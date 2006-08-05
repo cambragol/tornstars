@@ -1,0 +1,104 @@
+//*******************************************************************************************/
+//
+// tLock.pog
+//
+// This package gives some semaphore locking tools.
+// 
+//
+// 
+//
+// May 2005, Jon Freise
+//******************************************************************************************/
+
+package tLock;
+
+uses 
+iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, 
+Task, Debug, iFaction, iSim, iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+iConversation, iFormation, Group, Text, iEmail, State, iTrafficCreation, 
+iRangeCheck,iRemotePilot, iRegion, iMissionTracker, iWingmen,
+iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,
+iDirector, iEscort, 
+iLagrangePoint, iMusic, iGame, Stream;
+
+
+
+provides KeyedGet,
+         KeyedRelease,
+         Destroy;
+
+
+bool KeyedGet(int key, string lock_name)
+{
+   int stored_key;
+   bool taken = false;
+
+   atomic {
+      if (Global.Exists(lock_name)) {
+         stored_key = Global.Int(lock_name);
+         if (0 == stored_key) {
+            Global.SetInt(lock_name, key);
+            taken = true;
+         }else if (key == stored_key) {
+            // We already own this lock, so report back that
+            // it is ours.
+            taken = true;
+         }else {
+            // This lock has alreay been taken by someone else. Fail.
+            taken = false;
+         }
+
+      }else {
+         Global.CreateInt(lock_name, GA_Write, key);
+         taken = true;
+      }
+   }
+
+   return taken;
+}
+
+bool KeyedRelease(int key, string lock_name)
+{
+   int stored_key;
+   bool taken = false;
+
+   atomic {
+      if (Global.Exists(lock_name)) {
+         stored_key = Global.Int(lock_name);
+         if (0 == stored_key) {
+            // This lock is already released. Report back true.
+            taken = true;
+         }else if (key == stored_key) {
+            // This is our lock, so release it.
+            Global.SetInt(lock_name, 0);
+            taken = true;
+         }else {
+            // This lock was taken by someone else.
+            // We cannot release it. Fail.
+            taken = false;
+         }
+
+      }else {
+         // Create and release this lock.
+         Global.CreateInt(lock_name, GA_Write, 0);
+         taken = true;
+      }
+   }
+
+   return taken;
+}
+
+
+// Only use this after a lock has been released.
+Destroy(string lock_name)
+{
+   Global.Destroy(lock_name);
+}
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

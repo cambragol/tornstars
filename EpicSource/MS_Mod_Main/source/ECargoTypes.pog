@@ -1,0 +1,4418 @@
+/* Script Name:      Epic Cargo Types
+ * Last Edit:        2003-03-16 13:48:58 (5141L/154208C)
+ * Disclaimer:       This mod is not made, distributed or supported by
+ *                   Infogrames or Particle Systems Ltd.  Elements TM & (C)
+ *                   Infogrames and Particle Systems Ltd.
+ * Maintainer:       flamineo@btinternet.com
+ 
+ * Computer Generated File: Do NOT edit by hand!!
+
+ *
+ * This package is intended to supersede CargoTypes from the unmodded game.
+ * In addition to cargo type enumerations, it exports functions to cast enums
+ * from ints, and to and from strings.
+ *
+ * A gamble for convenience here: pog appears to implement enums as ints
+ * rather than strict enumerated types -- witness the fact cargo and
+ * inventory commands work fine with ints referencing user-defined cargo
+ * types, despite the fact the ints aren't in the unmodded eCargoType enum.
+ * 
+ * It may, therefore, be safe to redefine the cargo type enumerators for our
+ * own use -- the advantage of this is that it lets us easily keep name
+ * compatibility with scripts using the original enum, while rearranging the
+ * order to suit our purposes.  If our value ever gets passed down to a C++
+ * dll that's expecting a strict eCargoType value, though, nastiness may
+ * ensue.
+ *
+ * The simplest way to prevent this double definition causing compiler errors
+ * is to edit the POG SDK CargoTypes header file to include ECargoTypes, and
+ * comment out the original enums.  Example file in ./include in this zip.
+ */
+
+package
+  ECargoTypes
+;
+
+uses
+  Debug,
+  String,
+   List,
+   Object,
+   iCargo,
+   CargoTypes
+
+;
+
+provides
+  eCargoCategory,
+  eCargoSuperSet,
+  eCargoType,
+  eCargoValue,
+
+  Int2CargoValue,
+  CargoString2DBKey,
+  CargoCategory2String,
+  CargoSuperSet2String,
+  CargoType2String,
+  Int2CargoCategory,
+  Int2CargoSuperSet,
+  Int2CargoType,
+  String2CargoCategory,
+  String2CargoSuperSet,
+  String2CargoType,
+  Test
+;
+
+
+enum eCargoValue
+{ ECV_Invalid,
+  ECV_Cheap,
+  ECV_Average,
+  ECV_Expensive,
+  ECV_Exorbitant
+};
+
+
+
+// Prototypes
+
+prototype string    CargoCategory2String
+( eCargoCategory    to_cast
+);
+prototype string    CargoString2DBKey
+( string            to_cast
+);
+prototype string    CargoSuperSet2String
+( eCargoSuperSet    to_cast
+);
+prototype string    CargoType2String
+( eCargoType        to_cast
+);
+prototype eCargoCategory
+                    Int2CargoCategory
+( int               to_cast
+);
+prototype eCargoSuperSet
+                    Int2CargoSuperSet
+( int               to_cast
+);
+prototype eCargoType
+                    Int2CargoType
+( int               to_cast
+);
+prototype eCargoValue
+                    Int2CargoValue
+( int               to_cast
+);
+prototype eCargoCategory
+                    String2CargoCategory
+( string            to_cast
+);
+prototype eCargoSuperSet
+                    String2CargoSuperSet
+( string            to_cast
+);
+prototype eCargoType
+                    String2CargoType
+( string            to_cast
+);
+
+// Non-generated functions
+
+string              CargoString2DBKey
+( string            to_cast
+)
+{
+  return String.Join("Cargo", String.TrimLeft(to_cast, 2));
+}
+
+eCargoValue         Int2CargoValue
+( int               to_cast
+)
+{
+  switch(to_cast)
+  {
+    case ECV_Invalid:
+      return ECV_Invalid;
+    case ECV_Cheap:
+      return ECV_Cheap;
+    case ECV_Expensive:
+      return ECV_Expensive;
+    case ECV_Exorbitant:
+      return ECV_Exorbitant;
+  }
+  return ECV_Invalid;
+}
+
+
+// Generated Functions Follow
+
+string CargoType2String 
+ ( eCargoType to_cast 
+ ) 
+ { 
+ switch(to_cast) 
+ {
+case CT_Invalid:
+return "CT_Invalid";
+case CT_SeekerMineBlueprints:
+return "CT_SeekerMineBlueprints";
+case CT_GnatBlueprint:
+return "CT_GnatBlueprint";
+case CT_HarrowerBlueprint:
+return "CT_HarrowerBlueprint";
+case CT_HammerBlueprint:
+return "CT_HammerBlueprint";
+case CT_SeekerBlueprint:
+return "CT_SeekerBlueprint";
+case CT_LDSiShortBlueprints:
+return "CT_LDSiShortBlueprints";
+case CT_AssaultCannonAmmoBlueprints:
+return "CT_AssaultCannonAmmoBlueprints";
+case CT_TurretFighterBlueprints:
+return "CT_TurretFighterBlueprints";
+case CT_RemoteFighterBlueprints:
+return "CT_RemoteFighterBlueprints";
+case CT_FlareBlueprints:
+return "CT_FlareBlueprints";
+case CT_AchillesBlueprints:
+return "CT_AchillesBlueprints";
+case CT_AntimatterMineBlueprints:
+return "CT_AntimatterMineBlueprints";
+case CT_AntimatterMissileBlueprints:
+return "CT_AntimatterMissileBlueprints";
+case CT_BlizzardMissileBlueprints:
+return "CT_BlizzardMissileBlueprints";
+case CT_DeadshotBlueprints:
+return "CT_DeadshotBlueprints";
+case CT_DeathblowBlueprints:
+return "CT_DeathblowBlueprints";
+case CT_DecoyBlueprints:
+return "CT_DecoyBlueprints";
+case CT_DisruptorBlueprints:
+return "CT_DisruptorBlueprints";
+case CT_LDSi3000Blueprints:
+return "CT_LDSi3000Blueprints";
+case CT_LDSiMineBlueprints:
+return "CT_LDSiMineBlueprints";
+case CT_LDSiMissileBlueprints:
+return "CT_LDSiMissileBlueprints";
+case CT_SniperCannonAmmoBlueprints:
+return "CT_SniperCannonAmmoBlueprints";
+case CT_MiningChargeBlueprints:
+return "CT_MiningChargeBlueprints";
+case CT_ProximityMineBlueprints:
+return "CT_ProximityMineBlueprints";
+case CT_PulsarBlueprints:
+return "CT_PulsarBlueprints";
+case CT_RemoteMissileBlueprints:
+return "CT_RemoteMissileBlueprints";
+case CT_RemoteProbeBlueprints:
+return "CT_RemoteProbeBlueprints";
+case CT_SmartDecoyBlueprints:
+return "CT_SmartDecoyBlueprints";
+case CT_ComputerGames:
+return "CT_ComputerGames";
+case CT_NewsVids:
+return "CT_NewsVids";
+case CT_EntertainmentVids:
+return "CT_EntertainmentVids";
+case CT_InteractiveText:
+return "CT_InteractiveText";
+case CT_MusicRecordings:
+return "CT_MusicRecordings";
+case CT_CorporatePropaganda:
+return "CT_CorporatePropaganda";
+case CT_CorporateData:
+return "CT_CorporateData";
+case CT_XenoData:
+return "CT_XenoData";
+case CT_ResearchData:
+return "CT_ResearchData";
+case CT_PersonalData:
+return "CT_PersonalData";
+case CT_Mail:
+return "CT_Mail";
+case CT_ConfidentialData:
+return "CT_ConfidentialData";
+case CT_GovernmentData:
+return "CT_GovernmentData";
+case CT_PoliceData:
+return "CT_PoliceData";
+case CT_MilitaryIntelligence:
+return "CT_MilitaryIntelligence";
+case CT_SecretData:
+return "CT_SecretData";
+case CT_Autopilots:
+return "CT_Autopilots";
+case CT_MatchVelocityAutopilot:
+return "CT_MatchVelocityAutopilot";
+case CT_StealthProgram:
+return "CT_StealthProgram";
+case CT_SelfDefenceSoftware:
+return "CT_SelfDefenceSoftware";
+case CT_EngineManagementProgram:
+return "CT_EngineManagementProgram";
+case CT_OcclusionMonitoringSoftware:
+return "CT_OcclusionMonitoringSoftware";
+case CT_MilitaryTrackingProgram:
+return "CT_MilitaryTrackingProgram";
+case CT_MissileAI:
+return "CT_MissileAI";
+case CT_UtilitySoftware:
+return "CT_UtilitySoftware";
+case CT_CapsuleDriveGenerators:
+return "CT_CapsuleDriveGenerators";
+case CT_LDSClass1Drive:
+return "CT_LDSClass1Drive";
+case CT_PowerPlant:
+return "CT_PowerPlant";
+case CT_ShipsDrive:
+return "CT_ShipsDrive";
+case CT_ManoeuvreThrusters:
+return "CT_ManoeuvreThrusters";
+case CT_AlphaHeatSink:
+return "CT_AlphaHeatSink";
+case CT_BetaHeatSink:
+return "CT_BetaHeatSink";
+case CT_ColdGasThrusters:
+return "CT_ColdGasThrusters";
+case CT_MilitaryJumpCapacitor:
+return "CT_MilitaryJumpCapacitor";
+case CT_LDSClass2Drive:
+return "CT_LDSClass2Drive";
+case CT_LDSClass3Drive:
+return "CT_LDSClass3Drive";
+case CT_SealedHeatSink:
+return "CT_SealedHeatSink";
+case CT_CapsuleDrive:
+return "CT_CapsuleDrive";
+case CT_ImprovedManoeuverThrusters:
+return "CT_ImprovedManoeuverThrusters";
+case CT_PursuitDrivers:
+return "CT_PursuitDrivers";
+case CT_InterceptorDrivers:
+return "CT_InterceptorDrivers";
+case CT_GammaHeatSink:
+return "CT_GammaHeatSink";
+case CT_DeltaHeatSink:
+return "CT_DeltaHeatSink";
+case CT_AdvancedHeatSink:
+return "CT_AdvancedHeatSink";
+case CT_OmegaHeatSink:
+return "CT_OmegaHeatSink";
+case CT_HeatSinkSupercooler:
+return "CT_HeatSinkSupercooler";
+case CT_ActiveCooler:
+return "CT_ActiveCooler";
+case CT_EmergencyCoolingPod:
+return "CT_EmergencyCoolingPod";
+case CT_AntimatterPowerPod:
+return "CT_AntimatterPowerPod";
+case CT_HighYieldFusionInjector:
+return "CT_HighYieldFusionInjector";
+case CT_SNRVReloadPod:
+return "CT_SNRVReloadPod";
+case CT_Thrusterpods:
+return "CT_Thrusterpods";
+case CT_DockOnAutoTurret:
+return "CT_DockOnAutoTurret";
+case CT_SecondaryRing:
+return "CT_SecondaryRing";
+case CT_CapsuleDriveParts:
+return "CT_CapsuleDriveParts";
+case CT_LDSCarrierFields:
+return "CT_LDSCarrierFields";
+case CT_LDSFieldGenerators:
+return "CT_LDSFieldGenerators";
+case CT_LDSFieldNodes:
+return "CT_LDSFieldNodes";
+case CT_LDSGeneratorParts:
+return "CT_LDSGeneratorParts";
+case CT_ShipInstruments:
+return "CT_ShipInstruments";
+case CT_ShipSystems:
+return "CT_ShipSystems";
+case CT_AISystems:
+return "CT_AISystems";
+case CT_CompParts:
+return "CT_CompParts";
+case CT_ShipCPUGradeI:
+return "CT_ShipCPUGradeI";
+case CT_ShipCPUGradeII:
+return "CT_ShipCPUGradeII";
+case CT_ShipCPUGradeIII:
+return "CT_ShipCPUGradeIII";
+case CT_ShipCPUGradeIV:
+return "CT_ShipCPUGradeIV";
+case CT_ShipCPUGradeV:
+return "CT_ShipCPUGradeV";
+case CT_CompactShipAI:
+return "CT_CompactShipAI";
+case CT_ShipMemoryModule:
+return "CT_ShipMemoryModule";
+case CT_CPUCores:
+return "CT_CPUCores";
+case CT_CPUParts:
+return "CT_CPUParts";
+case CT_AudioEquipment:
+return "CT_AudioEquipment";
+case CT_AudioVisualEquipment:
+return "CT_AudioVisualEquipment";
+case CT_DataConsoles:
+return "CT_DataConsoles";
+case CT_DataScreens:
+return "CT_DataScreens";
+case CT_PersonalCommunicators:
+return "CT_PersonalCommunicators";
+case CT_BodyComps:
+return "CT_BodyComps";
+case CT_HandheldScientificInstruments:
+return "CT_HandheldScientificInstruments";
+case CT_CyberEyes:
+return "CT_CyberEyes";
+case CT_CyberLimbs:
+return "CT_CyberLimbs";
+case CT_CyberneticJackPlugs:
+return "CT_CyberneticJackPlugs";
+case CT_CyberneticOrgans:
+return "CT_CyberneticOrgans";
+case CT_DataCards:
+return "CT_DataCards";
+case CT_DataChips:
+return "CT_DataChips";
+case CT_DataModules:
+return "CT_DataModules";
+case CT_MemoryModules:
+return "CT_MemoryModules";
+case CT_AstronomicalInstruments:
+return "CT_AstronomicalInstruments";
+case CT_ShortRangeActiveSensors:
+return "CT_ShortRangeActiveSensors";
+case CT_ShortrangePassiveSensors:
+return "CT_ShortrangePassiveSensors";
+case CT_UCPScanner:
+return "CT_UCPScanner";
+case CT_PassiveSensorPackage:
+return "CT_PassiveSensorPackage";
+case CT_IFFBeacon:
+return "CT_IFFBeacon";
+case CT_ActiveSensorPackage:
+return "CT_ActiveSensorPackage";
+case CT_AdvancedActiveSensors:
+return "CT_AdvancedActiveSensors";
+case CT_AdvancedPassiveSensors:
+return "CT_AdvancedPassiveSensors";
+case CT_MilitaryGradeActiveSensors:
+return "CT_MilitaryGradeActiveSensors";
+case CT_MilitaryGradePassiveSensors:
+return "CT_MilitaryGradePassiveSensors";
+case CT_LongRangePassiveSensors:
+return "CT_LongRangePassiveSensors";
+case CT_LongRangeActiveSensors:
+return "CT_LongRangeActiveSensors";
+case CT_SensorDisruptor:
+return "CT_SensorDisruptor";
+case CT_HighPowerSensorDisruptor:
+return "CT_HighPowerSensorDisruptor";
+case CT_AdvancedSensorDisruptor:
+return "CT_AdvancedSensorDisruptor";
+case CT_MarauderCommsScrambler:
+return "CT_MarauderCommsScrambler";
+case CT_HyperspaceTracker:
+return "CT_HyperspaceTracker";
+case CT_LaserDetectors:
+return "CT_LaserDetectors";
+case CT_MonitoringDevices:
+return "CT_MonitoringDevices";
+case CT_GeneWriters:
+return "CT_GeneWriters";
+case CT_CryogenicTanks:
+return "CT_CryogenicTanks";
+case CT_Medkits:
+return "CT_Medkits";
+case CT_OrganMatrices:
+return "CT_OrganMatrices";
+case CT_RemoteTables:
+return "CT_RemoteTables";
+case CT_Autodocs:
+return "CT_Autodocs";
+case CT_Autosurgs:
+return "CT_Autosurgs";
+case CT_HKCounters:
+return "CT_HKCounters";
+case CT_MolecularImagers:
+return "CT_MolecularImagers";
+case CT_NanosurgeryEquipment:
+return "CT_NanosurgeryEquipment";
+case CT_NMRs:
+return "CT_NMRs";
+case CT_SurgeryKits:
+return "CT_SurgeryKits";
+case CT_NanoAssemblers:
+return "CT_NanoAssemblers";
+case CT_NanoFactories:
+return "CT_NanoFactories";
+case CT_NanoProgrammers:
+return "CT_NanoProgrammers";
+case CT_NanoSurgeons:
+return "CT_NanoSurgeons";
+case CT_NeuroConnectors:
+return "CT_NeuroConnectors";
+case CT_PreprogrammedNanotech:
+return "CT_PreprogrammedNanotech";
+case CT_TerraformingNanotech:
+return "CT_TerraformingNanotech";
+case CT_RoboticArms:
+return "CT_RoboticArms";
+case CT_RoboticChassis:
+return "CT_RoboticChassis";
+case CT_RoboticCPUs:
+return "CT_RoboticCPUs";
+case CT_RoboticSensors:
+return "CT_RoboticSensors";
+case CT_DomesticRobots:
+return "CT_DomesticRobots";
+case CT_ConstructionRobots:
+return "CT_ConstructionRobots";
+case CT_SecurityRobots:
+return "CT_SecurityRobots";
+case CT_HydroponicsEquipment:
+return "CT_HydroponicsEquipment";
+case CT_Biovators:
+return "CT_Biovators";
+case CT_AgriHarvestors:
+return "CT_AgriHarvestors";
+case CT_Tractors:
+return "CT_Tractors";
+case CT_TractorParts:
+return "CT_TractorParts";
+case CT_HabitationPods:
+return "CT_HabitationPods";
+case CT_HousingModules:
+return "CT_HousingModules";
+case CT_LifeSupportSystems:
+return "CT_LifeSupportSystems";
+case CT_StationComponents:
+return "CT_StationComponents";
+case CT_PrefabricatedStationModules:
+return "CT_PrefabricatedStationModules";
+case CT_StationConnectors:
+return "CT_StationConnectors";
+case CT_PrefabricatedHousing:
+return "CT_PrefabricatedHousing";
+case CT_Recyclers:
+return "CT_Recyclers";
+case CT_VaccumeDomes:
+return "CT_VaccumeDomes";
+case CT_ArmourPatches:
+return "CT_ArmourPatches";
+case CT_ArmourPlates:
+return "CT_ArmourPlates";
+case CT_Hullplates:
+return "CT_Hullplates";
+case CT_HullRepairKits:
+return "CT_HullRepairKits";
+case CT_Conduits:
+return "CT_Conduits";
+case CT_FloorGrids:
+return "CT_FloorGrids";
+case CT_GravGrids:
+return "CT_GravGrids";
+case CT_Wiring:
+return "CT_Wiring";
+case CT_LasTanks:
+return "CT_LasTanks";
+case CT_Lathes:
+return "CT_Lathes";
+case CT_MicroengineeringTools:
+return "CT_MicroengineeringTools";
+case CT_Drillers:
+return "CT_Drillers";
+case CT_EarthMovers:
+return "CT_EarthMovers";
+case CT_HandDrills:
+return "CT_HandDrills";
+case CT_LaserDrills:
+return "CT_LaserDrills";
+case CT_MiningDisplacers:
+return "CT_MiningDisplacers";
+case CT_MiningDrones:
+return "CT_MiningDrones";
+case CT_VehicleDrills:
+return "CT_VehicleDrills";
+case CT_FieldGenerators:
+return "CT_FieldGenerators";
+case CT_ReactorParts:
+return "CT_ReactorParts";
+case CT_ReactorSpares:
+return "CT_ReactorSpares";
+case CT_ReactorTargets:
+return "CT_ReactorTargets";
+case CT_FissionGenerators:
+return "CT_FissionGenerators";
+case CT_FusionGenerators:
+return "CT_FusionGenerators";
+case CT_Batteries:
+return "CT_Batteries";
+case CT_SolarPanels:
+return "CT_SolarPanels";
+case CT_Solettas:
+return "CT_Solettas";
+case CT_AtmosphericScrubbers:
+return "CT_AtmosphericScrubbers";
+case CT_PlanetHeaters:
+return "CT_PlanetHeaters";
+case CT_CFCGenerators:
+return "CT_CFCGenerators";
+case CT_Aerodynes:
+return "CT_Aerodynes";
+case CT_Aircars:
+return "CT_Aircars";
+case CT_Dirigibles:
+return "CT_Dirigibles";
+case CT_GroundCars:
+return "CT_GroundCars";
+case CT_ConstructionVehicles:
+return "CT_ConstructionVehicles";
+case CT_Hovercars:
+return "CT_Hovercars";
+case CT_Hovercraft:
+return "CT_Hovercraft";
+case CT_Rotorcraft:
+return "CT_Rotorcraft";
+case CT_Trucks:
+return "CT_Trucks";
+case CT_Spirits:
+return "CT_Spirits";
+case CT_Wine:
+return "CT_Wine";
+case CT_Champagne:
+return "CT_Champagne";
+case CT_Scotch:
+return "CT_Scotch";
+case CT_RealBeer:
+return "CT_RealBeer";
+case CT_ZeroBrew:
+return "CT_ZeroBrew";
+case CT_Antiques:
+return "CT_Antiques";
+case CT_Paintings:
+return "CT_Paintings";
+case CT_Sculpture:
+return "CT_Sculpture";
+case CT_Fur:
+return "CT_Fur";
+case CT_FurCoats:
+return "CT_FurCoats";
+case CT_Vatfur:
+return "CT_Vatfur";
+case CT_GoldJewellery:
+return "CT_GoldJewellery";
+case CT_ValuableJewellery:
+return "CT_ValuableJewellery";
+case CT_SmartJewels:
+return "CT_SmartJewels";
+case CT_Watches:
+return "CT_Watches";
+case CT_Books:
+return "CT_Books";
+case CT_Cosmetics:
+return "CT_Cosmetics";
+case CT_DesignerClothes:
+return "CT_DesignerClothes";
+case CT_MusicalInstruments:
+return "CT_MusicalInstruments";
+case CT_Perfume:
+return "CT_Perfume";
+case CT_Toys:
+return "CT_Toys";
+case CT_NaturalFibreClothing:
+return "CT_NaturalFibreClothing";
+case CT_LuxuryFurniture:
+return "CT_LuxuryFurniture";
+case CT_Caviar:
+return "CT_Caviar";
+case CT_Chocolate:
+return "CT_Chocolate";
+case CT_Lobster:
+return "CT_Lobster";
+case CT_RealCoffee:
+return "CT_RealCoffee";
+case CT_RealMeat:
+return "CT_RealMeat";
+case CT_RealTea:
+return "CT_RealTea";
+case CT_Shellfish:
+return "CT_Shellfish";
+case CT_Milk:
+return "CT_Milk";
+case CT_Spices:
+return "CT_Spices";
+case CT_Game:
+return "CT_Game";
+case CT_Cigarettes:
+return "CT_Cigarettes";
+case CT_Cigars:
+return "CT_Cigars";
+case CT_LeafTobacco:
+return "CT_LeafTobacco";
+case CT_Aphrodisiacs:
+return "CT_Aphrodisiacs";
+case CT_Caffeine:
+return "CT_Caffeine";
+case CT_PhysicalEnhancers:
+return "CT_PhysicalEnhancers";
+case CT_ErzatzCoffee:
+return "CT_ErzatzCoffee";
+case CT_Euphorics:
+return "CT_Euphorics";
+case CT_Halluciogenics:
+return "CT_Halluciogenics";
+case CT_MemoryEnhancers:
+return "CT_MemoryEnhancers";
+case CT_MoodEnhancers:
+return "CT_MoodEnhancers";
+case CT_MoodStabilsers:
+return "CT_MoodStabilsers";
+case CT_Stimulants:
+return "CT_Stimulants";
+case CT_Tranquilisers:
+return "CT_Tranquilisers";
+case CT_SportingBodyArmour:
+return "CT_SportingBodyArmour";
+case CT_Footballs:
+return "CT_Footballs";
+case CT_GolfSupplies:
+return "CT_GolfSupplies";
+case CT_NullBox:
+return "CT_NullBox";
+case CT_PaintGuns:
+return "CT_PaintGuns";
+case CT_Scuba:
+return "CT_Scuba";
+case CT_TennisEquipment:
+return "CT_TennisEquipment";
+case CT_SportsClothes:
+return "CT_SportsClothes";
+case CT_ZeroGGymnasia:
+return "CT_ZeroGGymnasia";
+case CT_SportingWeapons:
+return "CT_SportingWeapons";
+case CT_BricABrac:
+return "CT_BricABrac";
+case CT_OfficeSupplies:
+return "CT_OfficeSupplies";
+case CT_ReligiousMaterial:
+return "CT_ReligiousMaterial";
+case CT_Clothing:
+return "CT_Clothing";
+case CT_DisposableClothing:
+return "CT_DisposableClothing";
+case CT_HandTools:
+return "CT_HandTools";
+case CT_Uniforms:
+return "CT_Uniforms";
+case CT_Furniture:
+return "CT_Furniture";
+case CT_CleaningProducts:
+return "CT_CleaningProducts";
+case CT_HygieneGoods:
+return "CT_HygieneGoods";
+case CT_HumanitarianAid:
+return "CT_HumanitarianAid";
+case CT_WoundDressings:
+return "CT_WoundDressings";
+case CT_Anaesthetics:
+return "CT_Anaesthetics";
+case CT_Antibiotics:
+return "CT_Antibiotics";
+case CT_Antiseptics:
+return "CT_Antiseptics";
+case CT_Immunosuppressives:
+return "CT_Immunosuppressives";
+case CT_MedicalDrugs:
+return "CT_MedicalDrugs";
+case CT_Vaccines:
+return "CT_Vaccines";
+case CT_AntiAgingTreatments:
+return "CT_AntiAgingTreatments";
+case CT_RejuvenationTratments:
+return "CT_RejuvenationTratments";
+case CT_PainKillers:
+return "CT_PainKillers";
+case CT_EmergencySpaceSuits:
+return "CT_EmergencySpaceSuits";
+case CT_PersonalGasJets:
+return "CT_PersonalGasJets";
+case CT_SpaceSuits:
+return "CT_SpaceSuits";
+case CT_SuitPatches:
+return "CT_SuitPatches";
+case CT_SurvivalBubbles:
+return "CT_SurvivalBubbles";
+case CT_SurvivalPacks:
+return "CT_SurvivalPacks";
+case CT_SurvivalCloaks:
+return "CT_SurvivalCloaks";
+case CT_EmergencyHeaters:
+return "CT_EmergencyHeaters";
+case CT_NitroBacteria:
+return "CT_NitroBacteria";
+case CT_SoilBacteria:
+return "CT_SoilBacteria";
+case CT_TerraformingBacteria:
+return "CT_TerraformingBacteria";
+case CT_RecyclingBacteria:
+return "CT_RecyclingBacteria";
+case CT_AnimalFeed:
+return "CT_AnimalFeed";
+case CT_Compost:
+return "CT_Compost";
+case CT_Fertiliser:
+return "CT_Fertiliser";
+case CT_Soil:
+return "CT_Soil";
+case CT_Apes:
+return "CT_Apes";
+case CT_Birds:
+return "CT_Birds";
+case CT_DonorPigs:
+return "CT_DonorPigs";
+case CT_DrugLeeches:
+return "CT_DrugLeeches";
+case CT_Giraffes:
+return "CT_Giraffes";
+case CT_Horses:
+return "CT_Horses";
+case CT_Lions:
+return "CT_Lions";
+case CT_Weasels:
+return "CT_Weasels";
+case CT_Yaks:
+return "CT_Yaks";
+case CT_Zebras:
+return "CT_Zebras";
+case CT_AttackDogs:
+return "CT_AttackDogs";
+case CT_BiomassProcessingWorms:
+return "CT_BiomassProcessingWorms";
+case CT_Camels:
+return "CT_Camels";
+case CT_CancerMice:
+return "CT_CancerMice";
+case CT_Chickens:
+return "CT_Chickens";
+case CT_Cows:
+return "CT_Cows";
+case CT_Dogs:
+return "CT_Dogs";
+case CT_EngineeredInsects:
+return "CT_EngineeredInsects";
+case CT_Goats:
+return "CT_Goats";
+case CT_Insects:
+return "CT_Insects";
+case CT_Pigs:
+return "CT_Pigs";
+case CT_Rodents:
+return "CT_Rodents";
+case CT_Primates:
+return "CT_Primates";
+case CT_HYL:
+return "CT_HYL";
+case CT_Foetuses:
+return "CT_Foetuses";
+case CT_Houseplants:
+return "CT_Houseplants";
+case CT_PotPlants:
+return "CT_PotPlants";
+case CT_Seedlings:
+return "CT_Seedlings";
+case CT_Seeds:
+return "CT_Seeds";
+case CT_Algae:
+return "CT_Algae";
+case CT_PlantPulp:
+return "CT_PlantPulp";
+case CT_Woodpulp:
+return "CT_Woodpulp";
+case CT_Trees:
+return "CT_Trees";
+case CT_SlimeMould:
+return "CT_SlimeMould";
+case CT_Yeast:
+return "CT_Yeast";
+case CT_CloneBoneTissue:
+return "CT_CloneBoneTissue";
+case CT_CloneEyes:
+return "CT_CloneEyes";
+case CT_CloneGlands:
+return "CT_CloneGlands";
+case CT_CloneHearts:
+return "CT_CloneHearts";
+case CT_CloneIntestines:
+return "CT_CloneIntestines";
+case CT_CloneKidneys:
+return "CT_CloneKidneys";
+case CT_CloneLimbs:
+return "CT_CloneLimbs";
+case CT_CloneLivers:
+return "CT_CloneLivers";
+case CT_CloneLungs:
+return "CT_CloneLungs";
+case CT_CloneSkin:
+return "CT_CloneSkin";
+case CT_VatGrownMuscle:
+return "CT_VatGrownMuscle";
+case CT_BlankTissueCulture:
+return "CT_BlankTissueCulture";
+case CT_CommonStrandMaterial:
+return "CT_CommonStrandMaterial";
+case CT_DNAChangers:
+return "CT_DNAChangers";
+case CT_DNASequencers:
+return "CT_DNASequencers";
+case CT_DNATattoos:
+return "CT_DNATattoos";
+case CT_GeneticMarkerAgents:
+return "CT_GeneticMarkerAgents";
+case CT_GeneticRejuvinations:
+return "CT_GeneticRejuvinations";
+case CT_TransplantEyes:
+return "CT_TransplantEyes";
+case CT_TransplantGlands:
+return "CT_TransplantGlands";
+case CT_TransplantHearts:
+return "CT_TransplantHearts";
+case CT_TransplantIntestine:
+return "CT_TransplantIntestine";
+case CT_TransplantKidneys:
+return "CT_TransplantKidneys";
+case CT_TransplantLivers:
+return "CT_TransplantLivers";
+case CT_TransplantLungs:
+return "CT_TransplantLungs";
+case CT_TransplantSkin:
+return "CT_TransplantSkin";
+case CT_FoodBlocks:
+return "CT_FoodBlocks";
+case CT_FoodPills:
+return "CT_FoodPills";
+case CT_MealInABar:
+return "CT_MealInABar";
+case CT_PseudoShake:
+return "CT_PseudoShake";
+case CT_RecoveredMeat:
+return "CT_RecoveredMeat";
+case CT_SyntheticCheese:
+return "CT_SyntheticCheese";
+case CT_SyntheticProtein:
+return "CT_SyntheticProtein";
+case CT_SurvivalRations:
+return "CT_SurvivalRations";
+case CT_DrinkingWater:
+return "CT_DrinkingWater";
+case CT_SugarCane:
+return "CT_SugarCane";
+case CT_Fish:
+return "CT_Fish";
+case CT_Fruit:
+return "CT_Fruit";
+case CT_Grain:
+return "CT_Grain";
+case CT_Meat:
+return "CT_Meat";
+case CT_Potatoes:
+return "CT_Potatoes";
+case CT_Rice:
+return "CT_Rice";
+case CT_Soya:
+return "CT_Soya";
+case CT_Vegetables:
+return "CT_Vegetables";
+case CT_EdibleFungi:
+return "CT_EdibleFungi";
+case CT_WasteBlocks:
+return "CT_WasteBlocks";
+case CT_PlasticWaste:
+return "CT_PlasticWaste";
+case CT_OrganicPulp:
+return "CT_OrganicPulp";
+case CT_WastePaper:
+return "CT_WastePaper";
+case CT_DiseasedSewage:
+return "CT_DiseasedSewage";
+case CT_FrozenSewage:
+return "CT_FrozenSewage";
+case CT_RawSewage:
+return "CT_RawSewage";
+case CT_AntimatterContainers:
+return "CT_AntimatterContainers";
+case CT_Antimatter:
+return "CT_Antimatter";
+case CT_AntimatterPods:
+return "CT_AntimatterPods";
+case CT_FloorPlates:
+return "CT_FloorPlates";
+case CT_Girders:
+return "CT_Girders";
+case CT_WallPlates:
+return "CT_WallPlates";
+case CT_BeanstalkWire:
+return "CT_BeanstalkWire";
+case CT_FoamMetal:
+return "CT_FoamMetal";
+case CT_MacroCrystallineMetals:
+return "CT_MacroCrystallineMetals";
+case CT_Monowire:
+return "CT_Monowire";
+case CT_HeavyGirders:
+return "CT_HeavyGirders";
+case CT_Neutronium:
+return "CT_Neutronium";
+case CT_ExoticMetals:
+return "CT_ExoticMetals";
+case CT_RareMetals:
+return "CT_RareMetals";
+case CT_LiquifiedFuel:
+return "CT_LiquifiedFuel";
+case CT_LiquifiedFusionPremix:
+return "CT_LiquifiedFusionPremix";
+case CT_BoosterAgent:
+return "CT_BoosterAgent";
+case CT_FuelPellets:
+return "CT_FuelPellets";
+case CT_FuelRods:
+return "CT_FuelRods";
+case CT_CutGemstones:
+return "CT_CutGemstones";
+case CT_IndustrialGemstones:
+return "CT_IndustrialGemstones";
+case CT_UncutGemstones:
+return "CT_UncutGemstones";
+case CT_FeedStock:
+return "CT_FeedStock";
+case CT_PressurisedHydrocarbonGas:
+return "CT_PressurisedHydrocarbonGas";
+case CT_Oil:
+return "CT_Oil";
+case CT_Petroleum:
+return "CT_Petroleum";
+case CT_PlasticBars:
+return "CT_PlasticBars";
+case CT_PlasticBlocks:
+return "CT_PlasticBlocks";
+case CT_PlasticCables:
+return "CT_PlasticCables";
+case CT_PlasticGel:
+return "CT_PlasticGel";
+case CT_PlasticPellets:
+return "CT_PlasticPellets";
+case CT_BattleScrap:
+return "CT_BattleScrap";
+case CT_CompactedScrapMetal:
+return "CT_CompactedScrapMetal";
+case CT_MisCasts:
+return "CT_MisCasts";
+case CT_ScrapMetal:
+return "CT_ScrapMetal";
+case CT_Gold:
+return "CT_Gold";
+case CT_Platinum:
+return "CT_Platinum";
+case CT_Silver:
+return "CT_Silver";
+case CT_MetalBars:
+return "CT_MetalBars";
+case CT_MetalBillets:
+return "CT_MetalBillets";
+case CT_MetalRods:
+return "CT_MetalRods";
+case CT_Wire:
+return "CT_Wire";
+case CT_Rivets:
+return "CT_Rivets";
+case CT_RadioactiveWaste:
+return "CT_RadioactiveWaste";
+case CT_Uranium:
+return "CT_Uranium";
+case CT_Plutonium:
+return "CT_Plutonium";
+case CT_FissionInitiators:
+return "CT_FissionInitiators";
+case CT_Carbon:
+return "CT_Carbon";
+case CT_Nitrates:
+return "CT_Nitrates";
+case CT_Oxygen:
+return "CT_Oxygen";
+case CT_Phosphates:
+return "CT_Phosphates";
+case CT_Sulphur:
+return "CT_Sulphur";
+case CT_Alkalines:
+return "CT_Alkalines";
+case CT_Sodium:
+return "CT_Sodium";
+case CT_Phosphides:
+return "CT_Phosphides";
+case CT_Sulfides:
+return "CT_Sulfides";
+case CT_Tellurides:
+return "CT_Tellurides";
+case CT_InorganicAcids:
+return "CT_InorganicAcids";
+case CT_Intermetallics:
+return "CT_Intermetallics";
+case CT_UnprocessedGas:
+return "CT_UnprocessedGas";
+case CT_Air:
+return "CT_Air";
+case CT_Helium3:
+return "CT_Helium3";
+case CT_NeutroniumOre:
+return "CT_NeutroniumOre";
+case CT_GoldOre:
+return "CT_GoldOre";
+case CT_CommonOre:
+return "CT_CommonOre";
+case CT_SilverOre:
+return "CT_SilverOre";
+case CT_PlatinumOre:
+return "CT_PlatinumOre";
+case CT_RadioactiveOre:
+return "CT_RadioactiveOre";
+case CT_Rubble:
+return "CT_Rubble";
+case CT_Aggregates:
+return "CT_Aggregates";
+case CT_RockDust:
+return "CT_RockDust";
+case CT_Sand:
+return "CT_Sand";
+case CT_BlockIce:
+return "CT_BlockIce";
+case CT_CrushedIce:
+return "CT_CrushedIce";
+case CT_DirtyIce:
+return "CT_DirtyIce";
+case CT_DeionisedWater:
+return "CT_DeionisedWater";
+case CT_APCs:
+return "CT_APCs";
+case CT_TurretFighter:
+return "CT_TurretFighter";
+case CT_RemoteFighter:
+return "CT_RemoteFighter";
+case CT_ArtilleryFVs:
+return "CT_ArtilleryFVs";
+case CT_FireSupportFVs:
+return "CT_FireSupportFVs";
+case CT_GravTanks:
+return "CT_GravTanks";
+case CT_HoverTanks:
+return "CT_HoverTanks";
+case CT_Tanks:
+return "CT_Tanks";
+case CT_TankParts:
+return "CT_TankParts";
+case CT_BiologicalWeaponsAgents:
+return "CT_BiologicalWeaponsAgents";
+case CT_ChemicalWeaponsAgents:
+return "CT_ChemicalWeaponsAgents";
+case CT_NeutronWarheads:
+return "CT_NeutronWarheads";
+case CT_DirtyFissionWarheads:
+return "CT_DirtyFissionWarheads";
+case CT_HostileTerraformingAgents:
+return "CT_HostileTerraformingAgents";
+case CT_NanotechWeapons:
+return "CT_NanotechWeapons";
+case CT_AntimatterFuses:
+return "CT_AntimatterFuses";
+case CT_TwinPackMissileLauncher:
+return "CT_TwinPackMissileLauncher";
+case CT_LDSiShortMissiles:
+return "CT_LDSiShortMissiles";
+case CT_LDSiShortMissile:
+return "CT_LDSiShortMissile";
+case CT_SeekerMissiles:
+return "CT_SeekerMissiles";
+case CT_SeekerMissile:
+return "CT_SeekerMissile";
+case CT_HarrowerMissiles:
+return "CT_HarrowerMissiles";
+case CT_HarrowerMissile:
+return "CT_HarrowerMissile";
+case CT_GnatRockets:
+return "CT_GnatRockets";
+case CT_GnatRocket:
+return "CT_GnatRocket";
+case CT_HammerRockets:
+return "CT_HammerRockets";
+case CT_HammerRocket:
+return "CT_HammerRocket";
+case CT_LDSiMissiles:
+return "CT_LDSiMissiles";
+case CT_LDSiMissile:
+return "CT_LDSiMissile";
+case CT_MiningCharges:
+return "CT_MiningCharges";
+case CT_MiningCharge:
+return "CT_MiningCharge";
+case CT_TripackMissileLauncher:
+return "CT_TripackMissileLauncher";
+case CT_BlizzardRocketPod:
+return "CT_BlizzardRocketPod";
+case CT_BlizzardRocket:
+return "CT_BlizzardRocket";
+case CT_RemoteProbes:
+return "CT_RemoteProbes";
+case CT_RemoteProbe:
+return "CT_RemoteProbe";
+case CT_RemoteMissiles:
+return "CT_RemoteMissiles";
+case CT_RemoteMissile:
+return "CT_RemoteMissile";
+case CT_DeadshotMissiles:
+return "CT_DeadshotMissiles";
+case CT_DeadshotMissile:
+return "CT_DeadshotMissile";
+case CT_LDSi3000Missiles:
+return "CT_LDSi3000Missiles";
+case CT_LDSi3000Missile:
+return "CT_LDSi3000Missile";
+case CT_QuadpackMissileLauncher:
+return "CT_QuadpackMissileLauncher";
+case CT_DeathblowRemote:
+return "CT_DeathblowRemote";
+case CT_DeathblowRemoteMissile:
+return "CT_DeathblowRemoteMissile";
+case CT_AntimatterRemote:
+return "CT_AntimatterRemote";
+case CT_AntimatterRemoteMissile:
+return "CT_AntimatterRemoteMissile";
+case CT_InternalMissileMagazine:
+return "CT_InternalMissileMagazine";
+case CT_DisruptorMissiles:
+return "CT_DisruptorMissiles";
+case CT_DisruptorMissile:
+return "CT_DisruptorMissile";
+case CT_PulsarDisruptors:
+return "CT_PulsarDisruptors";
+case CT_PulsarDisruptor:
+return "CT_PulsarDisruptor";
+case CT_HullMissileHardPoint:
+return "CT_HullMissileHardPoint";
+case CT_AchillesShieldDisruptors:
+return "CT_AchillesShieldDisruptors";
+case CT_AchillesShieldDisruptor:
+return "CT_AchillesShieldDisruptor";
+case CT_ProximityMines:
+return "CT_ProximityMines";
+case CT_ProximityMine:
+return "CT_ProximityMine";
+case CT_AntimatterMines:
+return "CT_AntimatterMines";
+case CT_AntimatterMine:
+return "CT_AntimatterMine";
+case CT_LDSIMines:
+return "CT_LDSIMines";
+case CT_LDSIMine:
+return "CT_LDSIMine";
+case CT_SeekerMines:
+return "CT_SeekerMines";
+case CT_SeekerMine:
+return "CT_SeekerMine";
+case CT_LDSIWarheads:
+return "CT_LDSIWarheads";
+case CT_MissileParts:
+return "CT_MissileParts";
+case CT_MissileThrusters:
+return "CT_MissileThrusters";
+case CT_MissileWarheads:
+return "CT_MissileWarheads";
+case CT_Flares:
+return "CT_Flares";
+case CT_Flare:
+return "CT_Flare";
+case CT_Decoys:
+return "CT_Decoys";
+case CT_Decoy:
+return "CT_Decoy";
+case CT_SmartDecoy:
+return "CT_SmartDecoy";
+case CT_SmartDecoyCountermeasure:
+return "CT_SmartDecoyCountermeasure";
+case CT_CombatPowersuits:
+return "CT_CombatPowersuits";
+case CT_SidearmClips:
+return "CT_SidearmClips";
+case CT_BattlePacks:
+return "CT_BattlePacks";
+case CT_Explosives:
+return "CT_Explosives";
+case CT_Grenades:
+return "CT_Grenades";
+case CT_HandWeapons:
+return "CT_HandWeapons";
+case CT_ManpackMissiles:
+return "CT_ManpackMissiles";
+case CT_AcceleratorRings:
+return "CT_AcceleratorRings";
+case CT_NeutronBeamCannon:
+return "CT_NeutronBeamCannon";
+case CT_WeaponLinkHardware:
+return "CT_WeaponLinkHardware";
+case CT_CommunicationsLaser:
+return "CT_CommunicationsLaser";
+case CT_TrackingComputer:
+return "CT_TrackingComputer";
+case CT_ParticleBeamCannon:
+return "CT_ParticleBeamCannon";
+case CT_MiningLasers:
+return "CT_MiningLasers";
+case CT_AssaultCannon:
+return "CT_AssaultCannon";
+case CT_AssaultCannonAmmo:
+return "CT_AssaultCannonAmmo";
+case CT_AssaultCannonAmmoRound:
+return "CT_AssaultCannonAmmoRound";
+case CT_LightPBC:
+return "CT_LightPBC";
+case CT_CooledPBC:
+return "CT_CooledPBC";
+case CT_RapidFirePBC:
+return "CT_RapidFirePBC";
+case CT_LongRangeCannon:
+return "CT_LongRangeCannon";
+case CT_CuttingBeam:
+return "CT_CuttingBeam";
+case CT_WideanglePBC:
+return "CT_WideanglePBC";
+case CT_EnhancedAimPBC:
+return "CT_EnhancedAimPBC";
+case CT_QuadLightPBC:
+return "CT_QuadLightPBC";
+case CT_HeavyBeamCannon:
+return "CT_HeavyBeamCannon";
+case CT_LongRangeCannonAmmo:
+return "CT_LongRangeCannonAmmo";
+case CT_LongRangeCannonAmmoRound:
+return "CT_LongRangeCannonAmmoRound";
+case CT_TargetedPBC:
+return "CT_TargetedPBC";
+case CT_AssaultCannonRingModel:
+return "CT_AssaultCannonRingModel";
+case CT_PulseAcceleratedPBC:
+return "CT_PulseAcceleratedPBC";
+case CT_AntimatterParticleBeam:
+return "CT_AntimatterParticleBeam";
+case CT_AntimatterStreamer:
+return "CT_AntimatterStreamer";
+case CT_Accumulators:
+return "CT_Accumulators";
+case CT_PointDefenceTurret:
+return "CT_PointDefenceTurret";
+case CT_FireControlSensors:
+return "CT_FireControlSensors";
+case CT_PBCAccelerators:
+return "CT_PBCAccelerators";
+case CT_PlasmaStorageRings:
+return "CT_PlasmaStorageRings";
+case CT_GatlingPBCs:
+return "CT_GatlingPBCs";
+case CT_HeavyPBCs:
+return "CT_HeavyPBCs";
+case CT_LightPBCs:
+return "CT_LightPBCs";
+case CT_PBCs:
+return "CT_PBCs";
+case CT_MeteorShield:
+return "CT_MeteorShield";
+case CT_Level1AutorepairSystem:
+return "CT_Level1AutorepairSystem";
+case CT_DefenceShield:
+return "CT_DefenceShield";
+case CT_Level2AutorepairSystem:
+return "CT_Level2AutorepairSystem";
+case CT_RepairControlProgram:
+return "CT_RepairControlProgram";
+case CT_LightDefenceShield:
+return "CT_LightDefenceShield";
+case CT_InstantShieldControl:
+return "CT_InstantShieldControl";
+case CT_ReactorHardening:
+return "CT_ReactorHardening";
+case CT_ArmouredHullPlates:
+return "CT_ArmouredHullPlates";
+case CT_Level3Autorepairsystem:
+return "CT_Level3Autorepairsystem";
+case CT_LowSignatureHullplates:
+return "CT_LowSignatureHullplates";
+case CT_MilitaryShields:
+return "CT_MilitaryShields";
+case CT_ShieldSynchroniser:
+return "CT_ShieldSynchroniser";
+case CT_Level4Autorepairsystem:
+return "CT_Level4Autorepairsystem";
+case CT_CombatShields:
+return "CT_CombatShields";
+case CT_MilitaryAggressorShields:
+return "CT_MilitaryAggressorShields";
+case CT_AggressorShieldUpgrade:
+return "CT_AggressorShieldUpgrade";
+case CT_MinersShield:
+return "CT_MinersShield";
+case CT_Level5Autorepairsystem:
+return "CT_Level5Autorepairsystem";
+case CT_ParticleScreenShieldUpgrade:
+return "CT_ParticleScreenShieldUpgrade";
+case CT_AssaultShield:
+return "CT_AssaultShield";
+case CT_PowerPlantAutorepair:
+return "CT_PowerPlantAutorepair";
+case CT_ShieldBooster:
+return "CT_ShieldBooster";
+case CT_AdvancedHullMaterialRefit:
+return "CT_AdvancedHullMaterialRefit";
+ default:
+
+
+ return "CT_Invalid";
+} 
+ return "CT_Invalid"; 
+}
+
+eCargoType String2CargoType 
+ ( string to_cast 
+ ) 
+{
+if ("CT_Invalid" == to_cast )
+return CT_Invalid;
+else if ("CT_SeekerMineBlueprints" == to_cast )
+return CT_SeekerMineBlueprints;
+else if ("CT_GnatBlueprint" == to_cast )
+return CT_GnatBlueprint;
+else if ("CT_HarrowerBlueprint" == to_cast )
+return CT_HarrowerBlueprint;
+else if ("CT_HammerBlueprint" == to_cast )
+return CT_HammerBlueprint;
+else if ("CT_SeekerBlueprint" == to_cast )
+return CT_SeekerBlueprint;
+else if ("CT_LDSiShortBlueprints" == to_cast )
+return CT_LDSiShortBlueprints;
+else if ("CT_AssaultCannonAmmoBlueprints" == to_cast )
+return CT_AssaultCannonAmmoBlueprints;
+else if ("CT_TurretFighterBlueprints" == to_cast )
+return CT_TurretFighterBlueprints;
+else if ("CT_RemoteFighterBlueprints" == to_cast )
+return CT_RemoteFighterBlueprints;
+else if ("CT_FlareBlueprints" == to_cast )
+return CT_FlareBlueprints;
+else if ("CT_AchillesBlueprints" == to_cast )
+return CT_AchillesBlueprints;
+else if ("CT_AntimatterMineBlueprints" == to_cast )
+return CT_AntimatterMineBlueprints;
+else if ("CT_AntimatterMissileBlueprints" == to_cast )
+return CT_AntimatterMissileBlueprints;
+else if ("CT_BlizzardMissileBlueprints" == to_cast )
+return CT_BlizzardMissileBlueprints;
+else if ("CT_DeadshotBlueprints" == to_cast )
+return CT_DeadshotBlueprints;
+else if ("CT_DeathblowBlueprints" == to_cast )
+return CT_DeathblowBlueprints;
+else if ("CT_DecoyBlueprints" == to_cast )
+return CT_DecoyBlueprints;
+else if ("CT_DisruptorBlueprints" == to_cast )
+return CT_DisruptorBlueprints;
+else if ("CT_LDSi3000Blueprints" == to_cast )
+return CT_LDSi3000Blueprints;
+else if ("CT_LDSiMineBlueprints" == to_cast )
+return CT_LDSiMineBlueprints;
+else if ("CT_LDSiMissileBlueprints" == to_cast )
+return CT_LDSiMissileBlueprints;
+else if ("CT_SniperCannonAmmoBlueprints" == to_cast )
+return CT_SniperCannonAmmoBlueprints;
+else if ("CT_MiningChargeBlueprints" == to_cast )
+return CT_MiningChargeBlueprints;
+else if ("CT_ProximityMineBlueprints" == to_cast )
+return CT_ProximityMineBlueprints;
+else if ("CT_PulsarBlueprints" == to_cast )
+return CT_PulsarBlueprints;
+else if ("CT_RemoteMissileBlueprints" == to_cast )
+return CT_RemoteMissileBlueprints;
+else if ("CT_RemoteProbeBlueprints" == to_cast )
+return CT_RemoteProbeBlueprints;
+else if ("CT_SmartDecoyBlueprints" == to_cast )
+return CT_SmartDecoyBlueprints;
+else if ("CT_ComputerGames" == to_cast )
+return CT_ComputerGames;
+else if ("CT_NewsVids" == to_cast )
+return CT_NewsVids;
+else if ("CT_EntertainmentVids" == to_cast )
+return CT_EntertainmentVids;
+else if ("CT_InteractiveText" == to_cast )
+return CT_InteractiveText;
+else if ("CT_MusicRecordings" == to_cast )
+return CT_MusicRecordings;
+else if ("CT_CorporatePropaganda" == to_cast )
+return CT_CorporatePropaganda;
+else if ("CT_CorporateData" == to_cast )
+return CT_CorporateData;
+else if ("CT_XenoData" == to_cast )
+return CT_XenoData;
+else if ("CT_ResearchData" == to_cast )
+return CT_ResearchData;
+else if ("CT_PersonalData" == to_cast )
+return CT_PersonalData;
+else if ("CT_Mail" == to_cast )
+return CT_Mail;
+else if ("CT_ConfidentialData" == to_cast )
+return CT_ConfidentialData;
+else if ("CT_GovernmentData" == to_cast )
+return CT_GovernmentData;
+else if ("CT_PoliceData" == to_cast )
+return CT_PoliceData;
+else if ("CT_MilitaryIntelligence" == to_cast )
+return CT_MilitaryIntelligence;
+else if ("CT_SecretData" == to_cast )
+return CT_SecretData;
+else if ("CT_Autopilots" == to_cast )
+return CT_Autopilots;
+else if ("CT_MatchVelocityAutopilot" == to_cast )
+return CT_MatchVelocityAutopilot;
+else if ("CT_StealthProgram" == to_cast )
+return CT_StealthProgram;
+else if ("CT_SelfDefenceSoftware" == to_cast )
+return CT_SelfDefenceSoftware;
+else if ("CT_EngineManagementProgram" == to_cast )
+return CT_EngineManagementProgram;
+else if ("CT_OcclusionMonitoringSoftware" == to_cast )
+return CT_OcclusionMonitoringSoftware;
+else if ("CT_MilitaryTrackingProgram" == to_cast )
+return CT_MilitaryTrackingProgram;
+else if ("CT_MissileAI" == to_cast )
+return CT_MissileAI;
+else if ("CT_UtilitySoftware" == to_cast )
+return CT_UtilitySoftware;
+else if ("CT_CapsuleDriveGenerators" == to_cast )
+return CT_CapsuleDriveGenerators;
+else if ("CT_LDSClass1Drive" == to_cast )
+return CT_LDSClass1Drive;
+else if ("CT_PowerPlant" == to_cast )
+return CT_PowerPlant;
+else if ("CT_ShipsDrive" == to_cast )
+return CT_ShipsDrive;
+else if ("CT_ManoeuvreThrusters" == to_cast )
+return CT_ManoeuvreThrusters;
+else if ("CT_AlphaHeatSink" == to_cast )
+return CT_AlphaHeatSink;
+else if ("CT_BetaHeatSink" == to_cast )
+return CT_BetaHeatSink;
+else if ("CT_ColdGasThrusters" == to_cast )
+return CT_ColdGasThrusters;
+else if ("CT_MilitaryJumpCapacitor" == to_cast )
+return CT_MilitaryJumpCapacitor;
+else if ("CT_LDSClass2Drive" == to_cast )
+return CT_LDSClass2Drive;
+else if ("CT_LDSClass3Drive" == to_cast )
+return CT_LDSClass3Drive;
+else if ("CT_SealedHeatSink" == to_cast )
+return CT_SealedHeatSink;
+else if ("CT_CapsuleDrive" == to_cast )
+return CT_CapsuleDrive;
+else if ("CT_ImprovedManoeuverThrusters" == to_cast )
+return CT_ImprovedManoeuverThrusters;
+else if ("CT_PursuitDrivers" == to_cast )
+return CT_PursuitDrivers;
+else if ("CT_InterceptorDrivers" == to_cast )
+return CT_InterceptorDrivers;
+else if ("CT_GammaHeatSink" == to_cast )
+return CT_GammaHeatSink;
+else if ("CT_DeltaHeatSink" == to_cast )
+return CT_DeltaHeatSink;
+else if ("CT_AdvancedHeatSink" == to_cast )
+return CT_AdvancedHeatSink;
+else if ("CT_OmegaHeatSink" == to_cast )
+return CT_OmegaHeatSink;
+else if ("CT_HeatSinkSupercooler" == to_cast )
+return CT_HeatSinkSupercooler;
+else if ("CT_ActiveCooler" == to_cast )
+return CT_ActiveCooler;
+else if ("CT_EmergencyCoolingPod" == to_cast )
+return CT_EmergencyCoolingPod;
+else if ("CT_AntimatterPowerPod" == to_cast )
+return CT_AntimatterPowerPod;
+else if ("CT_HighYieldFusionInjector" == to_cast )
+return CT_HighYieldFusionInjector;
+else if ("CT_SNRVReloadPod" == to_cast )
+return CT_SNRVReloadPod;
+else if ("CT_Thrusterpods" == to_cast )
+return CT_Thrusterpods;
+else if ("CT_DockOnAutoTurret" == to_cast )
+return CT_DockOnAutoTurret;
+else if ("CT_SecondaryRing" == to_cast )
+return CT_SecondaryRing;
+else if ("CT_CapsuleDriveParts" == to_cast )
+return CT_CapsuleDriveParts;
+else if ("CT_LDSCarrierFields" == to_cast )
+return CT_LDSCarrierFields;
+else if ("CT_LDSFieldGenerators" == to_cast )
+return CT_LDSFieldGenerators;
+else if ("CT_LDSFieldNodes" == to_cast )
+return CT_LDSFieldNodes;
+else if ("CT_LDSGeneratorParts" == to_cast )
+return CT_LDSGeneratorParts;
+else if ("CT_ShipInstruments" == to_cast )
+return CT_ShipInstruments;
+else if ("CT_ShipSystems" == to_cast )
+return CT_ShipSystems;
+else if ("CT_AISystems" == to_cast )
+return CT_AISystems;
+else if ("CT_CompParts" == to_cast )
+return CT_CompParts;
+else if ("CT_ShipCPUGradeI" == to_cast )
+return CT_ShipCPUGradeI;
+else if ("CT_ShipCPUGradeII" == to_cast )
+return CT_ShipCPUGradeII;
+else if ("CT_ShipCPUGradeIII" == to_cast )
+return CT_ShipCPUGradeIII;
+else if ("CT_ShipCPUGradeIV" == to_cast )
+return CT_ShipCPUGradeIV;
+else if ("CT_ShipCPUGradeV" == to_cast )
+return CT_ShipCPUGradeV;
+else if ("CT_CompactShipAI" == to_cast )
+return CT_CompactShipAI;
+else if ("CT_ShipMemoryModule" == to_cast )
+return CT_ShipMemoryModule;
+else if ("CT_CPUCores" == to_cast )
+return CT_CPUCores;
+else if ("CT_CPUParts" == to_cast )
+return CT_CPUParts;
+else if ("CT_AudioEquipment" == to_cast )
+return CT_AudioEquipment;
+else if ("CT_AudioVisualEquipment" == to_cast )
+return CT_AudioVisualEquipment;
+else if ("CT_DataConsoles" == to_cast )
+return CT_DataConsoles;
+else if ("CT_DataScreens" == to_cast )
+return CT_DataScreens;
+else if ("CT_PersonalCommunicators" == to_cast )
+return CT_PersonalCommunicators;
+else if ("CT_BodyComps" == to_cast )
+return CT_BodyComps;
+else if ("CT_HandheldScientificInstruments" == to_cast )
+return CT_HandheldScientificInstruments;
+else if ("CT_CyberEyes" == to_cast )
+return CT_CyberEyes;
+else if ("CT_CyberLimbs" == to_cast )
+return CT_CyberLimbs;
+else if ("CT_CyberneticJackPlugs" == to_cast )
+return CT_CyberneticJackPlugs;
+else if ("CT_CyberneticOrgans" == to_cast )
+return CT_CyberneticOrgans;
+else if ("CT_DataCards" == to_cast )
+return CT_DataCards;
+else if ("CT_DataChips" == to_cast )
+return CT_DataChips;
+else if ("CT_DataModules" == to_cast )
+return CT_DataModules;
+else if ("CT_MemoryModules" == to_cast )
+return CT_MemoryModules;
+else if ("CT_AstronomicalInstruments" == to_cast )
+return CT_AstronomicalInstruments;
+else if ("CT_ShortRangeActiveSensors" == to_cast )
+return CT_ShortRangeActiveSensors;
+else if ("CT_ShortrangePassiveSensors" == to_cast )
+return CT_ShortrangePassiveSensors;
+else if ("CT_UCPScanner" == to_cast )
+return CT_UCPScanner;
+else if ("CT_PassiveSensorPackage" == to_cast )
+return CT_PassiveSensorPackage;
+else if ("CT_IFFBeacon" == to_cast )
+return CT_IFFBeacon;
+else if ("CT_ActiveSensorPackage" == to_cast )
+return CT_ActiveSensorPackage;
+else if ("CT_AdvancedActiveSensors" == to_cast )
+return CT_AdvancedActiveSensors;
+else if ("CT_AdvancedPassiveSensors" == to_cast )
+return CT_AdvancedPassiveSensors;
+else if ("CT_MilitaryGradeActiveSensors" == to_cast )
+return CT_MilitaryGradeActiveSensors;
+else if ("CT_MilitaryGradePassiveSensors" == to_cast )
+return CT_MilitaryGradePassiveSensors;
+else if ("CT_LongRangePassiveSensors" == to_cast )
+return CT_LongRangePassiveSensors;
+else if ("CT_LongRangeActiveSensors" == to_cast )
+return CT_LongRangeActiveSensors;
+else if ("CT_SensorDisruptor" == to_cast )
+return CT_SensorDisruptor;
+else if ("CT_HighPowerSensorDisruptor" == to_cast )
+return CT_HighPowerSensorDisruptor;
+else if ("CT_AdvancedSensorDisruptor" == to_cast )
+return CT_AdvancedSensorDisruptor;
+else if ("CT_MarauderCommsScrambler" == to_cast )
+return CT_MarauderCommsScrambler;
+else if ("CT_HyperspaceTracker" == to_cast )
+return CT_HyperspaceTracker;
+else if ("CT_LaserDetectors" == to_cast )
+return CT_LaserDetectors;
+else if ("CT_MonitoringDevices" == to_cast )
+return CT_MonitoringDevices;
+else if ("CT_GeneWriters" == to_cast )
+return CT_GeneWriters;
+else if ("CT_CryogenicTanks" == to_cast )
+return CT_CryogenicTanks;
+else if ("CT_Medkits" == to_cast )
+return CT_Medkits;
+else if ("CT_OrganMatrices" == to_cast )
+return CT_OrganMatrices;
+else if ("CT_RemoteTables" == to_cast )
+return CT_RemoteTables;
+else if ("CT_Autodocs" == to_cast )
+return CT_Autodocs;
+else if ("CT_Autosurgs" == to_cast )
+return CT_Autosurgs;
+else if ("CT_HKCounters" == to_cast )
+return CT_HKCounters;
+else if ("CT_MolecularImagers" == to_cast )
+return CT_MolecularImagers;
+else if ("CT_NanosurgeryEquipment" == to_cast )
+return CT_NanosurgeryEquipment;
+else if ("CT_NMRs" == to_cast )
+return CT_NMRs;
+else if ("CT_SurgeryKits" == to_cast )
+return CT_SurgeryKits;
+else if ("CT_NanoAssemblers" == to_cast )
+return CT_NanoAssemblers;
+else if ("CT_NanoFactories" == to_cast )
+return CT_NanoFactories;
+else if ("CT_NanoProgrammers" == to_cast )
+return CT_NanoProgrammers;
+else if ("CT_NanoSurgeons" == to_cast )
+return CT_NanoSurgeons;
+else if ("CT_NeuroConnectors" == to_cast )
+return CT_NeuroConnectors;
+else if ("CT_PreprogrammedNanotech" == to_cast )
+return CT_PreprogrammedNanotech;
+else if ("CT_TerraformingNanotech" == to_cast )
+return CT_TerraformingNanotech;
+else if ("CT_RoboticArms" == to_cast )
+return CT_RoboticArms;
+else if ("CT_RoboticChassis" == to_cast )
+return CT_RoboticChassis;
+else if ("CT_RoboticCPUs" == to_cast )
+return CT_RoboticCPUs;
+else if ("CT_RoboticSensors" == to_cast )
+return CT_RoboticSensors;
+else if ("CT_DomesticRobots" == to_cast )
+return CT_DomesticRobots;
+else if ("CT_ConstructionRobots" == to_cast )
+return CT_ConstructionRobots;
+else if ("CT_SecurityRobots" == to_cast )
+return CT_SecurityRobots;
+else if ("CT_HydroponicsEquipment" == to_cast )
+return CT_HydroponicsEquipment;
+else if ("CT_Biovators" == to_cast )
+return CT_Biovators;
+else if ("CT_AgriHarvestors" == to_cast )
+return CT_AgriHarvestors;
+else if ("CT_Tractors" == to_cast )
+return CT_Tractors;
+else if ("CT_TractorParts" == to_cast )
+return CT_TractorParts;
+else if ("CT_HabitationPods" == to_cast )
+return CT_HabitationPods;
+else if ("CT_HousingModules" == to_cast )
+return CT_HousingModules;
+else if ("CT_LifeSupportSystems" == to_cast )
+return CT_LifeSupportSystems;
+else if ("CT_StationComponents" == to_cast )
+return CT_StationComponents;
+else if ("CT_PrefabricatedStationModules" == to_cast )
+return CT_PrefabricatedStationModules;
+else if ("CT_StationConnectors" == to_cast )
+return CT_StationConnectors;
+else if ("CT_PrefabricatedHousing" == to_cast )
+return CT_PrefabricatedHousing;
+else if ("CT_Recyclers" == to_cast )
+return CT_Recyclers;
+else if ("CT_VaccumeDomes" == to_cast )
+return CT_VaccumeDomes;
+else if ("CT_ArmourPatches" == to_cast )
+return CT_ArmourPatches;
+else if ("CT_ArmourPlates" == to_cast )
+return CT_ArmourPlates;
+else if ("CT_Hullplates" == to_cast )
+return CT_Hullplates;
+else if ("CT_HullRepairKits" == to_cast )
+return CT_HullRepairKits;
+else if ("CT_Conduits" == to_cast )
+return CT_Conduits;
+else if ("CT_FloorGrids" == to_cast )
+return CT_FloorGrids;
+else if ("CT_GravGrids" == to_cast )
+return CT_GravGrids;
+else if ("CT_Wiring" == to_cast )
+return CT_Wiring;
+else if ("CT_LasTanks" == to_cast )
+return CT_LasTanks;
+else if ("CT_Lathes" == to_cast )
+return CT_Lathes;
+else if ("CT_MicroengineeringTools" == to_cast )
+return CT_MicroengineeringTools;
+else if ("CT_Drillers" == to_cast )
+return CT_Drillers;
+else if ("CT_EarthMovers" == to_cast )
+return CT_EarthMovers;
+else if ("CT_HandDrills" == to_cast )
+return CT_HandDrills;
+else if ("CT_LaserDrills" == to_cast )
+return CT_LaserDrills;
+else if ("CT_MiningDisplacers" == to_cast )
+return CT_MiningDisplacers;
+else if ("CT_MiningDrones" == to_cast )
+return CT_MiningDrones;
+else if ("CT_VehicleDrills" == to_cast )
+return CT_VehicleDrills;
+else if ("CT_FieldGenerators" == to_cast )
+return CT_FieldGenerators;
+else if ("CT_ReactorParts" == to_cast )
+return CT_ReactorParts;
+else if ("CT_ReactorSpares" == to_cast )
+return CT_ReactorSpares;
+else if ("CT_ReactorTargets" == to_cast )
+return CT_ReactorTargets;
+else if ("CT_FissionGenerators" == to_cast )
+return CT_FissionGenerators;
+else if ("CT_FusionGenerators" == to_cast )
+return CT_FusionGenerators;
+else if ("CT_Batteries" == to_cast )
+return CT_Batteries;
+else if ("CT_SolarPanels" == to_cast )
+return CT_SolarPanels;
+else if ("CT_Solettas" == to_cast )
+return CT_Solettas;
+else if ("CT_AtmosphericScrubbers" == to_cast )
+return CT_AtmosphericScrubbers;
+else if ("CT_PlanetHeaters" == to_cast )
+return CT_PlanetHeaters;
+else if ("CT_CFCGenerators" == to_cast )
+return CT_CFCGenerators;
+else if ("CT_Aerodynes" == to_cast )
+return CT_Aerodynes;
+else if ("CT_Aircars" == to_cast )
+return CT_Aircars;
+else if ("CT_Dirigibles" == to_cast )
+return CT_Dirigibles;
+else if ("CT_GroundCars" == to_cast )
+return CT_GroundCars;
+else if ("CT_ConstructionVehicles" == to_cast )
+return CT_ConstructionVehicles;
+else if ("CT_Hovercars" == to_cast )
+return CT_Hovercars;
+else if ("CT_Hovercraft" == to_cast )
+return CT_Hovercraft;
+else if ("CT_Rotorcraft" == to_cast )
+return CT_Rotorcraft;
+else if ("CT_Trucks" == to_cast )
+return CT_Trucks;
+else if ("CT_Spirits" == to_cast )
+return CT_Spirits;
+else if ("CT_Wine" == to_cast )
+return CT_Wine;
+else if ("CT_Champagne" == to_cast )
+return CT_Champagne;
+else if ("CT_Scotch" == to_cast )
+return CT_Scotch;
+else if ("CT_RealBeer" == to_cast )
+return CT_RealBeer;
+else if ("CT_ZeroBrew" == to_cast )
+return CT_ZeroBrew;
+else if ("CT_Antiques" == to_cast )
+return CT_Antiques;
+else if ("CT_Paintings" == to_cast )
+return CT_Paintings;
+else if ("CT_Sculpture" == to_cast )
+return CT_Sculpture;
+else if ("CT_Fur" == to_cast )
+return CT_Fur;
+else if ("CT_FurCoats" == to_cast )
+return CT_FurCoats;
+else if ("CT_Vatfur" == to_cast )
+return CT_Vatfur;
+else if ("CT_GoldJewellery" == to_cast )
+return CT_GoldJewellery;
+else if ("CT_ValuableJewellery" == to_cast )
+return CT_ValuableJewellery;
+else if ("CT_SmartJewels" == to_cast )
+return CT_SmartJewels;
+else if ("CT_Watches" == to_cast )
+return CT_Watches;
+else if ("CT_Books" == to_cast )
+return CT_Books;
+else if ("CT_Cosmetics" == to_cast )
+return CT_Cosmetics;
+else if ("CT_DesignerClothes" == to_cast )
+return CT_DesignerClothes;
+else if ("CT_MusicalInstruments" == to_cast )
+return CT_MusicalInstruments;
+else if ("CT_Perfume" == to_cast )
+return CT_Perfume;
+else if ("CT_Toys" == to_cast )
+return CT_Toys;
+else if ("CT_NaturalFibreClothing" == to_cast )
+return CT_NaturalFibreClothing;
+else if ("CT_LuxuryFurniture" == to_cast )
+return CT_LuxuryFurniture;
+else if ("CT_Caviar" == to_cast )
+return CT_Caviar;
+else if ("CT_Chocolate" == to_cast )
+return CT_Chocolate;
+else if ("CT_Lobster" == to_cast )
+return CT_Lobster;
+else if ("CT_RealCoffee" == to_cast )
+return CT_RealCoffee;
+else if ("CT_RealMeat" == to_cast )
+return CT_RealMeat;
+else if ("CT_RealTea" == to_cast )
+return CT_RealTea;
+else if ("CT_Shellfish" == to_cast )
+return CT_Shellfish;
+else if ("CT_Milk" == to_cast )
+return CT_Milk;
+else if ("CT_Spices" == to_cast )
+return CT_Spices;
+else if ("CT_Game" == to_cast )
+return CT_Game;
+else if ("CT_Cigarettes" == to_cast )
+return CT_Cigarettes;
+else if ("CT_Cigars" == to_cast )
+return CT_Cigars;
+else if ("CT_LeafTobacco" == to_cast )
+return CT_LeafTobacco;
+else if ("CT_Aphrodisiacs" == to_cast )
+return CT_Aphrodisiacs;
+else if ("CT_Caffeine" == to_cast )
+return CT_Caffeine;
+else if ("CT_PhysicalEnhancers" == to_cast )
+return CT_PhysicalEnhancers;
+else if ("CT_ErzatzCoffee" == to_cast )
+return CT_ErzatzCoffee;
+else if ("CT_Euphorics" == to_cast )
+return CT_Euphorics;
+else if ("CT_Halluciogenics" == to_cast )
+return CT_Halluciogenics;
+else if ("CT_MemoryEnhancers" == to_cast )
+return CT_MemoryEnhancers;
+else if ("CT_MoodEnhancers" == to_cast )
+return CT_MoodEnhancers;
+else if ("CT_MoodStabilsers" == to_cast )
+return CT_MoodStabilsers;
+else if ("CT_Stimulants" == to_cast )
+return CT_Stimulants;
+else if ("CT_Tranquilisers" == to_cast )
+return CT_Tranquilisers;
+else if ("CT_SportingBodyArmour" == to_cast )
+return CT_SportingBodyArmour;
+else if ("CT_Footballs" == to_cast )
+return CT_Footballs;
+else if ("CT_GolfSupplies" == to_cast )
+return CT_GolfSupplies;
+else if ("CT_NullBox" == to_cast )
+return CT_NullBox;
+else if ("CT_PaintGuns" == to_cast )
+return CT_PaintGuns;
+else if ("CT_Scuba" == to_cast )
+return CT_Scuba;
+else if ("CT_TennisEquipment" == to_cast )
+return CT_TennisEquipment;
+else if ("CT_SportsClothes" == to_cast )
+return CT_SportsClothes;
+else if ("CT_ZeroGGymnasia" == to_cast )
+return CT_ZeroGGymnasia;
+else if ("CT_SportingWeapons" == to_cast )
+return CT_SportingWeapons;
+else if ("CT_BricABrac" == to_cast )
+return CT_BricABrac;
+else if ("CT_OfficeSupplies" == to_cast )
+return CT_OfficeSupplies;
+else if ("CT_ReligiousMaterial" == to_cast )
+return CT_ReligiousMaterial;
+else if ("CT_Clothing" == to_cast )
+return CT_Clothing;
+else if ("CT_DisposableClothing" == to_cast )
+return CT_DisposableClothing;
+else if ("CT_HandTools" == to_cast )
+return CT_HandTools;
+else if ("CT_Uniforms" == to_cast )
+return CT_Uniforms;
+else if ("CT_Furniture" == to_cast )
+return CT_Furniture;
+else if ("CT_CleaningProducts" == to_cast )
+return CT_CleaningProducts;
+else if ("CT_HygieneGoods" == to_cast )
+return CT_HygieneGoods;
+else if ("CT_HumanitarianAid" == to_cast )
+return CT_HumanitarianAid;
+else if ("CT_WoundDressings" == to_cast )
+return CT_WoundDressings;
+else if ("CT_Anaesthetics" == to_cast )
+return CT_Anaesthetics;
+else if ("CT_Antibiotics" == to_cast )
+return CT_Antibiotics;
+else if ("CT_Antiseptics" == to_cast )
+return CT_Antiseptics;
+else if ("CT_Immunosuppressives" == to_cast )
+return CT_Immunosuppressives;
+else if ("CT_MedicalDrugs" == to_cast )
+return CT_MedicalDrugs;
+else if ("CT_Vaccines" == to_cast )
+return CT_Vaccines;
+else if ("CT_AntiAgingTreatments" == to_cast )
+return CT_AntiAgingTreatments;
+else if ("CT_RejuvenationTratments" == to_cast )
+return CT_RejuvenationTratments;
+else if ("CT_PainKillers" == to_cast )
+return CT_PainKillers;
+else if ("CT_EmergencySpaceSuits" == to_cast )
+return CT_EmergencySpaceSuits;
+else if ("CT_PersonalGasJets" == to_cast )
+return CT_PersonalGasJets;
+else if ("CT_SpaceSuits" == to_cast )
+return CT_SpaceSuits;
+else if ("CT_SuitPatches" == to_cast )
+return CT_SuitPatches;
+else if ("CT_SurvivalBubbles" == to_cast )
+return CT_SurvivalBubbles;
+else if ("CT_SurvivalPacks" == to_cast )
+return CT_SurvivalPacks;
+else if ("CT_SurvivalCloaks" == to_cast )
+return CT_SurvivalCloaks;
+else if ("CT_EmergencyHeaters" == to_cast )
+return CT_EmergencyHeaters;
+else if ("CT_NitroBacteria" == to_cast )
+return CT_NitroBacteria;
+else if ("CT_SoilBacteria" == to_cast )
+return CT_SoilBacteria;
+else if ("CT_TerraformingBacteria" == to_cast )
+return CT_TerraformingBacteria;
+else if ("CT_RecyclingBacteria" == to_cast )
+return CT_RecyclingBacteria;
+else if ("CT_AnimalFeed" == to_cast )
+return CT_AnimalFeed;
+else if ("CT_Compost" == to_cast )
+return CT_Compost;
+else if ("CT_Fertiliser" == to_cast )
+return CT_Fertiliser;
+else if ("CT_Soil" == to_cast )
+return CT_Soil;
+else if ("CT_Apes" == to_cast )
+return CT_Apes;
+else if ("CT_Birds" == to_cast )
+return CT_Birds;
+else if ("CT_DonorPigs" == to_cast )
+return CT_DonorPigs;
+else if ("CT_DrugLeeches" == to_cast )
+return CT_DrugLeeches;
+else if ("CT_Giraffes" == to_cast )
+return CT_Giraffes;
+else if ("CT_Horses" == to_cast )
+return CT_Horses;
+else if ("CT_Lions" == to_cast )
+return CT_Lions;
+else if ("CT_Weasels" == to_cast )
+return CT_Weasels;
+else if ("CT_Yaks" == to_cast )
+return CT_Yaks;
+else if ("CT_Zebras" == to_cast )
+return CT_Zebras;
+else if ("CT_AttackDogs" == to_cast )
+return CT_AttackDogs;
+else if ("CT_BiomassProcessingWorms" == to_cast )
+return CT_BiomassProcessingWorms;
+else if ("CT_Camels" == to_cast )
+return CT_Camels;
+else if ("CT_CancerMice" == to_cast )
+return CT_CancerMice;
+else if ("CT_Chickens" == to_cast )
+return CT_Chickens;
+else if ("CT_Cows" == to_cast )
+return CT_Cows;
+else if ("CT_Dogs" == to_cast )
+return CT_Dogs;
+else if ("CT_EngineeredInsects" == to_cast )
+return CT_EngineeredInsects;
+else if ("CT_Goats" == to_cast )
+return CT_Goats;
+else if ("CT_Insects" == to_cast )
+return CT_Insects;
+else if ("CT_Pigs" == to_cast )
+return CT_Pigs;
+else if ("CT_Rodents" == to_cast )
+return CT_Rodents;
+else if ("CT_Primates" == to_cast )
+return CT_Primates;
+else if ("CT_HYL" == to_cast )
+return CT_HYL;
+else if ("CT_Foetuses" == to_cast )
+return CT_Foetuses;
+else if ("CT_Houseplants" == to_cast )
+return CT_Houseplants;
+else if ("CT_PotPlants" == to_cast )
+return CT_PotPlants;
+else if ("CT_Seedlings" == to_cast )
+return CT_Seedlings;
+else if ("CT_Seeds" == to_cast )
+return CT_Seeds;
+else if ("CT_Algae" == to_cast )
+return CT_Algae;
+else if ("CT_PlantPulp" == to_cast )
+return CT_PlantPulp;
+else if ("CT_Woodpulp" == to_cast )
+return CT_Woodpulp;
+else if ("CT_Trees" == to_cast )
+return CT_Trees;
+else if ("CT_SlimeMould" == to_cast )
+return CT_SlimeMould;
+else if ("CT_Yeast" == to_cast )
+return CT_Yeast;
+else if ("CT_CloneBoneTissue" == to_cast )
+return CT_CloneBoneTissue;
+else if ("CT_CloneEyes" == to_cast )
+return CT_CloneEyes;
+else if ("CT_CloneGlands" == to_cast )
+return CT_CloneGlands;
+else if ("CT_CloneHearts" == to_cast )
+return CT_CloneHearts;
+else if ("CT_CloneIntestines" == to_cast )
+return CT_CloneIntestines;
+else if ("CT_CloneKidneys" == to_cast )
+return CT_CloneKidneys;
+else if ("CT_CloneLimbs" == to_cast )
+return CT_CloneLimbs;
+else if ("CT_CloneLivers" == to_cast )
+return CT_CloneLivers;
+else if ("CT_CloneLungs" == to_cast )
+return CT_CloneLungs;
+else if ("CT_CloneSkin" == to_cast )
+return CT_CloneSkin;
+else if ("CT_VatGrownMuscle" == to_cast )
+return CT_VatGrownMuscle;
+else if ("CT_BlankTissueCulture" == to_cast )
+return CT_BlankTissueCulture;
+else if ("CT_CommonStrandMaterial" == to_cast )
+return CT_CommonStrandMaterial;
+else if ("CT_DNAChangers" == to_cast )
+return CT_DNAChangers;
+else if ("CT_DNASequencers" == to_cast )
+return CT_DNASequencers;
+else if ("CT_DNATattoos" == to_cast )
+return CT_DNATattoos;
+else if ("CT_GeneticMarkerAgents" == to_cast )
+return CT_GeneticMarkerAgents;
+else if ("CT_GeneticRejuvinations" == to_cast )
+return CT_GeneticRejuvinations;
+else if ("CT_TransplantEyes" == to_cast )
+return CT_TransplantEyes;
+else if ("CT_TransplantGlands" == to_cast )
+return CT_TransplantGlands;
+else if ("CT_TransplantHearts" == to_cast )
+return CT_TransplantHearts;
+else if ("CT_TransplantIntestine" == to_cast )
+return CT_TransplantIntestine;
+else if ("CT_TransplantKidneys" == to_cast )
+return CT_TransplantKidneys;
+else if ("CT_TransplantLivers" == to_cast )
+return CT_TransplantLivers;
+else if ("CT_TransplantLungs" == to_cast )
+return CT_TransplantLungs;
+else if ("CT_TransplantSkin" == to_cast )
+return CT_TransplantSkin;
+else if ("CT_FoodBlocks" == to_cast )
+return CT_FoodBlocks;
+else if ("CT_FoodPills" == to_cast )
+return CT_FoodPills;
+else if ("CT_MealInABar" == to_cast )
+return CT_MealInABar;
+else if ("CT_PseudoShake" == to_cast )
+return CT_PseudoShake;
+else if ("CT_RecoveredMeat" == to_cast )
+return CT_RecoveredMeat;
+else if ("CT_SyntheticCheese" == to_cast )
+return CT_SyntheticCheese;
+else if ("CT_SyntheticProtein" == to_cast )
+return CT_SyntheticProtein;
+else if ("CT_SurvivalRations" == to_cast )
+return CT_SurvivalRations;
+else if ("CT_DrinkingWater" == to_cast )
+return CT_DrinkingWater;
+else if ("CT_SugarCane" == to_cast )
+return CT_SugarCane;
+else if ("CT_Fish" == to_cast )
+return CT_Fish;
+else if ("CT_Fruit" == to_cast )
+return CT_Fruit;
+else if ("CT_Grain" == to_cast )
+return CT_Grain;
+else if ("CT_Meat" == to_cast )
+return CT_Meat;
+else if ("CT_Potatoes" == to_cast )
+return CT_Potatoes;
+else if ("CT_Rice" == to_cast )
+return CT_Rice;
+else if ("CT_Soya" == to_cast )
+return CT_Soya;
+else if ("CT_Vegetables" == to_cast )
+return CT_Vegetables;
+else if ("CT_EdibleFungi" == to_cast )
+return CT_EdibleFungi;
+else if ("CT_WasteBlocks" == to_cast )
+return CT_WasteBlocks;
+else if ("CT_PlasticWaste" == to_cast )
+return CT_PlasticWaste;
+else if ("CT_OrganicPulp" == to_cast )
+return CT_OrganicPulp;
+else if ("CT_WastePaper" == to_cast )
+return CT_WastePaper;
+else if ("CT_DiseasedSewage" == to_cast )
+return CT_DiseasedSewage;
+else if ("CT_FrozenSewage" == to_cast )
+return CT_FrozenSewage;
+else if ("CT_RawSewage" == to_cast )
+return CT_RawSewage;
+else if ("CT_AntimatterContainers" == to_cast )
+return CT_AntimatterContainers;
+else if ("CT_Antimatter" == to_cast )
+return CT_Antimatter;
+else if ("CT_AntimatterPods" == to_cast )
+return CT_AntimatterPods;
+else if ("CT_FloorPlates" == to_cast )
+return CT_FloorPlates;
+else if ("CT_Girders" == to_cast )
+return CT_Girders;
+else if ("CT_WallPlates" == to_cast )
+return CT_WallPlates;
+else if ("CT_BeanstalkWire" == to_cast )
+return CT_BeanstalkWire;
+else if ("CT_FoamMetal" == to_cast )
+return CT_FoamMetal;
+else if ("CT_MacroCrystallineMetals" == to_cast )
+return CT_MacroCrystallineMetals;
+else if ("CT_Monowire" == to_cast )
+return CT_Monowire;
+else if ("CT_HeavyGirders" == to_cast )
+return CT_HeavyGirders;
+else if ("CT_Neutronium" == to_cast )
+return CT_Neutronium;
+else if ("CT_ExoticMetals" == to_cast )
+return CT_ExoticMetals;
+else if ("CT_RareMetals" == to_cast )
+return CT_RareMetals;
+else if ("CT_LiquifiedFuel" == to_cast )
+return CT_LiquifiedFuel;
+else if ("CT_LiquifiedFusionPremix" == to_cast )
+return CT_LiquifiedFusionPremix;
+else if ("CT_BoosterAgent" == to_cast )
+return CT_BoosterAgent;
+else if ("CT_FuelPellets" == to_cast )
+return CT_FuelPellets;
+else if ("CT_FuelRods" == to_cast )
+return CT_FuelRods;
+else if ("CT_CutGemstones" == to_cast )
+return CT_CutGemstones;
+else if ("CT_IndustrialGemstones" == to_cast )
+return CT_IndustrialGemstones;
+else if ("CT_UncutGemstones" == to_cast )
+return CT_UncutGemstones;
+else if ("CT_FeedStock" == to_cast )
+return CT_FeedStock;
+else if ("CT_PressurisedHydrocarbonGas" == to_cast )
+return CT_PressurisedHydrocarbonGas;
+else if ("CT_Oil" == to_cast )
+return CT_Oil;
+else if ("CT_Petroleum" == to_cast )
+return CT_Petroleum;
+else if ("CT_PlasticBars" == to_cast )
+return CT_PlasticBars;
+else if ("CT_PlasticBlocks" == to_cast )
+return CT_PlasticBlocks;
+else if ("CT_PlasticCables" == to_cast )
+return CT_PlasticCables;
+else if ("CT_PlasticGel" == to_cast )
+return CT_PlasticGel;
+else if ("CT_PlasticPellets" == to_cast )
+return CT_PlasticPellets;
+else if ("CT_BattleScrap" == to_cast )
+return CT_BattleScrap;
+else if ("CT_CompactedScrapMetal" == to_cast )
+return CT_CompactedScrapMetal;
+else if ("CT_MisCasts" == to_cast )
+return CT_MisCasts;
+else if ("CT_ScrapMetal" == to_cast )
+return CT_ScrapMetal;
+else if ("CT_Gold" == to_cast )
+return CT_Gold;
+else if ("CT_Platinum" == to_cast )
+return CT_Platinum;
+else if ("CT_Silver" == to_cast )
+return CT_Silver;
+else if ("CT_MetalBars" == to_cast )
+return CT_MetalBars;
+else if ("CT_MetalBillets" == to_cast )
+return CT_MetalBillets;
+else if ("CT_MetalRods" == to_cast )
+return CT_MetalRods;
+else if ("CT_Wire" == to_cast )
+return CT_Wire;
+else if ("CT_Rivets" == to_cast )
+return CT_Rivets;
+else if ("CT_RadioactiveWaste" == to_cast )
+return CT_RadioactiveWaste;
+else if ("CT_Uranium" == to_cast )
+return CT_Uranium;
+else if ("CT_Plutonium" == to_cast )
+return CT_Plutonium;
+else if ("CT_FissionInitiators" == to_cast )
+return CT_FissionInitiators;
+else if ("CT_Carbon" == to_cast )
+return CT_Carbon;
+else if ("CT_Nitrates" == to_cast )
+return CT_Nitrates;
+else if ("CT_Oxygen" == to_cast )
+return CT_Oxygen;
+else if ("CT_Phosphates" == to_cast )
+return CT_Phosphates;
+else if ("CT_Sulphur" == to_cast )
+return CT_Sulphur;
+else if ("CT_Alkalines" == to_cast )
+return CT_Alkalines;
+else if ("CT_Sodium" == to_cast )
+return CT_Sodium;
+else if ("CT_Phosphides" == to_cast )
+return CT_Phosphides;
+else if ("CT_Sulfides" == to_cast )
+return CT_Sulfides;
+else if ("CT_Tellurides" == to_cast )
+return CT_Tellurides;
+else if ("CT_InorganicAcids" == to_cast )
+return CT_InorganicAcids;
+else if ("CT_Intermetallics" == to_cast )
+return CT_Intermetallics;
+else if ("CT_UnprocessedGas" == to_cast )
+return CT_UnprocessedGas;
+else if ("CT_Air" == to_cast )
+return CT_Air;
+else if ("CT_Helium3" == to_cast )
+return CT_Helium3;
+else if ("CT_NeutroniumOre" == to_cast )
+return CT_NeutroniumOre;
+else if ("CT_GoldOre" == to_cast )
+return CT_GoldOre;
+else if ("CT_CommonOre" == to_cast )
+return CT_CommonOre;
+else if ("CT_SilverOre" == to_cast )
+return CT_SilverOre;
+else if ("CT_PlatinumOre" == to_cast )
+return CT_PlatinumOre;
+else if ("CT_RadioactiveOre" == to_cast )
+return CT_RadioactiveOre;
+else if ("CT_Rubble" == to_cast )
+return CT_Rubble;
+else if ("CT_Aggregates" == to_cast )
+return CT_Aggregates;
+else if ("CT_RockDust" == to_cast )
+return CT_RockDust;
+else if ("CT_Sand" == to_cast )
+return CT_Sand;
+else if ("CT_BlockIce" == to_cast )
+return CT_BlockIce;
+else if ("CT_CrushedIce" == to_cast )
+return CT_CrushedIce;
+else if ("CT_DirtyIce" == to_cast )
+return CT_DirtyIce;
+else if ("CT_DeionisedWater" == to_cast )
+return CT_DeionisedWater;
+else if ("CT_APCs" == to_cast )
+return CT_APCs;
+else if ("CT_TurretFighter" == to_cast )
+return CT_TurretFighter;
+else if ("CT_RemoteFighter" == to_cast )
+return CT_RemoteFighter;
+else if ("CT_ArtilleryFVs" == to_cast )
+return CT_ArtilleryFVs;
+else if ("CT_FireSupportFVs" == to_cast )
+return CT_FireSupportFVs;
+else if ("CT_GravTanks" == to_cast )
+return CT_GravTanks;
+else if ("CT_HoverTanks" == to_cast )
+return CT_HoverTanks;
+else if ("CT_Tanks" == to_cast )
+return CT_Tanks;
+else if ("CT_TankParts" == to_cast )
+return CT_TankParts;
+else if ("CT_BiologicalWeaponsAgents" == to_cast )
+return CT_BiologicalWeaponsAgents;
+else if ("CT_ChemicalWeaponsAgents" == to_cast )
+return CT_ChemicalWeaponsAgents;
+else if ("CT_NeutronWarheads" == to_cast )
+return CT_NeutronWarheads;
+else if ("CT_DirtyFissionWarheads" == to_cast )
+return CT_DirtyFissionWarheads;
+else if ("CT_HostileTerraformingAgents" == to_cast )
+return CT_HostileTerraformingAgents;
+else if ("CT_NanotechWeapons" == to_cast )
+return CT_NanotechWeapons;
+else if ("CT_AntimatterFuses" == to_cast )
+return CT_AntimatterFuses;
+else if ("CT_TwinPackMissileLauncher" == to_cast )
+return CT_TwinPackMissileLauncher;
+else if ("CT_LDSiShortMissiles" == to_cast )
+return CT_LDSiShortMissiles;
+else if ("CT_LDSiShortMissile" == to_cast )
+return CT_LDSiShortMissile;
+else if ("CT_SeekerMissiles" == to_cast )
+return CT_SeekerMissiles;
+else if ("CT_SeekerMissile" == to_cast )
+return CT_SeekerMissile;
+else if ("CT_HarrowerMissiles" == to_cast )
+return CT_HarrowerMissiles;
+else if ("CT_HarrowerMissile" == to_cast )
+return CT_HarrowerMissile;
+else if ("CT_GnatRockets" == to_cast )
+return CT_GnatRockets;
+else if ("CT_GnatRocket" == to_cast )
+return CT_GnatRocket;
+else if ("CT_HammerRockets" == to_cast )
+return CT_HammerRockets;
+else if ("CT_HammerRocket" == to_cast )
+return CT_HammerRocket;
+else if ("CT_LDSiMissiles" == to_cast )
+return CT_LDSiMissiles;
+else if ("CT_LDSiMissile" == to_cast )
+return CT_LDSiMissile;
+else if ("CT_MiningCharges" == to_cast )
+return CT_MiningCharges;
+else if ("CT_MiningCharge" == to_cast )
+return CT_MiningCharge;
+else if ("CT_TripackMissileLauncher" == to_cast )
+return CT_TripackMissileLauncher;
+else if ("CT_BlizzardRocketPod" == to_cast )
+return CT_BlizzardRocketPod;
+else if ("CT_BlizzardRocket" == to_cast )
+return CT_BlizzardRocket;
+else if ("CT_RemoteProbes" == to_cast )
+return CT_RemoteProbes;
+else if ("CT_RemoteProbe" == to_cast )
+return CT_RemoteProbe;
+else if ("CT_RemoteMissiles" == to_cast )
+return CT_RemoteMissiles;
+else if ("CT_RemoteMissile" == to_cast )
+return CT_RemoteMissile;
+else if ("CT_DeadshotMissiles" == to_cast )
+return CT_DeadshotMissiles;
+else if ("CT_DeadshotMissile" == to_cast )
+return CT_DeadshotMissile;
+else if ("CT_LDSi3000Missiles" == to_cast )
+return CT_LDSi3000Missiles;
+else if ("CT_LDSi3000Missile" == to_cast )
+return CT_LDSi3000Missile;
+else if ("CT_QuadpackMissileLauncher" == to_cast )
+return CT_QuadpackMissileLauncher;
+else if ("CT_DeathblowRemote" == to_cast )
+return CT_DeathblowRemote;
+else if ("CT_DeathblowRemoteMissile" == to_cast )
+return CT_DeathblowRemoteMissile;
+else if ("CT_AntimatterRemote" == to_cast )
+return CT_AntimatterRemote;
+else if ("CT_AntimatterRemoteMissile" == to_cast )
+return CT_AntimatterRemoteMissile;
+else if ("CT_InternalMissileMagazine" == to_cast )
+return CT_InternalMissileMagazine;
+else if ("CT_DisruptorMissiles" == to_cast )
+return CT_DisruptorMissiles;
+else if ("CT_DisruptorMissile" == to_cast )
+return CT_DisruptorMissile;
+else if ("CT_PulsarDisruptors" == to_cast )
+return CT_PulsarDisruptors;
+else if ("CT_PulsarDisruptor" == to_cast )
+return CT_PulsarDisruptor;
+else if ("CT_HullMissileHardPoint" == to_cast )
+return CT_HullMissileHardPoint;
+else if ("CT_AchillesShieldDisruptors" == to_cast )
+return CT_AchillesShieldDisruptors;
+else if ("CT_AchillesShieldDisruptor" == to_cast )
+return CT_AchillesShieldDisruptor;
+else if ("CT_ProximityMines" == to_cast )
+return CT_ProximityMines;
+else if ("CT_ProximityMine" == to_cast )
+return CT_ProximityMine;
+else if ("CT_AntimatterMines" == to_cast )
+return CT_AntimatterMines;
+else if ("CT_AntimatterMine" == to_cast )
+return CT_AntimatterMine;
+else if ("CT_LDSIMines" == to_cast )
+return CT_LDSIMines;
+else if ("CT_LDSIMine" == to_cast )
+return CT_LDSIMine;
+else if ("CT_SeekerMines" == to_cast )
+return CT_SeekerMines;
+else if ("CT_SeekerMine" == to_cast )
+return CT_SeekerMine;
+else if ("CT_LDSIWarheads" == to_cast )
+return CT_LDSIWarheads;
+else if ("CT_MissileParts" == to_cast )
+return CT_MissileParts;
+else if ("CT_MissileThrusters" == to_cast )
+return CT_MissileThrusters;
+else if ("CT_MissileWarheads" == to_cast )
+return CT_MissileWarheads;
+else if ("CT_Flares" == to_cast )
+return CT_Flares;
+else if ("CT_Flare" == to_cast )
+return CT_Flare;
+else if ("CT_Decoys" == to_cast )
+return CT_Decoys;
+else if ("CT_Decoy" == to_cast )
+return CT_Decoy;
+else if ("CT_SmartDecoy" == to_cast )
+return CT_SmartDecoy;
+else if ("CT_SmartDecoyCountermeasure" == to_cast )
+return CT_SmartDecoyCountermeasure;
+else if ("CT_CombatPowersuits" == to_cast )
+return CT_CombatPowersuits;
+else if ("CT_SidearmClips" == to_cast )
+return CT_SidearmClips;
+else if ("CT_BattlePacks" == to_cast )
+return CT_BattlePacks;
+else if ("CT_Explosives" == to_cast )
+return CT_Explosives;
+else if ("CT_Grenades" == to_cast )
+return CT_Grenades;
+else if ("CT_HandWeapons" == to_cast )
+return CT_HandWeapons;
+else if ("CT_ManpackMissiles" == to_cast )
+return CT_ManpackMissiles;
+else if ("CT_AcceleratorRings" == to_cast )
+return CT_AcceleratorRings;
+else if ("CT_NeutronBeamCannon" == to_cast )
+return CT_NeutronBeamCannon;
+else if ("CT_WeaponLinkHardware" == to_cast )
+return CT_WeaponLinkHardware;
+else if ("CT_CommunicationsLaser" == to_cast )
+return CT_CommunicationsLaser;
+else if ("CT_TrackingComputer" == to_cast )
+return CT_TrackingComputer;
+else if ("CT_ParticleBeamCannon" == to_cast )
+return CT_ParticleBeamCannon;
+else if ("CT_MiningLasers" == to_cast )
+return CT_MiningLasers;
+else if ("CT_AssaultCannon" == to_cast )
+return CT_AssaultCannon;
+else if ("CT_AssaultCannonAmmo" == to_cast )
+return CT_AssaultCannonAmmo;
+else if ("CT_AssaultCannonAmmoRound" == to_cast )
+return CT_AssaultCannonAmmoRound;
+else if ("CT_LightPBC" == to_cast )
+return CT_LightPBC;
+else if ("CT_CooledPBC" == to_cast )
+return CT_CooledPBC;
+else if ("CT_RapidFirePBC" == to_cast )
+return CT_RapidFirePBC;
+else if ("CT_LongRangeCannon" == to_cast )
+return CT_LongRangeCannon;
+else if ("CT_CuttingBeam" == to_cast )
+return CT_CuttingBeam;
+else if ("CT_WideanglePBC" == to_cast )
+return CT_WideanglePBC;
+else if ("CT_EnhancedAimPBC" == to_cast )
+return CT_EnhancedAimPBC;
+else if ("CT_QuadLightPBC" == to_cast )
+return CT_QuadLightPBC;
+else if ("CT_HeavyBeamCannon" == to_cast )
+return CT_HeavyBeamCannon;
+else if ("CT_LongRangeCannonAmmo" == to_cast )
+return CT_LongRangeCannonAmmo;
+else if ("CT_LongRangeCannonAmmoRound" == to_cast )
+return CT_LongRangeCannonAmmoRound;
+else if ("CT_TargetedPBC" == to_cast )
+return CT_TargetedPBC;
+else if ("CT_AssaultCannonRingModel" == to_cast )
+return CT_AssaultCannonRingModel;
+else if ("CT_PulseAcceleratedPBC" == to_cast )
+return CT_PulseAcceleratedPBC;
+else if ("CT_AntimatterParticleBeam" == to_cast )
+return CT_AntimatterParticleBeam;
+else if ("CT_AntimatterStreamer" == to_cast )
+return CT_AntimatterStreamer;
+else if ("CT_Accumulators" == to_cast )
+return CT_Accumulators;
+else if ("CT_PointDefenceTurret" == to_cast )
+return CT_PointDefenceTurret;
+else if ("CT_FireControlSensors" == to_cast )
+return CT_FireControlSensors;
+else if ("CT_PBCAccelerators" == to_cast )
+return CT_PBCAccelerators;
+else if ("CT_PlasmaStorageRings" == to_cast )
+return CT_PlasmaStorageRings;
+else if ("CT_GatlingPBCs" == to_cast )
+return CT_GatlingPBCs;
+else if ("CT_HeavyPBCs" == to_cast )
+return CT_HeavyPBCs;
+else if ("CT_LightPBCs" == to_cast )
+return CT_LightPBCs;
+else if ("CT_PBCs" == to_cast )
+return CT_PBCs;
+else if ("CT_MeteorShield" == to_cast )
+return CT_MeteorShield;
+else if ("CT_Level1AutorepairSystem" == to_cast )
+return CT_Level1AutorepairSystem;
+else if ("CT_DefenceShield" == to_cast )
+return CT_DefenceShield;
+else if ("CT_Level2AutorepairSystem" == to_cast )
+return CT_Level2AutorepairSystem;
+else if ("CT_RepairControlProgram" == to_cast )
+return CT_RepairControlProgram;
+else if ("CT_LightDefenceShield" == to_cast )
+return CT_LightDefenceShield;
+else if ("CT_InstantShieldControl" == to_cast )
+return CT_InstantShieldControl;
+else if ("CT_ReactorHardening" == to_cast )
+return CT_ReactorHardening;
+else if ("CT_ArmouredHullPlates" == to_cast )
+return CT_ArmouredHullPlates;
+else if ("CT_Level3Autorepairsystem" == to_cast )
+return CT_Level3Autorepairsystem;
+else if ("CT_LowSignatureHullplates" == to_cast )
+return CT_LowSignatureHullplates;
+else if ("CT_MilitaryShields" == to_cast )
+return CT_MilitaryShields;
+else if ("CT_ShieldSynchroniser" == to_cast )
+return CT_ShieldSynchroniser;
+else if ("CT_Level4Autorepairsystem" == to_cast )
+return CT_Level4Autorepairsystem;
+else if ("CT_CombatShields" == to_cast )
+return CT_CombatShields;
+else if ("CT_MilitaryAggressorShields" == to_cast )
+return CT_MilitaryAggressorShields;
+else if ("CT_AggressorShieldUpgrade" == to_cast )
+return CT_AggressorShieldUpgrade;
+else if ("CT_MinersShield" == to_cast )
+return CT_MinersShield;
+else if ("CT_Level5Autorepairsystem" == to_cast )
+return CT_Level5Autorepairsystem;
+else if ("CT_ParticleScreenShieldUpgrade" == to_cast )
+return CT_ParticleScreenShieldUpgrade;
+else if ("CT_AssaultShield" == to_cast )
+return CT_AssaultShield;
+else if ("CT_PowerPlantAutorepair" == to_cast )
+return CT_PowerPlantAutorepair;
+else if ("CT_ShieldBooster" == to_cast )
+return CT_ShieldBooster;
+else if ("CT_AdvancedHullMaterialRefit" == to_cast )
+return CT_AdvancedHullMaterialRefit;
+
+  debug Debug.PrintString
+  ( String.FormatStrStr
+    ( "[ECargoTypes] ERROR: Defaulting unrecognised cargo type \"%s\" to invalid%s",
+      to_cast,
+      "\n"
+    )
+  );
+return CT_Invalid;
+}
+
+eCargoType Int2CargoType 
+ ( int to_cast 
+ ) 
+ { 
+ switch(to_cast) 
+ {
+case CT_Invalid:
+return CT_Invalid;
+case CT_SeekerMineBlueprints:
+return CT_SeekerMineBlueprints;
+case CT_GnatBlueprint:
+return CT_GnatBlueprint;
+case CT_HarrowerBlueprint:
+return CT_HarrowerBlueprint;
+case CT_HammerBlueprint:
+return CT_HammerBlueprint;
+case CT_SeekerBlueprint:
+return CT_SeekerBlueprint;
+case CT_LDSiShortBlueprints:
+return CT_LDSiShortBlueprints;
+case CT_AssaultCannonAmmoBlueprints:
+return CT_AssaultCannonAmmoBlueprints;
+case CT_TurretFighterBlueprints:
+return CT_TurretFighterBlueprints;
+case CT_RemoteFighterBlueprints:
+return CT_RemoteFighterBlueprints;
+case CT_FlareBlueprints:
+return CT_FlareBlueprints;
+case CT_AchillesBlueprints:
+return CT_AchillesBlueprints;
+case CT_AntimatterMineBlueprints:
+return CT_AntimatterMineBlueprints;
+case CT_AntimatterMissileBlueprints:
+return CT_AntimatterMissileBlueprints;
+case CT_BlizzardMissileBlueprints:
+return CT_BlizzardMissileBlueprints;
+case CT_DeadshotBlueprints:
+return CT_DeadshotBlueprints;
+case CT_DeathblowBlueprints:
+return CT_DeathblowBlueprints;
+case CT_DecoyBlueprints:
+return CT_DecoyBlueprints;
+case CT_DisruptorBlueprints:
+return CT_DisruptorBlueprints;
+case CT_LDSi3000Blueprints:
+return CT_LDSi3000Blueprints;
+case CT_LDSiMineBlueprints:
+return CT_LDSiMineBlueprints;
+case CT_LDSiMissileBlueprints:
+return CT_LDSiMissileBlueprints;
+case CT_SniperCannonAmmoBlueprints:
+return CT_SniperCannonAmmoBlueprints;
+case CT_MiningChargeBlueprints:
+return CT_MiningChargeBlueprints;
+case CT_ProximityMineBlueprints:
+return CT_ProximityMineBlueprints;
+case CT_PulsarBlueprints:
+return CT_PulsarBlueprints;
+case CT_RemoteMissileBlueprints:
+return CT_RemoteMissileBlueprints;
+case CT_RemoteProbeBlueprints:
+return CT_RemoteProbeBlueprints;
+case CT_SmartDecoyBlueprints:
+return CT_SmartDecoyBlueprints;
+case CT_ComputerGames:
+return CT_ComputerGames;
+case CT_NewsVids:
+return CT_NewsVids;
+case CT_EntertainmentVids:
+return CT_EntertainmentVids;
+case CT_InteractiveText:
+return CT_InteractiveText;
+case CT_MusicRecordings:
+return CT_MusicRecordings;
+case CT_CorporatePropaganda:
+return CT_CorporatePropaganda;
+case CT_CorporateData:
+return CT_CorporateData;
+case CT_XenoData:
+return CT_XenoData;
+case CT_ResearchData:
+return CT_ResearchData;
+case CT_PersonalData:
+return CT_PersonalData;
+case CT_Mail:
+return CT_Mail;
+case CT_ConfidentialData:
+return CT_ConfidentialData;
+case CT_GovernmentData:
+return CT_GovernmentData;
+case CT_PoliceData:
+return CT_PoliceData;
+case CT_MilitaryIntelligence:
+return CT_MilitaryIntelligence;
+case CT_SecretData:
+return CT_SecretData;
+case CT_Autopilots:
+return CT_Autopilots;
+case CT_MatchVelocityAutopilot:
+return CT_MatchVelocityAutopilot;
+case CT_StealthProgram:
+return CT_StealthProgram;
+case CT_SelfDefenceSoftware:
+return CT_SelfDefenceSoftware;
+case CT_EngineManagementProgram:
+return CT_EngineManagementProgram;
+case CT_OcclusionMonitoringSoftware:
+return CT_OcclusionMonitoringSoftware;
+case CT_MilitaryTrackingProgram:
+return CT_MilitaryTrackingProgram;
+case CT_MissileAI:
+return CT_MissileAI;
+case CT_UtilitySoftware:
+return CT_UtilitySoftware;
+case CT_CapsuleDriveGenerators:
+return CT_CapsuleDriveGenerators;
+case CT_LDSClass1Drive:
+return CT_LDSClass1Drive;
+case CT_PowerPlant:
+return CT_PowerPlant;
+case CT_ShipsDrive:
+return CT_ShipsDrive;
+case CT_ManoeuvreThrusters:
+return CT_ManoeuvreThrusters;
+case CT_AlphaHeatSink:
+return CT_AlphaHeatSink;
+case CT_BetaHeatSink:
+return CT_BetaHeatSink;
+case CT_ColdGasThrusters:
+return CT_ColdGasThrusters;
+case CT_MilitaryJumpCapacitor:
+return CT_MilitaryJumpCapacitor;
+case CT_LDSClass2Drive:
+return CT_LDSClass2Drive;
+case CT_LDSClass3Drive:
+return CT_LDSClass3Drive;
+case CT_SealedHeatSink:
+return CT_SealedHeatSink;
+case CT_CapsuleDrive:
+return CT_CapsuleDrive;
+case CT_ImprovedManoeuverThrusters:
+return CT_ImprovedManoeuverThrusters;
+case CT_PursuitDrivers:
+return CT_PursuitDrivers;
+case CT_InterceptorDrivers:
+return CT_InterceptorDrivers;
+case CT_GammaHeatSink:
+return CT_GammaHeatSink;
+case CT_DeltaHeatSink:
+return CT_DeltaHeatSink;
+case CT_AdvancedHeatSink:
+return CT_AdvancedHeatSink;
+case CT_OmegaHeatSink:
+return CT_OmegaHeatSink;
+case CT_HeatSinkSupercooler:
+return CT_HeatSinkSupercooler;
+case CT_ActiveCooler:
+return CT_ActiveCooler;
+case CT_EmergencyCoolingPod:
+return CT_EmergencyCoolingPod;
+case CT_AntimatterPowerPod:
+return CT_AntimatterPowerPod;
+case CT_HighYieldFusionInjector:
+return CT_HighYieldFusionInjector;
+case CT_SNRVReloadPod:
+return CT_SNRVReloadPod;
+case CT_Thrusterpods:
+return CT_Thrusterpods;
+case CT_DockOnAutoTurret:
+return CT_DockOnAutoTurret;
+case CT_SecondaryRing:
+return CT_SecondaryRing;
+case CT_CapsuleDriveParts:
+return CT_CapsuleDriveParts;
+case CT_LDSCarrierFields:
+return CT_LDSCarrierFields;
+case CT_LDSFieldGenerators:
+return CT_LDSFieldGenerators;
+case CT_LDSFieldNodes:
+return CT_LDSFieldNodes;
+case CT_LDSGeneratorParts:
+return CT_LDSGeneratorParts;
+case CT_ShipInstruments:
+return CT_ShipInstruments;
+case CT_ShipSystems:
+return CT_ShipSystems;
+case CT_AISystems:
+return CT_AISystems;
+case CT_CompParts:
+return CT_CompParts;
+case CT_ShipCPUGradeI:
+return CT_ShipCPUGradeI;
+case CT_ShipCPUGradeII:
+return CT_ShipCPUGradeII;
+case CT_ShipCPUGradeIII:
+return CT_ShipCPUGradeIII;
+case CT_ShipCPUGradeIV:
+return CT_ShipCPUGradeIV;
+case CT_ShipCPUGradeV:
+return CT_ShipCPUGradeV;
+case CT_CompactShipAI:
+return CT_CompactShipAI;
+case CT_ShipMemoryModule:
+return CT_ShipMemoryModule;
+case CT_CPUCores:
+return CT_CPUCores;
+case CT_CPUParts:
+return CT_CPUParts;
+case CT_AudioEquipment:
+return CT_AudioEquipment;
+case CT_AudioVisualEquipment:
+return CT_AudioVisualEquipment;
+case CT_DataConsoles:
+return CT_DataConsoles;
+case CT_DataScreens:
+return CT_DataScreens;
+case CT_PersonalCommunicators:
+return CT_PersonalCommunicators;
+case CT_BodyComps:
+return CT_BodyComps;
+case CT_HandheldScientificInstruments:
+return CT_HandheldScientificInstruments;
+case CT_CyberEyes:
+return CT_CyberEyes;
+case CT_CyberLimbs:
+return CT_CyberLimbs;
+case CT_CyberneticJackPlugs:
+return CT_CyberneticJackPlugs;
+case CT_CyberneticOrgans:
+return CT_CyberneticOrgans;
+case CT_DataCards:
+return CT_DataCards;
+case CT_DataChips:
+return CT_DataChips;
+case CT_DataModules:
+return CT_DataModules;
+case CT_MemoryModules:
+return CT_MemoryModules;
+case CT_AstronomicalInstruments:
+return CT_AstronomicalInstruments;
+case CT_ShortRangeActiveSensors:
+return CT_ShortRangeActiveSensors;
+case CT_ShortrangePassiveSensors:
+return CT_ShortrangePassiveSensors;
+case CT_UCPScanner:
+return CT_UCPScanner;
+case CT_PassiveSensorPackage:
+return CT_PassiveSensorPackage;
+case CT_IFFBeacon:
+return CT_IFFBeacon;
+case CT_ActiveSensorPackage:
+return CT_ActiveSensorPackage;
+case CT_AdvancedActiveSensors:
+return CT_AdvancedActiveSensors;
+case CT_AdvancedPassiveSensors:
+return CT_AdvancedPassiveSensors;
+case CT_MilitaryGradeActiveSensors:
+return CT_MilitaryGradeActiveSensors;
+case CT_MilitaryGradePassiveSensors:
+return CT_MilitaryGradePassiveSensors;
+case CT_LongRangePassiveSensors:
+return CT_LongRangePassiveSensors;
+case CT_LongRangeActiveSensors:
+return CT_LongRangeActiveSensors;
+case CT_SensorDisruptor:
+return CT_SensorDisruptor;
+case CT_HighPowerSensorDisruptor:
+return CT_HighPowerSensorDisruptor;
+case CT_AdvancedSensorDisruptor:
+return CT_AdvancedSensorDisruptor;
+case CT_MarauderCommsScrambler:
+return CT_MarauderCommsScrambler;
+case CT_HyperspaceTracker:
+return CT_HyperspaceTracker;
+case CT_LaserDetectors:
+return CT_LaserDetectors;
+case CT_MonitoringDevices:
+return CT_MonitoringDevices;
+case CT_GeneWriters:
+return CT_GeneWriters;
+case CT_CryogenicTanks:
+return CT_CryogenicTanks;
+case CT_Medkits:
+return CT_Medkits;
+case CT_OrganMatrices:
+return CT_OrganMatrices;
+case CT_RemoteTables:
+return CT_RemoteTables;
+case CT_Autodocs:
+return CT_Autodocs;
+case CT_Autosurgs:
+return CT_Autosurgs;
+case CT_HKCounters:
+return CT_HKCounters;
+case CT_MolecularImagers:
+return CT_MolecularImagers;
+case CT_NanosurgeryEquipment:
+return CT_NanosurgeryEquipment;
+case CT_NMRs:
+return CT_NMRs;
+case CT_SurgeryKits:
+return CT_SurgeryKits;
+case CT_NanoAssemblers:
+return CT_NanoAssemblers;
+case CT_NanoFactories:
+return CT_NanoFactories;
+case CT_NanoProgrammers:
+return CT_NanoProgrammers;
+case CT_NanoSurgeons:
+return CT_NanoSurgeons;
+case CT_NeuroConnectors:
+return CT_NeuroConnectors;
+case CT_PreprogrammedNanotech:
+return CT_PreprogrammedNanotech;
+case CT_TerraformingNanotech:
+return CT_TerraformingNanotech;
+case CT_RoboticArms:
+return CT_RoboticArms;
+case CT_RoboticChassis:
+return CT_RoboticChassis;
+case CT_RoboticCPUs:
+return CT_RoboticCPUs;
+case CT_RoboticSensors:
+return CT_RoboticSensors;
+case CT_DomesticRobots:
+return CT_DomesticRobots;
+case CT_ConstructionRobots:
+return CT_ConstructionRobots;
+case CT_SecurityRobots:
+return CT_SecurityRobots;
+case CT_HydroponicsEquipment:
+return CT_HydroponicsEquipment;
+case CT_Biovators:
+return CT_Biovators;
+case CT_AgriHarvestors:
+return CT_AgriHarvestors;
+case CT_Tractors:
+return CT_Tractors;
+case CT_TractorParts:
+return CT_TractorParts;
+case CT_HabitationPods:
+return CT_HabitationPods;
+case CT_HousingModules:
+return CT_HousingModules;
+case CT_LifeSupportSystems:
+return CT_LifeSupportSystems;
+case CT_StationComponents:
+return CT_StationComponents;
+case CT_PrefabricatedStationModules:
+return CT_PrefabricatedStationModules;
+case CT_StationConnectors:
+return CT_StationConnectors;
+case CT_PrefabricatedHousing:
+return CT_PrefabricatedHousing;
+case CT_Recyclers:
+return CT_Recyclers;
+case CT_VaccumeDomes:
+return CT_VaccumeDomes;
+case CT_ArmourPatches:
+return CT_ArmourPatches;
+case CT_ArmourPlates:
+return CT_ArmourPlates;
+case CT_Hullplates:
+return CT_Hullplates;
+case CT_HullRepairKits:
+return CT_HullRepairKits;
+case CT_Conduits:
+return CT_Conduits;
+case CT_FloorGrids:
+return CT_FloorGrids;
+case CT_GravGrids:
+return CT_GravGrids;
+case CT_Wiring:
+return CT_Wiring;
+case CT_LasTanks:
+return CT_LasTanks;
+case CT_Lathes:
+return CT_Lathes;
+case CT_MicroengineeringTools:
+return CT_MicroengineeringTools;
+case CT_Drillers:
+return CT_Drillers;
+case CT_EarthMovers:
+return CT_EarthMovers;
+case CT_HandDrills:
+return CT_HandDrills;
+case CT_LaserDrills:
+return CT_LaserDrills;
+case CT_MiningDisplacers:
+return CT_MiningDisplacers;
+case CT_MiningDrones:
+return CT_MiningDrones;
+case CT_VehicleDrills:
+return CT_VehicleDrills;
+case CT_FieldGenerators:
+return CT_FieldGenerators;
+case CT_ReactorParts:
+return CT_ReactorParts;
+case CT_ReactorSpares:
+return CT_ReactorSpares;
+case CT_ReactorTargets:
+return CT_ReactorTargets;
+case CT_FissionGenerators:
+return CT_FissionGenerators;
+case CT_FusionGenerators:
+return CT_FusionGenerators;
+case CT_Batteries:
+return CT_Batteries;
+case CT_SolarPanels:
+return CT_SolarPanels;
+case CT_Solettas:
+return CT_Solettas;
+case CT_AtmosphericScrubbers:
+return CT_AtmosphericScrubbers;
+case CT_PlanetHeaters:
+return CT_PlanetHeaters;
+case CT_CFCGenerators:
+return CT_CFCGenerators;
+case CT_Aerodynes:
+return CT_Aerodynes;
+case CT_Aircars:
+return CT_Aircars;
+case CT_Dirigibles:
+return CT_Dirigibles;
+case CT_GroundCars:
+return CT_GroundCars;
+case CT_ConstructionVehicles:
+return CT_ConstructionVehicles;
+case CT_Hovercars:
+return CT_Hovercars;
+case CT_Hovercraft:
+return CT_Hovercraft;
+case CT_Rotorcraft:
+return CT_Rotorcraft;
+case CT_Trucks:
+return CT_Trucks;
+case CT_Spirits:
+return CT_Spirits;
+case CT_Wine:
+return CT_Wine;
+case CT_Champagne:
+return CT_Champagne;
+case CT_Scotch:
+return CT_Scotch;
+case CT_RealBeer:
+return CT_RealBeer;
+case CT_ZeroBrew:
+return CT_ZeroBrew;
+case CT_Antiques:
+return CT_Antiques;
+case CT_Paintings:
+return CT_Paintings;
+case CT_Sculpture:
+return CT_Sculpture;
+case CT_Fur:
+return CT_Fur;
+case CT_FurCoats:
+return CT_FurCoats;
+case CT_Vatfur:
+return CT_Vatfur;
+case CT_GoldJewellery:
+return CT_GoldJewellery;
+case CT_ValuableJewellery:
+return CT_ValuableJewellery;
+case CT_SmartJewels:
+return CT_SmartJewels;
+case CT_Watches:
+return CT_Watches;
+case CT_Books:
+return CT_Books;
+case CT_Cosmetics:
+return CT_Cosmetics;
+case CT_DesignerClothes:
+return CT_DesignerClothes;
+case CT_MusicalInstruments:
+return CT_MusicalInstruments;
+case CT_Perfume:
+return CT_Perfume;
+case CT_Toys:
+return CT_Toys;
+case CT_NaturalFibreClothing:
+return CT_NaturalFibreClothing;
+case CT_LuxuryFurniture:
+return CT_LuxuryFurniture;
+case CT_Caviar:
+return CT_Caviar;
+case CT_Chocolate:
+return CT_Chocolate;
+case CT_Lobster:
+return CT_Lobster;
+case CT_RealCoffee:
+return CT_RealCoffee;
+case CT_RealMeat:
+return CT_RealMeat;
+case CT_RealTea:
+return CT_RealTea;
+case CT_Shellfish:
+return CT_Shellfish;
+case CT_Milk:
+return CT_Milk;
+case CT_Spices:
+return CT_Spices;
+case CT_Game:
+return CT_Game;
+case CT_Cigarettes:
+return CT_Cigarettes;
+case CT_Cigars:
+return CT_Cigars;
+case CT_LeafTobacco:
+return CT_LeafTobacco;
+case CT_Aphrodisiacs:
+return CT_Aphrodisiacs;
+case CT_Caffeine:
+return CT_Caffeine;
+case CT_PhysicalEnhancers:
+return CT_PhysicalEnhancers;
+case CT_ErzatzCoffee:
+return CT_ErzatzCoffee;
+case CT_Euphorics:
+return CT_Euphorics;
+case CT_Halluciogenics:
+return CT_Halluciogenics;
+case CT_MemoryEnhancers:
+return CT_MemoryEnhancers;
+case CT_MoodEnhancers:
+return CT_MoodEnhancers;
+case CT_MoodStabilsers:
+return CT_MoodStabilsers;
+case CT_Stimulants:
+return CT_Stimulants;
+case CT_Tranquilisers:
+return CT_Tranquilisers;
+case CT_SportingBodyArmour:
+return CT_SportingBodyArmour;
+case CT_Footballs:
+return CT_Footballs;
+case CT_GolfSupplies:
+return CT_GolfSupplies;
+case CT_NullBox:
+return CT_NullBox;
+case CT_PaintGuns:
+return CT_PaintGuns;
+case CT_Scuba:
+return CT_Scuba;
+case CT_TennisEquipment:
+return CT_TennisEquipment;
+case CT_SportsClothes:
+return CT_SportsClothes;
+case CT_ZeroGGymnasia:
+return CT_ZeroGGymnasia;
+case CT_SportingWeapons:
+return CT_SportingWeapons;
+case CT_BricABrac:
+return CT_BricABrac;
+case CT_OfficeSupplies:
+return CT_OfficeSupplies;
+case CT_ReligiousMaterial:
+return CT_ReligiousMaterial;
+case CT_Clothing:
+return CT_Clothing;
+case CT_DisposableClothing:
+return CT_DisposableClothing;
+case CT_HandTools:
+return CT_HandTools;
+case CT_Uniforms:
+return CT_Uniforms;
+case CT_Furniture:
+return CT_Furniture;
+case CT_CleaningProducts:
+return CT_CleaningProducts;
+case CT_HygieneGoods:
+return CT_HygieneGoods;
+case CT_HumanitarianAid:
+return CT_HumanitarianAid;
+case CT_WoundDressings:
+return CT_WoundDressings;
+case CT_Anaesthetics:
+return CT_Anaesthetics;
+case CT_Antibiotics:
+return CT_Antibiotics;
+case CT_Antiseptics:
+return CT_Antiseptics;
+case CT_Immunosuppressives:
+return CT_Immunosuppressives;
+case CT_MedicalDrugs:
+return CT_MedicalDrugs;
+case CT_Vaccines:
+return CT_Vaccines;
+case CT_AntiAgingTreatments:
+return CT_AntiAgingTreatments;
+case CT_RejuvenationTratments:
+return CT_RejuvenationTratments;
+case CT_PainKillers:
+return CT_PainKillers;
+case CT_EmergencySpaceSuits:
+return CT_EmergencySpaceSuits;
+case CT_PersonalGasJets:
+return CT_PersonalGasJets;
+case CT_SpaceSuits:
+return CT_SpaceSuits;
+case CT_SuitPatches:
+return CT_SuitPatches;
+case CT_SurvivalBubbles:
+return CT_SurvivalBubbles;
+case CT_SurvivalPacks:
+return CT_SurvivalPacks;
+case CT_SurvivalCloaks:
+return CT_SurvivalCloaks;
+case CT_EmergencyHeaters:
+return CT_EmergencyHeaters;
+case CT_NitroBacteria:
+return CT_NitroBacteria;
+case CT_SoilBacteria:
+return CT_SoilBacteria;
+case CT_TerraformingBacteria:
+return CT_TerraformingBacteria;
+case CT_RecyclingBacteria:
+return CT_RecyclingBacteria;
+case CT_AnimalFeed:
+return CT_AnimalFeed;
+case CT_Compost:
+return CT_Compost;
+case CT_Fertiliser:
+return CT_Fertiliser;
+case CT_Soil:
+return CT_Soil;
+case CT_Apes:
+return CT_Apes;
+case CT_Birds:
+return CT_Birds;
+case CT_DonorPigs:
+return CT_DonorPigs;
+case CT_DrugLeeches:
+return CT_DrugLeeches;
+case CT_Giraffes:
+return CT_Giraffes;
+case CT_Horses:
+return CT_Horses;
+case CT_Lions:
+return CT_Lions;
+case CT_Weasels:
+return CT_Weasels;
+case CT_Yaks:
+return CT_Yaks;
+case CT_Zebras:
+return CT_Zebras;
+case CT_AttackDogs:
+return CT_AttackDogs;
+case CT_BiomassProcessingWorms:
+return CT_BiomassProcessingWorms;
+case CT_Camels:
+return CT_Camels;
+case CT_CancerMice:
+return CT_CancerMice;
+case CT_Chickens:
+return CT_Chickens;
+case CT_Cows:
+return CT_Cows;
+case CT_Dogs:
+return CT_Dogs;
+case CT_EngineeredInsects:
+return CT_EngineeredInsects;
+case CT_Goats:
+return CT_Goats;
+case CT_Insects:
+return CT_Insects;
+case CT_Pigs:
+return CT_Pigs;
+case CT_Rodents:
+return CT_Rodents;
+case CT_Primates:
+return CT_Primates;
+case CT_HYL:
+return CT_HYL;
+case CT_Foetuses:
+return CT_Foetuses;
+case CT_Houseplants:
+return CT_Houseplants;
+case CT_PotPlants:
+return CT_PotPlants;
+case CT_Seedlings:
+return CT_Seedlings;
+case CT_Seeds:
+return CT_Seeds;
+case CT_Algae:
+return CT_Algae;
+case CT_PlantPulp:
+return CT_PlantPulp;
+case CT_Woodpulp:
+return CT_Woodpulp;
+case CT_Trees:
+return CT_Trees;
+case CT_SlimeMould:
+return CT_SlimeMould;
+case CT_Yeast:
+return CT_Yeast;
+case CT_CloneBoneTissue:
+return CT_CloneBoneTissue;
+case CT_CloneEyes:
+return CT_CloneEyes;
+case CT_CloneGlands:
+return CT_CloneGlands;
+case CT_CloneHearts:
+return CT_CloneHearts;
+case CT_CloneIntestines:
+return CT_CloneIntestines;
+case CT_CloneKidneys:
+return CT_CloneKidneys;
+case CT_CloneLimbs:
+return CT_CloneLimbs;
+case CT_CloneLivers:
+return CT_CloneLivers;
+case CT_CloneLungs:
+return CT_CloneLungs;
+case CT_CloneSkin:
+return CT_CloneSkin;
+case CT_VatGrownMuscle:
+return CT_VatGrownMuscle;
+case CT_BlankTissueCulture:
+return CT_BlankTissueCulture;
+case CT_CommonStrandMaterial:
+return CT_CommonStrandMaterial;
+case CT_DNAChangers:
+return CT_DNAChangers;
+case CT_DNASequencers:
+return CT_DNASequencers;
+case CT_DNATattoos:
+return CT_DNATattoos;
+case CT_GeneticMarkerAgents:
+return CT_GeneticMarkerAgents;
+case CT_GeneticRejuvinations:
+return CT_GeneticRejuvinations;
+case CT_TransplantEyes:
+return CT_TransplantEyes;
+case CT_TransplantGlands:
+return CT_TransplantGlands;
+case CT_TransplantHearts:
+return CT_TransplantHearts;
+case CT_TransplantIntestine:
+return CT_TransplantIntestine;
+case CT_TransplantKidneys:
+return CT_TransplantKidneys;
+case CT_TransplantLivers:
+return CT_TransplantLivers;
+case CT_TransplantLungs:
+return CT_TransplantLungs;
+case CT_TransplantSkin:
+return CT_TransplantSkin;
+case CT_FoodBlocks:
+return CT_FoodBlocks;
+case CT_FoodPills:
+return CT_FoodPills;
+case CT_MealInABar:
+return CT_MealInABar;
+case CT_PseudoShake:
+return CT_PseudoShake;
+case CT_RecoveredMeat:
+return CT_RecoveredMeat;
+case CT_SyntheticCheese:
+return CT_SyntheticCheese;
+case CT_SyntheticProtein:
+return CT_SyntheticProtein;
+case CT_SurvivalRations:
+return CT_SurvivalRations;
+case CT_DrinkingWater:
+return CT_DrinkingWater;
+case CT_SugarCane:
+return CT_SugarCane;
+case CT_Fish:
+return CT_Fish;
+case CT_Fruit:
+return CT_Fruit;
+case CT_Grain:
+return CT_Grain;
+case CT_Meat:
+return CT_Meat;
+case CT_Potatoes:
+return CT_Potatoes;
+case CT_Rice:
+return CT_Rice;
+case CT_Soya:
+return CT_Soya;
+case CT_Vegetables:
+return CT_Vegetables;
+case CT_EdibleFungi:
+return CT_EdibleFungi;
+case CT_WasteBlocks:
+return CT_WasteBlocks;
+case CT_PlasticWaste:
+return CT_PlasticWaste;
+case CT_OrganicPulp:
+return CT_OrganicPulp;
+case CT_WastePaper:
+return CT_WastePaper;
+case CT_DiseasedSewage:
+return CT_DiseasedSewage;
+case CT_FrozenSewage:
+return CT_FrozenSewage;
+case CT_RawSewage:
+return CT_RawSewage;
+case CT_AntimatterContainers:
+return CT_AntimatterContainers;
+case CT_Antimatter:
+return CT_Antimatter;
+case CT_AntimatterPods:
+return CT_AntimatterPods;
+case CT_FloorPlates:
+return CT_FloorPlates;
+case CT_Girders:
+return CT_Girders;
+case CT_WallPlates:
+return CT_WallPlates;
+case CT_BeanstalkWire:
+return CT_BeanstalkWire;
+case CT_FoamMetal:
+return CT_FoamMetal;
+case CT_MacroCrystallineMetals:
+return CT_MacroCrystallineMetals;
+case CT_Monowire:
+return CT_Monowire;
+case CT_HeavyGirders:
+return CT_HeavyGirders;
+case CT_Neutronium:
+return CT_Neutronium;
+case CT_ExoticMetals:
+return CT_ExoticMetals;
+case CT_RareMetals:
+return CT_RareMetals;
+case CT_LiquifiedFuel:
+return CT_LiquifiedFuel;
+case CT_LiquifiedFusionPremix:
+return CT_LiquifiedFusionPremix;
+case CT_BoosterAgent:
+return CT_BoosterAgent;
+case CT_FuelPellets:
+return CT_FuelPellets;
+case CT_FuelRods:
+return CT_FuelRods;
+case CT_CutGemstones:
+return CT_CutGemstones;
+case CT_IndustrialGemstones:
+return CT_IndustrialGemstones;
+case CT_UncutGemstones:
+return CT_UncutGemstones;
+case CT_FeedStock:
+return CT_FeedStock;
+case CT_PressurisedHydrocarbonGas:
+return CT_PressurisedHydrocarbonGas;
+case CT_Oil:
+return CT_Oil;
+case CT_Petroleum:
+return CT_Petroleum;
+case CT_PlasticBars:
+return CT_PlasticBars;
+case CT_PlasticBlocks:
+return CT_PlasticBlocks;
+case CT_PlasticCables:
+return CT_PlasticCables;
+case CT_PlasticGel:
+return CT_PlasticGel;
+case CT_PlasticPellets:
+return CT_PlasticPellets;
+case CT_BattleScrap:
+return CT_BattleScrap;
+case CT_CompactedScrapMetal:
+return CT_CompactedScrapMetal;
+case CT_MisCasts:
+return CT_MisCasts;
+case CT_ScrapMetal:
+return CT_ScrapMetal;
+case CT_Gold:
+return CT_Gold;
+case CT_Platinum:
+return CT_Platinum;
+case CT_Silver:
+return CT_Silver;
+case CT_MetalBars:
+return CT_MetalBars;
+case CT_MetalBillets:
+return CT_MetalBillets;
+case CT_MetalRods:
+return CT_MetalRods;
+case CT_Wire:
+return CT_Wire;
+case CT_Rivets:
+return CT_Rivets;
+case CT_RadioactiveWaste:
+return CT_RadioactiveWaste;
+case CT_Uranium:
+return CT_Uranium;
+case CT_Plutonium:
+return CT_Plutonium;
+case CT_FissionInitiators:
+return CT_FissionInitiators;
+case CT_Carbon:
+return CT_Carbon;
+case CT_Nitrates:
+return CT_Nitrates;
+case CT_Oxygen:
+return CT_Oxygen;
+case CT_Phosphates:
+return CT_Phosphates;
+case CT_Sulphur:
+return CT_Sulphur;
+case CT_Alkalines:
+return CT_Alkalines;
+case CT_Sodium:
+return CT_Sodium;
+case CT_Phosphides:
+return CT_Phosphides;
+case CT_Sulfides:
+return CT_Sulfides;
+case CT_Tellurides:
+return CT_Tellurides;
+case CT_InorganicAcids:
+return CT_InorganicAcids;
+case CT_Intermetallics:
+return CT_Intermetallics;
+case CT_UnprocessedGas:
+return CT_UnprocessedGas;
+case CT_Air:
+return CT_Air;
+case CT_Helium3:
+return CT_Helium3;
+case CT_NeutroniumOre:
+return CT_NeutroniumOre;
+case CT_GoldOre:
+return CT_GoldOre;
+case CT_CommonOre:
+return CT_CommonOre;
+case CT_SilverOre:
+return CT_SilverOre;
+case CT_PlatinumOre:
+return CT_PlatinumOre;
+case CT_RadioactiveOre:
+return CT_RadioactiveOre;
+case CT_Rubble:
+return CT_Rubble;
+case CT_Aggregates:
+return CT_Aggregates;
+case CT_RockDust:
+return CT_RockDust;
+case CT_Sand:
+return CT_Sand;
+case CT_BlockIce:
+return CT_BlockIce;
+case CT_CrushedIce:
+return CT_CrushedIce;
+case CT_DirtyIce:
+return CT_DirtyIce;
+case CT_DeionisedWater:
+return CT_DeionisedWater;
+case CT_APCs:
+return CT_APCs;
+case CT_TurretFighter:
+return CT_TurretFighter;
+case CT_RemoteFighter:
+return CT_RemoteFighter;
+case CT_ArtilleryFVs:
+return CT_ArtilleryFVs;
+case CT_FireSupportFVs:
+return CT_FireSupportFVs;
+case CT_GravTanks:
+return CT_GravTanks;
+case CT_HoverTanks:
+return CT_HoverTanks;
+case CT_Tanks:
+return CT_Tanks;
+case CT_TankParts:
+return CT_TankParts;
+case CT_BiologicalWeaponsAgents:
+return CT_BiologicalWeaponsAgents;
+case CT_ChemicalWeaponsAgents:
+return CT_ChemicalWeaponsAgents;
+case CT_NeutronWarheads:
+return CT_NeutronWarheads;
+case CT_DirtyFissionWarheads:
+return CT_DirtyFissionWarheads;
+case CT_HostileTerraformingAgents:
+return CT_HostileTerraformingAgents;
+case CT_NanotechWeapons:
+return CT_NanotechWeapons;
+case CT_AntimatterFuses:
+return CT_AntimatterFuses;
+case CT_TwinPackMissileLauncher:
+return CT_TwinPackMissileLauncher;
+case CT_LDSiShortMissiles:
+return CT_LDSiShortMissiles;
+case CT_LDSiShortMissile:
+return CT_LDSiShortMissile;
+case CT_SeekerMissiles:
+return CT_SeekerMissiles;
+case CT_SeekerMissile:
+return CT_SeekerMissile;
+case CT_HarrowerMissiles:
+return CT_HarrowerMissiles;
+case CT_HarrowerMissile:
+return CT_HarrowerMissile;
+case CT_GnatRockets:
+return CT_GnatRockets;
+case CT_GnatRocket:
+return CT_GnatRocket;
+case CT_HammerRockets:
+return CT_HammerRockets;
+case CT_HammerRocket:
+return CT_HammerRocket;
+case CT_LDSiMissiles:
+return CT_LDSiMissiles;
+case CT_LDSiMissile:
+return CT_LDSiMissile;
+case CT_MiningCharges:
+return CT_MiningCharges;
+case CT_MiningCharge:
+return CT_MiningCharge;
+case CT_TripackMissileLauncher:
+return CT_TripackMissileLauncher;
+case CT_BlizzardRocketPod:
+return CT_BlizzardRocketPod;
+case CT_BlizzardRocket:
+return CT_BlizzardRocket;
+case CT_RemoteProbes:
+return CT_RemoteProbes;
+case CT_RemoteProbe:
+return CT_RemoteProbe;
+case CT_RemoteMissiles:
+return CT_RemoteMissiles;
+case CT_RemoteMissile:
+return CT_RemoteMissile;
+case CT_DeadshotMissiles:
+return CT_DeadshotMissiles;
+case CT_DeadshotMissile:
+return CT_DeadshotMissile;
+case CT_LDSi3000Missiles:
+return CT_LDSi3000Missiles;
+case CT_LDSi3000Missile:
+return CT_LDSi3000Missile;
+case CT_QuadpackMissileLauncher:
+return CT_QuadpackMissileLauncher;
+case CT_DeathblowRemote:
+return CT_DeathblowRemote;
+case CT_DeathblowRemoteMissile:
+return CT_DeathblowRemoteMissile;
+case CT_AntimatterRemote:
+return CT_AntimatterRemote;
+case CT_AntimatterRemoteMissile:
+return CT_AntimatterRemoteMissile;
+case CT_InternalMissileMagazine:
+return CT_InternalMissileMagazine;
+case CT_DisruptorMissiles:
+return CT_DisruptorMissiles;
+case CT_DisruptorMissile:
+return CT_DisruptorMissile;
+case CT_PulsarDisruptors:
+return CT_PulsarDisruptors;
+case CT_PulsarDisruptor:
+return CT_PulsarDisruptor;
+case CT_HullMissileHardPoint:
+return CT_HullMissileHardPoint;
+case CT_AchillesShieldDisruptors:
+return CT_AchillesShieldDisruptors;
+case CT_AchillesShieldDisruptor:
+return CT_AchillesShieldDisruptor;
+case CT_ProximityMines:
+return CT_ProximityMines;
+case CT_ProximityMine:
+return CT_ProximityMine;
+case CT_AntimatterMines:
+return CT_AntimatterMines;
+case CT_AntimatterMine:
+return CT_AntimatterMine;
+case CT_LDSIMines:
+return CT_LDSIMines;
+case CT_LDSIMine:
+return CT_LDSIMine;
+case CT_SeekerMines:
+return CT_SeekerMines;
+case CT_SeekerMine:
+return CT_SeekerMine;
+case CT_LDSIWarheads:
+return CT_LDSIWarheads;
+case CT_MissileParts:
+return CT_MissileParts;
+case CT_MissileThrusters:
+return CT_MissileThrusters;
+case CT_MissileWarheads:
+return CT_MissileWarheads;
+case CT_Flares:
+return CT_Flares;
+case CT_Flare:
+return CT_Flare;
+case CT_Decoys:
+return CT_Decoys;
+case CT_Decoy:
+return CT_Decoy;
+case CT_SmartDecoy:
+return CT_SmartDecoy;
+case CT_SmartDecoyCountermeasure:
+return CT_SmartDecoyCountermeasure;
+case CT_CombatPowersuits:
+return CT_CombatPowersuits;
+case CT_SidearmClips:
+return CT_SidearmClips;
+case CT_BattlePacks:
+return CT_BattlePacks;
+case CT_Explosives:
+return CT_Explosives;
+case CT_Grenades:
+return CT_Grenades;
+case CT_HandWeapons:
+return CT_HandWeapons;
+case CT_ManpackMissiles:
+return CT_ManpackMissiles;
+case CT_AcceleratorRings:
+return CT_AcceleratorRings;
+case CT_NeutronBeamCannon:
+return CT_NeutronBeamCannon;
+case CT_WeaponLinkHardware:
+return CT_WeaponLinkHardware;
+case CT_CommunicationsLaser:
+return CT_CommunicationsLaser;
+case CT_TrackingComputer:
+return CT_TrackingComputer;
+case CT_ParticleBeamCannon:
+return CT_ParticleBeamCannon;
+case CT_MiningLasers:
+return CT_MiningLasers;
+case CT_AssaultCannon:
+return CT_AssaultCannon;
+case CT_AssaultCannonAmmo:
+return CT_AssaultCannonAmmo;
+case CT_AssaultCannonAmmoRound:
+return CT_AssaultCannonAmmoRound;
+case CT_LightPBC:
+return CT_LightPBC;
+case CT_CooledPBC:
+return CT_CooledPBC;
+case CT_RapidFirePBC:
+return CT_RapidFirePBC;
+case CT_LongRangeCannon:
+return CT_LongRangeCannon;
+case CT_CuttingBeam:
+return CT_CuttingBeam;
+case CT_WideanglePBC:
+return CT_WideanglePBC;
+case CT_EnhancedAimPBC:
+return CT_EnhancedAimPBC;
+case CT_QuadLightPBC:
+return CT_QuadLightPBC;
+case CT_HeavyBeamCannon:
+return CT_HeavyBeamCannon;
+case CT_LongRangeCannonAmmo:
+return CT_LongRangeCannonAmmo;
+case CT_LongRangeCannonAmmoRound:
+return CT_LongRangeCannonAmmoRound;
+case CT_TargetedPBC:
+return CT_TargetedPBC;
+case CT_AssaultCannonRingModel:
+return CT_AssaultCannonRingModel;
+case CT_PulseAcceleratedPBC:
+return CT_PulseAcceleratedPBC;
+case CT_AntimatterParticleBeam:
+return CT_AntimatterParticleBeam;
+case CT_AntimatterStreamer:
+return CT_AntimatterStreamer;
+case CT_Accumulators:
+return CT_Accumulators;
+case CT_PointDefenceTurret:
+return CT_PointDefenceTurret;
+case CT_FireControlSensors:
+return CT_FireControlSensors;
+case CT_PBCAccelerators:
+return CT_PBCAccelerators;
+case CT_PlasmaStorageRings:
+return CT_PlasmaStorageRings;
+case CT_GatlingPBCs:
+return CT_GatlingPBCs;
+case CT_HeavyPBCs:
+return CT_HeavyPBCs;
+case CT_LightPBCs:
+return CT_LightPBCs;
+case CT_PBCs:
+return CT_PBCs;
+case CT_MeteorShield:
+return CT_MeteorShield;
+case CT_Level1AutorepairSystem:
+return CT_Level1AutorepairSystem;
+case CT_DefenceShield:
+return CT_DefenceShield;
+case CT_Level2AutorepairSystem:
+return CT_Level2AutorepairSystem;
+case CT_RepairControlProgram:
+return CT_RepairControlProgram;
+case CT_LightDefenceShield:
+return CT_LightDefenceShield;
+case CT_InstantShieldControl:
+return CT_InstantShieldControl;
+case CT_ReactorHardening:
+return CT_ReactorHardening;
+case CT_ArmouredHullPlates:
+return CT_ArmouredHullPlates;
+case CT_Level3Autorepairsystem:
+return CT_Level3Autorepairsystem;
+case CT_LowSignatureHullplates:
+return CT_LowSignatureHullplates;
+case CT_MilitaryShields:
+return CT_MilitaryShields;
+case CT_ShieldSynchroniser:
+return CT_ShieldSynchroniser;
+case CT_Level4Autorepairsystem:
+return CT_Level4Autorepairsystem;
+case CT_CombatShields:
+return CT_CombatShields;
+case CT_MilitaryAggressorShields:
+return CT_MilitaryAggressorShields;
+case CT_AggressorShieldUpgrade:
+return CT_AggressorShieldUpgrade;
+case CT_MinersShield:
+return CT_MinersShield;
+case CT_Level5Autorepairsystem:
+return CT_Level5Autorepairsystem;
+case CT_ParticleScreenShieldUpgrade:
+return CT_ParticleScreenShieldUpgrade;
+case CT_AssaultShield:
+return CT_AssaultShield;
+case CT_PowerPlantAutorepair:
+return CT_PowerPlantAutorepair;
+case CT_ShieldBooster:
+return CT_ShieldBooster;
+case CT_AdvancedHullMaterialRefit:
+return CT_AdvancedHullMaterialRefit;
+default:
+ return CT_Invalid;
+}
+ return CT_Invalid;
+}
+
+string CargoCategory2String 
+ ( eCargoCategory to_cast 
+ ) 
+ { 
+ switch(to_cast) 
+ {
+case CC_Blueprints:
+return "CC_Blueprints";
+case CC_ConsumerData:
+return "CC_ConsumerData";
+case CC_PrivateData:
+return "CC_PrivateData";
+case CC_SecureData:
+return "CC_SecureData";
+case CC_Software:
+return "CC_Software";
+case CC_Avionics:
+return "CC_Avionics";
+case CC_Computers:
+return "CC_Computers";
+case CC_ConsumerElectronics:
+return "CC_ConsumerElectronics";
+case CC_Cybernetics:
+return "CC_Cybernetics";
+case CC_DataStorage:
+return "CC_DataStorage";
+case CC_Instrumentation:
+return "CC_Instrumentation";
+case CC_MedicalElectronics:
+return "CC_MedicalElectronics";
+case CC_Nanotechnology:
+return "CC_Nanotechnology";
+case CC_Robotics:
+return "CC_Robotics";
+case CC_AgriculturalEquipment:
+return "CC_AgriculturalEquipment";
+case CC_Environmental:
+return "CC_Environmental";
+case CC_MachineTools:
+return "CC_MachineTools";
+case CC_MiningEquipment:
+return "CC_MiningEquipment";
+case CC_PowerSystems:
+return "CC_PowerSystems";
+case CC_Terraforming:
+return "CC_Terraforming";
+case CC_Vehicles:
+return "CC_Vehicles";
+case CC_Alcohol:
+return "CC_Alcohol";
+case CC_Art:
+return "CC_Art";
+case CC_Furs:
+return "CC_Furs";
+case CC_Jewellery:
+return "CC_Jewellery";
+case CC_LuxuryConsumerGoods:
+return "CC_LuxuryConsumerGoods";
+case CC_LuxuryFoodstuffs:
+return "CC_LuxuryFoodstuffs";
+case CC_Narcotics:
+return "CC_Narcotics";
+case CC_SportingGoods:
+return "CC_SportingGoods";
+case CC_ConsumerGoods:
+return "CC_ConsumerGoods";
+case CC_MedicalSupplies:
+return "CC_MedicalSupplies";
+case CC_Pharmaceuticals:
+return "CC_Pharmaceuticals";
+case CC_SurvivalEquipment:
+return "CC_SurvivalEquipment";
+case CC_Bacteria:
+return "CC_Bacteria";
+case CC_Biomass:
+return "CC_Biomass";
+case CC_Fauna:
+return "CC_Fauna";
+case CC_Flora:
+return "CC_Flora";
+case CC_Fungi:
+return "CC_Fungi";
+case CC_GeneticMaterial:
+return "CC_GeneticMaterial";
+case CC_ProcessedFoodstuffs:
+return "CC_ProcessedFoodstuffs";
+case CC_UnprocessedFoodstuffs:
+return "CC_UnprocessedFoodstuffs";
+case CC_Waste:
+return "CC_Waste";
+case CC_AntimatterGoods:
+return "CC_AntimatterGoods";
+case CC_ConstructionMaterial:
+return "CC_ConstructionMaterial";
+case CC_Exotics:
+return "CC_Exotics";
+case CC_ReactorFuel:
+return "CC_ReactorFuel";
+case CC_Gemstones:
+return "CC_Gemstones";
+case CC_Hydrocarbons:
+return "CC_Hydrocarbons";
+case CC_CommonMetals:
+return "CC_CommonMetals";
+case CC_Radioactives:
+return "CC_Radioactives";
+case CC_BulkChemicals:
+return "CC_BulkChemicals";
+case CC_Gasses:
+return "CC_Gasses";
+case CC_Ore:
+return "CC_Ore";
+case CC_Rocks:
+return "CC_Rocks";
+case CC_IndustrialWater:
+return "CC_IndustrialWater";
+case CC_CombatVehicles:
+return "CC_CombatVehicles";
+case CC_NBCWarfare:
+return "CC_NBCWarfare";
+case CC_Ordinance:
+return "CC_Ordinance";
+case CC_PersonalWeapons:
+return "CC_PersonalWeapons";
+case CC_SpacecraftWeapons:
+return "CC_SpacecraftWeapons";
+case CC_SpacecraftDefenceSystems:
+return "CC_SpacecraftDefenceSystems";
+default:
+ return "CC_Invalid"; 
+}
+ return "CC_Invalid"; 
+}
+
+eCargoCategory String2CargoCategory 
+ ( string to_cast 
+ ) 
+{
+if ("CC_Blueprints" == to_cast )
+return CC_Blueprints;
+else if ("CC_ConsumerData" == to_cast )
+return CC_ConsumerData;
+else if ("CC_PrivateData" == to_cast )
+return CC_PrivateData;
+else if ("CC_SecureData" == to_cast )
+return CC_SecureData;
+else if ("CC_Software" == to_cast )
+return CC_Software;
+else if ("CC_Avionics" == to_cast )
+return CC_Avionics;
+else if ("CC_Computers" == to_cast )
+return CC_Computers;
+else if ("CC_ConsumerElectronics" == to_cast )
+return CC_ConsumerElectronics;
+else if ("CC_Cybernetics" == to_cast )
+return CC_Cybernetics;
+else if ("CC_DataStorage" == to_cast )
+return CC_DataStorage;
+else if ("CC_Instrumentation" == to_cast )
+return CC_Instrumentation;
+else if ("CC_MedicalElectronics" == to_cast )
+return CC_MedicalElectronics;
+else if ("CC_Nanotechnology" == to_cast )
+return CC_Nanotechnology;
+else if ("CC_Robotics" == to_cast )
+return CC_Robotics;
+else if ("CC_AgriculturalEquipment" == to_cast )
+return CC_AgriculturalEquipment;
+else if ("CC_Environmental" == to_cast )
+return CC_Environmental;
+else if ("CC_MachineTools" == to_cast )
+return CC_MachineTools;
+else if ("CC_MiningEquipment" == to_cast )
+return CC_MiningEquipment;
+else if ("CC_PowerSystems" == to_cast )
+return CC_PowerSystems;
+else if ("CC_Terraforming" == to_cast )
+return CC_Terraforming;
+else if ("CC_Vehicles" == to_cast )
+return CC_Vehicles;
+else if ("CC_Alcohol" == to_cast )
+return CC_Alcohol;
+else if ("CC_Art" == to_cast )
+return CC_Art;
+else if ("CC_Furs" == to_cast )
+return CC_Furs;
+else if ("CC_Jewellery" == to_cast )
+return CC_Jewellery;
+else if ("CC_LuxuryConsumerGoods" == to_cast )
+return CC_LuxuryConsumerGoods;
+else if ("CC_LuxuryFoodstuffs" == to_cast )
+return CC_LuxuryFoodstuffs;
+else if ("CC_Narcotics" == to_cast )
+return CC_Narcotics;
+else if ("CC_SportingGoods" == to_cast )
+return CC_SportingGoods;
+else if ("CC_ConsumerGoods" == to_cast )
+return CC_ConsumerGoods;
+else if ("CC_MedicalSupplies" == to_cast )
+return CC_MedicalSupplies;
+else if ("CC_Pharmaceuticals" == to_cast )
+return CC_Pharmaceuticals;
+else if ("CC_SurvivalEquipment" == to_cast )
+return CC_SurvivalEquipment;
+else if ("CC_Bacteria" == to_cast )
+return CC_Bacteria;
+else if ("CC_Biomass" == to_cast )
+return CC_Biomass;
+else if ("CC_Fauna" == to_cast )
+return CC_Fauna;
+else if ("CC_Flora" == to_cast )
+return CC_Flora;
+else if ("CC_Fungi" == to_cast )
+return CC_Fungi;
+else if ("CC_GeneticMaterial" == to_cast )
+return CC_GeneticMaterial;
+else if ("CC_ProcessedFoodstuffs" == to_cast )
+return CC_ProcessedFoodstuffs;
+else if ("CC_UnprocessedFoodstuffs" == to_cast )
+return CC_UnprocessedFoodstuffs;
+else if ("CC_Waste" == to_cast )
+return CC_Waste;
+else if ("CC_AntimatterGoods" == to_cast )
+return CC_AntimatterGoods;
+else if ("CC_ConstructionMaterial" == to_cast )
+return CC_ConstructionMaterial;
+else if ("CC_Exotics" == to_cast )
+return CC_Exotics;
+else if ("CC_ReactorFuel" == to_cast )
+return CC_ReactorFuel;
+else if ("CC_Gemstones" == to_cast )
+return CC_Gemstones;
+else if ("CC_Hydrocarbons" == to_cast )
+return CC_Hydrocarbons;
+else if ("CC_CommonMetals" == to_cast )
+return CC_CommonMetals;
+else if ("CC_Radioactives" == to_cast )
+return CC_Radioactives;
+else if ("CC_BulkChemicals" == to_cast )
+return CC_BulkChemicals;
+else if ("CC_Gasses" == to_cast )
+return CC_Gasses;
+else if ("CC_Ore" == to_cast )
+return CC_Ore;
+else if ("CC_Rocks" == to_cast )
+return CC_Rocks;
+else if ("CC_IndustrialWater" == to_cast )
+return CC_IndustrialWater;
+else if ("CC_CombatVehicles" == to_cast )
+return CC_CombatVehicles;
+else if ("CC_NBCWarfare" == to_cast )
+return CC_NBCWarfare;
+else if ("CC_Ordinance" == to_cast )
+return CC_Ordinance;
+else if ("CC_PersonalWeapons" == to_cast )
+return CC_PersonalWeapons;
+else if ("CC_SpacecraftWeapons" == to_cast )
+return CC_SpacecraftWeapons;
+else if ("CC_SpacecraftDefenceSystems" == to_cast )
+return CC_SpacecraftDefenceSystems;
+
+return CC_Blueprints;
+}
+
+eCargoCategory Int2CargoCategory 
+ ( int to_cast 
+ ) 
+ { 
+ switch(to_cast) 
+ {
+case CC_Blueprints:
+return CC_Blueprints;
+case CC_ConsumerData:
+return CC_ConsumerData;
+case CC_PrivateData:
+return CC_PrivateData;
+case CC_SecureData:
+return CC_SecureData;
+case CC_Software:
+return CC_Software;
+case CC_Avionics:
+return CC_Avionics;
+case CC_Computers:
+return CC_Computers;
+case CC_ConsumerElectronics:
+return CC_ConsumerElectronics;
+case CC_Cybernetics:
+return CC_Cybernetics;
+case CC_DataStorage:
+return CC_DataStorage;
+case CC_Instrumentation:
+return CC_Instrumentation;
+case CC_MedicalElectronics:
+return CC_MedicalElectronics;
+case CC_Nanotechnology:
+return CC_Nanotechnology;
+case CC_Robotics:
+return CC_Robotics;
+case CC_AgriculturalEquipment:
+return CC_AgriculturalEquipment;
+case CC_Environmental:
+return CC_Environmental;
+case CC_MachineTools:
+return CC_MachineTools;
+case CC_MiningEquipment:
+return CC_MiningEquipment;
+case CC_PowerSystems:
+return CC_PowerSystems;
+case CC_Terraforming:
+return CC_Terraforming;
+case CC_Vehicles:
+return CC_Vehicles;
+case CC_Alcohol:
+return CC_Alcohol;
+case CC_Art:
+return CC_Art;
+case CC_Furs:
+return CC_Furs;
+case CC_Jewellery:
+return CC_Jewellery;
+case CC_LuxuryConsumerGoods:
+return CC_LuxuryConsumerGoods;
+case CC_LuxuryFoodstuffs:
+return CC_LuxuryFoodstuffs;
+case CC_Narcotics:
+return CC_Narcotics;
+case CC_SportingGoods:
+return CC_SportingGoods;
+case CC_ConsumerGoods:
+return CC_ConsumerGoods;
+case CC_MedicalSupplies:
+return CC_MedicalSupplies;
+case CC_Pharmaceuticals:
+return CC_Pharmaceuticals;
+case CC_SurvivalEquipment:
+return CC_SurvivalEquipment;
+case CC_Bacteria:
+return CC_Bacteria;
+case CC_Biomass:
+return CC_Biomass;
+case CC_Fauna:
+return CC_Fauna;
+case CC_Flora:
+return CC_Flora;
+case CC_Fungi:
+return CC_Fungi;
+case CC_GeneticMaterial:
+return CC_GeneticMaterial;
+case CC_ProcessedFoodstuffs:
+return CC_ProcessedFoodstuffs;
+case CC_UnprocessedFoodstuffs:
+return CC_UnprocessedFoodstuffs;
+case CC_Waste:
+return CC_Waste;
+case CC_AntimatterGoods:
+return CC_AntimatterGoods;
+case CC_ConstructionMaterial:
+return CC_ConstructionMaterial;
+case CC_Exotics:
+return CC_Exotics;
+case CC_ReactorFuel:
+return CC_ReactorFuel;
+case CC_Gemstones:
+return CC_Gemstones;
+case CC_Hydrocarbons:
+return CC_Hydrocarbons;
+case CC_CommonMetals:
+return CC_CommonMetals;
+case CC_Radioactives:
+return CC_Radioactives;
+case CC_BulkChemicals:
+return CC_BulkChemicals;
+case CC_Gasses:
+return CC_Gasses;
+case CC_Ore:
+return CC_Ore;
+case CC_Rocks:
+return CC_Rocks;
+case CC_IndustrialWater:
+return CC_IndustrialWater;
+case CC_CombatVehicles:
+return CC_CombatVehicles;
+case CC_NBCWarfare:
+return CC_NBCWarfare;
+case CC_Ordinance:
+return CC_Ordinance;
+case CC_PersonalWeapons:
+return CC_PersonalWeapons;
+case CC_SpacecraftWeapons:
+return CC_SpacecraftWeapons;
+case CC_SpacecraftDefenceSystems:
+return CC_SpacecraftDefenceSystems;
+ default:
+    return CC_Blueprints;
+}
+
+ return CC_Blueprints;
+}
+
+string CargoSuperSet2String 
+ ( eCargoSuperSet to_cast 
+ ) 
+ { 
+ switch(to_cast) 
+ {
+case CS_Data:
+return "CS_Data";
+case CS_Electronics:
+return "CS_Electronics";
+case CS_HeavyEngineering:
+return "CS_HeavyEngineering";
+case CS_Luxuries:
+return "CS_Luxuries";
+case CS_ManufacturedGoods:
+return "CS_ManufacturedGoods";
+case CS_OrganicMaterials:
+return "CS_OrganicMaterials";
+case CS_ProcessedMaterials:
+return "CS_ProcessedMaterials";
+case CS_RawMaterials:
+return "CS_RawMaterials";
+case CS_WeaponSystems:
+return "CS_WeaponSystems";
+default:
+ return "CS_Invalid"; 
+}
+ return "CS_Invalid"; 
+}
+
+eCargoSuperSet String2CargoSuperSet 
+ ( string to_cast 
+ ) 
+{
+
+if ("CS_Data" == to_cast )
+return CS_Data;
+else if ("CS_Electronics" == to_cast )
+return CS_Electronics;
+else if ("CS_HeavyEngineering" == to_cast )
+return CS_HeavyEngineering;
+else if ("CS_Luxuries" == to_cast )
+return CS_Luxuries;
+else if ("CS_ManufacturedGoods" == to_cast )
+return CS_ManufacturedGoods;
+else if ("CS_OrganicMaterials" == to_cast )
+return CS_OrganicMaterials;
+else if ("CS_ProcessedMaterials" == to_cast )
+return CS_ProcessedMaterials;
+else if ("CS_RawMaterials" == to_cast )
+return CS_RawMaterials;
+else if ("CS_WeaponSystems" == to_cast )
+return CS_WeaponSystems;
+
+return CS_Data;
+}
+
+eCargoSuperSet Int2CargoSuperSet 
+ ( int to_cast 
+ ) 
+ { 
+ switch(to_cast) 
+ {
+
+case CS_Data:
+return CS_Data;
+case CS_Electronics:
+return CS_Electronics;
+case CS_HeavyEngineering:
+return CS_HeavyEngineering;
+case CS_Luxuries:
+return CS_Luxuries;
+case CS_ManufacturedGoods:
+return CS_ManufacturedGoods;
+case CS_OrganicMaterials:
+return CS_OrganicMaterials;
+case CS_ProcessedMaterials:
+return CS_ProcessedMaterials;
+case CS_RawMaterials:
+return CS_RawMaterials;
+case CS_WeaponSystems:
+return CS_WeaponSystems;
+default:
+ return CS_Data;
+}
+ return CS_Data;
+}
+
+
+Test()
+{
+   int i, type;
+   hcargo cargo;
+   string name;
+
+   for (i=CT_Invalid;i<CT_AdvancedHullMaterialRefit;++i) {
+
+      name = CargoType2String(i);
+      type = String2CargoType(name);
+      cargo = iCargo.Find(type);
+
+      if (i != Object.IntProperty(cargo,"type") ) {
+         debug {
+            Debug.PrintString("Error\n");
+            Debug.PrintInt(i);
+            Debug.PrintString(" Cargo type failed\n");
+         }
+      }
+   }
+
+   for (i=CC_Blueprints;i<CC_SpacecraftDefenceSystems;++i) {
+      
+      name = CargoCategory2String(i);
+      type = String2CargoCategory(name);
+
+      if (name == "CC_Invalid") {
+         debug {
+            Debug.PrintString("Error\n");
+            Debug.PrintInt(i);
+            Debug.PrintString(" Cat type failed\n");
+         }
+      }
+      if ((i != CC_Blueprints) && (type == CC_Blueprints)) {
+         debug {
+            Debug.PrintString("Error\n");
+            Debug.PrintInt(i);
+            Debug.PrintString(" Cat type failed\n");
+         }
+      }
+   }
+
+
+   for (i=CS_Data;i<CS_WeaponSystems;++i) {
+      
+      name = CargoSuperSet2String(i);
+      type = String2CargoSuperSet(name);
+
+      if (name == "CS_Invalid") {
+         debug {
+            Debug.PrintString("Error\n");
+            Debug.PrintInt(i);
+            Debug.PrintString(" Super type failed\n");
+         }
+      }
+      if ((i != CS_Data) && (type == CS_Data)) {
+         debug {
+            Debug.PrintString("Error\n");
+            Debug.PrintInt(i);
+            Debug.PrintString(" Super type failed\n");
+         }
+      }
+   }
+
+
+   debug Debug.PrintString("ECargoTypes test complete\n");
+
+}

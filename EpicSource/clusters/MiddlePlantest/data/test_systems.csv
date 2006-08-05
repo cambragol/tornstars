@@ -1,0 +1,229 @@
+Center,Test_Sultan,,,
+
+Star,Test Sultan Alpha,5,5.00E+06,end
+
+Planet,Copper,,,
+Station,Palace,ClusterAdmin,Royalguard,ok
+Station,Elite Guard,PoliceBase,Royalguard,ok
+Station,Navy Port,DefenceDock,Royalguard,ok
+Station,Glass Dome,Entertainment,Khalilistan,ok
+Station,Floating City,Habitat,Khalilistan,ok
+
+
+
+comment,home of inside mega corp,,,
+Planet,Brass,,,
+Station,Brass Towers,CentralHQ,Mesa,ok
+Station,Brass Works,HeavyMan,Mesa,ok
+Station,Brass Security,SecurityStation,Mesa,ok
+Station,Brass Shipyard,Shipyard,Mesa,ok
+Station,Brass Shipping,Warehousing,Mesa,ok
+Station,Brass Habitat,Habitat,Empty,destroyed
+
+
+
+Planet,Iron,,,
+Station,Iron Police Station,PoliceBase,Royalguard,ok
+Station,Casino Rouge,Entertainment,Khalilistan,ok
+Operation,Viceden,Junkers,,
+Station,Iron Habitat,Habitat,Empty,destroyed
+Moon,Rust,,,
+Station,Rust Pirate Cove,PirateCove,Empty,destroyed
+
+
+Belt ,Rocky,,,
+
+Planet,Bronze,,,
+Station,Bronze Police,PoliceBase,Royalguard,ok
+Station,Bronze Metals,CommonMetalsProc,Khalilistan,ok
+Station,Bronze Refining,CommonMetalsProc,Empty,destroyed
+Station,Bronze Security,SecurityStation,Empty,destroyed
+Station,Bronze Manufacture,HeavyMan,Empty,destroyed
+Station,Bronze City,Habitat,Khalilistan,ok
+Station,Bronze Habitat,Habitat,Khalilistan,ok
+Station,Bronze Entertainment,Entertainment,Khalilistan,ok
+Station,Bronze Pirate Cove,PirateCove,Empty,destroyed
+
+Planet,Steel,,,
+Station,Steel Habitat,Habitat,Khalilistan,ok
+Station,Steel Cove,PirateCove,Gargoyles,ok,
+Operation,Blackmarket,Gargoyles,,,
+Operation,Piratehq,Gargoyles,,,
+
+Moon,Stainless,,,,
+Lpoint,Stainless Lpoint,Steel,Stainless,1,Test_Junk
+
+Nebula,Dusty,,,,
+
+Planet,TestZone,,,,
+
+Station,TestStationHab,Habitat,Vorlon,building,
+Station,TestStationSec,SecurityStation,Vorlon,ok,
+Station,TestStationProd,HeavyMan,Shadow,ok,
+Station,TestStationAdmin,Research,Shadow,ok,
+
+Center,Test_Junk,,,
+
+Star,Test Junk Alpha,5,0,end
+
+comment,Home of an outside mega corp,,,
+Planet,Hullplate,,,
+Station,The Scrapyard,Shipyard,Whind,destroyed
+Station,The Black Tower,SecurityStation,Whind,ok
+Operation,Blackmarket,Junkers,,
+Station,JunkWorks,HeavyMan,Whind,ok
+Station,Hullplate Shipping,Warehousing,Whind,ok
+Operation,Embezzle,Junkers,,
+Station,Corporate Plaza,CentralHQ,Whind,ok
+Operation,Piratehq,Junkers,,
+Station,Hullplate Research,Research,Whind,ok
+Operation,Hacker,Junkers,,
+Station,Hullplate Police Base,PoliceBase,Empty,destroyed,,
+
+Moon,Rivet,,,,,
+Station,Rivet Pirate Base,PirateBase,Empty,never,,
+Station,Rivet Pirate Cove,PirateCove,Empty,never,,
+Station,Rivet Habitat,Habitat,Yezhid,ok,,
+
+
+
+Moon,Airlock,,,,,
+Lpoint,Airlock Lpoint,Hullplate,Airlock,2,Test_Pirate,Test_Sultan
+
+Belt,Armor,,,,,
+Station,Armor Gov Outpost,Outpost,Empty,destroyed,,
+Station,Armor Navy Dock,DefenceDock,Empty,destroyed,,
+Station,Armor Police Station,PoliceBase,Empty,destroyed,,
+
+Station,Armor Habitat,Habitat,Yezhid,ok
+Station,Armor Refinery,CommonMetalsProc,Yezhid,ok
+Station,Armor Metals,CommonMetalsProc,Yezhid,ok
+
+Giant,Dockport,,,
+Station,Dockport Shipyard,Shipyard,Empty,destroyed
+Station,Dockport Security,SecurityStation,Empty,never
+Station,Dockport Heavy Material,HeavyMan,Empty,never
+Station,Dockport Shipping,Warehousing,Yezhid,ok
+Station,Dockport Corporate,CentralHQ,Empty,never
+Station,Dockport Police Base,PoliceBase,Empty,never
+Moon,Airlock,,,
+Station,Airlock Pirate Cove,PirateCove,Empty,never
+
+
+
+
+
+Center,Test_Pirate,,,
+
+Star,Test Pirate Alpha,100,0,end
+
+Planet,Evergreen,,,
+
+Station,Evergreen Metals,CommonMetalsProc,Aikenites,ok
+Station,Evergreen Refining,CommonMetalsProc,Aikenites,destroyed
+Station,Evergreen Security,SecurityStation,Aikenites,destroyed
+Operation,Blackmarket,Gargoyles,,
+Station,Evergreen Manufacture,HeavyMan,Aikenites,destroyed
+Operation,Embezzle,Gargoyles,,
+Station,Evergreen City,Habitat,Aikenites,ok
+Operation,Piratehq,Gargoyles,,,,
+Station,Evergreen Habitat,Habitat,Aikenites,ok,,
+Station,Evergreen Entertainment,Entertainment,Aikenites,ok,,
+Operation,Viceden,Gargoyles,,,,
+Station,Evergreen Pirate Base,PirateBase,Gargoyles,ok,,
+Operation,Piratehq,Gargoyles,,,,
+
+Moon,Pinecone,,,,,
+Station,Pinecone Pirate Cove,PirateCove,Empty,never,,
+Lpoint,Pinecone Lpoint,Evergreen,Pinecone,2,Test_Leung,Test_Junk
+
+Belt,Birch,,,,,
+Station,Birch Shipyard,Shipyard,EtCom,ok,,
+Station,Birch Security,SecurityStation,EtCom,ok,,
+Station,Birch Manufacture,HeavyMan,Empty,never,,
+Station,Birch Shipping,Warehousing,Empty,destroyed,,
+Station,Birch Corporate Center,CentralHQ,EtCom,ok
+Station,Birch Research,Research,Empty,never
+Station,Birch City,Habitat,Aikenites,ok
+Moon,Seed,,,
+Station,Seed Pirate Base,PirateBase,Empty,empty
+Station,Seed Pirate Cove,PirateCove,Aikenites,ok
+
+
+
+Planet ,Oak,,,
+Station,Oak Metals,CommonMetalsProc,Aikenites,ok
+Station,Oak Refining,CommonMetalsProc,Empty,never
+Station,Oak Security,SecurityStation,Empty,destroyed
+Station,Oak Manufacture,HeavyMan,Empty,never
+Station,Oak City,Habitat,Aikenites,ok
+Operation,Rebelhq,Dragons,,
+Station,Oak Habitat,Habitat,Aikenites,ok
+Operation,Rebelsupport,Dragons,,
+Station,Oak Pirate Cove,PirateCove,Dragons,ok
+
+Moon,Acorn,,,
+Station,Acorn Pirate Base,PirateBase,Empty,never
+Station,Acorn Pirate Cove,PirateCove,Empty,never
+Station,Acorn Habitat,Habitat,Aikenites,ok
+
+
+
+Giant,Elm,,,
+Station,Elm Metals,CommonMetalsProc,Aikenites,ok
+Station,Elm Refining,CommonMetalsProc,Empty,never
+Operation,Fleetattack,Enavy,,
+Station,Elm Security,SecurityStation,Empty,never
+Station,Elm Manufacture,HeavyMan,Empty,never
+Operation,Blackmarket,Gargoyles,,
+Station,Elm City,Habitat,Aikenites,ok
+Operation,Rebelsupport,Dragons,,
+Station,Elm Habitat,Habitat,Aikenites,ok
+Station,Elm Pirate Base,PirateBase,Empty,never
+Moon,Leaf,,,
+Moon,Bud,,,
+Moon,Nut,,,
+
+
+Center,Test_Leung,,,
+
+Star,Test Leung Alpha,11,0,end
+
+Planet,Tau Tsun,,,
+Station,Capital,ClusterAdmin,Enavy,ok,
+Station,Capital Police,PoliceBase,Enavy,ok,
+Station,Capital Navy Base,DefenceDock,Enavy,ok,
+Station,Floating World,Entertainment,Leung,ok,
+Station,Capital City,Habitat,Leung,ok,
+
+Moon,Pearl,,,,
+
+Lpoint,Pearl Lpoint,Tau Tsun,Pearl,1,Test_Pirate
+
+Planet,Kronholm,,,,
+Station,Kronholm Shipyard,Shipyard,Lomax,ok,
+Station,Kronholm Security,SecurityStation,Empty,never,
+Station,Kronholm Heavy Material,HeavyMan,Lomax,ok,
+Station,Kronholm Shipping,Warehousing,Lomax,ok,
+Station,Kronholm Corporate,CentralHQ,Lomax,ok,
+Station,Kronholm Police Base,PoliceBase,Empty,never
+Moon,Gear,,,
+Station,Gear Pirate Cove,PirateCove,Empty,never
+
+
+
+Planet ,LiPo,,,
+Station,LiPo Metals,CommonMetalsProc,Fonseka,ok
+Station,LiPo Refining,CommonMetalsProc,Empty,never
+Station ,LiPo Corporate,CentralHQ,Fonseka,ok
+Station,LiPo Security,SecurityStation,Empty,never
+Station,LiPo Manufacture,HeavyMan,Fonseka,building
+
+Station,LiPo City,Habitat,Fonseka,ok
+
+Station,LiPo Habitat,Habitat,Leung,ok
+Moon,Oyster,,,
+Station,Oyster Pirate Cove,PirateCove,Empty,never
+Moon,Snail,,,
+Station,Snail Refining,CommonMetalsProc,Empty,never
+Station,Snail Pirate Cove,PirateCove,Empty,never

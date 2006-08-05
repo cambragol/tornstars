@@ -1,0 +1,1336 @@
+//*******************************************************************************************/
+//
+// tEpicFaction
+//
+// Code to create and use a new faction package. Mostly done to get around the 54 faction 
+// limit in EoC. This package also has support for properties needed by the action planning
+// code.
+//
+//
+// May 2004, Jon Freise
+//******************************************************************************************/
+
+package tEpicFaction;
+
+uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+iConversation, iFormation, Group, Text, iEmail, State, iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker, iWingmen,
+iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,
+iDirector, iEscort, iLagrangePoint, iMusic, iGame, Stream, iBackToBase, iDeathScript,
+   tEpicFactionEnum,
+   tStationEnum,
+   tLRoot,
+   tLProduction,
+   tLFleet;
+
+
+
+provides Init,
+         SessionEnd,
+         SaveGame,
+         NewGame,
+         Find,
+         SetFeeling,
+         Feeling,
+         FeelingToString,
+         LevelToString,
+         FeelingToLevel,
+         FeelingLevel,
+
+         Description,
+         Create,
+         Destroy,
+         All,
+         Type,
+         Alignment,
+         Relations,
+
+         Activity,
+         SetActivity,
+
+         AddAction,
+         ActionList,
+
+         AddPlan,
+         PlanList,
+
+         StationList,
+         AddStation,
+         RemoveStation,
+         ClearStations,
+
+         SetEpicFaction,
+         Faction,
+         EocFaction,
+
+         SetFleetStyle,
+         FleetStyle,
+
+         SetSecret,
+         IsSecret,
+
+         SetKnown,
+         IsKnown,
+
+         IsGovernment,
+         IsPublic,
+         IsHidden,
+
+         SetPlayerDamage,
+         PlayerDamage,
+
+         FindPlayerFaction,
+         FindEmptyFaction,
+
+         CopyFaction,
+
+         RunCheck;
+
+
+
+
+prototype hsim Create(string name,
+                      string eoc_faction,
+                      string html_file,
+                      int type,
+                      int alignment,
+                      string fleet_style);
+
+prototype save_feelings();
+prototype restore_feelings();
+
+
+prototype hsim Find(string name);
+prototype SetFeeling(hsim efeeler, hsim efeelee, float level);
+prototype bool Known(hsim efaction);
+prototype SetKnown(hsim efaction, bool known);
+prototype string FeelingToString(float feeling);
+prototype string Description(hsim efaction);
+
+prototype AddStation(hsim efaction, hsim station);
+prototype RemoveStation(hsim efaction, hsim station);
+
+
+prototype hsim find_by_name(list items, string name);
+
+prototype add_list(hsim efaction);
+prototype list get_list();
+
+prototype hsim construct (string name,
+                          string eoc_faction,
+                          string html_file,
+                          int id,
+                          int type,
+                          int alignment,
+                          string fleet_style);
+
+
+prototype read_factions(string file_name);
+
+prototype read_adjustments(string file_name);
+
+prototype SetFleetStyle(hsim efaction, string fleet_style);
+
+prototype string FleetStyle(hsim efaction);
+
+
+
+/*
+   Faction Level Setting.
+
+   ACL_Allied > 7.0
+   ACL_Friendly > 4.0
+   ACL_Peaceful > 1.0
+   
+   ACL_Neutral 0.0
+   
+   ACL_Worried < -1.0
+   ACL_Dislike < -4.0
+   ACL_Hostile < -7.0
+*/
+
+
+// Convert the feeling level into the midpoint for that feeling range.
+// Typical target for the feeling level.
+float FeelingLevel(eFactionLevel level)
+{
+   switch (level) {
+   case ACL_Allied: 
+      return 0.85;
+      break;
+   case ACL_Friendly: 
+      return 0.55;
+      break;
+   case ACL_Peaceful: 
+      return 0.25;
+      break;
+
+   case ACL_Neutral:
+      return 0.0;
+      break;
+   
+   case ACL_Worried: 
+      return -0.25;
+      break;
+
+   case ACL_Dislike: 
+      return -0.55;
+      break;
+
+   case ACL_Hostile:
+      return -0.85;
+      break;
+
+   default:
+      break;
+   }
+
+   return 0.0;
+}
+
+eFactionLevel FeelingToLevel(float feeling)
+{
+   if (feeling < -0.7) {
+      return ACL_Hostile;
+
+   }else if (feeling < -0.4) {
+      return ACL_Dislike;
+
+   }else if (feeling < -0.1) {
+      return ACL_Worried;
+
+   }else if (feeling < 0.1) {
+      return ACL_Neutral;
+
+   }else if (feeling < 0.4) {
+      return ACL_Peaceful;
+
+   }else if (feeling < 0.7) {
+      return ACL_Friendly;
+   }
+
+   return ACL_Allied;
+}
+
+RunCheck()
+{
+   Global.SetBool("g_zz_ug_passme",true);
+}
+
+
+
+Init()
+{
+   list empty_list;
+
+   Text.Add("csv:/text/middle_factions");
+
+   if (!Global.Exists("g_epic_faction_id_counter")){
+      Global.CreateInt("g_epic_faction_id_counter",GA_Write, 200);
+   }
+
+   restore_feelings();
+
+   // Create short cut to player faction handle.
+   Global.CreateHandle("g_epic_faction_player_faction",GA_Write|GA_NoSave, 
+                       Find("F_Player"));
+
+   // Create a short cut to the empty faction. It gets used almost
+   // as much as the player faction.
+   Global.CreateHandle("g_epic_faction_empty_faction",GA_Write|GA_NoSave, 
+                       Find("F_Empty"));
+}
+
+SessionEnd()
+{
+
+   Text.Remove("csv:/text/middle_factions");
+}
+
+list All()
+{
+   return get_list();
+}
+
+
+SaveGame()
+{
+
+   save_feelings();
+
+}
+
+NewGame()
+{
+
+   Global.CreateInt("g_epic_faction_id_counter", GA_Write, 400);
+
+   Global.CreateFloat("gt_epic_fac_noise", GA_Write, 0.01);
+
+   Global.CreateBool("gt_epic_fac_readini", GA_Write, true);
+}
+
+
+// Return the short cut to the player faction. Speeds code all over.
+hsim FindPlayerFaction()
+{
+   return Sim.Cast(Global.Handle("g_epic_faction_player_faction"));
+}
+
+hsim FindEmptyFaction()
+{
+   return Sim.Cast(Global.Handle("g_epic_faction_empty_faction"));
+}
+
+string LevelToString(eFactionLevel level)
+{
+   switch (level) {
+   case ACL_Allied: 
+      return "Allied";
+      break;
+   case ACL_Friendly: 
+      return "Friendly";
+      break;
+   case ACL_Peaceful: 
+      return "Peaceful";
+      break;
+
+   case ACL_Neutral:
+      return "Neutral";
+      break;
+   
+   case ACL_Worried: 
+      return "Worried";
+      break;
+
+   case ACL_Dislike: 
+      return "Dislike";
+      break;
+
+   case ACL_Hostile:
+      return "Hostile";
+      break;
+
+   default:
+      break;
+   }
+
+   return "Invalid";
+}
+
+string FeelingToString(float feeling)
+{
+   eFactionLevel level;
+
+   level = FeelingToLevel(feeling);
+
+   return LevelToString(level);
+}
+
+// Returns the link to a factions html description file.
+string Description(hsim efaction)
+{
+
+   return Object.StringProperty(efaction, "gt_epic_fac_html");
+
+}
+
+
+hsim Create(string name,
+            string eoc_faction,
+            string html_file,
+            int type,
+            int alignment,
+            string fleet_style)
+{
+   int id;
+   hsim efaction;
+
+   id = tLRoot.NewId();
+
+   efaction = construct (name, eoc_faction, html_file, id, type, alignment, fleet_style);
+
+   // Factions are production layers, they just don't have centers.
+   tLProduction.Create(iSim.Cast(efaction), ept_Faction, 20000, 0, 0, true);
+
+   // Factions are also holding centers for fleets that get
+   // tossed when stations and operations are destroyed.
+   tLFleet.Create(iSim.Cast(efaction), 1.0, 5.0);
+
+   return efaction;
+}
+
+
+hsim construct (string name,
+                string eoc_faction,
+                string html_file,
+                int id,
+                int type,
+                int alignment,
+                string fleet_style)
+
+{
+   hsim efaction = Sim.Create("ini:/sims/nav/waypoint",name);
+   list empty_list;
+   hfaction eoc_fac;
+
+   eoc_fac = iFaction.Find(eoc_faction);
+
+   debug {
+      if (none == efaction) {
+         Debug.PrintString("EpicFaction.restore sim create failed\n");
+      }
+
+      Debug.PrintString("EpicFaction.construct ");
+      Debug.PrintString(name);
+      Debug.PrintString("\n");
+
+      if (none == eoc_fac) {
+         Debug.PrintString("EpicFaction.construct bad eoc faction");
+         Debug.PrintString(eoc_faction);
+         Debug.PrintString("\n");
+      }
+   }
+
+   tLRoot.SetId(efaction, id);
+
+   Object.AddStringProperty(efaction, "gt_epic_fac_eoc_fac", eoc_faction);
+   Object.AddHandleProperty(efaction, "gt_epic_fac_eoc_handle", eoc_fac);
+
+   Object.AddStringProperty(efaction, "gt_epic_fac_html", html_file);
+
+   Object.AddStringProperty(efaction, "gt_epic_fac_fleet_style", fleet_style);
+
+   Object.AddIntProperty(efaction, "gt_epic_fac_id", id);
+
+   Object.AddIntProperty(efaction, "gt_epic_fac_type", type);
+   Object.AddIntProperty(efaction, "gt_epic_fac_alignment", alignment);
+
+   // Add a bunch more properties with default values.
+
+   Object.AddIntProperty(efaction, "gt_epic_fac_copies", 0);
+
+   Object.AddIntProperty(efaction, "gt_epic_fac_player_damage", 0);
+
+   Object.AddBoolProperty(efaction, "gt_epic_fac_secret", false);
+   Object.AddBoolProperty(efaction, "gt_epic_fac_known", false);
+
+   Object.AddListProperty(efaction, "gt_epic_fac_relate", empty_list);
+
+   Object.AddListProperty(efaction, "gt_epic_fac_action", empty_list);
+
+   Object.AddListProperty(efaction, "gt_epic_fac_plans", empty_list);
+
+   Object.AddListProperty(efaction, "gt_epic_fac_stations", empty_list);
+
+   // These properties are used during Plan selecting 
+   Object.AddFloatProperty(efaction,"gt_sort_value" , 0);    // danger value
+   Object.AddListProperty(efaction, "gt_ally_list", empty_list);  // 
+   Object.AddListProperty(efaction, "gt_enemy_list", empty_list);
+
+   add_list(efaction);
+
+
+   return efaction;
+}
+
+// Returns the eoc hfaction that this epic faction
+// belongs under.
+hfaction EocFaction(hsim efaction)
+{
+   return iFaction.Cast(Object.HandleProperty(efaction, 
+                                              "gt_epic_fac_eoc_handle"));
+}
+
+// Returns the faction type (corporate, gov) of this faction.
+int Type(hsim efaction)
+{
+   return Object.IntProperty(efaction, "gt_epic_fac_type");
+}
+
+// Returns the alignment (white-gray-black) of this faction.
+int Alignment(hsim efaction)
+{
+   return Object.IntProperty(efaction, "gt_epic_fac_alignment");
+}
+
+// Set true if the player knows this faction exists and can read the 
+// description.
+SetKnown(hsim efaction, bool known)
+{
+   Object.SetBoolProperty(efaction, "gt_epic_fac_known", known);
+}
+
+
+bool IsKnown(hsim efaction)
+{
+   return Object.BoolProperty(efaction, "gt_epic_fac_known");
+}
+// If true then the player has secret level clearance inside this
+// faction and can know its links, even if the organization is
+// hidden.
+
+SetSecret(hsim efaction, bool secret)
+{
+   Object.SetBoolProperty(efaction, "gt_epic_fac_secret", secret);
+}
+
+
+bool IsSecret(hsim efaction)
+{
+   return Object.BoolProperty(efaction, "gt_epic_fac_secret");
+}
+
+SetPlayerDamage(hsim efaction, int player_damage)
+{
+   Object.SetIntProperty(efaction, "gt_epic_fac_player_damage", player_damage);
+}
+
+int PlayerDamage(hsim efaction)
+{
+   return Object.IntProperty(efaction, "gt_epic_fac_player_damage");
+}
+
+
+SetFleetStyle(hsim efaction, string fleet_style)
+{
+   Object.SetStringProperty(efaction,"gt_epic_fac_fleet_style", fleet_style);
+}
+
+string FleetStyle(hsim efaction)
+{
+   return Object.StringProperty(efaction,"gt_epic_fac_fleet_style");
+}
+
+
+// Is this faction type public, and easy to know?
+bool IsPublic(hsim efaction)
+{
+   int fac_type;
+   fac_type = Type(efaction);
+
+   // Returns true if this faction is any
+   // of the public faction types.
+   if (FCT_Public&fac_type) {
+      return true;
+   }
+   return false;
+}
+
+// Is this faction type hidden, and hard to know?
+bool IsHidden(hsim efaction)
+{
+   int fac_type;
+   fac_type = Type(efaction);
+   if (FCT_Hidden&fac_type) {
+      return true;
+   }
+   return false;
+}
+
+// Is this faction type a government faction?
+bool IsGovernment(hsim efaction)
+{
+   int fac_type;
+   fac_type = Type(efaction);
+   if (FCT_Authority&fac_type) {
+      return true;
+   }
+   return false;
+}
+
+
+int Id(hsim efaction)
+{
+   return Object.IntProperty(efaction, "gt_epic_fac_id");
+}
+
+// Sets the ships faction
+SetEpicFaction(hisim ship, hsim efaction)
+{
+   hfaction eoc_faction;
+   hsim old_faction;
+   bool add_station = false;
+
+   if (none == efaction) {
+      debug Debug.PrintString("Error EpicFaction.SetEpicFaction missing faction\n");
+      return;
+   }
+
+   if (none == ship) {
+      debug Debug.PrintString("Error EpicFaction.SetEpicFaction missing faction\n");
+      return;
+   }
+
+   eoc_faction = EocFaction(efaction);
+
+   // Set the visible faction
+   iSim.SetFaction(ship, eoc_faction);
+
+   if (Object.PropertyExists(ship, "gt_epic_fac_handle")) {
+      old_faction = Sim.Cast(Object.HandleProperty(ship, "gt_epic_fac_handle"));
+      Object.SetHandleProperty(ship, "gt_epic_fac_handle", efaction);
+   }else {
+      Object.AddHandleProperty(ship, "gt_epic_fac_handle", efaction);
+   }
+
+   // if the object is a station, we add it as a station into the
+   // faction.
+   if (iSim.Type(ship) & T_Station ) {
+      add_station == true;
+   }else if (iSim.Type(ship) & T_Waypoint) {
+      if (Object.PropertyExists(ship, "gtUnderOpKnown")) {
+         // Ok, that was evil, but I need to know if this is an operation and,
+         // I cannot circular link back to operations!
+         add_station == true;
+      }
+   }
+
+   if (true == add_station) {
+      if (none != old_faction) {
+         RemoveStation(old_faction, ship);
+      }
+      AddStation(efaction, ship);
+   }
+
+}
+
+
+hsim Faction(hisim ship)
+{
+
+   return Sim.Cast(Object.HandleProperty(ship, "gt_epic_fac_handle"));
+
+}
+
+AddAction(hsim efaction, hobject action)
+{
+   list actions;
+    
+   atomic {
+      actions = Object.ListProperty(efaction, "gt_epic_fac_action");
+      List.AddTail(actions, action);
+      Object.SetListProperty(efaction, "gt_epic_fac_action", actions);
+   }
+}
+
+list ActionList(hsim efaction)
+{
+   return Object.ListProperty(efaction, "gt_epic_fac_action");
+}
+
+AddPlan(hsim efaction, hobject plan)
+{
+   list plans;
+    
+   atomic {
+      plans = Object.ListProperty(efaction, "gt_epic_fac_plans");
+      List.AddTail(plans, plan);
+      Object.SetListProperty(efaction, "gt_epic_fac_plans", plans);
+   }
+}
+
+list PlanList(hsim efaction)
+{
+   return Object.ListProperty(efaction, "gt_epic_fac_plans");
+}
+
+
+
+AddStation(hsim efaction, hsim station)
+{
+   list stations;
+    
+   atomic {
+      stations = Object.ListProperty(efaction, "gt_epic_fac_stations");
+      if (!List.Contains(stations, station)) {
+         List.AddTail(stations, station);
+      }
+      Object.SetListProperty(efaction, "gt_epic_fac_stations", stations);
+   }
+}
+
+RemoveStation(hsim efaction, hsim station)
+{
+   list stations;
+    
+   atomic {
+      stations = Object.ListProperty(efaction, "gt_epic_fac_stations");
+      List.Remove(stations, station);
+      Object.SetListProperty(efaction, "gt_epic_fac_stations", stations);
+   }
+}
+
+list StationList(hsim efaction)
+{
+   return Object.ListProperty(efaction, "gt_epic_fac_stations");
+}
+
+ClearStations(hsim efaction)
+{
+   list empty_list;
+
+   Object.SetListProperty(efaction, "gt_epic_fac_stations", empty_list);
+}
+
+add_list(hsim efaction)
+{
+   list fac_list;
+
+   atomic {
+      if (Global.Exists("gt_epic_faction_hold_list")) {
+         fac_list = Global.List("gt_epic_faction_hold_list");
+         List.AddTail(fac_list, efaction);
+         Global.SetList("gt_epic_faction_hold_list", fac_list);
+      }else {
+         List.AddTail(fac_list, efaction);
+         Global.CreateList("gt_epic_faction_hold_list", GA_Write|GA_NoSave, fac_list);
+      }
+   }
+}
+
+
+
+remove_list(hsim efaction)
+{
+   list fac_list;
+
+   atomic {
+      if (Global.Exists("gt_epic_faction_hold_list")) {
+         fac_list = Global.List("gt_epic_faction_hold_list");
+         List.Remove(fac_list, efaction);
+         Global.SetList("gt_epic_faction_hold_list", fac_list);
+      }
+   }
+}
+
+
+
+list get_list()
+{
+   return Global.List("gt_epic_faction_hold_list");
+}
+
+
+/*
+
+; largest faction number used
+[Properties]
+faction_number= 5
+adjust_number=5
+
+[Faction#]
+name=
+short=
+eoc_faction=
+secret=
+government=
+
+
+[Adjust#]
+first_name=
+second_name=
+value=
+
+
+*/
+
+
+
+read_factions(string file_name)
+{
+   hinifile faction_file = INIFile.Create(file_name);
+   int faction_total, i, known_int, type, alignment;
+   string key_name, name, html_file, eoc_faction, fleet_style;
+   bool known, secret;
+   hsim faction;
+
+   if (none == faction_file) {
+      debug Debug.PrintString("EpicFaction.read_factions error cannot open ini file\n");
+      return;
+   }else {
+      debug Debug.PrintString("Read_factions\n");
+   }
+
+   faction_total = INIFile.Int(faction_file, "Properties", "faction_number",0);
+   
+   for (i=0;i<=faction_total;++i) {
+
+      key_name = String.FormatInt("Faction%d",i);
+      name = INIFile.String(faction_file, key_name, "name","none");
+
+      debug Debug.PrintString("Epic Faction ");
+      debug Debug.PrintString(name);
+      debug Debug.PrintString("\n");
+
+      if ("none" != name) {
+
+         // This faction entry does exist, fill the rest of the properties.
+         eoc_faction = INIFile.String(faction_file, key_name, "eoc_faction","none");
+         html_file = INIFile.String(faction_file, key_name, "html","none");
+         fleet_style = INIFile.String(faction_file, key_name, "fleet_style","none");
+         known_int = INIFile.Int(faction_file, key_name, "known", 0);
+         type = INIFile.Int(faction_file, key_name, "type", 0);
+         alignment = INIFile.Int(faction_file, key_name, "alignment", 0);
+
+         if (1 == known_int) {
+            known = true;
+         }else {
+            known = false;
+         }
+
+         faction = Create(name, eoc_faction, html_file, type, alignment, fleet_style);
+         SetKnown(faction, known);
+      }
+   }
+
+   INIFile.Destroy(faction_file);
+}
+
+
+
+read_adjustments(string file_name)
+{
+   hinifile faction_file = INIFile.Create(file_name);
+   int i, total, number_factions, adjust_count;
+   hsim faction, target;
+   string section_name, faction_name, adjust_name;
+   float adjust_level;
+   int faction_type, faction_alignment;
+
+   if (none == faction_file) {
+      debug Debug.PrintString("EpicFaction.read_adjustments: cannot find faction ini\n");
+      return;
+   }
+
+   number_factions = INIFile.Int(faction_file,"Properties","faction_number",0);
+   
+   for (i=0;i<=number_factions;++i) {         
+      section_name = String.FormatInt("Faction%d",i);
+
+      faction_name = INIFile.String(faction_file,section_name,"name","none");
+
+      faction = Find(faction_name);
+
+      adjust_count =0;
+      while (INIFile.NumberedExists(faction_file, section_name,"adjust_name",adjust_count)) {
+         adjust_name = INIFile.NumberedString(faction_file,section_name,"adjust_name",adjust_count,"none");
+         adjust_level = INIFile.NumberedFloat(faction_file,section_name,"adjust_level",adjust_count,0);
+
+         // Lookup the faction
+         target = Find(adjust_name);
+         // Change the feeling
+         SetFeeling(faction, target, adjust_level);
+
+         debug {
+            Debug.PrintHandle(faction);
+            Debug.PrintString(" to ");
+            Debug.PrintHandle(target);
+            Debug.PrintString(" adjusted ");
+            Debug.PrintFloat(adjust_level);
+            Debug.PrintString("\n");
+         }
+         ++adjust_count;
+      }
+   }
+
+   INIFile.Destroy(faction_file);
+}
+
+
+/*
+read_adjustments(string file_name)
+{
+   hinifile faction_file = INIFile.Create(file_name);
+
+   int faction_total, i;
+   string key_name, first_name, second_name;
+   hsim faction, faction2;
+   float level;
+
+
+   if (none == faction_file) {
+      debug Debug.PrintString("EpicFaction.read_adjustments error cannot open ini file\n");
+      return;
+   }else {
+      debug Debug.PrintString("Read_adjustments\n");
+   }
+
+   faction_total = INIFile.Int(faction_file, "Properties", "faction_number",0);
+
+   for (i=0;i<=faction_total;++i) {
+
+      key_name = String.FormatInt("Adjust%d",i);
+      first_name = INIFile.String(faction_file, key_name, "first_name","none");
+
+      debug Debug.PrintString("Adjust");
+      debug Debug.PrintString(first_name);
+      debug Debug.PrintString("\n");
+
+      if ("none" != first_name) {
+         // This faction entry does exist, fill the rest of the properties.
+         second_name = INIFile.String(faction_file, key_name, "second_name","none");
+         level = INIFile.Float(faction_file, key_name, "value",0.0);
+
+         faction = Find(first_name);
+         faction2 = Find(second_name);
+
+         SetFeeling(faction, faction2, level);
+      }
+   }
+
+   INIFile.Destroy(faction_file);
+}
+*/
+
+
+
+hsim find_by_name(list items, string name)
+{
+   int i, total;
+   hsim item;
+
+   total = List.ItemCount(items);
+   for (i=0;i<total;++i) {
+      item = Sim.Cast(List.GetNth(items, i));
+      if (name == Sim.Name(item)) {
+         return item;
+      }
+   }
+
+   return none;
+}
+
+
+hsim Find(string name)
+{
+
+   return find_by_name(get_list(), name);
+}
+
+
+Destroy(hsim faction)
+{
+   remove_list(faction);
+
+   Sim.Destroy(faction);
+}
+
+
+float Feeling(hsim efeeler, hsim efeelee)
+{
+   string name = Sim.Name(efeelee);
+
+   if (Object.PropertyExists(efeeler, name)) {
+      return Object.FloatProperty(efeeler, name);
+   }
+      
+   return 0.0;
+}
+
+SetFeeling(hsim efeeler, hsim efeelee, float level)
+{
+   float noise = Global.Float("gt_epic_fac_noise");
+   list relations;
+   string name = Sim.Name(efeelee);
+
+   if (none == efeeler) {
+      debug Debug.PrintString("EpicFaction.SetFeeling null efeeler\n");
+      return;
+   }
+   if (none == efeelee) {
+      debug Debug.PrintString("EpicFaction.SetFeeling null efeelee\n");
+      return;
+   }
+
+   if (Object.PropertyExists(efeeler, name)) {
+      Object.SetFloatProperty(efeeler, name, level);
+   }else {
+      Object.AddFloatProperty(efeeler, name, level);
+   }
+
+   // we track the a list of relations to make saving faster later.
+   relations = Object.ListProperty(efeeler, "gt_epic_fac_relate");
+   if (!List.Contains(relations, efeelee)) {
+      List.AddTail(relations, efeelee);
+      Object.SetListProperty(efeeler, "gt_epic_fac_relate", relations); 
+   }
+}
+
+// Return a list of those factions that are not neutral.
+// Very handy for fast planning of faction wars.
+list Relations(hsim efaction)
+{
+   return Object.ListProperty(efaction, "gt_epic_fac_relate");
+}
+
+// Activity tracks if there is currently something being done
+// from one faction towards another. Keeps plans from nesting
+// multiple deep.
+int Activity(hsim efeeler, hsim efeelee)
+{
+   string name = Sim.Name(efeelee);
+
+   name = String.Join(name,"active");
+
+   if (Object.PropertyExists(efeeler, name)) {
+      return Object.IntProperty(efeeler, name);
+   }
+      
+   return 0;
+
+}
+
+SetActivity(hsim efeeler, hsim efeelee, int activity_level)
+{
+
+   float noise = Global.Float("gt_epic_fac_noise");
+   list relations;
+   string name = Sim.Name(efeelee);
+
+   if (none == efeeler) {
+      debug Debug.PrintString("EpicFaction.SetActivity null efeeler\n");
+      return;
+   }
+
+   if (none == efeelee) {
+      debug Debug.PrintString("EpicFaction.SetActivity null efeelee\n");
+      return;
+   }
+
+   name = String.Join(name,"active");
+
+   if (Object.PropertyExists(efeeler, name)) {
+      Object.SetIntProperty(efeeler, name, activity_level);
+   }else {
+      Object.AddIntProperty(efeeler, name, activity_level);
+   }
+
+}
+
+// Creates a new faction based upon the old faction.
+hsim CopyFaction(int type, hsim base_faction, string new_name)
+{
+   int id, alignment;
+   int i, total;
+   list relations;
+   hsim efeelee, new_faction;
+   float level;
+   float noise = 0.01;
+
+   id = tLRoot.NewId();
+
+   alignment = Alignment(base_faction);
+
+   new_faction = construct (new_name,
+                            iFaction.Name(EocFaction(base_faction)),
+                            Description(base_faction),
+                            id,
+                            type,
+                            alignment,
+                            FleetStyle(base_faction));
+
+   // Copy over all the relationships from the base_faction.
+   relations = Object.ListProperty(base_faction, "gt_epic_fac_relate");
+   total = List.ItemCount(relations);
+
+   for (i=0;i<total;++i) {
+      efeelee = Sim.Cast(List.GetNth(relations, i));
+      if (!Sim.IsDead(efeelee)) {
+
+         level = Feeling(base_faction, efeelee);
+         SetFeeling(new_faction, efeelee, level);
+
+         level = Feeling(efeelee, base_faction);
+         SetFeeling(efeelee, new_faction, level);
+      }
+   }
+
+   return new_faction;
+}
+
+save_faction(hsim efaction)
+{
+   int id, activity;
+   string save_name, relation_name;
+   list relations;
+   int i, total, count;
+   hsim efeelee;
+   float noise = Global.Float("gt_epic_fac_noise");
+   float level;
+
+   if (none == efaction) {
+      debug Debug.PrintString("EpicFaction.save_faction null handle passed in\n");
+      return;
+   }
+
+   if (Sim.IsDead(efaction)) {
+      debug Debug.PrintString("EpicFaction.save_faction faction destroyed\n");
+      return;
+   }
+ 
+   debug Debug.PrintHandle(efaction);
+   debug Debug.PrintString(" faction saving\n");
+
+   id = Id(efaction);
+
+   save_name = String.FormatInt("gt_save_fac%d", id);
+
+   Global.CreateString(String.Join(save_name,"name"),GA_Write,Sim.Name(efaction));
+
+   Global.CreateString(String.Join(save_name,"eoc"), 
+                       GA_Write, 
+                       Object.StringProperty(efaction, "gt_epic_fac_eoc_fac"));
+
+   Global.CreateString(String.Join(save_name,"html"), 
+                       GA_Write, 
+                       Object.StringProperty(efaction, "gt_epic_fac_html"));
+
+   Global.CreateString(String.Join(save_name,"style"), 
+                       GA_Write, 
+                       FleetStyle(efaction));
+
+   Global.CreateBool(String.Join(save_name,"secret"), GA_Write, IsSecret(efaction));
+   Global.CreateBool(String.Join(save_name,"known"), GA_Write, IsKnown(efaction));
+
+   Global.CreateInt(String.Join(save_name,"type"), GA_Write, Type(efaction));
+   Global.CreateInt(String.Join(save_name,"alignment"), GA_Write, Alignment(efaction));
+
+   Global.CreateInt(String.Join(save_name,"player_damage"), GA_Write, PlayerDamage(efaction));
+
+   tLFleet.Save(iSim.Cast(efaction));
+   tLProduction.Save(iSim.Cast(efaction));
+
+   // save away all the relationships that are non-zero.
+   relations = Object.ListProperty(efaction, "gt_epic_fac_relate");
+   total = List.ItemCount(relations);
+   count = 0;
+   for (i=0;i<total;++i) {
+      efeelee = Sim.Cast(List.GetNth(relations, i));
+      if (!Sim.IsDead(efeelee)) {
+         level = Feeling(efaction, efeelee);
+         activity = Activity(efaction, efeelee);
+         if ((level > noise)||(level<(-1*noise))) {
+            // save relation name
+            // save relation level
+            // save relation activity
+            relation_name = String.Join(save_name,String.FormatInt("_%d",count));
+
+            Global.CreateString(String.Join(relation_name,"name"), GA_Write, Sim.Name(efeelee));
+            Global.CreateFloat(String.Join(relation_name,"level"),GA_Write, level);
+            Global.CreateInt(String.Join(relation_name,"active"),GA_Write, activity);
+
+            ++count;
+         }
+      }
+   }
+   Global.CreateInt(String.Join(save_name,"count"),GA_Write, count);
+
+}
+
+hsim restore_faction(int id)
+{
+   string save_name, name, eoc_name, html_file, fleet_style;
+   bool secret, known;
+   hsim efaction;
+   int type, alignment, funds, player_damage;
+
+   debug Debug.PrintString(String.FormatInt("Restoring Fac %d\n",id));
+
+   save_name = String.FormatInt("gt_save_fac%d", id);
+   
+   if (Global.Exists(String.Join(save_name,"name"))) {
+
+      // Save entry exists, go forward.
+      name = Global.String(String.Join(save_name,"name"));
+      eoc_name = Global.String(String.Join(save_name,"eoc"));
+      html_file = Global.String(String.Join(save_name,"html"));
+      fleet_style = Global.String(String.Join(save_name,"style"));
+      secret = Global.Bool(String.Join(save_name,"secret"));
+      known = Global.Bool(String.Join(save_name,"known"));
+      type = Global.Int(String.Join(save_name,"type"));
+      alignment = Global.Int(String.Join(save_name,"alignment"));
+      player_damage = Global.Int(String.Join(save_name,"player_damage"));
+
+      // Wipe out those globals we no longer need.
+      Global.Destroy(String.Join(save_name,"name"));
+      Global.Destroy(String.Join(save_name,"eoc"));
+      Global.Destroy(String.Join(save_name,"html"));
+      Global.Destroy(String.Join(save_name,"secret"));
+      Global.Destroy(String.Join(save_name,"known"));
+      Global.Destroy(String.Join(save_name,"type"));
+      Global.Destroy(String.Join(save_name,"alignment"));
+      Global.Destroy(String.Join(save_name,"player_damage"));
+   
+      efaction = construct (name,
+                            eoc_name,
+                            html_file,
+                            id,
+                            type, 
+                            alignment,
+                            fleet_style);
+
+      SetSecret(efaction, secret);
+      SetKnown(efaction, known);
+      SetPlayerDamage(efaction, player_damage);
+
+      debug Debug.PrintString("EpicFaction.restore_faction restore production, fleet\n");
+
+      tLProduction.Restore(iSim.Cast(efaction));
+      //tLFleet.Restore(iSim.Cast(efaction));
+
+      debug Debug.PrintString("EpicFaction.restore_faction done\n");
+
+      return efaction;
+
+   }else {
+      debug{
+          Debug.PrintString("EpicFaction.restore_faction name global missing\n");
+          Debug.PrintString(String.FormatInt("faction id %d\n",id));
+      }
+   }
+
+   return none;
+}
+
+// Second pass, once all are created.
+restore_feeling(hsim efaction)
+{
+   string save_name, relation_name, name;
+   int id = Id(efaction);
+   hsim efeelee;
+   float level;
+   int total, i, activity;
+
+   save_name = String.FormatInt("gt_save_fac%d", id);   
+
+   total = Global.Int(String.Join(save_name,"count"));
+   Global.Destroy(String.Join(save_name,"count"));
+
+   for (i=0;i<total;++i) {
+      relation_name = String.Join(save_name,String.FormatInt("_%d",i));
+      
+      name = Global.String(String.Join(relation_name,"name"));
+      Global.Destroy(String.Join(relation_name,"name"));
+
+      efeelee = Find(name);
+
+      if (none != efeelee) {
+         level = Global.Float(String.Join(relation_name,"level"));
+         activity = Global.Int(String.Join(relation_name,"active"));
+         Global.Destroy(String.Join(relation_name,"level"));
+         Global.Destroy(String.Join(relation_name,"active"));
+
+         SetFeeling(efaction, efeelee, level);
+         SetActivity(efaction, efeelee, activity);
+      }
+   }
+}
+
+
+save_feelings()
+{
+   int i, total;
+   hsim item;
+   list items = get_list();
+
+   debug Debug.PrintString(String.FormatInt("EpicFaction.save_feelings %d\n",List.ItemCount(items)));
+
+   total = List.ItemCount(items);
+   for (i=0;i<total;++i) {
+      item = Sim.Cast(List.GetNth(items, i));
+      save_faction(item);
+      Global.CreateInt(String.FormatInt("gt_epic_fac_master%d",i), GA_Write, Id(item));
+   }   
+
+   Global.CreateInt("gt_epic_fac_master_total", GA_Write, total);
+}
+
+
+restore_feelings()
+{
+
+   int i, total, id;
+   hsim item;
+   list items;
+
+   debug Debug.PrintString("EpicFaction.restore_feelings\n");
+
+   // If there was no prior save, then use the ini file.
+   if (!Global.Exists("gt_epic_fac_master_total")) {
+      debug Debug.PrintString("EpicFaction.restore_feelings read ini file\n");
+      read_factions("ini:/faction_init");
+      read_adjustments("ini:/faction_init");
+      return;
+   }
+
+   // Restore all the factions.
+   total = Global.Int("gt_epic_fac_master_total");
+   Global.Destroy("gt_epic_fac_master_total");
+
+   for (i=0;i<total;++i) {
+      id = Global.Int(String.FormatInt("gt_epic_fac_master%d",i));
+      Global.Destroy(String.FormatInt("gt_epic_fac_master%d",i));
+
+      restore_faction(id);
+   }   
+
+   // Now restore all links between them.
+   items = get_list();
+   total = List.ItemCount(items);
+   for (i=0;i<total;++i) {
+      item = Sim.Cast(List.GetNth(items, i));
+      restore_feeling(item);
+   }  
+}
+
+
+/*
+
+Design Notes:
+
+Structure Properties
+
+name
+eoc_faction
+html_description
+faction type
+alignment bits
+secret faction flag
+known faction to player
+funds 
+
+
+Relationship Properties
+current level
+anger level
+revealed factor
+
+What are the goals of this new faction system? What must it do?
+
+1. Read initial faction info from a file.
+
+2. Store changes in state between factions.
+
+3. Keep a few extra faction properties: known to player, 
+secret faction, gov faction, description file.
+
+4. Diplomatic properties, threat level, integrity, expansionist.
+
+efaction Find("name");
+
+SetFeeling( efaction, efaction, level);
+
+Known( efaction);
+
+bool IsKnown(efaction);
+
+Create("name", "short_name", "eoc_faction");
+
+*/
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

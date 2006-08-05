@@ -1,0 +1,24 @@
+//
+// (c) 1998-9 Particle Systems Ltd. All Rights Reserved
+//
+// ExitCrashTest.h
+//
+// Compiler-generated export header for package "ExitCrashTest"
+//
+// Revision control information:
+//
+// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/ExitCrashTest.h,v 1.1 2005/10/08 04:30:27 Owner Exp $
+//
+
+// Dependencies ////////////////////////////////////////////////////////////////
+
+// Enumerated types ////////////////////////////////////////////////////////////
+
+// Functions ///////////////////////////////////////////////////////////////////
+
+prototype ExitCrashTest.ScenarioMain();
+
+prototype ExitCrashTest.Main();
+
+// EOF /////////////////////////////////////////////////////////////////////////
+

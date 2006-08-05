@@ -1,0 +1,22 @@
+//
+// (c) 1998-9 Particle Systems Ltd. All Rights Reserved
+//
+// iIgnore.h
+//
+// Compiler-generated export header for package "iIgnore"
+//
+// Revision control information:
+//
+// $Header: c:/epic/cvs/EpicSource/pog/include_ps/iIgnore.h,v 1.1.1.1 2005/05/13 09:27:23 Owner Exp $
+//
+
+// Dependencies ////////////////////////////////////////////////////////////////
+
+// Enumerated types ////////////////////////////////////////////////////////////
+
+// Functions ///////////////////////////////////////////////////////////////////
+
+prototype task iIgnore.WarnVessel( hship requestor_ship, hship aggressor_ship );
+
+// EOF /////////////////////////////////////////////////////////////////////////
+

@@ -1,0 +1,1124 @@
+;Texture Setup Data,,
+RockyTextureCount,14,
+RockyTwoTextureCount,8,
+BlackPlanetTexture,34,
+
+GiantTextureCount,8,
+
+;Emerald Alliance,,
+
+Center,emerald_sys,
+Star,Emerald Alpha,5
+
+Planet,Ruby,
+Moon,Blackstone,
+Moon,Bloodstone,
+Planet,Sapphire,
+Moon,Moonstone,,,
+SpecialPlanetTexture,22,,,
+SpecialPlanetBump,23,,,
+Planet,Emerald,,,
+Station,Emerald Beanstalk Orbital,Waystation,EmeraldCitizens,ok
+Station,Emerald STC,PoliceBase,AllianceNavy,ok
+Station,Emerald Capitol ,ClusterAdmin,AllianceNavy,ok
+Station,Emerald Defense Station,DefenseDock,AllianceNavy,ok
+Station,Emerald Waystation Station,Waystation,EmeraldCitizens,ok
+Station,Amethyst Transfer Station,Transfer,EmeraldCitizens,ok
+Station,Sapphire Transfer Station,Transfer,EmeraldCitizens,ok
+Station,Azran Exotic Metals Processing,ExoticMetalsProc,Azran,ok
+Station,Turquoise Transfer Station,Transfer,EmeraldCitizens,ok
+Moon,Pearl,,,
+Station,Pearl Nanotech Factory,HiTechMan,EmeraldCitizens,ok
+Station,Pearl Research Station,Research,EmeraldCitizens,ok
+Giant,Jade,,,,,
+Moon,Crystal,,,,,
+Station,Jade Manufacturing Station,HeavyMan,EmeraldCitizens,ok,,
+Moon,Beryl,,,,,
+Station,Emerald Heavy Manufacturing,HeavyMan,EmeraldCitizens,ok,,
+Operation,Embezzle,Pimental,ok,,,
+Station,Emerald Shipyard,Shipyard,EmeraldCitizens,ok,,
+Planet,Diamond,,,,,
+Moon,Zircon,,,,,
+Station,Military Outpost,DefenseDock,AllianceNavy,ok,,
+Moon,Opal,,,,,
+Station,MelNet FTL Relay,FTLArray,Markus,ok,,
+Lpoint,Crystal Lpoint,Jade,Crystal,2,huang,bedalov
+Operation,Fleetdefense,AllianceNavy,,,,
+Lpoint,Beryl Lpoint,Jade,Beryl,2,penda,providence
+
+
+Center,providence,,,
+Star,Providence Alpha,5,,
+
+Planet,Palermo,,,
+
+Moon,Musetta,,,
+Moon,DeMarlo,,,
+Moon,Garrabrant,,,
+Planet,Edgewater,,,
+Moon,Ward,,,
+Station,Edgewater Waystation Station,Waystation,EmeraldCitizens,ok
+Moon,Ruppert,,,
+Station,Providence STC,PoliceBase,AllianceNavy,ok
+Station,Providence Senate,SystemAdmin,AllianceNavy,ok
+Planet,Roessner,,,
+Moon,Vander,,,,,,
+Station,Providence Medical Complex,Medical,EmeraldCitizens,ok,,,
+Station,Providence Medical Production,PharmaceuticalsMan,EmeraldCitizens,ok,,,
+Operation,Embezzle,Pimental,ok,,,,
+Moon,Fritz,,,,,,
+Moon,Denker,,,,,,
+Moon,Ritter,,,,,,
+Moon,Gertner,,,,,,
+
+Planet,Dufferin,,,,,,
+
+Moon,Lewis,,,,,,
+Station,Barkers Marker,DefenseDock,AllianceNavy,ok,,,
+Station,MelNet FTL Relay Station,FTLArray,Markus,ok,,,
+
+Lpoint,Lewis Lpoint,Dufferin,Lewis,3,li_po,xu_xuan,emerald_sys
+Operation,CustomsToll,AllianceNavy,,
+Lpoint,Vander Lpoint,Roessner,Vander,0
+
+
+Center,penda,,,
+Star,Penda Alpha,5,,
+
+Planet,New Luzon,,,
+Moon,Strang,,,
+Moon,Movalas,,,
+Station,Mining outpost,CommonMetalsMine,EmeraldCitizens,ok
+Moon,Kulas,,,
+Moon,Shekar,,,
+Planet,Mindanayo,,,
+Moon,Andsager,,,
+Station,Penda STC,PoliceBase,AllianceNavy,ok
+Station,Penda System Defense Station,DefenseDock,AllianceNavy,ok
+Station,Penda Senate,SystemAdmin,AllianceNavy,ok
+Moon,Baranec,,,
+Moon,Pimental,,,
+Station,Pimental Family HQ,PirateBase,Pimental,ok
+Station,Pimental Ship Base,PirateCove,Pimental,ok
+Planet,Nando,,,
+Moon,Schumacher,,,
+Station,Penda Military Outpost,DefenseDock,AllianceNavy,ok
+Moon,Nandini,,,
+Moon,Nalinas,,,
+Station,Nalinas Processing Facility,CommonMetalsProc,EmeraldCitizens,ok
+Operation,Embezzle,Pimental,ok,
+
+Moon,Bernal,,,
+Belt,Belt of Malacca,,,
+Planet,San Marcos,,,,,
+Moon,Einoco,,,,,
+Station,MelNet FTL Relay,FTLArray,Markus,ok,,
+Lpoint,Nandini Lpoint,Nando,Nandini,2,emerald_sys,epitaph
+Operation,Fleetdefense,AllianceNavy,,,,
+Lpoint,Kulas Lpoint,New Luzon,Kulas,0,,
+
+
+Center,huang,,,,,
+Star,Huang Alpha,5,,,,
+
+Planet,Lin,,,,,
+Moon,Long,,,,,
+Moon,Lou,,,,,
+Station,Yong Yuan Factory,CommonMetalsProc,EmeraldCitizens,ok,,
+Moon,Lai,,,,,
+Moon,Lung,,,
+Station,Feichang Hao Nano Production,CommonMetalsProc,EmeraldCitizens,ok
+Operation,Embezzle,Pimental,ok,
+Station,Chao Yun Nano Materials,CommonMetalsProc,EmeraldCitizens,ok
+Station,Lung Fuel Refinery,FusionableGasesProc,EmeraldCitizens,ok
+Moon,Lan,,,
+Station,Huang Waystation Station,Waystation,EmeraldCitizens,ok
+Planet,Tong,,,
+Moon,Yee,,,
+Station,Yee Entertainment,Resort,EmeraldCitizens,ok
+Station,Tong Station,Waystation,EmeraldCitizens,ok
+Moon,Liang,,,
+Station,Jump Gate Admin,CentralHQ,AllianceNavy,ok
+Planet,Chu Xien,,,
+Moon,Ko Shiu,,,
+Station,Huang Senate,SystemAdmin,AllianceNavy,ok
+Station,Huang STC,PoliceBase,AllianceNavy,ok,,
+Moon,Lieh,,,,,
+Moon,Yeung Jun,,,,,
+Station,Mining Outpost,CommonMetalsMine,EmeraldCitizens,ok,,
+Station,Yeung Fuel Refinery,FusionableGasesProc,EmeraldCitizens,ok,,
+Station,Gao Li Element Refinery,CommonMetalsProc,EmeraldCitizens,ok,,
+Moon,Yan,,,,,
+Moon,Pang,,,,,
+Station,Pang ElementRefinery,CommonMetalsProc,EmeraldCitizens,ok,,
+Operation,Embezzle,Scavengers,ok,,,
+Moon,Kong,,,,,
+Lpoint,Ko Shiu Lpoint,Chu Xien,Ko Shiu,2,emerald_sys,bedalov
+Lpoint,Lai Lpoint,Lin,Lai,2,powys,t_ang
+Operation,Fleetdefense,AllianceNavy,,,,
+
+; Sultanate,,,,,,
+Center,new_const,,,
+Star,Tulinid,5,,
+
+
+Giant,Al Battani,,,
+Moon,Accolus,,,
+Moon,Aurius  ,,,
+Moon,Carolus,,,
+Moon,Djibouti,,,
+Station,Battani Sation,Waystation,SultanateCitizens,ok
+Moon,Leolius,,,
+Station,Marius Base,DefenseDock,RoyalGuard,ok
+Moon,Olalius,,,
+Moon,Singulus ,,,
+Moon,Trochlius ,,,
+SpecialPlanetTexture,32,,,
+SpecialPlanetBump,33,,,
+Planet,Aljaya,,,
+Station,Aljaya Robotics Facility,WetwareMan,SultanateCitizens,ok
+Station,Aljaya Reactors Production,FusionReactorsMan,SultanateCitizens,ok
+Operation,Embezzle,Forty,ok,
+Moon,Mariq,,,
+Moon,Tariq,,,
+Station,Manufacturing Station,HeavyMan,SultanateCitizens,ok
+Giant,Antara,,,
+Moon,Akbar,,,
+Moon,Biralla,,,
+Moon,Ibrahim,,,
+Moon,Joaqim,,,
+Moon,Omar,,,
+Moon,Raballa,,,
+Giant,Ashalla,,,
+Moon,Harsha,,,
+Moon,Hira,,,
+Planet,Dramhin,,,
+Planet,Eva Cara,,,
+Station,Waystation Station,Waystation,SultanateCitizens,ok
+Giant,Ibn Abi R abia,,,
+Moon,Harun,,,
+Moon,Muhammed,,,
+Planet,Kasim,,,
+Station,Kasim Station,Waystation,SultanateCitizens,ok
+Moon,Cindra,,,
+SpecialPlanetTexture,28,,,
+SpecialPlanetBump,29,,,
+Planet,New Constantinople,,,
+Station,Palace,ClusterAdmin,RoyalGuard,ok
+Moon,Idris,,,
+Station,The Mustapha Institute,Habitat,SultanateCitizens,ok
+Station,Idris Food Processing,BiologicalMan,SultanateCitizens,ok
+Moon,Iona,,,
+Station,Pashasan Systems Manufacturing,WetwareMan,SultanateCitizens,ok
+Station,Iona Electronics Manufacturing,ElectronicsMan,SultanateCitizens,ok
+Station,New Constantinople STC,PoliceBase,RoyalGuard,ok
+Station,New Constantinople Trade Bureau HQ,CentralHQ,SultanateCitizens,ok
+Giant,Sirocco,,,
+Moon,Brophius,,,
+Moon,Eimskip,,,
+Moon,Gruner,,,
+Moon,Jazeel,,,
+Station,Jazeel Naval Shipyard,DefenseDock,RoyalGuard,ok
+Station,Jazeel Mercenary,MercenaryBase,Angels,ok
+Moon,Ludmilla,,,
+Moon,Matella,,,
+Moon,Naleema ,,,,,,
+Moon,Occam,,,,,,
+Moon,Omalla,,,,,,
+Moon,Pasha,,,,,,
+Moon,Rula,,,,,,
+Moon,Suleyman,,,,,,
+Planet,Telos,,,,,,
+Belt,Asteroids,,,,,,
+Station,Asteroid Base,CommonMetalsMine,SultanateCitizens,ok,,,
+Operation,Embezzle,Faceless,ok,,,,
+Station,Research Facility,Research,RoyalGuard,ok,,,
+Planet,Zelda,,,,,,
+
+Lpoint,Jazeel Lpoint,Sirocco,Jazeel,3,aleppo,epitaph,ivory_garden
+Operation,Fleetdefense,RoyalGuard,,,,,
+Lpoint,Aurius Lpoint,Al Battani,Aurius,2,saladin,al_wadi,
+Operation,CustomsToll,RoyalGuard,,
+
+
+Center,ivory_garden,,,
+
+Star,Al Quaan Alpha,5,,
+
+
+Planet,Obregon,,,
+Moon,Soham,,,
+Station,Manufacturing Station,HeavyMan,SultanateCitizens,ok
+Operation,Embezzle,Forty,ok,
+Station,Soham Arms Production,WeaponsMan,SultanateCitizens,ok
+Moon,Ostir,,,
+
+Station,STC Station,PoliceBase,RoyalGuard,ok
+Station,Processing Station,CommonMetalsProc,SultanateCitizens,ok,,
+Operation,Embezzle,Faceless,ok,,,
+Planet,Faidi,,,,,
+Moon,Ishai,,,,,
+Station,Security Station,SecurityStation,RoyalGuard,ok,,
+Station,Military Garrison Station,DefenseDock,RoyalGuard,ok,,
+Station,Military Weapons Facility,WeaponsMan,RoyalGuard,ok,,
+Station,Al Quaan Governor,RegionAdmin,RoyalGuard,ok,,
+Planet,Naveen,,,,,
+Station,Naveen Agricultural Station,AgSettlement,SultanateCitizens,ok,,
+Moon,Aziz,,,,,
+;Star,Al Quaan Beta,5,,,,
+
+Lpoint,Soham Lpoint,Obregon,Soham,2,aleppo,new_const
+Lpoint,Ostir Lpoint,Obregon,Ostir,0,,
+
+
+Center,aleppo,,,
+
+Star,Aleppo,5,,
+Giant,Al Qilaal,,,
+Moon,Malil,,,
+Moon,Sarfati,,,
+Moon,Al Barran,,,
+Moon,Ayala,,,
+Station,Ayala Trade Depot,Waystation,SultanateCitizens,ok
+Station,Aleppo STC,PoliceBase,RoyalGuard,ok
+station,Aleppo Governor,RegionAdmin,RoyalGuard,ok
+Station,Biomass Processing,BiologicalMan,SultanateCitizens,ok
+Planet,Qataar,,,
+Moon,Jinaro,,,
+Station,Ore Processing,CommonMetalsProc,SultanateCitizens,ok
+Station,Jinaro Refinery,CommonMetalsProc,SultanateCitizens,ok
+Operation,Embezzle,Forty,ok,
+Moon,Epper,,,
+Station,Epper Manufacturing,HeavyMan,SultanateCitizens,ok
+Moon,Gurrola,,,
+Belt,Zafir Belt ,,,
+Station,Zafir Mining HQ,CentralHQ,SultanateCitizens,ok
+Planet,Procopius,,,
+Moon,Silani,,,
+Moon,Correa,,,
+Station,Aleppo System Defense,DefenseDock,RoyalGuard,ok
+Moon,Ompah,,,
+Moon,Plevna,,,
+Moon,Neri,,,
+Moon,Verrea,,,
+Station,Alladins Cave,PirateBase,Forty,ok
+Lpoint,Sarfati Lpoint,Al Qilaal,Sarfati,2,new_const,ivory_garden
+
+
+Center,al_wadi,,,,,
+
+Star,Al Wadi,5,,,,
+
+Belt,Belt of Power,,,,,
+Belt,Belt of Riches,,,,,
+Station,Asteroid Base 1,NeutroniumMine,SultanateCitizens,ok,,
+Operation,Embezzle,Forty,ok,,,
+Station,Asteroid Base 2,NeutroniumMine,SultanateCitizens,ok,,
+Station,Asteroid Base 3,InorganicsMine,SultanateCitizens,ok,,
+Planet,Kaffal Djoba,,,,,
+Planet,Rumi,,,,,
+Belt,Belt of Great Wealth,,,,,
+Station,Asteroid Base 1,InorganicsMine,SultanateCitizens,ok
+Station,Asteroid Base 2,NeutroniumMine,SultanateCitizens,ok
+Station,Common Ore Handling Station,CommonMetalsProc,SultanateCitizens,ok
+Operation,Embezzle,Faceless,ok,
+Giant,Khodaverdi,,,
+Moon,Adjaina,,,
+Moon,Al Paz,,,
+Moon,Califendi,,,
+Moon,Al Galife,,,
+Moon,Guzman,,,
+Station,Guzman Mining Depot,CommonMetalsMine,SultanateCitizens,ok
+Moon,Laputo,,,
+Moon,Omer Alfez,,,
+Station,Omer Gas Depot,FusionableGasesMine,SultanateCitizens,ok
+Moon,Pyette,,,
+Moon,Qom,,,
+Moon,Zajowicz,,,,
+Planet,Igreja,,,,
+Moon,Maloufi,,,,
+Station,Al Wadi STC,PoliceBase,RoyalGuard,ok,
+Station,Al Wadi Naval Defense,MercenaryBase,Angels,ok,
+Station,Al Wadi Governor,RegionAdmin,RoyalGuard,ok,
+Moon,Maffindi,,,,
+Moon,Ogenna,,,,
+Station,Ogenna Base,DefenseDock,RoyalGuard,ok,
+Station,Neutronium Processing Facility,NeutroniumProc,SultanateCitizens,ok,
+Moon,Hajela,,,,
+Moon,Jamirai,,,,
+
+Lpoint,Al Paz Lpoint,Khodaverdi,Al Paz,1,new_const
+
+
+
+; Caliphate of Yezhid,,,,
+Center,nureddin,,,
+Star,Nureddin,5,,
+
+Giant,Cordoba,,,
+Moon,Barakka ,,,
+Moon,El Cid,,,
+Moon,Drexen,,,
+Moon,Olaf,,,
+Moon,New Istanbul  ,,,
+Station,Nureddin STC Station,PoliceBase,YezhidNavy,ok
+Station,Yehzid Food Processing,BiologicalMan,CaliphateCitizens,ok
+Moon,Jiddah,,,
+Station,Nureddin System Defense Station,DefenseDock,YezhidNavy,ok
+Station,Nureddin Centeral Government,RegionAdmin,YezhidNavy,ok
+Moon,Clovis,,,
+Station,Clovis Nano Fibre Production,WaterProc,CaliphateCitizens,ok
+Station,Cordoba Advanced Materials Assembly,RareMetalsProc,CaliphateCitizens,ok
+Station,Gas mine,CommonMetalsMine,CaliphateCitizens,ok
+Moon,Ghiddrah  ,,,
+Station,Mesa Corporation HQ Station,CentralHQ,Mesa,ok
+Station,Mesa Advanced Materials,RareMetalsProc,Mesa,ok
+Moon,Vellus,,,
+Moon,Tallus,,,
+SpecialPlanetTexure,30,,,
+SpecialPlanetBump,31,,,
+Planet,Autharia,,,
+Station,Nureddin Station,CentralHQ,CaliphateCitizens,ok
+Station,Nureddin Naval Shipyard,Shipyard,YezhidNavy,ok
+Station,Security Station,SecurityStation,YezhidNavy,ok
+Moon,Thrasamund,,,
+Belt,Asteroids,,,,,
+Station,Asteroid Base,RareMetalsMine,CaliphateCitizens,ok,,
+
+Lpoint,Drexen Lpoint,Cordoba,Drexen,2,hant,saladin
+Operation,Fleetdefense,YezhidNavy,,,,
+
+
+Center,saladin,,,,,
+
+Star,Saladin Alpha,5,,,,
+Planet,Ottokar,,,,,
+Planet,Oswald,,,,,
+Giant,Abassid,,,,,
+Moon,Abghi,,,,,
+Moon,Al Khibbi,,,,,
+Station,Saladdin STC,PoliceBase,YezhidNavy,ok,,
+Station,Saladdin System Defence,DefenseDock,YezhidNavy,ok
+Station,Saladdin Governor,RegionAdmin,YezhidNavy,ok
+Moon,Motassim,,,
+Moon,Ewalla,,,
+Moon,Fethi,,,
+Moon,Icqra,,,
+Moon,Oban Tam,,,
+Moon,Tafla,,,
+Station,Waystation Station,Waystation,CaliphateCitizens,ok
+Moon,Zajonc,,,
+Moon,Zapenna,,,
+Giant,Khayyam,,,
+Moon,Olivia,,,
+Moon,Antonia,,,
+Moon,Campos,,,
+Station,Ice Mine Station,WaterMine,CaliphateCitizens,ok
+Belt,The Big Belt,,,,,
+Station,Asteroid Station,CommonMetalsMine,CaliphateCitizens,ok,,
+Moon,Sangria,,,,,
+Station,Ice Mine Station,WaterMine,CaliphateCitizens,ok,,
+Station,Waystation Station,Waystation,CaliphateCitizens,ok,,
+
+Lpoint,Antonia Lpoint,Khayyam,Antonia,2,nureddin,hant
+Operation,Fleetdefense,YezhidNavy,,,,
+Lpoint,Al Khibbi,Abassid,Al Khibbi,1,new_const,
+Operation,CustomsToll,YezhidNavy,,,,
+
+
+; The barrens,,,,,,
+
+Center,hant,,,,,
+Star,Hant Alpha,5,,,,
+
+
+Planet,Olnyk,,,
+Moon,Bandychuk,,,
+Moon,Feschuk,,,
+Planet,Kilik,,,
+Moon,Pablo,,,
+Moon,Marco,,,
+Moon,Fabio,,,
+Planet,Kladnik,,,
+Planet,Llianna,,,
+Moon,Lindy,,,
+Station,Waystation Station,Waystation,Transients,ok
+Moon,Bailey,,,
+Planet,Rurik,,,
+Moon,Cedric,,,
+Moon,Ramona,,,
+Station,Hant STC,PoliceBase,Empty,destroyed
+Station,Hant Outpost,Outpost,Empty,destroyed
+Planet,Weldrik,,,
+Moon,Verdad,,,
+Station,Verdad Station,Waystation,Transients,ok
+Moon,San Pablo,,,
+Moon,Cruz,,,
+Moon,Doralicia,,,
+Moon,El Lobo,,,
+Planet,Seljuk,,,
+Moon,Deitch,,,
+Moon,Corinna,,,
+Moon,Artiss,,,
+Moon,Winblad,,,
+Station,Ore Processing Station,CommonMetalsProc,TakananRaiders,ok
+Moon,Bengt,,,
+Moon,Brason,,,
+Planet,Kowalyk,,,
+Moon,Archetti,,,
+Moon,Borroni,,,
+Station,Borroni Shipyard Repair Depot,Shipyard,Transients,ok
+Station,CMC Navy Stores,PirateBase,TakananRaiders,ok
+Moon,Hinton,,,
+Moon,Czernansky,,,
+Moon,Valle,,,
+Moon,Hecht,,,
+Moon,Southin,,,
+Moon,Marjacq,,,
+Moon,Wessel,,,
+Station,Wessel Waystation Station,Waystation,TakananRaiders,ok
+
+Lpoint,Corinna Lpoint,Seljuk,Corinna,1,nisami
+Operation,PirateToll,TakananRaiders,,,
+Lpoint,Valle Lpoint,Kowalyk,Valle,1,akra
+Lpoint,Lindy Lpoint,Kladnik,Lindy,1,nureddin
+Lpoint,Verdad Lpoint,Weldrik,Verdad,1,saladin
+Operation,PirateToll,TakananRaiders,,,
+
+
+
+Center,akra,,,,
+Star,Akra Alpha,5,,,
+
+Planet,Recared,,,,
+Moon,Shahar,,,,
+Moon,Zettel,,,,
+Moon,Nomad,,,,
+Planet,Gundobad,,,
+Moon,Trinidad,,,
+Moon,Brentano,,,
+Station,Fonseka Foundation HQ,CentralHQ,Aikenites,ok
+Moon,Pollard,,,
+Station,Akra STC,SecurityStation,Aikenites,ok
+Moon,Espirito Santo,,,
+Planet,Stahl,,,
+Station,CMC mining Outpost,CommonMetalsMine,CMCMining,ok
+Operation,Embezzle,TakananRaiders,ok,
+Station,CMC Security Station,SecurityStation,CMCMining,ok
+Planet,Hevesi,,,
+Station,Hevesi Station,Waystation,Fist,ok
+Moon,Surya Dava,,,
+Station,Surya Grande,MercenaryBase,Fist,ok
+Station,Surya Pocito,Habitat,Fist,ok
+Station,Akra Governor,RegionAdmin,Empty,destroyed
+Moon,Varley,,,
+Moon,Wyndham,,,
+Giant,Margate,,,
+Moon,Williams,,,
+Moon,Powell ,,,
+Station,Wrecked Waystation Station,Waystation,Transients,ok
+Moon,Umberto,,,
+Moon,Placentia,,,
+Moon,New Adelaide,,,
+Station,New Adelaide processing Facility,CommonMetalsProc,Aikenites,ok
+Operation,Embezzle,Droznic,ok,
+Moon,Clark,,,
+Moon,Todd,,,
+Moon,Clayton,,,
+Moon,Brown,,,
+
+Lpoint,Powell Lpoint,Margate,Powell,1,lombard,
+Lpoint,Brown Lpoint,Margate,Brown,2,nisami,hant
+Operation,PirateToll,TakananRaiders,,,,
+
+Center,epitaph,,,,,
+Star,Omayyad,5,,,,
+
+Planet,Styx,,,,,
+Planet,Sassania,,,,,
+Moon,Querelle,,,,,
+Moon,Rashomon,,,,,
+Moon,Tampopo,,,,,
+Belt,Golgotha Asteroid Belt,,,,,
+Planet,Malefique,,,,,
+Moon,Knell,,,,,
+Planet,Sarcophage,,,
+Moon,Samhain,,,
+Moon,Bardash,,,
+Station,Bardash Station,PirateBase,Gargoyles,ok
+Moon,Al Ameren,,,
+Moon,Sagerbrecht,,,
+Station,Sagerbrecht Waystation Station,Waystation,Machines,ok
+Belt,No Go Zone,,,
+Giant,Valhalla,,,
+Moon,Freddy,,,
+Moon,Jason,,,
+Moon,Michael,,,
+Moon,Norman,,,
+Moon,Hannibal,,,
+Moon,Carrie,,,
+Moon,Leatherface,,,
+Moon,Jack,,,,,
+Moon,Ash,,,,,
+Planet,Thanatos,,,,,
+Moon,Mordred,,,,,
+Moon,Scar,,,,,
+Planet,Quatermass,,,,,
+Moon,Farnham,,,,,
+Station,Quatermass Station,Waystation,Gargoyles,ok,,
+Station,Omayyad Outpost,Outpost,Empty,destroyed,,
+Planet,Grosvenor,,,,,
+Moon,Billings,,,,,
+Moon,Gruber,,,,,
+Moon,Bylsma,,,,,
+
+Lpoint,Mordred Lpoint,Valhalla,Mordred,2,lombard,new_const
+Operation,Fleetdefense,Machines,,,,
+Lpoint,Knell Lpoint,Malefique,Knell,1,penda
+Operation,Fleetdefense,Machines,,,
+
+
+Center,lombard,,,,
+Star,Lombard Alpha,5,,,
+
+
+Planet,Shapiro,,,,
+Planet,Vogel,,,,
+Moon,Dunlop,,,,
+Moon,Dorie,,,,
+Planet,Laswintha,,,,
+Belt,Inner Belt ,,,,
+Station,Asteroid base,OrganicsMine,Aikenites,ok,
+Operation,Embezzle,Droznic,ok,,
+Belt,Middle Belt,,,
+Giant,Lombardi,,,
+Moon,Morel,,,
+Moon,Opaline,,,
+Moon,Salvatore,,,
+Moon,Archer,,,
+Station,Lombard Station,Waystation,Aikenites,ok
+Station,Lombard STC,PoliceBase,Empty,destroyed
+Station,Lombard Government Center,ClusterAdmin,Empty,destroyed
+Moon,Remy,,,
+Moon,Foreman,,,
+Station,Foreman Military Base,DefenseDock,Empty,destroyed
+Moon,Segal,,,
+Belt,Lombards Outer Belt,,,
+Station,Aikenites HQ,Settlement,Aikenites,ok
+Giant,Samarra,,,
+Moon,Fallon,,,,,
+Station,Strong Hand,PirateBase,Droznic,ok,,
+Moon,Brammell,,,,,
+Moon,Tappin,,,,,
+Moon,Bentley,,,,,
+Station,Bentley CMC HQ,CentralHQ,Empty,destroyed,,
+Station,Bentley Processing Facility,CommonMetalsProc,Aikenites,ok,,
+Moon,Turner,,,,,
+Moon,Eisen,,,,,
+
+Lpoint,Salvatore Lpoint,Lombardi,Salvatore,2,akra,epitaph
+Lpoint,Brammell Lpoint,Samarra,Brammell,2,watts,ripon
+
+
+Center,ripon,,,,,
+Star,Ripon,5,,,,
+
+
+
+Planet,Paulus,,,
+Moon,Nestor,,,
+Moon,Obregon,,,
+Moon,Cabron,,,
+Moon,Felix,,,
+Planet,Kittredge,,,
+Moon,Bolivar,,,
+Moon,Hastings,,,
+Moon,Gilmour,,,
+Moon,Albertus,,,
+Station,Ripon STC,PoliceBase,Empty,destroyed
+Station,Ripon Outpost,Outpost,Empty,destroyed
+Moon,Monaghan,,,
+Moon,Carlotta,,,
+Moon,Wake,,,
+Station,Ripon System Defense Station,DefenseDock,Brethren,ok
+Moon,Weller,,,
+Moon,Stannor,,,
+Planet,Morte Subite,,,
+Moon,Alma,,,
+Station,Alma agricultural orbital,AgSettlement,Brethren,ok
+Station,Alma Waystation Station,Waystation,Brethren,ok
+Moon,Grande Cailliou,,,
+Moon,Daleena,,,
+Planet,Maudite,,,
+Moon,En Panne,,,
+Moon,Putain,,,
+Moon,Salope,,,
+Planet,Roux-Lough,,,
+Moon,D Arcy,,,,
+
+Lpoint,En Panne Lpoint,Maudite,En Panne,1,li_po
+Operation,Fleetdefense,Brethren,,,
+Lpoint,Grande Cailliou,Morte Subite,Grande Cailliou,1,lombard
+Operation,Fleetdefense,Brethren,,,
+
+; Corliss,,,,,
+
+
+Center,corliss,,,,
+Star,Corliss Alpha,5,,,
+
+
+Planet,Oxalis,,,,
+Moon,Chawla,,,,
+Moon,Guilbeault,,,
+Moon,Jai Gahn,,,
+Moon,Vaidwan,,,
+Planet,Delis,,,
+Moon,Chiama,,,
+Moon,Shaiman,,,
+Moon,Vano,,,
+Planet,Corliss,,,
+Station,Corliss STC,PoliceBase,CDF,ok
+Station,Corliss Government Center,SystemAdmin,CDF,ok
+Station,Corliss Trade Station,Waystation,Corliss,ok
+Station,Corliss Consumer Goods Production,LuxuriesMan,Corliss,ok
+Moon,Mowat,,,
+Station,Mowat Station,Waystation,Corliss,ok
+Station,Mowat Mineral Processing,InorganicsProc,Corliss,ok
+Operation,Embezzle,Droznic,ok,
+Station,Mowat Docking Platform,Waystation,Corliss,ok,,
+Moon,Ladson,,,,,
+Station,Ladson Naval Base and Shipyard,DefenseDock,CDF,ok,,
+Planet,Gault,,,,,
+Moon,Boone,,,,,
+Station,Boone Leisure Complex,Casino,Corliss,ok,,
+Planet,Fallis,,,,,
+Moon,Lars,,,,,
+Station,Lars Outpost,DefenseDock,Corliss,ok,,
+Moon,Kramer,,,,,
+
+Lpoint,Lars Lpoint,Gault,Lars,2,watts,nisami
+Operation,CustomsToll,CDF,,,,
+
+
+Center,nisami,,,,,
+Star,Nisami Alpha,5,,
+
+
+Giant,Hom,,,
+Moon,Noda,,,
+Moon,Mori,,,
+Station,Gas Mining Outpost,FusionableGasesMine,Corliss,ok
+Operation,Embezzle,Scavengers,ok,
+Planet,Gurkan,,,
+Moon,Wurts,,,
+Moon,Bromley,,,
+Station,Markus Corporation HQ Station,CentralHQ,Markus,ok
+Station,Nisami Senate,SystemAdmin,CDF,ok
+Moon,Ostergard,,,
+Station,Markus Corp. Manufacturing Station,HeavyMan,Markus,ok
+Giant,Odom,,,
+Moon,Travis,,,,,
+Station,Odom Waystation Station,Waystation,Corliss,ok,,
+Station,Biomass Processing Station,BiologicalMan,Corliss,ok,,
+Operation,Embezzle,Scavengers,ok,,,
+Station,Gas Mining Outpost,FusionableGasesMine,Corliss,ok,,
+Moon,Dugald,,,,,
+Planet,Sento,,,,,
+Station,Markus Corp Research Labs,Research,Markus,ok,,
+Planet,Yamagishi,,,,,
+Moon,Shimizu,,,,,
+Station,Shimizu Mines,CommonMetalsMine,Corliss,ok,,
+Moon,Suzuki,,,,,
+
+Lpoint,Noda Lpoint,Hom,Noda,2,hant,akra
+Operation,Fleetdefense,CDF,,,,
+Lpoint,Dugald Lpoint,Odom,Dugald,1,corliss,
+
+
+; Watts,,,,
+Center,watts,,,
+Star,Watts,5,,
+
+
+Planet,Blondell,,,
+Planet,Marsden,,,
+Moon,Amdur,,,
+Moon,Lynch,,,
+Moon,Lang,,,
+Moon,Rudachuk,,,
+Planet,Sutter,,,
+Moon,Renquist,,,
+Station,Watts Governor,RegionAdmin,CMCSS,ok
+Station,CMC HQ Station,CentralHQ,CMCMining,ok
+Station,CMC Materials Assembly,RareMetalsProc,CMCMining,ok
+Operation,Embezzle,Droznic,ok,
+Station,Renquist Station Assembly,StationFabricationMan,CMCMining,ok
+Moon,Daltry,,,
+Station,Watts STC,PoliceBase,CMCSS,ok
+Moon,Cooper,,,
+Station,Sutter Agricultural Orbital,AgSettlement,CMCMining,ok
+Station,Sutter Station Assembly,StationFabricationMan,CMCMining,ok
+Operation,Embezzle,Scavengers,ok,
+Moon,Beraud,,,
+Moon,Brion,,,
+Belt,Little Friends,,,
+Station,CMC Mining Outpost,CommonMetalsMine,CMCMining,ok
+Operation,Embezzle,Uncleansed,ok,
+Station,CMC Nano Producer,CommonMetalsProc,CMCMining,ok
+Station,CMC Nano Fibre Production,WaterProc,CMCMining,ok,,
+Station,MelNet FTL Relay,FTLArray,Markus,ok,,
+
+Lpoint,Cooper Lpoint,Sutter,Cooper,2,corliss ,lombard
+Operation,Fleetdefense,CMCSS,,,,
+Lpoint,Amdur Lpoint,Marsden,Amdur,1,kronholm,
+
+
+; Leung Empire,,,,,,
+Center,kronholm,,,,,
+Star,Kronholm Alpha,5,,,,
+
+
+Planet,Kogan,,,,,
+Moon,Lamar,,,,,
+Station,Lamar Shipyard,Shipyard,LeungCitizens,ok,,
+Moon,Vernon?s Leap,,,
+Planet,Lundquist,,,
+Moon,Daiglish,,,
+Station,Kronholm STC,PoliceBase,ImperialNavy,ok
+Station,Kronholm Waystation Station,Waystation,LeungCitizens,ok
+Moon,Withnail,,,
+Station,Kronholm Station,CentralHQ,LeungCitizens,ok
+Moon,Rochester,,,
+Station,Rochester Reactors Assembly,FusionReactorsMan,LeungCitizens,ok
+Operation,Embezzle,GoldenLotus,ok,
+Station,Rochester Manufacturing,HeavyMan,LeungCitizens,ok
+Station,Lundquist Systems Factory,ElectronicsMan,LeungCitizens,ok
+Planet,Bartlett,,,
+Moon,Reardon,,,
+Station,Reardon Shipyard,Shipyard,LeungCitizens,ok
+Station,System Defense Station,DefenseDock,ImperialNavy,ok
+Station,Kronholm Government Center,SystemAdmin,ImperialNavy,ok
+Moon,Stibbe,,,
+Moon,Angevine,,,
+Moon,Mudra,,,
+Station,Imperial Military Garrison,DefenseDock,ImperialNavy,ok
+Moon,Klepaki,,,
+Planet,Shiumi,,,
+Moon,Aoki,,,
+Station,Naval Outpost,DefenseDock,ImperialNavy,ok
+Moon,Okahara,,,
+Station,Systems Manufacturing,WetwareMan,LeungCitizens,ok
+Operation,Embezzle,Uncleansed,ok,
+Station,Advanced Nano Facility A,ExoticMetalsProc,LeungCitizens,ok
+Station,Advanced Nano Facility B,ExoticMetalsProc,LeungCitizens,ok
+Station,Okahara Reactors Assembly,FusionReactorsMan,LeungCitizens,ok
+Station,Okahara Systems Factory,ElectronicsMan,LeungCitizens,ok
+Moon,Fukuoka,,,,,
+Station,MelNet FTL Relay,FTLArray,EtCom,ok,,
+
+Lpoint,Aoki Lpoint,Shiumi,Aoki,2,li_po,watts
+Operation,CustomsToll,ImperialNavy,,,,
+Lpoint,Angevine Lpoint,Bartlett,Angevine,1,tau_tsun,
+
+
+Center ,tau_tsun,,,,,
+Star,Tau Tsun Alpha,5,,,,
+
+
+Planet,Shiang,,,,,
+Moon,Mirko,,,,,
+Station,Mirko Luxuries Production,LuxuriesMan,LeungCitizens,ok,,
+Moon,Sho,,,,,
+Station,Sho Mineral Processing,CommonMetalsProc,LeungCitizens,ok
+Station,Sho Materials Assembly,RareMetalsProc,LeungCitizens,ok
+Operation,Embezzle,GoldenLotus,ok,
+Planet,Dengo,,,
+SpecialPlanetTexture,24,,,
+SpecialPlanetBump,25,,,
+Planet,Tseng ,,,
+Station,Forbidden Orbital Imperial HQ,ClusterAdmin,ImperialNavy,ok
+Station,Tau Tsun STC ,PoliceBase,ImperialNavy,ok
+Station,Imperial Customs and Security Station,SecurityStation,ImperialNavy,ok
+Station,Tau Tsun Trade and Commerce Station,CentralHQ,LeungCitizens,ok
+Station,Tau Tsun Waystation Station,Waystation,LeungCitizens,ok
+Station,Hao Shun Systems Facility,WetwareMan,LeungCitizens,ok
+Station,Chui Gon Manufacturing Facility,HeavyMan,LeungCitizens,ok
+Operation,Embezzle,Uncleansed,ok,
+Station,Hao Ping Consumer Production,LuxuriesMan,LeungCitizens,ok
+Station,Tau Tsun System Defense Station,DefenseDock,ImperialNavy,ok,,
+Moon,Chui Gon,,,,,
+Moon,Sook ,,,,,
+Station,Imperial Naval Academy,CentralHQ,ImperialNavy,ok,,
+Moon,Jai,,,,,
+Station,MelNet FTL Relay Station,FTLArray,Markus,ok,,
+
+Lpoint,Sook Lpoint,Tseng,Sook,2,kronholm,li_po
+Lpoint,Mirko Lpoint,Shiang,Mirko,1,xu_xuan,
+
+
+
+Center,li_po,,,,,
+Star,Li Po Alpha,5,,,,
+
+
+Planet,Pyunyang,,,
+Moon,Cheong 1,,,
+Moon,Cheong 2,,,
+Moon,We,,,
+Station,Li Po Military Garrison,DefenseDock,ImperialNavy,ok
+Station,Li Po Naval Shipyards,Shipyard,ImperialNavy,ok
+SpecialPlanetTexture,26,,,
+SpecialPlanetBump,27,,,
+Planet,Chenyuang ,,,
+Station,Li Po STC,PoliceBase,ImperialNavy,ok
+Station,Li Po Station,SystemAdmin,ImperialNavy,ok
+Station,Biomass Production Shang,BiomassProc,LeungCitizens,ok
+Station,Biomass Production Xia,BiomassProc,LeungCitizens,ok
+Station,Exotic Metals Processing ,ExoticMetalsProc,LeungCitizens,ok
+Operation,Embezzle,GoldenLotus,ok,
+Moon,Lau,,,
+Station,Lau System Defense Station,SecurityStation,ImperialNavy,ok,,,
+Planet,Tu Fu,,,,,,
+Moon,Hyland ,,,,,,
+Moon,Gibbs ,,,,,,
+Station,Gibbs Agricultural orbital,AgSettlement,LeungCitizens,ok,,,
+Moon,Lafferty,,,,,,
+
+Lpoint,Gibbs Lpoint,Tu Fu,Gibbs,2,tau_tsun,kronholm,
+Lpoint,Lau Lpoint,Chenyuang,Lau,3,providence,xu_xuan,ripon
+Operation,CustomsToll,ImperialNavy,,,,,
+
+Center,xu_xuan,,,,,,
+Star,Xu Xuan Alpha,5,,,,,
+
+
+
+Belt,The Great Wall Belt,,,
+Station,Asteroid Base,RareMetalsMine,LeungCitizens,ok
+Operation,Embezzle,Uncleansed,ok,
+Station,Mining Outpost,CommonMetalsMine,LeungCitizens,ok
+Station,Processing Facility,CommonMetalsProc,LeungCitizens,ok
+Operation,Embezzle,GoldenLotus,ok,
+Station,Nanoscience Facility,HiTechMan,LeungCitizens,ok
+Station,Manufacturing Station,HeavyMan,LeungCitizens,ok
+Planet,Manchuria,,,
+Station,Imperial Biosciences Complex,Research,ImperialNavy,ok
+Station,System Defense Outpost,SecurityStation,ImperialNavy,ok
+Station,Imperial Governor,RegionAdmin,ImperialNavy,ok
+Moon,Holder,,,
+Station,Yellow Flower,PirateBase,GoldenLotus,ok
+Belt,Manchurian Belt,,,
+Planet,Jin Gzhu,,,
+Station,Jin Gzhu Shipyard,Shipyard,LeungCitizens,ok,,,,
+Station,Tian Liang Reactor Assembly,FusionReactorsMan,LeungCitizens,ok,,,,
+Station,Jin Systems Factory,ElectronicsMan,LeungCitizens,ok,,,,
+Belt,Jin Gzhu Belt,,,,,,,
+Station,Imperial Weapons Facility,WeaponsMan,ImperialNavy,ok,,,,
+Station,Dragons Palace,MercenaryBase,Dragons,ok,,,,
+Operation,Embezzle,Uncleansed,ok,,,,,
+Belt,Long March Belt,,,,,,,
+Station,Imperial Naval Research Facility,Research,ImperialNavy,ok,,,,
+Station,Naval Finishing Shipyard,DefenseDock,ImperialNavy,ok,,,,
+Station,Naval Component Production Plant,HeavyMan,ImperialNavy,ok,,,,
+Station,Imperial Tactical Fighter Base,DefenseDock,ImperialNavy,ok,,,,
+Station,Sensor Outpost,STLTran,ImperialNavy,ok,,,,
+
+Lpoint,Holder Lpoint,Manchuria,Holder,4,li_po,tau_tsun,providence,bumpys_star
+
+
+
+;Dead Reaches,,,,
+
+Center,bumpys_star,,,
+
+Star,Bumpys,5,,
+
+
+Planet,Pinetop,,,
+Moon,Perkins,,,
+Moon,Keylime ,,,
+Station,Keylime Refinery,CommonMetalsProc,Junkers,ok
+Planet,Jellyroll,,,
+Moon,Sweet Sheila,,,
+Moon,Lubecks Hole,,,
+Moon,Goodboy,,,
+Moon,Sit,,,
+Moon,Stay,,,
+Station,Rose Rock,ExoticMetalsMine,Junkers,ok
+Planet,Woomera,,,
+Station,Woomera Station,CommonMetalsMine,Junkers,ok
+Operation,Embezzle,Lindevaal,ok,
+Station,Woomera Leisure Station,Casino,Lindevaal,ok
+Station,Woomera Outpost,Outpost,Empty,destroyed
+Planet,Dizzy,,,
+Moon,Three Bears,,,
+Moon,Blue Aggie,,,
+Station,Dexters Dig,RareMetalsMine,Junkers,ok
+Station,Lunchbox,NeutroniumMine,Junkers,ok
+Operation,Embezzle,Scavengers,ok,
+Moon,Letdown,,,
+Moon,Redemption ,,,,,
+Station,Shiny,PirateBase,Lindevaal,ok,,
+Belt,Magdalena Belt,,,,,
+Station,Asteroid Station,InorganicsMine,Junkers,ok,,
+Planet,Ella,,,,,
+Moon,Jennys Beat,,,,,
+Moon,Hopkins Hazard,,,,,
+
+Lpoint,Jennys Lpoint,Ella,Jennys Beat,2,xu_xuan,alcuin
+Operation,PirateToll,Lindevaal,,,,
+
+Center ,alcuin,,,,,
+
+Star,Alcuin Alpha,5,,,,
+
+Planet,Danforth,,,,,
+Moon,Stohl,,,
+Moon,Miehl,,,
+Belt,McKeown Belt,,,
+Station,Common Metals Mine,CommonMetalsMine,Azran,ok
+Operation,Embezzle,Scavengers,ok,
+Station,Rare Metals Mine,RareMetalsMine,Azran,ok
+Planet,Toffelmeyer,,,
+Moon,Dietrich,,,
+Station,EtCom HQ Station,CentralHQ,EtCom,ok
+Moon,Vaden,,,
+Station,Alcuin STC,MercenaryBase,Golligers,ok
+Station,Alcuin Governor,RegionAdmin,Empty,destroyed
+Moon,Wachhaus,,,
+Station,Toffelmeyer Entertainment,Casino,Junkers,ok
+Station,Common Metals Processing,CommonMetalsProc,Junkers,ok
+Operation,Embezzle,Scavengers,ok,
+Moon,Siess,,,
+Moon,Reinl,,,
+Planet,Geisebrecht,,,
+Moon,Hoel,,,
+Moon,Geisinger,,,
+Station,Geisebrecht Manufacturing,HeavyMan,EtCom,ok
+Operation,Embezzle,Lindevaal,ok,
+Station,Infineon Manufacturing,LuxuriesMan,EtCom,ok
+Moon,Schalk,,,
+Moon,Brandt,,,
+Station,Azran Corporate HQ,CentralHQ,Azran,ok
+Station,Azran Consumer Production,LuxuriesMan,Azran,ok
+Station,Azran Shipbuilding,Shipyard,Azran,ok
+Belt,Inner Kuniper Belt,,,
+Station,Exotic Metals Mine,ExoticMetalsMine,Junkers,ok
+
+Lpoint,Hoel Lpoint,Geisebrecht,Hoel,2,bedalov,bumpys_star
+
+
+Center,bedalov,,,,,
+
+Star,Bedalov Alpha,5,,,,
+
+Planet,Pallava,,,,,
+Moon,Seelye,,,,,
+Moon,Harman,,,,,
+Moon,Julich,,,,,
+Moon,Moravek,,,,,
+Planet,Mosgrove,,,,,
+Moon,Hummel,,,,,
+Moon,Calbault,,,,,
+Station,Common Metals Mining,CommonMetalsMine,EtCom,ok,,
+Station,Mining Outpost,CommonMetalsMine,Junkers,ok
+Operation,Embezzle,Scavengers,,
+Moon,Kuhlmey,,,
+Belt,Hough Belt,,,
+Station,Rare Metals Mine,RareMetalsMine,Junkers,ok
+Planet,Poboron,,,
+Moon,Mason,,,
+Moon,Eaton,,,
+Station,Rare Metals Processing,RareMetalsProc,Azran,ok
+Operation,Embezzle,Lindevaal,,
+Station,Ore Processing Facility,CommonMetalsProc,Junkers,ok
+Operation,Embezzle,Pimental,,
+Station,Manufacturing Station,HeavyMan,Junkers,ok
+Station,Bedalov Senate,SystemAdmin,Empty,destroyed
+Moon,Kirby,,,
+Moon,Mavor,,,
+Belt,Markides Belt,,,,,
+Station,Markides Mining Outpost,CommonMetalsMine,Junkers,ok,,
+Planet,Knutson,,,,,
+Moon,Sunczyk,,,,,
+Moon,Kambeitz,,,,,
+Planet,Pasechnik,,,,,
+Moon,Janik,,,,,
+
+Lpoint,Kirby Lpoint,Poboron,Kirby,2,huang,emerald_sys
+Lpoint,Calbault Lpoint,Mosgrove,Calbault,1,alcuin,
+
+
+Center,powys,,,,,
+
+Star,Powys Alpha,5,,,,
+
+Planet,Gwynedd,,,
+Moon,Lloyd,,,
+Moon,Holmes,,,
+Moon,Glynn,,,
+Planet,Mabinogion,,,
+Station,Powys STC station,PoliceBase,Empty,destroyed
+Station,Powys Senate,SystemAdmin,Empty,destroyed
+Moon,Giddings,,,
+Planet,Llywelyn,,,
+Moon,Gurnsey,,,
+Moon,Bigelow,,,
+Moon,Wynn,,,
+Moon,Ennis,,,
+Station,Ennis Processing Station,CommonMetalsProc,Junkers,ok
+Operation,Embezzle,Scavengers,,
+Station,Ennis Station,CommonMetalsMine,Junkers,ok
+Operation,Embezzle,Scavengers,,,,
+Moon,Calnan,,,,,
+Station,Calnan Naval Works,MercenaryBase,Golligers,ok,,
+Planet,Gruffydd,,,,,
+Station,Gruffydd Medical Research Station,Medical,Markus,ok,,
+
+Station,Gruffydd Medical Production,PharmaceuticalsMan,Markus,ok,,
+Moon,Llynlea,,,,,
+Moon,Flindall,,,,,
+Station,Flindall Waystation Station,Waystation,Junkers,ok,,
+Moon,Hammond,,,,,
+
+Lpoint,Flindall Lpoint,Gruffydd,Flindall,2,t_ang,huang
+
+
+
+Center,t_ang,,,
+
+Star,T Ang Alpha,5,,
+
+Planet,Lavoisier,,,
+Station,Lavoisier Sec,PirateBase,Droznic,ok
+
+Moon,Asseltine,,,
+Moon,Grundy,,,
+Moon,Quesnelle,,,
+
+Planet,Ypres,,,
+Station,T Ang STC station,SecurityStation,Markus,ok
+Station,Ypres Police,PoliceBase,EmeraldCitizens,ok
+Moon,Pynenburg,,,
+Station,Markus Corporation system HQ,CentralHQ,Markus,ok
+Station,T Ang Governor,RegionAdmin,Empty,destroyed
+Moon,Zhonyang,,,
+Moon,Gui Jin,,,
+
+Planet,Bonaparte,,,
+
+Planet,Yinma,,,
+Moon,Liu,,,
+Station,Liu Waystation,PirateBase,Gargoyles,ok
+Moon,Han,,,
+Moon,Qian,,,
+Station,Qian Waystation,Waystation,Jardin,ok
+Moon,Zhang Shan,,,
+Moon,San Xiang,,,
+Moon,Su-Ping,,,
+
+Planet,She Tsung,,,,,
+
+Lpoint,Qian Lpoint,Yinma,Qian,2,powys,huang
+Lpoint,Zhonyang Lpoint,Ypres,Zhonyang,2,powys,huang

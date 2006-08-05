@@ -1,0 +1,311 @@
+//*******************************************************************************************/
+//
+// tEpicMain
+//
+// This package unifies the major Epic components. It handles script.ini calls, and 
+// in turn calls the Epic packages.
+// 
+// This package is a great danger for circular dependency. Try to never call these functions
+// directly. Save is the only current exception.
+//
+// Feb 2003, Jon Freise
+//******************************************************************************************/
+
+package tEpicMain;
+
+uses 
+   Sim,
+   GUI,
+   Task,
+   State,
+   iSim,
+   iShip,
+   iFactionScript,
+   iCargo,
+   Debug,
+   Text,
+   iBaseGUI,
+    iLagrangePoint,
+   tTime,
+   tDistance,
+   tMultimod,
+   UniGUI,
+   UniGUIBase,
+   tEpicLFPlus,
+   tEFaction,
+   tEpicGuiEnum,
+   tEpicGui,
+   tEpicFleet,
+   tDistance,
+   jGiftCargo,
+   tWingComm,
+   tEPlayerWatch,
+   tStationEnv,
+   tEpicComms,
+   tEpicFleetUpkeep,
+   tUnderOp,
+   tUnderOpSave,
+   tLInventory,
+   tEconSmall,
+   tETradeBuy,
+   tETradeSell,
+   tEFleetGui,
+   tExitGui,
+   tStationSave,
+   tESysSetup,
+   tMusic,
+   tMail,
+   tNewsNet,
+   tShipMail,
+   tViewDock,
+   tEJump,
+    tELpointFind,
+   tStationRules,
+   tsFleetOpUpdate,
+   tsCrewSpeak,
+   tRepUpdate,
+   tOptionsGui;
+
+
+
+
+
+provides 
+   GameEnter,
+   SessionEnter,
+   SessionExit,
+   BaseEnter,
+   BaseExit,
+   SpaceEnter,
+   SpaceExit,
+   FinalSetup,
+   SystemEnter,
+   SystemExit,
+   SaveGame,
+   DayUpdate,
+   PlayerDocked,
+   PlayerUndocked;
+
+
+
+GameEnter()
+{
+   jGiftCargo.NewGame();
+
+   tEpicFleet.NewGameTest();
+   
+   tStationSave.ReadNewStations();
+
+   tUnderOpSave.ReadNewOperations();
+
+   tEJump.StartGame();
+
+   tOptionsGui.NewGame();
+}
+
+
+SessionEnter()
+{
+
+   Text.Add("csv:/text/gt_station_types");
+   Text.Add("csv:/text/gt_pc_objects");
+
+   tDistance.Init();
+
+   iFactionScript.Initialise();
+   tEFaction.Init();
+
+
+   tTime.InitGlobals();
+
+   tStationSave.SessionStart();
+   tUnderOpSave.SessionStart();
+
+
+   tEpicGui.InitGlobals();
+
+   tEpicFleet.StartSession();
+
+   tETradeBuy.SessionStart();
+   tETradeSell.SessionStart();
+   tEFleetGui.SessionStart();
+   tExitGui.SessionStart();
+
+   tMusic.Init();
+
+   tLInventory.Init();
+
+   tELpointFind.StartSession();
+}
+
+SessionExit()
+{
+   debug Debug.PrintString("ses\n");
+   Text.Remove("csv:/text/gt_station_types");
+   Text.Remove("csv:/text/gt_pc_objects");
+
+   tETradeBuy.SessionEnd();
+   tETradeSell.SessionEnd();
+   tEFleetGui.SessionEnd();
+   tExitGui.SessionEnd();
+   tELpointFind.EndSession();
+
+   debug Debug.PrintString("see\n");
+}
+
+BaseEnter()
+{
+   tUnderOpSave.BaseEnter();
+
+
+   iBaseGUI.SetTradeScreenEnabled( false );
+   iBaseGUI.SetInventoryScreenEnabled( false );
+   iBaseGUI.SetRecyclingScreenEnabled( false );
+   iBaseGUI.SetManufacturingScreenEnabled( false );
+   iBaseGUI.SetCommsScreenEnabled( false );
+   iBaseGUI.SetEncyclopaediaScreenEnabled( false );
+   iBaseGUI.SetStatisticsScreenEnabled( false );
+   iBaseGUI.SetTriangulationScreenEnabled( false );
+
+}
+
+
+BaseExit()
+{
+   tStationSave.BaseExit();
+   tUnderOpSave.BaseExit();
+
+   tStationEnv.EnterBase();
+   tEconSmall.ExitBase();
+}
+
+
+SpaceEnter()
+{
+   jGiftCargo.AddInventory();
+
+   UniGUIBase.EnterSpace();
+
+   tEconSmall.EnterSpace();
+
+   tEpicLFPlus.Initialise();
+
+
+}
+
+
+SpaceExit()
+{
+   tEpicLFPlus.ExitSpace();
+}
+
+
+FinalSetup()
+{
+   tEPlayerWatch.PlayerWatch();
+   tEpicFleet.RestoreFleet();
+
+   tWingComm.Setup();
+   tEpicComms.Setup();
+
+   tEconSmall.TestRun();
+
+   tEJump.Init();
+
+   tMail.ReadArchives();
+
+   tShipMail.StartMyMod();
+
+   tsCrewSpeak.Init();
+}
+
+SystemEnter()
+{
+   tStationSave.RestoreAllStations();   
+
+   tUnderOpSave.Restore();
+
+
+   tESysSetup.UpdateSystem();
+
+   tStationEnv.CallMods();
+   tStationEnv.SystemSetup();
+
+   tEconSmall.StartSystem();
+   tEPlayerWatch.SystemEnter();
+
+   tMusic.NewSystem();
+}
+
+SystemExit()
+{
+
+
+
+}
+
+SaveGame()
+{
+   tTime.SaveTime();
+
+   tStationSave.SaveAllStations();
+   tEFaction.SaveGame();
+   tEpicFleet.SaveFleet();
+
+//   tReputation.SaveReputation();
+   tUnderOpSave.Save();
+
+
+   tMail.SaveArchives();
+
+   // Saves the favorites.
+   tEpicLFPlus.ExitSpace();
+
+   tMultimod.SaveGame();
+}
+
+DayUpdate()
+{
+   tStationRules.UpdateAllStations();
+   tsFleetOpUpdate.UpdateAll();
+
+   tNewsNet.DayUpdate();
+   tEpicFleetUpkeep.RunUpkeep();
+
+   tRepUpdate.Update();
+   tMultimod.DayUpdate();
+}
+
+
+// Event called when the player docks to a station.
+PlayerDocked()
+{
+   tViewDock.PlayerDock();
+   tMultimod.PlayerDocked();
+}
+
+
+PlayerUndocked()
+{
+   tMultimod.PlayerUndocked();
+}
+
+
+
+
+
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+

@@ -1,0 +1,116 @@
+//*******************************************************************************************/
+//
+// zTestCapsule
+//
+//
+// May 2005, jon freise
+//******************************************************************************************/
+
+package zTestCapsule;
+
+uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, 
+   iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+   iConversation, iFormation, Group, Text, iEmail, State, 
+   iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker, 
+   iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+   iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
+   iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
+   tEpicFleet;
+
+
+
+
+provides JumpTarget,
+         ListJumps;
+
+
+task jump_task()
+{
+   hship player = iShip.FindPlayerShip();
+   hgroup player_fleet;
+   hisim target;
+   hisim waypoint;
+
+   // Check the player target is a station.
+   target = iShip.CurrentTarget(player);
+
+   if (T_Station == iSim.Type(target)) {
+      player_fleet = Group.FromList(tEpicFleet.PlayerFleet());
+
+      waypoint = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","jump target"));
+
+      Sim.SetCullable(waypoint, false);
+      Sim.PlaceNear(waypoint, target, 10km);
+
+      iUtilities.CapsuleJumpGroup(player_fleet, waypoint, 0.0);
+
+      // Leave plenty of time for the player to arrive.
+      Task.Sleep(Task.Current(), 20);
+
+      Group.Destroy(player_fleet, false);
+      Sim.Destroy(waypoint);
+   }
+}
+
+JumpTarget()
+{
+
+   Task.Detach(start jump_task());
+
+   // Find all the player wingmen. 
+   
+   // Put them into a group.
+
+   // Jump them to the target.
+
+   // Get rid of the group.
+}
+
+
+// List instersteller
+
+ListJumps()
+{
+   hship player = iShip.FindPlayerShip();
+   list links;
+   int i, total;
+
+   hlagrangepoint jump_point;
+
+   jump_point = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), player);
+
+   links = List.FromSet(iLagrangePoint.InterstellarDestinations(jump_point));
+
+   debug {
+      Debug.PrintHandle(jump_point);
+      Debug.PrintString(" Jump Point\n");
+   }
+
+   total = List.ItemCount(links);
+   for (i=0;i<total;++i) {
+      jump_point = iLagrangePoint.Cast(List.GetNth(links, i));
+
+      debug {
+         Debug.PrintHandle(jump_point);
+         Debug.PrintString(" Connecting\n");
+      }
+   }
+
+}
+
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+
+
+
+

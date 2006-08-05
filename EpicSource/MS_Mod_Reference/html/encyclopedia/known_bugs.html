@@ -1,0 +1,81 @@
+<HTML>
+
+<BODY>
+<b>Known Bug List</b>
+<hr>
+
+<P>Epic: Middle States is a mod. 
+There were several major issues that we could not resolve without source code.
+
+<P>
+<b>
+Broken Menu
+</b>
+<P>Symptom: You try to open the Ship Computer menu and you only get beeps. 
+Nothing opens. You dock to a station and the menu does not open.
+<P>This problem is a bug in the EoC code. 
+When a player tries to change the game options while flying in space 
+(Changing the sound volume for example) the game stops being able
+to read the INI control files. The game is broken at that point and the
+mod cannot continue. No error message is displayed. The 
+<P>The beeping is caused by the menu code not being able to open 
+the INI files that it must read to operate.
+
+
+<P>
+<b>
+Lost Wingmen
+</b>
+<P>Symptom: Your wingmen are following you when you jump, but they never show up.
+<P>Wingmen sometimes lose track of your ship in jump. Or they jump to the wrong Lpoint. 
+<P>The first step is always make sure your wingmen were given orders to formate with 
+your ship before you jump. Make sure they are close when you do jump.
+<P>If they jumped to the wrong location or failed to jump, they will return to you shortly.
+Just wait a few moments for them to appear. 
+
+
+<P>
+<b>
+No Autopilot
+</b>
+<P>Symptom: You try to use the autopilot to reach a station in another system and it will
+not work. 
+<P>We did this on purpose. 
+There is a bug in the autopilot code that jumps the player to the wrong lpoint.
+The only way to fix the bug is to not allow autopilots to perform capsule jumps. 
+Your going to have to rely on your own navigation skills. 
+Start reading the star map!
+<P>
+
+<P>
+<b>
+Tug Attack
+</b>
+<P>Symptom: F**k**g Tugs are attacking me for no reason!
+
+<P>The EoC traffic scripts sometimes spawn tugs (of any faction) 
+that will attack the player for no reason. 
+Fighting back can destroy your standing with the tugs faction. 
+This is a real disaster if the faction is a government or major trade partner.
+<P>We suggesting running away. 
+The tugs tend not to follow. 
+Do not shoot back, if you can avoid it. 
+<P>Worst case, enter the station. 
+The tug traffic script may not be launched again when you return.
+
+
+<P>
+<b>
+Wingman Collision
+</b>
+<P>Symptom: Your wingman "bumps" another ship will trying to follow you. 
+The ship then turns hostile and attacks.
+
+<P>The EoC traffic code considers bumping to be "ramming" and that is an attack.
+
+<P>There is not much you can do except run. 
+Once you get far enough away, the escorts will stop chasing you and go back to
+guarding. 
+
+</BODY>
+</HTML>

@@ -1,0 +1,894 @@
+//*******************************************************************************************/
+//
+// tUnderOpGui.pog
+//
+// 
+// 
+//
+//
+//
+// March 2006, Jon Freise
+//******************************************************************************************/
+
+package tUnderOpGui;
+
+uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, 
+   iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+   iConversation, iFormation, Group, Text, iEmail, State, 
+   iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker, 
+   iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+   iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
+   iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
+   tTime,
+   tEpicGuiEnum,
+   tEpicGui,
+   UniGUI,
+   tLRoot,
+   tLCenter,
+   tStationEnum,
+   tEpicFactionEnum,
+   tEFaction,
+   tEconUtil,
+   tLProduction,
+   tLFleet,
+   tUnderOpEnum,
+   tUnderOp,
+   tUnderOpFilter;
+
+
+provides RunCheck,
+         DisplayWindow,
+         OnSystemFilterPress,
+         OnTypeFilterPress,
+         OnSystemButtonPress,
+         OnTypeButtonPress,
+         OnOperationPress,
+         OnStationWaypointPress,
+         OnDestroyPress,
+         OnHealPress,
+         OnDamagePress,
+         OnMovePress,
+         StartScreen,
+         ExitScreen;
+
+prototype create_system_list();
+
+prototype create_type_list();
+
+prototype create_op_list();
+
+prototype update_op_info();
+
+prototype task set_hud_target( hisim waypoint );
+
+
+RunCheck()
+{
+   Global.SetBool("g_zz_ug_passme",true);
+}
+
+hwindow create_list(hwindow parent, 
+                    int x, int y, 
+                    int width, int height, 
+                    string function, 
+                    list item_list, 
+                    string title)
+{
+   hwindow list_box;
+   hwindow base_win;
+   hwindow button;
+   int count, i;
+   hobject item;
+   string name;
+   int left;
+   int cwidth = width - 4;
+                                   
+   
+   cwidth = cwidth - Global.Int("GUI_scrollbar_width");
+
+   base_win = GUI.CreateWindow(x, y, width, height, parent);
+
+
+   iGUI.CreateAndInitialiseStaticWindow( 0,
+                                         0,
+                                         width,
+                                         20,
+                                         base_win,
+                                         Global.String("GUI_title_font"),
+                                         title);
+
+   // Create the parent listbox
+   list_box = GUI.CreateListBox( 0, 22,
+                                 cwidth, height,
+                                 base_win,
+                                 true,
+                                 false);
+
+   count = List.ItemCount(item_list);
+   for (i=0;i<count;++i) {
+      item = List.GetNth(item_list,i);
+ 
+      button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, 
+                                                      cwidth, 
+                                                      Object.StringProperty(item,"gtTransName"),
+                                                      function);
+
+      Object.AddHandleProperty(button,"gt_special", item);
+
+      GUI.AddListBoxEntry(list_box, button);
+   }
+
+   GUI.CreateVerticalScrollbar( cwidth+4,
+                                22,
+                                Global.Int("GUI_scrollbar_width"),
+                                height - 22,
+                                base_win,
+                                list_box,
+                                Global.Float( "GUI_scrollbar_buttonratio"), 
+                                "");
+
+   return base_win;
+}
+
+
+
+
+
+
+OnSystemButtonPress()
+{
+	hwindow button =	GUI.FocusedWindow();
+   hsim filter; 
+   string system;
+
+   filter = Sim.Cast(Object.HandleProperty(button,"gt_special"));
+   system = Sim.Name(filter);
+
+   Global.SetString("gt_underop_gui_system", system);
+   // Refresh the operations list.
+   create_op_list();
+}
+
+
+OnTypeButtonPress()
+{
+	hwindow button =	GUI.FocusedWindow();
+   hsim filter; 
+   int op_type;
+
+   filter = Sim.Cast(Object.HandleProperty(button,"gt_special"));
+   op_type = Object.IntProperty(filter,"gt_op_type");
+
+   Global.SetInt("gt_underop_gui_op_type",op_type);
+
+   // Refresh the operations list.
+   create_op_list();
+}
+
+
+OnSystemFilterPress()
+{
+   // filter selected is system view
+   create_system_list();
+
+}
+
+
+OnTypeFilterPress()
+{
+   // set the global filter value to op type
+   // Refresh the operation list.
+
+   create_type_list();
+
+}
+
+
+OnOperationPress()
+{
+	hwindow button =	GUI.FocusedWindow();
+   hsim op; 
+   int op_type;
+
+   op = Sim.Cast(Object.HandleProperty(button,"gt_special"));
+
+   Global.SetHandle("gt_underop_selected_op", op);
+
+   update_op_info();
+}
+
+// Code and globals are taken from location finder. We actually use the 
+// location finder waypoint here. Makes it easy to clear when you want to go 
+// somewhere else.
+
+OnStationWaypointPress()
+{
+
+   hisim op = iSim.Cast(Global.Handle("gt_underop_selected_op"));
+   string system, station;
+   hmapentity location;
+	hisim waypoint = iSim.Cast( Global.Handle( "g_zz_lf_location_waypoint" ) );
+	string location_name;
+	string waypoint_name;																// Name for the waypoint.
+	float avoidance_radius; 															// Avoidance Radius
+
+	// First destroy the old waypoint.
+	Sim.Destroy( waypoint );
+
+   if (none == op) {
+      return;
+   }
+
+   location = tLCenter.GetCenter(op);
+   location_name = Object.StringProperty( location, "name" );					
+
+	// Work out the waypoint name - we set a prefix to make the waypoint name unique. 
+	// The + sign allows multiple name keys to be used in one string.
+	waypoint_name = String.Join( "zz_lf_prefix+", Object.StringProperty( location, "name" ) );
+
+	// Create the waypoint
+	waypoint = iSim.Cast( Sim.Create( "ini:/sims/nav/waypoint", waypoint_name ) );
+
+	// Add the localised location name as a property.
+	Object.AddStringProperty( waypoint, "location_name", location_name );
+	
+	// Place the waypoint at a safe distance from the location.
+	avoidance_radius = iAI.AvoidanceRadius( location, iShip.FindPlayerShip() ) + 1km;
+	Sim.PlaceRelativeTo( waypoint, location, 0, avoidance_radius, 0 );
+	
+	// Make it visible to sensors and on the starmap. Make it critical for good measure.
+	iSim.SetSensorVisibility( waypoint, true );
+
+	// Set the handle and system name.
+	Global.SetHandle( "g_zz_lf_location_waypoint", waypoint );
+
+	// We need to do this, as we need to wait a short while before setting the target
+	// Otherwise it doesn't register.
+	Task.Detach( start set_hud_target(	waypoint ) );
+
+}
+
+
+OnDestroyPress()
+{
+   // Destroy the operation and reset the operation screens.
+   hisim op = iSim.Cast(Global.Handle("gt_underop_selected_op"));
+
+   if (op == none) {
+      return;
+   }
+
+   tUnderOp.DestroyOp(op);
+
+   create_op_list();
+}
+
+
+OnMovePress()
+{
+   hisim op = iSim.Cast(Global.Handle("gt_underop_selected_op"));
+   hship player = iShip.FindPlayerShip();
+   hisim target;
+   // Move the op to the players currently selected station.
+
+   if (op == none) {
+      return;
+   }
+
+   target = iShip.CurrentTarget(player);
+
+   if ((T_Station == iSim.Type(target)) || (T_LagrangePoint == iSim.Type(target))) {
+
+      // Move the op to the target.
+      tLCenter.SetCenter(op, iMapEntity.Cast(target));
+      create_op_list();
+   }
+}
+
+
+OnHealPress()
+{
+   // Destroy the operation and reset the operation screens.
+   hisim op = iSim.Cast(Global.Handle("gt_underop_selected_op"));
+
+   if (op == none) {
+      return;
+   }
+
+   tLFleet.SetFleets(op, tLFleet.MaxFleets(op));
+
+   update_op_info();
+}
+
+
+
+OnDamagePress()
+{
+   // Destroy the operation and reset the operation screens.
+   hisim op = iSim.Cast(Global.Handle("gt_underop_selected_op"));
+
+   tLFleet.SetFleets(op, 10);
+
+   update_op_info();
+}
+
+
+task set_hud_target( hisim waypoint )
+{
+	// We need this task as we have to wait for a short time before setting
+	// the HUD target, otherwise it doesn't register.
+
+	Task.Sleep( Task.Current(), 0.1 );
+	iHUD.SetTarget( waypoint );
+
+} // set_hud_target
+
+
+DisplayWindow()
+{
+   hwindow shady_bar, rhshady_bar;
+   hwindow title;
+   hwindow subtitle;
+   hwindow exit;
+   hwindow button;
+   hwindow op_info;
+
+
+   int width, height, xpos, ypos;
+
+   debug Debug.PrintString("UnderOpGui.DisplayWindow\n");
+
+
+   Global.CreateString("gt_underop_gui_system",GA_Write|GA_NoSave, iSim.ActiveWorld());
+   Global.CreateInt("gt_underop_gui_op_type",GA_Write|GA_NoSave,UO_Invalid);
+   Global.CreateInt("gt_underop_gui_filter_type", GA_Write|GA_NoSave, 0);
+
+   Global.CreateHandle("gt_underop_filter_list_box", GA_Write|GA_NoSave, none);
+   Global.CreateHandle("gt_underop_list_box", GA_Write|GA_NoSave, none);
+   Global.CreateHandle("gt_underop_selected_op", GA_Write|GA_NoSave, none);
+   Global.CreateHandle("gt_underop_gui_op_info", GA_Write|GA_NoSave, none);
+
+   Global.CreateHandle("gt_underop_gui_action_info", GA_Write|GA_NoSave, none);
+
+   Global.CreateHandle("gt_underop_gui_station_button", GA_Write|GA_NoSave, none);
+   Global.CreateHandle("gt_underop_gui_destroy_button", GA_Write|GA_NoSave, none);
+   Global.CreateHandle("gt_underop_gui_damage_button", GA_Write|GA_NoSave, none);
+   Global.CreateHandle("gt_underop_gui_heal_button", GA_Write|GA_NoSave, none);
+   Global.CreateHandle("gt_underop_gui_move_button", GA_Write|GA_NoSave, none);
+
+
+   // Shrink the rhand shady bar out of the way.
+   rhshady_bar = iGUI.CreateShadyBarRight();
+   /*GUI.SetWindowClientArea( rhshady_bar, 
+                            0,
+                            0,
+                            250,
+                            GUI.WindowCanvasHeight( rhshady_bar));*/
+
+   Global.CreateHandle("gt_underop_gui_rhshady",GA_Write, rhshady_bar);
+
+   // Set right hand shady bar width.
+   shady_bar = iGUI.CreateWideShadyBar();
+   Global.CreateHandle("gt_underop_gui_shady",GA_Write,shady_bar);
+
+
+   GUI.SetWindowClientArea( shady_bar, 
+                            0,
+                            0,
+                            500,
+                            GUI.WindowCanvasHeight( shady_bar));
+   
+
+
+   height = GUI.WindowCanvasHeight( shady_bar);
+   height = height - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+
+
+   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   width = width/2;
+   width = width - Global.Int("EpicGui_content_indent");
+   width = width - Global.Int("EpicGui_content_indent");
+      
+
+   tEpicGui.CreateTitle(shady_bar, "FLEET OPS");
+   tEpicGui.CreateSubtitle(shady_bar, "Allows viewing and changing fleets");
+
+   tEpicGui.CreateExitButton(shady_bar, "EXIT", "tUnderOpGui.ExitScreen");
+
+
+   // Create the two type buttons
+
+   ypos = ypos + Global.Int("EpicGui_content_drop");
+
+   button = iGUI.CreateAndInitialiseInverseButton( shady_bar, 
+                                                   Global.Int("EpicGui_content_indent"), 
+                                                   ypos, 
+                                                   width, 
+                                                   "System Filter",
+                                                   "tUnderOpGui.OnSystemFilterPress");
+
+   button = iGUI.CreateAndInitialiseInverseButton( shady_bar, 
+                                                   Global.Int("EpicGui_content_indent"), 
+                                                   ypos + 25, 
+                                                   width, 
+                                                   "Op Type Filter",
+                                                   "tUnderOpGui.OnTypeFilterPress");
+
+   // Put down the op info window. Later, we will fill it with information.
+   op_info= GUI.CreateTextWindow( 250 + Global.Int("EpicGui_content_indent"),
+                                 Global.Int("EpicGui_content_drop") ,
+                                 width,
+                                 300,
+                                 shady_bar);
+
+   xpos = 250 + Global.Int("EpicGui_content_indent");
+   xpos = xpos + width;
+   GUI.CreateVerticalScrollbar( xpos,
+                                Global.Int("EpicGui_content_drop"),
+                                Global.Int("GUI_scrollbar_width"),
+                                300,
+                                shady_bar,
+                                op_info,
+                                Global.Float( "GUI_scrollbar_buttonratio"), 
+                                "");
+
+   Global.SetHandle("gt_underop_gui_op_info", op_info);
+
+
+  
+
+   // All static windows have been created. Now time to build the dynamic information
+   // lists.
+
+   // Set the filter type to system view, and create the first list
+   create_system_list();
+}
+
+
+StartScreen()
+{
+   GUI.PopScreensTo("icSpaceFlightScreen");
+   GUI.OverlayScreen("icPDAOverlayManager");
+   iGUI.OverlayCustomScreen( "tUnderOpGui.DisplayWindow" );
+}
+
+
+ExitScreen()
+{
+
+	UniGUI.UniGUIRemoveScreen();
+}
+
+
+update_informer_info()
+{
+
+}
+
+update_op_controls()
+{
+
+   hwindow parent = GUI.Cast(Global.Handle("gt_underop_gui_shady"));
+   hwindow station_button = GUI.Cast(Global.Handle("gt_underop_gui_station_button"));
+   hwindow destroy_button = GUI.Cast(Global.Handle("gt_underop_gui_destroy_button"));
+   hwindow damage_button = GUI.Cast(Global.Handle("gt_underop_gui_damage_button"));
+   hwindow heal_button = GUI.Cast(Global.Handle("gt_underop_gui_heal_button"));
+   hwindow move_button = GUI.Cast(Global.Handle("gt_underop_gui_move_button"));
+
+   hsim op = Sim.Cast(Global.Handle("gt_underop_selected_op"));
+   int width;
+
+
+   GUI.DeleteWindow(station_button);
+   GUI.DeleteWindow(destroy_button);
+   GUI.DeleteWindow(damage_button);
+   GUI.DeleteWindow(heal_button);
+   GUI.DeleteWindow(move_button);
+
+
+   if (none != op) {
+      width = 250;
+      width = width - Global.Int("EpicGui_content_indent");
+      width = width - Global.Int("EpicGui_content_indent");
+
+      station_button = iGUI.CreateAndInitialiseInverseButton( parent,
+                                                250+Global.Int("EpicGui_content_indent"), 
+                                                300+Global.Int("EpicGui_content_drop"), 
+                                                width, 
+                                                "Set Waypoint",
+                                                "tUnderOpGui.OnStationWaypointPress");
+
+      Global.CreateHandle("gt_underop_gui_station_button",GA_Write|GA_NoSave, station_button);
+
+
+
+      destroy_button = iGUI.CreateAndInitialiseInverseButton( parent,
+                                                250+Global.Int("EpicGui_content_indent"), 
+                                                320+Global.Int("EpicGui_content_drop"), 
+                                                width, 
+                                                "Destroy Op",
+                                                "tUnderOpGui.OnDestroyPress");
+
+      Global.CreateHandle("gt_underop_gui_destroy_button",GA_Write|GA_NoSave, destroy_button);
+
+
+
+      damage_button = iGUI.CreateAndInitialiseInverseButton( parent,
+                                                250+Global.Int("EpicGui_content_indent"), 
+                                                340+Global.Int("EpicGui_content_drop"), 
+                                                width, 
+                                                "Damage Op",
+                                                "tUnderOpGui.OnDamagePress");
+
+      Global.CreateHandle("gt_underop_gui_damage_button",GA_Write|GA_NoSave, damage_button);
+
+
+
+      heal_button = iGUI.CreateAndInitialiseInverseButton( parent,
+                                                250+Global.Int("EpicGui_content_indent"), 
+                                                360+Global.Int("EpicGui_content_drop"), 
+                                                width, 
+                                                "Heal Op",
+                                                "tUnderOpGui.OnHealPress");
+
+      Global.CreateHandle("gt_underop_gui_heal_button",GA_Write|GA_NoSave, heal_button);
+
+
+
+      move_button = iGUI.CreateAndInitialiseInverseButton( parent,
+                                                250+Global.Int("EpicGui_content_indent"), 
+                                                380+Global.Int("EpicGui_content_drop"), 
+                                                width, 
+                                                "Move Op",
+                                                "tUnderOpGui.OnMovePress");
+
+      Global.CreateHandle("gt_underop_gui_move_button",GA_Write|GA_NoSave, move_button);
+
+   }
+}
+
+
+// Called whenever a new operation has been selected.
+// It will refresh all operation information.
+update_op_info()
+{
+   hisim op = iSim.Cast(Global.Handle("gt_underop_selected_op"));
+   hwindow op_info = GUI.Cast(Global.Handle("gt_underop_gui_op_info"));
+   string text, faction_name;
+   string op_type, location_name, system, owner_name, owner_system;
+   hhabitat owner = tUnderOp.Supporter(op);
+   hmapentity center = tLCenter.GetCenter(op);
+
+   if (none != op) {
+
+      op_type = tEconUtil.StationIntToString(tLProduction.GetType(op));
+      faction_name = Text.Field(tEFaction.EName(iSim.Faction(op)), FT_Text);
+      location_name = Text.Field(Sim.Name(center), FT_Text);
+      system = Text.Field(iSim.WorldName(center), FT_Text);
+
+      owner_name = Text.Field(Sim.Name(owner), FT_Text);
+      owner_system = Text.Field(iSim.WorldName(owner), FT_Text);
+
+      text = "<HTML><BODY>";
+      text = String.Join(text, Text.Field(tUnderOp.Name(op), FT_Text));
+      text = String.Join(text, "<br>");
+      text = String.Join(text, faction_name);
+      text = String.Join(text, "<br>");
+      text = String.Join(text, op_type);
+
+      text = String.Join(text, String.FormatInt("<br>Fleets %d", tLFleet.Fleets(op)));
+
+      text = String.Join(text, "<P> Owner ");
+      text = String.Join(text, "<br>");
+      text = String.Join(text, owner_name);
+
+      text = String.Join(text, "<br>");
+      text = String.Join(text, owner_system);
+
+      text = String.Join(text, "<P> Current Position ");
+      text = String.Join(text, "<br>");
+      text = String.Join(text, location_name);
+
+      text = String.Join(text, "<br>");
+      text = String.Join(text, system);
+
+      text = String.Join(text, "</BODY></HTML>");
+      GUI.SetTextWindowString( op_info, text );
+   }else {
+      text = "<HTML><BODY>No Operation Selected.</BODY></HTML>";
+      GUI.SetTextWindowString( op_info, text );
+
+   }
+
+   update_op_controls();
+
+   update_informer_info();
+}
+
+// Create a list box, showing all the systems with at 
+// least one operation.
+
+create_system_list()
+{
+   hwindow list_box;
+   hwindow base_win;
+   hwindow parent;
+   hwindow button;
+   int count, entries;
+   string system_map;
+   list system_list;
+   hsim system;
+   int width, height, ypos, xpos;
+   hinifile cluster_ini = INIFile.Create("ini:/geog/clusters");
+   
+   parent = GUI.Cast(Global.Handle("gt_underop_gui_shady"));
+
+   base_win = GUI.Cast(Global.Handle("gt_underop_filter_list_box"));
+
+   // Remove the prior list box.
+   if (none != base_win) {
+      GUI.DeleteWindow(base_win);
+   }
+
+   height = GUI.WindowCanvasHeight( parent);
+   height = height - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+   ypos = height/3;
+   height = height/4; // split into 4 window spaces.
+
+   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   width = width/2;
+   width = width - Global.Int("EpicGui_content_indent");
+   width = width - Global.Int("EpicGui_content_indent");
+
+   ypos = ypos + Global.Int("EpicGui_content_drop");
+   xpos = Global.Int("EpicGui_content_indent");
+   
+
+   entries = iUtilities.FindNumberOfINIEntries(  cluster_ini,	"badlands", "system" );
+
+	// Create and initialise the inverse buttons and add them to a list for a 
+	// standard layout function and control focus ordering. 
+
+	for ( count = 0 ; count < entries ; ++count )
+	{
+		// Get the system map URL. Note that if there is no entry, the default hoffers_wake map is used.
+		system_map = INIFile.NumberedString( cluster_ini, "badlands",
+													  "system",
+													   count,
+													   "map:/geog/badlands/hoffers_wake" );   
+
+      system = Sim.Create("ini:/sims/nav/waypoint", system_map);
+
+      Object.AddStringProperty(system,"gtTransName", Text.Field(system_map, FT_Text));
+
+      List.AddTail(system_list, system);
+   }
+
+   system_list = List.SortByStringProperty(system_list,"gtTransName");
+
+   base_win = create_list(parent,
+               xpos,
+               ypos, 
+               width, 
+               height,
+               "tUnderOpGui.OnSystemButtonPress", 
+               system_list,
+               "System List");
+
+   Global.SetHandle("gt_underop_filter_list_box", base_win);
+
+   Global.SetInt("gt_underop_gui_filter_type", 0);
+
+   Global.SetString("gt_underop_gui_system", iSim.ActiveWorld());
+
+   create_op_list();
+}
+
+
+create_type_list()
+{
+   hwindow list_box;
+   hwindow base_win;
+   hwindow parent;
+   hwindow button;
+   int count, entries;
+   string system_map;
+   list system_list;
+   hsim system;
+   int width, height, ypos, xpos;
+   
+   parent = GUI.Cast(Global.Handle("gt_underop_gui_shady"));
+
+   base_win = GUI.Cast(Global.Handle("gt_underop_filter_list_box"));
+
+   // Remove the prior list box.
+   if (none != base_win) {
+      GUI.DeleteWindow(base_win);
+   }
+
+   height = GUI.WindowCanvasHeight( parent);
+   height = height - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+   ypos = height/3;
+   height = height/4; // split into 4 window spaces.
+
+   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   width = width/2;
+   width = width - Global.Int("EpicGui_content_indent");
+   width = width - Global.Int("EpicGui_content_indent");
+
+   ypos = ypos + Global.Int("EpicGui_content_drop");
+   xpos = Global.Int("EpicGui_content_indent");
+   
+
+
+   system = Sim.Create("ini:/sims/nav/waypoint", "UO_fleetattack");
+   Object.AddStringProperty(system,"gtTransName", "Fleet Attack");
+   Object.AddIntProperty(system,"gt_op_type",    ept_FleetAttackOp);
+
+   List.AddTail(system_list, system);
+
+   system = Sim.Create("ini:/sims/nav/waypoint", "UO_fleetdefense");
+   Object.AddStringProperty(system,"gtTransName", "Fleet Defense");
+   Object.AddIntProperty(system,"gt_op_type", ept_FleetDefenseOp);
+   List.AddTail(system_list, system);
+
+   system = Sim.Create("ini:/sims/nav/waypoint", "UO_patrol");
+   Object.AddStringProperty(system,"gtTransName", "Security Patrol");
+   Object.AddIntProperty(system,"gt_op_type", ept_PatrolOp);
+   List.AddTail(system_list, system);
+
+
+   system = Sim.Create("ini:/sims/nav/waypoint", "UO_customs");
+   Object.AddStringProperty(system,"gtTransName", "Customs");
+   Object.AddIntProperty(system,"gt_op_type", ept_CustomsOp);
+   List.AddTail(system_list, system);
+
+
+   system = Sim.Create("ini:/sims/nav/waypoint", "UO_thugs");
+   Object.AddStringProperty(system,"gtTransName", "Pirate Thugs");
+   Object.AddIntProperty(system,"gt_op_type", ept_ThugsOp);
+   List.AddTail(system_list, system);
+
+
+   system = Sim.Create("ini:/sims/nav/waypoint", "UO_raider");
+   Object.AddStringProperty(system,"gtTransName", "Pirate Raider");
+   Object.AddIntProperty(system,"gt_op_type", ept_RaiderOp);
+   List.AddTail(system_list, system);
+
+
+   system = Sim.Create("ini:/sims/nav/waypoint", "UO_embezzle");
+   Object.AddStringProperty(system,"gtTransName", "Embezzle");
+   Object.AddIntProperty(system,"gt_op_type", ept_EmbezzleOp);
+   List.AddTail(system_list, system);
+
+
+   system = Sim.Create("ini:/sims/nav/waypoint", "UO_pirate_toll");
+   Object.AddStringProperty(system,"gtTransName", "Pirate Toll");
+   Object.AddIntProperty(system,"gt_op_type", ept_ProtectionOp);
+   List.AddTail(system_list, system);
+
+   system_list = List.SortByStringProperty(system_list, "gtTransName");
+
+   base_win = create_list(parent,
+               xpos,
+               ypos, 
+               width, 
+               height,
+               "tUnderOpGui.OnTypeButtonPress", 
+               system_list,
+               "Type List");
+
+
+   Global.SetHandle("gt_underop_filter_list_box", base_win);
+
+   Global.SetInt("gt_underop_gui_filter_type", 1);
+   Global.SetInt("gt_underop_gui_op_type", 2);
+
+   create_op_list();
+}
+
+
+
+create_op_list()
+{
+   hwindow list_box;
+   hwindow base_win;
+   hwindow parent;
+   hwindow button;
+   int i, total;
+   string system_map;
+   list operation_list;
+   hisim op;
+   int width, height, ypos, xpos;
+   int filter_type = Global.Int("gt_underop_gui_filter_type");
+   int op_type = Global.Int("gt_underop_gui_op_type");
+   string system = Global.String("gt_underop_gui_system");
+
+
+   parent = GUI.Cast(Global.Handle("gt_underop_gui_shady"));
+
+   base_win = GUI.Cast(Global.Handle("gt_underop_list_box"));
+
+   // Remove the prior list box.
+   if (none != base_win) {
+      GUI.DeleteWindow(base_win);
+   }
+
+   height = GUI.WindowCanvasHeight( parent);
+   height = height - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+   ypos = height/3;
+   height = height/4; // split into 4 window spaces.
+
+   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   width = width/2;
+   width = width - Global.Int("EpicGui_content_indent");
+   width = width - Global.Int("EpicGui_content_indent");
+
+   ypos = ypos * 2;
+   ypos = ypos + Global.Int("EpicGui_content_drop");
+   xpos = Global.Int("EpicGui_content_indent");
+   
+   operation_list = tUnderOp.OperationList();
+   //operation_list = tUnderOp.FilterKnown(operation_list);
+
+   // Always filter by system.
+   operation_list = tUnderOpFilter.FilterSystem(operation_list, system);
+
+   // Sometimes filter by the type.
+   if (1 == filter_type) {
+      operation_list = tUnderOpFilter.FilterType(operation_list, op_type);
+   }
+
+   total = List.ItemCount(operation_list);
+
+   for (i=0;i<total;++i) {
+      op = iSim.Cast(List.GetNth(operation_list, i));
+
+      Object.AddStringProperty(op,"gtTransName", Text.Field(tUnderOp.Name(op),FT_Text));
+   }
+
+   operation_list = List.SortByStringProperty(operation_list, "gtTransName");
+
+   base_win = create_list(parent,
+               xpos,
+               ypos, 
+               width, 
+               height,
+               "tUnderOpGui.OnOperationPress", 
+               operation_list,
+               "Operations");
+
+   op = iSim.Cast(List.Head(operation_list));
+
+   Global.SetHandle("gt_underop_selected_op", op);
+   Global.SetHandle("gt_underop_list_box", base_win);
+
+   update_op_info();
+}
+
+
+
+
+
+
+
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+
+
+
+

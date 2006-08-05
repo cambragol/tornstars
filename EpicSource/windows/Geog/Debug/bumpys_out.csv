@@ -1,0 +1,87 @@
+;Center, Name,
+Center,bumpys_star_center,bumpys_star_center,
+
+;Star, Name, Parent, Distance, Rotation, Elevation, Color,
+Star,Bumpys,bumpys_star_center,0.000000,   0,   0,5,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Pinetop,Bumpys,40000000000.000000,   0,   0,1.000000, 0.000000, 0.000000,0.000000, 2492874.000000, 2,2, 18,1,255.000000, 255.000000, 255.000000,0.000000, 0.000000, 0.000000,127.000000, 44.000000, 34.000000,255, 0, 0,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Perkins,Pinetop,400000000.000000,   0,   0,1.000000, 0.000000, 0.000000,0.000000, 354401.406250, 3,15, 41,1,255.000000, 255.000000, 255.000000,0.000000, 0.000000, 0.000000,127.000000, 44.000000, 34.000000,255, 0, 0,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Keylime,Pinetop,630000000.000002,  30,   0,1.000000, 0.000000, 0.000000,0.000000, 403868.468750, 3,28, 44,1,255.000000, 255.000000, 255.000000,0.000000, 0.000000, 0.000000,127.000000, 44.000000, 34.000000,255, 0, 0,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Keylime Refinery,Keylime,15000000.000000,   0,   0,1.000000, 0.000000, 0.000000,1, 15, 0, 10,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Jellyroll,Bumpys,49999998976.000008,  30,   0,1.000000, 0.000000, 0.000000,0.000000, 4921537.000000, 2,14, 21,1,255.000000, 255.000000, 255.000000,0.000000, 0.000000, 0.000000,127.000000, 44.000000, 34.000000,255, 0, 0,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Sweet Sheila,Jellyroll,400000000.000001,  30,   0,1.000000, 0.000000, 0.000000,0.000000, 1182662.000000, 3,16, 49,1,255.000000, 255.000000, 255.000000,0.000000, 0.000000, 0.000000,127.000000, 44.000000, 34.000000,255, 0, 0,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Lubecks Hole,Jellyroll,629999999.999998,  60,   0,1.000000, 0.000000, 0.000000,0.000000, 1028844.000000, 3,24, 44,1,255.000000, 255.000000, 255.000000,0.000000, 0.000000, 0.000000,127.000000, 44.000000, 34.000000,255, 0, 0,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Goodboy,Jellyroll,860000000.000002,  90,   0,1.000000, 0.000000, 0.000000,0.000000, 1103015.375000, 3,9, 51,1,255.000000, 255.000000, 255.000000,0.000000, 0.000000, 0.000000,127.000000, 44.000000, 34.000000,255, 0, 0,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Sit,Jellyroll,1090000000.000000, 120,   0,1.000000, 0.000000, 0.000000,0.000000, 512666.500000, 3,29, 46,1,255.000000, 255.000000, 255.000000,0.000000, 0.000000, 0.000000,127.000000, 44.000000, 34.000000,255, 0, 0,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Stay,Jellyroll,1320000000.000002, 150,   0,1.000000, 0.000000, 0.000000,0.000000, 375124.875000, 3,24, 41,1,255.000000, 255.000000, 255.000000,0.000000, 0.000000, 0.000000,127.000000, 44.000000, 34.000000,255, 0, 0,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Rose Rock,Stay,15000000.000000,   0,   0,1.000000, 0.000000, 0.000000,20, 8, 0, 10,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Woomera,Bumpys,62499999744.000000,  60,   0,1.000000, 0.000000, 0.000000,0.000000, 3759087.000000, 2,0, 2,1,255.000000, 255.000000, 255.000000,0.000000, 0.000000, 0.000000,127.000000, 44.000000, 34.000000,255, 0, 0,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Woomera Station,Woomera,15000000.000000,   0,   0,1.000000, 0.000000, 0.000000,24, 6, 0, 10,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Woomera Leisure Station,Woomera,15000000.000000, 127,   0,1.000000, 0.000000, 0.000000,11, 106, 0, 10,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Dizzy,Bumpys,78124998656.000000,  90,   0,1.000000, 0.000000, 0.000000,0.000000, 6547868.500000, 2,26, 7,1,255.000000, 255.000000, 255.000000,0.000000, 0.000000, 0.000000,127.000000, 44.000000, 34.000000,255, 0, 0,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Three Bears,Dizzy,400000000.000001,  90,   0,1.000000, 0.000000, 0.000000,0.000000, 270063.562500, 3,6, 49,1,255.000000, 255.000000, 255.000000,0.000000, 0.000000, 0.000000,127.000000, 44.000000, 34.000000,255, 0, 0,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Blue Aggie,Dizzy,629999999.999994, 120,   0,1.000000, 0.000000, 0.000000,0.000000, 1355696.375000, 3,24, 45,1,255.000000, 255.000000, 255.000000,0.000000, 0.000000, 0.000000,127.000000, 44.000000, 34.000000,255, 0, 0,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Dexters Dig,Blue Aggie,15000000.000000,   0,   0,1.000000, 0.000000, 0.000000,20, 7, 0, 10,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Lunchbox,Blue Aggie,15000000.000000, 127,   0,1.000000, 0.000000, 0.000000,22, 53, 0, 10,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Letdown,Dizzy,859999999.999999, 150,   0,1.000000, 0.000000, 0.000000,0.000000, 664350.437500, 3,24, 51,1,255.000000, 255.000000, 255.000000,0.000000, 0.000000, 0.000000,127.000000, 44.000000, 34.000000,255, 0, 0,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Redemption,Dizzy,1090000000.000000, 180,   0,1.000000, 0.000000, 0.000000,0.000000, 1418003.500000, 3,7, 41,1,255.000000, 255.000000, 255.000000,0.000000, 0.000000, 0.000000,127.000000, 44.000000, 34.000000,255, 0, 0,
+
+;Belt, Name, Parent, Distance, Rotation, Elevation,
+Belt,Magdalena Belt,Bumpys,97656250368.000000, 120,   0,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Asteroid Station,Magdalena Belt,12999999.999993, 120,   0,1.000000, 0.000000, 0.000000,24, 4, 0, 10,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Ella,Bumpys,122070310912.000000, 150,   0,1.000000, 0.000000, 0.000000,0.000000, 2230109.500000, 2,2, 1,1,255.000000, 255.000000, 255.000000,0.000000, 0.000000, 0.000000,127.000000, 44.000000, 34.000000,255, 0, 0,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Jennys Beat,Ella,400000000.000007, 150,   0,1.000000, 0.000000, 0.000000,0.000000, 359544.968750, 3,22, 40,1,255.000000, 255.000000, 255.000000,0.000000, 0.000000, 0.000000,127.000000, 44.000000, 34.000000,255, 0, 0,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Hopkins Hazard,Ella,630000000.000006, 180,   0,1.000000, 0.000000, 0.000000,0.000000, 305485.750000, 3,9, 35,1,255.000000, 255.000000, 255.000000,0.000000, 0.000000, 0.000000,127.000000, 44.000000, 34.000000,255, 0, 0,
+
+;Lpoint, Name, Planet, Moon,
+Lpoint,Jennys Lpoint,Jennys Beat,Ella,
+

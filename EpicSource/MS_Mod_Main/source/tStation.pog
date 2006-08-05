@@ -1,0 +1,428 @@
+//*******************************************************************************************/
+//
+// tStation
+//
+// This package implements supplemental information for stations. Funds, Ships, and utility
+// functions. It no longer supports pog created stations, because EoC tends to crash when 
+// those are used. 
+//
+// 
+//
+// October 2002, Jon Freise
+//******************************************************************************************/
+
+package tStation;
+
+uses 
+iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, 
+Task, Debug, iFaction, iSim, iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+iConversation, iFormation, Group, Text, iEmail, State, iTrafficCreation, 
+iRangeCheck,iRemotePilot, iRegion, iMissionTracker, iWingmen,
+iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+iStartSystem, 
+iLagrangePoint, 
+   iGame, 
+   Stream, 
+   iDockport,
+//   tEpicFactionEnum,
+//   tEpicFaction,
+   tStationEnum;
+
+
+
+
+provides 
+   Habitats,
+   Nearest,
+   IsStation,
+   IsVisibleOnMap,
+   SetMapVisibility,
+   IsHidden,
+   SetHidden,
+   IsDestroyed,
+   SetDestroyed,
+
+   SetStatus,
+   Status,
+   
+   SetCategory,
+   Category,
+
+   SetChangeTime,
+   ChangeTime,
+
+   SetReactorBuildTime,
+   ReactorBuildTime,
+
+   SetControlBuildTime,
+   ControlBuildTime,
+
+   SetRichness,
+   Richness,
+
+   SetKnown,
+   IsKnown,
+
+   SetAwake,
+   IsAwake,
+
+   Create,
+   
+   String2Status,
+   Status2String,
+   Richness2String,
+   
+   String2Category,
+   Category2String;
+
+ 
+prototype Create(hhabitat station, string faction_name, eStationStatus status, int event_time, 
+                 int reactor_time, int control_time, int richness, bool known, bool awake);
+
+
+set Habitats() 
+{
+   return iMapEntity.SystemHabitats();
+}
+
+set SystemHabitats(string system)
+{
+   return iMapEntity.SystemHabitatsInSystem(system);
+}
+
+
+
+
+
+// Returns true if the sim has the properties of an initilized station.
+bool IsStation(hisim station)
+{
+   return Object.PropertyExists(station,"gt_station_state");
+}
+
+
+
+
+/* 
+Takes a list of sims, it returns the sim that is 
+nearest to the location provided.
+
+*/
+hsim Nearest(hsim location, list items)
+{
+   float dist;
+   hsim found, curr;
+   int i, total;
+
+   found = Sim.Cast(List.Head(items));
+   dist = Sim.DistanceBetween( location, found);
+
+   total = List.ItemCount(items);
+   for (i=1;i<total;++i) {
+      curr = Sim.Cast(List.GetNth(items, i));
+      if (Sim.DistanceBetween( location, curr) < dist) {
+         found = curr;
+         dist = Sim.DistanceBetween( location, curr);
+      }
+   }
+   return found;
+}
+
+
+
+
+
+bool IsVisibleOnMap(hhabitat station)
+{
+   return iMapEntity.IsVisibleOnMap(station);
+}
+
+SetMapVisibility(hhabitat station, bool visible)
+{
+   iMapEntity.SetMapVisibility(station, visible);
+}
+
+SetHidden(hhabitat station, bool hide)
+{
+
+   iMapEntity.SetHidden(station, hide);
+   if (false == hide) {
+      iSim.SetStandardSensorVisibility(station, true);
+   }else {
+      iSim.SetStandardSensorVisibility(station, false);
+   }
+}
+
+
+bool IsHidden(hhabitat station)
+{
+   return iMapEntity.IsHidden(station);
+}
+
+// This function will set a map entity station to destroyed, and will totally
+// remove a pog created station.
+
+SetDestroyed(hhabitat station, bool destroyed)
+{
+   iMapEntity.SetDestroyed(station, destroyed);
+}
+
+bool IsDestroyed(hhabitat station)
+{
+   return iMapEntity.IsDestroyed(station);
+}
+
+
+
+
+SetCategory(hhabitat station, eStationCategory category)
+{
+   Object.SetIntProperty(station, "gt_station_category", category);
+}
+
+eStationCategory Category(hhabitat station)
+{
+   return Object.IntProperty(station, "gt_station_category");
+}
+
+
+
+
+SetStatus(hhabitat station, eStationStatus status)
+{
+   Object.SetIntProperty(station, "gt_station_state", status);
+}
+
+eStationStatus Status(hhabitat station)
+{
+   return Object.IntProperty(station, "gt_station_state");
+}
+
+
+
+SetRichness(hhabitat station, int richness)
+{
+   Object.SetIntProperty(station, "gt_station_richness", richness);
+}
+
+int Richness(hhabitat station)
+{
+   return Object.IntProperty(station, "gt_station_richness");
+}
+
+
+SetKnown(hhabitat station, bool known)
+{
+   Object.SetBoolProperty(station, "gt_station_known", known);
+}
+
+bool IsKnown(hhabitat station)
+{
+   return Object.BoolProperty(station, "gt_station_known");
+}
+
+SetAwake(hhabitat station, bool awake)
+{
+   Object.SetBoolProperty(station, "gt_station_awake", awake);
+}
+
+bool IsAwake(hhabitat station)
+{
+   return Object.BoolProperty(station, "gt_station_awake");
+}
+
+
+
+int ChangeTime(hhabitat station)
+{
+   return Object.IntProperty(station,"gt_station_event");
+}
+
+SetChangeTime(hhabitat station, int build_time)
+{
+   Object.SetIntProperty(station,"gt_station_event", build_time);
+}
+
+
+
+int ReactorBuildTime(hhabitat station)
+{
+   return Object.IntProperty(station,"gt_station_reac_build");
+}
+
+SetReactorBuildTime(hhabitat station, int build_time)
+{
+   Object.SetIntProperty(station,"gt_station_reac_build", build_time);
+}
+
+
+
+int ControlBuildTime(hhabitat station)
+{
+   return Object.IntProperty(station,"gt_station_cont_build");
+}
+
+SetControlBuildTime(hhabitat station, int build_time)
+{
+   Object.SetIntProperty(station,"gt_station_cont_build", build_time);
+}
+
+
+
+
+
+Create(hhabitat station,
+       string faction_name,
+       eStationStatus status,
+       int event_time,
+       int reactor_time,
+       int control_time, 
+       int richness,
+       bool known, 
+       bool awake)
+{
+   hfaction faction;
+
+   Object.AddIntProperty(station,"gt_station_state", 0);
+   Object.AddIntProperty(station,"gt_station_category", 0);
+   Object.AddIntProperty(station,"gt_station_event", 0);
+   Object.AddIntProperty(station,"gt_station_reac_build", 0);
+   Object.AddIntProperty(station,"gt_station_cont_build", 0);
+   Object.AddIntProperty(station,"gt_station_richness", 0);
+   Object.AddBoolProperty(station,"gt_station_known", true);
+   Object.AddBoolProperty(station,"gt_station_awake", true);
+
+   SetStatus(station, status);
+   SetChangeTime(station, event_time);
+   SetControlBuildTime(station, control_time);
+   SetReactorBuildTime(station, reactor_time);
+   SetRichness(station, richness);
+   SetKnown(station, known);
+   SetAwake(station, awake);
+
+
+   faction = iFaction.Find(faction_name);
+   iSim.SetFaction(iSim.Cast(station), faction);
+
+   // Commented out until stations can be replaced.
+   //iSim.SetIndestructable(station, false);
+}
+
+string Status2String(eStationStatus status)
+{
+   switch (status) {
+
+   case ESS_Invalid : return "ESS_Invalid"; break;
+   case ESS_Destroyed : return "ESS_Destroyed"; break;
+   case ESS_Normal : return "ESS_Normal"; break;
+   case ESS_Empty : return "ESS_Empty"; break;
+   case ESS_Building : return "ESS_Building"; break;
+   case ESS_Leaving : return "ESS_Leaving"; break;
+   case ESS_Fleeing : return "ESS_Fleeing"; break;
+   case ESS_NeverBuilt : return "ESS_NeverBuilt"; break;
+   default:
+      break;
+   }
+
+   debug Debug.PrintString("Error tStation.Status2String invalid status\n");
+   
+   return "";
+}
+
+
+eStationStatus String2Status(string status_name)
+{
+   if ("ESS_Invalid" == status_name) { return ESS_Invalid;}
+   else if ("ESS_Destroyed" == status_name) { return ESS_Destroyed;}
+   else if ("ESS_Normal" == status_name) { return ESS_Normal;}
+   else if ("ESS_Empty" == status_name) { return ESS_Empty;}
+   else if ("ESS_Building" == status_name) { return ESS_Building;} 
+   else if ("ESS_Leaving" == status_name) { return ESS_Leaving;} 
+   else if ("ESS_Fleeing" == status_name) { return ESS_Fleeing;} 
+   else if ("ESS_NeverBuilt" == status_name) { return ESS_NeverBuilt;}
+
+   debug{
+      Debug.PrintString("Error tStation.String2Status invalid string ");
+      Debug.PrintString(status_name);
+      Debug.PrintString("\n");
+   }
+
+   return ESS_Invalid;
+}
+
+
+
+string Richness2String(int richness)
+{
+   switch (richness) {
+   case 0 : return "Unusable"; break;
+   case 1 : return "Poor"; break;
+   case 2 : return "Average"; break;
+   case 3 : return "Excellent"; break;
+   default:
+      break;
+   }
+   return "Unusable";
+}
+
+
+
+string Category2String(eStationCategory category)
+{
+   switch (category) {
+
+   case ESC_Invalid : return "ESC_Invalid"; break;
+   case ESC_Mine : return "ESC_Mine"; break;
+   case ESC_Process : return "ESC_Process"; break;
+   case ESC_Manufacture : return "ESC_Manufacture"; break; 
+   case ESC_Research : return "ESC_Research"; break;
+   case ESC_Habitat : return "ESC_Habitat"; break;
+   case ESC_Headquarters : return "ESC_Headquarters"; break;
+   case ESC_Pirate : return "ESC_Pirate"; break;
+   default:
+
+      break;
+   }
+
+   debug Debug.PrintString("Error tStation.Category2String invalid status\n");
+   
+   return "";
+}
+
+
+
+eStationCategory String2Category(string category_string)
+{
+
+   if("ESC_Invalid"==category_string){return ESC_Invalid;}
+   else if("ESC_Mine"==category_string){return ESC_Mine;}
+   else if("ESC_Process"==category_string){return ESC_Process;}
+   else if("ESC_Manufacture"==category_string){return ESC_Manufacture;} 
+   else if("ESC_Research"==category_string){return ESC_Research;}
+   else if("ESC_Habitat"==category_string){return ESC_Habitat;}
+   else if("ESC_Headquarters"==category_string){return ESC_Headquarters;}
+   else if("ESC_Pirate"==category_string){return ESC_Pirate;}
+
+   debug{
+      Debug.PrintString("Error tStation.String2Category invalid string ");
+      Debug.PrintString(category_string);
+      Debug.PrintString("\n");
+   }
+
+   return ESC_Invalid;
+}
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+

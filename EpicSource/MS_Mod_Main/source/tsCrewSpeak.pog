@@ -1,0 +1,88 @@
+//*******************************************************************************************/
+//
+// tsCrewSpeak.pog
+//
+// This package adds some crew responses to player keyboard commands. Makes the ship feel
+// like it has more crew.
+// 
+//
+// Feb 2006, Jon Freise
+//******************************************************************************************/
+
+package tsCrewSpeak;
+
+uses    Sim,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        GUI,
+        iGUI,
+        iHUD,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        iMod,
+        iComms,
+        uString;
+
+
+
+
+provides Init,
+         AutopilotHalt,
+         AutopilotApproach,
+         AutopilotFormate,
+         AutopilotDock;
+
+
+
+
+Init()
+{
+   Input.BindKey( "tsCrewSpeak.AutopilotHalt", "icPlayerPilot.AutopilotOff" );
+
+   Input.BindKey( "tsCrewSpeak.AutopilotApproach", "icPlayerPilot.AutopilotApproach" );
+
+   Input.BindKey( "tsCrewSpeak.AutopilotFormate", "icPlayerPilot.AutopilotFormate" );
+
+   Input.BindKey( "tsCrewSpeak.AutopilotDock", "icPlayerPilot.AutopilotDock" );
+
+}
+
+AutopilotHalt()
+{
+   // crew_halting, "Acknowledged  Halting ship"
+   iComms.Shout(none,"name_az",uString.CommsStringRandom( "crew_halting","",5));
+}
+
+AutopilotApproach()
+{
+   // crew_approach, "Aye Sir. Setting course for target"
+   iComms.Shout(none,"name_az",uString.CommsStringRandom( "crew_approach","",5));
+}
+
+AutopilotFormate()
+{
+   // crew_formate, "Formation maneuver initiated"
+   iComms.Shout(none,"name_az", uString.CommsStringRandom("crew_formate","",5));
+}
+
+AutopilotDock()
+{
+   // crew_dock, "Aligning with dockport now, Sir"
+   iComms.Shout(none,"name_az", uString.CommsStringRandom("crew_dock","",5));
+}
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

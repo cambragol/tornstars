@@ -1,0 +1,67 @@
+//*******************************************************************************************/
+//
+// tTestSwap.pog
+//
+// 
+// 
+//
+//
+//
+// May 6, 2005, jon freise
+//******************************************************************************************/
+
+package zTestSwap;
+
+uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, 
+   iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+   iConversation, iFormation, Group, Text, iEmail, State, 
+   iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker, 
+   iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+   iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
+   iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
+   iInventory,
+
+   tSaveGui;
+
+
+
+
+provides SwapShips;
+         
+
+SwapShips()
+{
+   // remove all ships
+   iInventory.RemoveCommandSection();
+   iInventory.RemoveTug();
+   iInventory.RemoveFastAttackShip();
+   iInventory.RemoveHeavyCorvette();
+   iInventory.RemoveStormPetrel();
+
+
+   // add back a test ship (different than tug).
+   iInventory.AddHeavyCorvette();
+
+
+   // force the entry into the base.
+   tSaveGui.PressEnterStation();
+}
+
+
+
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+
+
+
+

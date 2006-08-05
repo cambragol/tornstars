@@ -1,0 +1,382 @@
+//*******************************************************************************************/
+//
+// tsPilotSetup.pog
+//
+// This pog object implements the setup of pilots and the scripts they use.
+// 
+//
+// March 2006, Jon Freise
+//******************************************************************************************/
+
+package tsPilotSetup;
+
+uses    Sim,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        GUI,
+        iGUI,
+        iHUD,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        Math,
+        iAI,
+        iShipCreation,
+        iComms,
+        iConversation,
+        tEpicComms,
+        tEpicFleet,
+        tLRoot,
+        tLTrade,
+        tEFaction,
+        tETradeSell,
+        tEpicMoney,
+        tShipName,
+        tPcOwner,
+        tLProduction,
+        tLFleet,
+        tUnderOp,
+        tPodUtil,
+        tRepWatch,
+        tEpicEventEnum,
+        tsEvent;
+
+
+
+provides SetupOperation,
+         OperationDeath,
+         SetupCargo,
+         CargoSelfPreserve,
+         CargoDeath,
+         SetupEscort,
+         EscortSelfPreserve,
+         EscortDeath;
+
+
+
+prototype drop_cargo(hship freighter);
+
+// This task is launched when an escort ship 
+// has been attacked. It watches the ship and tells it when
+// to stop fighting and flee.
+
+task escort_task(hship escort)
+{
+   float hit_points, flee_points;
+   hship last_attacker;
+
+
+   if (Object.BoolProperty(escort,"watch_task")) {
+      // this ship has a watch task already.
+      return;
+   }
+
+   Object.AddBoolProperty(escort,"watch_task", true);
+
+   while (1) {
+      Task.Sleep(Task.Current(), 1.0);
+
+      if (Sim.IsDead(escort)) {
+         // our ship is dead, bail.
+         return;
+      }
+      
+      hit_points = Object.FloatProperty(escort,"hit_points");
+      flee_points = Object.FloatProperty(escort,"flee_hit_points");
+
+      if (hit_points < flee_points) {
+         // If our orders are not to run, then run.
+
+         if (OT_Flee != iAI.CurrentOrderType(escort)) {
+            last_attacker = iShip.Cast(iShip.LastAttacker(escort));
+
+            iAI.PurgeOrders(escort);
+            iAI.GiveFleeOrder(escort, last_attacker);
+
+            debug Debug.PrintString("tsPilotSetup.escort_task giving flee order\n");
+            // This is a good place for a distress call.
+
+            // Escorts don't normally carry cargo, but just in case.
+            tPodUtil.DropCargo(escort);
+         }
+      }
+   }
+}
+
+
+task cargo_task(hship cargo_ship)
+{
+   float hit_points, flee_points;
+   hship last_attacker;
+   set cargo;
+
+
+   if (Object.BoolProperty(cargo_ship,"watch_task")) {
+      // this ship has a watch task already.
+      return;
+   }
+
+   Object.AddBoolProperty(cargo_ship,"watch_task", true);
+
+   while (1) {
+      Task.Sleep(Task.Current(), 1.0);
+
+      if (Sim.IsDead(cargo_ship)) {
+         // our ship is dead, bail.
+         return;
+      }
+      
+      hit_points = Object.FloatProperty(cargo_ship,"hit_points");
+      flee_points = Object.FloatProperty(cargo_ship,"flee_hit_points");
+
+      if (hit_points < flee_points) {
+         // If our orders are not to run, then run.
+
+         if (OT_Flee != iAI.CurrentOrderType(cargo_ship)) {
+            last_attacker = iShip.Cast(iShip.LastAttacker(cargo_ship));
+
+            iAI.PurgeOrders(cargo_ship);
+            iAI.GiveFleeOrder(cargo_ship, last_attacker);
+
+            debug Debug.PrintString("tsPilotSetup.cargo_task giving flee order\n");
+            // This is a good place for a distress call.
+
+            // Drop all of our cargo and run for it.
+            //cargo = tPodUtil.ShipPods(cargo_ship);
+            //Task.Detach(start iUtilities.JettisonCargo( List.FromSet(cargo), cargo_ship ));
+            
+            tPodUtil.DropCargo(cargo_ship);
+         }
+      }
+   }
+}
+
+
+SetupEscort(hship escort, float notice_level, float flee_level)
+{
+   
+   // Setup the pilot so that it turns hostile very quickly.
+   iShip.InstallAIPilot(escort, 0.1, 4.0,
+                        notice_level,
+                        "tsPilotSetup.EscortSelfPreserve",
+                        "tsPilotSetup.EscortSelfPreserve",
+                        "tsPilotSetup.EscortSelfPreserve",
+                        "tsPilotSetup.EscortSelfPreserve");
+
+   // Set the level of hit points when we should run for it.
+   Object.AddFloatProperty(escort,"flee_hit_points", 
+                           Object.FloatProperty(escort,"hit_points") * flee_level);
+
+   Object.SetStringProperty(escort,"death_script", "tsPilotSetup.EscortDeath");
+}
+
+
+// Someone is attacking the escort.
+task EscortSelfPreserve(hship escort)
+{
+   hisim last_attacker;
+   hfaction empty_faction = tEFaction.EmptyFaction();
+
+   debug Debug.PrintString("tsPilotSetup.EscortSelfPreserve\n");
+
+   // Launch the watch task that will set this ship to run
+   // when badly damaged.
+   Task.Detach(start escort_task(escort));
+
+   // Test if the player did it, and give penalty/bonus.
+   tRepWatch.ShipAttacked(escort, -2.0);
+
+
+   // We need to choose if the escort attacks the last
+   // attacker. There are a few cases that need
+   // to get weeded out.
+
+   last_attacker = iShip.LastAttacker(escort);
+
+   if (none == last_attacker) {
+      return;
+   }
+
+   // Mistaken shot.
+   if (iSim.Faction(escort) == iSim.Faction(last_attacker)) {
+      return;
+   }
+
+   // Empty faction, junk should be ignored.
+   if (iSim.Faction(last_attacker) == empty_faction) {
+      return;
+   }
+
+   // Let our patrol group know we were fired upon.
+   tsEvent.SendEvent(Sim.Group(escort),
+                     espSelfAttacked,
+                     eseSelfAttacked,
+                     escort,
+                     last_attacker,
+                     escort);
+
+
+   iAI.PurgeOrders(escort);
+   iAI.GiveAttackOrder(escort, last_attacker);   
+
+}
+ 
+// Some ships belong to an owner with fleets. Charge the owner for the loss
+// of this ship.
+fleet_loss(hship ship)
+{
+   hisim operation = iSim.Cast(tPcOwner.Owner(ship));
+
+   if (none != operation) {
+      // If this escort is owned by a station or operation
+      // then the owner will have fleets. So deduct this lost ship from
+      // the supply of fleets.
+      if (tUnderOp.IsOperation(operation) || (T_Station == iSim.Type(operation))){
+
+         // Subtract off the threat value of the dead ship.
+         tLFleet.ChangeFleets(operation, -1.0 * Object.FloatProperty(ship,"threat"));
+      }
+   }
+}
+
+// An escort death script just needs to remove 
+// its value from the owners fleets.
+task EscortDeath(hship escort)
+{
+   hfaction empty_faction = tEFaction.EmptyFaction();
+   hship last_attacker;
+
+   debug Debug.PrintString("tsPilotSetup.EscortDeath\n");
+
+   tRepWatch.ShipAttacked(escort, -8.0);
+
+   fleet_loss(escort);
+
+   // Utter death threats..
+   iSim.Kill(escort);
+}
+
+
+SetupCargo(hship cargo_ship, float notice_level, float flee_level)
+{
+   
+   // Setup the pilot so that it turns hostile very quickly.
+   iShip.InstallAIPilot(cargo_ship, 0.1, 4.0,
+                        notice_level,
+                        "tsPilotSetup.CargoSelfPreserve",
+                        "tsPilotSetup.CargoSelfPreserve",
+                        "tsPilotSetup.CargoSelfPreserve",
+                        "tsPilotSetup.CargoSelfPreserve");
+
+   // Set the level of hit points when we should run for it.
+   Object.AddFloatProperty(cargo_ship,"flee_hit_points", 
+                           Object.FloatProperty(cargo_ship,"hit_points") * flee_level);
+
+   Object.SetStringProperty(cargo_ship,"death_script", "tsPilotSetup.CargoDeath");
+}
+
+
+// Some one is attacking the ship. 
+// Because this is an cargo_ship, don't worry about it too much.
+task CargoSelfPreserve(hship cargo_ship)
+{
+   hisim last_attacker;
+   hfaction empty_faction = tEFaction.EmptyFaction();
+   bool guilty = true;
+
+   debug Debug.PrintString("tsPilotSetup.CargoSelfPreserve\n");
+
+   // Launch the watch task that will set this ship to run.
+   Task.Detach(start cargo_task(cargo_ship));
+
+   tRepWatch.ShipAttacked(cargo_ship, -2.0);
+
+}
+ 
+
+
+// An cargo_ship death script just needs to remove 
+// its value from the owners fleets.
+task CargoDeath(hship cargo_ship)
+{
+   hfaction empty_faction = tEFaction.EmptyFaction();
+   hship last_attacker;
+
+   debug Debug.PrintString("tsPilotSetup.CargoDeath\n");
+
+   last_attacker = iShip.Cast(iShip.LastAttacker(cargo_ship));
+
+   fleet_loss(cargo_ship);
+
+   // If the player is guilty this will assign penalty (or bonus);
+   tRepWatch.ShipAttacked(cargo_ship, -8.0);
+
+   // Utter death threats..
+   iSim.Kill(cargo_ship);
+}
+
+
+// The operation pilot is just like a cargo ship
+// But it also destroys the owning operation when it dies.
+
+SetupOperation(hship ship, float notice_level, float flee_level)
+{
+   // Setup the pilot so that it turns hostile very quickly.
+   iShip.InstallAIPilot(ship, 0.1, 4.0,
+                        notice_level,
+                        "tsPilotSetup.CargoSelfPreserve",
+                        "tsPilotSetup.CargoSelfPreserve",
+                        "tsPilotSetup.CargoSelfPreserve",
+                        "tsPilotSetup.CargoSelfPreserve");
+
+   // Set the level of hit points when we should run for it.
+   Object.AddFloatProperty(ship,"flee_hit_points", 
+                           Object.FloatProperty(ship,"hit_points") * flee_level);
+
+   Object.SetStringProperty(ship,"death_script", "tsPilotSetup.OperationDeath");
+}
+
+// Used for when a ship is representing an operation.
+// This function kills the represented operation.
+task OperationDeath(hship ship)
+{
+   hisim operation;
+   hfaction empty_faction = tEFaction.EmptyFaction();
+   hship last_attacker;
+   bool guilty = true;
+
+   debug Debug.PrintString("tsPilotSetup.OperationDeath\n");
+
+
+   operation = iSim.Cast(tPcOwner.Owner(ship));
+   if (none != operation) {
+      if (tUnderOp.IsOperation(operation)){
+
+         // This op is history.
+         tUnderOp.DestroyOp(operation);
+      }
+   }
+
+   fleet_loss(ship);
+
+   tRepWatch.ShipAttacked(ship, -8.0);
+
+   // Utter death threats..
+
+   iSim.Kill(ship);
+}
+
+
+/*   
+
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

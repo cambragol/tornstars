@@ -1,0 +1,190 @@
+/*******************************************************************************************/
+//
+// tsFleetOperation
+// 
+// This module is a dispatch module that branches common calls to the various types
+// of operations. We don't have objects in POG so we need to make do with older
+// strategies like this one.
+// 
+// March 2006
+//******************************************************************************************/
+
+package tsFleetOperation;
+
+
+uses  Sim,
+iSim,
+Debug,
+Global,
+iGame,
+iFaction,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+State,
+Text,
+Math,
+iShip,
+iHabitat,
+iMapEntity,
+iHUD,
+iComms,
+   tStationEnum,
+   tStation,
+   tEFaction,
+   tTime,
+   tUnderOp,
+   tLCenter,
+   tLProduction,
+   tsFoEmbezzle,
+   tsFoFleetAttack,
+   tsFoFleetDefense,
+   tsFoProtection,
+   tsFoThugs,
+   tsFoRaider,
+   tsFoCustoms,
+   tsFoPatrol;
+
+
+
+
+provides New,
+         Save,
+         Restore,
+         Update;
+
+
+
+
+
+//*******************************************************************************************/         
+//
+//*******************************************************************************************/
+
+
+// Sets up the information that is needed by each type of operation.
+// This is done once at creation time.
+// After this, all information should be recovered in save and restore.
+hisim New(int operation_type,
+          hfaction faction,
+          hmapentity center)
+{
+   hisim operation;
+
+   operation = tUnderOp.NewOp(operation_type, faction, center);
+
+   switch (operation_type) {
+
+   case ept_EmbezzleOp: tsFoEmbezzle.New(operation); break;
+   case ept_CustomsOp: tsFoCustoms.New(operation);break;
+
+   case ept_ThugsOp: tsFoThugs.New(operation);break;
+   case ept_PatrolOp: tsFoPatrol.New(operation);break;
+
+   case ept_RaiderOp: tsFoRaider.New(operation);break;
+   case ept_ProtectionOp: tsFoProtection.New(operation);break;
+
+   case ept_FleetAttackOp: tsFoFleetAttack.New(operation);break;
+   case ept_FleetDefenseOp: tsFoFleetDefense.New(operation);break;
+
+   default:
+      debug {
+         Debug.PrintString(String.FormatInt("tFleetOperation.Create invalid op type %d\n", operation_type));
+      }
+      break;
+   }
+
+   return operation;
+}
+
+Save(hisim operation)
+{
+   int operation_type = tLProduction.GetType(operation);
+
+   switch (operation_type) {
+
+   case ept_EmbezzleOp: tsFoEmbezzle.Save(operation);break;
+   case ept_CustomsOp: tsFoCustoms.Save(operation);break;
+
+   case ept_ThugsOp: tsFoThugs.Save(operation);break;
+   case ept_PatrolOp: tsFoPatrol.Save(operation);break;
+   
+   case ept_RaiderOp: tsFoRaider.Save(operation);break;
+   case ept_ProtectionOp: tsFoProtection.Save(operation);break;
+   
+   case ept_FleetAttackOp: tsFoFleetAttack.Save(operation);break;
+   case ept_FleetDefenseOp: tsFoFleetDefense.Save(operation);break;
+
+   default:
+      debug {
+         Debug.PrintString(String.FormatInt("tFleetOperation.Save invalid op type %d\n", operation_type));
+      }
+      break;
+   }
+}
+
+
+
+Restore(hisim operation)
+{
+   int operation_type = tLProduction.GetType(operation);
+
+   switch (operation_type) {
+   case ept_EmbezzleOp: tsFoEmbezzle.Restore(operation);break;
+   case ept_CustomsOp: tsFoCustoms.Restore(operation);break;
+
+   case ept_ThugsOp: tsFoThugs.Restore(operation);break;
+   case ept_PatrolOp: tsFoPatrol.Restore(operation);break;
+
+   case ept_RaiderOp: tsFoRaider.Restore(operation);break;
+   case ept_ProtectionOp: tsFoProtection.Restore(operation);break;
+
+   case ept_FleetAttackOp: tsFoFleetAttack.Restore(operation);break;
+   case ept_FleetDefenseOp: tsFoFleetDefense.Restore(operation);break;
+   default:
+      debug {
+         Debug.PrintString(String.FormatInt("tFleetOperation.Restore invalid op type %d\n", operation_type));
+      }
+      break;
+   }
+}
+
+
+
+Update(hisim operation)
+{
+   int operation_type = tLProduction.GetType(operation);
+
+   switch (operation_type) {
+   case ept_EmbezzleOp: tsFoEmbezzle.Update(operation);break;
+   case ept_CustomsOp: tsFoCustoms.Update(operation);break;
+
+   case ept_ThugsOp: tsFoThugs.Update(operation);break;
+   case ept_PatrolOp: tsFoPatrol.Update(operation);break;
+
+   case ept_RaiderOp: tsFoRaider.Update(operation);break;
+   case ept_ProtectionOp: tsFoProtection.Update(operation);break;
+
+   case ept_FleetAttackOp: tsFoFleetAttack.Update(operation);break;
+   case ept_FleetDefenseOp: tsFoFleetDefense.Update(operation);break;
+   default:
+      
+      debug {
+         Debug.PrintString(String.FormatInt("tFleetOperation.Update invalid op type %d\n", operation_type));
+      }
+      break;
+   }
+}
+
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

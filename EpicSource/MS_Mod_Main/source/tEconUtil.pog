@@ -1,0 +1,3674 @@
+//*******************************************************************************************/
+//
+// tEconUtil
+//
+// Does string to enum conversions for use by econ pkg.
+// 
+// 
+// 
+//
+// THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+// OR PARTICLE SYSTEMS LTD. 
+// ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+//
+// Oct, 2002
+//******************************************************************************************/
+
+
+
+package tEconUtil;
+
+uses Debug,
+     String,
+     List,
+     Object,
+     Sim,
+     iSim,
+     iCargo,
+     tStationEnum,
+     CargoTypes;
+
+provides CargoType,
+         StationIntToString,
+         StationStringToEnum,
+         String2CargoType,
+         EconString2CargoType,
+         ShipType2String,
+         StationType2Category,
+
+         IsAllowedIndependent,
+         IsAllowedMegaCorp,
+         IsAllowedGovernment,
+         IsAllowedRebel,
+         IsAllowedPirate,
+         IsAllowedMercenary;
+
+
+
+int CargoType(hcargo cargo)
+{
+   return Object.IntProperty(cargo,"type");
+}
+
+
+string StationIntToString(int type)
+{
+   switch (type) {
+   case ept_Invalid : return "HT_Invalid"; break;
+   case ept_Disused : return "HT_Disused"; break;
+   case ept_WaterMine : return "HT_WaterMine"; break;
+   case ept_OrganicsMine : return "HT_OrganicsMine"; break;
+   case ept_InorganicsMine : return "HT_InorganicsMine"; break;
+   case ept_BiomassMine : return "HT_BiomassMine"; break;
+   case ept_CommonMetalsMine : return "HT_CommonMetalsMine"; break;
+   case ept_RareMetalsMine : return "HT_RareMetalsMine"; break;
+   case ept_ExoticMetalsMine : return "HT_ExoticMetalsMine"; break;
+   case ept_RadioactivesMine : return "HT_RadioactivesMine"; break;
+   case ept_FusionableGasesMine : return "HT_FusionableGasesMine"; break;
+   case ept_WaterProcessingPlant : return "HT_WaterProcessingPlant"; break;
+   case ept_OrganicsProcessingPlant : return "HT_OrganicsProcessingPlant"; break;
+   case ept_InorganicsProcessingPlant : return "HT_InorganicsProcessingPlant"; break;
+   case ept_BiomassProcessingPlant : return "HT_BiomassProcessingPlant"; break;
+   case ept_CommonMetalsProcessingPlant : return "HT_CommonMetalsProcessingPlant"; break;
+   case ept_RareMetalsProcessingPlant : return "HT_RareMetalsProcessingPlant"; break;
+   case ept_ExoticMetalsProcessingPlant : return "HT_ExoticMetalsProcessingPlant"; break;
+   case ept_RadioactivesProcessingPlant : return "HT_RadioactivesProcessingPlant"; break;
+   case ept_FusionableGasesProcessingPlant : return "HT_FusionableGasesProcessingPlant"; break;
+   case ept_NeutroniumProcessingPlant : return "HT_NeutroniumProcessingPlant"; break;
+   case ept_Shipyard : return "HT_Shipyard"; break;
+   case ept_HeavyManufacturingPlant : return "HT_HeavyManufacturingPlant"; break;
+   case ept_BiologicalManufacturingPlant : return "HT_BiologicalManufacturingPlant"; break;
+   case ept_WetwareManufacturingPlant : return "HT_WetwareManufacturingPlant"; break;
+   case ept_HiTechManufacturingPlant : return "HT_HiTechManufacturingPlant"; break;
+   case ept_ElectronicsManufacturingPlant : return "HT_ElectronicsManufacturingPlant"; break;
+   case ept_WeaponsManufacturingPlant : return "HT_WeaponsManufacturingPlant"; break;
+   case ept_PharmaceuticalsManufacturingPlant : return "HT_PharmaceuticalsManufacturingPlant"; break;
+   case ept_PlasticsManufacturingPlant : return "HT_PlasticsManufacturingPlant"; break;
+   case ept_FusionReactorsManufacturingPlant : return "HT_FusionReactorsManufacturingPlant"; break;
+   case ept_EnergyCellsManufacturingPlant : return "HT_EnergyCellsManufacturingPlant"; break;
+   case ept_StationFabricationManufacturingPlant : return "HT_StationFabricationManufacturingPlant"; break;
+   case ept_LuxuriesManufacturingPlant : return "HT_LuxuriesManufacturingPlant"; break;
+   case ept_TerraformingStation : return "HT_TerraformingStation"; break;
+   case ept_BioBomber : return "HT_BioBomber"; break;
+   case ept_Waystation : return "HT_Waystation"; break;
+   case ept_RepairStation : return "HT_RepairStation"; break;
+   case ept_OreTransferStation : return "HT_OreTransferStation"; break;
+   case ept_ResearchAndDevelopmentLab : return "HT_ResearchAndDevelopmentLab"; break;
+   case ept_ResearchStation : return "HT_ResearchStation"; break;
+   case ept_MedicalResearchCentre : return "HT_MedicalResearchCentre"; break;
+   case ept_BlackBudgetResearchStation : return "HT_BlackBudgetResearchStation"; break;
+   case ept_SensitiveResearchStation : return "HT_SensitiveResearchStation"; break;
+   case ept_FinancialCentre : return "HT_FinancialCentre"; break;
+   case ept_RegionalHQ : return "HT_RegionalHQ"; break;
+   case ept_Villa : return "HT_Villa"; break;
+   case ept_CentralHQ : return "HT_CentralHQ"; break;
+   case ept_AgriculturalSettlement : return "HT_AgriculturalSettlement"; break;
+   case ept_Resort : return "HT_Resort"; break;
+   case ept_LuxuryResort : return "HT_LuxuryResort"; break;
+   case ept_MedicalFacility : return "HT_MedicalFacility"; break;
+   case ept_LeisureComplex : return "HT_LeisureComplex"; break;
+   case ept_NeutroniumMine : return "HT_NeutroniumMine"; break;
+   case ept_SecurityStation : return "HT_SecurityStation"; break;
+   case ept_Fortress : return "HT_Fortress"; break;
+   case ept_HighSecurityPrison : return "HT_HighSecurityPrison"; break;
+   case ept_LowSecurityPrison : return "HT_LowSecurityPrison"; break;
+   case ept_HardLabourPrison : return "HT_HardLabourPrison"; break;
+   case ept_Homestead : return "HT_Homestead"; break;
+   case ept_MercenaryBase : return "HT_MercenaryBase"; break;
+   case ept_TradingPost : return "HT_TradingPost"; break;
+   case ept_Warehousing : return "HT_Warehousing"; break;
+   case ept_BlackMarket : return "HT_BlackMarket"; break;
+   case ept_DryDock : return "HT_DryDock"; break;
+   case ept_DockingStation : return "HT_DockingStation"; break;
+   case ept_EntertainmentStation : return "HT_EntertainmentStation"; break;
+   case ept_Settlement : return "HT_Settlement"; break;
+   case ept_PoliceBase : return "HT_PoliceBase"; break;
+   case ept_PoliceOutpost : return "HT_PoliceOutpost"; break;
+   case ept_SystemDefenceStation : return "HT_SystemDefenceStation"; break;
+   case ept_SystemDefenceDock : return "HT_SystemDefenceDock"; break;
+   case ept_NavalAcademy : return "HT_NavalAcademy"; break;
+   case ept_NavalTrainingBase : return "HT_NavalTrainingBase"; break;
+   case ept_Outpost : return "HT_Outpost"; break;
+   case ept_Base : return "HT_Base"; break;
+   case ept_RepairDock : return "HT_RepairDock"; break;
+   case ept_MarineBarracks : return "HT_MarineBarracks"; break;
+   case ept_PerimeterDefences : return "HT_PerimeterDefences"; break;
+   case ept_NavalTestingSite : return "HT_NavalTestingSite"; break;
+   case ept_NavalResearchFacility : return "HT_NavalResearchFacility"; break;
+   case ept_JumpFortress : return "HT_JumpFortress"; break;
+   case ept_SupplyDepot : return "HT_SupplyDepot"; break;
+   case ept_DefenceStation : return "HT_DefenceStation"; break;
+   case ept_STCPost : return "HT_STCPost"; break;
+   case ept_STCHQ : return "HT_STCHQ"; break;
+   case ept_FTLArray : return "HT_FTLArray"; break;
+   case ept_FTLInterchange : return "HT_FTLInterchange"; break;
+   case ept_STLTranceiver : return "HT_STLTranceiver"; break;
+   case ept_STLInterchange : return "HT_STLInterchange"; break;
+   case ept_PlanetaryAdministration : return "HT_PlanetaryAdministration"; break;
+   case ept_SystemAdministration : return "HT_SystemAdministration"; break;
+   case ept_ClusterAdministration : return "HT_ClusterAdministration"; break;
+   case ept_RegionalDepartment : return "HT_RegionalDepartment"; break;
+   case ept_University : return "HT_University"; break;
+   case ept_Ark : return "HT_Ark"; break;
+   case ept_Garden : return "HT_Garden"; break;
+   case ept_Asylum : return "HT_Asylum"; break;
+   case ept_Hospice : return "HT_Hospice"; break;
+   case ept_PirateBase : return "HT_PirateBase"; break;
+   case ept_PirateCove : return "HT_PirateCove"; break;
+   case ept_PirateOutpost : return "HT_PirateOutpost"; break;
+   case ept_GangsterHideout : return "HT_GangsterHideout"; break;
+   case ept_ViceDen : return "HT_ViceDen"; break;
+   case ept_Casino : return "HT_Casino"; break;
+   case ept_CollectiveSettlement : return "HT_CollectiveSettlement"; break;
+   case ept_Hermitage : return "HT_Hermitage"; break;
+   case ept_ReligiousCentre : return "HT_ReligiousCentre"; break;
+   case ept_MadScientistLab : return "HT_MadScientistLab"; break;
+   case ept_Hideout : return "HT_Hideout"; break;
+   case ept_Habitat : return "HT_Habitat"; break;
+   case ept_Junkyard : return "HT_Junkyard"; break;
+   case ept_BoxTown : return "HT_BoxTown"; break;
+   case ept_AsteroidSculptures : return "HT_AsteroidSculptures"; break;
+   case ept_PlayerBase : return "HT_PlayerBase"; break;
+   case ept_GunstarArray : return "HT_GunstarArray"; break;
+   case ept_JumpAccelerator : return "HT_JumpAccelerator"; break;
+   case ept_HoffersGap : return "HT_HoffersGap"; break;
+   case ept_HoffersHeel : return "HT_HoffersHeel"; break;
+   case ept_Beanstalk : return "HT_Beanstalk"; break;
+   case ept_TransferStation : return "HT_TransferStation"; break;
+
+   case ept_PirateHQOp : return "HT_PirateHQOp"; break; 
+   case ept_EmbezzleOp : return "HT_EmbezzleOp"; break; 
+   case ept_ViceDenOp : return "HT_ViceDenOp"; break; 
+   case ept_HackerOp : return "HT_HackerOp"; break; 
+   case ept_CyberOp : return "HT_CyberOp"; break; 
+   case ept_ProtectionOp : return "HT_ProtectionOp"; break; 
+   case ept_FleetAttackOp : return "HT_FleetAttackOp"; break; 
+   case ept_FleetDefenseOp : return "HT_FleetDefenseOp"; break; 
+   case ept_SpyAttackOp : return "HT_SpyAttackOp"; break; 
+   case ept_SpyDefenseOp : return "HT_SpyDefenseOp"; break; 
+   case ept_SpyNeutralOp : return "HT_SpyNeutralOp"; break; 
+   case ept_InvasionOp : return "HT_InvasionOp"; break; 
+   case ept_RebelSupportOp : return "HT_RebelSupportOp"; break; 
+   case ept_BlackMarketOp : return "HT_BlackMarketOp"; break; 
+   case ept_RebelHQOp : return "HT_RebelHQOp"; break; 
+   case ept_CustomsOp : return "HT_CustomsOp"; break; 
+   case ept_PirateTollOp : return "HT_PirateTollOp"; break; 
+
+   case ept_ThugsOp : return "HT_ThugsOp"; break; 
+   case ept_PatrolOp : return "HT_PatrolOp"; break; 
+   case ept_RaiderOp : return "HT_RaiderOp"; break; 
+
+   default:
+      debug Debug.PrintString("tEconUtil.StationIntToString Invalid station type ");
+      debug Debug.PrintString(String.FormatInt("%d\n", type));
+      break;
+   }
+   return "HT_Invalid";
+}
+
+int StationStringToEnum(string instring)
+{
+
+   if ( "HT_Invalid" == instring) {
+      return ept_Invalid; 
+   }
+   if ( "HT_Disused" == instring) {
+      return ept_Disused; 
+   }
+   if ( "HT_WaterMine" == instring) {
+      return ept_WaterMine; 
+   }
+   if ( "HT_OrganicsMine" == instring) {
+      return ept_OrganicsMine; 
+   }
+   if ( "HT_InorganicsMine" == instring) {
+      return ept_InorganicsMine; 
+   }
+   if ( "HT_BiomassMine" == instring) {
+      return ept_BiomassMine; 
+   }
+   if ( "HT_CommonMetalsMine" == instring) {
+      return ept_CommonMetalsMine; 
+   }
+   if ( "HT_RareMetalsMine" == instring) {
+      return ept_RareMetalsMine; 
+   }
+   if ( "HT_ExoticMetalsMine" == instring) {
+      return ept_ExoticMetalsMine; 
+   }
+   if ( "HT_RadioactivesMine" == instring) {
+      return ept_RadioactivesMine; 
+   }
+   if ( "HT_FusionableGasesMine" == instring) {
+      return ept_FusionableGasesMine; 
+   }
+   if ( "HT_WaterProcessingPlant" == instring) {
+      return ept_WaterProcessingPlant; 
+   }
+   if ( "HT_OrganicsProcessingPlant" == instring) {
+      return ept_OrganicsProcessingPlant; 
+   }
+   if ( "HT_InorganicsProcessingPlant" == instring) {
+      return ept_InorganicsProcessingPlant; 
+   }
+   if ( "HT_BiomassProcessingPlant" == instring) {
+      return ept_BiomassProcessingPlant; 
+   }
+   if ( "HT_CommonMetalsProcessingPlant" == instring) {
+      return ept_CommonMetalsProcessingPlant; 
+   }
+   if ( "HT_RareMetalsProcessingPlant" == instring) {
+      return ept_RareMetalsProcessingPlant; 
+   }
+   if ( "HT_ExoticMetalsProcessingPlant" == instring) {
+      return ept_ExoticMetalsProcessingPlant; 
+   }
+   if ( "HT_RadioactivesProcessingPlant" == instring) {
+      return ept_RadioactivesProcessingPlant; 
+   }
+   if ( "HT_FusionableGasesProcessingPlant" == instring) {
+      return ept_FusionableGasesProcessingPlant; 
+   }
+   if ( "HT_NeutroniumProcessingPlant" == instring) {
+      return ept_NeutroniumProcessingPlant; 
+   }
+   if ( "HT_Shipyard" == instring) {
+      return ept_Shipyard; 
+   }
+   if ( "HT_HeavyManufacturingPlant" == instring) {
+      return ept_HeavyManufacturingPlant; 
+   }
+   if ( "HT_BiologicalManufacturingPlant" == instring) {
+      return ept_BiologicalManufacturingPlant; 
+   }
+   if ( "HT_WetwareManufacturingPlant" == instring) {
+      return ept_WetwareManufacturingPlant; 
+   }
+   if ( "HT_HiTechManufacturingPlant" == instring) {
+      return ept_HiTechManufacturingPlant; 
+   }
+   if ( "HT_ElectronicsManufacturingPlant" == instring) {
+      return ept_ElectronicsManufacturingPlant; 
+   }
+   if ( "HT_WeaponsManufacturingPlant" == instring) {
+      return ept_WeaponsManufacturingPlant; 
+   }
+   if ( "HT_PharmaceuticalsManufacturingPlant" == instring) {
+      return ept_PharmaceuticalsManufacturingPlant; 
+   }
+   if ( "HT_PlasticsManufacturingPlant" == instring) {
+      return ept_PlasticsManufacturingPlant; 
+   }
+   if ( "HT_FusionReactorsManufacturingPlant" == instring) {
+      return ept_FusionReactorsManufacturingPlant; 
+   }
+   if ( "HT_EnergyCellsManufacturingPlant" == instring) {
+      return ept_EnergyCellsManufacturingPlant; 
+   }
+   if ( "HT_StationFabricationManufacturingPlant" == instring) {
+      return ept_StationFabricationManufacturingPlant; 
+   }
+   if ( "HT_LuxuriesManufacturingPlant" == instring) {
+      return ept_LuxuriesManufacturingPlant; 
+   }
+   if ( "HT_TerraformingStation" == instring) {
+      return ept_TerraformingStation; 
+   }
+   if ( "HT_BioBomber" == instring) {
+      return ept_BioBomber; 
+   }
+   if ( "HT_Waystation" == instring) {
+      return ept_Waystation; 
+   }
+   if ( "HT_RepairStation" == instring) {
+      return ept_RepairStation; 
+   }
+   if ( "HT_OreTransferStation" == instring) {
+      return ept_OreTransferStation; 
+   }
+   if ( "HT_ResearchAndDevelopmentLab" == instring) {
+      return ept_ResearchAndDevelopmentLab; 
+   }
+   if ( "HT_ResearchStation" == instring) {
+      return ept_ResearchStation; 
+   }
+   if ( "HT_MedicalResearchCentre" == instring) {
+      return ept_MedicalResearchCentre; 
+   }
+   if ( "HT_BlackBudgetResearchStation" == instring) {
+      return ept_BlackBudgetResearchStation; 
+   }
+   if ( "HT_SensitiveResearchStation" == instring) {
+      return ept_SensitiveResearchStation; 
+   }
+   if ( "HT_FinancialCentre" == instring) {
+      return ept_FinancialCentre; 
+   }
+   if ( "HT_RegionalHQ" == instring) {
+      return ept_RegionalHQ; 
+   }
+   if ( "HT_Villa" == instring) {
+      return ept_Villa; 
+   }
+   if ( "HT_CentralHQ" == instring) {
+      return ept_CentralHQ; 
+   }
+   if ( "HT_AgriculturalSettlement" == instring) {
+      return ept_AgriculturalSettlement; 
+   }
+   if ( "HT_Resort" == instring) {
+      return ept_Resort; 
+   }
+   if ( "HT_LuxuryResort" == instring) {
+      return ept_LuxuryResort; 
+   }
+   if ( "HT_MedicalFacility" == instring) {
+      return ept_MedicalFacility; 
+   }
+   if ( "HT_LeisureComplex" == instring) {
+      return ept_LeisureComplex; 
+   }
+   if ( "HT_NeutroniumMine" == instring) {
+      return ept_NeutroniumMine; 
+   }
+   if ( "HT_SecurityStation" == instring) {
+      return ept_SecurityStation; 
+   }
+   if ( "HT_Fortress" == instring) {
+      return ept_Fortress; 
+   }
+   if ( "HT_HighSecurityPrison" == instring) {
+      return ept_HighSecurityPrison; 
+   }
+   if ( "HT_LowSecurityPrison" == instring) {
+      return ept_LowSecurityPrison; 
+   }
+   if ( "HT_HardLabourPrison" == instring) {
+      return ept_HardLabourPrison; 
+   }
+   if ( "HT_Homestead" == instring) {
+      return ept_Homestead; 
+   }
+   if ( "HT_MercenaryBase" == instring) {
+      return ept_MercenaryBase; 
+   }
+   if ( "HT_TradingPost" == instring) {
+      return ept_TradingPost; 
+   }
+   if ( "HT_Warehousing" == instring) {
+      return ept_Warehousing; 
+   }
+   if ( "HT_BlackMarket" == instring) {
+      return ept_BlackMarket; 
+   }
+   if ( "HT_DryDock" == instring) {
+      return ept_DryDock; 
+   }
+   if ( "HT_DockingStation" == instring) {
+      return ept_DockingStation; 
+   }
+   if ( "HT_EntertainmentStation" == instring) {
+      return ept_EntertainmentStation; 
+   }
+   if ( "HT_Settlement" == instring) {
+      return ept_Settlement; 
+   }
+   if ( "HT_PoliceBase" == instring) {
+      return ept_PoliceBase; 
+   }
+   if ( "HT_PoliceOutpost" == instring) {
+      return ept_PoliceOutpost; 
+   }
+   if ( "HT_SystemDefenceStation" == instring) {
+      return ept_SystemDefenceStation; 
+   }
+   if ( "HT_SystemDefenceDock" == instring) {
+      return ept_SystemDefenceDock; 
+   }
+   if ( "HT_NavalAcademy" == instring) {
+      return ept_NavalAcademy; 
+   }
+   if ( "HT_NavalTrainingBase" == instring) {
+      return ept_NavalTrainingBase; 
+   }
+   if ( "HT_Outpost" == instring) {
+      return ept_Outpost; 
+   }
+   if ( "HT_Base" == instring) {
+      return ept_Base; 
+   }
+   if ( "HT_RepairDock" == instring) {
+      return ept_RepairDock; 
+   }
+   if ( "HT_MarineBarracks" == instring) {
+      return ept_MarineBarracks; 
+   }
+   if ( "HT_PerimeterDefences" == instring) {
+      return ept_PerimeterDefences; 
+   }
+   if ( "HT_NavalTestingSite" == instring) {
+      return ept_NavalTestingSite; 
+   }
+   if ( "HT_NavalResearchFacility" == instring) {
+      return ept_NavalResearchFacility; 
+   }
+   if ( "HT_JumpFortress" == instring) {
+      return ept_JumpFortress; 
+   }
+   if ( "HT_SupplyDepot" == instring) {
+      return ept_SupplyDepot; 
+   }
+   if ( "HT_DefenceStation" == instring) {
+      return ept_DefenceStation; 
+   }
+   if ( "HT_STCPost" == instring) {
+      return ept_STCPost; 
+   }
+   if ( "HT_STCHQ" == instring) {
+      return ept_STCHQ; 
+   }
+   if ( "HT_FTLArray" == instring) {
+      return ept_FTLArray; 
+   }
+   if ( "HT_FTLInterchange" == instring) {
+      return ept_FTLInterchange; 
+   }
+   if ( "HT_STLTranceiver" == instring) {
+      return ept_STLTranceiver; 
+   }
+   if ( "HT_STLInterchange" == instring) {
+      return ept_STLInterchange; 
+   }
+   if ( "HT_PlanetaryAdministration" == instring) {
+      return ept_PlanetaryAdministration; 
+   }
+   if ( "HT_SystemAdministration" == instring) {
+      return ept_SystemAdministration; 
+   }
+   if ( "HT_ClusterAdministration" == instring) {
+      return ept_ClusterAdministration; 
+   }
+   if ( "HT_RegionalDepartment" == instring) {
+      return ept_RegionalDepartment; 
+   }
+   if ( "HT_University" == instring) {
+      return ept_University; 
+   }
+   if ( "HT_Ark" == instring) {
+      return ept_Ark; 
+   }
+   if ( "HT_Garden" == instring) {
+      return ept_Garden; 
+   }
+   if ( "HT_Asylum" == instring) {
+      return ept_Asylum; 
+   }
+   if ( "HT_Hospice" == instring) {
+      return ept_Hospice; 
+   }
+   if ( "HT_PirateBase" == instring) {
+      return ept_PirateBase; 
+   }
+   if ( "HT_PirateCove" == instring) {
+      return ept_PirateCove; 
+   }
+   if ( "HT_PirateOutpost" == instring) {
+      return ept_PirateOutpost; 
+   }
+   if ( "HT_GangsterHideout" == instring) {
+      return ept_GangsterHideout; 
+   }
+   if ( "HT_ViceDen" == instring) {
+      return ept_ViceDen; 
+   }
+   if ( "HT_Casino" == instring) {
+      return ept_Casino; 
+   }
+   if ( "HT_CollectiveSettlement" == instring) {
+      return ept_CollectiveSettlement; 
+   }
+   if ( "HT_Hermitage" == instring) {
+      return ept_Hermitage; 
+   }
+   if ( "HT_ReligiousCentre" == instring) {
+      return ept_ReligiousCentre; 
+   }
+   if ( "HT_MadScientistLab" == instring) {
+      return ept_MadScientistLab; 
+   }
+   if ( "HT_Hideout" == instring) {
+      return ept_Hideout; 
+   }
+   if ( "HT_Habitat" == instring) {
+      return ept_Habitat; 
+   }
+   if ( "HT_Junkyard" == instring) {
+      return ept_Junkyard; 
+   }
+   if ( "HT_BoxTown" == instring) {
+      return ept_BoxTown; 
+   }
+   if ( "HT_AsteroidSculptures" == instring) {
+      return ept_AsteroidSculptures; 
+   }
+   if ( "HT_PlayerBase" == instring) {
+      return ept_PlayerBase; 
+   }
+   if ( "HT_GunstarArray" == instring) {
+      return ept_GunstarArray; 
+   }
+   if ( "HT_JumpAccelerator" == instring) {
+      return ept_JumpAccelerator; 
+   }
+   if ( "HT_HoffersGap" == instring) {
+      return ept_HoffersGap; 
+   }
+   if ( "HT_HoffersHeel" == instring) {
+      return ept_HoffersHeel; 
+   }
+   if ( "HT_Beanstalk" == instring) {
+      return ept_Beanstalk; 
+   }
+   if ( "HT_TransferStation" == instring) {
+      return ept_TransferStation; 
+   }
+
+   //************ Operations start here
+   if ( "HT_PirateHQOp" == instring ) {
+      return ept_PirateHQOp;
+   }
+   if ( "HT_EmbezzleOp" == instring ) {
+      return ept_EmbezzleOp;
+   }
+   if ( "HT_ViceDenOp" == instring ) {
+      return ept_ViceDenOp;
+   }
+   if ( "HT_HackerOp" == instring ) {
+      return ept_HackerOp;
+   }
+   if ( "HT_CyberOp" == instring ) {
+      return ept_CyberOp;
+   }
+   if ( "HT_ProtectionOp" == instring ) {
+      return ept_ProtectionOp;
+   }
+   if ( "HT_FleetAttackOp" == instring ) {
+      return ept_FleetAttackOp;
+   }
+   if ( "HT_FleetDefenseOp" == instring ) {
+      return ept_FleetDefenseOp;
+   }
+   if ( "HT_SpyAttackOp" == instring ) {
+      return ept_SpyAttackOp;
+   }
+   if ( "HT_SpyDefenseOp" == instring ) {
+      return ept_SpyDefenseOp;
+   }
+   if ( "HT_SpyNeutralOp" == instring ) {
+      return ept_SpyNeutralOp;
+   }
+   if ( "HT_InvasionOp" == instring ) {
+      return ept_InvasionOp;
+   }
+   if ( "HT_RebelSupportOp" == instring ) {
+      return ept_RebelSupportOp;
+   }
+   if ( "HT_BlackMarketOp" == instring ) {
+      return ept_BlackMarketOp;
+   }
+   if ( "HT_RebelHQOp" == instring ) {
+      return ept_RebelHQOp;
+   }
+   if ( "HT_CustomsOp" == instring ) {
+      return ept_CustomsOp;
+   }
+   if ( "HT_PirateTollOp" == instring ) {
+      return ept_PirateTollOp;
+   }
+
+
+   if ( "HT_ThugsOp" == instring ) {
+      return ept_ThugsOp;
+   }
+   if ( "HT_PatrolOp" == instring ) {
+      return ept_PatrolOp;
+   }
+   if ( "HT_RaiderOp" == instring ) {
+      return ept_RaiderOp;
+   }
+
+
+   debug Debug.PrintString("tEconUtil.StationStringToEnum Invalid string :");
+   debug Debug.PrintString(instring);
+   debug Debug.PrintString(":\n");
+
+   return ept_Invalid;
+}
+
+
+eCargoType        String2CargoType
+( string          to_cast
+)
+{
+  if(to_cast == "CT_Invalid")
+    return CT_Invalid;
+  if(to_cast == "CT_WasteBlocks")
+    return CT_WasteBlocks;
+  if(to_cast == "CT_PlasticWaste")
+    return CT_PlasticWaste;
+  if(to_cast == "CT_OrganicPulp")
+    return CT_OrganicPulp;
+  if(to_cast == "CT_WastePaper")
+    return CT_WastePaper;
+  if(to_cast == "CT_DiseasedSewage")
+    return CT_DiseasedSewage;
+  if(to_cast == "CT_FrozenSewage")
+    return CT_FrozenSewage;
+  if(to_cast == "CT_RawSewage")
+    return CT_RawSewage;
+  if(to_cast == "CT_SugarCane")
+    return CT_SugarCane;
+  if(to_cast == "CT_Fish")
+    return CT_Fish;
+  if(to_cast == "CT_Fruit")
+    return CT_Fruit;
+  if(to_cast == "CT_Grain")
+    return CT_Grain;
+  if(to_cast == "CT_Meat ")
+    return CT_Meat ;
+  if(to_cast == "CT_Potatoes")
+    return CT_Potatoes;
+  if(to_cast == "CT_Rice")
+    return CT_Rice;
+  if(to_cast == "CT_Soya")
+    return CT_Soya;
+  if(to_cast == "CT_Vegetables")
+    return CT_Vegetables;
+  if(to_cast == "CT_EdibleFungi")
+    return CT_EdibleFungi;
+  if(to_cast == "CT_FoodBlocks")
+    return CT_FoodBlocks;
+  if(to_cast == "CT_FoodPills")
+    return CT_FoodPills;
+  if(to_cast == "CT_MealInABar")
+    return CT_MealInABar;
+  if(to_cast == "CT_PseudoShake ")
+    return CT_PseudoShake ;
+  if(to_cast == "CT_RecoveredMeat")
+    return CT_RecoveredMeat;
+  if(to_cast == "CT_SyntheticCheese")
+    return CT_SyntheticCheese;
+  if(to_cast == "CT_SyntheticProtein")
+    return CT_SyntheticProtein;
+  if(to_cast == "CT_SurvivalRations")
+    return CT_SurvivalRations;
+  if(to_cast == "CT_DrinkingWater")
+    return CT_DrinkingWater;
+  if(to_cast == "CT_Apes")
+    return CT_Apes;
+  if(to_cast == "CT_Birds")
+    return CT_Birds;
+  if(to_cast == "CT_DonorPigs")
+    return CT_DonorPigs;
+  if(to_cast == "CT_DrugLeeches")
+    return CT_DrugLeeches;
+  if(to_cast == "CT_Giraffes")
+    return CT_Giraffes;
+  if(to_cast == "CT_Horses")
+    return CT_Horses;
+  if(to_cast == "CT_Lions ")
+    return CT_Lions ;
+  if(to_cast == "CT_Weasels")
+    return CT_Weasels;
+  if(to_cast == "CT_Yaks")
+    return CT_Yaks;
+  if(to_cast == "CT_Zebras")
+    return CT_Zebras;
+  if(to_cast == "CT_AttackDogs")
+    return CT_AttackDogs;
+  if(to_cast == "CT_BiomassProcessingWorms")
+    return CT_BiomassProcessingWorms;
+  if(to_cast == "CT_Camels")
+    return CT_Camels;
+  if(to_cast == "CT_CancerMice")
+    return CT_CancerMice;
+  if(to_cast == "CT_Chickens")
+    return CT_Chickens;
+  if(to_cast == "CT_Cows")
+    return CT_Cows;
+  if(to_cast == "CT_Dogs")
+    return CT_Dogs;
+  if(to_cast == "CT_EngineeredInsects")
+    return CT_EngineeredInsects;
+  if(to_cast == "CT_Goats ")
+    return CT_Goats ;
+  if(to_cast == "CT_Insects ")
+    return CT_Insects ;
+  if(to_cast == "CT_Pigs ")
+    return CT_Pigs ;
+  if(to_cast == "CT_Rodents ")
+    return CT_Rodents ;
+  if(to_cast == "CT_Primates ")
+    return CT_Primates ;
+  if(to_cast == "CT_HYL ")
+    return CT_HYL ;
+  if(to_cast == "CT_Foetuses")
+    return CT_Foetuses;
+  if(to_cast == "CT_CloneBoneTissue ")
+    return CT_CloneBoneTissue ;
+  if(to_cast == "CT_CloneEyes ")
+    return CT_CloneEyes ;
+  if(to_cast == "CT_CloneGlands ")
+    return CT_CloneGlands ;
+  if(to_cast == "CT_CloneHearts ")
+    return CT_CloneHearts ;
+  if(to_cast == "CT_CloneIntestines")
+    return CT_CloneIntestines;
+  if(to_cast == "CT_CloneKidneys")
+    return CT_CloneKidneys;
+  if(to_cast == "CT_CloneLimbs ")
+    return CT_CloneLimbs ;
+  if(to_cast == "CT_CloneLivers")
+    return CT_CloneLivers;
+  if(to_cast == "CT_CloneLungs")
+    return CT_CloneLungs;
+  if(to_cast == "CT_CloneSkin ")
+    return CT_CloneSkin ;
+  if(to_cast == "CT_VatGrownMuscle  ")
+    return CT_VatGrownMuscle  ;
+  if(to_cast == "CT_BlankTissueCulture ")
+    return CT_BlankTissueCulture ;
+  if(to_cast == "CT_CommonStrandMaterial")
+    return CT_CommonStrandMaterial;
+  if(to_cast == "CT_DNAChangers")
+    return CT_DNAChangers;
+  if(to_cast == "CT_DNASequencers")
+    return CT_DNASequencers;
+  if(to_cast == "CT_DNATattoos ")
+    return CT_DNATattoos ;
+  if(to_cast == "CT_GeneticMarkerAgents ")
+    return CT_GeneticMarkerAgents ;
+  if(to_cast == "CT_GeneticRejuvinations ")
+    return CT_GeneticRejuvinations ;
+  if(to_cast == "CT_TransplantEyes")
+    return CT_TransplantEyes;
+  if(to_cast == "CT_TransplantGlands")
+    return CT_TransplantGlands;
+  if(to_cast == "CT_TransplantHearts")
+    return CT_TransplantHearts;
+  if(to_cast == "CT_TransplantIntestine")
+    return CT_TransplantIntestine;
+  if(to_cast == "CT_TransplantKidneys")
+    return CT_TransplantKidneys;
+  if(to_cast == "CT_TransplantLivers")
+    return CT_TransplantLivers;
+  if(to_cast == "CT_TransplantLungs")
+    return CT_TransplantLungs;
+  if(to_cast == "CT_TransplantSkin")
+    return CT_TransplantSkin;
+  if(to_cast == "CT_Houseplants")
+    return CT_Houseplants;
+  if(to_cast == "CT_PotPlants")
+    return CT_PotPlants;
+  if(to_cast == "CT_Seedlings")
+    return CT_Seedlings;
+  if(to_cast == "CT_Seeds")
+    return CT_Seeds;
+  if(to_cast == "CT_Algae")
+    return CT_Algae;
+  if(to_cast == "CT_PlantPulp")
+    return CT_PlantPulp;
+  if(to_cast == "CT_Woodpulp")
+    return CT_Woodpulp;
+  if(to_cast == "CT_Trees")
+    return CT_Trees;
+  if(to_cast == "CT_SlimeMould")
+    return CT_SlimeMould;
+  if(to_cast == "CT_Yeast")
+    return CT_Yeast;
+  if(to_cast == "CT_NitroBacteria")
+    return CT_NitroBacteria;
+  if(to_cast == "CT_SoilBacteria")
+    return CT_SoilBacteria;
+  if(to_cast == "CT_TerraformingBacteria")
+    return CT_TerraformingBacteria;
+  if(to_cast == "CT_RecyclingBacteria")
+    return CT_RecyclingBacteria;
+  if(to_cast == "CT_AnimalFeed")
+    return CT_AnimalFeed;
+  if(to_cast == "CT_Compost")
+    return CT_Compost;
+  if(to_cast == "CT_Fertiliser")
+    return CT_Fertiliser;
+  if(to_cast == "CT_Soil")
+    return CT_Soil;
+  if(to_cast == "CT_SportingBodyArmour")
+    return CT_SportingBodyArmour;
+  if(to_cast == "CT_Footballs")
+    return CT_Footballs;
+  if(to_cast == "CT_GolfSupplies")
+    return CT_GolfSupplies;
+  if(to_cast == "CT_NullBox")
+    return CT_NullBox;
+  if(to_cast == "CT_PaintGuns")
+    return CT_PaintGuns;
+  if(to_cast == "CT_Scuba")
+    return CT_Scuba;
+  if(to_cast == "CT_TennisEquipment")
+    return CT_TennisEquipment;
+  if(to_cast == "CT_SportsClothes")
+    return CT_SportsClothes;
+  if(to_cast == "CT_ZeroGGymnasia")
+    return CT_ZeroGGymnasia;
+  if(to_cast == "CT_SportingWeapons")
+    return CT_SportingWeapons;
+  if(to_cast == "CT_Antiques")
+    return CT_Antiques;
+  if(to_cast == "CT_Paintings")
+    return CT_Paintings;
+  if(to_cast == "CT_Sculpture")
+    return CT_Sculpture;
+  if(to_cast == "CT_Caviar")
+    return CT_Caviar;
+  if(to_cast == "CT_Chocolate")
+    return CT_Chocolate;
+  if(to_cast == "CT_Lobster")
+    return CT_Lobster;
+  if(to_cast == "CT_RealCoffee")
+    return CT_RealCoffee;
+  if(to_cast == "CT_RealMeat")
+    return CT_RealMeat;
+  if(to_cast == "CT_RealTea")
+    return CT_RealTea;
+  if(to_cast == "CT_Shellfish")
+    return CT_Shellfish;
+  if(to_cast == "CT_Milk")
+    return CT_Milk;
+  if(to_cast == "CT_Spices")
+    return CT_Spices;
+  if(to_cast == "CT_Game")
+    return CT_Game;
+  if(to_cast == "CT_Cigarettes")
+    return CT_Cigarettes;
+  if(to_cast == "CT_Cigars")
+    return CT_Cigars;
+  if(to_cast == "CT_LeafTobacco")
+    return CT_LeafTobacco;
+  if(to_cast == "CT_Aphrodisiacs")
+    return CT_Aphrodisiacs;
+  if(to_cast == "CT_Caffeine")
+    return CT_Caffeine;
+  if(to_cast == "CT_PhysicalEnhancers")
+    return CT_PhysicalEnhancers;
+  if(to_cast == "CT_ErzatzCoffee")
+    return CT_ErzatzCoffee;
+  if(to_cast == "CT_Euphorics")
+    return CT_Euphorics;
+  if(to_cast == "CT_Halluciogenics")
+    return CT_Halluciogenics;
+  if(to_cast == "CT_MemoryEnhancers")
+    return CT_MemoryEnhancers;
+  if(to_cast == "CT_MoodEnhancers")
+    return CT_MoodEnhancers;
+  if(to_cast == "CT_MoodStabilsers")
+    return CT_MoodStabilsers;
+  if(to_cast == "CT_Stimulants")
+    return CT_Stimulants;
+  if(to_cast == "CT_Tranquilisers")
+    return CT_Tranquilisers;
+  if(to_cast == "CT_Spirits")
+    return CT_Spirits;
+  if(to_cast == "CT_Wine")
+    return CT_Wine;
+  if(to_cast == "CT_Champagne")
+    return CT_Champagne;
+  if(to_cast == "CT_Scotch")
+    return CT_Scotch;
+  if(to_cast == "CT_RealBeer")
+    return CT_RealBeer;
+  if(to_cast == "CT_ZeroBrew")
+    return CT_ZeroBrew;
+  if(to_cast == "CT_Fur")
+    return CT_Fur;
+  if(to_cast == "CT_FurCoats")
+    return CT_FurCoats;
+  if(to_cast == "CT_Vatfur")
+    return CT_Vatfur;
+  if(to_cast == "CT_GoldJewellery")
+    return CT_GoldJewellery;
+  if(to_cast == "CT_ValuableJewellery")
+    return CT_ValuableJewellery;
+  if(to_cast == "CT_SmartJewels")
+    return CT_SmartJewels;
+  if(to_cast == "CT_Watches")
+    return CT_Watches;
+  if(to_cast == "CT_Books")
+    return CT_Books;
+  if(to_cast == "CT_Cosmetics")
+    return CT_Cosmetics;
+  if(to_cast == "CT_DesignerClothes")
+    return CT_DesignerClothes;
+  if(to_cast == "CT_MusicalInstruments")
+    return CT_MusicalInstruments;
+  if(to_cast == "CT_Perfume")
+    return CT_Perfume;
+  if(to_cast == "CT_Toys")
+    return CT_Toys;
+  if(to_cast == "CT_NaturalFibreClothing")
+    return CT_NaturalFibreClothing;
+  if(to_cast == "CT_LuxuryFurniture")
+    return CT_LuxuryFurniture;
+  if(to_cast == "CT_CorporateData")
+    return CT_CorporateData;
+  if(to_cast == "CT_XenoData")
+    return CT_XenoData;
+  if(to_cast == "CT_ResearchData")
+    return CT_ResearchData;
+  if(to_cast == "CT_PersonalData")
+    return CT_PersonalData;
+  if(to_cast == "CT_Mail")
+    return CT_Mail;
+  if(to_cast == "CT_ConfidentialData")
+    return CT_ConfidentialData;
+  if(to_cast == "CT_GovernmentData")
+    return CT_GovernmentData;
+  if(to_cast == "CT_PoliceData")
+    return CT_PoliceData;
+  if(to_cast == "CT_MilitaryIntelligence")
+    return CT_MilitaryIntelligence;
+  if(to_cast == "CT_SecretData")
+    return CT_SecretData;
+  if(to_cast == "CT_SeekerMineBlueprints")
+    return CT_SeekerMineBlueprints;
+  if(to_cast == "CT_GnatBlueprint")
+    return CT_GnatBlueprint;
+  if(to_cast == "CT_HarrowerBlueprint")
+    return CT_HarrowerBlueprint;
+  if(to_cast == "CT_HammerBlueprint")
+    return CT_HammerBlueprint;
+  if(to_cast == "CT_SeekerBlueprint")
+    return CT_SeekerBlueprint;
+  if(to_cast == "CT_LDSiShortBlueprints")
+    return CT_LDSiShortBlueprints;
+  if(to_cast == "CT_AssaultCannonAmmoBlueprints")
+    return CT_AssaultCannonAmmoBlueprints;
+  if(to_cast == "CT_TurretFighterBlueprints")
+    return CT_TurretFighterBlueprints;
+  if(to_cast == "CT_RemoteFighterBlueprints")
+    return CT_RemoteFighterBlueprints;
+  if(to_cast == "CT_FlareBlueprints")
+    return CT_FlareBlueprints;
+  if(to_cast == "CT_AchillesBlueprints")
+    return CT_AchillesBlueprints;
+  if(to_cast == "CT_AntimatterMineBlueprints")
+    return CT_AntimatterMineBlueprints;
+  if(to_cast == "CT_AntimatterMissileBlueprints")
+    return CT_AntimatterMissileBlueprints;
+  if(to_cast == "CT_BlizzardMissileBlueprints")
+    return CT_BlizzardMissileBlueprints;
+  if(to_cast == "CT_DeadshotBlueprints")
+    return CT_DeadshotBlueprints;
+  if(to_cast == "CT_DeathblowBlueprints")
+    return CT_DeathblowBlueprints;
+  if(to_cast == "CT_DecoyBlueprints")
+    return CT_DecoyBlueprints;
+  if(to_cast == "CT_DisruptorBlueprints")
+    return CT_DisruptorBlueprints;
+  if(to_cast == "CT_LDSi3000Blueprints")
+    return CT_LDSi3000Blueprints;
+  if(to_cast == "CT_LDSiMineBlueprints")
+    return CT_LDSiMineBlueprints;
+  if(to_cast == "CT_LDSiMissileBlueprints")
+    return CT_LDSiMissileBlueprints;
+  if(to_cast == "CT_SniperCannonAmmoBlueprints")
+    return CT_SniperCannonAmmoBlueprints;
+  if(to_cast == "CT_MiningChargeBlueprints")
+    return CT_MiningChargeBlueprints;
+  if(to_cast == "CT_ProximityMineBlueprints")
+    return CT_ProximityMineBlueprints;
+  if(to_cast == "CT_PulsarBlueprints")
+    return CT_PulsarBlueprints;
+  if(to_cast == "CT_RemoteMissileBlueprints")
+    return CT_RemoteMissileBlueprints;
+  if(to_cast == "CT_RemoteProbeBlueprints")
+    return CT_RemoteProbeBlueprints;
+  if(to_cast == "CT_SmartDecoyBlueprints")
+    return CT_SmartDecoyBlueprints;
+  if(to_cast == "CT_Autopilots")
+    return CT_Autopilots;
+  if(to_cast == "CT_MatchVelocityAutopilot")
+    return CT_MatchVelocityAutopilot;
+  if(to_cast == "CT_StealthProgram")
+    return CT_StealthProgram;
+  if(to_cast == "CT_SelfDefenceSoftware")
+    return CT_SelfDefenceSoftware;
+  if(to_cast == "CT_EngineManagementProgram")
+    return CT_EngineManagementProgram;
+  if(to_cast == "CT_OcclusionMonitoringSoftware")
+    return CT_OcclusionMonitoringSoftware;
+  if(to_cast == "CT_MilitaryTrackingProgram")
+    return CT_MilitaryTrackingProgram;
+  if(to_cast == "CT_MissileAI")
+    return CT_MissileAI;
+  if(to_cast == "CT_UtilitySoftware")
+    return CT_UtilitySoftware;
+  if(to_cast == "CT_ComputerGames")
+    return CT_ComputerGames;
+  if(to_cast == "CT_NewsVids")
+    return CT_NewsVids;
+  if(to_cast == "CT_EntertainmentVids")
+    return CT_EntertainmentVids;
+  if(to_cast == "CT_InteractiveText")
+    return CT_InteractiveText;
+  if(to_cast == "CT_MusicRecordings")
+    return CT_MusicRecordings;
+  if(to_cast == "CT_CorporatePropaganda")
+    return CT_CorporatePropaganda;
+  if(to_cast == "CT_CapsuleDriveGenerators")
+    return CT_CapsuleDriveGenerators;
+  if(to_cast == "CT_LDSClass1Drive")
+    return CT_LDSClass1Drive;
+  if(to_cast == "CT_PowerPlant")
+    return CT_PowerPlant;
+  if(to_cast == "CT_ShipsDrive")
+    return CT_ShipsDrive;
+  if(to_cast == "CT_ManoeuvreThrusters")
+    return CT_ManoeuvreThrusters;
+  if(to_cast == "CT_AlphaHeatSink")
+    return CT_AlphaHeatSink;
+  if(to_cast == "CT_BetaHeatSink")
+    return CT_BetaHeatSink;
+  if(to_cast == "CT_ColdGasThrusters")
+    return CT_ColdGasThrusters;
+  if(to_cast == "CT_MilitaryJumpCapacitor")
+    return CT_MilitaryJumpCapacitor;
+  if(to_cast == "CT_LDSClass2Drive")
+    return CT_LDSClass2Drive;
+  if(to_cast == "CT_LDSClass3Drive")
+    return CT_LDSClass3Drive;
+  if(to_cast == "CT_SealedHeatSink")
+    return CT_SealedHeatSink;
+  if(to_cast == "CT_CapsuleDrive")
+    return CT_CapsuleDrive;
+  if(to_cast == "CT_ImprovedManoeuverThrusters")
+    return CT_ImprovedManoeuverThrusters;
+  if(to_cast == "CT_PursuitDrivers")
+    return CT_PursuitDrivers;
+  if(to_cast == "CT_InterceptorDrivers")
+    return CT_InterceptorDrivers;
+  if(to_cast == "CT_GammaHeatSink")
+    return CT_GammaHeatSink;
+  if(to_cast == "CT_DeltaHeatSink")
+    return CT_DeltaHeatSink;
+  if(to_cast == "CT_AdvancedHeatSink")
+    return CT_AdvancedHeatSink;
+  if(to_cast == "CT_OmegaHeatSink")
+    return CT_OmegaHeatSink;
+  if(to_cast == "CT_HeatSinkSupercooler")
+    return CT_HeatSinkSupercooler;
+  if(to_cast == "CT_ActiveCooler")
+    return CT_ActiveCooler;
+  if(to_cast == "CT_EmergencyCoolingPod")
+    return CT_EmergencyCoolingPod;
+  if(to_cast == "CT_AntimatterPowerPod")
+    return CT_AntimatterPowerPod;
+  if(to_cast == "CT_HighYieldFusionInjector")
+    return CT_HighYieldFusionInjector;
+  if(to_cast == "CT_SNRVReloadPod")
+    return CT_SNRVReloadPod;
+  if(to_cast == "CT_Thrusterpods")
+    return CT_Thrusterpods;
+  if(to_cast == "CT_DockOnAutoTurret")
+    return CT_DockOnAutoTurret;
+  if(to_cast == "CT_SecondaryRing")
+    return CT_SecondaryRing;
+  if(to_cast == "CT_CapsuleDriveParts")
+    return CT_CapsuleDriveParts;
+  if(to_cast == "CT_LDSCarrierFields")
+    return CT_LDSCarrierFields;
+  if(to_cast == "CT_LDSFieldGenerators")
+    return CT_LDSFieldGenerators;
+  if(to_cast == "CT_LDSFieldNodes")
+    return CT_LDSFieldNodes;
+  if(to_cast == "CT_LDSGeneratorParts")
+    return CT_LDSGeneratorParts;
+  if(to_cast == "CT_ShipInstruments")
+    return CT_ShipInstruments;
+  if(to_cast == "CT_ShipSystems")
+    return CT_ShipSystems;
+  if(to_cast == "CT_AISystems")
+    return CT_AISystems;
+  if(to_cast == "CT_CompParts")
+    return CT_CompParts;
+  if(to_cast == "CT_ShipCPUGradeI")
+    return CT_ShipCPUGradeI;
+  if(to_cast == "CT_ShipCPUGradeII")
+    return CT_ShipCPUGradeII;
+  if(to_cast == "CT_ShipCPUGradeIII")
+    return CT_ShipCPUGradeIII;
+  if(to_cast == "CT_ShipCPUGradeIV")
+    return CT_ShipCPUGradeIV;
+  if(to_cast == "CT_ShipCPUGradeV")
+    return CT_ShipCPUGradeV;
+  if(to_cast == "CT_CompactShipAI")
+    return CT_CompactShipAI;
+  if(to_cast == "CT_ShipMemoryModule")
+    return CT_ShipMemoryModule;
+  if(to_cast == "CT_CPUCores")
+    return CT_CPUCores;
+  if(to_cast == "CT_CPUParts")
+    return CT_CPUParts;
+  if(to_cast == "CT_AudioEquipment")
+    return CT_AudioEquipment;
+  if(to_cast == "CT_AudioVisualEquipment")
+    return CT_AudioVisualEquipment;
+  if(to_cast == "CT_DataConsoles")
+    return CT_DataConsoles;
+  if(to_cast == "CT_DataScreens")
+    return CT_DataScreens;
+  if(to_cast == "CT_PersonalCommunicators")
+    return CT_PersonalCommunicators;
+  if(to_cast == "CT_BodyComps")
+    return CT_BodyComps;
+  if(to_cast == "CT_HandheldScientificInstruments")
+    return CT_HandheldScientificInstruments;
+  if(to_cast == "CT_DataCards")
+    return CT_DataCards;
+  if(to_cast == "CT_DataChips")
+    return CT_DataChips;
+  if(to_cast == "CT_DataModules")
+    return CT_DataModules;
+  if(to_cast == "CT_MemoryModules")
+    return CT_MemoryModules;
+  if(to_cast == "CT_NanoAssemblers")
+    return CT_NanoAssemblers;
+  if(to_cast == "CT_NanoFactories")
+    return CT_NanoFactories;
+  if(to_cast == "CT_NanoProgrammers")
+    return CT_NanoProgrammers;
+  if(to_cast == "CT_NanoSurgeons")
+    return CT_NanoSurgeons;
+  if(to_cast == "CT_NeuroConnectors")
+    return CT_NeuroConnectors;
+  if(to_cast == "CT_PreprogrammedNanotech")
+    return CT_PreprogrammedNanotech;
+  if(to_cast == "CT_TerraformingNanotech")
+    return CT_TerraformingNanotech;
+  if(to_cast == "CT_GeneWriters")
+    return CT_GeneWriters;
+  if(to_cast == "CT_CryogenicTanks")
+    return CT_CryogenicTanks;
+  if(to_cast == "CT_Medkits")
+    return CT_Medkits;
+  if(to_cast == "CT_OrganMatrices")
+    return CT_OrganMatrices;
+  if(to_cast == "CT_RemoteTables")
+    return CT_RemoteTables;
+  if(to_cast == "CT_Autodocs")
+    return CT_Autodocs;
+  if(to_cast == "CT_Autosurgs")
+    return CT_Autosurgs;
+  if(to_cast == "CT_HKCounters")
+    return CT_HKCounters;
+  if(to_cast == "CT_MolecularImagers")
+    return CT_MolecularImagers;
+  if(to_cast == "CT_NanosurgeryEquipment")
+    return CT_NanosurgeryEquipment;
+  if(to_cast == "CT_NMRs")
+    return CT_NMRs;
+  if(to_cast == "CT_SurgeryKits")
+    return CT_SurgeryKits;
+  if(to_cast == "CT_CyberEyes")
+    return CT_CyberEyes;
+  if(to_cast == "CT_CyberLimbs")
+    return CT_CyberLimbs;
+  if(to_cast == "CT_CyberneticJackPlugs")
+    return CT_CyberneticJackPlugs;
+  if(to_cast == "CT_CyberneticOrgans")
+    return CT_CyberneticOrgans;
+  if(to_cast == "CT_RoboticArms")
+    return CT_RoboticArms;
+  if(to_cast == "CT_RoboticChassis")
+    return CT_RoboticChassis;
+  if(to_cast == "CT_RoboticCPUs")
+    return CT_RoboticCPUs;
+  if(to_cast == "CT_RoboticSensors")
+    return CT_RoboticSensors;
+  if(to_cast == "CT_DomesticRobots")
+    return CT_DomesticRobots;
+  if(to_cast == "CT_ConstructionRobots")
+    return CT_ConstructionRobots;
+  if(to_cast == "CT_SecurityRobots")
+    return CT_SecurityRobots;
+  if(to_cast == "CT_AstronomicalInstruments")
+    return CT_AstronomicalInstruments;
+  if(to_cast == "CT_ShortRangeActiveSensors")
+    return CT_ShortRangeActiveSensors;
+  if(to_cast == "CT_ShortrangePassiveSensors")
+    return CT_ShortrangePassiveSensors;
+  if(to_cast == "CT_UCPScanner")
+    return CT_UCPScanner;
+  if(to_cast == "CT_PassiveSensorPackage")
+    return CT_PassiveSensorPackage;
+  if(to_cast == "CT_IFFBeacon")
+    return CT_IFFBeacon;
+  if(to_cast == "CT_ActiveSensorPackage")
+    return CT_ActiveSensorPackage;
+  if(to_cast == "CT_AdvancedActiveSensors")
+    return CT_AdvancedActiveSensors;
+  if(to_cast == "CT_AdvancedPassiveSensors")
+    return CT_AdvancedPassiveSensors;
+  if(to_cast == "CT_MilitaryGradeActiveSensors")
+    return CT_MilitaryGradeActiveSensors;
+  if(to_cast == "CT_MilitaryGradePassiveSensors")
+    return CT_MilitaryGradePassiveSensors;
+  if(to_cast == "CT_LongRangePassiveSensors")
+    return CT_LongRangePassiveSensors;
+  if(to_cast == "CT_LongRangeActiveSensors")
+    return CT_LongRangeActiveSensors;
+  if(to_cast == "CT_SensorDisruptor")
+    return CT_SensorDisruptor;
+  if(to_cast == "CT_HighPowerSensorDisruptor")
+    return CT_HighPowerSensorDisruptor;
+  if(to_cast == "CT_AdvancedSensorDisruptor")
+    return CT_AdvancedSensorDisruptor;
+  if(to_cast == "CT_MarauderCommsScrambler ")
+    return CT_MarauderCommsScrambler ;
+  if(to_cast == "CT_HyperspaceTracker")
+    return CT_HyperspaceTracker;
+  if(to_cast == "CT_LaserDetectors")
+    return CT_LaserDetectors;
+  if(to_cast == "CT_MonitoringDevices")
+    return CT_MonitoringDevices;
+  if(to_cast == "CT_BricABrac")
+    return CT_BricABrac;
+  if(to_cast == "CT_OfficeSupplies")
+    return CT_OfficeSupplies;
+  if(to_cast == "CT_ReligiousMaterial")
+    return CT_ReligiousMaterial;
+  if(to_cast == "CT_Clothing")
+    return CT_Clothing;
+  if(to_cast == "CT_DisposableClothing")
+    return CT_DisposableClothing;
+  if(to_cast == "CT_HandTools")
+    return CT_HandTools;
+  if(to_cast == "CT_Uniforms ")
+    return CT_Uniforms ;
+  if(to_cast == "CT_Furniture")
+    return CT_Furniture;
+  if(to_cast == "CT_CleaningProducts")
+    return CT_CleaningProducts;
+  if(to_cast == "CT_HygieneGoods")
+    return CT_HygieneGoods;
+  if(to_cast == "CT_HumanitarianAid")
+    return CT_HumanitarianAid;
+  if(to_cast == "CT_WoundDressings")
+    return CT_WoundDressings;
+  if(to_cast == "CT_Anaesthetics")
+    return CT_Anaesthetics;
+  if(to_cast == "CT_Antibiotics")
+    return CT_Antibiotics;
+  if(to_cast == "CT_Antiseptics")
+    return CT_Antiseptics;
+  if(to_cast == "CT_Immunosuppressives")
+    return CT_Immunosuppressives;
+  if(to_cast == "CT_MedicalDrugs")
+    return CT_MedicalDrugs;
+  if(to_cast == "CT_Vaccines")
+    return CT_Vaccines;
+  if(to_cast == "CT_AntiAgingTreatments")
+    return CT_AntiAgingTreatments;
+  if(to_cast == "CT_RejuvenationTratments")
+    return CT_RejuvenationTratments;
+  if(to_cast == "CT_PainKillers")
+    return CT_PainKillers;
+  if(to_cast == "CT_EmergencySpaceSuits")
+    return CT_EmergencySpaceSuits;
+  if(to_cast == "CT_PersonalGasJets")
+    return CT_PersonalGasJets;
+  if(to_cast == "CT_SpaceSuits")
+    return CT_SpaceSuits;
+  if(to_cast == "CT_SuitPatches")
+    return CT_SuitPatches;
+  if(to_cast == "CT_SurvivalBubbles")
+    return CT_SurvivalBubbles;
+  if(to_cast == "CT_SurvivalPacks")
+    return CT_SurvivalPacks;
+  if(to_cast == "CT_SurvivalCloaks")
+    return CT_SurvivalCloaks;
+  if(to_cast == "CT_EmergencyHeaters")
+    return CT_EmergencyHeaters;
+  if(to_cast == "CT_FieldGenerators")
+    return CT_FieldGenerators;
+  if(to_cast == "CT_ReactorParts")
+    return CT_ReactorParts;
+  if(to_cast == "CT_ReactorSpares")
+    return CT_ReactorSpares;
+  if(to_cast == "CT_ReactorTargets")
+    return CT_ReactorTargets;
+  if(to_cast == "CT_FissionGenerators")
+    return CT_FissionGenerators;
+  if(to_cast == "CT_FusionGenerators")
+    return CT_FusionGenerators;
+  if(to_cast == "CT_Batteries")
+    return CT_Batteries;
+  if(to_cast == "CT_SolarPanels")
+    return CT_SolarPanels;
+  if(to_cast == "CT_Solettas")
+    return CT_Solettas;
+  if(to_cast == "CT_AtmosphericScrubbers")
+    return CT_AtmosphericScrubbers;
+  if(to_cast == "CT_PlanetHeaters")
+    return CT_PlanetHeaters;
+  if(to_cast == "CT_CFCGenerators")
+    return CT_CFCGenerators;
+  if(to_cast == "CT_HydroponicsEquipment")
+    return CT_HydroponicsEquipment;
+  if(to_cast == "CT_Biovators")
+    return CT_Biovators;
+  if(to_cast == "CT_AgriHarvestors")
+    return CT_AgriHarvestors;
+  if(to_cast == "CT_Tractors")
+    return CT_Tractors;
+  if(to_cast == "CT_TractorParts")
+    return CT_TractorParts;
+  if(to_cast == "CT_Aerodynes")
+    return CT_Aerodynes;
+  if(to_cast == "CT_Aircars")
+    return CT_Aircars;
+  if(to_cast == "CT_Dirigibles")
+    return CT_Dirigibles;
+  if(to_cast == "CT_GroundCars")
+    return CT_GroundCars;
+  if(to_cast == "CT_ConstructionVehicles")
+    return CT_ConstructionVehicles;
+  if(to_cast == "CT_Hovercars")
+    return CT_Hovercars;
+  if(to_cast == "CT_Hovercraft")
+    return CT_Hovercraft;
+  if(to_cast == "CT_Rotorcraft")
+    return CT_Rotorcraft;
+  if(to_cast == "CT_Trucks")
+    return CT_Trucks;
+  if(to_cast == "CT_LasTanks")
+    return CT_LasTanks;
+  if(to_cast == "CT_Lathes")
+    return CT_Lathes;
+  if(to_cast == "CT_MicroengineeringTools")
+    return CT_MicroengineeringTools;
+  if(to_cast == "CT_Drillers")
+    return CT_Drillers;
+  if(to_cast == "CT_HabitationPods")
+    return CT_HabitationPods;
+  if(to_cast == "CT_HousingModules")
+    return CT_HousingModules;
+  if(to_cast == "CT_LifeSupportSystems")
+    return CT_LifeSupportSystems;
+  if(to_cast == "CT_StationComponents")
+    return CT_StationComponents;
+  if(to_cast == "CT_PrefabricatedStationModules")
+    return CT_PrefabricatedStationModules;
+  if(to_cast == "CT_StationConnectors")
+    return CT_StationConnectors;
+  if(to_cast == "CT_PrefabricatedHousing")
+    return CT_PrefabricatedHousing;
+  if(to_cast == "CT_Recyclers")
+    return CT_Recyclers;
+  if(to_cast == "CT_VaccumeDomes")
+    return CT_VaccumeDomes;
+  if(to_cast == "CT_ArmourPatches")
+    return CT_ArmourPatches;
+  if(to_cast == "CT_ArmourPlates")
+    return CT_ArmourPlates;
+  if(to_cast == "CT_Hullplates")
+    return CT_Hullplates;
+  if(to_cast == "CT_HullRepairKits")
+    return CT_HullRepairKits;
+  if(to_cast == "CT_Conduits")
+    return CT_Conduits;
+  if(to_cast == "CT_FloorGrids")
+    return CT_FloorGrids;
+  if(to_cast == "CT_GravGrids")
+    return CT_GravGrids;
+  if(to_cast == "CT_Wiring")
+    return CT_Wiring;
+  if(to_cast == "CT_EarthMovers")
+    return CT_EarthMovers;
+  if(to_cast == "CT_HandDrills")
+    return CT_HandDrills;
+  if(to_cast == "CT_LaserDrills")
+    return CT_LaserDrills;
+  if(to_cast == "CT_MiningDisplacers")
+    return CT_MiningDisplacers;
+  if(to_cast == "CT_MiningDrones")
+    return CT_MiningDrones;
+  if(to_cast == "CT_VehicleDrills")
+    return CT_VehicleDrills;
+  if(to_cast == "CT_Rubble")
+    return CT_Rubble;
+  if(to_cast == "CT_Aggregates")
+    return CT_Aggregates;
+  if(to_cast == "CT_RockDust")
+    return CT_RockDust;
+  if(to_cast == "CT_Sand")
+    return CT_Sand;
+  if(to_cast == "CT_NeutroniumOre")
+    return CT_NeutroniumOre;
+  if(to_cast == "CT_GoldOre")
+    return CT_GoldOre;
+  if(to_cast == "CT_CommonOre")
+    return CT_CommonOre;
+  if(to_cast == "CT_SilverOre ")
+    return CT_SilverOre ;
+  if(to_cast == "CT_PlatinumOre")
+    return CT_PlatinumOre;
+  if(to_cast == "CT_RadioactiveOre")
+    return CT_RadioactiveOre;
+  if(to_cast == "CT_UnprocessedGas")
+    return CT_UnprocessedGas;
+  if(to_cast == "CT_Air")
+    return CT_Air;
+  if(to_cast == "CT_Helium3")
+    return CT_Helium3;
+  if(to_cast == "CT_BlockIce")
+    return CT_BlockIce;
+  if(to_cast == "CT_CrushedIce")
+    return CT_CrushedIce;
+  if(to_cast == "CT_DirtyIce")
+    return CT_DirtyIce;
+  if(to_cast == "CT_DeionisedWater")
+    return CT_DeionisedWater;
+  if(to_cast == "CT_Carbon")
+    return CT_Carbon;
+  if(to_cast == "CT_Nitrates")
+    return CT_Nitrates;
+  if(to_cast == "CT_Oxygen")
+    return CT_Oxygen;
+  if(to_cast == "CT_Phosphates")
+    return CT_Phosphates;
+  if(to_cast == "CT_Sulphur")
+    return CT_Sulphur;
+  if(to_cast == "CT_Alkalines")
+    return CT_Alkalines;
+  if(to_cast == "CT_Sodium")
+    return CT_Sodium;
+  if(to_cast == "CT_Phosphides")
+    return CT_Phosphides;
+  if(to_cast == "CT_Sulfides")
+    return CT_Sulfides;
+  if(to_cast == "CT_Tellurides")
+    return CT_Tellurides;
+  if(to_cast == "CT_InorganicAcids")
+    return CT_InorganicAcids;
+  if(to_cast == "CT_Intermetallics")
+    return CT_Intermetallics;
+  if(to_cast == "CT_BattleScrap")
+    return CT_BattleScrap;
+  if(to_cast == "CT_CompactedScrapMetal")
+    return CT_CompactedScrapMetal;
+  if(to_cast == "CT_MisCasts")
+    return CT_MisCasts;
+  if(to_cast == "CT_ScrapMetal")
+    return CT_ScrapMetal;
+  if(to_cast == "CT_Gold")
+    return CT_Gold;
+  if(to_cast == "CT_Platinum")
+    return CT_Platinum;
+  if(to_cast == "CT_Silver")
+    return CT_Silver;
+  if(to_cast == "CT_MetalBars")
+    return CT_MetalBars;
+  if(to_cast == "CT_MetalBillets")
+    return CT_MetalBillets;
+  if(to_cast == "CT_MetalRods")
+    return CT_MetalRods;
+  if(to_cast == "CT_Wire")
+    return CT_Wire;
+  if(to_cast == "CT_Rivets")
+    return CT_Rivets;
+  if(to_cast == "CT_RadioactiveWaste")
+    return CT_RadioactiveWaste;
+  if(to_cast == "CT_Uranium")
+    return CT_Uranium;
+  if(to_cast == "CT_Plutonium")
+    return CT_Plutonium;
+  if(to_cast == "CT_FissionInitiators")
+    return CT_FissionInitiators;
+  if(to_cast == "CT_Neutronium")
+    return CT_Neutronium;
+  if(to_cast == "CT_ExoticMetals")
+    return CT_ExoticMetals;
+  if(to_cast == "CT_RareMetals")
+    return CT_RareMetals;
+  if(to_cast == "CT_FeedStock")
+    return CT_FeedStock;
+  if(to_cast == "CT_PressurisedHydrocarbonGas")
+    return CT_PressurisedHydrocarbonGas;
+  if(to_cast == "CT_Oil")
+    return CT_Oil;
+  if(to_cast == "CT_Petroleum")
+    return CT_Petroleum;
+  if(to_cast == "CT_PlasticBars")
+    return CT_PlasticBars;
+  if(to_cast == "CT_PlasticBlocks")
+    return CT_PlasticBlocks;
+  if(to_cast == "CT_PlasticCables")
+    return CT_PlasticCables;
+  if(to_cast == "CT_PlasticGel")
+    return CT_PlasticGel;
+  if(to_cast == "CT_PlasticPellets")
+    return CT_PlasticPellets;
+  if(to_cast == "CT_LiquifiedFuel")
+    return CT_LiquifiedFuel;
+  if(to_cast == "CT_LiquifiedFusionPremix")
+    return CT_LiquifiedFusionPremix;
+  if(to_cast == "CT_BoosterAgent")
+    return CT_BoosterAgent;
+  if(to_cast == "CT_FuelPellets")
+    return CT_FuelPellets;
+  if(to_cast == "CT_FuelRods")
+    return CT_FuelRods;
+  if(to_cast == "CT_FloorPlates")
+    return CT_FloorPlates;
+  if(to_cast == "CT_Girders")
+    return CT_Girders;
+  if(to_cast == "CT_WallPlates")
+    return CT_WallPlates;
+  if(to_cast == "CT_BeanstalkWire")
+    return CT_BeanstalkWire;
+  if(to_cast == "CT_FoamMetal")
+    return CT_FoamMetal;
+  if(to_cast == "CT_MacroCrystallineMetals")
+    return CT_MacroCrystallineMetals;
+  if(to_cast == "CT_Monowire")
+    return CT_Monowire;
+  if(to_cast == "CT_HeavyGirders")
+    return CT_HeavyGirders;
+  if(to_cast == "CT_CutGemstones")
+    return CT_CutGemstones;
+  if(to_cast == "CT_IndustrialGemstones")
+    return CT_IndustrialGemstones;
+  if(to_cast == "CT_UncutGemstones")
+    return CT_UncutGemstones;
+  if(to_cast == "CT_AntimatterContainers")
+    return CT_AntimatterContainers;
+  if(to_cast == "CT_Antimatter")
+    return CT_Antimatter;
+  if(to_cast == "CT_AntimatterPods")
+    return CT_AntimatterPods;
+  if(to_cast == "CT_APCs")
+    return CT_APCs;
+  if(to_cast == "CT_TurretFighter")
+    return CT_TurretFighter;
+  if(to_cast == "CT_RemoteFighter")
+    return CT_RemoteFighter;
+  if(to_cast == "CT_ArtilleryFVs")
+    return CT_ArtilleryFVs;
+  if(to_cast == "CT_FireSupportFVs")
+    return CT_FireSupportFVs;
+  if(to_cast == "CT_GravTanks")
+    return CT_GravTanks;
+  if(to_cast == "CT_HoverTanks")
+    return CT_HoverTanks;
+  if(to_cast == "CT_Tanks")
+    return CT_Tanks;
+  if(to_cast == "CT_TankParts")
+    return CT_TankParts;
+  if(to_cast == "CT_AntimatterFuses")
+    return CT_AntimatterFuses;
+  if(to_cast == "CT_TwinPackMissileLauncher")
+    return CT_TwinPackMissileLauncher;
+  if(to_cast == "CT_LDSiShortMissiles")
+    return CT_LDSiShortMissiles;
+  if(to_cast == "CT_LDSiShortMissile")
+    return CT_LDSiShortMissile;
+  if(to_cast == "CT_Flares")
+    return CT_Flares;
+  if(to_cast == "CT_Flare")
+    return CT_Flare;
+  if(to_cast == "CT_SeekerMissiles")
+    return CT_SeekerMissiles;
+  if(to_cast == "CT_SeekerMissile")
+    return CT_SeekerMissile;
+  if(to_cast == "CT_HarrowerMissiles")
+    return CT_HarrowerMissiles;
+  if(to_cast == "CT_HarrowerMissile")
+    return CT_HarrowerMissile;
+  if(to_cast == "CT_GnatRockets")
+    return CT_GnatRockets;
+  if(to_cast == "CT_GnatRocket")
+    return CT_GnatRocket;
+  if(to_cast == "CT_HammerRockets")
+    return CT_HammerRockets;
+  if(to_cast == "CT_HammerRocket")
+    return CT_HammerRocket;
+  if(to_cast == "CT_LDSiMissiles")
+    return CT_LDSiMissiles;
+  if(to_cast == "CT_LDSiMissile")
+    return CT_LDSiMissile;
+  if(to_cast == "CT_MiningCharges")
+    return CT_MiningCharges;
+  if(to_cast == "CT_MiningCharge")
+    return CT_MiningCharge;
+  if(to_cast == "CT_TripackMissileLauncher")
+    return CT_TripackMissileLauncher;
+  if(to_cast == "CT_BlizzardRocketPod")
+    return CT_BlizzardRocketPod;
+  if(to_cast == "CT_BlizzardRocket")
+    return CT_BlizzardRocket;
+  if(to_cast == "CT_RemoteProbes")
+    return CT_RemoteProbes;
+  if(to_cast == "CT_RemoteProbe")
+    return CT_RemoteProbe;
+  if(to_cast == "CT_RemoteMissiles")
+    return CT_RemoteMissiles;
+  if(to_cast == "CT_RemoteMissile")
+    return CT_RemoteMissile;
+  if(to_cast == "CT_DeadshotMissiles")
+    return CT_DeadshotMissiles;
+  if(to_cast == "CT_DeadshotMissile")
+    return CT_DeadshotMissile;
+  if(to_cast == "CT_LDSi3000Missiles")
+    return CT_LDSi3000Missiles;
+  if(to_cast == "CT_LDSi3000Missile")
+    return CT_LDSi3000Missile;
+  if(to_cast == "CT_QuadpackMissileLauncher")
+    return CT_QuadpackMissileLauncher;
+  if(to_cast == "CT_DeathblowRemote")
+    return CT_DeathblowRemote;
+  if(to_cast == "CT_DeathblowRemoteMissile")
+    return CT_DeathblowRemoteMissile;
+  if(to_cast == "CT_AntimatterRemote")
+    return CT_AntimatterRemote;
+  if(to_cast == "CT_AntimatterRemoteMissile")
+    return CT_AntimatterRemoteMissile;
+  if(to_cast == "CT_InternalMissileMagazine")
+    return CT_InternalMissileMagazine;
+  if(to_cast == "CT_DisruptorMissiles")
+    return CT_DisruptorMissiles;
+  if(to_cast == "CT_DisruptorMissile")
+    return CT_DisruptorMissile;
+  if(to_cast == "CT_SmartDecoy")
+    return CT_SmartDecoy;
+  if(to_cast == "CT_SmartDecoyCountermeasure")
+    return CT_SmartDecoyCountermeasure;
+  if(to_cast == "CT_Decoys")
+    return CT_Decoys;
+  if(to_cast == "CT_Decoy")
+    return CT_Decoy;
+  if(to_cast == "CT_PulsarDisruptors")
+    return CT_PulsarDisruptors;
+  if(to_cast == "CT_PulsarDisruptor")
+    return CT_PulsarDisruptor;
+  if(to_cast == "CT_HullMissileHardPoint")
+    return CT_HullMissileHardPoint;
+  if(to_cast == "CT_AchillesShieldDisruptors")
+    return CT_AchillesShieldDisruptors;
+  if(to_cast == "CT_AchillesShieldDisruptor")
+    return CT_AchillesShieldDisruptor;
+  if(to_cast == "CT_ProximityMines")
+    return CT_ProximityMines;
+  if(to_cast == "CT_ProximityMine")
+    return CT_ProximityMine;
+  if(to_cast == "CT_AntimatterMines")
+    return CT_AntimatterMines;
+  if(to_cast == "CT_AntimatterMine")
+    return CT_AntimatterMine;
+  if(to_cast == "CT_LDSIMines")
+    return CT_LDSIMines;
+  if(to_cast == "CT_LDSIMine")
+    return CT_LDSIMine;
+  if(to_cast == "CT_SeekerMines")
+    return CT_SeekerMines;
+  if(to_cast == "CT_SeekerMine")
+    return CT_SeekerMine;
+  if(to_cast == "CT_LDSIWarheads")
+    return CT_LDSIWarheads;
+  if(to_cast == "CT_MissileParts")
+    return CT_MissileParts;
+  if(to_cast == "CT_MissileThrusters")
+    return CT_MissileThrusters;
+  if(to_cast == "CT_MissileWarheads")
+    return CT_MissileWarheads;
+  if(to_cast == "CT_CombatPowersuits")
+    return CT_CombatPowersuits;
+  if(to_cast == "CT_SidearmClips")
+    return CT_SidearmClips;
+  if(to_cast == "CT_BattlePacks")
+    return CT_BattlePacks;
+  if(to_cast == "CT_Explosives")
+    return CT_Explosives;
+  if(to_cast == "CT_Grenades")
+    return CT_Grenades;
+  if(to_cast == "CT_HandWeapons")
+    return CT_HandWeapons;
+  if(to_cast == "CT_ManpackMissiles")
+    return CT_ManpackMissiles;
+  if(to_cast == "CT_BiologicalWeaponsAgents")
+    return CT_BiologicalWeaponsAgents;
+  if(to_cast == "CT_ChemicalWeaponsAgents")
+    return CT_ChemicalWeaponsAgents;
+  if(to_cast == "CT_NeutronWarheads")
+    return CT_NeutronWarheads;
+  if(to_cast == "CT_DirtyFissionWarheads")
+    return CT_DirtyFissionWarheads;
+  if(to_cast == "CT_HostileTerraformingAgents")
+    return CT_HostileTerraformingAgents;
+  if(to_cast == "CT_NanotechWeapons")
+    return CT_NanotechWeapons;
+  if(to_cast == "CT_AcceleratorRings")
+    return CT_AcceleratorRings;
+  if(to_cast == "CT_NeutronBeamCannon")
+    return CT_NeutronBeamCannon;
+  if(to_cast == "CT_WeaponLinkHardware")
+    return CT_WeaponLinkHardware;
+  if(to_cast == "CT_CommunicationsLaser")
+    return CT_CommunicationsLaser;
+  if(to_cast == "CT_TrackingComputer")
+    return CT_TrackingComputer;
+  if(to_cast == "CT_ParticleBeamCannon")
+    return CT_ParticleBeamCannon;
+  if(to_cast == "CT_MiningLasers")
+    return CT_MiningLasers;
+  if(to_cast == "CT_AssaultCannon")
+    return CT_AssaultCannon;
+  if(to_cast == "CT_AssaultCannonAmmo")
+    return CT_AssaultCannonAmmo;
+  if(to_cast == "CT_AssaultCannonAmmoRound")
+    return CT_AssaultCannonAmmoRound;
+  if(to_cast == "CT_LightPBC")
+    return CT_LightPBC;
+  if(to_cast == "CT_CooledPBC")
+    return CT_CooledPBC;
+  if(to_cast == "CT_RapidFirePBC")
+    return CT_RapidFirePBC;
+  if(to_cast == "CT_LongRangeCannon")
+    return CT_LongRangeCannon;
+  if(to_cast == "CT_CuttingBeam")
+    return CT_CuttingBeam;
+  if(to_cast == "CT_WideanglePBC")
+    return CT_WideanglePBC;
+  if(to_cast == "CT_EnhancedAimPBC")
+    return CT_EnhancedAimPBC;
+  if(to_cast == "CT_QuadLightPBC")
+    return CT_QuadLightPBC;
+  if(to_cast == "CT_HeavyBeamCannon")
+    return CT_HeavyBeamCannon;
+  if(to_cast == "CT_LongRangeCannonAmmo")
+    return CT_LongRangeCannonAmmo;
+  if(to_cast == "CT_LongRangeCannonAmmoRound")
+    return CT_LongRangeCannonAmmoRound;
+  if(to_cast == "CT_TargetedPBC")
+    return CT_TargetedPBC;
+  if(to_cast == "CT_AssaultCannonRingModel")
+    return CT_AssaultCannonRingModel;
+  if(to_cast == "CT_PulseAcceleratedPBC")
+    return CT_PulseAcceleratedPBC;
+  if(to_cast == "CT_AntimatterParticleBeam")
+    return CT_AntimatterParticleBeam;
+  if(to_cast == "CT_AntimatterStreamer")
+    return CT_AntimatterStreamer;
+  if(to_cast == "CT_Accumulators")
+    return CT_Accumulators;
+  if(to_cast == "CT_PointDefenceTurret")
+    return CT_PointDefenceTurret;
+  if(to_cast == "CT_FireControlSensors")
+    return CT_FireControlSensors;
+  if(to_cast == "CT_PBCAccelerators")
+    return CT_PBCAccelerators;
+  if(to_cast == "CT_PlasmaStorageRings")
+    return CT_PlasmaStorageRings;
+  if(to_cast == "CT_GatlingPBCs")
+    return CT_GatlingPBCs;
+  if(to_cast == "CT_HeavyPBCs")
+    return CT_HeavyPBCs;
+  if(to_cast == "CT_LightPBCs")
+    return CT_LightPBCs;
+  if(to_cast == "CT_PBCs")
+    return CT_PBCs;
+  if(to_cast == "CT_MeteorShield")
+    return CT_MeteorShield;
+  if(to_cast == "CT_Level1AutorepairSystem")
+    return CT_Level1AutorepairSystem;
+  if(to_cast == "CT_DefenceShield")
+    return CT_DefenceShield;
+  if(to_cast == "CT_Level2AutorepairSystem")
+    return CT_Level2AutorepairSystem;
+  if(to_cast == "CT_RepairControlProgram")
+    return CT_RepairControlProgram;
+  if(to_cast == "CT_LightDefenceShield")
+    return CT_LightDefenceShield;
+  if(to_cast == "CT_InstantShieldControl")
+    return CT_InstantShieldControl;
+  if(to_cast == "CT_ReactorHardening")
+    return CT_ReactorHardening;
+  if(to_cast == "CT_ArmouredHullPlates")
+    return CT_ArmouredHullPlates;
+  if(to_cast == "CT_Level3Autorepairsystem")
+    return CT_Level3Autorepairsystem;
+  if(to_cast == "CT_LowSignatureHullplates")
+    return CT_LowSignatureHullplates;
+  if(to_cast == "CT_MilitaryShields")
+    return CT_MilitaryShields;
+  if(to_cast == "CT_ShieldSynchroniser")
+    return CT_ShieldSynchroniser;
+  if(to_cast == "CT_Level4Autorepairsystem")
+    return CT_Level4Autorepairsystem;
+  if(to_cast == "CT_CombatShields")
+    return CT_CombatShields;
+  if(to_cast == "CT_MilitaryAggressorShields")
+    return CT_MilitaryAggressorShields;
+  if(to_cast == "CT_AggressorShieldUpgrade")
+    return CT_AggressorShieldUpgrade;
+  if(to_cast == "CT_MinersShield")
+    return CT_MinersShield;
+  if(to_cast == "CT_Level5Autorepairsystem")
+    return CT_Level5Autorepairsystem;
+  if(to_cast == "CT_ParticleScreenShieldUpgrade")
+    return CT_ParticleScreenShieldUpgrade;
+  if(to_cast == "CT_AssaultShield")
+    return CT_AssaultShield;
+  if(to_cast == "CT_PowerPlantAutorepair")
+    return CT_PowerPlantAutorepair;
+  if(to_cast == "CT_ShieldBooster")
+    return CT_ShieldBooster;
+  if(to_cast == "CT_AdvancedHullMaterialRefit")
+    return CT_AdvancedHullMaterialRefit;
+
+  debug Debug.PrintString
+  ( String.FormatStrStr
+    ( "[flm_ut] ERROR: Defaulting unrecognised cargo type \"%s\" to invalid%s",
+      to_cast,
+      "\n"
+    )
+  );
+  return CT_Invalid;
+}
+
+
+
+
+
+
+// This function translates the new nanotech economy names into
+// the PS numerical values needed to use the inventory and 
+// loadout code.
+
+eCargoType        EconString2CargoType
+( string          to_cast
+)
+{
+  if(to_cast == "ECT_Invalid")
+    return CT_Invalid;
+  if(to_cast == "ECT_WasteBlocks")
+    return CT_WasteBlocks;
+  if(to_cast == "ECT_PlasticWaste")
+    return CT_PlasticWaste;
+  if(to_cast == "ECT_OrganicPulp")
+    return CT_OrganicPulp;
+  if(to_cast == "ECT_WastePaper")
+    return CT_WastePaper;
+  if(to_cast == "ECT_DiseasedSewage")
+    return CT_DiseasedSewage;
+  if(to_cast == "ECT_FrozenSewage")
+    return CT_FrozenSewage;
+  if(to_cast == "ECT_RawSewage")
+    return CT_RawSewage;
+  if(to_cast == "ECT_SugarCane")
+    return CT_SugarCane;
+  if(to_cast == "ECT_Fish")
+    return CT_Fish;
+  if(to_cast == "ECT_Fruit")
+    return CT_Fruit;
+  if(to_cast == "ECT_Grain")
+    return CT_Grain;
+  if(to_cast == "ECT_Meat ")
+    return CT_Meat ;
+  if(to_cast == "ECT_Potatoes")
+    return CT_Potatoes;
+  if(to_cast == "ECT_Rice")
+    return CT_Rice;
+  if(to_cast == "ECT_Soya")
+    return CT_Soya;
+  if(to_cast == "ECT_Vegetables")
+    return CT_Vegetables;
+  if(to_cast == "ECT_EdibleFungi")
+    return CT_EdibleFungi;
+  if(to_cast == "ECT_FoodBlocks")
+    return CT_FoodBlocks;
+  if(to_cast == "ECT_FoodPills")
+    return CT_FoodPills;
+  if(to_cast == "ECT_MealInABar")
+    return CT_MealInABar;
+  if(to_cast == "ECT_PseudoShake ")
+    return CT_PseudoShake ;
+  if(to_cast == "ECT_RecoveredMeat")
+    return CT_RecoveredMeat;
+  if(to_cast == "ECT_SyntheticCheese")
+    return CT_SyntheticCheese;
+  if(to_cast == "ECT_SyntheticProtein")
+    return CT_SyntheticProtein;
+  if(to_cast == "ECT_SurvivalRations")
+    return CT_SurvivalRations;
+  if(to_cast == "ECT_DrinkingWater")
+    return CT_DrinkingWater;
+  if(to_cast == "ECT_Apes")
+    return CT_Apes;
+  if(to_cast == "ECT_Birds")
+    return CT_Birds;
+  if(to_cast == "ECT_DonorPigs")
+    return CT_DonorPigs;
+  if(to_cast == "ECT_DrugLeeches")
+    return CT_DrugLeeches;
+  if(to_cast == "ECT_Giraffes")
+    return CT_Giraffes;
+  if(to_cast == "ECT_Horses")
+    return CT_Horses;
+  if(to_cast == "ECT_Lions ")
+    return CT_Lions ;
+  if(to_cast == "ECT_Weasels")
+    return CT_Weasels;
+  if(to_cast == "ECT_Yaks")
+    return CT_Yaks;
+  if(to_cast == "ECT_Zebras")
+    return CT_Zebras;
+  if(to_cast == "ECT_Hydrogen")
+    return CT_AttackDogs;
+  if(to_cast == "ECT_Helium")
+    return CT_BiomassProcessingWorms;
+  if(to_cast == "ECT_Nitrogen")
+    return CT_Camels;
+  if(to_cast == "ECT_Oxygen")
+    return CT_CancerMice;
+  if(to_cast == "ECT_Flourine")
+    return CT_Chickens;
+  if(to_cast == "ECT_Neon")
+    return CT_Cows;
+  if(to_cast == "ECT_Chlorine")
+    return CT_Dogs;
+  if(to_cast == "ECT_Argon")
+    return CT_EngineeredInsects;
+  if(to_cast == "ECT_Bromine")
+    return CT_Goats;
+  if(to_cast == "ECT_Krypton")
+    return CT_Insects ;
+  if(to_cast == "ECT_Pigs")
+    return CT_Pigs ;
+  if(to_cast == "ECT_Rodents")
+    return CT_Rodents ;
+  if(to_cast == "ECT_Primates")
+    return CT_Primates ;
+  if(to_cast == "ECT_HYL")
+    return CT_HYL ;
+  if(to_cast == "ECT_Foetuses")
+    return CT_Foetuses;
+  if(to_cast == "ECT_CloneBoneTissue")
+    return CT_CloneBoneTissue ;
+  if(to_cast == "ECT_CloneEyes")
+    return CT_CloneEyes ;
+  if(to_cast == "ECT_CloneGlands")
+    return CT_CloneGlands ;
+  if(to_cast == "ECT_CloneHearts")
+    return CT_CloneHearts ;
+  if(to_cast == "ECT_CloneIntestines")
+    return CT_CloneIntestines;
+  if(to_cast == "ECT_CloneKidneys")
+    return CT_CloneKidneys;
+  if(to_cast == "ECT_CloneLimbs")
+    return CT_CloneLimbs ;
+  if(to_cast == "ECT_CloneLivers")
+    return CT_CloneLivers;
+  if(to_cast == "ECT_CloneLungs")
+    return CT_CloneLungs;
+  if(to_cast == "ECT_CloneSkin")
+    return CT_CloneSkin ;
+  if(to_cast == "ECT_VatGrownMuscle")
+    return CT_VatGrownMuscle  ;
+  if(to_cast == "ECT_BlankTissueCulture")
+    return CT_BlankTissueCulture ;
+  if(to_cast == "ECT_CommonStrandMaterial")
+    return CT_CommonStrandMaterial;
+  if(to_cast == "ECT_DNAChangers")
+    return CT_DNAChangers;
+  if(to_cast == "ECT_DNASequencers")
+    return CT_DNASequencers;
+  if(to_cast == "ECT_DNATattoos")
+    return CT_DNATattoos ;
+  if(to_cast == "ECT_GeneticMarkerAgents")
+    return CT_GeneticMarkerAgents ;
+  if(to_cast == "ECT_GeneticRejuvinations")
+    return CT_GeneticRejuvinations;
+  if(to_cast == "ECT_TransplantEyes")
+    return CT_TransplantEyes;
+  if(to_cast == "ECT_TransplantGlands")
+    return CT_TransplantGlands;
+  if(to_cast == "ECT_TransplantHearts")
+    return CT_TransplantHearts;
+  if(to_cast == "ECT_TransplantIntestine")
+    return CT_TransplantIntestine;
+  if(to_cast == "ECT_TransplantKidneys")
+    return CT_TransplantKidneys;
+  if(to_cast == "ECT_TransplantLivers")
+    return CT_TransplantLivers;
+  if(to_cast == "ECT_TransplantLungs")
+    return CT_TransplantLungs;
+  if(to_cast == "ECT_TransplantSkin")
+    return CT_TransplantSkin;
+  if(to_cast == "ECT_Houseplants")
+    return CT_Houseplants;
+  if(to_cast == "ECT_PotPlants")
+    return CT_PotPlants;
+  if(to_cast == "ECT_Seedlings")
+    return CT_Seedlings;
+  if(to_cast == "ECT_Seeds")
+    return CT_Seeds;
+  if(to_cast == "ECT_Algae")
+    return CT_Algae;
+  if(to_cast == "ECT_PlantPulp")
+    return CT_PlantPulp;
+  if(to_cast == "ECT_Woodpulp")
+    return CT_Woodpulp;
+  if(to_cast == "ECT_Trees")
+    return CT_Trees;
+  if(to_cast == "ECT_SlimeMould")
+    return CT_SlimeMould;
+  if(to_cast == "ECT_Yeast")
+    return CT_Yeast;
+  if(to_cast == "ECT_NitroBacteria")
+    return CT_NitroBacteria;
+  if(to_cast == "ECT_SoilBacteria")
+    return CT_SoilBacteria;
+  if(to_cast == "ECT_TerraformingBacteria")
+    return CT_TerraformingBacteria;
+  if(to_cast == "ECT_RecyclingBacteria")
+    return CT_RecyclingBacteria;
+  if(to_cast == "ECT_AnimalFeed")
+    return CT_AnimalFeed;
+  if(to_cast == "ECT_Compost")
+    return CT_Compost;
+  if(to_cast == "ECT_Fertiliser")
+    return CT_Fertiliser;
+  if(to_cast == "ECT_Soil")
+    return CT_Soil;
+  if(to_cast == "ECT_SportingBodyArmour")
+    return CT_SportingBodyArmour;
+  if(to_cast == "ECT_Footballs")
+    return CT_Footballs;
+  if(to_cast == "ECT_GolfSupplies")
+    return CT_GolfSupplies;
+  if(to_cast == "ECT_NullBox")
+    return CT_NullBox;
+  if(to_cast == "ECT_PaintGuns")
+    return CT_PaintGuns;
+  if(to_cast == "ECT_Scuba")
+    return CT_Scuba;
+  if(to_cast == "ECT_TennisEquipment")
+    return CT_TennisEquipment;
+  if(to_cast == "ECT_SportsClothes")
+    return CT_SportsClothes;
+  if(to_cast == "ECT_ZeroGGymnasia")
+    return CT_ZeroGGymnasia;
+  if(to_cast == "ECT_SportingWeapons")
+    return CT_SportingWeapons;
+  if(to_cast == "ECT_Antiques")
+    return CT_Antiques;
+  if(to_cast == "ECT_Paintings")
+    return CT_Paintings;
+  if(to_cast == "ECT_Sculpture")
+    return CT_Sculpture;
+  if(to_cast == "ECT_Caviar")
+    return CT_Caviar;
+  if(to_cast == "ECT_Chocolate")
+    return CT_Chocolate;
+  if(to_cast == "ECT_Lobster")
+    return CT_Lobster;
+  if(to_cast == "ECT_RealCoffee")
+    return CT_RealCoffee;
+  if(to_cast == "ECT_RealMeat")
+    return CT_RealMeat;
+  if(to_cast == "ECT_RealTea")
+    return CT_RealTea;
+  if(to_cast == "ECT_Shellfish")
+    return CT_Shellfish;
+  if(to_cast == "ECT_Milk")
+    return CT_Milk;
+  if(to_cast == "ECT_Spices")
+    return CT_Spices;
+  if(to_cast == "ECT_Game")
+    return CT_Game;
+  if(to_cast == "ECT_Cigarettes")
+    return CT_Cigarettes;
+  if(to_cast == "ECT_Cigars")
+    return CT_Cigars;
+  if(to_cast == "ECT_LeafTobacco")
+    return CT_LeafTobacco;
+  if(to_cast == "ECT_Aphrodisiacs")
+    return CT_Aphrodisiacs;
+  if(to_cast == "ECT_Caffeine")
+    return CT_Caffeine;
+  if(to_cast == "ECT_PhysicalEnhancers")
+    return CT_PhysicalEnhancers;
+  if(to_cast == "ECT_ErzatzCoffee")
+    return CT_ErzatzCoffee;
+  if(to_cast == "ECT_Euphorics")
+    return CT_Euphorics;
+  if(to_cast == "ECT_Halluciogenics")
+    return CT_Halluciogenics;
+  if(to_cast == "ECT_MemoryEnhancers")
+    return CT_MemoryEnhancers;
+  if(to_cast == "ECT_MoodEnhancers")
+    return CT_MoodEnhancers;
+  if(to_cast == "ECT_MoodStabilsers")
+    return CT_MoodStabilsers;
+  if(to_cast == "ECT_Stimulants")
+    return CT_Stimulants;
+  if(to_cast == "ECT_Tranquilisers")
+    return CT_Tranquilisers;
+  if(to_cast == "ECT_Spirits")
+    return CT_Spirits;
+  if(to_cast == "ECT_Wine")
+    return CT_Wine;
+  if(to_cast == "ECT_Champagne")
+    return CT_Champagne;
+  if(to_cast == "ECT_Scotch")
+    return CT_Scotch;
+  if(to_cast == "ECT_RealBeer")
+    return CT_RealBeer;
+  if(to_cast == "ECT_ZeroBrew")
+    return CT_ZeroBrew;
+  if(to_cast == "ECT_Fur")
+    return CT_Fur;
+  if(to_cast == "ECT_FurCoats")
+    return CT_FurCoats;
+  if(to_cast == "ECT_Vatfur")
+    return CT_Vatfur;
+  if(to_cast == "ECT_GoldJewellery")
+    return CT_GoldJewellery;
+  if(to_cast == "ECT_ValuableJewellery")
+    return CT_ValuableJewellery;
+  if(to_cast == "ECT_SmartJewels")
+    return CT_SmartJewels;
+  if(to_cast == "ECT_Watches")
+    return CT_Watches;
+  if(to_cast == "ECT_Books")
+    return CT_Books;
+  if(to_cast == "ECT_Cosmetics")
+    return CT_Cosmetics;
+  if(to_cast == "ECT_DesignerClothes")
+    return CT_DesignerClothes;
+  if(to_cast == "ECT_MusicalInstruments")
+    return CT_MusicalInstruments;
+  if(to_cast == "ECT_Perfume")
+    return CT_Perfume;
+  if(to_cast == "ECT_Toys")
+    return CT_Toys;
+  if(to_cast == "ECT_NaturalFibreClothing")
+    return CT_NaturalFibreClothing;
+  if(to_cast == "ECT_LuxuryFurniture")
+    return CT_LuxuryFurniture;
+  if(to_cast == "ECT_CorporateData")
+    return CT_CorporateData;
+  if(to_cast == "ECT_XenoData")
+    return CT_XenoData;
+  if(to_cast == "ECT_ResearchData")
+    return CT_ResearchData;
+  if(to_cast == "ECT_PersonalData")
+    return CT_PersonalData;
+  if(to_cast == "ECT_Mail")
+    return CT_Mail;
+  if(to_cast == "ECT_ConfidentialData")
+    return CT_ConfidentialData;
+  if(to_cast == "ECT_GovernmentData")
+    return CT_GovernmentData;
+  if(to_cast == "ECT_PoliceData")
+    return CT_PoliceData;
+  if(to_cast == "ECT_MilitaryIntelligence")
+    return CT_MilitaryIntelligence;
+  if(to_cast == "ECT_SecretData")
+    return CT_SecretData;
+  if(to_cast == "ECT_SeekerMineBlueprints")
+    return CT_SeekerMineBlueprints;
+  if(to_cast == "ECT_GnatBlueprint")
+    return CT_GnatBlueprint;
+  if(to_cast == "ECT_HarrowerBlueprint")
+    return CT_HarrowerBlueprint;
+  if(to_cast == "ECT_HammerBlueprint")
+    return CT_HammerBlueprint;
+  if(to_cast == "ECT_SeekerBlueprint")
+    return CT_SeekerBlueprint;
+  if(to_cast == "ECT_LDSiShortBlueprints")
+    return CT_LDSiShortBlueprints;
+  if(to_cast == "ECT_AssaultCannonAmmoBlueprints")
+    return CT_AssaultCannonAmmoBlueprints;
+  if(to_cast == "ECT_TurretFighterBlueprints")
+    return CT_TurretFighterBlueprints;
+  if(to_cast == "ECT_RemoteFighterBlueprints")
+    return CT_RemoteFighterBlueprints;
+  if(to_cast == "ECT_FlareBlueprints")
+    return CT_FlareBlueprints;
+  if(to_cast == "ECT_AchillesBlueprints")
+    return CT_AchillesBlueprints;
+  if(to_cast == "ECT_AntimatterMineBlueprints")
+    return CT_AntimatterMineBlueprints;
+  if(to_cast == "ECT_AntimatterMissileBlueprints")
+    return CT_AntimatterMissileBlueprints;
+  if(to_cast == "ECT_BlizzardMissileBlueprints")
+    return CT_BlizzardMissileBlueprints;
+  if(to_cast == "ECT_DeadshotBlueprints")
+    return CT_DeadshotBlueprints;
+  if(to_cast == "ECT_DeathblowBlueprints")
+    return CT_DeathblowBlueprints;
+  if(to_cast == "ECT_DecoyBlueprints")
+    return CT_DecoyBlueprints;
+  if(to_cast == "ECT_DisruptorBlueprints")
+    return CT_DisruptorBlueprints;
+  if(to_cast == "ECT_LDSi3000Blueprints")
+    return CT_LDSi3000Blueprints;
+  if(to_cast == "ECT_LDSiMineBlueprints")
+    return CT_LDSiMineBlueprints;
+  if(to_cast == "ECT_LDSiMissileBlueprints")
+    return CT_LDSiMissileBlueprints;
+  if(to_cast == "ECT_SniperCannonAmmoBlueprints")
+    return CT_SniperCannonAmmoBlueprints;
+  if(to_cast == "ECT_MiningChargeBlueprints")
+    return CT_MiningChargeBlueprints;
+  if(to_cast == "ECT_ProximityMineBlueprints")
+    return CT_ProximityMineBlueprints;
+  if(to_cast == "ECT_PulsarBlueprints")
+    return CT_PulsarBlueprints;
+  if(to_cast == "ECT_RemoteMissileBlueprints")
+    return CT_RemoteMissileBlueprints;
+  if(to_cast == "ECT_RemoteProbeBlueprints")
+    return CT_RemoteProbeBlueprints;
+  if(to_cast == "ECT_SmartDecoyBlueprints")
+    return CT_SmartDecoyBlueprints;
+  if(to_cast == "ECT_Autopilots")
+    return CT_Autopilots;
+  if(to_cast == "ECT_MatchVelocityAutopilot")
+    return CT_MatchVelocityAutopilot;
+  if(to_cast == "ECT_StealthProgram")
+    return CT_StealthProgram;
+  if(to_cast == "ECT_SelfDefenceSoftware")
+    return CT_SelfDefenceSoftware;
+  if(to_cast == "ECT_EngineManagementProgram")
+    return CT_EngineManagementProgram;
+  if(to_cast == "ECT_OcclusionMonitoringSoftware")
+    return CT_OcclusionMonitoringSoftware;
+  if(to_cast == "ECT_MilitaryTrackingProgram")
+    return CT_MilitaryTrackingProgram;
+  if(to_cast == "ECT_MissileAI")
+    return CT_MissileAI;
+  if(to_cast == "ECT_UtilitySoftware")
+    return CT_UtilitySoftware;
+  if(to_cast == "ECT_ComputerGames")
+    return CT_ComputerGames;
+  if(to_cast == "ECT_NewsVids")
+    return CT_NewsVids;
+  if(to_cast == "ECT_EntertainmentVids")
+    return CT_EntertainmentVids;
+  if(to_cast == "ECT_InteractiveText")
+    return CT_InteractiveText;
+  if(to_cast == "ECT_MusicRecordings")
+    return CT_MusicRecordings;
+  if(to_cast == "ECT_CorporatePropaganda")
+    return CT_CorporatePropaganda;
+  if(to_cast == "ECT_CapsuleDriveGenerators")
+    return CT_CapsuleDriveGenerators;
+  if(to_cast == "ECT_LDSClass1Drive")
+    return CT_LDSClass1Drive;
+  if(to_cast == "ECT_PowerPlant")
+    return CT_PowerPlant;
+  if(to_cast == "ECT_ShipsDrive")
+    return CT_ShipsDrive;
+  if(to_cast == "ECT_ManoeuvreThrusters")
+    return CT_ManoeuvreThrusters;
+  if(to_cast == "ECT_AlphaHeatSink")
+    return CT_AlphaHeatSink;
+  if(to_cast == "ECT_BetaHeatSink")
+    return CT_BetaHeatSink;
+  if(to_cast == "ECT_ColdGasThrusters")
+    return CT_ColdGasThrusters;
+  if(to_cast == "ECT_MilitaryJumpCapacitor")
+    return CT_MilitaryJumpCapacitor;
+  if(to_cast == "ECT_LDSClass2Drive")
+    return CT_LDSClass2Drive;
+  if(to_cast == "ECT_LDSClass3Drive")
+    return CT_LDSClass3Drive;
+  if(to_cast == "ECT_SealedHeatSink")
+    return CT_SealedHeatSink;
+  if(to_cast == "ECT_CapsuleDrive")
+    return CT_CapsuleDrive;
+  if(to_cast == "ECT_ImprovedManoeuverThrusters")
+    return CT_ImprovedManoeuverThrusters;
+  if(to_cast == "ECT_PursuitDrivers")
+    return CT_PursuitDrivers;
+  if(to_cast == "ECT_InterceptorDrivers")
+    return CT_InterceptorDrivers;
+  if(to_cast == "ECT_GammaHeatSink")
+    return CT_GammaHeatSink;
+  if(to_cast == "ECT_DeltaHeatSink")
+    return CT_DeltaHeatSink;
+  if(to_cast == "ECT_AdvancedHeatSink")
+    return CT_AdvancedHeatSink;
+  if(to_cast == "ECT_OmegaHeatSink")
+    return CT_OmegaHeatSink;
+  if(to_cast == "ECT_HeatSinkSupercooler")
+    return CT_HeatSinkSupercooler;
+  if(to_cast == "ECT_ActiveCooler")
+    return CT_ActiveCooler;
+  if(to_cast == "ECT_EmergencyCoolingPod")
+    return CT_EmergencyCoolingPod;
+  if(to_cast == "ECT_AntimatterPowerPod")
+    return CT_AntimatterPowerPod;
+  if(to_cast == "ECT_HighYieldFusionInjector")
+    return CT_HighYieldFusionInjector;
+  if(to_cast == "ECT_SNRVReloadPod")
+    return CT_SNRVReloadPod;
+  if(to_cast == "ECT_Thrusterpods")
+    return CT_Thrusterpods;
+  if(to_cast == "ECT_DockOnAutoTurret")
+    return CT_DockOnAutoTurret;
+  if(to_cast == "ECT_SecondaryRing")
+    return CT_SecondaryRing;
+  if(to_cast == "ECT_CapsuleDriveParts")
+    return CT_CapsuleDriveParts;
+  if(to_cast == "ECT_LDSCarrierFields")
+    return CT_LDSCarrierFields;
+  if(to_cast == "ECT_LDSFieldGenerators")
+    return CT_LDSFieldGenerators;
+  if(to_cast == "ECT_LDSFieldNodes")
+    return CT_LDSFieldNodes;
+  if(to_cast == "ECT_LDSGeneratorParts")
+    return CT_LDSGeneratorParts;
+  if(to_cast == "ECT_ShipInstruments")
+    return CT_ShipInstruments;
+  if(to_cast == "ECT_ShipSystems")
+    return CT_ShipSystems;
+  if(to_cast == "ECT_AISystems")
+    return CT_AISystems;
+  if(to_cast == "ECT_CompParts")
+    return CT_CompParts;
+  if(to_cast == "ECT_ShipCPUGradeI")
+    return CT_ShipCPUGradeI;
+  if(to_cast == "ECT_ShipCPUGradeII")
+    return CT_ShipCPUGradeII;
+  if(to_cast == "ECT_ShipCPUGradeIII")
+    return CT_ShipCPUGradeIII;
+  if(to_cast == "ECT_ShipCPUGradeIV")
+    return CT_ShipCPUGradeIV;
+  if(to_cast == "ECT_ShipCPUGradeV")
+    return CT_ShipCPUGradeV;
+  if(to_cast == "ECT_CompactShipAI")
+    return CT_CompactShipAI;
+  if(to_cast == "ECT_ShipMemoryModule")
+    return CT_ShipMemoryModule;
+  if(to_cast == "ECT_CPUCores")
+    return CT_CPUCores;
+  if(to_cast == "ECT_CPUParts")
+    return CT_CPUParts;
+  if(to_cast == "ECT_AudioEquipment")
+    return CT_AudioEquipment;
+  if(to_cast == "ECT_AudioVisualEquipment")
+    return CT_AudioVisualEquipment;
+  if(to_cast == "ECT_DataConsoles")
+    return CT_DataConsoles;
+  if(to_cast == "ECT_DataScreens")
+    return CT_DataScreens;
+  if(to_cast == "ECT_PersonalCommunicators")
+    return CT_PersonalCommunicators;
+  if(to_cast == "ECT_BodyComps")
+    return CT_BodyComps;
+  if(to_cast == "ECT_HandheldScientificInstruments")
+    return CT_HandheldScientificInstruments;
+  if(to_cast == "ECT_DataCards")
+    return CT_DataCards;
+  if(to_cast == "ECT_DataChips")
+    return CT_DataChips;
+  if(to_cast == "ECT_DataModules")
+    return CT_DataModules;
+  if(to_cast == "ECT_MemoryModules")
+    return CT_MemoryModules;
+  if(to_cast == "ECT_NanoAssemblers")
+    return CT_NanoAssemblers;
+  if(to_cast == "ECT_NanoFactories")
+    return CT_NanoFactories;
+  if(to_cast == "ECT_NanoProgrammers")
+    return CT_NanoProgrammers;
+  if(to_cast == "ECT_NanoSurgeons")
+    return CT_NanoSurgeons;
+  if(to_cast == "ECT_NeuroConnectors")
+    return CT_NeuroConnectors;
+  if(to_cast == "ECT_PreprogrammedNanotech")
+    return CT_PreprogrammedNanotech;
+  if(to_cast == "ECT_TerraformingNanotech")
+    return CT_TerraformingNanotech;
+  if(to_cast == "ECT_GeneWriters")
+    return CT_GeneWriters;
+  if(to_cast == "ECT_CryogenicTanks")
+    return CT_CryogenicTanks;
+  if(to_cast == "ECT_Medkits")
+    return CT_Medkits;
+  if(to_cast == "ECT_OrganMatrices")
+    return CT_OrganMatrices;
+  if(to_cast == "ECT_RemoteTables")
+    return CT_RemoteTables;
+  if(to_cast == "ECT_Autodocs")
+    return CT_Autodocs;
+  if(to_cast == "ECT_Autosurgs")
+    return CT_Autosurgs;
+  if(to_cast == "ECT_HKCounters")
+    return CT_HKCounters;
+  if(to_cast == "ECT_MolecularImagers")
+    return CT_MolecularImagers;
+  if(to_cast == "ECT_NanosurgeryEquipment")
+    return CT_NanosurgeryEquipment;
+  if(to_cast == "ECT_NMRs")
+    return CT_NMRs;
+  if(to_cast == "ECT_SurgeryKits")
+    return CT_SurgeryKits;
+  if(to_cast == "ECT_CyberEyes")
+    return CT_CyberEyes;
+  if(to_cast == "ECT_CyberLimbs")
+    return CT_CyberLimbs;
+  if(to_cast == "ECT_CyberneticJackPlugs")
+    return CT_CyberneticJackPlugs;
+  if(to_cast == "ECT_CyberneticOrgans")
+    return CT_CyberneticOrgans;
+  if(to_cast == "ECT_RoboticArms")
+    return CT_RoboticArms;
+  if(to_cast == "ECT_RoboticChassis")
+    return CT_RoboticChassis;
+  if(to_cast == "ECT_RoboticCPUs")
+    return CT_RoboticCPUs;
+  if(to_cast == "ECT_RoboticSensors")
+    return CT_RoboticSensors;
+  if(to_cast == "ECT_DomesticRobots")
+    return CT_DomesticRobots;
+  if(to_cast == "ECT_ConstructionRobots")
+    return CT_ConstructionRobots;
+  if(to_cast == "ECT_SecurityRobots")
+    return CT_SecurityRobots;
+  if(to_cast == "ECT_AstronomicalInstruments")
+    return CT_AstronomicalInstruments;
+  if(to_cast == "ECT_ShortRangeActiveSensors")
+    return CT_ShortRangeActiveSensors;
+  if(to_cast == "ECT_ShortrangePassiveSensors")
+    return CT_ShortrangePassiveSensors;
+  if(to_cast == "ECT_UCPScanner")
+    return CT_UCPScanner;
+  if(to_cast == "ECT_PassiveSensorPackage")
+    return CT_PassiveSensorPackage;
+  if(to_cast == "ECT_IFFBeacon")
+    return CT_IFFBeacon;
+  if(to_cast == "ECT_ActiveSensorPackage")
+    return CT_ActiveSensorPackage;
+  if(to_cast == "ECT_AdvancedActiveSensors")
+    return CT_AdvancedActiveSensors;
+  if(to_cast == "ECT_AdvancedPassiveSensors")
+    return CT_AdvancedPassiveSensors;
+  if(to_cast == "ECT_MilitaryGradeActiveSensors")
+    return CT_MilitaryGradeActiveSensors;
+  if(to_cast == "ECT_MilitaryGradePassiveSensors")
+    return CT_MilitaryGradePassiveSensors;
+  if(to_cast == "ECT_LongRangePassiveSensors")
+    return CT_LongRangePassiveSensors;
+  if(to_cast == "ECT_LongRangeActiveSensors")
+    return CT_LongRangeActiveSensors;
+  if(to_cast == "ECT_SensorDisruptor")
+    return CT_SensorDisruptor;
+  if(to_cast == "ECT_HighPowerSensorDisruptor")
+    return CT_HighPowerSensorDisruptor;
+  if(to_cast == "ECT_AdvancedSensorDisruptor")
+    return CT_AdvancedSensorDisruptor;
+  if(to_cast == "ECT_MarauderCommsScrambler ")
+    return CT_MarauderCommsScrambler ;
+  if(to_cast == "ECT_HyperspaceTracker")
+    return CT_HyperspaceTracker;
+  if(to_cast == "ECT_LaserDetectors")
+    return CT_LaserDetectors;
+  if(to_cast == "ECT_MonitoringDevices")
+    return CT_MonitoringDevices;
+  if(to_cast == "ECT_BricABrac")
+    return CT_BricABrac;
+  if(to_cast == "ECT_OfficeSupplies")
+    return CT_OfficeSupplies;
+  if(to_cast == "ECT_ReligiousMaterial")
+    return CT_ReligiousMaterial;
+  if(to_cast == "ECT_Clothing")
+    return CT_Clothing;
+  if(to_cast == "ECT_DisposableClothing")
+    return CT_DisposableClothing;
+  if(to_cast == "ECT_HandTools")
+    return CT_HandTools;
+  if(to_cast == "ECT_Uniforms ")
+    return CT_Uniforms ;
+  if(to_cast == "ECT_Furniture")
+    return CT_Furniture;
+  if(to_cast == "ECT_CleaningProducts")
+    return CT_CleaningProducts;
+  if(to_cast == "ECT_HygieneGoods")
+    return CT_HygieneGoods;
+  if(to_cast == "ECT_HumanitarianAid")
+    return CT_HumanitarianAid;
+  if(to_cast == "ECT_WoundDressings")
+    return CT_WoundDressings;
+  if(to_cast == "ECT_Anaesthetics")
+    return CT_Anaesthetics;
+  if(to_cast == "ECT_Antibiotics")
+    return CT_Antibiotics;
+  if(to_cast == "ECT_Antiseptics")
+    return CT_Antiseptics;
+  if(to_cast == "ECT_Immunosuppressives")
+    return CT_Immunosuppressives;
+  if(to_cast == "ECT_MedicalDrugs")
+    return CT_MedicalDrugs;
+  if(to_cast == "ECT_Vaccines")
+    return CT_Vaccines;
+  if(to_cast == "ECT_AntiAgingTreatments")
+    return CT_AntiAgingTreatments;
+  if(to_cast == "ECT_RejuvenationTratments")
+    return CT_RejuvenationTratments;
+  if(to_cast == "ECT_PainKillers")
+    return CT_PainKillers;
+  if(to_cast == "ECT_EmergencySpaceSuits")
+    return CT_EmergencySpaceSuits;
+  if(to_cast == "ECT_PersonalGasJets")
+    return CT_PersonalGasJets;
+  if(to_cast == "ECT_SpaceSuits")
+    return CT_SpaceSuits;
+  if(to_cast == "ECT_SuitPatches")
+    return CT_SuitPatches;
+  if(to_cast == "ECT_SurvivalBubbles")
+    return CT_SurvivalBubbles;
+  if(to_cast == "ECT_SurvivalPacks")
+    return CT_SurvivalPacks;
+  if(to_cast == "ECT_SurvivalCloaks")
+    return CT_SurvivalCloaks;
+  if(to_cast == "ECT_EmergencyHeaters")
+    return CT_EmergencyHeaters;
+  if(to_cast == "ECT_FieldGenerators")
+    return CT_FieldGenerators;
+  if(to_cast == "ECT_ReactorParts")
+    return CT_ReactorParts;
+  if(to_cast == "ECT_ReactorSpares")
+    return CT_ReactorSpares;
+  if(to_cast == "ECT_ReactorTargets")
+    return CT_ReactorTargets;
+  if(to_cast == "ECT_FissionGenerators")
+    return CT_FissionGenerators;
+  if(to_cast == "ECT_FusionGenerators")
+    return CT_FusionGenerators;
+  if(to_cast == "ECT_Batteries")
+    return CT_Batteries;
+  if(to_cast == "ECT_SolarPanels")
+    return CT_SolarPanels;
+  if(to_cast == "ECT_Solettas")
+    return CT_Solettas;
+  if(to_cast == "ECT_AtmosphericScrubbers")
+    return CT_AtmosphericScrubbers;
+  if(to_cast == "ECT_PlanetHeaters")
+    return CT_PlanetHeaters;
+  if(to_cast == "ECT_CFCGenerators")
+    return CT_CFCGenerators;
+  if(to_cast == "ECT_HydroponicsEquipment")
+    return CT_HydroponicsEquipment;
+  if(to_cast == "ECT_Biovators")
+    return CT_Biovators;
+  if(to_cast == "ECT_AgriHarvestors")
+    return CT_AgriHarvestors;
+  if(to_cast == "ECT_Tractors")
+    return CT_Tractors;
+  if(to_cast == "ECT_TractorParts")
+    return CT_TractorParts;
+  if(to_cast == "ECT_Aerodynes")
+    return CT_Aerodynes;
+  if(to_cast == "ECT_Aircars")
+    return CT_Aircars;
+  if(to_cast == "ECT_Dirigibles")
+    return CT_Dirigibles;
+  if(to_cast == "ECT_GroundCars")
+    return CT_GroundCars;
+  if(to_cast == "ECT_ConstructionVehicles")
+    return CT_ConstructionVehicles;
+  if(to_cast == "ECT_Hovercars")
+    return CT_Hovercars;
+  if(to_cast == "ECT_Hovercraft")
+    return CT_Hovercraft;
+  if(to_cast == "ECT_Rotorcraft")
+    return CT_Rotorcraft;
+  if(to_cast == "ECT_Trucks")
+    return CT_Trucks;
+  if(to_cast == "ECT_LasTanks")
+    return CT_LasTanks;
+  if(to_cast == "ECT_Lathes")
+    return CT_Lathes;
+  if(to_cast == "ECT_MicroengineeringTools")
+    return CT_MicroengineeringTools;
+  if(to_cast == "ECT_Drillers")
+    return CT_Drillers;
+  if(to_cast == "ECT_HabitationPods")
+    return CT_HabitationPods;
+  if(to_cast == "ECT_HousingModules")
+    return CT_HousingModules;
+  if(to_cast == "ECT_LifeSupportSystems")
+    return CT_LifeSupportSystems;
+  if(to_cast == "ECT_StationComponents")
+    return CT_StationComponents;
+  if(to_cast == "ECT_PrefabricatedStationModules")
+    return CT_PrefabricatedStationModules;
+  if(to_cast == "ECT_StationConnectors")
+    return CT_StationConnectors;
+  if(to_cast == "ECT_PrefabricatedHousing")
+    return CT_PrefabricatedHousing;
+  if(to_cast == "ECT_Recyclers")
+    return CT_Recyclers;
+  if(to_cast == "ECT_VaccumeDomes")
+    return CT_VaccumeDomes;
+  if(to_cast == "ECT_ArmourPatches")
+    return CT_ArmourPatches;
+  if(to_cast == "ECT_ArmourPlates")
+    return CT_ArmourPlates;
+  if(to_cast == "ECT_Hullplates")
+    return CT_Hullplates;
+  if(to_cast == "ECT_HullRepairKits")
+    return CT_HullRepairKits;
+  if(to_cast == "ECT_Conduits")
+    return CT_Conduits;
+  if(to_cast == "ECT_FloorGrids")
+    return CT_FloorGrids;
+  if(to_cast == "ECT_GravGrids")
+    return CT_GravGrids;
+  if(to_cast == "ECT_Wiring")
+    return CT_Wiring;
+  if(to_cast == "ECT_EarthMovers")
+    return CT_EarthMovers;
+  if(to_cast == "ECT_HandDrills")
+    return CT_HandDrills;
+  if(to_cast == "ECT_LaserDrills")
+    return CT_LaserDrills;
+  if(to_cast == "ECT_MiningDisplacers")
+    return CT_MiningDisplacers;
+  if(to_cast == "ECT_MiningDrones")
+    return CT_MiningDrones;
+  if(to_cast == "ECT_VehicleDrills")
+    return CT_VehicleDrills;
+  if(to_cast == "ECT_Rubble")
+    return CT_Rubble;
+  if(to_cast == "ECT_Aggregates")
+    return CT_Aggregates;
+  if(to_cast == "ECT_RockDust")
+    return CT_RockDust;
+  if(to_cast == "ECT_Sand")
+    return CT_Sand;
+  if(to_cast == "ECT_NeutroniumOre")
+    return CT_NeutroniumOre;
+  if(to_cast == "ECT_GoldOre")
+    return CT_GoldOre;
+  if(to_cast == "ECT_CommonOre")
+    return CT_CommonOre;
+  if(to_cast == "ECT_SilverOre ")
+    return CT_SilverOre ;
+  if(to_cast == "ECT_PlatinumOre")
+    return CT_PlatinumOre;
+  if(to_cast == "ECT_RadioactiveOre")
+    return CT_RadioactiveOre;
+  if(to_cast == "ECT_UnprocessedGas")
+    return CT_UnprocessedGas;
+  if(to_cast == "ECT_Air")
+    return CT_Air;
+  if(to_cast == "ECT_Helium3")
+    return CT_Helium3;
+  if(to_cast == "ECT_BlockIce")
+    return CT_BlockIce;
+  if(to_cast == "ECT_CrushedIce")
+    return CT_CrushedIce;
+  if(to_cast == "ECT_DirtyIce")
+    return CT_DirtyIce;
+  if(to_cast == "ECT_DeionisedWater")
+    return CT_DeionisedWater;
+  if(to_cast == "ECT_Carbon")
+    return CT_Carbon;
+  if(to_cast == "ECT_Nitrates")
+    return CT_Nitrates;
+  if(to_cast == "ECT_Oxygen")
+    return CT_Oxygen;
+  if(to_cast == "ECT_Phosphates")
+    return CT_Phosphates;
+  if(to_cast == "ECT_Sulphur")
+    return CT_Sulphur;
+  if(to_cast == "ECT_Alkalines")
+    return CT_Alkalines;
+  if(to_cast == "ECT_Sodium")
+    return CT_Sodium;
+  if(to_cast == "ECT_Phosphides")
+    return CT_Phosphides;
+  if(to_cast == "ECT_Sulfides")
+    return CT_Sulfides;
+  if(to_cast == "ECT_Tellurides")
+    return CT_Tellurides;
+  if(to_cast == "ECT_InorganicAcids")
+    return CT_InorganicAcids;
+  if(to_cast == "ECT_Intermetallics")
+    return CT_Intermetallics;
+  if(to_cast == "ECT_BattleScrap")
+    return CT_BattleScrap;
+  if(to_cast == "ECT_CompactedScrapMetal")
+    return CT_CompactedScrapMetal;
+  if(to_cast == "ECT_MisCasts")
+    return CT_MisCasts;
+  if(to_cast == "ECT_ScrapMetal")
+    return CT_ScrapMetal;
+  if(to_cast == "ECT_Gold")
+    return CT_Gold;
+  if(to_cast == "ECT_Platinum")
+    return CT_Platinum;
+  if(to_cast == "ECT_Silver")
+    return CT_Silver;
+  if(to_cast == "ECT_MetalBars")
+    return CT_MetalBars;
+  if(to_cast == "ECT_MetalBillets")
+    return CT_MetalBillets;
+  if(to_cast == "ECT_MetalRods")
+    return CT_MetalRods;
+  if(to_cast == "ECT_Wire")
+    return CT_Wire;
+  if(to_cast == "ECT_Rivets")
+    return CT_Rivets;
+  if(to_cast == "ECT_RadioactiveWaste")
+    return CT_RadioactiveWaste;
+  if(to_cast == "ECT_Uranium")
+    return CT_Uranium;
+  if(to_cast == "ECT_Plutonium")
+    return CT_Plutonium;
+  if(to_cast == "ECT_FissionInitiators")
+    return CT_FissionInitiators;
+  if(to_cast == "ECT_Neutronium")
+    return CT_Neutronium;
+  if(to_cast == "ECT_ExoticMetals")
+    return CT_ExoticMetals;
+  if(to_cast == "ECT_RareMetals")
+    return CT_RareMetals;
+  if(to_cast == "ECT_FeedStock")
+    return CT_FeedStock;
+  if(to_cast == "ECT_PressurisedHydrocarbonGas")
+    return CT_PressurisedHydrocarbonGas;
+  if(to_cast == "ECT_Oil")
+    return CT_Oil;
+  if(to_cast == "ECT_Petroleum")
+    return CT_Petroleum;
+  if(to_cast == "ECT_PlasticBars")
+    return CT_PlasticBars;
+  if(to_cast == "ECT_PlasticBlocks")
+    return CT_PlasticBlocks;
+  if(to_cast == "ECT_PlasticCables")
+    return CT_PlasticCables;
+  if(to_cast == "ECT_PlasticGel")
+    return CT_PlasticGel;
+  if(to_cast == "ECT_PlasticPellets")
+    return CT_PlasticPellets;
+  if(to_cast == "ECT_LiquifiedFuel")
+    return CT_LiquifiedFuel;
+  if(to_cast == "ECT_LiquifiedFusionPremix")
+    return CT_LiquifiedFusionPremix;
+  if(to_cast == "ECT_BoosterAgent")
+    return CT_BoosterAgent;
+  if(to_cast == "ECT_FuelPellets")
+    return CT_FuelPellets;
+  if(to_cast == "ECT_FuelRods")
+    return CT_FuelRods;
+  if(to_cast == "ECT_FloorPlates")
+    return CT_FloorPlates;
+  if(to_cast == "ECT_Girders")
+    return CT_Girders;
+  if(to_cast == "ECT_WallPlates")
+    return CT_WallPlates;
+  if(to_cast == "ECT_BeanstalkWire")
+    return CT_BeanstalkWire;
+  if(to_cast == "ECT_FoamMetal")
+    return CT_FoamMetal;
+  if(to_cast == "ECT_MacroCrystallineMetals")
+    return CT_MacroCrystallineMetals;
+  if(to_cast == "ECT_Monowire")
+    return CT_Monowire;
+  if(to_cast == "ECT_HeavyGirders")
+    return CT_HeavyGirders;
+  if(to_cast == "ECT_CutGemstones")
+    return CT_CutGemstones;
+  if(to_cast == "ECT_IndustrialGemstones")
+    return CT_IndustrialGemstones;
+  if(to_cast == "ECT_UncutGemstones")
+    return CT_UncutGemstones;
+  if(to_cast == "ECT_AntimatterContainers")
+    return CT_AntimatterContainers;
+  if(to_cast == "ECT_Antimatter")
+    return CT_Antimatter;
+  if(to_cast == "ECT_AntimatterPods")
+    return CT_AntimatterPods;
+  if(to_cast == "ECT_APCs")
+    return CT_APCs;
+  if(to_cast == "ECT_TurretFighter")
+    return CT_TurretFighter;
+  if(to_cast == "ECT_RemoteFighter")
+    return CT_RemoteFighter;
+  if(to_cast == "ECT_ArtilleryFVs")
+    return CT_ArtilleryFVs;
+  if(to_cast == "ECT_FireSupportFVs")
+    return CT_FireSupportFVs;
+  if(to_cast == "ECT_GravTanks")
+    return CT_GravTanks;
+  if(to_cast == "ECT_HoverTanks")
+    return CT_HoverTanks;
+  if(to_cast == "ECT_Tanks")
+    return CT_Tanks;
+  if(to_cast == "ECT_TankParts")
+    return CT_TankParts;
+  if(to_cast == "ECT_AntimatterFuses")
+    return CT_AntimatterFuses;
+  if(to_cast == "ECT_TwinPackMissileLauncher")
+    return CT_TwinPackMissileLauncher;
+  if(to_cast == "ECT_LDSiShortMissiles")
+    return CT_LDSiShortMissiles;
+  if(to_cast == "ECT_LDSiShortMissile")
+    return CT_LDSiShortMissile;
+  if(to_cast == "ECT_Flares")
+    return CT_Flares;
+  if(to_cast == "ECT_Flare")
+    return CT_Flare;
+  if(to_cast == "ECT_SeekerMissiles")
+    return CT_SeekerMissiles;
+  if(to_cast == "ECT_SeekerMissile")
+    return CT_SeekerMissile;
+  if(to_cast == "ECT_HarrowerMissiles")
+    return CT_HarrowerMissiles;
+  if(to_cast == "ECT_HarrowerMissile")
+    return CT_HarrowerMissile;
+  if(to_cast == "ECT_GnatRockets")
+    return CT_GnatRockets;
+  if(to_cast == "ECT_GnatRocket")
+    return CT_GnatRocket;
+  if(to_cast == "ECT_HammerRockets")
+    return CT_HammerRockets;
+  if(to_cast == "ECT_HammerRocket")
+    return CT_HammerRocket;
+  if(to_cast == "ECT_LDSiMissiles")
+    return CT_LDSiMissiles;
+  if(to_cast == "ECT_LDSiMissile")
+    return CT_LDSiMissile;
+  if(to_cast == "ECT_MiningCharges")
+    return CT_MiningCharges;
+  if(to_cast == "ECT_MiningCharge")
+    return CT_MiningCharge;
+  if(to_cast == "ECT_TripackMissileLauncher")
+    return CT_TripackMissileLauncher;
+  if(to_cast == "ECT_BlizzardRocketPod")
+    return CT_BlizzardRocketPod;
+  if(to_cast == "ECT_BlizzardRocket")
+    return CT_BlizzardRocket;
+  if(to_cast == "ECT_RemoteProbes")
+    return CT_RemoteProbes;
+  if(to_cast == "ECT_RemoteProbe")
+    return CT_RemoteProbe;
+  if(to_cast == "ECT_RemoteMissiles")
+    return CT_RemoteMissiles;
+  if(to_cast == "ECT_RemoteMissile")
+    return CT_RemoteMissile;
+  if(to_cast == "ECT_DeadshotMissiles")
+    return CT_DeadshotMissiles;
+  if(to_cast == "ECT_DeadshotMissile")
+    return CT_DeadshotMissile;
+  if(to_cast == "ECT_LDSi3000Missiles")
+    return CT_LDSi3000Missiles;
+  if(to_cast == "ECT_LDSi3000Missile")
+    return CT_LDSi3000Missile;
+  if(to_cast == "ECT_QuadpackMissileLauncher")
+    return CT_QuadpackMissileLauncher;
+  if(to_cast == "ECT_DeathblowRemote")
+    return CT_DeathblowRemote;
+  if(to_cast == "ECT_DeathblowRemoteMissile")
+    return CT_DeathblowRemoteMissile;
+  if(to_cast == "ECT_AntimatterRemote")
+    return CT_AntimatterRemote;
+  if(to_cast == "ECT_AntimatterRemoteMissile")
+    return CT_AntimatterRemoteMissile;
+  if(to_cast == "ECT_InternalMissileMagazine")
+    return CT_InternalMissileMagazine;
+  if(to_cast == "ECT_DisruptorMissiles")
+    return CT_DisruptorMissiles;
+  if(to_cast == "ECT_DisruptorMissile")
+    return CT_DisruptorMissile;
+  if(to_cast == "ECT_SmartDecoy")
+    return CT_SmartDecoy;
+  if(to_cast == "ECT_SmartDecoyCountermeasure")
+    return CT_SmartDecoyCountermeasure;
+  if(to_cast == "ECT_Decoys")
+    return CT_Decoys;
+  if(to_cast == "ECT_Decoy")
+    return CT_Decoy;
+  if(to_cast == "ECT_PulsarDisruptors")
+    return CT_PulsarDisruptors;
+  if(to_cast == "ECT_PulsarDisruptor")
+    return CT_PulsarDisruptor;
+  if(to_cast == "ECT_HullMissileHardPoint")
+    return CT_HullMissileHardPoint;
+  if(to_cast == "ECT_AchillesShieldDisruptors")
+    return CT_AchillesShieldDisruptors;
+  if(to_cast == "ECT_AchillesShieldDisruptor")
+    return CT_AchillesShieldDisruptor;
+  if(to_cast == "ECT_ProximityMines")
+    return CT_ProximityMines;
+  if(to_cast == "ECT_ProximityMine")
+    return CT_ProximityMine;
+  if(to_cast == "ECT_AntimatterMines")
+    return CT_AntimatterMines;
+  if(to_cast == "ECT_AntimatterMine")
+    return CT_AntimatterMine;
+  if(to_cast == "ECT_LDSIMines")
+    return CT_LDSIMines;
+  if(to_cast == "ECT_LDSIMine")
+    return CT_LDSIMine;
+  if(to_cast == "ECT_SeekerMines")
+    return CT_SeekerMines;
+  if(to_cast == "ECT_SeekerMine")
+    return CT_SeekerMine;
+  if(to_cast == "ECT_LDSIWarheads")
+    return CT_LDSIWarheads;
+  if(to_cast == "ECT_MissileParts")
+    return CT_MissileParts;
+  if(to_cast == "ECT_MissileThrusters")
+    return CT_MissileThrusters;
+  if(to_cast == "ECT_MissileWarheads")
+    return CT_MissileWarheads;
+  if(to_cast == "ECT_CombatPowersuits")
+    return CT_CombatPowersuits;
+  if(to_cast == "ECT_SidearmClips")
+    return CT_SidearmClips;
+  if(to_cast == "ECT_BattlePacks")
+    return CT_BattlePacks;
+  if(to_cast == "ECT_Explosives")
+    return CT_Explosives;
+  if(to_cast == "ECT_Grenades")
+    return CT_Grenades;
+  if(to_cast == "ECT_HandWeapons")
+    return CT_HandWeapons;
+  if(to_cast == "ECT_ManpackMissiles")
+    return CT_ManpackMissiles;
+  if(to_cast == "ECT_BiologicalWeaponsAgents")
+    return CT_BiologicalWeaponsAgents;
+  if(to_cast == "ECT_ChemicalWeaponsAgents")
+    return CT_ChemicalWeaponsAgents;
+  if(to_cast == "ECT_NeutronWarheads")
+    return CT_NeutronWarheads;
+  if(to_cast == "ECT_DirtyFissionWarheads")
+    return CT_DirtyFissionWarheads;
+  if(to_cast == "ECT_HostileTerraformingAgents")
+    return CT_HostileTerraformingAgents;
+  if(to_cast == "ECT_NanotechWeapons")
+    return CT_NanotechWeapons;
+  if(to_cast == "ECT_AcceleratorRings")
+    return CT_AcceleratorRings;
+  if(to_cast == "ECT_NeutronBeamCannon")
+    return CT_NeutronBeamCannon;
+  if(to_cast == "ECT_WeaponLinkHardware")
+    return CT_WeaponLinkHardware;
+  if(to_cast == "ECT_CommunicationsLaser")
+    return CT_CommunicationsLaser;
+  if(to_cast == "ECT_TrackingComputer")
+    return CT_TrackingComputer;
+  if(to_cast == "ECT_ParticleBeamCannon")
+    return CT_ParticleBeamCannon;
+  if(to_cast == "ECT_MiningLasers")
+    return CT_MiningLasers;
+  if(to_cast == "ECT_AssaultCannon")
+    return CT_AssaultCannon;
+  if(to_cast == "ECT_AssaultCannonAmmo")
+    return CT_AssaultCannonAmmo;
+  if(to_cast == "ECT_AssaultCannonAmmoRound")
+    return CT_AssaultCannonAmmoRound;
+  if(to_cast == "ECT_LightPBC")
+    return CT_LightPBC;
+  if(to_cast == "ECT_CooledPBC")
+    return CT_CooledPBC;
+  if(to_cast == "ECT_RapidFirePBC")
+    return CT_RapidFirePBC;
+  if(to_cast == "ECT_LongRangeCannon")
+    return CT_LongRangeCannon;
+  if(to_cast == "ECT_CuttingBeam")
+    return CT_CuttingBeam;
+  if(to_cast == "ECT_WideanglePBC")
+    return CT_WideanglePBC;
+  if(to_cast == "ECT_EnhancedAimPBC")
+    return CT_EnhancedAimPBC;
+  if(to_cast == "ECT_QuadLightPBC")
+    return CT_QuadLightPBC;
+  if(to_cast == "ECT_HeavyBeamCannon")
+    return CT_HeavyBeamCannon;
+  if(to_cast == "ECT_LongRangeCannonAmmo")
+    return CT_LongRangeCannonAmmo;
+  if(to_cast == "ECT_LongRangeCannonAmmoRound")
+    return CT_LongRangeCannonAmmoRound;
+  if(to_cast == "ECT_TargetedPBC")
+    return CT_TargetedPBC;
+  if(to_cast == "ECT_AssaultCannonRingModel")
+    return CT_AssaultCannonRingModel;
+  if(to_cast == "ECT_PulseAcceleratedPBC")
+    return CT_PulseAcceleratedPBC;
+  if(to_cast == "ECT_AntimatterParticleBeam")
+    return CT_AntimatterParticleBeam;
+  if(to_cast == "ECT_AntimatterStreamer")
+    return CT_AntimatterStreamer;
+  if(to_cast == "ECT_Accumulators")
+    return CT_Accumulators;
+  if(to_cast == "ECT_PointDefenceTurret")
+    return CT_PointDefenceTurret;
+  if(to_cast == "ECT_FireControlSensors")
+    return CT_FireControlSensors;
+  if(to_cast == "ECT_PBCAccelerators")
+    return CT_PBCAccelerators;
+  if(to_cast == "ECT_PlasmaStorageRings")
+    return CT_PlasmaStorageRings;
+  if(to_cast == "ECT_GatlingPBCs")
+    return CT_GatlingPBCs;
+  if(to_cast == "ECT_HeavyPBCs")
+    return CT_HeavyPBCs;
+  if(to_cast == "ECT_LightPBCs")
+    return CT_LightPBCs;
+  if(to_cast == "ECT_PBCs")
+    return CT_PBCs;
+  if(to_cast == "ECT_MeteorShield")
+    return CT_MeteorShield;
+  if(to_cast == "ECT_Level1AutorepairSystem")
+    return CT_Level1AutorepairSystem;
+  if(to_cast == "ECT_DefenceShield")
+    return CT_DefenceShield;
+  if(to_cast == "ECT_Level2AutorepairSystem")
+    return CT_Level2AutorepairSystem;
+  if(to_cast == "ECT_RepairControlProgram")
+    return CT_RepairControlProgram;
+  if(to_cast == "ECT_LightDefenceShield")
+    return CT_LightDefenceShield;
+  if(to_cast == "ECT_InstantShieldControl")
+    return CT_InstantShieldControl;
+  if(to_cast == "ECT_ReactorHardening")
+    return CT_ReactorHardening;
+  if(to_cast == "ECT_ArmouredHullPlates")
+    return CT_ArmouredHullPlates;
+  if(to_cast == "ECT_Level3Autorepairsystem")
+    return CT_Level3Autorepairsystem;
+  if(to_cast == "ECT_LowSignatureHullplates")
+    return CT_LowSignatureHullplates;
+  if(to_cast == "ECT_MilitaryShields")
+    return CT_MilitaryShields;
+  if(to_cast == "ECT_ShieldSynchroniser")
+    return CT_ShieldSynchroniser;
+  if(to_cast == "ECT_Level4Autorepairsystem")
+    return CT_Level4Autorepairsystem;
+  if(to_cast == "ECT_CombatShields")
+    return CT_CombatShields;
+  if(to_cast == "ECT_MilitaryAggressorShields")
+    return CT_MilitaryAggressorShields;
+  if(to_cast == "ECT_AggressorShieldUpgrade")
+    return CT_AggressorShieldUpgrade;
+  if(to_cast == "ECT_MinersShield")
+    return CT_MinersShield;
+  if(to_cast == "ECT_Level5Autorepairsystem")
+    return CT_Level5Autorepairsystem;
+  if(to_cast == "ECT_ParticleScreenShieldUpgrade")
+    return CT_ParticleScreenShieldUpgrade;
+  if(to_cast == "ECT_AssaultShield")
+    return CT_AssaultShield;
+  if(to_cast == "ECT_PowerPlantAutorepair")
+    return CT_PowerPlantAutorepair;
+  if(to_cast == "ECT_ShieldBooster")
+    return CT_ShieldBooster;
+  if(to_cast == "ECT_AdvancedHullMaterialRefit")
+    return CT_AdvancedHullMaterialRefit;
+
+  debug Debug.PrintString
+  ( String.FormatStrStr
+    ( "[flm_ut] ERROR: Defaulting unrecognised Epic cargo type \"%s\" to invalid%s",
+      to_cast,
+      "\n"
+    )
+  );
+  return CT_Invalid;
+}
+
+
+string ShipType2String(int ship_type)
+{
+   switch (ship_type) {
+   case T_None: return"T_None"; break;
+
+
+   case T_Star: return"T_Star"; break;
+   case T_Planet: return"T_Planet"; break;
+   case T_Nebula: return"T_Nebula"; break;
+
+   case T_Waypoint: return"T_Waypoint"; break;
+   case T_LagrangePoint: return"T_LagrangePoint"; break; 
+   case T_Probe: return"T_Probe"; break;
+
+
+   case T_Weapon: return"T_Weapon"; break;   
+   case T_Missile: return"T_Missile"; break;
+   case T_Mine: return"T_Mine"; break; 
+
+   case T_Dolly: return"T_Dolly"; break;
+
+
+   case T_Asteroid: return"T_Asteroid"; break;
+   case T_CargoPod: return"T_CargoPod"; break;
+
+
+   case T_Gunstar: return"T_Gunstar"; break;       
+   case T_Station: return"T_Station"; break;       
+   case T_BioBomber: return"T_BioBomber"; break;         
+
+
+   case T_Drone: return"T_Drone"; break;           
+   case T_Waldo: return"T_Waldo"; break;           
+   case T_CommandSection: return"T_CommandSection"; break;
+   case T_Utility: return"T_Utility"; break;    
+   case T_Passenger: return"T_Passenger"; break;      
+   case T_Fighter: return"T_Fighter"; break;    
+   case T_Tug: return"T_Tug"; break;            
+   case T_Patcom: return"T_Patcom"; break;         
+   case T_Interceptor: return"T_Interceptor"; break;  
+   case T_Corvette: return"T_Corvette"; break;     
+   case T_Freighter: return"T_Freighter"; break;      
+   case T_Destroyer: return"T_Destroyer"; break;      
+   case T_Cruiser: return"T_Cruiser"; break;
+   case T_Carrier: return"T_Carrier"; break;
+
+   case T_Alien: return"T_Alien"; break;
+
+
+   case T_PowerUp: return"T_PowerUp"; break;         
+   default:
+      break;
+   }
+
+   return "T_None";
+}
+
+
+bool IsProductionStation(int station_type) 
+{
+   switch (station_type) {
+   case ept_WaterMine : 
+   case ept_OrganicsMine : 
+   case ept_InorganicsMine : 
+   case ept_BiomassMine : 
+   case ept_CommonMetalsMine : 
+   case ept_RareMetalsMine : 
+   case ept_ExoticMetalsMine : 
+   case ept_RadioactivesMine : 
+   case ept_FusionableGasesMine : 
+   case ept_WaterProcessingPlant : 
+   case ept_OrganicsProcessingPlant : 
+   case ept_InorganicsProcessingPlant : 
+   case ept_BiomassProcessingPlant : 
+   case ept_CommonMetalsProcessingPlant : 
+   case ept_RareMetalsProcessingPlant : 
+   case ept_ExoticMetalsProcessingPlant : 
+   case ept_RadioactivesProcessingPlant : 
+   case ept_FusionableGasesProcessingPlant : 
+   case ept_NeutroniumProcessingPlant : 
+   case ept_Shipyard : 
+   case ept_HeavyManufacturingPlant : 
+   case ept_BiologicalManufacturingPlant : 
+   case ept_WetwareManufacturingPlant : 
+   case ept_HiTechManufacturingPlant : 
+   case ept_ElectronicsManufacturingPlant : 
+   case ept_WeaponsManufacturingPlant : 
+   case ept_PharmaceuticalsManufacturingPlant : 
+   case ept_PlasticsManufacturingPlant : 
+   case ept_FusionReactorsManufacturingPlant : 
+   case ept_EnergyCellsManufacturingPlant : 
+   case ept_StationFabricationManufacturingPlant : 
+   case ept_LuxuriesManufacturingPlant : 
+   case ept_TerraformingStation : 
+   case ept_BioBomber : 
+   case ept_NeutroniumMine : 
+      return true;
+      break;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+
+bool IsMining(int station_type) 
+{
+   switch (station_type) {
+   
+   case ept_WaterMine : 
+   case ept_OrganicsMine : 
+   case ept_InorganicsMine : 
+   case ept_BiomassMine : 
+   case ept_CommonMetalsMine : 
+   case ept_RareMetalsMine : 
+   case ept_ExoticMetalsMine : 
+   case ept_RadioactivesMine : 
+   case ept_FusionableGasesMine : 
+   case ept_NeutroniumMine : 
+      return true;
+      break;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+
+bool IsProcessing(int station_type) 
+{
+   switch (station_type) {
+   case ept_WaterProcessingPlant : 
+   case ept_OrganicsProcessingPlant : 
+   case ept_InorganicsProcessingPlant : 
+   case ept_BiomassProcessingPlant : 
+   case ept_CommonMetalsProcessingPlant : 
+   case ept_RareMetalsProcessingPlant : 
+   case ept_ExoticMetalsProcessingPlant : 
+   case ept_RadioactivesProcessingPlant : 
+   case ept_FusionableGasesProcessingPlant : 
+   case ept_NeutroniumProcessingPlant : 
+      return true;
+      break;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+
+
+
+bool IsManufacturing(int station_type) 
+{
+   switch (station_type) {
+   case ept_Shipyard : 
+   case ept_HeavyManufacturingPlant : 
+   case ept_BiologicalManufacturingPlant : 
+   case ept_WetwareManufacturingPlant : 
+   case ept_HiTechManufacturingPlant : 
+   case ept_ElectronicsManufacturingPlant : 
+   case ept_WeaponsManufacturingPlant : 
+   case ept_PharmaceuticalsManufacturingPlant : 
+   case ept_PlasticsManufacturingPlant : 
+   case ept_FusionReactorsManufacturingPlant : 
+   case ept_EnergyCellsManufacturingPlant : 
+   case ept_StationFabricationManufacturingPlant : 
+   case ept_LuxuriesManufacturingPlant : 
+   case ept_TerraformingStation : 
+   case ept_BioBomber : 
+
+      return true;
+      break;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+
+
+
+int StationType2Category(int type)
+{
+   switch (type) {
+   case ept_Invalid :
+   case ept_Disused :
+      break;
+
+   case ept_WaterMine :
+   case ept_OrganicsMine : 
+   case ept_InorganicsMine : 
+   case ept_BiomassMine :
+   case ept_CommonMetalsMine : 
+   case ept_RareMetalsMine :
+   case ept_ExoticMetalsMine : 
+   case ept_RadioactivesMine : 
+   case ept_FusionableGasesMine : 
+   case ept_NeutroniumMine : 
+      return ESC_Mine;
+      break;
+
+   case ept_WaterProcessingPlant : 
+   case ept_OrganicsProcessingPlant : 
+   case ept_InorganicsProcessingPlant : 
+   case ept_BiomassProcessingPlant : 
+   case ept_CommonMetalsProcessingPlant : 
+   case ept_RareMetalsProcessingPlant : 
+   case ept_ExoticMetalsProcessingPlant : 
+   case ept_RadioactivesProcessingPlant : 
+   case ept_FusionableGasesProcessingPlant : 
+   case ept_NeutroniumProcessingPlant : 
+      return ESC_Process;
+      break;
+
+   case ept_Shipyard : 
+   case ept_HeavyManufacturingPlant : 
+   case ept_BiologicalManufacturingPlant : 
+   case ept_WetwareManufacturingPlant : 
+   case ept_HiTechManufacturingPlant : 
+   case ept_ElectronicsManufacturingPlant : 
+   case ept_WeaponsManufacturingPlant : 
+   case ept_PharmaceuticalsManufacturingPlant : 
+   case ept_PlasticsManufacturingPlant : 
+   case ept_FusionReactorsManufacturingPlant : 
+   case ept_EnergyCellsManufacturingPlant : 
+   case ept_StationFabricationManufacturingPlant : 
+   case ept_LuxuriesManufacturingPlant : 
+   case ept_TerraformingStation : 
+   case ept_BioBomber : 
+      return ESC_Manufacture;
+      break;
+
+   case ept_ResearchStation : 
+   case ept_BlackBudgetResearchStation : 
+      return ESC_Research;
+      break;
+
+   case ept_FinancialCentre : 
+   case ept_RegionalHQ : 
+   case ept_Villa : 
+   case ept_CentralHQ : 
+   case ept_FTLArray : 
+      return ESC_Headquarters;
+      break;
+
+   case ept_Waystation : 
+   case ept_Beanstalk : 
+   case ept_TransferStation :
+   case ept_Warehousing : 
+      return ESC_Transport;
+      break;
+
+   case ept_AgriculturalSettlement : 
+   case ept_Settlement : 
+   case ept_Habitat :
+   case ept_EntertainmentStation : 
+   case ept_Resort : 
+   case ept_Casino : 
+   case ept_MedicalFacility : 
+      return ESC_Habitat;
+      break;
+
+   case ept_Outpost : 
+   case ept_SystemAdministration : 
+   case ept_ClusterAdministration : 
+   case ept_RegionalDepartment : 
+      return ESC_Government;
+      break;
+
+   case ept_SecurityStation : 
+   case ept_MercenaryBase : 
+   case ept_Fortress : 
+   case ept_PoliceBase : 
+   case ept_SystemDefenceDock : 
+      return ESC_Military;
+      break;
+
+   case ept_PirateBase : 
+   case ept_PirateCove : 
+   case ept_PirateOutpost : 
+   case ept_BlackMarket : 
+   case ept_GangsterHideout : 
+   case ept_Hideout : 
+      return ESC_Pirate;
+      break;
+
+   default:
+      break;
+   }
+
+   // Basically, not any type.
+   return ESC_Invalid;
+}
+
+
+
+
+bool IsAllowedMegaCorp(int type)
+{
+   switch (type) {
+   // Any of the production stations.
+   case ept_WaterMine :
+   case ept_OrganicsMine : 
+   case ept_InorganicsMine : 
+   case ept_BiomassMine :
+   case ept_CommonMetalsMine : 
+   case ept_RareMetalsMine :
+   case ept_ExoticMetalsMine : 
+   case ept_RadioactivesMine : 
+   case ept_FusionableGasesMine : 
+   case ept_NeutroniumMine : 
+
+   case ept_WaterProcessingPlant : 
+   case ept_OrganicsProcessingPlant : 
+   case ept_InorganicsProcessingPlant : 
+   case ept_BiomassProcessingPlant : 
+   case ept_CommonMetalsProcessingPlant : 
+   case ept_RareMetalsProcessingPlant : 
+   case ept_ExoticMetalsProcessingPlant : 
+   case ept_RadioactivesProcessingPlant : 
+   case ept_FusionableGasesProcessingPlant : 
+   case ept_NeutroniumProcessingPlant : 
+
+   case ept_Shipyard : 
+   case ept_HeavyManufacturingPlant : 
+   case ept_BiologicalManufacturingPlant : 
+   case ept_WetwareManufacturingPlant : 
+   case ept_HiTechManufacturingPlant : 
+   case ept_ElectronicsManufacturingPlant : 
+   case ept_WeaponsManufacturingPlant : 
+   case ept_PharmaceuticalsManufacturingPlant : 
+   case ept_PlasticsManufacturingPlant : 
+   case ept_FusionReactorsManufacturingPlant : 
+   case ept_EnergyCellsManufacturingPlant : 
+   case ept_StationFabricationManufacturingPlant : 
+   case ept_LuxuriesManufacturingPlant : 
+
+   case ept_Waystation : 
+   case ept_ResearchStation : 
+
+   case ept_CentralHQ : 
+
+   case ept_Resort : 
+   case ept_MedicalFacility : 
+
+   case ept_SecurityStation : 
+
+   case ept_Warehousing : 
+
+   case ept_FTLArray :
+
+   case ept_EntertainmentStation : 
+   case ept_Casino : 
+
+      // 
+   case ept_Beanstalk : 
+   case ept_TransferStation :
+      return true;
+   default:
+      break;
+   }
+
+   // Basically, not any type.
+   return false;
+}
+
+
+
+
+bool IsAllowedIndependent(int type)
+{
+   switch (type) {
+   // Any of the production stations.
+   case ept_WaterMine :
+   case ept_OrganicsMine : 
+   case ept_InorganicsMine : 
+   case ept_BiomassMine :
+   case ept_CommonMetalsMine : 
+   case ept_RareMetalsMine :
+   case ept_ExoticMetalsMine : 
+   case ept_RadioactivesMine : 
+   case ept_FusionableGasesMine : 
+   case ept_NeutroniumMine : 
+
+   case ept_WaterProcessingPlant : 
+   case ept_OrganicsProcessingPlant : 
+   case ept_InorganicsProcessingPlant : 
+   case ept_BiomassProcessingPlant : 
+   case ept_CommonMetalsProcessingPlant : 
+   case ept_RareMetalsProcessingPlant : 
+   case ept_ExoticMetalsProcessingPlant : 
+   case ept_RadioactivesProcessingPlant : 
+   case ept_FusionableGasesProcessingPlant : 
+   case ept_NeutroniumProcessingPlant : 
+
+   case ept_Shipyard : 
+
+   case ept_HeavyManufacturingPlant : 
+   case ept_BiologicalManufacturingPlant : 
+   case ept_WetwareManufacturingPlant : 
+   case ept_HiTechManufacturingPlant : 
+   case ept_ElectronicsManufacturingPlant : 
+   case ept_WeaponsManufacturingPlant : 
+   case ept_PharmaceuticalsManufacturingPlant : 
+   case ept_PlasticsManufacturingPlant : 
+   case ept_FusionReactorsManufacturingPlant : 
+   case ept_EnergyCellsManufacturingPlant : 
+   case ept_StationFabricationManufacturingPlant : 
+   case ept_LuxuriesManufacturingPlant : 
+
+   case ept_Waystation : 
+   case ept_ResearchStation : 
+
+    case ept_Resort : 
+   case ept_MedicalFacility : 
+
+    case ept_Warehousing : 
+
+   case ept_FTLArray :
+
+   case ept_EntertainmentStation : 
+   case ept_Casino : 
+
+      // Only independents are allowed settlements and
+      // habitats.
+   case ept_AgriculturalSettlement :
+   case ept_Settlement :
+   case ept_Habitat :
+
+
+   case ept_Beanstalk : 
+   case ept_TransferStation :
+      return true;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+
+
+
+
+bool IsAllowedGovernment(int type)
+{
+   switch (type) {
+
+   // Police and Navy bases.
+   case ept_PoliceBase : 
+   case ept_SystemDefenceDock : 
+
+      // Government administration stations.
+      // One per system.
+   case ept_Outpost : 
+   case ept_SystemAdministration : 
+   case ept_ClusterAdministration : 
+   case ept_RegionalDepartment : 
+
+      // Governments also get a spy and secret research base.
+   case ept_BlackBudgetResearchStation : 
+      return true;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+
+
+
+
+bool IsAllowedRebel(int type)
+{
+   switch (type) {
+
+      // These represent the rebels hidden bases.
+      // Different from pirates to prevent spawning
+      // pirate operations.
+   case ept_GangsterHideout : 
+   case ept_Hideout : 
+
+      // Rebels must capture of build
+      // one of these to become a 
+      // new government.
+   case ept_SystemAdministration : 
+   case ept_ClusterAdministration : 
+      return true;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+
+
+
+bool IsAllowedPirate(int type)
+{
+   switch (type) {
+   // The hidden pirate bases.
+   case ept_PirateBase : 
+   case ept_PirateCove : 
+   case ept_PirateOutpost : 
+      // Pirates are allowed to run
+      // betting establishments.
+      // Out of a sense of tradition.
+   case ept_Casino : 
+      return true;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+
+bool IsAllowedMercenary(int type)
+{
+   switch (type) {
+
+   case ept_MercenaryBase:
+   case ept_Fortress: 
+
+      return true;
+   default:
+      break;
+   }
+
+   return false;
+}

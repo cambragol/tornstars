@@ -1,0 +1,473 @@
+//*******************************************************************************************/
+//
+// tMusicGui.pog
+//
+// A screen for testing the music changing routines and testing music choices.
+// 
+// 
+// 
+//
+// July 2003, Jon Freise
+//******************************************************************************************/
+package tMusicGui;
+
+uses	Sim,
+		iShip,
+		iSim,
+		Debug,
+		Global,
+		GUI,
+		iDirector,
+		iGame,
+		iGUI,
+		iHUD,
+		iHabitat,
+		iMapEntity,
+		INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+		iUtilities,
+		iCargo,
+		iInventory,
+		iComms,
+      Stream,
+		Math,
+		UniGUI,
+      iMusic,
+      tMusic,
+      tEpicGuiEnum,
+		tEpicGui;
+
+
+
+provides DisplayWindow,
+         RunCheck,
+         StartScreen,
+         ExitScreen,
+         SelectSuite,
+         SelectMood,
+         PressPause,
+         PressResume,
+         PressDiscovery,
+         PressCombat,
+         PressCymbal,
+         PressTymp,
+         PressRestart,
+         PressTestChannel;
+
+
+prototype SetStandardGuiColors(hwindow window);
+
+
+
+RunCheck()
+{
+   Global.SetBool("g_zz_ug_passme",true);
+}
+
+
+SetStandardGuiColors(hwindow window)
+{
+
+
+   GUI.SetWindowStateColours( window,
+                              Global.Float( "GUI_neutral_red"),
+                              Global.Float( "GUI_neutral_green"),
+                              Global.Float( "GUI_neutral_blue"),
+                              Global.Float( "GUI_focused_red"),
+                              Global.Float( "GUI_focused_green"),
+                              Global.Float( "GUI_focused_blue"),
+                              Global.Float( "GUI_selected_red"),
+                              Global.Float( "GUI_selected_green"),
+                              Global.Float( "GUI_selected_blue"));
+                              
+
+
+   /*
+					Global.Float( "GUI_neutral_red", access, 0.6 );
+					Global.Float( "GUI_neutral_green", access, 0.451 );
+					Global.Float( "GUI_neutral_blue", access, 0.0 );
+					Global.Float( "GUI_focused_red", access, 1.0 );
+			Global.Float( "GUI_focused_green", access, 0.749 );
+					Global.Float( "GUI_focused_blue", access, 0.0 );
+				Global.Float( "GUI_selected_red", access, 1.0 );
+				Global.Float( "GUI_selected_green", access, 0.859 );
+					Global.Float( "GUI_selected_blue", access, 0.278 );
+				Global.Float( "GUI_faded_red", access, 0.5 );
+				Global.Float( "GUI_faded_green", access, 0.3745 );
+					Global.Float( "GUI_faded_blue", access, 0.0 );
+               */
+}
+
+CreateSuiteList(hwindow parent, int x, int y, int width, int height)
+{
+   hwindow list_box;
+   hwindow button;
+   int count, i;
+   list suite_list;
+   hsim suite;
+   hinifile suite_file;
+
+   string suite_name, suite_key;
+
+   int cwidth = width - 25;
+
+
+   // Create the parent listbox
+   list_box = GUI.CreateListBox( x, y,
+                                 200, height,
+                                 parent,
+                                 true,
+                                 false);
+
+
+   suite_list = tMusic.SuiteList();
+
+   count = List.ItemCount(suite_list);
+   for (i=0;i<count;++i) {
+      suite = Sim.Cast(List.GetNth(suite_list,i));
+      suite_key = Sim.Name(suite);
+      button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-4, suite_key, "tMusicGui.SelectSuite" );
+      Object.AddStringProperty(button, "Suite",suite_key);
+
+      GUI.AddListBoxEntry(list_box, button);
+      /*
+      GUI.SetInputOverrideFunctions( 
+                                       faction,
+			"", 
+			"",
+			"", 
+			"", 
+			"", 
+			"",
+			"tMusicGui.SelectSuite",
+			"",
+			"" );
+         */
+   }
+
+
+   // Add a scroll bar to the listbox.
+   //GUI.CreateVerticalScrollbarDecorator( list_box );
+
+   GUI.CreateVerticalScrollbar( x+width,
+                                y,
+                                Global.Int("GUI_scrollbar_width"),
+                                height,
+                                parent,
+                                list_box,
+                                Global.Float( "GUI_scrollbar_buttonratio"), 
+                                "");
+}
+
+CreateMoodList(hwindow parent, int x, int y, int width, int height)
+{
+   hwindow list_box;
+   hwindow button;
+   int count, i;
+   list fac_list;
+
+   hfaction fac;
+   hfaction player = iFaction.Find("Player");
+
+   string suite_name;
+
+   int cwidth = width - 25;
+
+
+   // Create the parent listbox
+   list_box = GUI.CreateListBox( x, y,
+                                 width, height,
+                                 parent,
+                                 true,
+                                 false);
+
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Tension Mood", "tMusicGui.SelectMood" );
+   Object.AddStringProperty(button, "Mood","Tension");
+   GUI.AddListBoxEntry(list_box, button);
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Discovery Mood", "tMusicGui.SelectMood" );
+   Object.AddStringProperty(button, "Mood","Discovery");
+   GUI.AddListBoxEntry(list_box, button);
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Ambient Mood", "tMusicGui.SelectMood" );
+   Object.AddStringProperty(button, "Mood","Ambient");
+   GUI.AddListBoxEntry(list_box, button);
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Action Mood", "tMusicGui.SelectMood" );
+   Object.AddStringProperty(button, "Mood","Action");
+   GUI.AddListBoxEntry(list_box, button);
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Theme Mood", "tMusicGui.SelectMood" );
+   Object.AddStringProperty(button, "Mood","Theme");
+   GUI.AddListBoxEntry(list_box, button);
+
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Pause", 
+                                                   "tMusicGui.PressPause" );
+   GUI.AddListBoxEntry(list_box, button);
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Resume", 
+                                                   "tMusicGui.PressResume" );
+   GUI.AddListBoxEntry(list_box, button);
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Discovery Event", 
+                                                   "tMusicGui.PressDiscovery" );
+   GUI.AddListBoxEntry(list_box, button);
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Combat Event", 
+                                                   "tMusicGui.PressCombat" );
+   GUI.AddListBoxEntry(list_box, button);
+
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Typanni", 
+                                                   "tMusicGui.PressTymp" );
+   GUI.AddListBoxEntry(list_box, button);
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Cymbal", 
+                                                   "tMusicGui.PressCymbal" );
+   GUI.AddListBoxEntry(list_box, button);
+
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Play Test", 
+                                                   "tMusicGui.PressRestart" );
+   GUI.AddListBoxEntry(list_box, button);
+
+
+   ////
+   //// Here we add a bunch of channel test buttons
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Ch 0", 
+                                                   "tMusicGui.PressTestChannel" );
+   Object.AddIntProperty(button,"gt_mg_channel",0);
+   GUI.AddListBoxEntry(list_box, button);
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Ch 1", 
+                                                   "tMusicGui.PressTestChannel" );
+   Object.AddIntProperty(button,"gt_mg_channel",1);
+   GUI.AddListBoxEntry(list_box, button);
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Ch 2", 
+                                                   "tMusicGui.PressTestChannel" );
+   Object.AddIntProperty(button,"gt_mg_channel",2);
+   GUI.AddListBoxEntry(list_box, button);
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Ch 3", 
+                                                   "tMusicGui.PressTestChannel" );
+   Object.AddIntProperty(button,"gt_mg_channel",3);
+   GUI.AddListBoxEntry(list_box, button);
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Ch 4", 
+                                                   "tMusicGui.PressTestChannel" );
+   Object.AddIntProperty(button,"gt_mg_channel",4);
+   GUI.AddListBoxEntry(list_box, button);
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Ch 5", 
+                                                   "tMusicGui.PressTestChannel" );
+   Object.AddIntProperty(button,"gt_mg_channel",5);
+   GUI.AddListBoxEntry(list_box, button);
+
+   button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, width-10,"Ch 6", 
+                                                   "tMusicGui.PressTestChannel" );
+   Object.AddIntProperty(button,"gt_mg_channel",6);
+   GUI.AddListBoxEntry(list_box, button);
+
+
+   // Add a scroll bar to the listbox.
+   //GUI.CreateVerticalScrollbarDecorator( list_box );
+
+   GUI.CreateVerticalScrollbar( x+width,
+                                y,
+                                Global.Int("GUI_scrollbar_width"),
+                                height,
+                                parent,
+                                list_box,
+                                Global.Float( "GUI_scrollbar_buttonratio"), 
+                                "");
+}
+
+
+SelectSuite()
+{
+   // Get the currently focused window - it must be the correct system button.
+   hwindow selected_button =	GUI.FocusedWindow();
+   string suite = Object.StringProperty(selected_button,"Suite");
+
+   tMusic.SetSuite(suite);
+}
+
+SelectMood()
+{
+	// Get the currently focused window - it must be the correct system button.
+	hwindow selected_button =	GUI.FocusedWindow();
+   string mood = Object.StringProperty(selected_button,"Mood");
+
+   tMusic.SetMood(mood);
+}
+
+PressPause()
+{
+   tMusic.Pause();
+}
+
+PressResume()
+{
+   tMusic.Resume();
+}
+
+PressDiscovery()
+{
+   tMusic.SetMood("Discovery");
+   tMusic.Discovery();
+}
+
+PressCombat()
+{
+   tMusic.SetMood("Action");
+   tMusic.Combat();
+}
+
+PressCymbal()
+{
+   tMusic.PlayEvent(ME_ShortCymbal);
+}
+
+PressTymp()
+{
+   tMusic.PlayEvent(ME_SoftTimpani);
+}
+
+// A test function to see if iMusicAutocuing restarts.
+PressRestart()
+{
+    tMusic.Play("sound:/audio/music/a4_tension",
+                  false,    // fade in
+                  false ); // do not loop
+
+   
+   //iComms.Shout( none, "name_clay", "a2_m25_dialogue_clay_you_messed_up_bigtime");
+
+}
+
+
+DisplayWindow()
+{
+   hwindow shady_bar;
+   hwindow title;
+   hwindow subtitle;
+   hwindow exit;
+   hwindow button;
+   hwindow music_info;
+
+   int width, height;
+
+   debug Debug.PrintString("MusicGui Display\n");
+
+   // Set right hand shady bar width.
+   shady_bar = iGUI.CreateWideShadyBar();
+   //Global.CreateHandle("gt_epic_fac_gui_shady",GA_Write,shady_bar);
+
+
+   GUI.SetWindowClientArea( shady_bar, 
+                            0,
+                            0,
+                            500,
+                            GUI.WindowCanvasHeight( shady_bar));
+   
+
+
+   height = GUI.WindowCanvasHeight( shady_bar);
+   height = height - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+
+
+   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   width = width/2;
+   width = width - Global.Int("EpicGui_content_indent");
+   width = width - Global.Int("EpicGui_content_indent");
+      
+
+   tEpicGui.CreateTitle(shady_bar, "MUSIC TEST");
+   tEpicGui.CreateSubtitle(shady_bar, "Change Suite, Mood, Specials");
+
+   // Create the exit button
+   tEpicGui.CreateExitButton(shady_bar, "EXIT", "tMusicGui.ExitScreen");
+
+   
+   CreateSuiteList(shady_bar, 
+                     Global.Int("EpicGui_content_indent"),
+                     Global.Int("EpicGui_content_drop") ,
+                     width-25,
+                     height - 50);
+
+   // Display all the current sound objects nearby.
+   music_info = GUI.CreateTextWindow( Global.Int("EpicGui_content_indent"),
+                                      height - 50,
+                                      width - 25,
+                                      50,
+                                      shady_bar);   
+
+   GUI.SetWindowFont( music_info, Global.String( "GUI_detail_font" ) );
+
+
+
+   CreateMoodList(shady_bar, 
+                     Global.Int("EpicGui_content_indent") + width,
+                     Global.Int("EpicGui_content_drop") ,
+                     width-25,
+                     height);
+
+
+
+
+}
+
+
+
+
+StartScreen()
+{
+   GUI.PopScreensTo("icSpaceFlightScreen");
+   GUI.OverlayScreen("icPDAOverlayManager");
+   iGUI.OverlayCustomScreen( "tMusicGui.DisplayWindow" );
+}
+
+ExitScreen()
+{
+
+	UniGUI.UniGUIRemoveScreen();
+}
+
+
+PressTestChannel()
+{
+   hwindow button = GUI.FocusedWindow();
+   int channel = Object.IntProperty(button,"gt_mg_channel");
+
+   if (Stream.IsPlaying(channel)) {
+      Stream.Stop(channel, false);
+   }else {
+      Stream.Play(channel, "sound:/audio/music/a4_tension", false, false);
+   }
+}
+
+
+// Watch which streams are playing, and 
+task stream_watch()
+{
+   
+}
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

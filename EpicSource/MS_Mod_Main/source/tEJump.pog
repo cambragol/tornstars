@@ -1,0 +1,1692 @@
+//*******************************************************************************************/
+//
+// tEJump.pog
+//
+// Implements a replacement capsule jump system that allows unstable jump routes, and
+// difficult jump routes.
+//
+//
+//
+// October 2005, Jon Freise
+// April 2006, JF major rewrite
+//******************************************************************************************/
+
+package tEJump;
+
+uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, 
+iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+iConversation, iFormation, Group, Text, iEmail, State, 
+iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker, 
+iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
+iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
+tEpicGuiEnum,
+tEpicGui,
+tEpicFleet,
+tTime;
+
+
+
+provides StartGame,
+         Init,
+         SelectDialog,
+         KnownList,
+         DebugJump,
+         IsCapsuleSpace,
+         IsCapsuleJumping;
+   
+
+
+prototype task jump_watch();
+
+
+prototype set_known(string start_lpoint, string end_lpoint);
+
+prototype bool is_known(string start_lpoint, string end_lpoint);
+
+prototype jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty);
+
+prototype set find_following_ships(hship ship);
+
+prototype jump_ship(hship ship, hisim lpoint, int difficulty);
+
+prototype bool jump_simulation(hship player, hisim target_lpoint, int difficulty);
+
+prototype bool player_watch(hship player, hisim exit_mark, float route_time);
+
+
+prototype int sensor_rating(hship ship);
+
+prototype int jump_rating(hship ship);
+
+prototype init_system(string system_name);
+
+prototype init_lpoints();
+
+prototype string difficulty2name(int difficulty);
+
+prototype string difficulty2key(int difficulty);
+
+prototype int float2int(float value);
+
+
+StartGame() 
+{
+    Global.CreateBool("tEJumpRunOnce",GA_Write, false);
+}
+
+// Call during final setup.
+Init() 
+{
+    float min_damage, max_damage;
+    int commercial, military;
+    hinifile properties = INIFile.Create("ini:/jump_controls");
+
+    if (none == properties) {
+       debug Debug.PrintString("tEJump.Init Error jump_controls file not found\n");
+    }
+
+    // Read in the damage properties.
+    min_damage = INIFile.Float(properties, "Damage","min_percent_per_level", 0.1);
+    max_damage = INIFile.Float(properties, "Damage","max_percent_per_level", 0.3);
+
+    Global.CreateFloat("tEJumpMinDamage",GA_Write|GA_NoSave, min_damage);
+    Global.CreateFloat("tEJumpMaxDamage",GA_Write|GA_NoSave, max_damage);
+
+
+    // Read in the Drive properties
+    commercial = INIFile.Int(properties, "Drives","commercial_level", 1);
+    military = INIFile.Int(properties, "Drives","military_level", 3);
+
+    Global.CreateInt("tEJumpCommerical",GA_Write|GA_NoSave, commercial);
+    Global.CreateInt("tEJumpMilitary",GA_Write|GA_NoSave, military);
+
+    INIFile.Destroy(properties);
+
+    init_lpoints();
+
+
+    Global.CreateBool("gt_ejump_player_jumping",GA_Write|GA_NoSave, false);
+
+    Input.BindKey( "tEJump.SelectDialog","Multiplayer.Score");
+}
+
+
+// Checks if the requested system is really the capsule space simulation.
+
+bool IsCapsuleSpace(string system)
+{
+   if ("map:/geog/middle/capsule_space" == system) {
+      return true;
+   }
+
+   return false;
+}
+
+
+// Returns true when the player ship is capsule jumping 
+// between systems.
+bool IsCapsuleJumping()
+{
+   return Global.Bool("gt_ejump_player_jumping");
+}
+
+/*
+   Jump routes come in 5 flavors
+   
+   Stable     1
+   Weak       2
+   Unstable   3
+   Dangerous  4
+   Deadly     5
+   
+   Commercial grade capsule drives can only cross Stable lpoints without damage.
+   Military grade capsule drives can cross Unstable lpoints without damage.
+   
+   Dangerous and Deadly cannot be crossed without some damage.
+   Deadly jump routes will often destroy commercial ships.
+   
+*/
+
+
+// This routine is called when the player enters space. It will
+// hide all the lpoints the player has not already found or
+// that have no level 1 routes leaving them.
+init_lpoints() {
+    hinifile geog = INIFile.Create("ini:/geog/clusters");
+    hsim station;
+    int count;
+    string system_name, system_file_name;
+    list empty_list;
+
+    debug Debug.PrintString("tEJump.init_lpoints\n");
+
+
+    count = 0;
+    while (INIFile.NumberedExists(geog,"badlands","system",count)) {
+        system_name = INIFile.NumberedString(geog,"badlands","system",count,"invalid");
+
+        init_system(system_name);
+
+        ++count;
+    }
+
+    INIFile.Destroy(geog);
+}
+
+
+
+init_system(string system_name) {
+    hinifile system_file;
+    string system_file_name = String.Join("ini", String.TrimLeft(system_name,3));
+    string global_name;
+    string start_lpoint, end_lpoint, end_system;
+
+    int i, total, count, difficulty;
+    hlagrangepoint lpoint, target_lpoint;
+
+    list lpoints;
+    list route_list;
+    hsim route;
+
+    // Mark all the lpoints hidden to start.
+
+//   global_name = String.Join("gt_found", system_name);
+
+    lpoints = List.FromSet(iMapEntity.SystemLagrangePointsInSystem(system_name));
+    total = List.ItemCount(lpoints);
+    for (i=0;i<total;++i) {
+        lpoint = iLagrangePoint.Cast(List.GetNth(lpoints, i));
+
+        // We need to force every route list to be empty, and make sure every lpoint has a list.
+        Object.AddListProperty(lpoint,"route_list", route_list);
+        Object.SetListProperty(lpoint,"route_list", route_list);
+
+        Object.AddIntProperty(lpoint,"difficulty", 5);
+
+        //iMapEntity.SetMapVisibility(lpoint, true);
+
+        // Set every lpoint invisible. 
+        iMapEntity.SetMapVisibility(lpoint, false);
+    }
+
+
+    system_file = INIFile.Create(system_file_name);
+
+    // Run through all route entries for this system. 
+    // If the lpoint has a level 1 route, mark it visible.
+    count = 0;
+    while (INIFile.NumberedExists(system_file,"starting_stations","start_lpoint",count)) {
+        start_lpoint = INIFile.NumberedString(system_file,"starting_stations","start_lpoint",count,"Invalid");
+        end_lpoint = INIFile.NumberedString(system_file,"starting_stations","end_lpoint",count,"Invalid");
+        end_system = INIFile.NumberedString(system_file,"starting_stations","end_system",count,"Invalid");
+        difficulty = INIFile.NumberedInt(system_file,"starting_stations","difficulty",count,0);
+
+        lpoint = iLagrangePoint.Cast(iSim.FindByNameInSystem(start_lpoint, system_name));
+
+        if (none != lpoint) {
+            if (difficulty < Object.IntProperty(lpoint,"difficulty")) {
+                Object.SetIntProperty(lpoint, "difficulty", difficulty);
+            }
+
+            if (1 == difficulty) {
+                iMapEntity.SetMapVisibility(lpoint, true);
+
+                Object.AddBoolProperty(lpoint,"standard_route", true);
+            }
+
+            if (is_known(start_lpoint, end_lpoint)) {
+                iMapEntity.SetMapVisibility(lpoint, true);
+            }
+
+            // Put the route into the lpoints route list.
+            route = Sim.Create("ini:/sims/nav/waypoint", String.Join(start_lpoint,end_lpoint));
+
+            // attach the rest of the system name.
+            end_system = String.Join("map:/geog/middle/", end_system);
+
+            Object.AddStringProperty(route,"gtRoute", start_lpoint);
+            Object.AddStringProperty(route,"gtRouteLpoint", end_lpoint);
+            Object.AddIntProperty(route,"gtRouteDanger", difficulty);
+            Object.AddStringProperty(route,"gtRouteSystem", end_system);
+            Object.AddStringProperty(route,"gtRouteName", "");
+            Object.AddBoolProperty(route,"gtRouteKnown", false);
+
+            route_list = Object.ListProperty(lpoint,"route_list");
+            List.AddTail(route_list, route);
+            Object.SetListProperty(lpoint,"route_list", route_list);
+
+
+            target_lpoint = iLagrangePoint.Cast(iSim.FindByNameInSystem(end_lpoint, end_system));
+
+            if (none == target_lpoint) {
+                // Must have been a spelling error. Spill out the details.
+                debug {
+                    Debug.PrintString("ERROR: tEJump.init_system end lpoint missing\n");
+                    Debug.PrintString(end_lpoint);
+                    Debug.PrintString(" lpoint name\n");
+                    Debug.PrintString(end_system);
+                    Debug.PrintString(" end system\n");
+                    Debug.PrintString(system_file_name);
+                    Debug.PrintString(" system file name\n");
+                }
+            }
+
+        } else {
+            // Must have been a spelling error. Spill out the details.
+            debug {
+                Debug.PrintString("ERROR: tEJump.init_system lpoint missing\n");
+                Debug.PrintString(start_lpoint);
+                Debug.PrintString(" lpoint name\n");
+                Debug.PrintString(system_file_name);
+                Debug.PrintString(" system file name\n");
+            }
+        }
+
+        ++count;
+    }
+
+    INIFile.Destroy(system_file);
+
+
+    // Sweep back through the lpoint. Set a traffic exception on any lpoint
+    // that does not have a level 1 route.
+    /*
+    lpoints = List.FromSet(iMapEntity.SystemLagrangePointsInSystem(system_name));
+    total = List.ItemCount(lpoints);
+    for (i=0;i<total;++i) {
+        lpoint = iLagrangePoint.Cast(List.GetNth(lpoints, i));
+
+        if (Object.IntProperty(lpoint,"difficulty") != 1) {
+            iRangeCheck.AddTrafficException ( lpoint );
+        }
+    }
+    */
+}
+
+
+// This task is spawned when the player has activated a jump point with jump sensors.
+// If the player gets close to the point, it will jump the player to the points destination
+// system and location.
+
+task jump_watch() {
+    hlagrangepoint jump_point;
+    hisim target_lpoint;
+    int difficulty;
+    int count = 10;
+    string system, location_name;
+    hsim  end_location;
+    hship player;
+    float velocity;
+
+    debug Debug.PrintString("tEJump.jump_watch\n");
+
+    player = iShip.FindPlayerShip();
+    jump_point = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), player);
+
+    while (1) {
+        player = iShip.FindPlayerShip();
+
+        // if the player has moved out of range, get rid of this task.
+        if (Sim.DistanceBetween(player, jump_point) > Global.Float("gt_distance_culling")) {
+            // Remove this handle so another task can be started later.
+            Object.RemoveProperty(jump_point,"tEJumpDest");
+            Object.RemoveProperty(jump_point,"tEJumpDiff");
+            Object.RemoveProperty(jump_point,"tEJumpName");
+            return;
+        }
+
+        // If the player is within jump distance of the point, 
+        // and moving at the correct speed, jump.
+        if (Sim.DistanceBetween(player, jump_point) < 3km) {
+            velocity = Sim.Speed(player);
+            if ((velocity > 100) && (velocity < 1200) ) {
+                debug Debug.PrintString("tEJump.Jumping Player\n");
+
+                // We pull this property only at the moment of jump. 
+                // This keeps the 
+                target_lpoint = iLagrangePoint.Cast(Object.HandleProperty(jump_point,"tEJumpDest"));
+                difficulty = Object.IntProperty(jump_point,"tEJumpDiff");
+
+                set_known(Sim.Name(jump_point), Sim.Name(Sim.Cast(target_lpoint)));
+
+                jump_player_fleet(jump_point, target_lpoint, difficulty);
+
+                Object.RemoveProperty(jump_point,"tEJumpDest");
+                Object.RemoveProperty(jump_point,"tEJumpDiff");
+                Object.RemoveProperty(jump_point,"tEJumpName");
+
+                return;
+            }
+        }
+
+        // Keep the player informed that this lpoint is now active.
+        ++count;
+        if (count > 10) {
+            count = 0;
+
+            location_name = Object.StringProperty(jump_point,"tEJumpName");
+
+            iHUD.Print(location_name);
+
+            // Try to flash the capsule drive icon.
+            iHUD.FlashElement("icHUDLagrangeIcon");
+        }
+
+        Task.Sleep(Task.Current(), 1.0);
+    }
+}
+
+
+
+/*
+
+The INI file needs these items.
+The jump point info is auto generated, so it does not 
+need to be so sensitive to hand edits.
+
+[LpointName]
+difficulty[0]= 
+period[0]=
+offset[0]=
+end_system[0]=
+end_lpoint[0]=
+
+
+*/
+
+
+
+// This function tracks if a player knows about a specific route between
+// two systems.
+set_known(string start_lpoint, string end_lpoint) {
+    string global_name;
+
+    global_name = String.Join("tejump", start_lpoint);
+    global_name = String.Join(global_name, end_lpoint);
+
+    Global.CreateBool(global_name, GA_Write, true);
+}
+
+
+bool is_known(string start_lpoint, string end_lpoint) {
+    string global_name;
+
+    global_name = String.Join("tejump", start_lpoint);
+    global_name = String.Join(global_name, end_lpoint);
+
+    return Global.Exists(global_name);
+}
+
+
+
+// Returns only those routes the player has taken
+// or are standard jump routes.
+list filter_known(list route_list) {
+    int total,i;
+    hsim route;
+    list final_list;
+
+    total = List.ItemCount(route_list);
+    for (i=0;i<total;++i) {
+        route = Sim.Cast(List.GetNth(route_list,i));
+
+        if (Object.BoolProperty(route,"gtRouteKnown")) {
+            List.AddTail(final_list, route);
+        }
+    }
+
+    return final_list;
+}
+
+// Returns only those routes that are equal or lower
+// than the players current sensor level.
+list filter_sensors(list route_list, int sensor_level) {
+    int total,i;
+    hsim route;
+    list final_list;
+
+    total = List.ItemCount(route_list);
+    for (i=0;i<total;++i) {
+        route = Sim.Cast(List.GetNth(route_list,i));
+
+        if (sensor_level >= Object.IntProperty(route,"gtRouteDanger")) {
+            List.AddTail(final_list, route);
+        }
+    }
+
+    return final_list;
+}
+
+
+
+// This returns the list of routes attached to an
+// lpoint with names updated to match the players
+// current travels.
+list gen_route_list(hlagrangepoint lpoint) {
+    int difficulty, i, total;
+
+    string end_system, lpoint_name, end_lpoint, name;
+    list route_list;
+    bool known;
+    hsim route;
+
+    route_list = Object.ListProperty(lpoint,"route_list");
+
+    total = List.ItemCount(route_list);
+    for (i=0;i<total;++i) {
+        route = Sim.Cast(List.GetNth(route_list,i));
+
+        difficulty = Object.IntProperty(route,"gtRouteDanger");
+        lpoint_name = Object.StringProperty(route,"gtRoute");
+        end_lpoint = Object.StringProperty(route,"gtRouteLpoint");
+        end_system = Object.StringProperty(route,"gtRouteSystem");
+
+
+        if (is_known(lpoint_name, end_lpoint)||(difficulty == 1)) {
+            known = true;
+        } else {
+            known = false;
+        }
+
+        // Names are based on if the player has taken the
+        // route in the past.
+        if (known) {
+            name = Text.Field(end_system,FT_Text);
+            name = String.Join(name," : ");
+            name = String.Join(name, Text.Field(end_lpoint,FT_Text));
+            name = String.Join(name," : ");
+            name = String.Join(name, Text.Field(difficulty2name(difficulty),FT_Text));
+        } else {
+            name = "Unknown : ";
+            name = String.Join(name, Text.Field(difficulty2name(difficulty),FT_Text));
+        }
+
+        Object.SetStringProperty(route,"gtRouteName", name);
+        Object.SetBoolProperty(route,"gtRouteKnown", known);
+    }
+
+    return route_list;
+
+}
+
+
+// Return the list of jump routes that the player has flown
+// or are stable that leave from this lpoint.
+list KnownList(hlagrangepoint lpoint) {
+    return filter_known(gen_route_list(lpoint));
+}
+
+
+
+task select_dialog() {
+    int i, total, selection, response, difficulty;
+    list route_list;
+    hsim route;
+    string system_name, target_name, route_name;
+    hlagrangepoint lpoint; 
+    hisim target_lpoint;
+    hship player = iShip.FindPlayerShip();
+    bool known, halt;
+
+    // Stop other keypresses from starting the dialog
+    Global.CreateBool("gt_ejump_running",GA_Write|GA_NoSave, true);
+
+    // Create a list of possible routes from the nearest lpoint.
+    lpoint = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), player);
+
+    if (Sim.DistanceBetween(lpoint, player) > Global.Float("gt_distance_wakeup")) {
+       // ejump_no_lpoint, No Lpoint near Sir"
+        iComms.Shout(none, "name_lori", "ejump_no_lpoint");
+        Global.SetBool("gt_ejump_running", false);
+        return;
+    }
+
+
+    // Only allow those jump routes that we can see.
+    route_list = filter_sensors(gen_route_list(lpoint), sensor_rating(player));
+
+    if (List.IsEmpty(route_list)) {
+       // ejump_no_routes, "Our sensors detect no viable jump routes, Sir"
+        iComms.Shout(none, "name_lori", "ejump_no_routes");
+        Global.SetBool("gt_ejump_running", false);
+        return;
+    }
+
+
+    iConversation.Begin();
+
+    // ejump_cancel, "Do not jump"
+    // ejump_cancel_say, "Nav, cancel that order"
+    iConversation.AddResponse(
+       "ejump_cancel",
+       "ejump_cancel_say");
+
+
+    total = List.ItemCount(route_list);
+    for (i=0;i<total;++i) {
+        route = Sim.Cast(List.GetNth(route_list, i));
+
+        iConversation.AddResponse(
+           Object.StringProperty(route,"gtRouteName"),
+           Object.StringProperty(route,"gtRouteName"));
+    }
+
+    // ejump_ask, "Sir, which jump route?"
+    response = iConversation.Ask(none,"name_lori","ejump_ask");
+    halt = false;
+
+
+    if (1 == response) {
+       // ejump_cancel_response, "Order cancelled Sir"
+        iConversation.Say(none,"name_lori","ejump_cancel_request");
+        halt = true;
+    } else {
+        selection = response - 2;
+
+        route = Sim.Cast(List.GetNth(route_list, selection));
+
+        system_name= Object.StringProperty(route,"gtRouteSystem");
+        target_name = Object.StringProperty(route,"gtRouteLpoint");
+        route_name = Object.StringProperty(route,"gtRouteName");
+        difficulty = Object.IntProperty(route,"gtRouteDanger");
+        known = Object.BoolProperty(route,"gtRouteKnown");
+
+
+        if (difficulty > 3) {
+           // ejump_risk,"Risk Death"
+           // ejump_risk_say,"Yes, we are very desperate"
+            iConversation.AddResponse(
+               "ejump_risk",
+               "ejump_risk_say");
+
+
+            // ejump_risk_cancel_say, "Cancel that, I do not want to die today"
+            iConversation.AddResponse(
+               "ejump_cancel",
+               "ejump_risk_cancel_say");
+
+            // ejump_risk_ask, "Please no Sir! The lpoint is unstable and extremly lethal!"
+            response = iConversation.Ask(none,"name_lori","ejump_risk_ask");
+
+            if (1== response) {
+                halt = false;
+            } else if (2 == response) {
+                halt = true;
+            }
+
+        } else if (!known) {
+
+           // ejump_unknown,"Yes take uncharted"
+           // ejump_unknown_say, "Yes, we are exploring a new jump route");
+           iConversation.AddResponse(
+              "ejump_unknown",
+              "ejump_unknown_say");
+
+
+           // ejump_unknown_cancel_say, "Cancel that, it is too dangerous"
+            iConversation.AddResponse(
+               "ejump_cancel",
+               "ejump_uknown_cancel_say");
+
+
+
+            // ejump_unknown_ask, "Are you certain you want an uncharted route?"
+            response = iConversation.Ask(none,"name_lori","ejump_unknown_ask");
+
+            if (1== response) {
+                halt = false;
+            } else if (2 == response) {
+                halt = true;
+            }
+
+        } else if (difficulty > 1) {
+
+           // ejump_unknown,"Yes take uncharted"
+           // ejump_unknown_say, "Yes, we are exploring a new jump route");
+           iConversation.AddResponse(
+              "ejump_unknown",
+              "ejump_unknown_say");
+
+
+           // ejump_unknown_cancel_say, "Cancel that, it is too dangerous"
+           iConversation.AddResponse(
+              "ejump_cancel",
+              "ejump_uknown_cancel_say");
+
+
+           // ejump_unstable_ask, "The lpoint is unstable and could damage us?"
+           response = iConversation.Ask(none,"name_lori","ejump_unstable_ask");
+
+            if (1== response) {
+                halt = false;
+            } else if (2 == response) {
+                halt = true;
+            }
+        }
+
+        if (!halt) {
+           // ejump_plotted, "Course plotted Sir"
+            iConversation.Say(none,"name_lori","ejump_plotted");
+        } else {
+           // ejump_order_cancel, "Cancelling Sir"
+            iConversation.Say(none,"name_lori","ejump_order_cancel");
+        }
+    }
+
+
+    // Finish the conversation.
+    iConversation.End();
+
+
+    // The player chose to abandon this route.
+    if (halt) {
+        Global.SetBool("gt_ejump_running", false);
+        return;
+    }
+
+
+    target_lpoint = iSim.FindByNameInSystem(target_name, system_name);
+
+
+    debug {
+        Debug.PrintHandle(lpoint);
+        Debug.PrintString(" start lpoint\n");
+        Debug.PrintHandle(target_lpoint);
+        Debug.PrintString(" ending lpoint\n");
+    }
+
+
+    if (Object.PropertyExists(lpoint,"tEJumpDest")) {
+        Object.SetHandleProperty(lpoint,"tEJumpDest", target_lpoint);
+        Object.SetIntProperty(lpoint,"tEJumpDiff", difficulty);
+        Object.SetStringProperty(lpoint,"tEJumpName", route_name);
+    } else {
+        Object.AddHandleProperty(lpoint,"tEJumpDest", target_lpoint);
+        Object.AddIntProperty(lpoint,"tEJumpDiff", difficulty);
+        Object.AddStringProperty(lpoint,"tEJumpName", route_name);
+
+        Task.Detach( start jump_watch());
+    }
+
+
+    Global.SetBool("gt_ejump_running", false);
+}
+
+
+SelectDialog() {
+
+   if (IsCapsuleSpace(iSim.ActiveWorld())) {
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   if (!Global.Bool("gt_ejump_running")) {
+      Task.Detach(start select_dialog());
+   }
+}
+
+
+
+// Returns the capsule drives efficiency.
+// If the drive is missing or disabled, it will return 0.0.
+int jump_rating(hship ship) {
+    int i, subsim_count;
+    hsubsim subsim;
+    float effect;
+    string name;
+
+    subsim_count = Sim.SubsimCount(ship);
+    for (i=0;i<subsim_count;++i) {
+        subsim = Sim.NthSubsim(ship, i);
+
+        name = Object.StringProperty(subsim,"name");
+
+        if (name == "Cargo_CapsuleDrive") {
+            return Global.Int("tEJumpCommerical");
+        } else if (name == "Cargo_MilitaryJumpCapacitor") {
+            return Global.Int("tEJumpMilitary");
+        }
+    }
+
+    return 0;
+}
+
+
+// Looks over the player ship looking for sensors.
+// If the player ship has no sensors, it returns 0 (cannot see anything).
+int sensor_rating(hship ship) {
+    int i, subsim_count;
+    hsubsim subsim;
+    float effect;
+    string name;
+
+    subsim_count = Sim.SubsimCount(ship);
+    for (i=0;i<subsim_count;++i) {
+        subsim = Sim.NthSubsim(ship, i);
+
+        name = Object.StringProperty(subsim,"name");
+
+        if (name == "Cargo_LongRangePassiveSensors") {
+            return 5;
+        } else if (name == "Cargo_MilitaryGradeActiveSensors") {
+            return 4;
+        } else if (name == "Cargo_AdvancedActiveSensors") {
+            return 3;
+        } else if (name == "Cargo_ShortActiveSensors") {
+            return 2;
+        } else if (name == "Cargo_ActiveSensorPackage") {
+            return 1;
+        } else if (name == "system_sensors") {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+// Read the ships jump drive rating
+// Compare to the route difficulty
+// Calculate ship damage.
+// Apply the ship damage.
+
+// Charge the ship jump fuel usage.
+
+// Put the ship near the exit point, with the proper orientation,
+// and scattered around a little.
+// Set velocity to be capsule jump exit speed.
+jump_ship(hship ship, hisim lpoint, int difficulty) {
+    int drive_rating;
+    float difference;
+    float damage;
+    float hit_points;
+    float max_hit_points;
+
+    float min_damage = Global.Float("tEJumpMinDamage");
+    float max_damage = Global.Float("tEJumpMaxDamage");
+
+    // Calculate and apply ship damage.
+    drive_rating = jump_rating(ship);
+
+    // If the ship does not have a drive, it can't jump.
+    if (drive_rating < 1) {
+       // ejump_wingman_no_drive, "We don't have a capsule drive! Sir"
+       iComms.Shout(ship, "", "ejump_wingman_no_drive");
+        return;
+    }
+
+    // Place the arriving ship within 1km of the lpoint, facing the correct way.
+    atomic {
+       Sim.CopyOrientation(ship, lpoint);
+       Sim.SetVelocityLocalToSim(ship, 0, 0, 1000);
+       Sim.PlaceNear(ship, lpoint, 1km);
+    }
+
+    // if jumping a hard route, take damage.
+    if (difficulty > drive_rating) {
+        difference = difficulty - drive_rating;
+
+        // Inflict 10% to 30% damage for each level of difference.
+        damage = difference * Math.Random(min_damage, max_damage);
+
+        max_hit_points = Object.FloatProperty(ship, "max_hit_points");
+
+        atomic {
+            hit_points = Object.FloatProperty(ship, "hit_points");
+
+            damage = damage * max_hit_points;
+            hit_points = hit_points - damage;
+
+            if (hit_points < 0.0) {
+                hit_points = 0.0;
+                iSim.Kill(ship);
+            }
+            Object.SetFloatProperty(ship, "hit_points", hit_points);
+        }
+    }
+}
+
+add_flash(hship player)
+{
+   hsim flash;
+
+   flash = Sim.Create("ini:/sims/ships/flash","jumpflash");
+   Sim.PlaceAt(flash, player);
+}
+
+
+jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
+    hship player = iShip.FindPlayerShip();
+    hship wingman;
+    list player_fleet;
+    int i, total, final_difficulty;
+    hisim destination;
+    float fuel, jump_cost;
+    bool jump_success;
+    eCamera camera;
+
+    // Create a list of wingmen to jump after player.
+    // Do this now, in case we want to take range into account
+    // in the calculations.
+    player_fleet = List.FromSet(find_following_ships(player));
+
+    // phase 1:
+    // jump the player ship
+
+
+    // Stop the player if he is going to jump and leave wingmen behind.
+    total = List.ItemCount(player_fleet);
+    for (i=0;i<total;++i) {
+        wingman = iShip.Cast(List.GetNth(player_fleet,i));
+
+        fuel = tEpicFleet.Fuel(wingman);
+        jump_cost = tEpicFleet.FuelPerJump(wingman);
+
+        if (jump_cost > fuel) {
+           // ejump_low_fuel, "We don't have enough fuel to jump Sir"
+            iComms.Shout(wingman, "", "ejump_low_fuel");
+            return;
+        }
+
+        
+        // Check here for lack of capsule drive.
+
+    }
+
+    // The player is now clear to jump.
+    fuel = tEpicFleet.Fuel(player);
+    jump_cost = tEpicFleet.FuelPerJump(player);
+
+    if (jump_cost < fuel) {
+
+        debug {
+            Debug.PrintString(String.FormatInt("Player fuel %d\n", float2int(fuel)));
+            Debug.PrintString(String.FormatInt("Player jump cost %d\n", float2int(jump_cost)));
+        }
+
+        atomic{
+            fuel = tEpicFleet.Fuel(player);
+            fuel = fuel - jump_cost;
+            tEpicFleet.SetFuel(player, fuel);
+        }
+
+        Global.CreateBool("gt_ejump_passed", GA_Write|GA_NoSave, false);
+
+        Global.SetBool("gt_ejump_player_jumping", true);
+
+        //jump_ship(player, target_lpoint, difficulty);   
+        jump_success = jump_simulation(player, target_lpoint, difficulty);   
+
+        if (jump_success) {
+           // If the player succeeds, send them out the target lpoint.
+           destination = target_lpoint;
+        }else {
+           // If the player fails, toss them back out the starting lpoint.
+           destination = jump_point;
+        }
+        
+        // If the player makes the jump without hitting anything,
+        // don't damage the ships. If they didn't pass, smash 
+        // some stuff up.
+        if (Global.Bool("gt_ejump_passed")){
+           final_difficulty = 1;
+        }else {
+           final_difficulty = difficulty;
+        }
+
+
+        debug atomic {
+           Debug.PrintString("tEJump.player moving\n");
+        }
+
+        // Put the player in the destination system, near the exit, but not at it yet.
+        // This is safely inside of culling distance, and the system should wake up.
+        Sim.PlaceNear(player, destination, Global.Float("gt_distance_wakeup") - 10km);
+
+        // Give the lpoint time to wake up and place all objects. And give the day update
+        // time to begin running.
+        Task.Sleep(Task.Current(), 2.0);
+
+        // Now move the player ship to the proper location.
+        jump_ship(player, destination, difficulty);   
+
+        debug atomic {
+           Debug.PrintString("tEJump.player moved\n");
+        }
+
+        add_flash(player);
+        
+          // The game will have blacked out at the end of the jump sim.
+        // We need to unhide the player here.
+        iGame.EnableBlackout(false);
+
+        Global.SetBool("gt_ejump_player_jumping", false);
+
+        debug atomic {
+           Debug.PrintString("tEJump.starting wingmen\n");
+        }
+
+        // Move the player wingmen, with small time delays between.
+        total = List.ItemCount(player_fleet);
+        for (i=0;i<total;++i) {
+           wingman = iShip.Cast(List.GetNth(player_fleet,i));
+
+           fuel = tEpicFleet.Fuel(wingman);
+           jump_cost = tEpicFleet.FuelPerJump(wingman);
+
+           if (jump_cost < fuel) {
+
+              atomic{
+                 fuel = tEpicFleet.Fuel(wingman);
+                 tEpicFleet.SetFuel(wingman, fuel-jump_cost);
+              }
+
+              // Put a bit of time between each one.
+              Task.Sleep(Task.Current(), 1.5);
+
+              jump_ship(wingman, destination, difficulty);
+           }
+        }
+
+        debug atomic {
+           Debug.PrintString("tEJump.wingmen complete\n");
+        }
+
+    } else {
+        iComms.Shout(none, "name_az", "ejump_low_fuel");
+    }
+}
+
+
+
+// Cull the jump simulation and all objects
+// after some time has past to allow the player
+// to get free.
+task cull_task(hgroup group, hisim end_mark, hship player)
+{
+   hlagrangepoint lpoint;
+
+   while (1) {
+      Task.Sleep(Task.Current(), 2.0);
+
+      if (end_mark != iShip.CurrentTarget(player)) {
+
+         Group.Destroy(group, true);
+         return;
+      }
+/*
+      lpoint = iLagrangePoint.Nearest( iMapEntity.SystemLagrangePoints(),
+                                       player);
+
+      iHUD.SetTarget(iSim.Cast(lpoint));
+      */
+   }
+}
+
+set_culling(hgroup group)
+{  
+   int i, total;
+   hisim jump_sim;
+
+   total = Group.SimCount( group );
+
+   for (i=0;i<total;++i) {
+      jump_sim = iSim.Cast(Group.NthSim(group, i));
+      
+      // Allows the sims to cull normally when the player is gone.
+      Sim.SetCullable(jump_sim, true);
+   }
+}
+
+
+
+// Creates a tube section and reads any needed INI file properties.
+hisim create_tube(string section_template, string section_name)
+{
+   hisim tube;
+
+   tube = iSim.Cast(Sim.Create(section_template, section_name));
+   Sim.SetCullable(tube, false);
+   iSim.SetSensorVisibility(tube, false);
+   iSim.SetIndestructable(tube, true);
+   
+   return tube;
+}
+
+
+
+hisim create_bubble(string section_template)
+{
+   hisim bubble;
+
+   bubble = iSim.Cast(Sim.Create(section_template, "bubble"));
+   Sim.SetCullable(bubble, false);
+   iSim.SetSensorVisibility(bubble, false);
+   iSim.SetIndestructable(bubble, true);
+   // Let the bubble bounce
+   iShip.SetFreeWithoutPilot( iShip.Cast(bubble), true );
+   return bubble;
+}
+
+
+
+// Call once the tubes are connected to place unmoving and moving lights
+// inside the tube.
+add_lights(hisim jump_tube, hgroup cull_group)
+{
+   string jump_template = Sim.TemplateName(jump_tube);
+   hinifile jump_file = INIFile.Create(jump_template);
+   int count;
+   hisim light;
+   string light_template;
+   float xpos, ypos, zpos, velocity;
+   
+   if (jump_file == none) {
+      debug Debug.PrintString("tEJump.add_lights Errror template file missing\n");
+      return;
+   }
+
+   light_template = "ini:/sims/ships/bubble";
+
+   // Add the unmoving lights.
+   count = 0;
+   while (INIFile.NumberedExists(jump_file, "Lights", "location", count)) {
+      light_template = INIFile.NumberedString(jump_file, "Lights", "model", count, "ini:/sims/ships/bubble");
+      xpos = INIFile.NumberedVectorX(jump_file, "Lights", "location", count);
+      ypos = INIFile.NumberedVectorY(jump_file, "Lights", "location", count);
+      zpos = INIFile.NumberedVectorZ(jump_file, "Lights", "location", count);
+
+      light = create_bubble(light_template);
+
+      if (light == none) {
+         debug Debug.PrintString("tEJump.add_lights error light not created\n");
+         return;
+      }
+
+      Sim.PlaceRelativeToInside(light, jump_tube, xpos, ypos, zpos);
+
+      Group.AddSim(cull_group, light);
+
+      ++count;
+   }
+
+   velocity = INIFile.Float(jump_file, "MovingLights", "speed", 0);
+
+   // Add the moving lights.
+   count = 0;
+   while (INIFile.NumberedExists(jump_file, "MovingLights", "location", count)) {
+      light_template = INIFile.NumberedString(jump_file, "MovingLights", "model", count, "ini:/sims/ships/bubble");
+      xpos = INIFile.NumberedVectorX(jump_file, "MovingLights", "location", count);
+      ypos = INIFile.NumberedVectorY(jump_file, "MovingLights", "location", count);
+      zpos = INIFile.NumberedVectorZ(jump_file, "MovingLights", "location", count);
+
+      light = create_bubble(light_template);
+
+      if (light == none) {
+         debug Debug.PrintString("tEJump.add_lights error light not created\n");
+         return;
+      }
+
+      Sim.PlaceRelativeToInside(light, jump_tube, xpos, ypos, zpos);
+      // Send it wandering.
+      Sim.SetVelocity(light, 
+                      Math.Random(-1.0 * velocity, velocity),
+                      Math.Random(-1.0 * velocity, velocity),
+                      Math.Random(-1.0 * velocity, velocity));
+
+      Group.AddSim(cull_group, light);
+
+      ++count;
+   }
+
+   INIFile.Destroy(jump_file);
+}
+
+hship create_player(hship player, hinifile jump_file)
+{
+   string jump_ship_name;
+   hship jump_sim;
+   hsubsim old_ship;
+
+   jump_ship_name= INIFile.NumberedString(jump_file, 
+                                          "Ships", 
+                                          "template", 
+                                          jump_rating(player), 
+                                          "ini:/sims/ships/utility/puffin");   
+
+   jump_sim = iShip.Create(jump_ship_name,"jump sim");
+
+   Sim.SetCullable(jump_sim, false);
+   iSim.SetIndestructable(jump_sim, true);
+
+   // Now we add the visible bit of the players old ship.
+   switch (iSim.Type(player)) {
+   case T_CommandSection:
+      old_ship = Subsim.Create("ini:/subsims/systems/nonplayer/command_section_capsule");
+      break;
+   case T_Tug:
+      old_ship = Subsim.Create("ini:/subsims/systems/nonplayer/tug_capsule");
+      break;
+   case T_Interceptor:
+      old_ship = Subsim.Create("ini:/subsims/systems/nonplayer/stormpetrel_capsule");
+      break;
+   case T_Patcom:
+      old_ship = Subsim.Create("ini:/subsims/systems/nonplayer/patcom_capsule");
+      break;
+   case T_Corvette:
+      old_ship = Subsim.Create("ini:/subsims/systems/nonplayer/heavy_corvette_capsule");
+      break;
+   }
+
+   if (none != old_ship) {
+      Sim.AddSubsim(jump_sim, old_ship);
+   }
+
+   return jump_sim;
+}
+
+
+bool create_simulation(hmapentity center, 
+                       int difficulty, 
+                       hship player,
+                       hgroup cull_group, 
+                       hinifile jump_file)
+{
+   int count, i;
+   string difficulty_key = difficulty2key(difficulty);
+   string section_name;
+   string system_name;
+
+   bool docked, result;
+   hisim tube1, tube2, entry_tube, exit_tube;
+   hship jump_sim;
+   hisim exit_mark, bubble;
+
+   hdockport top, bottom;
+
+   //
+   //  Create the player ship. The player must be the first object
+   //  in the returned group.
+   //
+
+   jump_sim = create_player(player, jump_file);
+
+
+
+   if (jump_sim == none) {
+      debug Debug.PrintString("tEJump.jump_simulation error jump sim missing\n");
+      return false;
+   }
+
+   Group.AddSim(cull_group, jump_sim);
+
+   //
+   // The exit marker is always the second object in the group list.
+   // 
+
+   exit_mark = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","Jump Exit"));
+
+   if (exit_mark == none) {
+      debug Debug.PrintString("tEJump.jump_simulation error exit mark missing\n");
+      return false;
+   }
+
+   Sim.SetCullable(exit_mark, false);
+   iSim.SetSensorVisibility(exit_mark, true);
+   Group.AddSim(cull_group, exit_mark);
+
+
+   //
+   // Now create the sections of the jump simulation.
+   // 
+
+   section_name = INIFile.NumberedString(jump_file, difficulty_key, "section", 0, "invalid");
+
+   tube1 = create_tube(section_name,"jump_section");
+
+   if (tube1 == none) {
+      debug Debug.PrintString("tEJump.jump_simulation Error section ini error\n");
+      return false;
+   }
+
+   Sim.PlaceNear(tube1, iSim.Cast(center), 10km);
+
+   entry_tube = tube1;
+   exit_tube = tube1;
+   Group.AddSim(cull_group, tube1);
+   
+
+   count = 1;
+   while (INIFile.NumberedExists(jump_file, difficulty_key, "section", count)) {
+      section_name = INIFile.NumberedString(jump_file, difficulty_key, "section", count, "invalid");
+
+      tube2 = create_tube(section_name,String.FormatInt("jump_section%d",count));
+
+      if (tube2 == none) {
+         debug Debug.PrintString("tEJump.jump_simulation Error section ini error\n");
+         return false;
+      }
+
+      Group.AddSim(cull_group, tube2);
+      Sim.PlaceNear(tube2, tube1, 10km);
+      ++count;
+   }
+
+   // Delay long enough for the sections to create.
+   Task.Sleep(Task.Current(), 0.1);
+
+   tube1 = entry_tube;
+
+   // Link up the sections into a jump route.
+   for (i=1;i<count;++i) {
+      // Tight loop while the sim is getting created.
+      tube2 = iShip.Cast(Sim.FindByName(String.FormatInt("jump_section%d",i)));
+
+      if (tube2 == none) {
+         debug Debug.PrintString("tEJump.jump_simulation Error section lost\n");
+      }
+
+      do {
+         bottom = iDockport.Cast(Sim.FindSubsimByName( tube1, "bottom_connect_port" ));
+      } while (bottom == none);
+
+      do {
+         top = iDockport.Cast(Sim.FindSubsimByName( tube2, "top_connect_port" ));
+      } while (top == none);
+
+      do {
+         docked = iDockport.Dock( bottom, top );
+      } while (!docked );
+
+      tube1 = tube2;
+      exit_tube = tube2;
+   }
+
+   // Now put some objects into the tubes for the player to run into.
+   for (i=1;i<count;++i) {
+      tube2 = iShip.Cast(Sim.FindByName(String.FormatInt("jump_section%d",i)));
+
+      if (tube2 == none) {
+         debug Debug.PrintString("tEJump.jump_simulation Error section lost\n");
+      }else {
+
+         add_lights(tube2, cull_group);
+      }
+   }
+
+
+   // Place the player ship and the exit marker.
+   Sim.PlaceRelativeToInside(exit_mark, exit_tube, 0, 0, -10km);
+
+   Sim.PlaceRelativeToInside(jump_sim, entry_tube, 0, 0, 10km);
+   Sim.PointAt(jump_sim, entry_tube);
+
+   return true;
+}
+
+
+// 
+// Run the player through the jump simulation.
+//
+
+bool jump_simulation(hship player, hisim target_lpoint, int difficulty)
+{
+   hinifile jump_file = INIFile.Create("ini:/jump_controls");
+   int count, i;
+   float route_time;
+   float velocity;
+   string difficulty_key = difficulty2key(difficulty);
+   string section_name;
+   hisim exit_mark;
+   hship jump_sim;
+   hmapentity center;
+   hgroup cull_group = Group.Create();
+   bool result;
+
+   if (none==jump_file) {
+
+      debug atomic {
+         Debug.PrintString("tEJump.jump_simulation Error jump_controls.ini missing\n");
+      }
+
+      return false;
+   }
+
+   // Removed from INI file. This needs to be compiled in.
+   center = iMapEntity.SystemCentreInSystem("map:/geog/middle/capsule_space");
+
+   if (none==center) {
+      debug atomic {
+         Debug.PrintString("tEJump.jump_simulation Error system center missing\n");
+      }
+      return false;
+   }
+
+   // Render the view dark while we move the player pilot.
+   iGame.EnableBlackout(true);
+
+   velocity = Sim.Speed(player);
+
+   // Shut down the player autopilot, so we don't get hauled somewhere unexpected.
+   iAI.ClearAutopilot();
+
+   // Put the player safely within culling distance. We need this for proper setup.
+   Sim.PlaceNear(player, center, Global.Float("gt_distance_wakeup"));
+
+   // Hide the player ship from sensors.
+   iSim.SetStandardSensorVisibility(player, false);
+
+   Sim.SetVelocityLocalToSim( player,
+                              0.0,
+                              0.0,
+                              0.0);
+
+
+   result = create_simulation(center, difficulty, player, cull_group, jump_file);
+
+   if (!result){
+
+      set_culling(cull_group);
+      Group.Destroy(cull_group, false);
+      return false;
+   }
+
+   // Read out the number of seconds the player has to run the course.
+   route_time = INIFile.Float(jump_file, difficulty_key, "time", 240);
+
+
+   INIFile.Destroy(jump_file);
+
+   jump_sim = iShip.Cast(Group.NthSim(cull_group, 0));
+
+   exit_mark = iSim.Cast(Group.NthSim(cull_group, 1));
+
+
+   Sim.SetVelocityLocalToSim( jump_sim,
+                              0.0,
+                              0.0,
+                              velocity);
+
+   iShip.InstallPlayerPilot(jump_sim);
+   Group.AddSim(cull_group, jump_sim);   
+
+   iHUD.SetTarget(exit_mark);
+
+   // Let the player see what we have setup.
+   iGame.EnableBlackout(false);
+
+   // Let the player hear they have jumped.
+   add_flash(jump_sim);
+
+   // handle the player motion to the exit tube.
+   result = player_watch(jump_sim, exit_mark, route_time);
+
+
+   // Ok, black the screen again while we move the player back into old ship.
+   iGame.EnableBlackout(true);
+
+   debug atomic {
+      Debug.PrintString("tEJump.player_watch done\n");
+   }
+
+   if (Sim.IsDead(player)) {
+      debug atomic {
+         Debug.PrintString("tEJump.player sim dead\n");
+      }
+   }
+
+   // Put the player back.
+   atomic {
+      iShip.InstallPlayerPilot(player);
+   }
+
+
+   // Let sensors see the player ship.
+   iSim.SetStandardSensorVisibility(player, true);
+
+   debug atomic {
+      Debug.PrintString("tEJump.player installed\n");
+   }
+
+   // Put the exit mark back to normal.
+   iSim.SetStandardSensorVisibility(exit_mark, true);
+
+   set_culling(cull_group);
+   Group.Destroy(cull_group, false);
+
+   // Pause a moment to let the player pilot get properly installed.
+   Task.Sleep(Task.Current(), 0.1);
+
+   return result;
+}
+
+
+bool player_watch(hship player, hisim exit_mark, float route_time)
+{
+   float start_distance, half_distance;
+   float low_hit_points;
+   float start_time, elapsed_time;
+   bool success;
+
+   if (none == player) {
+      debug Debug.PrintString("tEJump.player_watch error no player\n");
+      return false ;
+   }
+
+   if (none == exit_mark) {
+      debug Debug.PrintString("tEJump.player_watch error no exit mark\n");
+      return false ;
+   }
+
+   start_time = iGame.GameTime();
+
+   // At half distance, the player will be tossed out the far
+   // side.
+   start_distance = Sim.DistanceBetween(player, exit_mark);
+   half_distance = start_distance/2.0;
+   success = false;
+
+   low_hit_points = Object.FloatProperty(player, "hit_points");
+   low_hit_points = low_hit_points * 0.5;
+
+   while (1) {
+
+      if (Sim.IsDead(player)) {
+         // Player hit a wall, return based on distance travelled.
+         debug Debug.PrintString("tEJump.player_watch player sim dead\n");
+         return success;
+      }
+
+      if (Sim.DistanceBetween(player, exit_mark) < 5km) {
+         // The player has reached the exit, return true.
+         debug Debug.PrintString("tEJump.player_watch player at exit.\n");
+
+         // Signal that the player had a good run.
+         Global.SetBool("gt_ejump_passed", true);
+
+         iHUD.SetPrompt(String.FormatInt("%d Elapsed Seconds", float2int(elapsed_time)),"");
+         return true;
+      }
+
+      // Check if the player is halfway to the exit.
+      if (Sim.DistanceBetween(player, exit_mark) < half_distance ) {
+         success = true;
+      }
+
+
+      // Check if the player is low on hit points.
+      if (Object.FloatProperty(player, "hit_points") < low_hit_points) {
+         debug Debug.PrintString("tEJump.player_watch player damaged.\n");
+         return success;
+      }
+
+
+      // If time is up, end the simulation with
+      // result based on distance traveled.
+      elapsed_time = iGame.GameTime() - start_time;
+      if (elapsed_time > route_time) {
+         debug Debug.PrintString("tEJump.player_watch player slow.\n");
+         // Keep this commented out to leave record of how fast crossing jump.
+         //iHUD.SetPrompt("","");
+         iHUD.SetPrompt(String.FormatInt("%d Elapsed Seconds", float2int(elapsed_time)),"");
+         return success;
+      }
+
+      // Update the hud with the time remaining
+      iHUD.SetPrompt(String.FormatInt("%d Remaining Seconds",  float2int(route_time - elapsed_time)),"");
+
+      Task.Sleep(Task.Current(), 0.5);
+   }
+
+
+
+   return false;
+}
+
+
+// Recurse from the player ship,
+// finding all those ships that are following the player, or 
+// following a wingman following the player.
+set find_following_ships(hship ship) {
+    list player_ships;
+    set following_ships;
+    int i, total;
+    hship follower;
+
+    // Find all player fleet ships that are formated to the player
+    // and jump them to the players current Lpoint.
+    player_ships = tEpicFleet.PlayerFleet();
+    total = List.ItemCount(player_ships);
+
+    for (i=0;i<total;++i) {
+        follower = iShip.Cast(List.GetNth(player_ships, i));
+
+        // Add any ship following the current ship.
+        // Then recurse on that ship to get nested order groups.
+        if ("ScriptedEscort" == iAI.CurrentOrderName(follower)) {
+            if (ship == iShip.Cast(iAI.CurrentOrderTarget(follower))) {
+                Set.Add(following_ships, follower);
+                Set.Union(following_ships, find_following_ships(follower));
+            }
+        }
+    }
+
+    return following_ships;
+}
+
+
+
+string difficulty2name(int difficulty) {
+
+    switch (difficulty) {
+    case 1:
+        return "tejump_stable";
+        break;
+    case 2:
+        return "tejump_weak";
+        break;
+    case 3:
+        return "tejump_unstable";
+        break;
+    case 4:
+        return "tejump_dangerous";
+        break;
+    case 5:
+        return "tejump_deadly";
+        break;
+    default:
+        break;
+    }
+
+    return String.FormatInt(" %d ", difficulty);
+}
+
+string difficulty2key(int difficulty) {
+
+    switch (difficulty) {
+    case 1:
+        return "Stable";
+        break;
+    case 2:
+        return "Weak";
+        break;
+    case 3:
+        return "Unstable";
+        break;
+    case 4:
+        return "Dangerous";
+        break;
+    case 5:
+        return "Deadly";
+        break;
+    default:
+        break;
+    }
+
+    debug {
+       Debug.PrintString("tEJump.difficulty2key Error invalid difficulty error\n");
+    }
+
+    return String.FormatInt(" %d ", difficulty);
+}
+
+
+DebugJump()
+{
+    hship player = iShip.FindPlayerShip();
+    hship wingman;
+    list player_fleet;
+    int i, total;
+    hisim target_lpoint;
+    hisim waypoint;
+    bool jump_success;
+
+
+    target_lpoint = iShip.CurrentTarget(player);
+
+    // Only allow jumps to stations and lpoints.
+    if (T_Station == iSim.Type(target_lpoint)){
+       // This is a station. To prevent collision, we put a 
+       // jump mark near the station.
+       waypoint = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","Jump Exit"));
+       Sim.SetCullable(waypoint, false);
+       Sim.PlaceNear(waypoint, target_lpoint, 20km);
+       target_lpoint = waypoint;
+
+    }else if (T_LagrangePoint != iSim.Type(target_lpoint)) {
+
+       iHUD.Print("No Jump Target");
+       iHUD.PlayAudioCue(AC_InvalidInput);
+       return;
+
+    }
+
+    // Create a list of wingmen to jump after player.
+    player_fleet = List.FromSet(find_following_ships(player));
+
+    jump_ship(player, target_lpoint, 1);   
+
+
+    // Move the player wingmen, with small time delays between.
+    total = List.ItemCount(player_fleet);
+    for (i=0;i<total;++i) {
+       wingman = iShip.Cast(List.GetNth(player_fleet,i));
+
+       // Put a bit of time between each one.
+       Task.Sleep(Task.Current(), 1.5);
+
+       jump_ship(wingman, target_lpoint, 1);
+    }
+}
+
+int float2int(float value)
+{
+   return value;
+}
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

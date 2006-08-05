@@ -1,0 +1,1002 @@
+//*******************************************************************************************/
+//
+// tShipMail
+//
+// This file is the application that uses the tMail archives to form an email system.
+// It is also the root for The BaseNet job board and the NewsNet info service.
+//
+// SendEmail and Read are the primary interfaces to the ShipMail Inbox.
+//
+// April 2002, Jon Freise
+//******************************************************************************************/
+
+package tShipMail;
+
+uses	Sim,
+		Debug,
+		Global,
+		GUI,
+		INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+  		Math,
+		iShip,
+		iSim,
+   	iGame,
+		iGUI,
+		iHUD,
+		iHabitat,
+		iMapEntity,
+		iUtilities,
+		iCargo,
+		iInventory,
+		iComms,
+      iMod,
+		UniGUI,
+      tEpicGuiEnum,
+      tEpicGui,
+		tMail,
+//		tBaseNet,
+		tNewsNet;
+
+
+provides StartScreen,
+         RunCheck,
+         SendEmail,
+         Read,
+         OnQuit,
+         ShipMailScreen,
+         StartMyMod,
+         MailViewListPress,
+         MailViewBackPress,
+         MailAcceptButtonPressed,
+         ArchiveButtonPress,
+         DeleteButtonPress,
+         Register;
+
+
+
+prototype CreateGlobals();
+
+prototype CreateArchiveView();
+
+prototype CreateMailView();
+
+prototype CreateMessageView();
+
+
+prototype ListMailButtonPress();
+
+prototype ListCancelButtonPress();
+
+
+prototype MailCancelButtonPressed();
+
+prototype MailAcceptButtonPressed();
+
+prototype DeleteButtonPress();
+
+prototype bool player_docked();
+
+
+//*******************************************************************************************/
+//
+// SendEmail puts mail in the players Inbox. 
+//
+//  sender - is a normal string "Jose Whetherspoon".
+//  subject - is a normal string "Hey Cal, send me those spare parts".
+//  body - has two forms
+//  1. a HTML resource string - "ini:/html/first_email" 
+//  2. a string with a HTML wrapper -  <html><body>Welcome to ShipMail</html></body>"
+//  reply_function - use this to give your mission a callback function "tAssassin.Accept"
+//     the function must be exported.
+//  critical - when set true it stops the player from deleting the mail until the mission 
+//     has checked if the mail has been read. Set true for all critical mission emails.
+//  html_body - set this true if the body string is an HTML resource string.
+// 
+// It returns the email id number. This number is needed to test if an email has been 
+//     read by the player.
+//******************************************************************************************/
+int SendEmail(string sender,
+              string subject,
+              string body,
+              string reply_function,
+              bool critical,
+              bool html_body)
+{
+   hsim archive = tMail.FindArchive("ShipMail");
+   int id;
+   id = tMail.SendMail(archive,
+                         sender, 
+                         subject, 
+                         body, 
+                         reply_function, 
+                         none,
+                         "Date",
+                         false, // save
+                         critical,
+                         html_body);
+
+   iHUD.PlayAudioCue(AC_SonarPing);
+
+   return id;
+}
+
+
+//*******************************************************************************************/
+//
+// Give this function a valid mail id, and it will test if your mail has been read by the 
+// player. Because the player can delete mail at any time, it is recommended that you 
+// act on the first time this returns true.
+//
+// returns true if the mail has been read. returns false if mail unread or deleted.
+//******************************************************************************************/
+bool Read(int mail_id)
+{
+   hsim archive = tMail.FindArchive("ShipMail");
+
+   return tMail.isRead(archive, mail_id);
+}
+
+
+//*******************************************************************************************/
+//
+// ShipMail Local functions. These functions run the mail app, and are not to be called by
+// outside users.
+//
+//
+//******************************************************************************************/
+//*******************************************************************************************/
+//
+// Create Globals for internal shipmail use.
+// 
+//******************************************************************************************/
+
+CreateGlobals()
+{
+   hsim empty_sim;
+   list empty_list;
+   hwindow empty_win;
+
+   // These are used to delete the mail view.
+   Global.CreateHandle("g_trout_shipmail_mail_view",GA_NoSave|GA_Write,empty_win);
+   Global.CreateHandle("g_trout_shipmail_back_button",GA_NoSave|GA_Write,empty_win);
+
+   // These are used to delete the archive view.
+   Global.CreateHandle("g_trout_shipmail_archive_view",GA_NoSave|GA_Write,empty_win);
+   Global.CreateHandle("g_trout_shipmail_back_button",GA_NoSave|GA_Write,empty_win);
+
+   // The very base window of shipmail. Needed to build other windows on.
+   Global.CreateHandle("g_trout_shipmail_shadybar",GA_Write|GA_NoSave,empty_win);
+
+   // The list of viewable archives, used by the archive list view
+   Global.CreateList("g_trout_shipmail_archive_list",GA_Write|GA_NoSave, empty_list);
+
+   // The mail window needs the current archive to get the mail lists.
+   Global.CreateHandle("g_trout_shipmail_current_archive",GA_Write|GA_NoSave, empty_sim);
+
+   // The mail to display in the mail window. Also used by delete button, and accept.
+   Global.CreateHandle("g_trout_shipmail_current_mail",GA_Write|GA_NoSave,empty_sim);
+
+   // The base window that the single message view is base upon
+   Global.CreateHandle("g_trout_shipmail_message_view_base",GA_Write|GA_NoSave, empty_win);
+
+   // The single message view parent window. Delete this to remove the message view.
+   Global.CreateHandle("g_trout_shipmail_message_view_parent",GA_Write|GA_NoSave, empty_win);
+
+
+   Global.CreateInt("g_trout_shipmail_message_test_count",GA_Write|GA_NoSave, 1);
+}
+
+
+
+
+
+//*******************************************************************************************/
+//
+// This function displays the message text. It also displays a delete/save button, and 
+// if the mail has an accept task attached, it will display an accept button.
+// It is redrawn when the user selects a new mail item.
+//******************************************************************************************/
+
+CreateMessageView()
+{
+
+   hwindow pane_win;
+   hwindow email_win;
+   hwindow del_button;
+   hwindow accept_button;
+   hwindow base_win = GUI.Cast(Global.Handle("g_trout_shipmail_message_view_base"));
+   hwindow parent_win;
+
+   hwindow old_view = GUI.Cast(Global.Handle("g_trout_shipmail_message_view_parent"));
+
+   hsim archive = Sim.Cast(Global.Handle("g_trout_shipmail_current_archive"));
+   hsim mail = Sim.Cast(Global.Handle("g_trout_shipmail_current_mail"));
+
+   string sender;
+   string subj;
+   string body;
+   string sdelete;
+
+   debug Debug.PrintString("Create Message View\n");
+   if (none == mail) {
+      // no mail to display, so don't.
+      return;
+   }
+
+   // mark this message as read.
+   tMail.SetRead(mail);
+
+   // Create the sender and subject lines
+   sender = tMail.Sender(mail);
+   subj = tMail.Subject(mail);
+   body = tMail.Body(mail);
+
+   // delete the old window
+
+   debug Debug.PrintHandle(old_view);
+   GUI.DeleteWindow(old_view);
+
+   // create a parent window we can build all the others upon. For easy delete.
+   parent_win = GUI.CreateWindow(0,0,
+                               GUI.WindowCanvasWidth(base_win),
+                               GUI.WindowCanvasHeight(base_win),
+                               base_win);
+
+   // Create a window to underly the email window. This is how we set the size, leave rooom for buttons.
+   pane_win = GUI.CreateWindow(0,0,
+                               GUI.WindowCanvasWidth(parent_win),
+                               GUI.WindowCanvasHeight(parent_win)
+                               -Global.Int("GUI_fancybutton_height"),
+                               parent_win);
+
+   // Save this new parent window, so we can delete the message view easy.
+   Global.SetHandle("g_trout_shipmail_message_view_parent", parent_win);
+
+   email_win = iGUI.CreateTitledTextBox( pane_win,
+                                         tMail.ScreenName(archive), 
+                                         (GUI.WindowCanvasWidth(base_win)/3)-10,
+                                         sender,
+                                         ((GUI.WindowCanvasWidth(base_win)*2)/3)-10,
+                                         subj,
+                                         body);
+
+   // if the text resource is a string, set it this way instead.
+   if (!tMail.isHtml(mail)) {
+      GUI.SetTextWindowString(email_win, body);
+   }
+
+
+   // If the mail is deleted, change this to save.
+   if (tMail.isDeleted(mail)) {
+      sdelete = "Save";
+   }else {
+      sdelete = "Delete";
+   }
+   del_button = iGUI.CreateAndInitialiseRectangularInverseButton( parent_win, 
+                                                                  0,
+                                                                  GUI.WindowCanvasHeight(parent_win) 
+                                                                  -Global.Int("GUI_fancybutton_height"), 
+                                                                  GUI.WindowCanvasWidth(parent_win)/3-10, 
+                                                                  sdelete, 
+                                                                  "tShipMail.DeleteButtonPress");    
+
+   if (tMail.HasReply(mail)) {
+      // If the mail has an accept task.
+      accept_button = iGUI.CreateAndInitialiseRectangularInverseButton( parent_win, 
+                                                                  GUI.WindowCanvasWidth(parent_win)/3,
+                                                                  GUI.WindowCanvasHeight(parent_win) 
+                                                                  -Global.Int("GUI_fancybutton_height"), 
+                                                                  GUI.WindowCanvasWidth(parent_win)/3-10, 
+                                                                  "Accept", 
+                                                                  "tShipMail.MailAcceptButtonPressed");    
+   }
+   debug Debug.PrintString("End Create Message View\n");
+}
+
+// runs when the user presses delete mail. Toggles the mail state.
+// changes the name to save, to allow them to save the mail again.
+DeleteButtonPress()
+{
+   hwindow button;
+   hsim mail = Sim.Cast(Global.Handle("g_trout_shipmail_current_mail"));
+   
+   debug Debug.PrintString("Delete Press\n");
+
+   button = GUI.FocusedWindow();
+   debug Debug.PrintHandle(button);
+
+   // Toggle the mail state. Change the button text to opposite of state.
+   if (tMail.isDeleted(mail)) {
+      tMail.DeleteMail(mail,false);
+      GUI.SetWindowTitle(button,"Delete");
+   }else {
+      tMail.DeleteMail(mail,true);
+      GUI.SetWindowTitle(button,"Save");
+   }
+
+   debug Debug.PrintHandle(mail);
+   debug Debug.PrintString("  End Delete\n");
+}
+
+// If the user presses the Accept button, the function that was 
+// sent with the mail is run.
+MailAcceptButtonPressed()
+{  
+   hsim mail = Sim.Cast(Global.Handle("g_trout_shipmail_current_mail"));
+
+   debug atomic{
+      Debug.PrintHandle(mail);
+      Debug.PrintString(": accept button press\n");
+   }
+
+   tMail.RunReply(mail);
+}
+
+//*******************************************************************************************/
+//
+// This is split in two.The top half holds a message window, created in another function.
+// The bottom half has two message lists, new mail and old mail. When the user presses a 
+// mail button, the mail is selected, and the message window is redrawn.
+//******************************************************************************************/
+CreateMailView()
+{
+   hwindow main_split;
+   hwindow top_main_split;
+   hwindow bot_main_split;
+
+   hwindow list_split;
+   hwindow top_list_split;
+   hwindow bot_list_split;
+
+   hwindow back_button;
+
+   hwindow mail_list_box;
+   hwindow old_list_box;
+
+   hwindow top_scroll;
+   hwindow bot_scroll;
+
+   hwindow cbutton;
+   hwindow shady_bar;
+
+   hsim mail;
+   hsim archive = Sim.Cast(Global.Handle("g_trout_shipmail_current_archive"));
+
+   int shady_height;
+   int shady_width;
+   int i;
+   int main_height;
+   int mtotal,mcount;
+   int scroll_width = Global.Int("GUI_scrollbar_width");
+
+   list mail_button_list;
+   list archive_button_list;
+   list unread_list;
+   list read_list;
+   list mail_list;
+
+   string name;
+   string body;
+   string sender;
+   string subj;
+
+   shady_bar = GUI.Cast(Global.Handle("g_trout_shipmail_shadybar"));
+
+   shady_height = GUI.WindowCanvasHeight(shady_bar);
+   shady_width =  450; // by decree
+
+   archive = Sim.Cast(Global.Handle("g_trout_shipmail_current_archive"));
+   mail_list = tMail.GetArchiveMail(archive);
+
+   mtotal = List.ItemCount(mail_list);
+
+   for (mcount=0;mcount<mtotal;++mcount) {
+      mail = Sim.Cast(List.GetNth(mail_list,mcount));
+      if (tMail.Read(mail)) {
+         List.AddTail(read_list,mail);
+      }else{
+         List.AddTail(unread_list,mail);
+      }
+   }
+
+   mail = Sim.Cast(List.Head(unread_list));
+   if (none==mail) {
+      mail = Sim.Cast(List.Head(read_list));
+   }
+
+   Global.SetHandle("g_trout_shipmail_current_mail",mail);
+
+   // Create the base splitter window.
+
+   // Splitter upper pane
+      // Add the email pane window
+      // Add the email window
+      // Add the delete and accept buttons
+
+   // Splitter Lower pane
+      // Create the lower splitter
+         // Add the unread mail list box   
+         // Add the read mail list box
+   // Add the Back button
+
+   // Create the main splitter between the title and the exit button.
+   // Put the split halfway down the screen, offset by top, and with room for delete button.
+
+//   main_height = shady_height - (Global.Int("GUI_fancybutton_height") + 10);
+//   main_height = main_height -60;
+
+
+   main_height = shady_height - Global.Int("EpicGui_content_drop");
+   main_height = main_height - Global.Int("EpicGui_content_footer");
+
+
+   main_split = GUI.CreateSplitterWindow(0, 
+                                         60, 
+                                         shady_width,
+                                         main_height,
+                                         shady_bar,
+                                         main_height/2,
+                                         false);
+
+   top_main_split = GUI.SplitterWindowTopWindow( main_split );
+   bot_main_split = GUI.SplitterWindowBottomWindow( main_split );
+
+
+   // Save this window so the message view can be built upon it.
+   Global.SetHandle("g_trout_shipmail_message_view_base",top_main_split);
+
+
+   // Create the lower splitter that holds the list boxes.
+   list_split = GUI.CreateSplitterWindow(0, 0, 
+                                         GUI.WindowCanvasWidth(bot_main_split),
+                                         GUI.WindowCanvasHeight(bot_main_split),
+                                         bot_main_split,
+                                         GUI.WindowCanvasHeight(bot_main_split)/2,
+                                         false);
+   
+   top_list_split = GUI.SplitterWindowTopWindow( list_split );
+   bot_list_split = GUI.SplitterWindowBottomWindow( list_split );
+
+
+   // Display the actual message, requires archive,base,mail globals be set.
+   CreateMessageView();
+
+
+
+
+   mail_list_box = GUI.CreateListBox(0,0,
+                                     GUI.WindowCanvasWidth(top_list_split)-(4+scroll_width),
+                                     GUI.WindowCanvasHeight(top_list_split)-10,
+                                     top_list_split,
+                                     true,
+                                     true);
+
+
+
+   top_scroll = GUI.CreateVerticalScrollbar( GUI.WindowCanvasWidth(top_list_split)-scroll_width, 0,
+                                             scroll_width, 
+                                             GUI.WindowCanvasHeight(top_list_split)-10,
+                                             top_list_split,
+                                             mail_list_box,
+                                             Global.Float( "GUI_scrollbar_buttonratio"),
+                                             "" );
+
+
+   mtotal = List.ItemCount(unread_list);
+
+   for (mcount=0;mcount<mtotal;++mcount) {
+
+      mail = Sim.Cast(List.GetNth(unread_list,mcount));
+
+      name = tMail.Sender(mail);
+      subj = tMail.Subject(mail);
+
+      name = String.Join(name,"     ");
+      name = String.Join(name,subj);
+
+      cbutton = iGUI.CreateAndInitialiseRectangularInverseButton( none, 
+                                                                  0, 
+                                                                  0, 
+                                                                  GUI.WindowCanvasWidth(top_list_split)-(scroll_width+4), 
+                                                                  name,
+                                                                  "tShipMail.MailViewListPress");       
+
+      GUI.AddListBoxEntry(mail_list_box, cbutton);
+      Object.AddHandleProperty(cbutton,"MailHandle",mail);
+   }
+
+
+
+   // Create the read list of mails in the lower list box.
+   old_list_box = GUI.CreateListBox(0,0,
+                                     GUI.WindowCanvasWidth(bot_list_split)-(scroll_width+4),
+                                     GUI.WindowCanvasHeight(bot_list_split)-10,
+                                     bot_list_split,
+                                     true,
+                                     true);
+
+
+
+   bot_scroll = GUI.CreateVerticalScrollbar( GUI.WindowCanvasWidth(bot_list_split)-scroll_width, 
+                                             0,
+                                             scroll_width, 
+                                             GUI.WindowCanvasHeight(bot_list_split)-10,
+                                             bot_list_split,
+                                             old_list_box,
+                                             Global.Float( "GUI_scrollbar_buttonratio"),
+                                             "" );
+
+
+   //Display old email selections
+
+   mtotal = List.ItemCount(read_list);
+   for (mcount=0;mcount<mtotal;++mcount) {
+      mail = Sim.Cast(List.GetNth(read_list,mcount));
+
+      name = tMail.Sender(mail);
+      subj = tMail.Subject(mail);
+
+      name = String.Join(name,"     ");
+      name = String.Join(name,subj);
+
+      cbutton = iGUI.CreateAndInitialiseRectangularInverseButton( none, 
+                                                                  0, 
+                                                                  0, 
+                                                                  GUI.WindowCanvasWidth(bot_list_split)-(scroll_width+4), 
+                                                                  name,
+                                                                  "tShipMail.MailViewListPress");       
+
+      GUI.AddListBoxEntry(old_list_box, cbutton);
+      Object.AddHandleProperty(cbutton,"MailHandle",mail);
+   }
+
+   // Put the exit button just up off the bottom.
+   // Use the strange round back buttons found in the base.
+/*   back_button = iGUI.CreateBackButton(20,					
+                                       GUI.WindowCanvasHeight(shady_bar) - 
+                                       (Global.Int("GUI_fancybutton_height") + 8),
+                                       shady_bar);
+
+   GUI.SetButtonFunctionPog(back_button,"tShipMail.MailViewBackPress");
+*/
+
+   back_button = tEpicGui.CreateExitButton(shady_bar, "Channel", "tShipMail.MailViewBackPress");
+   Global.SetHandle("g_trout_shipmail_mail_view",main_split);
+   Global.SetHandle("g_trout_shipmail_back_button",back_button);
+
+}
+
+// User selected a new mail item to view. Set current, redraw message window.
+MailViewListPress()
+{
+   hsim mail;
+   hwindow button;
+
+   // Set the current archive.
+   button = GUI.FocusedWindow();
+   debug Debug.PrintHandle(button);
+
+   mail = Sim.Cast(Object.HandleProperty(button,"MailHandle"));
+
+   Global.SetHandle("g_trout_shipmail_current_mail",mail);
+
+   CreateMessageView();
+}
+
+// This takes the user back to the list of archives.
+MailViewBackPress()
+{
+   hwindow main;
+   hwindow button;
+
+   main = GUI.Cast(Global.Handle("g_trout_shipmail_mail_view"));
+
+   GUI.DeleteWindow(main);
+
+   button = GUI.Cast(Global.Handle("g_trout_shipmail_back_button"));
+
+   GUI.DeleteWindow(button);
+
+   CreateArchiveView();
+
+}
+
+//*******************************************************************************************/
+//
+// The archive view is a list of buttons, one for each archive. The user picks an archive
+// for further viewing. It also has a text box with a description of each archive.
+// 
+//******************************************************************************************/
+
+CreateArchiveView()
+{
+   hwindow shady_bar;
+
+   hwindow main_split;
+   hwindow top_main_split;
+   hwindow bot_main_split;
+
+   hwindow archive_tag;
+   hwindow desc_tag;
+
+   hwindow archive_list_box;
+   hwindow archive_scroll;
+   hwindow archive_border;
+
+   hwindow desc_text;
+   hwindow desc_scroll;
+   hwindow desc_border;
+
+   hwindow back_button;
+   hwindow cbutton;
+
+   int shady_height;
+   int shady_width;
+   int main_height;
+   int acount, atotal;
+
+   int scroll_width = Global.Int("GUI_scrollbar_width");
+
+   list archive_list;
+   hsim archive;
+
+   string name;
+   string archive_desc = "";
+   string full_desc = "";
+
+
+   shady_bar = GUI.Cast(Global.Handle("g_trout_shipmail_shadybar"));
+
+   shady_height = GUI.WindowCanvasHeight(shady_bar);
+   shady_width =  450;
+
+   // Create the main splitter between the title and the exit button.
+   // Put the split halfway down the screen, offset by top;
+
+//   main_height = shady_height - (Global.Int("GUI_fancybutton_height") + 10);
+//   main_height = main_height - 60;
+
+   main_height = shady_height - Global.Int("EpicGui_content_drop");
+   main_height = main_height - Global.Int("EpicGui_content_footer");
+
+
+
+   main_split = GUI.CreateSplitterWindow(0, 60, 
+                                            shady_width,
+                                            main_height,
+                                            shady_bar,
+                                            (main_height/2),
+                                            false);
+
+   top_main_split = GUI.SplitterWindowTopWindow( main_split );
+   bot_main_split = GUI.SplitterWindowBottomWindow( main_split );
+
+
+   archive_tag = GUI.CreateTextWindow(26,0,shady_width,20,top_main_split);
+
+   GUI.SetTextWindowString(archive_tag,"<HTML><BODY>SELECT CHANNEL</HTML></BODY>");
+
+	GUI.SetWindowFont( archive_tag, "font:/fonts/square721 bdex bt_8pt" );
+
+   archive_list_box = GUI.CreateListBox(0,20,
+                                     GUI.WindowCanvasWidth(top_main_split),
+                                     GUI.WindowCanvasHeight(top_main_split)-60,
+                                     top_main_split,
+                                     true,
+                                     true);
+
+   archive_scroll = GUI.CreateVerticalScrollbar( GUI.WindowCanvasWidth(top_main_split)-(scroll_width+4), 20,
+                                             scroll_width, 
+                                             GUI.WindowCanvasHeight(top_main_split)-60,
+                                             top_main_split,
+                                             archive_list_box,
+                                             Global.Float( "GUI_scrollbar_buttonratio"),
+                                             "" );
+
+
+   archive_list = Global.List("g_trout_marchive_active_list");
+   atotal = List.ItemCount(archive_list);
+
+   for (acount=0;acount<atotal;++acount) {
+
+      archive = Sim.Cast(List.GetNth(archive_list,acount));
+      name = tMail.ScreenName(archive);
+      archive_desc = tMail.Desc(archive);
+
+      cbutton = iGUI.CreateAndInitialiseRectangularInverseButton( none, 
+                                                                  0, 
+                                                                  0, 
+                                                                  GUI.WindowCanvasWidth(top_main_split)-(4+scroll_width), 
+                                                                  name,
+                                                                  "tShipMail.ArchiveButtonPress");       
+
+      Object.AddHandleProperty(cbutton,"MailArchive",archive);
+
+      GUI.AddListBoxEntry(archive_list_box, cbutton);
+
+      // create description string for the lower text window.
+      full_desc = String.Join(full_desc,name);
+      full_desc = String.Join(full_desc,":   ");
+      full_desc = String.Join(full_desc,archive_desc);
+      full_desc = String.Join(full_desc," <p><p><p> ");
+   }
+
+
+   desc_tag = GUI.CreateTextWindow(26,0,
+                                   GUI.WindowCanvasWidth(bot_main_split),
+                                   20,
+                                   bot_main_split);
+
+   GUI.SetTextWindowString(desc_tag,"<HTML><BODY>CHANNEL DESCRIPTION</HTML></BODY>");
+	GUI.SetWindowFont( desc_tag, "font:/fonts/square721 bdex bt_8pt" );
+
+
+   desc_text = GUI.CreateTextWindow(0,20,
+                                    GUI.WindowCanvasWidth(bot_main_split)-(scroll_width+4),
+                                    GUI.WindowCanvasHeight(bot_main_split)-50,
+                                    bot_main_split);
+
+   full_desc = String.Join("<HTML><BODY>",full_desc);
+   full_desc = String.Join(full_desc,"</HTML></BODY>");
+
+   GUI.SetTextWindowString(desc_text, full_desc);
+
+
+   desc_scroll = GUI.CreateVerticalScrollbar( GUI.WindowCanvasWidth(bot_main_split)-scroll_width, 20,
+                                             scroll_width, 
+                                             GUI.WindowCanvasHeight(bot_main_split)-50,
+                                             bot_main_split,
+                                             desc_text,
+                                             Global.Float( "GUI_scrollbar_buttonratio"),
+                                             "" );
+
+   // Put the exit button just up off the bottom.
+   // Use the strange round back buttons found in the base.
+   /*back_button = iGUI.CreateBackButton(20,					
+                                       GUI.WindowCanvasHeight(shady_bar) - 
+                                       (Global.Int("GUI_fancybutton_height") + 8),
+                                       shady_bar);
+
+   GUI.SetButtonFunctionPog(back_button,"tShipMail.OnQuit");
+*/
+
+   back_button = tEpicGui.CreateExitButton(shady_bar, "Exit", "tShipMail.OnQuit");
+
+   Global.SetHandle("g_trout_shipmail_archive_view",main_split);
+   Global.SetHandle("g_trout_shipmail_back_button",back_button);
+}
+
+
+// Started when the user selects an archive they want to view.
+ArchiveButtonPress()
+{
+   hwindow view;
+   hwindow button;
+   hsim archive;
+   hship player = iShip.FindPlayerShip();
+
+   // Set the current archive.
+   button = GUI.FocusedWindow();
+   debug Debug.PrintHandle(button);
+
+   archive = Sim.Cast(Object.HandleProperty(button,"MailArchive"));
+
+   debug Debug.PrintHandle(archive);
+
+   // check if archive is viewable at a base only and player is docked. 
+   if (tMail.isArBaseOnly(archive)) {
+      if (!player_docked()) {
+         iHUD.PlayAudioCue(AC_InvalidInput);
+         return;
+      }
+   }
+
+   Global.SetHandle("g_trout_shipmail_current_archive", archive);
+
+   // Delete the archive view.
+   view = GUI.Cast(Global.Handle("g_trout_shipmail_archive_view"));
+   button = GUI.Cast(Global.Handle("g_trout_shipmail_back_button"));
+   GUI.DeleteWindow(view);
+   GUI.DeleteWindow(button);
+
+   // Create the mail view for the selected archive.
+   CreateMailView();
+}
+
+
+
+
+//*******************************************************************************************/
+//
+// Sets up the main Shipmail window. 
+//
+//******************************************************************************************/
+
+
+ShipMailScreen()
+{
+
+   hwindow shady_bar;
+   hwindow cancel_button;
+   hwindow current_button;
+   hwindow slider;
+   int col, row;
+   list archive_list;
+   hsim archive;
+
+   debug Debug.PrintString("Setting Up Shipmail Window\n");
+
+   CreateGlobals();
+
+   GUI.StopAllMovies();
+   GUI.SetDefaultFont(Global.String("GUI_title_font"));
+
+   shady_bar = iGUI.CreateWideShadyBar();
+   GUI.SetShadyBarWidth(450);
+   
+//   iGUI.AddTitle(shady_bar,"Ship Mail");
+
+   tEpicGui.CreateTitle(shady_bar, "COMM LINK");
+
+   tEpicGui.CreateSubtitle(shady_bar, "Email, News, Jobs and Information");
+
+   // we will need this alot.
+   Global.SetHandle("g_trout_shipmail_shadybar",shady_bar);
+
+   
+   Global.SetHandle("g_trout_shipmail_current_archive", archive);
+
+   // Create the window to display the archive choices.
+   CreateArchiveView();
+}
+
+//*******************************************************************************************/
+//
+// Called by UniGUI to begin ShipMail.
+//
+//******************************************************************************************/
+StartScreen()
+{
+
+   GUI.PopScreensTo("icSpaceFlightScreen");
+   GUI.OverlayScreen("icPDAOverlayManager");
+   iGUI.OverlayCustomScreen("tShipMail.ShipMailScreen");
+
+}
+
+//*******************************************************************************************/
+//
+// Called by UniGUI to ask if we want to run, which is ALWAYS!
+//
+//******************************************************************************************/
+RunCheck()
+{
+   Global.SetBool("g_zz_ug_passme",true);
+}
+
+// Checks if the player is really docked to the nearby station.
+// Used for archives like BaseNet that should only work when a player
+// is docked.
+bool player_docked()
+{
+   hship pship;
+   hhabitat here;
+
+	pship = iShip.FindPlayerShip();
+	here = iHabitat.Nearest(iMapEntity.SystemHabitats(), pship);
+
+   return iSim.IsDockedToStructure(pship, here);
+
+}
+
+
+//*******************************************************************************************/
+// This task looks for unread mail and flashes the hud.
+// Let the player know the inbox has unread mail. Quietly.
+//******************************************************************************************/
+
+task ShipMailWatch()
+{
+   hsim archive;
+   int ucount;
+
+   debug Debug.PrintString("Ship Mail Watch Start!\n");
+
+   schedule {
+      every 60:{
+
+         archive = tMail.FindArchive("ShipMail");
+         if (none != archive) {
+            ucount = tMail.NewArchiveMail(archive);
+            if (0 < ucount){
+               iHUD.Print(String.FormatInt("New Mail",ucount));
+            }
+         }
+      }//every 
+   }//schedule
+}
+
+//*******************************************************************************************/
+//
+// This function is called by MultiMod at Enter_Space event.
+//
+// It sets up the email archive the very first time, and it begins the other archive services
+// 
+//******************************************************************************************/
+StartMyMod()
+{
+   hsim archive;
+
+	debug Debug.PrintString( "Ship Mail started\n" ); 
+
+	//Input.BindKey( "tShipTest.pressKey", "AnySection.CallMyFunction" );
+	 
+   archive = tMail.FindArchive("ShipMail");
+   if(archive == none){
+      debug Debug.PrintString("ShipMail: Creating Archive ShipMail\n");
+      archive = tMail.CreateArchive("ShipMail",
+                                    "Email Inbox",
+                                    "Your inship Email inbox. All personal messages will show up here.",
+                                    false,
+                                    true);
+
+      tMail.SendMail(archive,
+                     "Von Schelling",
+                     "Welcome",
+                     "html:/html/welcome",
+                     "tShipMail.Register",
+                     none, //no reply object.
+                     "",   //no date
+                     true,  //autodelete
+                     false, //critical    
+                     true);//html
+   }
+
+   // tell player they have mail.
+   start ShipMailWatch();
+
+   // the station job board.
+//   tBaseNet.StartBaseNet();
+
+   // the news and info service.
+   tNewsNet.StartNewsNet();
+
+   // unit test code.
+   // Task.Call("tShipTest.StartTest");
+}
+
+// Sends a response to the Welcome message
+// registration accept button press.
+Register()
+{
+   
+      SendEmail("Von Schelling",
+               "Hello Caljo Hnston",
+               "html:/html/register",
+               "",    //no reply function
+               false, //critical    
+               true);//html 
+}
+
+
+
+//*******************************************************************************************/
+// Ends the shipmail app.
+//
+//******************************************************************************************/
+OnQuit()
+{
+
+   debug Debug.PrintString("OnQuit function called\n");
+
+
+   UniGUI.UniGUIRemoveScreen();
+
+}
+

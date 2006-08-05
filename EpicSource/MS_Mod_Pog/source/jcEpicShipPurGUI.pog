@@ -1,0 +1,731 @@
+//*****************************************************************************/
+//
+// jcEpicShipPurGUI.pog
+//
+// This screen supports the player purchasing ships or selling their current
+// ship.
+// 
+// 
+//
+// May 2004, James Walker
+//
+// Last Edit: 
+//****************************************************************************/
+
+
+package		jcEpicShipPurGUI;
+
+
+uses
+	Debug,
+	String,
+	INIFile,
+	iMapEntity,
+	List,
+	Set,
+	Global,
+	iEmail,
+	iHabitat,
+	iShip,
+	iFaction,
+	iScriptedOrders,
+	Task,
+	Math,
+	iFormation,
+	iShipCreation,
+	iComms,
+	Object,
+	State,
+	iInventory,
+	iAI,
+	iPilotSetup,
+	iUtilities,
+	iConversation,
+	Text,
+	iLagrangePoint,
+	Group,
+	Object,
+	iMissionTracker,
+	iCutsceneUtilities,
+	iHUD,
+	iGame,
+	iRemotePilot,
+	iDirector,
+	iLoadout,
+	GUI,
+	iGUI,
+	Config,
+	iMultiplay,
+	Input,
+	iRegion,
+	UniGUI,
+    tEpicGuiEnum,
+	tEpicGui,
+	tSaveGui,
+	ECargoTypes,
+	tEconUtil,
+	tEpicFleet,
+	tEpicMoney,
+	tEFaction;
+
+
+	
+provides
+	DisplayWindow,
+	RunCheck,
+	StartScreen,
+	ExitScreen,
+	ShipSelected,
+	BuyBtn,
+	SellBtn,
+	ConfirmBtn,
+	CancelBtn;
+
+
+enum ePurState
+{
+	SE_NoAction,
+	SE_Buy,
+	SE_Sell
+};
+
+//
+// prototypes
+//
+prototype hwindow create_ship_list(hwindow parent, int x, int y, int width, int height, string btn_fn);
+prototype hide_window( hwindow win );
+prototype show_window( hwindow win );
+prototype hwindow get_top_container();
+prototype hsim docked_to_station();	// returns handle to station the player is docked to, else returns none
+prototype RunCheck();			// UniGui start checker
+prototype StartScreen();		// Start screen
+prototype ExitScreen();			// End screen
+prototype DisplayWindow();		// Display code for screen
+prototype ShipSelected();		// Button select response for buttons in list box
+prototype BuyBtn();				// Buying button
+prototype SellBtn();			// Selling button
+prototype ConfirmBtn();			// Confirm action
+prototype hwindow create_shady_box( hwindow shady_bar );
+
+
+//
+// Fn: RunCheck
+// Desc: Tell UniGUI when this screen should be available
+//
+RunCheck()
+{
+	hship player = iShip.FindPlayerShip();
+	
+    if ( iSim.IsDockedToStructure(iSim.Cast(player), iSim.Cast(docked_to_station())) )
+    {
+		Global.SetBool("g_zz_ug_passme",true);
+    }
+    else
+	{
+		Global.SetBool("g_zz_ug_passme",false);
+    }
+}
+
+
+//
+// Fn: StartScreen
+// Desc: Called by UniGUI to start this screen. This fn is what is referenced
+//       in the UniGUI .ini setup.
+//
+StartScreen()
+{
+   // start a background movie as a tester
+   //GUI.PlayBackgroundMovie("/tug0", "");
+   
+   GUI.PopScreensTo("icSpaceFlightScreen");
+   GUI.OverlayScreen("icPDAOverlayManager");
+   iGUI.OverlayCustomScreen( "jcEpicShipPurGUI.DisplayWindow" );
+}
+
+
+//
+// Fn: ExitScreen
+// Desc: Call when exiting this screen and returning code back to UniGUI
+//
+ExitScreen()
+{
+	// remove global handle
+	Global.Destroy( "gjc_epic_purship_gui_shady" );
+	UniGUI.UniGUIRemoveScreen();
+}
+
+
+//
+// Fn: DisplayWindow
+// Desc: Start ship purchasing gui system for player
+//
+DisplayWindow()
+{
+	hwindow shady_bar;
+	hwindow rh_shady;
+	hwindow help_window;
+	hwindow title;
+	hwindow subtitle;
+	hwindow exit;
+	hwindow ship_list;
+	hwindow buy_btn;
+	hwindow sell_btn;
+	hwindow confirm_btn;
+	hwindow cancel_btn;
+	hwindow info_area;
+	hwindow ship_desc_area;
+	
+	int width, height, accum_y_offset;
+	
+	debug Debug.PrintString("jcEpicShipPurGUI.DisplayWindow START\n");
+	
+	
+	// Set right hand shady bar width and global save handle for later use
+	//shady_bar = iGUI.CreateShadyBar();
+	shady_bar = iGUI.CreateWideShadyBar();
+	rh_shady = iGUI.CreateShadyBarRight();
+
+	Global.CreateHandle("gjc_epic_purship_gui_shady", GA_Write|GA_NoSave, shady_bar);
+
+
+	// define the client area that can be used
+	GUI.SetWindowClientArea( shady_bar, 
+							0,
+							0,
+							GUI.WindowCanvasWidth( shady_bar ),
+							GUI.WindowCanvasHeight( shady_bar) );
+   
+
+
+	height = GUI.WindowCanvasHeight( shady_bar);
+	height = height - Global.Int("EpicGui_content_drop");
+	height = height - Global.Int("EpicGui_content_footer");
+	
+	
+	width = GUI.WindowCanvasWidth( shady_bar);
+	width = width - Global.Int("EpicGui_content_indent");
+	width = width - Global.Int("EpicGui_content_indent");
+	  
+	
+	tEpicGui.CreateTitle(shady_bar, "SHIP DEALER");
+	tEpicGui.CreateSubtitle(shady_bar, "Buy and Sell ships");
+	
+	// Create the exit button
+	tEpicGui.CreateExitButton(shady_bar, "EXIT", "jcEpicShipPurGUI.ExitScreen");
+
+
+	//
+	// Build the detailed layout
+	//
+	accum_y_offset = Global.Int("EpicGui_content_drop");
+	// 1. make ship list
+	ship_list = create_ship_list(shady_bar,
+					Global.Int("EpicGui_content_indent"),
+					accum_y_offset,
+					width/2, height/3, "jcEpicShipPurGUI.ShipSelected");
+	
+	Object.AddHandleProperty(get_top_container(), "ship_list", ship_list);
+
+	GUI.CreateBorder( ship_list );
+
+	
+	// 2. put buttons at bottom of ship list
+	accum_y_offset += (height/3) + Global.Int( "GUI_fancybutton_height" );
+	
+	buy_btn = iGUI.CreateAndInitialiseFancyButton( shady_bar, accum_y_offset, "Buy Ship", "jcEpicShipPurGUI.BuyBtn" );
+	hide_window( buy_btn );
+	GUI.SetWindowTextFormatting( buy_btn, true, 0 );	// centre text
+   	accum_y_offset += GUI.WindowCanvasHeight( buy_btn );
+   	
+	sell_btn = iGUI.CreateAndInitialiseFancyButton( shady_bar, accum_y_offset, "Sell Your Ship", "jcEpicShipPurGUI.SellBtn" );
+	GUI.SetWindowTextFormatting( sell_btn, true, 0 );	// centre text
+	accum_y_offset += GUI.WindowCanvasHeight( sell_btn );
+	
+	confirm_btn = iGUI.CreateAndInitialiseFancyButton( shady_bar, accum_y_offset, "Confirm Buy/Sell", "jcEpicShipPurGUI.ConfirmBtn" );
+	GUI.SetWindowTextFormatting( confirm_btn, true, 0 );	// centre text
+	accum_y_offset += GUI.WindowCanvasHeight( confirm_btn );
+	hide_window( confirm_btn );
+	
+	cancel_btn = iGUI.CreateAndInitialiseFancyButton( shady_bar, accum_y_offset, "Cancel", "jcEpicShipPurGUI.CancelBtn" );
+	GUI.SetWindowTextFormatting( cancel_btn, true, 0 );	// centre text
+	accum_y_offset += GUI.WindowCanvasHeight( cancel_btn );
+	hide_window( cancel_btn );
+	
+	// save inter button handles for on/off control
+	Object.AddHandleProperty( get_top_container(), "confirm_btn", confirm_btn );
+	Object.AddHandleProperty( get_top_container(), "cancel_btn", cancel_btn );
+	Object.AddHandleProperty( get_top_container(), "sell_btn", sell_btn );
+	Object.AddHandleProperty( get_top_container(), "buy_btn", buy_btn );
+	Object.AddIntProperty( get_top_container(), "state", SE_NoAction );
+	
+	// 3. make the info display area
+	info_area = GUI.CreateTextWindow( Global.Int("EpicGui_content_indent"), accum_y_offset,
+									    width/2, height - accum_y_offset, shady_bar );
+    
+    // save the info_area to a global for later access from the buttons and list box
+	Object.AddHandleProperty(get_top_container(), "info_area", info_area);
+	
+	// 4. make the ship descr area
+	ship_desc_area = GUI.CreateTextWindow( Global.Int("EpicGui_content_indent")+ (width/2), accum_y_offset,
+									    width/2, height - accum_y_offset, shady_bar );
+    
+    // save the ship_desc_area to a global for later access from the buttons and list box
+	Object.AddHandleProperty(get_top_container(), "ship_desc_area", ship_desc_area);
+	
+    // hard set some html for debug purposes.
+	debug GUI.SetTextWindowString( info_area, "<html><body>Sample text that should appear in info area</body></html>" );
+	debug GUI.SetTextWindowString( ship_desc_area, "<html><body>Sample text that should appear in ship description area</body></html>" );
+    
+   
+   help_window = create_shady_box(rh_shady);
+   GUI.SetTextWindowResource( help_window, "html:/html/gt_ship_purchase_gui_help");
+
+	debug Debug.PrintString("jcEpicShipPurGUI.DisplayWindow END\n");
+}
+
+
+hwindow create_shady_box( hwindow shady_bar )
+{
+   hwindow border_box;
+   hwindow text_box;
+
+   int top_border = 40;
+   int splitter_alignment_offset = 4;
+   int height = GUI.WindowCanvasHeight( shady_bar ) - 80;
+   int x = Global.Int( "GUI_alignment_offset" ) + splitter_alignment_offset;
+   int y = top_border;
+   int width = Global.Int("GUI_shader_width" ) - ( x * 2 );
+
+   border_box = GUI.CreateStaticWindow( x, y, width, height, shady_bar );
+   GUI.CreateBorder( border_box );
+
+   text_box = GUI.CreateTextWindow( x + 5, y + 5, width - 10, height - 10, shady_bar );
+
+   GUI.SetWindowFont( text_box, Global.String( "GUI_detail_font" ) );
+
+   return text_box;
+}
+
+
+
+//
+// Fn: BuyBtn
+// Desc: Respond to BuyBtn push event
+//
+BuyBtn()
+{
+	hwindow button = GUI.FocusedWindow();
+	hwindow cbtn = 	GUI.Cast( Object.HandleProperty( get_top_container(), "confirm_btn" ) );
+	hwindow cabtn = GUI.Cast( Object.HandleProperty( get_top_container(), "cancel_btn" ) );
+	hwindow sbtn = 	GUI.Cast( Object.HandleProperty( get_top_container(), "sell_btn" ) );
+	hwindow list_box = GUI.Cast( Object.HandleProperty( get_top_container(), "ship_list" ) );
+	
+	debug Debug.PrintString("jcEpicShipPurGUI.BuyBtn: START\n");
+	// only do the buy button if have a selection in the list
+	if( GUI.ListBoxSelectedIndex( list_box ) > -1 )
+	{
+		GUI.SetWindowTitle( cbtn, "Confirm Purchase" );
+		show_window( cbtn );	// confirm visible
+		show_window( cabtn );	// cancel visible
+		hide_window( sbtn );	// sell hidden
+		
+		// set correct state on confirm button
+		Object.SetIntProperty( get_top_container(), "state", SE_Buy );
+	}
+	debug Debug.PrintString("jcEpicShipPurGUI.BuyBtn: End\n");
+}
+
+
+//
+// Fn: SellBtn
+// Desc: Respond to SellBtn push event
+//
+SellBtn()
+{
+	hwindow button = GUI.FocusedWindow();
+	hwindow cbtn = 	GUI.Cast( Object.HandleProperty( get_top_container(), "confirm_btn" ) );
+	hwindow cabtn = GUI.Cast( Object.HandleProperty( get_top_container(), "cancel_btn" ) );
+	hwindow bbtn = 	GUI.Cast( Object.HandleProperty( get_top_container(), "buy_btn" ) );
+	hwindow info_area = GUI.Cast( Object.HandleProperty( get_top_container(), "info_area" ) );
+	string info_html_template = "<html><body>Sell current spaceship for approximately %d.</body></html>";
+	string info_html;
+
+	debug Debug.PrintString("jcEpicShipPurGUI.SellBtn: START\n");
+	GUI.SetWindowTitle( cbtn, "Confirm Sale" );
+	show_window( cbtn );	// confirm visible
+	show_window( cabtn );	// cancel visible
+	hide_window( bbtn );	// buy hidden
+	Object.SetIntProperty( get_top_container(), "state", SE_Sell );
+	
+	// determine how much money player will get for his ship
+	info_html = String.FormatInt(info_html_template, Object.IntProperty(get_top_container(), "player_ship_resale"));
+	
+	GUI.SetTextWindowString( info_area, info_html );
+	debug Debug.PrintString("jcEpicShipPurGUI.SellBtn: End\n");
+}
+
+
+//
+// Fn: ConfirmBtn
+// Desc: Respond to the ConfirmBtn push event
+//
+ConfirmBtn()
+{
+	hwindow button = GUI.FocusedWindow();
+	hwindow sbtn = 	GUI.Cast( Object.HandleProperty( get_top_container(), "sell_btn" ) );
+	hwindow bbtn = 	GUI.Cast( Object.HandleProperty( get_top_container(), "buy_btn" ) );
+	hwindow cbtn = 	GUI.Cast( Object.HandleProperty( get_top_container(), "cancel_btn" ) );
+	hwindow list_box = GUI.Cast( Object.HandleProperty( get_top_container(), "ship_list" ) );
+	hwindow selected;
+	int		price;
+	int		equip_i;
+	int		player_resale;
+	bool	enter_station = false;
+
+	debug Debug.PrintString("jcEpicShipPurGUI.ConfirmBtn: START\n");
+	
+	// confirmed sell
+	if( Object.IntProperty(get_top_container(), "state") == SE_Sell )
+	{
+		iInventory.RemoveCommandSection();
+		iInventory.RemoveTug();
+		iInventory.RemoveFastAttackShip();
+		iInventory.RemoveHeavyCorvette();
+		iInventory.RemoveStormPetrel();
+		
+		iInventory.AddCommandSection();
+		
+		// add in the $$ from the ship sale
+		player_resale = Object.IntProperty(get_top_container(), "player_ship_resale") * (100+Math.RandomInt(0, 15));
+		player_resale /= 100;
+		tEpicMoney.ChangeShipAccount( player_resale );
+
+		hide_window( button );		// confirm hidden
+		hide_window( cbtn );		// cancel hidden
+		hide_window( sbtn );		// sell visible
+		hide_window( bbtn );		// buy visible
+		// enter station gui
+		enter_station = true;
+	}
+	
+	// confirmed buy
+	if( (Object.IntProperty(get_top_container(), "state") == SE_Buy) && ( GUI.ListBoxSelectedIndex( list_box ) > -1 ))
+	{
+		// clean out inventory
+		iInventory.RemoveCommandSection();
+		iInventory.RemoveTug();
+		iInventory.RemoveFastAttackShip();
+		iInventory.RemoveHeavyCorvette();
+		iInventory.RemoveStormPetrel();
+		
+		// determine what has been purchased, and do the add inventory call.
+		selected = GUI.ListBoxValue( list_box );
+		Task.Call( Object.StringProperty( selected, "inventory_fn" ) );
+		// add in the special equipment for this purchase
+		equip_i = 0;
+		while( Object.PropertyExists( selected, String.FormatInt( "add_equipment_%d", equip_i )) )
+		{
+			iInventory.Add(Object.IntProperty(selected, String.FormatInt( "add_equipment_%d", equip_i )), 1);
+			++equip_i;
+		}
+		
+		// take off the $$ for the purchase
+		price = Object.IntProperty( selected, "price" );
+		tEpicMoney.ChangeShipAccount(-price);
+			
+		hide_window( button );		// confirm hidden
+		hide_window( cbtn );		// cancel hidden
+		hide_window( sbtn );		// sell visible
+		hide_window( bbtn );		// buy visible
+		// enter station gui
+		enter_station = true;
+	}
+	
+	
+	Object.SetIntProperty( get_top_container(), "state", SE_NoAction );
+	
+	if( enter_station)
+		tSaveGui.PressEnterStation();
+	
+	debug Debug.PrintString("jcEpicShipPurGUI.ConfirmBtn: End\n");
+}
+
+
+//
+// Fn: CancelBtn
+// Desc: Respond to the CancelBtn push event
+//
+CancelBtn()
+{
+	hwindow button = GUI.FocusedWindow();
+	hwindow sbtn = 	GUI.Cast( Object.HandleProperty( get_top_container(), "sell_btn" ) );
+	hwindow bbtn = 	GUI.Cast( Object.HandleProperty( get_top_container(), "buy_btn" ) );
+	hwindow cbtn = 	GUI.Cast( Object.HandleProperty( get_top_container(), "confirm_btn" ) );
+
+	debug Debug.PrintString("jcEpicShipPurGUI.CancelBtn: START\n");
+	hide_window( button );	// cancel hidden
+	hide_window( cbtn );		// confirm hidden
+	show_window( sbtn );		// sell visible
+	show_window( bbtn );		// buy visible
+	Object.SetIntProperty( get_top_container(), "state", SE_NoAction );
+	debug Debug.PrintString("jcEpicShipPurGUI.CancelBtn: End\n");
+}
+
+
+//
+// Fn: ShipListSelect
+// Desc: Respond to a ship being selected in the ship list box
+//
+ShipSelected()
+{
+	hwindow button = GUI.FocusedWindow();
+	hwindow info_area = GUI.Cast( Object.HandleProperty( get_top_container(), "info_area" ) );
+	hwindow ship_desc_area = GUI.Cast( Object.HandleProperty(get_top_container(), "ship_desc_area" ) );
+	hwindow bbtn = 	GUI.Cast( Object.HandleProperty( get_top_container(), "buy_btn" ) );
+	string info_html_template = "<html><body><hr>Ship: %s<br><br>%s</body></html>";
+	string price, funds, tmp1, tmp2;
+	string info_html;
+	hwindow list_box = GUI.Cast( Object.HandleProperty( get_top_container(), "ship_list" ) );
+	int entry_index = GUI.ListBoxFocusedEntry( list_box );
+	
+	debug Debug.PrintString("jcEpicShipPurGUI.ShipListSelect: START\n");
+	price = String.FromInt( Object.IntProperty(button, "price") );
+	if( Object.IntProperty(button, "price") > tEpicMoney.ShipAccount() )
+	{
+		price = String.Join( price, " (insufficient funds)" );
+	}
+	funds = String.FromInt( tEpicMoney.ShipAccount() );
+	tmp1 = String.FormatStrStr( "Cost: %s<br><br>Available funds: %s", price, funds );
+	info_html = String.FormatStrStr( info_html_template, GUI.WindowTitle( button ), tmp1 );
+	GUI.SetTextWindowString( info_area, info_html );
+	GUI.SetTextWindowResource( ship_desc_area, Object.StringProperty(button, "html_description") );
+	
+	// select the chosen entry
+	GUI.CancelListBoxSelection( list_box );
+	GUI.SelectListBoxEntry( list_box, entry_index );
+	
+	// test to see if player has enough $$ to buy the selected ship
+	if( Object.IntProperty(button, "price") <= tEpicMoney.ShipAccount() )
+	{
+		show_window( bbtn );
+	} else
+	{
+		hide_window( bbtn );
+	}
+	
+	debug Debug.PrintString("jcEpicShipPurGUI.ShipListSelect: End\n");
+}
+
+
+//
+// Fn: create_ship_list
+// Desc: Build up the list of buyable ships from the ini file
+//
+hwindow create_ship_list(hwindow parent, int x, int y, int width, int height, string btn_fn)
+{
+	hwindow		list_box;
+	hwindow		ships;
+	hwindow		button;
+	int			count, i, ship_i, station_i, cargo_i;
+	int			cargo_type;
+	list		ship_list;
+	hinifile	shipyard_ini;
+	string		ship_key;
+	string		ship_name;
+	string		station_type_txt;
+	string		cargo_type_txt;
+	string		standing_const;
+	float		standing_const_val;
+	bool		add_btn;
+	IeHabitatType station_type_docked;
+	hship		player;
+	eSimType	player_type;
+	int			player_resale;
+	hfaction	station_faction;
+	hfaction	player_faction;
+	
+	int cwidth = width - 25;
+	
+	
+	// Create the parent listbox
+	list_box = GUI.CreateListBox( x, y,
+	                             width, height,
+	                             parent,
+	                             true,
+	                             false);
+	
+
+	// Fill the listbox with the ships available for sale
+
+	shipyard_ini = INIFile.Create( "ini:/player_ship" );
+	if( shipyard_ini != none)
+	{
+		debug Debug.PrintString( "jcEpicShipPurGUI: Loading player_ship.ini\n" );
+		debug Debug.PrintString( "Station Docked at: " );
+		debug Debug.PrintString( tEconUtil.StationIntToString( iHabitat.Type( iHabitat.Cast(docked_to_station())) ) );
+		debug Debug.PrintString( "\n" );
+		
+		ship_i = 0;
+		while( INIFile.NumberedExists( shipyard_ini, "Entries", "ship", ship_i ) )
+		{
+			// get ship key
+			ship_key = INIFile.NumberedString( shipyard_ini, "Entries", "ship", ship_i, "");
+			
+			// Determine if this ship should be listed for this station type and faction
+			add_btn = false;
+			station_type_docked = iHabitat.Type( iHabitat.Cast(docked_to_station()));
+			standing_const = INIFile.String( shipyard_ini, ship_key, "standing", "FT_Neutral");
+			standing_const_val = tEFaction.String2LowerLevel( standing_const );
+			station_faction = iSim.Faction( iSim.Cast(docked_to_station()) );
+			player_faction = iFaction.Find( "Player" );
+			
+			if( iFaction.Feeling(station_faction, player_faction) >= standing_const_val )
+			{
+				station_i = 0;
+				while( INIFile.NumberedExists( shipyard_ini, ship_key, "station", station_i ) && !add_btn )
+				{
+					station_type_txt = INIFile.NumberedString( shipyard_ini, ship_key, "station", station_i, "");
+					//station_type_docked = iHabitat.Type( iHabitat.Cast(Global.Handle("g_zz_ug_station")));
+					
+					debug Debug.PrintString( "habitat type: " );
+					debug Debug.PrintInt( station_type_docked );
+					debug Debug.PrintString("\n");
+					
+					if( station_type_txt == tEconUtil.StationIntToString( station_type_docked ) )
+					{
+						add_btn = true;
+					}
+					++station_i;
+				}
+				
+				
+				
+				if( add_btn )
+				{
+					//get ship name
+					ship_name = INIFile.String( shipyard_ini, ship_key, "name", "ERROR-no-name");
+					
+					// make a button with that name and hook to btn function
+					button = iGUI.CreateAndInitialiseRectangularInverseButton(none, 0, 0, 180, ship_name, btn_fn);
+					
+		            // add in ship specific attributes as needed, from ini file
+		            Object.AddStringProperty( button, "ship_key", ship_key);
+		            Object.AddIntProperty( button, "price", INIFile.Int( shipyard_ini, ship_key, "price", 0) );
+		            Object.AddStringProperty( button, "html_description", INIFile.String( shipyard_ini, ship_key, "html_description", "") );
+		            Object.AddStringProperty( button, "inventory_fn", INIFile.String( shipyard_ini, ship_key, "inventory_fn", "") );
+		            
+					cargo_i = 0;
+					while( INIFile.NumberedExists( shipyard_ini, ship_key, "add_equipment", cargo_i ) )
+					{
+						cargo_type_txt = INIFile.NumberedString( shipyard_ini, ship_key, "add_equipment", cargo_i, "");
+						cargo_type = ECargoTypes.String2CargoType( cargo_type_txt );
+						Object.AddIntProperty( button, String.FormatInt( "add_equipment_%d", cargo_i ), cargo_type  );
+						++cargo_i;
+					}
+		            
+		            // add button to list box
+					GUI.AddListBoxEntry(list_box, button);
+				}
+			}
+			// increment counter for ship access to ini file
+			++ship_i;
+		}
+	} else
+	{
+		debug Debug.PrintString( "jcEpicShipPurGUI.create_ship_list: player_ship.ini not found!\n" );
+	}
+	
+	// get the resale value of the players current ship. Then save in gui for later reference
+	// Do this here as we are already processing againts the player_ship.ini file.
+	player = iShip.FindPlayerShip();
+	player_type = iSim.Type( player );
+	switch( player_type )
+	{
+		case T_CommandSection:
+		player_resale = INIFile.Int( shipyard_ini, "Resale_Values", "commandsection", 0 );
+		break;
+		
+		case T_Tug:
+		player_resale = INIFile.Int( shipyard_ini, "Resale_Values", "tug", 0 );
+		break;
+		
+		case T_Patcom:
+		player_resale = INIFile.Int( shipyard_ini, "Resale_Values", "advancedpatcom", 0 );
+		break;
+		
+		case T_Interceptor:
+		player_resale = INIFile.Int( shipyard_ini, "Resale_Values", "stormpetrel", 0 );
+		break;
+		
+		case T_Corvette:
+		player_resale = INIFile.Int( shipyard_ini, "Resale_Values", "heavycorvette", 0 );
+		break;
+	}
+	Object.AddIntProperty(get_top_container(), "player_ship_resale", player_resale);
+	
+	INIFile.Destroy( shipyard_ini );
+
+
+	// Add a scroll bar to the listbox.
+	GUI.CreateVerticalScrollbar( x+width+5,
+                                y,
+                                Global.Int("GUI_scrollbar_width"),
+                                height,
+                                parent,
+                                list_box,
+                                Global.Float( "GUI_scrollbar_buttonratio"), 
+                                "");
+
+	return list_box;
+}
+
+
+//
+// Fn: get_top_container
+// Desc: return the toplevel window container for the screen set
+//
+hwindow get_top_container()
+{
+	return (GUI.Cast( Global.Handle("gjc_epic_purship_gui_shady") ));
+}
+
+
+//
+// Fn: hide_window
+// Desc: Make window invisible and prevent it getting focus
+//
+hide_window( hwindow win )
+{
+	GUI.SetVisible( win, false );
+	GUI.SetWindowAcceptFocus( win, false );
+}
+
+
+//
+// Fn: show_window
+// Desc: Make window visible and allow focus
+//
+show_window( hwindow win )
+{
+	GUI.SetVisible( win, true );
+	GUI.SetWindowAcceptFocus( win, true );
+}
+
+
+//
+// Fn: docked_to_station
+// Desc: Returns the handle to the station the player is docked to
+//       else returns a none handle.
+//
+hsim docked_to_station()
+{
+	hship player = iShip.FindPlayerShip();
+	hhabitat closest_station = iHabitat.Nearest( iMapEntity.SystemHabitats(), player );
+	
+    if ( iSim.IsDockedToStructure(iSim.Cast(player), iSim.Cast(closest_station)) )
+    {
+	    return Sim.Cast(closest_station);
+    }
+    
+    return none;
+}

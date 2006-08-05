@@ -1,0 +1,1085 @@
+package UniGUI;
+
+uses    Sim,
+      iShip,
+      iSim,
+      Debug,
+      Global,
+      GUI,
+      iDirector,
+      iGUI,
+      iHUD,
+      iHabitat,
+      iMapEntity,
+      iLagrangePoint,
+      INIFile,
+      Input,
+      List,
+      Object,
+      String,
+      Task,
+      Text,
+      iUtilities,
+      iCargo,
+      iInventory,
+      iComms,
+      Math,
+      iMod,
+      tEJump,
+      tEpicGuiEnum,
+      tEpicGui;
+
+
+provides Initialise,
+      UniGUIScreen,
+      UniGUIWelcomeScreen,
+      UniGUIToggle,
+      UniGUIStart,
+      UniGUIAddScreen,
+      UniGUIRemoveScreen,
+      UniGUISwapScreen,
+      UniGUIClose,
+      OnShow,
+      OnContinue,
+      OnSelectScreen,
+      ChargePlayer,
+      PayPlayer,
+      OnQuit,
+      OnPDA,
+      UniGUILock,
+      UniGUIUnlock,
+      CreateShadyBox,
+      AddWideTitle,
+      True;
+
+prototype UniGUIAddScreen( string screen_func );
+prototype UniGUISwapScreen( string screen_func );
+prototype UniGUIRemoveScreen();
+prototype UniGUIClose();
+prototype UniGUILock();
+prototype UniGUIUnlock();
+prototype hwindow CreateShadyBox( hwindow shady_bar );
+prototype AddWideTitle();
+prototype True();
+
+
+prototype RunScreen( string script );
+prototype Initialise();
+prototype UniGUIToggle();
+prototype OnQuit();
+prototype OnPDA();
+
+prototype hsim IsDockedToWhat( hisim sim );
+prototype dock_func( hsim station_habitat );
+prototype task unigui_monitor(hwindow list_box);
+prototype task quit_task();
+
+
+prototype list create_screen_buttons( hwindow list_box );
+prototype OnShow();
+prototype OnContinue();
+prototype OnSelectScreen();
+prototype bool ChargePlayer( int number );
+prototype bool PayPlayer( int number );
+
+prototype hwindow create_combo_window( hwindow window, string title, int y, int height, bool scrollbar );
+prototype create_text_box( hwindow shady_bar );
+prototype create_text_box2( hwindow shady_bar );
+
+Initialise()
+{
+   list emptylist;
+
+   Global.CreateBool( "g_zz_ug_screen_active",  GA_Write | GA_NoSave, false );
+   Global.CreateHandle("g_zz_ug_station", GA_Write | GA_NoSave, none );
+   Global.CreateList("g_zz_ug_screens_button_list", GA_Write | GA_NoSave, emptylist );
+   Global.CreateString( "g_zz_ug_selected_screen_script", GA_Write | GA_NoSave, "" );
+   Global.CreateBool( "g_zz_ug_passme", GA_Write | GA_NoSave, false );
+   Global.CreateHandle("g_zz_ug_text_box", GA_Write | GA_NoSave, none );
+   Global.CreateBool( "g_zz_ug_screen_disabled", GA_Write | GA_NoSave, true );
+   Global.CreateHandle("g_zz_ug_text_box2", GA_Write | GA_NoSave, none );
+   Global.CreateHandle("g_zz_ug_monitor_task", GA_Write | GA_NoSave, none );
+   Global.CreateInt("g_zz_ug_button_width", GA_Write | GA_NoSave, 0 );
+
+   if ( Global.Exists( "g_zz_ug_lock_count" ) == false )
+      Global.CreateInt( "g_zz_ug_lock_count", GA_Write, 0 );
+
+   if ( Global.Exists( "g_zz_ug_firsttime_1e" ) == false )
+      Global.CreateBool( "g_zz_ug_firsttime_1e", GA_Write, true );
+
+   if ( Global.Exists( "g_zz_ug_firsttime_1c" ) )
+      Global.Destroy( "g_zz_ug_firsttime_1c" );
+
+   if ( Global.Exists( "g_zz_ug_firsttime_1d" ) )
+      Global.Destroy( "g_zz_ug_firsttime_1d" );
+
+   debug Debug.PrintString( "UniGUI.Initialise: Initialising globals and key bindings\n");
+   Input.BindKey( "UniGUI.UniGUIToggle", "zzUniGUI.UniGUIToggle" );
+   //Input.BindKey( "UniGUI.Dump", "zzUniGUI.Dump" );
+   Input.BindKey( "UniGUI.OnPDA", "SpaceFlight.PDA" );
+   //Input.BindKey( "UniGUI.UniGUILock", "zzUniGUI.Lock" );
+   //Input.BindKey( "UniGUI.UniGUIUnlock", "zzUniGUI.Unlock" );
+
+   Text.Add( "csv:/text/UniGUI" );
+
+
+}
+
+OnPDA()
+{
+
+   GUI.SetRHSShadyBarWidth( 0 );
+
+}
+
+
+dock_func( hsim station_habitat )
+{
+
+
+   Global.SetHandle( "g_zz_ug_station", station_habitat );
+
+   debug
+   {
+      Debug.PrintString("UniGUI: Found station: ");
+      Debug.PrintString( Object.StringProperty( station_habitat,"name" ) );
+      Debug.PrintString(".\n");
+   }
+
+   Global.SetBool( "g_zz_ug_screen_disabled", false );
+
+   if ( Global.Int( "g_zz_ug_lock_count" ) < 1 )
+      iComms.Shout( station_habitat, Object.StringProperty( station_habitat, "name" ) , Text.Field( "zz_ug_welcome", FT_Text ) );
+}
+
+hsim IsDockedToWhat( hisim sim )
+{
+   hsim docked_station;
+
+   docked_station = iHabitat.Nearest(iMapEntity.SystemHabitats(), sim);
+
+   if ( iSim.IsDockedToStructure( sim, iSim.Cast( docked_station ) ) ) {
+      //debug Debug.PrintString( "UniGUI: IsDockedToWhat Found Station the Sim is docked to.\n" );
+      return docked_station;
+   }
+   return none;
+}
+
+// if player is docked, it returns the station.
+hisim is_docked( )
+{
+   hship player = iShip.FindPlayerShip();
+   hisim docked_station;
+
+   docked_station = iSim.Cast(iHabitat.Nearest(iMapEntity.SystemHabitats(), player));
+
+   if ( iSim.IsDockedToStructure( player, docked_station ) ) {
+      return docked_station;
+   }
+
+   return none;
+}
+
+/*
+prototype bool ChargePlayer( int number );
+
+This charges the player 'number' CUs. It gives the player some blueprints, manufactures 'number'
+of a dummy cargo with a manufacture cost of 1. It returns true if the player can satisfy the deal,
+i.e. has more than 'number' CUs.
+*/
+bool ChargePlayer( int number )
+{
+   int type_blueprint_needed = 170;
+   int type_to_produce = 561;
+   hcargo cargo_handle_for_blueprint = iCargo.Find( type_blueprint_needed );
+   hcargo cargo_handle_to_produce = iCargo.Find( type_to_produce );
+
+   int manufacture_value = iCargo.ManufactureValue( cargo_handle_to_produce );
+   int recycle_value =iCargo.RecycleValue( cargo_handle_to_produce );
+
+   bool flag;
+
+   if ( number > 0 ) {
+      iInventory.Add( type_blueprint_needed, 1 );
+
+      iCargo.SetManufactureValue( cargo_handle_to_produce, 1 );
+
+
+      flag = iInventory.Manufacture( type_to_produce, number );
+      iInventory.Remove( type_blueprint_needed, 1 );
+      iCargo.SetManufactureValue( cargo_handle_to_produce, manufacture_value );
+
+      if ( flag ) {
+         iInventory.Remove( type_to_produce, number );
+
+         debug
+         {
+            Debug.PrintString( "UniGUI: Player Charged, " );
+            Debug.PrintInt( iInventory.ManufactureUnits() );
+            Debug.PrintString( " Manufacturing Units Left\n" );
+         }
+
+         return true;
+      }
+   }
+
+   return false;
+}
+
+/*
+prototype bool PayPlayer( int number );
+
+This pays the player 'number' CUs. It works by giving the player 'number' x a cargo item with a recycle value of 1,
+and then recycling all of them. The recycle value is then set back to its original value.
+It returns true if the cargo is recycled successfully (always).
+*/
+bool PayPlayer( int number )
+{
+   int cg = 154;
+   hcargo cargo = iCargo.Find( 154 );
+   int recycle_value = iCargo.RecycleValue( cargo );
+
+   if ( number > 0 ) {
+      iCargo.SetRecycleValue( cargo, 1 );
+      iInventory.AddWithoutMarkingNew( cg, number );
+
+      if ( iInventory.Recycle( cg, number ) ) {
+
+         debug
+         {
+            Debug.PrintString( "FutureTrader: Player Paid, " );
+            Debug.PrintInt( iInventory.ManufactureUnits() );
+            Debug.PrintString( " Manufacturing Units Left\n" );
+         }
+
+         iCargo.SetRecycleValue( cargo, recycle_value );
+
+         return true;
+      }
+   }
+
+   return false;
+}
+
+/*
+
+*/
+UniGUIToggle()
+{
+   /*
+   if ( Global.Int( "g_zz_ug_lock_count" ) > 0 )
+   {
+     debug Debug.PrintString( "UniGUIToggle: Not running. Locked.\n");
+     iHUD.Print("UniGUI: Currently Locked.");
+     return;
+   }
+   */
+
+/*
+   if ( iDirector.IsBusy() ) {
+      debug Debug.PrintString( "UniGUIToggle: Not running. Director mode active.\n");
+      return;
+   }
+*/
+   if ( tEJump.IsCapsuleSpace(iSim.ActiveWorld()))
+   {
+      debug Debug.PrintString( "UniGUIToggle: Not running. Player is capsule jumping.\n");
+      return;
+   }
+
+   /*
+   if ( ( iDirector.Camera() != CAM_Internal ) && ( iDirector.Camera() != CAM_InternalNoCockpit ) ) {
+      debug Debug.PrintString( "UniGUIToggle: Not running. Camera is incorrect.\n");
+      iHUD.Print("UniGUI: You must be in First-Person View to use the FutureTrade Screen.");
+      iHUD.PlayAudioCue( AC_InvalidInput );
+      return;
+   }
+*/
+
+   if ( Global.Bool( "g_zz_ug_screen_active" ) == false ) {
+      Global.SetBool( "g_zz_ug_screen_active", true );
+      GUI.PopScreensTo("icSpaceFlightScreen");
+      GUI.OverlayScreen("icPDAOverlayManager");
+      iGUI.OverlayCustomScreen( "UniGUI.UniGUIScreen" );
+
+      // Removing the welcome screen for now.
+      /*
+      if ( Global.Bool( "g_zz_ug_firsttime_1e" ) ) {
+         Global.SetBool( "g_zz_ug_firsttime_1e", false );
+
+         Global.SetBool( "g_zz_ug_screen_active", true );
+         GUI.PopScreensTo("icSpaceFlightScreen");
+         GUI.OverlayScreen("icPDAOverlayManager");
+         //iGUI.OverlayCustomScreen( "UniGUI.UniGUIWelcomeScreen" );
+         iGUI.OverlayCustomScreen( "UniGUI.UniGUIScreen" );
+      } else {
+         Global.SetBool( "g_zz_ug_screen_active", true );
+         GUI.PopScreensTo("icSpaceFlightScreen");
+         GUI.OverlayScreen("icPDAOverlayManager");
+         iGUI.OverlayCustomScreen( "UniGUI.UniGUIScreen" );
+      }
+      */
+   } else {
+      OnQuit();
+   }
+
+} // UniGUIToggle
+
+
+// Similar to toggle, but always puts up the screen, or leaves it up.
+UniGUIStart()
+{
+
+   Global.SetBool( "g_zz_ug_screen_active", true );
+   GUI.PopScreensTo("icSpaceFlightScreen");
+   GUI.OverlayScreen("icPDAOverlayManager");
+   iGUI.OverlayCustomScreen( "UniGUI.UniGUIScreen" );
+
+   /* // Removing the welcome screen
+   if ( Global.Bool( "g_zz_ug_screen_active" ) == false ) {
+      if ( Global.Bool( "g_zz_ug_firsttime_1e" ) ) {
+         Global.SetBool( "g_zz_ug_firsttime_1e", false );
+
+         Global.SetBool( "g_zz_ug_screen_active", true );
+         GUI.PopScreensTo("icSpaceFlightScreen");
+         GUI.OverlayScreen("icPDAOverlayManager");
+         //iGUI.OverlayCustomScreen( "UniGUI.UniGUIWelcomeScreen" );
+         iGUI.OverlayCustomScreen( "UniGUI.UniGUIScreen" );
+      } else {
+         Global.SetBool( "g_zz_ug_screen_active", true );
+         GUI.PopScreensTo("icSpaceFlightScreen");
+         GUI.OverlayScreen("icPDAOverlayManager");
+         iGUI.OverlayCustomScreen( "UniGUI.UniGUIScreen" );
+      }
+   }
+   */
+}
+
+UniGUIScreen()
+{
+   // Windows
+   hwindow shady_bar;
+   hwindow shady_bar_r;
+   hwindow goods_list_box;
+   hwindow screens_list_box;
+   hwindow text_box;
+   hwindow current_button;
+
+   int count;
+   int waypoint_border_left;
+   int waypoint_border_top;
+   int button_width = Global.Int( "GUI_inversebutton_width" );
+
+   int width, height;
+
+   list goods_list;
+   list screens_button_list;
+   list action_button_list;
+   list temp_list;
+
+   hisim station;
+
+   htask unigui_monitor_task;
+
+   GUI.StopAllMovies();
+
+   GUI.SetDefaultFont( Global.String( "GUI_title_font" ) );
+
+   // Shady bars on both sides of the screen.
+   //shady_bar = iGUI.CreateWideShadyBar();
+
+   shady_bar = iGUI.CreateShadyBar();
+   shady_bar_r = iGUI.CreateShadyBarRight();
+
+   station = is_docked();
+
+   if (none != station) {
+      tEpicGui.CreateTitle(shady_bar, Text.Field( "zz_ug_title_dock", FT_Text ) );
+      //tEpicGui.CreateSubtitle(shady_bar, Text.Field( "zz_ug_subtitle_docked", FT_Text ) );
+      tEpicGui.CreateSubtitle(shady_bar, Sim.Name(station));
+   }else {
+      tEpicGui.CreateTitle(shady_bar, Text.Field( "zz_ug_title", FT_Text ) );
+      tEpicGui.CreateSubtitle(shady_bar, Text.Field( "zz_ug_subtitle", FT_Text ) );
+   }
+
+   height = GUI.WindowCanvasHeight( shady_bar);
+   height = height - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+   
+
+   // Get subscreens.
+//   screens_list_box = create_combo_window( shady_bar, "zz_ug_mods", Global.Int( "GUI_title_yoffset" ) + 23, 435, true );
+
+   screens_list_box = create_combo_window( shady_bar, "zz_ug_mods", Global.Int("EpicGui_content_drop"), height, true );
+
+   //GUI.SetListBoxSelectFunction( screens_list_box, "UniGUI.OnSectionSelect" );
+
+   screens_button_list = create_screen_buttons( screens_list_box );
+
+   if ( List.IsEmpty( screens_button_list ) ) {
+      UniGUIClose();
+      iHUD.Print("UniGUI: There are no UniGUI Subscreens currently available.");
+      iHUD.PlayAudioCue( AC_InvalidInput );
+   } else {
+
+      Global.SetList( "g_zz_ug_screens_button_list", screens_button_list );
+      GUI.SelectListBoxEntry( screens_list_box, 0 );
+
+      Global.SetString("g_zz_ug_selected_screen_script", Object.StringProperty( GUI.Cast( List.GetNth( screens_button_list, 0 ) ) , "script" ) );
+
+      // Removing the launch button. Selections now launch themselves.
+      /*
+      current_button = iGUI.CreateAndInitialiseParentlessInverseButton(
+                                                                      "UniGUI.OnShow",
+                                                                      Text.Field( "zz_ug_open", FT_Text ),
+                                                                      action_button_list );
+
+      GUI.SetInputOverrideFunctions(
+                                   current_button,
+                                   "", "", "", "", "",
+                                   "UniGUI.OnQuit",
+                                   "", "", "" );
+
+
+      waypoint_border_left = Global.Int( "GUI_alignment_offset" ) + Global.Int( "GUI_fancyborder_alignmentoffset" );
+      waypoint_border_top = GUI.WindowCanvasHeight( shady_bar ) - 75;
+
+      iGUI.CreateWindowListInFancyBorder(
+                                        shady_bar,
+                                        action_button_list,
+                                        waypoint_border_left,
+                                        waypoint_border_top );
+
+*/
+/*
+      current_button = iGUI.CreateAndInitialiseFancyButton(
+                                                          shady_bar,
+                                                          GUI.WindowCanvasHeight( shady_bar ) - ( Global.Int( "GUI_fancybutton_height" ) + 8 ),
+                                                          Text.Field( "zz_ug_exit", FT_Text ),
+                                                          "UniGUI.OnQuit" );
+      */
+
+      current_button = tEpicGui.CreateExitButton(shady_bar, Text.Field( "zz_ug_exit", FT_Text ), "UniGUI.OnQuit");
+
+      Global.SetHandle("g_zz_ug_text_box", CreateShadyBox( shady_bar_r ) );
+      GUI.SetTextWindowResource( GUI.Cast( Global.Handle("g_zz_ug_text_box") ), Object.StringProperty( GUI.Cast( List.GetNth( screens_button_list, 0 ) ), "html_file" ) );
+
+      unigui_monitor_task = start unigui_monitor(screens_list_box);
+      Global.SetHandle( "g_zz_ug_monitor_task", unigui_monitor_task );
+      Task.Detach( unigui_monitor_task );
+
+   }
+
+} // UniGUIScreen
+
+UniGUIWelcomeScreen()
+{
+   // Windows
+   hwindow shady_bar;
+   hwindow goods_list_box;
+   hwindow screens_list_box;
+   hwindow text_box;
+   hwindow current_button;
+
+   int count;
+   int waypoint_border_left;
+   int waypoint_border_top;
+   int button_width = Global.Int( "GUI_inversebutton_width" );
+
+   list goods_list;
+   list screens_button_list;
+   list action_button_list;
+   list temp_list;
+
+   GUI.StopAllMovies();
+
+   GUI.SetDefaultFont( Global.String( "GUI_title_font" ) );
+
+   // Shady bars on one side of the screen.
+   shady_bar = iGUI.CreateShadyBar();
+
+   iGUI.AddTitle( shady_bar, Text.Field( "zz_ug_title", FT_Text ) );
+
+   create_text_box2( shady_bar );
+
+   GUI.SetTextWindowResource( GUI.Cast( Global.Handle("g_zz_ug_text_box2") ), "html:/html/zz_ug_welcome");
+
+   current_button = iGUI.CreateAndInitialiseParentlessInverseButton(
+                                                                   "UniGUI.OnContinue",
+                                                                   Text.Field( "zz_ug_continue", FT_Text ),
+                                                                   action_button_list );
+
+   GUI.SetInputOverrideFunctions(
+                                current_button,
+                                "", "", "", "", "",
+                                "UniGUI.OnQuit",
+                                "", "", "" );
+
+   waypoint_border_left = Global.Int( "GUI_alignment_offset" ) + Global.Int( "GUI_fancyborder_alignmentoffset" );
+   waypoint_border_top = GUI.WindowCanvasHeight( shady_bar ) - 75;
+
+   iGUI.CreateWindowListInFancyBorder(
+                                     shady_bar,
+                                     action_button_list,
+                                     waypoint_border_left,
+                                     waypoint_border_top );
+
+   current_button = iGUI.CreateAndInitialiseFancyButton(
+                                                       shady_bar,
+                                                       GUI.WindowCanvasHeight( shady_bar ) - ( Global.Int( "GUI_fancybutton_height" ) + 8 ),
+                                                       Text.Field( "zz_ug_exit", FT_Text ),
+                                                       "UniGUI.OnQuit" );
+}
+
+list create_screen_buttons( hwindow list_box )
+{
+   int number_of_mods = iMod.Count();
+   string mod_name;
+   string script;
+   string enter_ask;
+   string html_file;
+   int count;
+   hinifile mod_ini;
+   bool flag = false;
+
+   int lockable;
+
+   int i;
+   int t;
+
+   list buttons;
+
+   int splitter_left;
+   int splitter_top;
+
+   hwindow button;
+
+   int button_height = Global.Int( "GUI_inversebutton_height" );
+   int list_box_gap = 3;
+   int button_width = Global.Int( "g_zz_ug_button_width" );
+
+/*
+   debug
+   {
+      Debug.PrintString( "UniGUI: Checking " );
+      Debug.PrintInt( number_of_mods );
+      Debug.PrintString( " mods for scripts to run for UniGUI\n" );
+   }
+*/
+
+   for ( count = 0 ; count < number_of_mods ; ++count ) {
+      mod_name = iMod.Name( count );
+/*
+      debug
+      {
+         Debug.PrintString( "UniGUI: Processing Mod " );
+         Debug.PrintInt( count );
+         Debug.PrintString( ": " );
+         Debug.PrintString( mod_name );
+         Debug.PrintString( ". " );
+      }
+*/
+      mod_ini = INIFile.Create( String.Join( "ini:/", mod_name ) );
+      t = iUtilities.FindNumberOfINIEntries( mod_ini, "UniGUI", "enter_script" );
+/*
+      debug
+      {
+         Debug.PrintString( "Opened mod INI file = " );
+         Debug.PrintString( mod_name );
+         Debug.PrintString( ".ini.\n" );
+         Debug.PrintHandle(mod_ini);
+         Debug.PrintString( "\n" );
+      }
+*/
+      if ( INIFile.Exists( mod_ini, "UniGUI", "enter_script" ) ) {
+         for ( i = 0; i < t ; ++i ) {
+
+            Global.SetBool("g_zz_ug_passme",false);
+            flag = false;
+            enter_ask = "";
+            script = "";
+
+            // It does exist so get the entry.
+            script = INIFile.NumberedString( mod_ini, "UniGUI", "enter_script",i, "" );
+            enter_ask = INIFile.NumberedString( mod_ini, "UniGUI", "enter_ask",i, "" );
+            html_file = INIFile.NumberedString( mod_ini, "UniGUI", "html_file",i, "" );
+            mod_name = INIFile.NumberedString( mod_ini, "UniGUI", "display_name",i, "" );
+            lockable = INIFile.NumberedInt( mod_ini, "UniGUI", "lockable", i, 1 );
+
+            if ( lockable == 1 ) {
+               if ( Global.Int( "g_zz_ug_lock_count" ) > 0 ) {
+                  debug
+                  {
+                     Debug.PrintString("UniGUI: Locked = ");
+                     Debug.PrintString( mod_name );
+                     Debug.PrintString( ".\n");
+                  }
+                  script = "";
+               }
+            }
+
+            if ( script == "" ) {
+/*
+               debug Debug.PrintString( "Entry found, but no script call specified.\n" );
+               debug Debug.PrintString( mod_name);
+               debug Debug.PrintString( " \n");
+*/
+            } else {
+/*
+               debug
+               {
+                  Debug.PrintString( "UniGUI: Script function = " );
+                  Debug.PrintString( script );
+                  Debug.PrintString( "\n" );
+
+                  Debug.PrintString( "UniGUI: Testing script = " );
+                  Debug.PrintString( enter_ask );
+                  Debug.PrintString( "\n" );
+               }
+*/
+
+               Global.SetBool("g_zz_ug_passme", false);
+
+               Task.Call( enter_ask );
+
+               flag = Global.Bool("g_zz_ug_passme");
+
+               if ( flag ) {
+
+
+                  button = iGUI.CreateAndInitialiseRectangularInverseButton(none, 
+                                                                            0, 
+                                                                            0, 
+                                                                            button_width, 
+                                                                            mod_name,
+                                                                            "UniGUI.OnShow");
+
+/*
+                  button = iGUI.CreateAndInitialiseRectangularInverseRadioButton(
+                                                                                none,
+                                                                                0,
+                                                                                0,
+                                                                                button_width,
+                                                                                mod_name,
+                                                                                false );
+*/
+//                  iGUI.MakeRectangularInverseButtonIconic( button );
+
+                  Object.AddStringProperty( button, "mod_name", mod_name );
+                  Object.AddStringProperty( button, "script", script );
+                  Object.AddStringProperty( button, "html_file", html_file );
+
+                  /*
+                  GUI.SetInputOverrideFunctions(
+                                               button,
+                                               "",
+                                               "",
+                                               "",
+                                               "",
+                                               "",
+                                               "",
+                                               "UniGUI.OnShow",
+                                               "",
+                                               "" );
+*/
+                  List.AddTail( buttons, button );
+               } // if flag
+
+            } // else (script!="")
+         } // for
+
+      } // if
+
+      INIFile.Destroy( mod_ini );
+
+   } // End for each mod ini
+
+
+   buttons = List.SortByStringProperty( buttons, "mod_name" );
+
+   for ( count = 0 ; count < List.ItemCount( buttons ) ; ++count ) {
+      GUI.AddListBoxEntry( list_box, GUI.Cast( List.GetNth( buttons, count ) ) );
+   }
+
+   return buttons;
+}
+
+OnSelectScreen()
+{
+
+   hwindow selected = GUI.FocusedWindow();
+/*
+   debug
+   {
+      Debug.PrintString("UniGUI: Selected Screen -- ");
+      Debug.PrintString( Object.StringProperty( selected, "mod_name" ) );
+      Debug.PrintString("\n");
+      Debug.PrintString("UniGUI: Selected Script -- ");
+      Debug.PrintString( Object.StringProperty( selected, "script" ) );
+      Debug.PrintString("\n");
+      Debug.PrintString("UniGUI: Selected HTML -- ");
+      Debug.PrintString( Object.StringProperty( selected, "html_file" ) );
+      Debug.PrintString("\n");
+   }
+   */
+   GUI.SetTextWindowResource( GUI.Cast( Global.Handle("g_zz_ug_text_box") ), Object.StringProperty( selected, "html_file" ) );
+   Global.SetString( "g_zz_ug_selected_screen_script", Object.StringProperty( selected, "script" ) );
+
+
+
+}
+
+hwindow create_combo_window( hwindow window, string title, int y, int height, bool scrollbar )
+{
+
+   hwindow pane;
+   hwindow title_window;
+
+   hsim current_location;
+
+   string title_font = Global.String( "GUI_subtitle_font" );
+
+   int button_height = Global.Int( "GUI_inversebutton_height" );
+   int list_box_gap = 3;
+   int button_width = Global.Int( "GUI_inversebutton_width" );
+
+   int i;
+
+   int scrollbar_width = Global.Int( "GUI_scrollbar_width" );
+
+   hwindow list_box;
+   hwindow button;
+   hwindow splitter;
+
+   list buttons;
+   list goods_list;
+
+   int x;
+   int width;
+   int splitter_y_bottom_offset = 120;
+   int splitter_alignment_offset = 4;
+   int split = ( 2 * Global.Int( "GUI_fancyborder_width" ) ) + 13;
+   int element_gap = 10;
+
+   x = Global.Int( "GUI_alignment_offset" ) + splitter_alignment_offset;
+
+   width = Global.Int( "GUI_shader_width" ) + splitter_alignment_offset - ( x * 2 );
+
+   if ( height == -1 ) {
+      height = ( GUI.WindowCanvasHeight( window ) - ( y + splitter_y_bottom_offset ) );
+   }
+
+   splitter = GUI.CreateSplitterWindow(
+                                      x, y,
+                                      width, height,
+                                      window,
+                                      split,
+                                      false );
+
+   pane = GUI.SplitterWindowTopWindow( splitter );
+
+   title_window = iGUI.CreateAndInitialiseStaticWindow(
+                                                      0,
+                                                      0,
+                                                      GUI.WindowCanvasWidth( pane ),
+                                                      GUI.WindowCanvasHeight( pane ),
+                                                      pane,
+                                                      title_font,
+                                                      Text.Field( title, FT_Text ) );
+
+   GUI.SetWindowTextFormatting( title_window, false, 9 );
+
+   pane = GUI.SplitterWindowBottomWindow( splitter );
+
+   if ( scrollbar ) {
+      button_width = button_width - ( scrollbar_width + 4);
+   }
+
+   Global.SetInt("g_zz_ug_button_width",button_width);
+
+   list_box = GUI.CreateListBox(
+                               0, 0,
+                               button_width,
+                               GUI.WindowCanvasHeight( pane ),
+                               pane,
+                               true,
+                               false );
+
+   List.AddHead( goods_list, list_box );
+
+   if ( scrollbar ) {
+      GUI.CreateVerticalScrollbar(
+                                 GUI.WindowCanvasWidth( pane ) - scrollbar_width,
+                                 0,
+                                 scrollbar_width,
+                                 GUI.WindowCanvasHeight( pane ),
+                                 pane,
+                                 list_box,
+                                 Global.Float( "GUI_scrollbar_buttonratio" ),
+                                 "" );
+   }
+
+   return list_box;
+
+} // create_combo_window
+
+create_text_box( hwindow shady_bar )
+{
+   hwindow border_box;
+   hwindow text_box;
+
+   int top_border = 24;
+   int splitter_alignment_offset = 4;
+   int height = 540;
+   int x = Global.Int( "GUI_alignment_offset" ) + splitter_alignment_offset;
+   int y = top_border;
+   int width = Global.Int( "GUI_shader_width" ) - ( x * 2 );
+
+   border_box = GUI.CreateStaticWindow( x, y, width, height, shady_bar );
+   GUI.CreateBorder( border_box );
+
+   text_box = GUI.CreateTextWindow( x + 5, y + 5, width - 10, height - 10, shady_bar );
+
+   GUI.SetWindowFont( text_box, Global.String( "GUI_detail_font" ) );
+
+   Global.SetHandle( "g_zz_ug_text_box", text_box );
+
+} // create_text_box
+
+hwindow CreateShadyBox( hwindow shady_bar )
+{
+   hwindow border_box;
+   hwindow text_box;
+
+   int top_border = 40;
+   int splitter_alignment_offset = 4;
+   int height = GUI.WindowCanvasHeight( shady_bar ) - 80;
+   int x = Global.Int( "GUI_alignment_offset" ) + splitter_alignment_offset;
+   int y = top_border;
+   int width = Global.Int("GUI_shader_width" ) - ( x * 2 );
+
+   border_box = GUI.CreateStaticWindow( x, y, width, height, shady_bar );
+   GUI.CreateBorder( border_box );
+
+   text_box = GUI.CreateTextWindow( x + 5, y + 5, width - 10, height - 10, shady_bar );
+
+   GUI.SetWindowFont( text_box, Global.String( "GUI_detail_font" ) );
+
+   return text_box;
+}
+
+create_text_box2( hwindow shady_bar )
+{
+   hwindow border_box;
+   hwindow text_box;
+
+   int top_border = 23 + 23;
+   int splitter_alignment_offset = 4;
+   int height = 425;
+   int x = Global.Int( "GUI_alignment_offset" ) + splitter_alignment_offset;
+   int y = top_border + Global.Int( "GUI_title_yoffset" );
+   int width = Global.Int( "GUI_shader_width" ) - ( x * 2 );
+
+   border_box = GUI.CreateStaticWindow( x, y, width, height, shady_bar );
+   GUI.CreateBorder( border_box );
+
+   text_box = GUI.CreateTextWindow( x + 5, y + 5, width - 10, height - 10, shady_bar );
+
+   GUI.SetWindowFont( text_box, Global.String( "GUI_detail_font" ) );
+
+   Global.SetHandle( "g_zz_ug_text_box2", text_box );
+
+}
+
+task unigui_monitor(hwindow list_box)
+{
+   hship player = iShip.FindPlayerShip();
+   int focused_index;
+   int previous_focus = -2;
+
+   while ( 1 ) {
+
+      // if ( Global.Bool("g_zz_ug_screen_active") && Global.Bool("g_zz_ug_screen_disabled") == false && iSim.IsDocked( player ) == false )
+      // {
+      //    Global.SetBool("g_zz_ug_screen_disabled", true );
+      //    Global.SetHandle("g_zz_ug_station", none );
+      //    Task.Detach( start quit_task() );
+      //    return;
+      // }
+
+
+		// Continually check the list boxes for selections.
+		focused_index = GUI.ListBoxFocusedEntry( list_box );
+		
+		// If a window in the location list box is being focused... ( -1 is no focus )
+		if ( focused_index != -1 )
+		{
+			// ... and it has changed from the previous focus can display the info for the
+			//	   currently focused location.
+
+			if ( focused_index != previous_focus )
+			{
+            OnSelectScreen();
+
+            previous_focus = focused_index;
+         }
+      }
+
+
+
+
+/*
+      if ( iDirector.IsBusy() ) {
+         Task.Detach( start quit_task() );
+         return;
+      }
+
+      if ( iSim.IsCapsuleJumping( iShip.FindPlayerShip() ) ) {
+         Task.Detach( start quit_task() );
+         return;
+      }
+
+      if ( ( iDirector.Camera() != CAM_Internal ) && ( iDirector.Camera() != CAM_InternalNoCockpit ) ) {
+         Task.Detach( start quit_task() );
+         return;
+      }
+*/
+      Task.Sleep( Task.Current(), 0.1 );
+   }
+
+}
+
+task quit_task()
+{
+   OnQuit();
+}
+
+OnShow()
+{
+   hwindow selected = GUI.FocusedWindow();
+   string script = Object.StringProperty( selected, "script" );
+/*
+   debug
+   {
+      Debug.PrintString("UniGUI: OnShow. Script = \"");
+      Debug.PrintString( script );
+      Debug.PrintString("\"\n");
+   }
+*/
+   RunScreen( script );
+}
+
+OnContinue()
+{
+   UniGUISwapScreen("UniGUI.UniGUIScreen");
+}
+
+OnQuit()
+{
+
+   Task.Halt( Task.Cast( Global.Handle( "g_zz_ug_monitor_task" ) ) );
+   GUI.SetRHSShadyBarWidth( 0 );
+   UniGUIClose();
+
+
+} // OnQuit
+
+RunScreen( string script )
+{
+   /*
+   debug
+   {
+      Debug.PrintString("UniGUI: Running Screen -- ");
+      Debug.PrintString( script );
+      Debug.PrintString("\n");
+   }
+   */
+
+   UniGUIClose();
+
+   Task.Call( script );
+}
+
+UniGUIAddScreen( string screen_func )
+{
+   GUI.PopScreensTo("icSpaceFlightScreen");
+   GUI.OverlayScreen("icPDAOverlayManager");
+   iGUI.OverlayCustomScreen( screen_func );
+}
+
+UniGUISwapScreen( string screen_func )
+{
+   GUI.RemoveOverlaysAfter("icSpaceFlightScreenOverlay");
+   GUI.PopScreensTo("icSpaceFlightScreen");
+   GUI.OverlayScreen("icPDAOverlayManager");
+   iGUI.OverlayCustomScreen( screen_func );
+}
+
+UniGUIRemoveScreen()
+{
+   GUI.RemoveOverlaysAfter("icSpaceFlightScreenOverlay");
+   Global.SetBool( "g_zz_ug_screen_active", true );
+   GUI.PopScreensTo("icSpaceFlightScreen");
+   GUI.OverlayScreen("icPDAOverlayManager");
+   iGUI.OverlayCustomScreen( "UniGUI.UniGUIScreen" );
+}
+
+UniGUIClose()
+{
+   GUI.RemoveOverlaysAfter("icSpaceFlightScreenOverlay");
+   GUI.PopScreensTo("icSpaceFlightScreen");
+
+   // Add this during debug development.
+   GUI.OverlayScreen("icDebugScreen");
+   Global.SetBool( "g_zz_ug_screen_active", false );
+}
+
+UniGUILock()
+{
+   int i = Global.Int( "g_zz_ug_lock_count" );
+   string msg;
+
+   i = i + 1;
+
+   Global.SetInt( "g_zz_ug_lock_count", i );
+
+   /*
+   msg = "UniGUI: Locked. Count is now '";
+   msg = String.Join( msg, String.FromInt( i ) );
+   msg = String.Join( msg, "'." );
+ 
+   iHUD.Print( msg );
+   */
+}
+
+UniGUIUnlock()
+{
+   int i = Global.Int( "g_zz_ug_lock_count" );
+   string msg;
+
+   i = i - 1;
+
+   if ( i < 0 ) {
+      i = 0;
+      debug Debug.PrintString("UniGUI.Unlock: Lockcount attempted to become negative.\n");
+   }
+
+   Global.SetInt( "g_zz_ug_lock_count", i );
+
+   /*
+   msg = "UniGUI: Unlocked. Count is now '";
+   msg = String.Join( msg, String.FromInt( i ) );
+   msg = String.Join( msg, "'." );
+ 
+   iHUD.Print( msg );
+   */
+}
+
+True()
+{
+   Global.SetBool("g_zz_ug_passme", true );
+}
+
+
+
+

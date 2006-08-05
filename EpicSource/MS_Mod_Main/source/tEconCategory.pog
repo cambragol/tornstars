@@ -1,0 +1,62 @@
+//*******************************************************************************************/
+//
+// tEconCategory.pog
+//
+// Code reads in a list of categories and attaches
+// 
+//
+//
+//
+// March 2005, Jon Freise
+//******************************************************************************************/
+
+package tEconCategory;
+
+uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, 
+   iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+   iConversation, iFormation, Group, Text, iEmail, State, 
+   iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker, 
+   iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+   iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
+   iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
+   tEpicGui,
+   UniGUI,
+   tUnderOpEnum,
+   tUnderOp,
+   tInformer;
+
+
+
+provides RunCheck,
+         Setup;
+
+RunCheck()
+{
+   Global.SetBool("g_zz_ug_passme",true);
+}
+
+
+Setup()
+{
+
+
+
+}
+
+
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,68 @@
+//*******************************************************************************************/
+//
+// tPcOwner
+//
+// Used to allow setting and returning the owning production center of a pog object.
+// 
+// 
+//
+// August 2003, Jon Freise
+//******************************************************************************************/
+
+package tPcOwner;
+
+uses    Sim,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        GUI,
+        iGUI,
+        iHUD,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text;
+
+
+
+provides Owner,
+         SetOwner;
+
+
+
+
+
+// These utility functions are used to help setup pog objects quickly and without error.
+// The owner is typically a map entity or other production center that created
+// this pog object. It allows the pog object to setup faction and other
+// information automatically. Not all pog objects must support the owner
+// concept. Most useful for HiredShips, Fences, Guards, PolicePatrols
+// and other pog objects that are used in automatic setup.
+
+hobject Owner(hsim pog_object)
+{
+   return Object.HandleProperty(pog_object, "gt_pc_owner");
+}
+
+SetOwner(hsim pog_object, hobject owner)
+{
+   if (Object.PropertyExists(pog_object, "gt_pc_owner")) {
+      Object.SetHandleProperty(pog_object, "gt_pc_owner", owner);
+   }else {
+      Object.AddHandleProperty(pog_object, "gt_pc_owner", owner);
+   }
+}
+
+
+
+/*   
+
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

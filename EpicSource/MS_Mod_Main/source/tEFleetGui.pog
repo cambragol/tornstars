@@ -1,0 +1,757 @@
+//*******************************************************************************************/
+//
+// tEFleetGui.pog
+//
+// This module displays a GUI screen with the player wingman information.
+// 
+// 
+// 
+//
+// May 2005, jon freise
+//******************************************************************************************/
+
+package tEFleetGui;
+
+uses	Sim,
+		iShip,
+		iSim,
+		Debug,
+		Global,
+		GUI,
+		iDirector,
+		iGame,
+		iGUI,
+		iHUD,
+		iHabitat,
+		iMapEntity,
+		INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+		iUtilities,
+		iCargo,
+		iInventory,
+		iComms,
+		Math,
+      iDockPort,                
+      CargoTypes,
+
+		UniGUI,
+      tEpicGuiEnum,
+      tEpicGui,
+      tLProduction,
+      tEpicMoney,
+      tEpicFleet,
+      tEpicFleetUpkeep,
+      tEconUtil,
+      uString;
+
+
+
+provides FleetWindow,
+         RunCheck,
+         StartScreen,
+         OnWingmanPress,
+         SessionStart,
+         SessionEnd,
+         ExitScreen;
+
+prototype hwindow CreateShadyBox( hwindow shady_bar );
+
+prototype update_wingman_description(hship wingman);
+
+prototype hwindow create_wingman_desc_box( hwindow parent );
+
+prototype create_cargo_list_window(hship wingman);
+
+prototype string subsim_text(hship ship);
+
+
+
+
+RunCheck()
+{
+      Global.SetBool("g_zz_ug_passme",true);
+}
+
+
+// Load the text files we wil need.
+SessionStart()
+{
+   Text.Add("csv:/text/gt_efleet_gui");
+}
+
+
+// Unload any text files.
+SessionEnd()
+{
+   Text.Remove("csv:/text/gt_efleet_gui");
+}
+
+
+//*******************************************************************************
+// 
+
+//*******************************************************************************
+StartScreen()
+{
+      GUI.PopScreensTo("icSpaceFlightScreen");
+      GUI.OverlayScreen("icPDAOverlayManager");
+      iGUI.OverlayCustomScreen( "tEFleetGui.FleetWindow" );
+}
+
+
+
+ExitScreen()
+{
+   UniGUI.UniGUIRemoveScreen();
+}
+
+int float2int(float value)
+{
+   return value;
+}
+
+update_wingman_info(hship wingman)
+{
+   hwindow wingman_info = GUI.Cast(Global.Handle("gt_efleetgui_wingman_info"));
+   string text;
+   int upkeep, current_fuel, max_fuel, daily_fuel, jump_fuel;
+   int scan_range, prospector, survey_days, mining_cost;
+   float efficiency;
+
+   upkeep = tEpicFleet.DailyUpkeep(wingman);
+   jump_fuel = float2int(tEpicFleet.FuelPerJump(wingman));
+   daily_fuel = float2int(tEpicFleet.DailyFuel(wingman));
+   max_fuel = float2int(tEpicFleet.FuelMax(wingman));
+   current_fuel = float2int(tEpicFleet.Fuel(wingman));
+
+
+
+   text = "Wingman Status <hr>";
+
+   text = String.Join(text, Text.Field(Sim.Name(wingman),FT_Text));
+
+   text = String.Join(text, "<br>");
+   text = String.Join(text, "Class ");
+   text = String.Join(text,Text.Field(tEconUtil.ShipType2String(iSim.Type(wingman)),FT_Text));
+
+   text = String.Join(text, "<br>");
+   text = String.Join(text,Text.Field("gt_efleetgui_used_fuel",FT_Text));
+   text = String.Join(text,String.FormatInt(" %d<br>", current_fuel));
+
+   text = String.Join(text,"<br>");
+   text = String.Join(text,"System: ");
+   text = String.Join(text,Text.Field(iSim.WorldName(wingman),FT_Text));
+
+   text = String.Join(text," <br>");
+   text = String.Join(text,Text.Field("gt_efleetgui_group",FT_Text));
+   text = String.Join(text,String.FormatInt(" %d", tEpicFleet.GroupNumber(wingman)));
+
+   text = String.Join(text,"<p>");
+
+   text = String.Join(text,Text.Field("gt_efleetgui_funds",FT_Text));
+   text = String.Join(text,String.FormatInt(" %d<p>",tEpicMoney.ShipAccount()));
+
+   text = String.Join(text, "Wingman Ship Info <hr>");
+
+   text = String.Join(text,Text.Field("gt_efleetgui_upkeep",FT_Text));
+   text = String.Join(text,String.FormatInt(" %d<p>", upkeep));
+
+   text = String.Join(text,Text.Field("gt_efleetgui_dailyfuel",FT_Text));
+   text = String.Join(text,String.FormatInt(" %d<br>", daily_fuel));
+
+   text = String.Join(text,Text.Field("gt_efleetgui_jumpfee",FT_Text));
+   text = String.Join(text,String.FormatInt(" %d<br>", jump_fuel));
+
+   text = String.Join(text,Text.Field("gt_efleetgui_max_fuel",FT_Text));
+   text = String.Join(text,String.FormatInt(" %d", max_fuel));
+
+   
+   scan_range = Object.IntProperty(wingman,"scan_range");
+   if (scan_range) {
+      scan_range = scan_range/1000;
+      text = String.Join(text,"<p>Asteroid Finder");
+      text = String.Join(text,String.FormatInt("<br>Range %d km", scan_range));
+   }
+
+   prospector = Object.IntProperty(wingman,"prospector");
+   survey_days = Object.IntProperty(wingman,"survey_days");
+   if (Object.IntProperty(wingman,"prospector") > 0) {
+      text = String.Join(text,"<p>Mining Prospector");
+      text = String.Join(text,String.FormatInt("<br>Survey Cost %d", prospector));
+      text = String.Join(text,String.FormatInt("<br>Survey Days %d", survey_days));
+   }
+
+   efficiency = Object.FloatProperty(wingman,"mining_efficiency");
+   mining_cost = Object.IntProperty(wingman,"miner");
+   if (mining_cost) {
+      text = String.Join(text,"<p>Mining Rig");
+      text = String.Join(text,String.FormatInt("<br>Mining Cost %d", mining_cost));
+      text = String.Join(text,"<br>Efficency ");
+      text = String.Join(text,String.FromFloat(efficiency));
+      text = String.Join(text," ppd");
+   }
+
+
+   if (Object.IntProperty(wingman,"tanker") > 0) {
+      text = String.Join(text,"<p>Fuel Tanker");
+   }
+
+   text = String.Join(text, subsim_text(wingman));
+
+
+   text = uString.Htmlize(text);
+
+   GUI.SetTextWindowString( wingman_info, text);
+
+
+}
+
+update_wingman_description(hship wingman)
+{
+   hwindow text_window = GUI.Cast(Global.Handle("gt_efleetgui_wingman_text"));
+   hinifile ship_template = INIFile.Create(Sim.TemplateName(wingman));
+   string text_file = "";
+
+   if (none != ship_template) {
+      text_file = INIFile.String(ship_template,"Properties","description","html:/html/gt_fleet_missing");
+      INIFile.Destroy(ship_template);
+   }
+
+   GUI.SetTextWindowResource( text_window, text_file);
+}
+
+
+// Handles the player selecting a new wingman to view.
+select_wingman(hship wingman)
+{
+   update_wingman_info(wingman);
+
+   update_wingman_description(wingman);
+
+   create_cargo_list_window(wingman);
+}
+
+// Player has selected a new wingman to view. 
+OnWingmanPress()
+{
+   hwindow button = GUI.FocusedWindow();
+   hship wingman = iShip.Cast(Object.HandleProperty(button,"gt_efleetgui_wingman"));
+
+   select_wingman(wingman);
+}
+
+
+
+create_wingman_list()
+{
+   hwindow list_parent = GUI.Cast(Global.Handle("gt_efleetgui_wingman_list_parent"));
+   hwindow list_base = GUI.Cast(Global.Handle("gt_efleetgui_wingman_list_base"));
+   hwindow list_box;
+   hwindow button;
+
+   hship wingman;
+   int i, count, index;
+	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
+
+   int button_width, height, list_x, list_y;
+
+   string name;
+   list wingman_list = tEpicFleet.PlayerFleet();
+
+
+
+   // Remove the prior inventory list.
+   if (none != list_base) {
+      GUI.DeleteWindow(list_base);
+   }
+
+   list_base = GUI.CreateWindow(0, 
+                                0,
+                                GUI.WindowCanvasWidth( list_parent),
+                                GUI.WindowCanvasHeight( list_parent),
+                                list_parent);
+
+
+   Global.CreateHandle("gt_efleetgui_wingman_list_base",GA_Write|GA_NoSave, list_base);
+
+   // Set up the button and list sizes now.
+   button_width = GUI.WindowCanvasWidth( list_base) - scrollbar_width;
+   button_width -= 4;
+
+
+   list_box = GUI.CreateListBox( 0, 
+                                 0,
+                                 button_width,
+                                 GUI.WindowCanvasHeight( list_base),
+                                 list_base,
+                                 true,
+                                 false);
+
+	// Attach a scrollbar to the list box. from LFPlus.
+	GUI.CreateVerticalScrollbar( 
+		GUI.WindowCanvasWidth( list_base ) - scrollbar_width, 
+		0,
+		scrollbar_width, 
+		GUI.WindowCanvasHeight( list_base ),
+		list_base,
+		list_box,
+		Global.Float( "GUI_scrollbar_buttonratio" ),
+		"" );
+
+   
+
+   count = List.ItemCount(wingman_list);
+   for (i=0;i<count;++i) {
+      wingman = iShip.Cast(List.GetNth(wingman_list,i));
+
+      if (!Sim.IsDead(wingman)) {
+
+         name = Sim.Name(wingman);
+
+         name = Text.Field(name, FT_Text);
+
+         button = iGUI.CreateAndInitialiseRectangularInverseRadioButton( none, 0, 0, 
+                                                                         button_width, 
+                                                                         name,
+                                                                         false );
+         // Attach the wingman for easy display when selected.
+         Object.AddHandleProperty(button,"gt_efleetgui_wingman",wingman);
+
+         GUI.SetInputOverrideFunctions( button,
+                                        "", 
+                                        "",
+                                        "", 
+                                        "", 
+                                        "", 
+                                        "",
+                                        "tEFleetGui.OnWingmanPress",
+                                        "",
+                                        "" );
+
+         GUI.AddListBoxEntry(list_box, button);
+      }
+   }   
+
+   GUI.SelectListBoxEntry(list_box, 0);
+
+   select_wingman(iShip.Cast(List.Head(wingman_list)));
+
+}
+
+
+FleetWindow()
+{
+   hwindow lh_shady, rh_shady;
+   hwindow trade_list_box;
+   hwindow station_title;
+   hwindow fac_title;
+
+   hwindow splitter;
+   hwindow top_splitter;
+   hwindow bot_splitter;
+   hwindow text_window;
+
+   hwindow button;
+   hwindow list_parent;
+   hwindow wingman_info;
+   hwindow help_window;
+
+
+   string title_font = Global.String( "GUI_subtitle_font" );
+
+   int rwidth, rheight, rx, ry;
+
+   int lwidth, lheight;
+
+   int lshady_width = 400;
+
+
+   debug Debug.PrintString("Fleet Upkeep window\n");
+
+
+   ///***********************************
+   // Non GUI interfacing and preperation here.
+
+
+   ///***********************************
+   // GUI setup here.
+
+
+   // Set right hand shady bar width.
+   lh_shady = iGUI.CreateWideShadyBar();
+   rh_shady = iGUI.CreateShadyBarRight();
+
+
+   GUI.SetShadyBarWidth(lshady_width);
+   
+
+
+
+   rh_shady = iGUI.CreateShadyBarRight();
+   
+   tEpicGui.CreateTitle(lh_shady,Text.Field("gt_efleetgui_title",FT_Text));
+   tEpicGui.CreateSubtitle(lh_shady,Text.Field("gt_efleetgui_subtitle",FT_Text));
+
+   tEpicGui.CreateExitButton(lh_shady, 
+                             Text.Field("gt_efleetgui_exit",FT_Text), 
+                             "tEFleetGui.ExitScreen" );   
+
+
+   //************ 
+   // The GUI will have the fleet list on top, with the wingman info to the right
+   // 
+
+   lheight = GUI.WindowCanvasHeight(lh_shady);
+   lheight = lheight - Global.Int("EpicGui_content_drop");
+   lheight = lheight - Global.Int("EpicGui_content_footer");
+
+   lwidth = lshady_width/2;
+
+
+     //**************
+   // Create the second column of the left side window.
+   // This column contains the wingman info screens.
+/*
+   splitter = GUI.CreateSplitterWindow( Global.Int("EpicGui_content_indent") + lwidth, 
+                                        Global.Int("EpicGui_content_drop"),
+                                        lwidth - Global.Int("EpicGui_content_indent"), 
+                                        lheight,
+                                        lh_shady,
+                                        lheight/2,
+                                        false);
+
+
+   // This is the wingman info area.
+   top_splitter = GUI.SplitterWindowTopWindow(splitter);
+
+
+   // Create the wingman info area.
+   wingman_info = GUI.CreateTextWindow( 0,
+                                        0,
+                                        GUI.WindowCanvasWidth( top_splitter),
+                                        GUI.WindowCanvasHeight( top_splitter),
+                                        top_splitter );   
+ */
+
+   // Create the wingman info area.
+   wingman_info = GUI.CreateTextWindow(Global.Int("EpicGui_content_indent") + lwidth, 
+                                        Global.Int("EpicGui_content_drop"),
+                                        lwidth - Global.Int("EpicGui_content_indent"), 
+                                        lheight,
+                                        lh_shady ); 
+
+   GUI.SetWindowFont( wingman_info, Global.String( "GUI_detail_font" ) );
+
+   Global.CreateHandle("gt_efleetgui_wingman_info",GA_Write|GA_NoSave, wingman_info);
+
+
+
+   // Create the window for displaying the descriptive text file of the 
+   // currently selected wingman.
+   /*
+   bot_splitter = GUI.SplitterWindowBottomWindow(splitter);
+
+   text_window = create_wingman_desc_box( bot_splitter );
+
+   Global.CreateHandle("gt_efleetgui_wingman_text",GA_Write|GA_NoSave, text_window);
+*/
+
+
+   //*******************
+   // Setup the wingman list boxes in the far left column.
+
+   splitter = GUI.CreateSplitterWindow( Global.Int("EpicGui_content_indent"), 
+                                        Global.Int("EpicGui_content_drop"),
+                                        lwidth - Global.Int("EpicGui_content_indent"), 
+                                        lheight,
+                                        lh_shady,
+                                        lheight/2,
+                                        false);
+
+
+   // Create a placeholder for the list of cargo a wingman is carrying.
+   bot_splitter = GUI.SplitterWindowBottomWindow(splitter);
+
+   list_parent = GUI.CreateWindow(0,
+                                  0,
+                                  GUI.WindowCanvasWidth( bot_splitter),
+                                  GUI.WindowCanvasHeight( bot_splitter),
+                                  bot_splitter);
+
+   Global.CreateHandle("gt_efleetgui_cargo_list_parent",GA_Write|GA_NoSave, list_parent);
+
+
+
+   // Create a placeholder for the list of wingmen.
+   top_splitter = GUI.SplitterWindowTopWindow(splitter);
+
+   list_parent = GUI.CreateWindow(0,
+                                  0,
+                                  GUI.WindowCanvasWidth( top_splitter),
+                                  GUI.WindowCanvasHeight( top_splitter),
+                                  top_splitter);
+
+   Global.CreateHandle("gt_efleetgui_wingman_list_parent",GA_Write|GA_NoSave, list_parent);
+
+
+   create_wingman_list();
+
+
+   // Turn the far righthand side into a help file.
+   help_window = CreateShadyBox(rh_shady);
+   GUI.SetTextWindowResource( help_window, "html:/html/gt_fleet_gui_help");
+}
+
+
+hwindow CreateShadyBox( hwindow shady_bar )
+{
+   hwindow border_box;
+   hwindow text_box;
+
+   int top_border = 40;
+   int splitter_alignment_offset = 4;
+   int height = GUI.WindowCanvasHeight( shady_bar ) - 80;
+   int x = Global.Int( "GUI_alignment_offset" ) + splitter_alignment_offset;
+   int y = top_border;
+   int width = Global.Int("GUI_shader_width" ) - ( x * 2 );
+
+   border_box = GUI.CreateStaticWindow( x, y, width, height, shady_bar );
+   GUI.CreateBorder( border_box );
+
+   text_box = GUI.CreateTextWindow( x + 5, y + 5, width - 10, height - 10, shady_bar );
+
+   GUI.SetWindowFont( text_box, Global.String( "GUI_detail_font" ) );
+
+   return text_box;
+}
+
+hwindow create_wingman_desc_box( hwindow parent )
+{
+   hwindow text_box;
+
+   int height = GUI.WindowCanvasHeight( parent);
+   int width = GUI.WindowCanvasWidth( parent );
+
+
+   text_box = GUI.CreateTextWindow( 0, 0, width , height, parent );
+
+   GUI.SetWindowFont( text_box, Global.String( "GUI_detail_font" ) );
+
+   return text_box;
+}
+
+
+create_cargo_list_window(hship wingman)
+{
+
+	// Window handles
+	hwindow pane;
+	hwindow title_window;
+	hwindow shady_bar = GUI.Cast( Global.Handle("gt_efleetgui_cargo_list_parent"));
+	hwindow list_box;
+	hwindow splitter;
+
+	// Title font
+	string title_font = Global.String( "GUI_subtitle_font" );
+
+	// Button parameters.
+	int button_height = Global.Int( "GUI_inversebutton_height" );
+	int list_box_gap = 3;
+	
+	int i; // Counter
+	
+	list item_list; // List of cargo items
+
+	// Splitter dimension parameters.
+	int x;
+	int y;
+	int width;
+	int height;
+	int splitter_alignment_offset = 4;
+	int split = ( 2 * Global.Int( "GUI_fancyborder_width" ) ) + 13;
+	int element_gap = 10;
+
+   hisim item;
+   string item_name;										// sublist items name
+	int max_title_length = 19;									// Title length parameter
+	hwindow button; 											// Current button being processed
+	int button_count;											// Count of buttons
+	int button_width = Global.Int( "GUI_inversebutton_width" ); // Width of the buttons.
+	list buttons;												// List of buttons.
+	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
+	string title;												// Title
+	hwindow scroll_bar; 										// Scrollbar handle
+
+	
+   debug Debug.PrintString("tEFleetGui.create_cargo_list_window\n");
+
+   //********
+
+
+   // First we remove the old cargo list.
+   splitter = GUI.Cast(Global.Handle("gt_efleetgui_cargo_list"));
+
+   if (none != splitter) {
+      GUI.DeleteWindow(splitter);
+   }
+
+	// Work out x and y positions of the splitter
+	x = Global.Int( "GUI_alignment_offset" ) + splitter_alignment_offset;
+	y = 0;
+	
+	width = GUI.WindowCanvasWidth(shady_bar) + splitter_alignment_offset - ( x * 2 );
+
+	height = GUI.WindowCanvasHeight( shady_bar );
+	
+	// Create the splitter window that contains the list box.
+	splitter = GUI.CreateSplitterWindow( 
+		x, y,
+		width, height, 
+		shady_bar, 
+		split,
+		false );
+
+	// Set a global for the window so we can delete it when we re-create this screen.
+   Global.CreateHandle("gt_efleetgui_cargo_list",GA_Write|GA_NoSave, splitter);
+
+
+	// Get the top pane of the splitter, for the title.
+	pane = GUI.SplitterWindowTopWindow( splitter );
+	
+	// Put a static window in the pane with the title in
+	title_window = iGUI.CreateAndInitialiseStaticWindow( 
+		0, 
+		0,
+		GUI.WindowCanvasWidth( pane ), 
+		GUI.WindowCanvasHeight( pane ),
+		pane,
+		title_font,
+		title );
+
+
+	// Set the text formatting
+	GUI.SetWindowTextFormatting( title_window, false, 9 );
+
+   title = "Carried Cargo";
+
+	// Set the title and title window text formatting
+	GUI.SetWindowTitle( title_window,  title  );
+	GUI.SetWindowTextFormatting( title_window, false, 0 );
+
+
+	// Now we create the list box with the operations or lpoint routes.
+	pane = GUI.SplitterWindowBottomWindow( splitter );
+	
+	// We will have a smaller button width as we will always have a scrollbar.
+	button_width -= ( scrollbar_width + 4);
+	
+	// Create the list box 
+	list_box = GUI.CreateListBox( 
+		0, 0,
+		button_width,
+		GUI.WindowCanvasHeight( pane ),
+		pane,
+		true,
+		false );
+
+	
+   // Attach a scrollbar to the list box.
+	GUI.CreateVerticalScrollbar( 
+		GUI.WindowCanvasWidth( pane ) - scrollbar_width, 
+		0,
+		scrollbar_width, 
+		GUI.WindowCanvasHeight( pane ),
+		pane,
+		list_box,
+		Global.Float( "GUI_scrollbar_buttonratio" ),
+		"" );
+
+   
+   item_list = tEpicFleet.ShipPodList(wingman);
+
+	// Count the buttons
+	button_count = List.ItemCount( item_list );
+
+		for ( i = 0; i < button_count; ++i )
+		{
+			item = iSim.Cast( List.GetNth( item_list, i ) );
+
+         item_name = Text.Field(Sim.Name(item),FT_Text);
+
+			// Clip the title if it's longer than the max_title_length.
+			if ( String.Length( item_name ) >= max_title_length )
+			{
+				item_name = String.Left( item_name, max_title_length );
+				item_name = String.Join( item_name, "..." );
+			}
+
+			// Create a special parentless rectangular inverse button
+			button = iGUI.CreateAndInitialiseRectangularInverseRadioButton( 
+				none,
+				0,
+				0,
+				button_width,
+				item_name,
+				false );
+			iGUI.MakeRectangularInverseButtonIconic( button );
+			List.AddTail( buttons, button );
+
+			// Add the button to the list box
+			GUI.AddListBoxEntry( list_box, button );
+		}	
+		
+		// Make the first entry of the list box the one that's selected.
+		GUI.SelectListBoxEntry( list_box, 0 );
+		button = GUI.Cast( List.Head( buttons ) );
+
+} // Create cargo list 
+
+
+// Creates a description of the ships subsystems.
+string subsim_text(hship ship)
+{
+   int i, total;
+   hsubsim sub;
+   string description;
+   bool keep;
+
+   description ="<p>Ship Systems <hr>";
+
+   total = Sim.SubsimCount(ship);
+   for (i=0;i<total;++i) {
+      sub = Sim.NthSubsim(ship, i);
+
+      keep = false;
+      
+      if (Object.StringProperty(sub,"name") == "Cargo_CapsuleDrive") {
+         keep = true;
+      }else if (Object.StringProperty(sub,"name") == "Cargo_MilitaryJumpCapacitor") {
+         keep = true;
+      }else if (Object.FloatProperty(sub,"refire_delay") > 0) {
+         keep = true;
+      }else if (Object.FloatProperty(sub,"ramp_up_time") > 0) {
+         keep = true;
+      }
+
+      if (keep) {
+         description = String.Join(description,"<br>");
+         description = String.Join(description, 
+                                   Text.Field(Object.StringProperty(sub,"name"), FT_Text));
+      }
+   }
+
+   return description;
+}
+
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

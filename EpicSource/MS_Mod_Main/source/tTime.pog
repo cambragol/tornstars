@@ -1,0 +1,121 @@
+//*******************************************************************************************/
+//
+// tTime
+//
+// Keeps a running total of mission time spent. Allows building a long running campaign timer.
+// 
+// 
+// 
+//
+// 
+//	
+// 
+//
+// July, 2002
+//******************************************************************************************/
+
+package tTime;
+
+
+uses Global,
+     iGame;
+
+
+provides GetTime,
+         SaveTime,
+         GetDay,
+         AdvanceTime,
+         TimeToString,
+         InitGlobals;
+         
+
+InitGlobals()
+{
+   Global.CreateInt("gt_time_one_day", GA_Write|GA_NoSave,14400);
+}
+
+// Called when the player returns to base.
+// 
+SaveTime()
+{
+    int mission_time = iGame.GameTime();
+
+    if (Global.Exists("g_trout_mission_time")) {
+       mission_time = mission_time + Global.Int("g_trout_mission_time");
+       Global.SetInt("g_trout_mission_time", mission_time);
+    }else {
+       Global.CreateInt("g_trout_mission_time",GA_Write, mission_time);
+    }
+}
+
+// Used by missions to query the current time.
+// Returns seconds since game started.
+int GetTime()
+{
+    int mission_time = iGame.GameTime();
+
+    if (Global.Exists("g_trout_mission_time")) {
+       mission_time = (Global.Int("g_trout_mission_time") + mission_time);
+    }
+
+    return mission_time;
+}
+
+// Day always begins with day one (because init code must start on day zero).
+int GetDay()
+{
+    // Game is broken into 4 hour days, or 14400 seconds.
+    return ((GetTime()/ Global.Int("gt_time_one_day"))+1);
+
+   // For testing, 1 min days.
+//    return (GetTime()/60);
+}
+
+// Allows advancing the game clock. It does not change the current mission time,
+// only the campaign time. Argument is time in seconds.
+AdvanceTime(int time)
+{
+    int mission_time;
+
+    atomic
+    {
+       if (Global.Exists("g_trout_mission_time")) {
+          mission_time = time + Global.Int("g_trout_mission_time");
+          Global.SetInt("g_trout_mission_time", mission_time);
+       }else {
+          Global.CreateInt("g_trout_mission_time",GA_Write, time);
+       }
+    }
+}
+
+string TimeToString()
+{
+   int seconds = GetTime();
+   int days, min, hours, temp;
+   string result;
+   int day_seconds = Global.Int("gt_time_one_day");
+
+   // days, hours, min, seconds from start of game
+
+   // Find days and seconds remaining
+   days = seconds / day_seconds;
+   temp = days * day_seconds;
+   seconds = seconds - temp;
+
+   // Find hours and seconds remaining
+   hours = seconds/3600;
+   temp = hours * 3600;
+   seconds = seconds - temp;
+
+   // Find min and seconds remaining
+   min = seconds/60;
+   temp = min*60;
+   seconds = seconds - temp;
+
+   result = String.FormatInt("Day %d",days);
+   result = String.Join(result, String.FormatInt(" %d:",hours));
+   result = String.Join(result, String.FormatInt(" %d:",min));
+   result = String.Join(result, String.FormatInt(" %d ",seconds));
+
+   return result;
+}

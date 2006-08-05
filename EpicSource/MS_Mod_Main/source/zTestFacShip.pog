@@ -1,0 +1,144 @@
+//*******************************************************************************************/
+//
+// zTestFacShip.pog
+//
+// 
+// 
+//
+//
+//
+// May, 2005, jon freise
+//******************************************************************************************/
+
+package zTestFacShip;
+
+uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, 
+   iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+   iConversation, iFormation, Group, Text, iEmail, State, 
+   iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker, 
+   iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+   iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
+   iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI;
+
+
+
+
+provides StartTest,
+         SetLove,
+         SetLike,
+         SetNeutral,
+         SetDislike, 
+         SetHate;
+
+
+set_feeling(eFeelingType feeling)
+{
+   hship player = iShip.FindPlayerShip();
+   hisim target;
+   hfaction player_faction = iFaction.Find("Player");
+   hfaction target_faction;
+
+   target = iShip.CurrentTarget(player);
+
+   target_faction = iSim.Faction(target);
+
+   if (none != target_faction) {
+
+      iFaction.SetFeeling(target_faction, player_faction, iFaction.FeelingLevel(feeling));
+   }
+}
+
+
+SetLove()
+{
+   set_feeling(FT_Love);
+}
+
+
+SetLike()
+{
+   set_feeling(FT_Like);
+}
+
+
+SetNeutral()
+{
+   set_feeling(FT_Neutral);
+}
+
+
+SetDislike()
+{
+   set_feeling(FT_Dislike);
+}
+
+
+SetHate()
+{
+   set_feeling(FT_Hate);
+}
+
+
+
+// Spill out a few of the ship choices for each faction.
+task object_task()
+{
+   hfaction faction;
+   list faction_list = iFaction.All();
+   int i, total, allegiance;
+
+
+   total = List.ItemCount(faction_list);
+   for (i=0;i<total;++i) {
+      faction = iFaction.Cast(List.GetNth(faction_list, i));
+      
+      allegiance = iFaction.Allegiance(faction);
+
+//string iShipCreation.GetShip( IeAllegiance faction, eShipType ship_type );      
+//ST_CombatFighter, ST_CombatLight, ST_CombatHeavy,
+//	ST_CombatCaptial
+
+      debug {
+         Debug.PrintString("\n");
+         Debug.PrintString(iFaction.Name(faction));
+         Debug.PrintString(" ");
+         Debug.PrintInt(i);
+         Debug.PrintString("\n");
+         Debug.PrintString(iShipCreation.GetShip(allegiance, 	ST_CombatFighter));
+         Debug.PrintString("\n");
+         Debug.PrintString(iShipCreation.GetShip(allegiance, 	ST_CombatLight));
+         Debug.PrintString("\n");
+         Debug.PrintString(iShipCreation.GetShip(allegiance, 	ST_CombatHeavy));
+         Debug.PrintString("\n");
+         Debug.PrintString(iShipCreation.GetShip(allegiance, 	ST_CombatCaptial));
+         Debug.PrintString("\n");
+      }
+   }
+
+
+}
+
+StartTest()
+{
+
+   Task.Detach(start object_task());
+
+}
+
+
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+
+
+
+

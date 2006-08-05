@@ -1,0 +1,148 @@
+player_ship_name,"Risky Ventures"
+
+; Wingman order groups responding
+
+OrderGroupZeroAck,"Group Zero Here"
+OrderGroupOneAck,"Group One"
+OrderGroupTwoAck,"Group Two"
+OrderGroupThreeAck,"Group Three Here"
+OrderGroupFourAck,"Group Four Here"
+OrderGroupFiveAck,"Group Five Here"
+OrderGroupSixAck,"Group Six"," Rodger"
+OrderGroupSevenAck,"Group Seven Here"
+OrderGroupEightAck,"Group Eight Over"
+OrderGroupNineAck,"Group Nine Reporting"
+
+
+; Wingmen responding
+
+epo_halt_order_ack, "Halting ships."
+epo_attack_target_ack, "Attacking your target."
+epo_formate_player_ack, "Forming up with you."
+epo_defend_target_ack, "Defending your target."
+epo_dock_target_ack, "Docking with your target."
+epo_approach_target_ack, "Approaching your target."
+epo_refuel_target_ack, "Refueling your target."
+epo_drain_fuel_ack, "Draining fuel from your target."
+epo_scan_sky_ack, "Scanning for asteroids and stations now."
+
+
+epo_not_wingman, "We can only add wingmen to groups."
+
+epo_refuse_no_target, "Your target is invalid."
+epo_refuse_target_far, "That target is out of range."
+epo_refuse_player_ship_target, "We cannot attack our own ships."
+epo_refuse_player_far, "You are too far from our group."
+
+epo_out_of_system, "Our group is out of system."
+
+epo_refueling_finished, "Finished refueling "
+
+epo_no_tankers_in_group, "Our group has no tankers."
+epo_tankers_empty, "Our tankers are empty."
+
+epo_fleet_fueling_complete, "Fueling all ships complete."
+epo_refuel_only_ships, "We can only fuel ships."
+epo_refuel_player_only, "We can only fuel your wingmen."
+
+
+epo_not_cargo_pod, "That is not a cargo pod."
+epo_not_player_pod, "We can only control your cargo pods."
+
+epo_detach_asteroid, "Releasing locks and detaching ship now."
+epo_none_attached, "None of our ships are attached."
+
+
+epo_fuel_drain_complete, "Fuel draining complete."
+
+epo_refuse_not_fuel_pod, "Only fuel pods can be drained."
+
+epo_refuse_drain_only_player, "Only your pods can be drained."
+
+epo_scan_sky_success, "Trace signals detected."
+epo_scan_sky_failed, "Nothing in range."
+
+epo_refuse_no_science_ship, "There is no scanning ship in our group."
+
+epo_refuse_not_player_mine, "You must claim the mine before we can extract ore."
+
+epo_miner_docking_ack,"Going for Approach and Attachment now."
+
+epo_no_mining_ships, "Our group has no mining ships."
+
+epo_no_undocked_mining_ships, "Our group has no undocked mining ships."
+
+epo_mining_rig_docked, "Mining rig attached. Starting extraction."
+
+epo_mining_dock_cancelled, "Cancelling docking approach."
+epo_refuse_no_mine_near, "There is no mine nearby."
+
+epo_refuse_not_mine, "This habitat is not a mine."
+epo_refuse_claimed_mine, "This mine has not been claimed by us."
+
+
+epo_refuse_claimed_asteroid, "This mine has already been claimed."
+
+epo_prospector_ack, "Docking with survey asteroid."
+epo_refuse_no_prospector, "No prospecting ship in the group."
+epo_prospector_attaching,"We are attached to the surface."
+
+epo_prospector_survey_delay,"The survey will take a few days."
+
+epo_prospector_send_email,"We will notify you by email when we are done."
+
+epo_prospector_docking_cancelled, "Cancelling docking approach." 
+
+epo_move_group_ack, "Joining new group."
+epo_refuse_group_change, "Cannot join group."
+epo_leave_group_ack,"Leaving group."
+
+
+epo_capture_ack, "Capturing your target."
+epo_refuse_no_marines, "No ships with marines in the group."
+
+
+; Dialog with nav officer about setting a jump route.
+ejump_no_lpoint, No Lpoint near Sir"
+ejump_no_routes, "Our sensors detect no viable jump routes, Sir"
+ejump_cancel, "Do not jump"
+ejump_cancel_say, "Nav, cancel that order"
+ejump_ask, "Sir, which jump route?"
+ejump_cancel_response, "Order cancelled Sir"
+ejump_risk,"Risk Death"
+ejump_risk_say,"Yes, we are very desperate"
+ejump_risk_cancel_say, "Cancel that, I do not want to die today"
+ejump_risk_ask, "Please no Sir! The lpoint is unstable and extremly lethal!"
+ejump_unknown,"Yes take uncharted"
+ejump_unknown_say, "Yes, we are exploring a new jump route"
+ejump_unknown_cancel_say, "Cancel that, it is too dangerous"
+ejump_unknown_ask, "Are you certain you want an uncharted route?"
+ejump_unstable_ask, "The lpoint is unstable and could damage us?"
+ejump_plotted, "Course plotted Sir"
+ejump_order_cancel, "Cancelling Sir"
+
+
+
+; Wingman and crew alerts that a ship will not jump
+
+ejump_wingman_no_drive, "We don't have a capsule drive! Sir"
+ejump_low_fuel, "We don't have enough fuel to jump Sir"
+
+
+
+
+; Player crew pilot responding to commands.
+
+crew_halting, "Acknowledged  Halting ship"
+crew_halting_1, "Aye sir, halting"
+crew_halting_2, "Full Stop, Aye"
+
+crew_approach, "Aye Sir. Setting course for target"
+
+
+crew_formate, "Formation maneuver initiated"
+
+
+crew_dock, "Aligning with dockport now, Sir"
+
+

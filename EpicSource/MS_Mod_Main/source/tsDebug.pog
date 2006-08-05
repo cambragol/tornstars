@@ -1,0 +1,352 @@
+//*******************************************************************************************/
+//
+// tsDebug.pog
+//
+// 
+// A Gui Package for setting and clearing debug flags. Lets a developer or user control
+// the kind of data that gets collected in the logs.
+// 
+// Provides debug print facilities PrintString and PrintHandle to let a developer turn off
+// debug features.
+//
+// April 2006, Jon Freise
+//******************************************************************************************/
+
+package tsDebug;
+
+uses	Sim,
+		iShip,
+		iSim,
+		Debug,
+		Global,
+		GUI,
+		iGame,
+		iGUI,
+		iHUD,
+		iHabitat,
+		iMapEntity,
+      INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+		UniGUI,
+      tEpicGuiEnum,
+      tEpicGui;
+
+
+provides StartScreen,
+         ExitScreen,
+         DisplayWindow,
+         OnDebugPress,
+         PrintString,
+         PrintHandle;
+         
+
+
+SetStandardGuiColors(hwindow window)
+{
+
+
+   GUI.SetWindowStateColours( window,
+                              Global.Float( "GUI_neutral_red"),
+                              Global.Float( "GUI_neutral_green"),
+                              Global.Float( "GUI_neutral_blue"),
+                              Global.Float( "GUI_focused_red"),
+                              Global.Float( "GUI_focused_green"),
+                              Global.Float( "GUI_focused_blue"),
+                              Global.Float( "GUI_selected_red"),
+                              Global.Float( "GUI_selected_green"),
+                              Global.Float( "GUI_selected_blue"));
+
+}
+
+
+
+string button_text(string name, bool value)
+{
+   if (value) {
+      return String.Join(name," On");
+   }
+
+   return String.Join(name, " Off");
+}
+
+
+
+hwindow CreateDebugList(hwindow parent, int x, int y, int width, int height, string function)
+{
+   hwindow list_box;
+   hwindow base_win;
+   hwindow button;
+   int count, i;
+   hsim debug_flag;
+   string debug_name, flag_name;
+   hinifile debug_file = INIFile.Create("ini:/ms_mod_debug");
+   int cwidth = width - 4;
+
+   if (none == debug_file) {
+      debug Debug.PrintString("tsDebug error missing ms_mod_debug file\n");
+   }
+                                   
+   
+   cwidth = cwidth - Global.Int("GUI_scrollbar_width");
+
+   base_win = GUI.CreateWindow(x, y, width, height, parent);
+
+   // Create the parent listbox
+   list_box = GUI.CreateListBox( 0, 0,
+                                 cwidth, height,
+                                 base_win,
+                                 true,
+                                 true);
+   count = 0;
+   while (INIFile.NumberedExists(debug_file,"DebugFlags","flag_name", count)) {
+
+      debug_name = INIFile.NumberedString(debug_file,"DebugFlags","debug_name", count, "");
+      flag_name = INIFile.NumberedString(debug_file,"DebugFlags","flag_name", count, "");
+
+      ++count;
+
+      button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, 
+                                                      cwidth, 
+                                                      debug_name,
+                                                      function);
+
+      Object.AddStringProperty(button,"g_debug_flag",flag_name);
+
+      if (Global.Bool(flag_name)){
+         GUI.SetWindowStateIcons( button,
+                                  I_CircleOn,
+                                  I_CircleOn,
+                                  I_CircleOn);
+      }else {
+         GUI.SetWindowStateIcons( button,
+                                  I_None,
+                                  I_None,
+                                  I_None);
+      }
+
+      GUI.AddListBoxEntry(list_box, button);
+   }
+
+   INIFile.Destroy(debug_file);
+
+   // Add a scroll bar to the listbox.
+   GUI.CreateVerticalScrollbar( cwidth+4,
+                                0,
+                                Global.Int("GUI_scrollbar_width"),
+                                height,
+                                base_win,
+                                list_box,
+                                Global.Float( "GUI_scrollbar_buttonratio"), 
+                                "");
+
+   return base_win;
+}
+
+
+hwindow CreateDebugCheck(hwindow parent, int x, int y, int width, int height, string function, list debug_list)
+{
+   hwindow list_box;
+   hwindow base_win;
+   hwindow button;
+   int count, i;
+   hsim debug_flag;
+   string button_name, flag_name;
+   int cwidth = width - 4;
+                                   
+
+   cwidth = cwidth - Global.Int("GUI_scrollbar_width");
+
+   base_win = GUI.CreateWindow(x, y, width, height, parent);
+
+   count = List.ItemCount(debug_list);
+
+   // Create the parent for all the check boxes
+   list_box = GUI.CreateWindow( 0, 0,
+                                 cwidth, 19*count,
+                                 base_win);
+                              
+
+   for (i=0;i<count;++i) {
+      debug_flag = Sim.Cast(List.GetNth(debug_list,i));
+ 
+      flag_name = Object.StringProperty(debug_flag,"debug_flag_global");
+
+     button = GUI.CreateCheckbox(0, i*19,45,15,list_box, true);
+
+
+     GUI.SetInputOverrideFunctions(button,
+                              "",
+                              "",
+                              "",
+                              "",
+                              "",
+                              "",
+                              "tsDebug.OnDebugPress",
+                              "",
+                              "" );
+
+
+   }
+
+   // Add a scroll bar to the listbox.
+   GUI.CreateVerticalScrollbar( cwidth+4,
+                                0,
+                                Global.Int("GUI_scrollbar_width"),
+                                height,
+                                base_win,
+                                list_box,
+                                Global.Float( "GUI_scrollbar_buttonratio"), 
+                                "");
+
+   return base_win;
+}
+
+
+
+OnDebugPress()
+{
+	// Get the currently focused window - it must be the correct system button.
+	hwindow button =	GUI.FocusedWindow();
+   string flag_name = Object.StringProperty(button,"g_debug_flag");
+   bool value;
+
+   value = Global.Bool(flag_name);
+
+   if (value) {
+      Global.CreateBool(flag_name, GA_Write|GA_NoSave, false);
+
+     GUI.SetWindowStateIcons( button,
+                                  I_None,
+                                  I_None,
+                                  I_None);
+   }else {
+      Global.CreateBool(flag_name, GA_Write|GA_NoSave, true);
+
+     GUI.SetWindowStateIcons( button,
+                                  I_CircleOn,
+                                  I_CircleOn,
+                                  I_CircleOn);
+   }
+
+   debug Debug.PrintString("Debug Press\n");
+}
+
+
+
+DisplayWindow()
+{
+   hwindow shady_bar;
+   hwindow title;
+   hwindow subtitle;
+   hwindow exit;
+
+   int width, height;
+
+   list debug_list, empty_list;
+
+   debug Debug.PrintString("Debug Gui Display\n");
+
+   // Set right hand shady bar width.
+   shady_bar = iGUI.CreateWideShadyBar();
+   Global.CreateHandle("gt_debug_gui_shady",GA_Write,shady_bar);
+
+
+   GUI.SetWindowClientArea( shady_bar, 
+                            0,
+                            0,
+                            500,
+                            GUI.WindowCanvasHeight( shady_bar));
+   
+
+
+   height = GUI.WindowCanvasHeight( shady_bar);
+   height = height - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+
+
+   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   width = width/2;
+   width = width - Global.Int("EpicGui_content_indent");
+   width = width - Global.Int("EpicGui_content_indent");
+      
+
+   tEpicGui.CreateTitle(shady_bar, "EPIC DEBUG");
+   tEpicGui.CreateSubtitle(shady_bar, "Select Debug Message Flags");
+
+   // Create the exit button
+   tEpicGui.CreateExitButton(shady_bar, "EXIT", "tsDebug.ExitScreen");
+
+
+
+   
+   CreateDebugList(shady_bar, 
+                   Global.Int("EpicGui_content_indent"),
+                   Global.Int("EpicGui_content_drop") ,
+                   width,
+                   height,
+                   "tsDebug.OnDebugPress");
+
+
+
+   // Create help window
+
+   // Create launch button
+}
+
+
+
+PrintString(string flag, string info)
+{
+   debug {
+      if (Global.Bool(flag)) {
+         Debug.PrintString(info);
+      }
+   }
+}
+
+
+
+PrintHandle(string flag, hobject item)
+{
+   debug {
+      if (Global.Bool(flag)) {
+         Debug.PrintHandle(item);
+      }
+   }
+}
+
+
+
+StartScreen()
+{
+//   AddFlag("My Name","gt_my_name", true);
+//   AddFlag("Home Away","gt_home", false);
+//   AddFlag("Just Here","gt_just", true);
+
+//   SetFlag("gt_home",true);
+
+   GUI.PopScreensTo("icSpaceFlightScreen");
+   GUI.OverlayScreen("icPDAOverlayManager");
+   iGUI.OverlayCustomScreen( "tsDebug.DisplayWindow" );
+}
+
+
+
+ExitScreen()
+{
+
+	UniGUI.UniGUIRemoveScreen();
+}
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

@@ -1,0 +1,83 @@
+; News main body text,
+NewsShipAttack_1_neu,The %b %a attacked ships belonging to %t near %l in the %s system.
+NewsShipAttack_1_neg,neg The %b %a attacked ships belonging to %t near %l in the %s system.
+NewsShipAttack_1_pos,pos The %b %a attacked ships belonging to %t near %l in the %s system.
+NewsOpRaided_1_neu,The %l covert operation in the %s system was raided by the %b %a. The operation belongs to %t
+NewsOpRaided_1_neg,neg The %l illegal operation in the %s system was raided by the %b %a. The op belongs to %t
+NewsOpRaided_1_pos,pos The %l planning center in the %s system was raided by the %b %a. The center belongs to %t
+NewsOpDestroyed_1_neu,The %l covert operation in the %s system was destroyed by the %b %a. The operation belongs to %t
+NewsOpDestroyed_1_neg,neg The %l illegal operation in the %s system was destroyed by the %b %a. The op belongs to %t
+NewsOpDestroyed_1_pos,pos The %l planning center in the %s system was destroyed by the %b %a. The center belongs to %t
+NewsStationAttack_1_neu,The %l station in the %s system was attacked by the %b %a. The station belongs to %t
+NewsStationAttack_1_neg,neg The %l station in the %s system was attacked by the %b %a. The station belongs to %t
+NewsStationAttack_1_pos,pos The %l station in the %s system was attacked by the %b %a. The station belongs to %t
+NewsStationCapture_1_neu,A station belonging to the %t was captured in the %s system. The %l station was captured by the %b %a.
+NewsStationCapture_1_neg,neg A station belonging to the %t was captured in the %s system. The %l station was captured by the %b %a.
+NewsStationCapture_1_pos,pos A station belonging to the %t was captured in the %s system. The %l station was captured by the %b %a.
+NewsStationSabotage_1_neu,The %b %a claimed responsibility for the sabotage of %l station in %s. Severe damage was reported by the station owners %t.
+NewsStationSabotage_1_neg,neg The %b %a claimed responsibility for the sabotage of %l station in %s. Severe damage was reported by the station owners %t.
+NewsStationSabotage_1_pos,pos The %b %a claimed responsibility for the sabotage of %l station in %s. Severe damage was reported by the station owners %t.
+NewsStationDestroyed_1_neu,The %l station in the %s system was destroyed by the %b %a. The station belongs to %t
+NewsStationDestroyed_1_neg,neg The %l station in the %s system was destroyed by the %b %a. The station belongs to %t
+NewsStationDestroyed_1_pos,pos The %l station in the %s system was destroyed by the %b %a. The station belongs to %t
+NewsHabitatDestroyed_1_neu,The %l habitat in the %s system was destroyed by the %b %a. The station belongs to %t
+NewsHabitatDestroyed_1_neg,neg The %l habitat in the %s system was destroyed by the %b %a. The station belongs to %t
+NewsHabitatDestroyed_1_pos,pos The %l habitat in the %s system was destroyed by the %b %a. The station belongs to %t
+NewsCargoRaid_1_neu,Cargo ships belonging to %t were plundered by %b %a near %l in the %s system.
+NewsCargoRaid_1_neg,neg Cargo ships belonging to %t were plundered by %b %a near %l in the %s system.
+NewsCargoRaid_1_pos,pos Cargo ships belonging to %t were plundered by %b %a near %l in the %s system.
+
+
+; News Subject Lines,
+NewsShipAttackTitle_1_neu,Ships Damaged!
+NewsShipAttackTitle_1_neg,Neg Ships Damaged!
+NewsShipAttackTitle_1_pos,Pos Ships Damaged!
+NewsOpRaidedTitle_1_neu,Operation Raided
+NewsOpRaidedTitle_1_neg,Neg Operation Raided
+NewsOpRaidedTitle_1_pos,Pos Operation Raided
+NewsOpDestroyedTitle_1_neu,Operation Destroyed
+NewsOpDestroyedTitle_1_neg,Neg Operation Destroyed
+NewsOpDestroyedTitle_1_pos,Pos Operation Destroyed
+NewsStationAttackTitle_1_neu,Brazen Station Attack
+NewsStationAttackTitle_1_neg,Neg Brazen Station Attack
+NewsStationAttackTitle_1_pos,Pos Brazen Station Attack
+NewsStationCaptureTitle_1_neu,Station Reported Captured
+NewsStationCaptureTitle_1_neg,Neg Station Reported Captured
+NewsStationCaptureTitle_1_pos,Pos Station Reported Captured
+NewsStationSabotageTitle_1_neu,Station Damaged
+NewsStationSabotageTitle_1_neg,Neg Station Damaged
+NewsStationSabotageTitle_1_pos,Pos Station Damaged
+NewsStationDestroyedTitle_1_neu,Station Destroyed
+NewsStationDestroyedTitle_1_neg,Neg Station Destroyed
+NewsStationDestroyedTitle_1_pos,Pos Station Destroyed
+NewsHabitatDestroyedTitle_1_neu,Station Destroyed
+NewsHabitatDestroyedTitle_1_neg,Neg Station Destroyed
+NewsHabitatDestroyedTitle_1_pos,Pos Station Destroyed
+NewsCargoRaidTitle_1_neu,Cargo Raids Unchecked
+NewsCargoRaidTitle_1_neg,Neg Cargo Raids Unchecked
+NewsCargoRaidTitle_1_pos,Pos Cargo Raids Unchecked
+
+
+NewsFactionTitleNavy_neu,offical
+NewsFactionTitleNavy_pos,valiant
+NewsFactionTitleNavy_neg,lawless
+
+NewsFactionTitlePirate_neu,pirate force
+NewsFactionTitlePirate_pos,freedom fighters
+NewsFactionTitlePirate_neg,pirate scum
+
+NewsFactionTitleMercenary_neu,mercenary company
+NewsFactionTitleMercenary_pos,civilian contractor 
+NewsFactionTitleMercenary_neg,pirate force
+
+NewsFactioinTitleRebel_neu,rebel force
+NewsFactioinTitleRebel_pos,freedom fighters
+NewsFactioinTitleRebel_neg,pirate force
+
+NewsFactionTitleSpy_neu,espionage force
+NewsFactionTitleSpy_pos,intelligence agency
+NewsFactionTitleSpy_neg,illegal spy force
+
+NewsFactionTitleCorp_neu,corporation
+NewsFactionTitleCorp_pos,ernest corporation
+NewsFactionTitleCorp_neg,renegade corporation

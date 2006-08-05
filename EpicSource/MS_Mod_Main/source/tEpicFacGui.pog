@@ -1,0 +1,1087 @@
+//*******************************************************************************************/
+//
+// tEpicFacGui.pog
+//
+// This screen displays the player relations to factions. It also displays the players
+// skill levels and any criminal status the player has.
+// 
+// 
+//
+// Jan 2003, Jon Freise
+//******************************************************************************************/
+package tEpicFacGui;
+
+uses	Sim,
+		iShip,
+		iSim,
+		Debug,
+		Global,
+		GUI,
+		iDirector,
+		iGame,
+		iGUI,
+		iHUD,
+		iHabitat,
+		iMapEntity,
+		INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+		iUtilities,
+		iCargo,
+		iInventory,
+		iComms,
+		Math,
+		UniGUI,
+      tEFactionEnum,
+      tEFaction,
+		tEpicGuiEnum,
+		tEpicGui,
+      tEpicMoney;
+//		tRepEnum,
+//		tReputation;
+
+
+provides DisplayWindow,
+         Test,
+         RunCheck,
+         StartScreen,
+         ExitScreen,
+         OnSelectFaction,
+         UpgradePress,
+         DowngradePress;
+
+
+prototype SetStandardGuiColors(hwindow window);
+
+prototype create_skill_status();
+
+prototype hwindow create_faction_detail();
+
+prototype hwindow CreateShadyBox( hwindow shady_bar );
+
+prototype create_upgrade_button();
+
+prototype bool test_friendly(hfaction upgrade);
+
+prototype bool test_allied(hfaction upgrade);
+
+prototype setup_player_allies();
+
+
+
+// bind at enter space
+Test()
+{
+   debug Debug.PrintString("FacGui Test\n");
+
+//   Input.BindKey( "tEpicFacGui.CreateMenu", "AnySection.CallMyFunction" ); 
+}
+
+
+
+RunCheck()
+{
+   Global.SetBool("g_zz_ug_passme",true);
+}
+
+
+
+
+hwindow CreateSliderWindow(int width, int height, string name, float value, float low, float high)
+{
+   hwindow base;
+   hwindow slider;
+   hwindow label;
+
+   // Create base window
+   base = GUI.CreateWindow(0,0,width,height,none);
+
+   // Add a label
+   label = GUI.CreateStaticWindow(0,0,width,height/2,base);
+   GUI.SetWindowTitle(label, name);
+
+   SetStandardGuiColors(label);
+
+   /*
+   GUI.SetWindowStateColours( label,
+                              1,1,0,
+                              0.1,0.1,0.1,
+                              0.1,0.1,0.1);
+*/
+   // Add the slider
+   slider = GUI.CreateSliderControl( 4, height/2,
+					   width-8, height/2,
+					   base,
+					   low,
+					   high,
+					   0.05 );
+
+   GUI.SetWindowAcceptFocus( slider, false );
+
+   GUI.SetSliderControlValue(slider, value);
+
+   // return
+   return base;
+}
+
+SetStandardGuiColors(hwindow window)
+{
+
+
+   GUI.SetWindowStateColours( window,
+                              Global.Float( "GUI_neutral_red"),
+                              Global.Float( "GUI_neutral_green"),
+                              Global.Float( "GUI_neutral_blue"),
+                              Global.Float( "GUI_focused_red"),
+                              Global.Float( "GUI_focused_green"),
+                              Global.Float( "GUI_focused_blue"),
+                              Global.Float( "GUI_selected_red"),
+                              Global.Float( "GUI_selected_green"),
+                              Global.Float( "GUI_selected_blue"));
+                              
+
+
+   /*
+					Global.Float( "GUI_neutral_red", access, 0.6 );
+					Global.Float( "GUI_neutral_green", access, 0.451 );
+					Global.Float( "GUI_neutral_blue", access, 0.0 );
+					Global.Float( "GUI_focused_red", access, 1.0 );
+			Global.Float( "GUI_focused_green", access, 0.749 );
+					Global.Float( "GUI_focused_blue", access, 0.0 );
+				Global.Float( "GUI_selected_red", access, 1.0 );
+				Global.Float( "GUI_selected_green", access, 0.859 );
+					Global.Float( "GUI_selected_blue", access, 0.278 );
+				Global.Float( "GUI_faded_red", access, 0.5 );
+				Global.Float( "GUI_faded_green", access, 0.3745 );
+					Global.Float( "GUI_faded_blue", access, 0.0 );
+               */
+}
+
+update_faction_list()
+{
+   hwindow list_box;
+   hwindow faction;
+   int count, i;
+   list fac_list;
+
+   hfaction fac;
+   hfaction player = iFaction.Find("Player");
+
+	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
+   int button_width;
+
+   hwindow base_window = GUI.Cast(Global.Handle("tEpicFacGui_faction_list"));
+
+   hwindow list_parent = GUI.Cast(Global.Handle("tEpicFacGui_faction_list_parent")) ;
+   
+
+   // Remove the old list, if it exists.
+   if (none != list_parent) {
+      GUI.DeleteWindow(list_parent);
+   }
+
+   list_parent = GUI.CreateWindow(0, 
+                                  0,
+                                  GUI.WindowCanvasWidth( base_window),
+                                  GUI.WindowCanvasHeight( base_window),
+                                  base_window);
+
+   Global.CreateHandle("tEpicFacGui_faction_list_parent", GA_Write|GA_NoSave, list_parent);
+
+   // Set up the button and list sizes now.
+   button_width = GUI.WindowCanvasWidth( list_parent) - scrollbar_width;
+   button_width -= 4;
+
+   list_box = GUI.CreateListBox( 0, 
+                                 0,
+                                 button_width,
+                                 GUI.WindowCanvasHeight( list_parent),
+                                 list_parent,
+                                 true,
+                                 false);
+
+
+
+   // Fill the parent with all factions.
+   fac_list = iFaction.All();
+   List.Remove(fac_list, player);
+
+   count = List.ItemCount(fac_list);
+   for (i=0;i<count;++i) {
+      fac = iFaction.Cast(List.GetNth(fac_list,i));
+      if (tEFaction.IsKnown(fac)) {
+//      if (true) {
+         faction = CreateSliderWindow(button_width, 30, Text.Field(iFaction.Name(fac), FT_Text),iFaction.Feeling(fac,player), -1,1);
+
+         Object.AddHandleProperty(faction, "epic_faction",fac);
+
+         GUI.AddListBoxEntry(list_box, faction);
+         GUI.SetInputOverrideFunctions( 
+                                       faction,
+			"", 
+			"",
+			"", 
+			"", 
+			"", 
+			"",
+			"tEpicFacGui.OnSelectFaction",
+			"",
+			"" );
+
+
+      }
+   }
+
+   // Add a scroll bar to the listbox.
+   //GUI.CreateVerticalScrollbarDecorator( list_box );
+
+   GUI.CreateVerticalScrollbar(GUI.WindowCanvasWidth( list_parent) - scrollbar_width,
+                                0,
+                                Global.Int("GUI_scrollbar_width"),
+                               GUI.WindowCanvasHeight( list_parent),
+                                list_parent,
+                                list_box,
+                                Global.Float( "GUI_scrollbar_buttonratio"), 
+                                "");
+
+   if (none == Global.Handle("gt_epic_fac_gui_faction")){
+      fac = iFaction.Cast(List.Head(fac_list));
+      Global.CreateHandle("gt_epic_fac_gui_faction",GA_Write,fac);
+   }
+
+}
+
+
+OnSelectFaction()
+{
+	// Get the currently focused window - it must be the correct system button.
+	hwindow selected_button =	GUI.FocusedWindow();
+   hfaction faction = iFaction.Cast(Object.HandleProperty(selected_button, "epic_faction"));	
+   hfaction player = tEFaction.PlayerFaction();
+
+   Global.CreateHandle("gt_epic_fac_gui_faction",GA_Write,faction);
+
+   create_faction_detail();
+
+   create_upgrade_button();
+
+   debug {
+      Debug.PrintHandle(faction);
+      Debug.PrintString(" selected faction\n");
+      Debug.PrintFloat(iFaction.Feeling(faction, player));
+      Debug.PrintString(" feeling\n");
+   }
+
+
+}
+
+
+UpgradePress()
+{
+   hfaction faction = iFaction.Cast(Global.Handle("gt_epic_fac_gui_faction"));
+   hfaction player = tEFaction.PlayerFaction();
+   float standing;
+   string standing_string;
+   string faction_string;
+   int upgrade_price;
+   hinifile upgrade_file = INIFile.Create("ini:/standing_upgrade");
+
+   if (none == upgrade_file) {
+      debug Debug.PrintString("ERROR: upgrade file not found\n");
+   }
+
+   faction_string = tEFaction.Type2String(tEFaction.Type(faction));
+   standing = iFaction.Feeling(faction, player);
+   standing_string = tEFaction.Level2String(iFaction.FeelingType(standing));
+
+   upgrade_price = INIFile.Int(upgrade_file,faction_string,standing_string,0);
+
+   INIFile.Destroy(upgrade_file);
+
+
+   if (0 == upgrade_price) {
+      debug Debug.PrintString("Upgrade price was zero. Not allowed\n");
+      return;
+   }
+
+   if (test_allied(faction)) {
+      debug Debug.PrintString("Player allies with mortal enemy. Not allowed\n");
+      return;
+   }
+
+   if (test_friendly(faction)) {
+      //Player is friends with mortal enemy, double the cost of upgrades.
+      upgrade_price *= 2;
+   }
+
+   if (tEpicMoney.ShipAccount() < upgrade_price) {
+      debug Debug.PrintString("Player lacks funds\n");
+      return;
+   }
+   // Look up the upgrade cost based on this faction.
+   // See if the player has the funds. 
+   // Deduct the funds.
+
+   tEpicMoney.ChangeShipAccount(-1*upgrade_price);
+
+   standing = standing + 0.4;
+
+   iFaction.SetFeeling(faction, player, standing);
+   iFaction.SetFeeling(player, faction, standing);
+
+   setup_player_allies();
+
+   update_faction_list();
+
+   create_faction_detail();
+}
+
+
+
+
+
+DowngradePress()
+{
+   hfaction faction = iFaction.Cast(Global.Handle("gt_epic_fac_gui_faction"));
+   hfaction player = tEFaction.PlayerFaction();
+   float standing;
+   string standing_string;
+   string faction_string;
+
+
+   standing = iFaction.Feeling(faction, player);
+
+   standing = standing - 0.4;
+
+   iFaction.SetFeeling(faction, player, standing);
+   iFaction.SetFeeling(player, faction, standing);
+
+   setup_player_allies();
+
+   update_faction_list();
+
+   create_faction_detail();
+}
+
+
+
+
+hwindow create_border_button(int x, int y, int width, int height, hwindow parent, string name, string function)
+{
+   hwindow button, border;
+   int button_x, button_y, button_width, button_height;
+
+   // We need to change the button size to make room for the border.
+   button_x = x + 8;
+   button_y = y + 8;
+
+   button_width = width - 16;
+   button_height = height - 16;
+
+   button = GUI.CreateButton( button_x,
+                              button_y,
+                              button_width,
+                              button_height,
+                              parent);
+
+
+   GUI.SetWindowTitle(button, name);
+
+   GUI.SetWindowFont(button, Global.String("GUI_title_font"));
+
+   GUI.SetButtonFunctionPog(button, function);
+
+//   tEpicGui.SetStandardWindowColours(button);
+
+   // Add the border
+   border = GUI.CreateBorder(button);
+
+   // we still return the button, because the function might need to change
+   // or something. This is one of those no good choice decisions.
+
+   tEpicGui.SetStandardStateColours(button);
+
+   return button;
+}
+
+
+create_upgrade_button()
+{
+   hwindow button_parent = GUI.Cast(Global.Handle("tEpicFacGui_upgrade"));
+   hwindow button_base = GUI.Cast(Global.Handle("tEpicFacGui_upgrade_base"));
+
+   hfaction selected_faction = iFaction.Cast(Global.Handle("gt_epic_fac_gui_faction"));
+   hfaction player_faction = tEFaction.PlayerFaction();
+   hfaction empty_faction = tEFaction.PlayerFaction();
+   float standing;
+
+   if (none != button_base) {
+      GUI.DeleteWindow(button_base);
+   }
+
+   // We don't always allow upgrades. 
+   // Turn off the button in those cases.
+
+   if (selected_faction == none) {
+      return;
+   }
+
+   if (selected_faction == empty_faction) {
+      return;
+   }
+   
+
+   standing = iFaction.Feeling(selected_faction, player_faction);
+
+   // We don't allow paid upgrades from hostile level. The player has to perform
+   // a mission or some other service.
+   if (standing < -0.6) {
+      return;
+   }
+
+   // If the player has been blowing up the factions stuff, don't allow an
+   // upgrade. Negative actions are negative values.
+   if ((tEFaction.CurrentAction(selected_faction) < -0.1) || 
+       (tEFaction.PastAction(selected_faction) < -0.1)) {
+      return;
+   }
+
+   button_base = GUI.CreateWindow(0,
+                                  0,
+                                  GUI.WindowCanvasWidth( button_parent),
+                                  GUI.WindowCanvasHeight( button_parent),
+                                  button_parent);
+
+   Global.CreateHandle("tEpicFacGui_upgrade_base", GA_Write, button_base);
+
+   create_border_button(0,
+                        0,
+                        GUI.WindowCanvasWidth( button_base),
+                        GUI.WindowCanvasHeight( button_base),
+                        button_base,
+                        "Upgrade", 
+                        "tEpicFacGui.UpgradePress");
+}
+
+
+create_downgrade_button()
+{
+   hwindow button_parent = GUI.Cast(Global.Handle("tEpicFacGui_downgrade"));
+   hwindow button_base = GUI.Cast(Global.Handle("tEpicFacGui_downgrade_base"));
+
+   hfaction selected_faction = iFaction.Cast(Global.Handle("gt_epic_fac_gui_faction"));
+   hfaction player_faction = tEFaction.PlayerFaction();
+   hfaction empty_faction = tEFaction.PlayerFaction();
+   float standing;
+
+   if (none != button_base) {
+      GUI.DeleteWindow(button_base);
+   }
+
+   // We don't always allow upgrades. 
+   // Turn off the button in those cases.
+   if (selected_faction == none) {
+      return;
+   }
+
+   if (selected_faction == empty_faction) {
+      return;
+   }
+   
+
+   standing = iFaction.Feeling(selected_faction, player_faction);
+
+
+   // We don't allow downgrades from hostile level. Already at bottom.
+   if (standing < -0.6) {
+      return;
+   }
+
+
+   button_base = GUI.CreateWindow(0,
+                                  0,
+                                  GUI.WindowCanvasWidth( button_parent),
+                                  GUI.WindowCanvasHeight( button_parent),
+                                  button_parent);
+
+   Global.CreateHandle("tEpicFacGui_downgrade_base", GA_Write, button_base);
+
+   create_border_button(0,
+                        0,
+                        GUI.WindowCanvasWidth( button_base),
+                        GUI.WindowCanvasHeight( button_base),
+                        button_base,
+                        "Lower", 
+                        "tEpicFacGui.DowngradePress");
+}
+
+
+
+
+DisplayWindow()
+{
+   hwindow shady_bar;
+   hwindow rh_shady;   
+   hwindow title;
+   hwindow subtitle;
+   hwindow exit;
+   hwindow faction_list_base;
+   hwindow help_window;
+   hwindow button_base;
+
+   int width, height, button_height;
+
+   debug Debug.PrintString("FacGui Display\n");
+
+
+   // remove any selection from the prior screens use.
+   Global.Destroy("gt_epic_fac_gui_faction");
+
+
+
+   // Set right hand shady bar width.
+   shady_bar = iGUI.CreateWideShadyBar();
+   rh_shady = iGUI.CreateShadyBarRight();
+
+
+   Global.CreateHandle("gt_epic_fac_gui_shady",GA_Write,shady_bar);
+
+
+   GUI.SetWindowClientArea( shady_bar, 
+                            0,
+                            0,
+                            500,
+                            GUI.WindowCanvasHeight( shady_bar));
+   
+
+
+   height = GUI.WindowCanvasHeight( shady_bar);
+   height = height - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+
+
+   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   width = width/2;
+   width = width - Global.Int("EpicGui_content_indent");
+   width = width - Global.Int("EpicGui_content_indent");
+      
+
+   tEpicGui.CreateTitle(shady_bar, "REPUTATION");
+   tEpicGui.CreateSubtitle(shady_bar, "Faction Relations and Skill");
+
+   // Create the exit button
+   tEpicGui.CreateExitButton(shady_bar, "EXIT", "tEpicFacGui.ExitScreen");
+
+
+
+   setup_player_allies();
+
+
+   
+   faction_list_base = GUI.CreateWindow(Global.Int("EpicGui_content_indent"),
+                                        Global.Int("EpicGui_content_drop") ,
+                                        width,
+                                        height,
+                                        shady_bar);
+
+
+   Global.CreateHandle("tEpicFacGui_faction_list", GA_Write|GA_NoSave, faction_list_base);
+
+   update_faction_list();
+
+  // create_skill_status();
+
+   create_faction_detail();
+
+   button_height = (height/2) + Global.Int("EpicGui_content_drop");
+
+   button_base = GUI.CreateWindow(250+ Global.Int("EpicGui_content_indent"),
+                                  button_height,
+                                  120, 
+                                  30, 
+                                  shady_bar);
+
+   Global.CreateHandle("tEpicFacGui_upgrade", GA_Write|GA_NoSave, button_base);
+
+   create_upgrade_button();
+
+
+
+   button_base = GUI.CreateWindow(250+ Global.Int("EpicGui_content_indent"),
+                                  button_height + 60,
+                                  120, 
+                                  30, 
+                                  shady_bar);
+
+   Global.CreateHandle("tEpicFacGui_downgrade", GA_Write|GA_NoSave, button_base);
+
+   create_downgrade_button();
+
+
+
+   help_window = CreateShadyBox(rh_shady);
+   GUI.SetTextWindowResource( help_window, "html:/html/gt_rep_gui_help");
+}
+
+
+hwindow CreateShadyBox( hwindow shady_bar )
+{
+   hwindow border_box;
+   hwindow text_box;
+
+   int top_border = 40;
+   int splitter_alignment_offset = 4;
+   int height = GUI.WindowCanvasHeight( shady_bar ) - 80;
+   int x = Global.Int( "GUI_alignment_offset" ) + splitter_alignment_offset;
+   int y = top_border;
+   int width = Global.Int("GUI_shader_width" ) - ( x * 2 );
+
+   border_box = GUI.CreateStaticWindow( x, y, width, height, shady_bar );
+   GUI.CreateBorder( border_box );
+
+   text_box = GUI.CreateTextWindow( x + 5, y + 5, width - 10, height - 10, shady_bar );
+
+   GUI.SetWindowFont( text_box, Global.String( "GUI_detail_font" ) );
+
+   return text_box;
+}
+
+
+StartScreen()
+{
+   GUI.PopScreensTo("icSpaceFlightScreen");
+   GUI.OverlayScreen("icPDAOverlayManager");
+   iGUI.OverlayCustomScreen( "tEpicFacGui.DisplayWindow" );
+}
+
+ExitScreen()
+{
+
+	UniGUI.UniGUIRemoveScreen();
+}
+
+
+/*
+create_status_list(hwindow parent)
+{
+   hwindow list_box;
+   hwindow status;
+   int count, i;
+   int width, height;
+   string name;
+   float status_level;
+   string system = iSim.ActiveWorld();
+
+   width = GUI.WindowCanvasWidth( parent ) - Global.Int("GUI_scrollbar_width");
+   height = 30;
+
+   // Create the parent listbox
+   list_box = GUI.CreateListBox( 0, 
+                                 0,
+                                 width,
+                                 GUI.WindowCanvasHeight( parent ),
+                                 parent,
+                                 true,
+                                 false);
+
+
+   count = STR_TotalStatus;
+   for (i=1;i<count;++i) {
+         
+         status_level = tReputation.StatusLevel(i, system);
+
+         // Form the button name from skill name and level
+         name = tReputation.StatusToNameString(i);
+         name = String.Join(name," : ");
+         name = String.Join(name, tReputation.StatusLevelToString(status_level));
+
+
+         status = CreateSliderWindow(width, height, name, status_level,0,1);
+
+         GUI.AddListBoxEntry(list_box, status);
+   }
+
+   // Add a scroll bar to the listbox.
+   //GUI.CreateVerticalScrollbarDecorator( list_box );
+
+   GUI.CreateVerticalScrollbar( width,
+                                0,
+                                Global.Int("GUI_scrollbar_width"),
+                                GUI.WindowCanvasHeight( parent ),
+                                parent,
+                                list_box,
+                                Global.Float( "GUI_scrollbar_buttonratio"), 
+                                "");
+}
+
+
+
+create_skill_list(hwindow parent)
+{
+
+   hwindow list_box;
+   hwindow skill;
+   int count, i;
+   int width, height;
+   string name;
+   float skill_level;
+
+   width = GUI.WindowCanvasWidth( parent ) - Global.Int("GUI_scrollbar_width");
+   height = 30;
+
+   // Create the parent listbox
+   list_box = GUI.CreateListBox( 0, 
+                                 0,
+                                 width,
+                                 GUI.WindowCanvasHeight( parent ),
+                                 parent,
+                                 true,
+                                 false);
+
+
+   count = SR_TotalRep;
+   for (i=1;i<count;++i) {
+         
+         skill_level = tReputation.SkillLevel(i);
+
+         // Form the button name from skill name and level
+         name = tReputation.SkillToNameString(i);
+         name = String.Join(name," : ");
+         name = String.Join(name, tReputation.SkillLevelToString(skill_level));
+
+
+         skill = CreateSliderWindow(width, height, name, skill_level,0,1);
+
+         GUI.AddListBoxEntry(list_box, skill);
+   }
+
+   // Add a scroll bar to the listbox.
+   //GUI.CreateVerticalScrollbarDecorator( list_box );
+
+   GUI.CreateVerticalScrollbar( width,
+                                0,
+                                Global.Int("GUI_scrollbar_width"),
+                                GUI.WindowCanvasHeight( parent ),
+                                parent,
+                                list_box,
+                                Global.Float( "GUI_scrollbar_buttonratio"), 
+                                "");
+
+}
+
+*/
+
+
+hwindow create_title_split(hwindow parent, int y, int height, string name)
+{
+   hwindow splitter;
+   hwindow top_pane;
+   hwindow bot_pane;
+   hwindow static_title;
+   int width, x, margin;
+
+   x = Global.Int("EpicGui_content_indent");
+
+   margin = x*2;
+
+   splitter = GUI.CreateSplitterWindow( x,
+                                        y,
+                                        GUI.WindowCanvasWidth( parent ) - margin, 
+                                        height,
+                                        parent,
+                                        30,
+                                        false);
+
+   top_pane = GUI.SplitterWindowTopWindow( splitter );
+
+
+   iGUI.CreateAndInitialiseStaticWindow( 0, 
+                                         0, 
+                                         GUI.WindowCanvasWidth( top_pane ),
+                                         GUI.WindowCanvasHeight( top_pane ),
+                                         top_pane, 
+                                         Global.String("GUI_title_font"), 
+                                         name);
+
+   bot_pane = GUI.SplitterWindowBottomWindow( splitter );
+
+   return bot_pane;
+
+}
+
+//*******************************************************************************************/
+// Create the right hand side display for player skill and status.
+// Two list boxes.
+
+//*******************************************************************************************/
+/*
+create_skill_status()
+{
+   hwindow shady_bar;
+   hwindow pane;
+   int drop, height;
+
+   debug Debug.PrintString("FacGui Rightside\n");
+
+   // Set right hand shady bar width.
+   shady_bar = iGUI.CreateShadyBarRight();
+
+   height = GUI.WindowCanvasHeight( shady_bar);
+   height = height - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+   height = height /2;
+   height = height - 40;
+
+   pane = create_title_split(shady_bar, Global.Int("EpicGui_content_drop"), height, "STATUS & FAME");
+
+   create_status_list(pane);
+
+   drop = height + Global.Int("EpicGui_content_drop");
+   drop = drop + 20; // A little space between panes.
+
+   height = height + 40; // Add a little room to the bottom pane
+
+   pane = create_title_split(shady_bar, drop, height, "EARNED SKILL");
+
+   create_skill_list(pane);
+
+}
+*/
+
+//*******************************************************************************************/
+// Faction detail window. This window is updated when the player selects a faction.
+// It gives more information on the faction, as well as the player standing in words.
+//
+// The window can only take up the top half.
+//*******************************************************************************************/
+
+hwindow create_faction_detail()
+{
+
+   // Grab the current faction handle.
+   hfaction player = iFaction.Find("Player");
+   hfaction faction = iFaction.Cast(Global.Handle("gt_epic_fac_gui_faction"));
+   hwindow detail_window = GUI.Cast(Global.Handle("gt_epic_fac_gui_detail"));
+   hwindow shady_bar = GUI.Cast(Global.Handle("gt_epic_fac_gui_shady"));
+   hwindow title;
+   hwindow text;
+   int width, height, x, y, upgrade_price;
+   string name, text_url, upgrade_string;
+
+   float standing;
+   string standing_string;
+   string faction_string;
+   hinifile upgrade_file = INIFile.Create("ini:/standing_upgrade");
+
+   if (none == upgrade_file) {
+      debug Debug.PrintString("ERROR: upgrade file not found\n");
+   }
+
+   faction_string = tEFaction.Type2String(tEFaction.Type(faction));
+   standing = iFaction.Feeling(faction, player);
+   standing_string = tEFaction.Feeling2String(standing);
+
+   upgrade_price = INIFile.Int(upgrade_file,faction_string,standing_string,0);
+
+   INIFile.Destroy(upgrade_file);
+
+   debug {
+      Debug.PrintString(faction_string);
+      Debug.PrintString("\n");
+      Debug.PrintString(standing_string);
+      Debug.PrintString("\n");
+   }
+
+   standing_string = Text.Field(standing_string, FT_Text);
+
+
+   if (test_allied(faction)) {
+      // Don't allow an upgrade.
+      upgrade_price = 0;
+   }else if (test_friendly(faction)) {
+      upgrade_price *= 2;
+   }
+
+   if (0 == upgrade_price) {
+      upgrade_string = "Cannot Upgrade";
+   }else {
+      upgrade_string = String.FormatInt("Upgrade Cost: %d",upgrade_price);
+   }
+
+   // If there was a prior detail window, destroy it.
+   GUI.DeleteWindow(detail_window);
+
+   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   width = width /2;
+
+
+   height = GUI.WindowCanvasHeight( shady_bar) - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+   height = height/2;
+
+   x = width + Global.Int("EpicGui_content_indent");
+   y = Global.Int("EpicGui_content_drop");
+
+   width = width - Global.Int("EpicGui_content_indent");
+   width = width - Global.Int("EpicGui_content_indent");
+
+   // Create a new base window.
+   detail_window = GUI.CreateWindow(x, y, width, height, shady_bar);
+
+   // Put the name in a static window.
+   name = Text.Field(iFaction.Name(faction), FT_Text);
+
+   iGUI.CreateAndInitialiseStaticWindow( 0, 
+                                         0, 
+                                         GUI.WindowCanvasWidth( detail_window ),
+                                         20,
+                                         detail_window, 
+                                         Global.String("GUI_title_font"), 
+                                         name);
+
+
+
+   iGUI.CreateAndInitialiseStaticWindow( 0, 
+                                         20, 
+                                         GUI.WindowCanvasWidth( detail_window),
+                                         20,
+                                         detail_window, 
+                                         Global.String("GUI_title_font"), 
+                                         standing_string);
+
+
+   iGUI.CreateAndInitialiseStaticWindow( 0, 
+                                         40, 
+                                         GUI.WindowCanvasWidth( detail_window),
+                                         20,
+                                         detail_window, 
+                                         Global.String("GUI_title_font"), 
+                                         upgrade_string);
+
+
+   // Lookup the description file, put it in a text window.
+
+
+   width = GUI.WindowCanvasWidth( detail_window) -Global.Int("GUI_scrollbar_width");
+   height = GUI.WindowCanvasHeight( detail_window) - 70;
+   
+   text_url = tEFaction.Description(faction);
+
+  // text_url = "html:/html/gt_sample_desc";
+
+   text = iGUI.CreateAndInitialiseTextWindow( 0, 
+                                       65, 
+                                       width,
+                                       height,
+                                       detail_window, 
+                                       text_url );
+
+   // Add a scroll bar.
+   GUI.CreateVerticalScrollbar( width,
+                                65,
+                                Global.Int("GUI_scrollbar_width"),
+                                height,
+                                detail_window,
+                                text,
+                                Global.Float( "GUI_scrollbar_buttonratio"), 
+                                "");
+
+   // Save for later updates.
+   Global.CreateHandle("gt_epic_fac_gui_detail", GA_Write|GA_NoSave, detail_window);
+
+   return detail_window;
+}
+
+/*
+   The player wants to upgrade a faction.
+   We find all the factions that the player is friendly or allied.
+
+   Then as a faction is selected, we check to see if those faction
+   are in open war with the selected faction.
+   
+   If so, we make things more difficult for the player.
+
+
+*/
+
+setup_player_allies()
+{
+   list factions = iFaction.All();
+   int total, i;
+   hfaction player = tEFaction.PlayerFaction();
+   hfaction faction;
+   float feeling;
+   set friendly, allied;
+
+   total = List.ItemCount(factions);
+   for (i=0;i<total;++i) {
+      faction = iFaction.Cast(List.GetNth(factions, i));
+
+      // If friendly
+      if (iFaction.Feeling(faction, player) >= 0.2) {
+         Set.Add(friendly, faction);
+
+         // If allied
+         if (iFaction.Feeling(faction, player) >= 0.6) {
+            Set.Add(allied, faction);
+         }
+      }
+   }
+
+   Global.CreateSet("gt_epic_fac_gui_friendly", GA_Write|GA_NoSave, friendly);
+   Global.CreateSet("gt_epic_fac_gui_allied", GA_Write|GA_NoSave, allied);
+
+}
+
+// Returns true if the upgrade faction hates any of the factions
+// the player is friends with.
+bool test_friendly(hfaction upgrade)
+{
+   set friendly = Global.Set("gt_epic_fac_gui_friendly");
+   int total, i;
+   hfaction faction;
+
+   while (!Set.IsEmpty(friendly)) {
+      faction = iFaction.Cast(Set.FirstElement(friendly));
+      Set.Remove(friendly, faction);
+
+      // If hatred of this player friendly faction
+      if (iFaction.Feeling(upgrade, faction) <= -0.6) {
+         return true;
+      }
+   }
+
+   return false;
+}
+
+// Returns true if the upgrade faction hates any of the factions
+// the player has allied with.
+bool test_allied(hfaction upgrade)
+{
+   set friendly = Global.Set("gt_epic_fac_gui_allied");
+   int total, i;
+   hfaction faction;
+
+   while (!Set.IsEmpty(friendly)) {
+      faction = iFaction.Cast(Set.FirstElement(friendly));
+      Set.Remove(friendly, faction);
+
+      // If hatred of this allied faction
+      if (iFaction.Feeling(upgrade, faction) <= -0.6) {
+         return true;
+      }
+   }
+
+   return false;
+}
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

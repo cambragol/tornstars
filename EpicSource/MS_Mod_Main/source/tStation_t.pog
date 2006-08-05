@@ -1,0 +1,299 @@
+//*******************************************************************************************/
+//
+// tStation_t
+//
+// Unit test package for the tStation code. Use with the test_station system.
+// 
+// 
+//
+// 
+//
+// October 2003, Jon Freise
+//******************************************************************************************/
+
+package tStation_t;
+
+uses 
+iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, 
+Task, Debug, iFaction, iSim, iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+iConversation, iFormation, Group, Text, iEmail, State, iTrafficCreation, 
+iRangeCheck,iRemotePilot, iRegion, iMissionTracker, iWingmen,
+iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+iStartSystem, 
+iLagrangePoint, iGame, Stream, 
+   tEpicFactionEnum,
+   tEpicFaction,
+   tStationEnum,
+   tStation,
+   tLProduction,
+   tLCenter,
+   tLFleet,
+   tLMission;
+
+
+
+provides 
+	StartTest,
+	RestoreTest; 
+
+
+prototype bool verify_properties();
+
+/*
+   Coding tests
+   
+   New game setup INI files correctly?
+   
+   Standard stations modified correctly?
+   New stations created?
+   
+   Restore of standard stations complete?
+   New stations recreated?
+   
+   Are all properties correct? Are all set functions
+   working correctly? 
+   
+   Do create and destroy work correctly?
+   
+   
+   All find functions return right?
+
+   When failures happen, do they behave correctly?
+   
+
+   // Framework:
+   // Ship arrives at new system.
+   
+   // Create a pog station. Destroy a station
+   // Undestroy a destroyed station. Destroy geog station.
+   
+   // Verify location. Verify number. 
+   // Verify all station values are set correctly (to non defaults).
+   
+   
+
+*/
+
+bool StartTest()
+{
+   set habs, sys_habs;
+
+   string system = "map:/geog/middle/test_station";
+   hhabitat station, station2;
+   hisim parent;
+   hship player = iShip.FindPlayerShip();
+   int type;
+
+   debug Debug.PrintString("tStation_t.StartTest\n");
+
+
+
+   station = iHabitat.Cast(iMapEntity.FindByName("TestStationHab"));
+
+   station2 = iHabitat.Cast(iMapEntity.FindByName("TestStationSec"));
+
+   if (none == station) {
+      debug Debug.PrintString("Station_t.StartTest Pog station failed to create\n");
+      return false;
+   }
+
+   tStation.SetStatus(station2, ESS_Building);
+
+   tLProduction.SetFunds(iSim.Cast(station), 100);
+   tLFleet.SetFleets(iSim.Cast(station), 3.0);
+   tLMission.SetPlannerType(iSim.Cast(station), 5);
+
+   if (!verify_properties()){
+      return false;
+   }
+  
+
+   debug Debug.PrintString("Station_t.StartTest Done\n");
+   return true;
+}
+
+
+/*
+   Called after the save to check that all the saved stuff was restored correctly.
+
+
+*/
+bool RestoreTest()
+{
+   debug Debug.PrintString("tStation_t.RestoreTest\n");
+
+   if (!verify_properties()) {
+      return false;
+   }
+
+   return true;
+}
+
+
+bool verify_properties()
+{
+   set habs;
+   hisim center;
+   int planner;
+
+   string system = "map:/geog/middle/test_station";
+   hhabitat station, station2;
+   hship player = iShip.FindPlayerShip();
+   int type, allegiance, number, loans, funds, ships, loss, status;
+   //hfaction faction1, faction2;
+   hsim faction1, faction2;
+   bool visible;
+   float fleets;
+
+   station = iHabitat.Cast(iMapEntity.FindByName("TestStationSec"));
+   if (none == station) {
+      debug Debug.PrintString("Station_t.StartTest cannot find TestStationSec\n");
+      return false;
+   }
+
+
+   station = iHabitat.Cast(iMapEntity.FindByName("TestStationHab"));
+   if (none == station) {
+      debug Debug.PrintString("Station_t.StartTest cannot find TestStationHab\n");
+      return false;
+   }
+
+   // Test all the properties of a geog station and make sure they were written
+   // in from the INI file correctly.
+
+   faction1 = tEpicFaction.Find("F_Vorlon");
+   faction2 = tEpicFaction.Faction(station);
+
+   if (faction1 != faction2){
+      debug Debug.PrintString("Station_t.StartTest station faction incorrect\n");
+      return false;
+   }
+
+   visible = tStation.IsVisibleOnMap(station);
+   if (!visible){
+      debug Debug.PrintString("Station_t.StartTest visible not set correctly\n");
+      return false;
+   }
+
+   tStation.SetMapVisibility(station, false);
+   visible = tStation.IsVisibleOnMap(station);
+   if (visible){
+      debug Debug.PrintString("Station_t.StartTest visible cannot set false\n");
+      return false;
+   }
+
+   tStation.SetMapVisibility(station, true);
+
+   visible = tStation.IsVisibleOnMap(station);
+   if (!visible){
+      debug Debug.PrintString("Station_t.StartTest visible does not reset\n");
+      return false;
+   }
+
+
+   // Station is building, so must be hidden from eye.
+   visible = tStation.IsHidden(station);
+   if (!visible){
+      debug Debug.PrintString("Station_t.StartTest hidden not set correctly\n");
+      return false;
+   }
+
+
+
+
+   visible = tStation.IsDestroyed(station);
+   if (visible){
+      debug Debug.PrintString("Station_t.StartTest destroyed not set correctly\n");
+      return false;
+   }
+
+   tStation.SetDestroyed(station, true);
+   visible = tStation.IsDestroyed(station);
+   if (!visible){
+      debug Debug.PrintString("Station_t.StartTest destroyed cannot make destroyed\n");
+      return false;
+   }
+
+   tStation.SetDestroyed(station, false);
+   visible = tStation.IsDestroyed(station);
+   if (visible){
+      debug Debug.PrintString("Station_t.StartTest destroyed cannot undestroy\n");
+      return false;
+   }
+   
+   tStation.SetHidden(station, false);
+   visible = tStation.IsHidden(station);
+   if (visible){
+      debug Debug.PrintString("Station_t.StartTest hidden cannot set false\n");
+      return false;
+   }
+
+   tStation.SetHidden(station, true);
+   visible = tStation.IsHidden(station);
+   if (!visible){
+      debug Debug.PrintString("Station_t.StartTest hidden does not reset\n");
+      return false;
+   }
+
+
+   status = tStation.Status(station);
+   if ( ESS_Building != status){
+      debug Debug.PrintString("Station_t.StartTest pg store status wrong\n");
+      return false;
+   }
+
+   tStation.SetStatus(station, ESS_Normal);
+
+   status = tStation.Status(station);
+   if (ESS_Normal != status){
+      debug Debug.PrintString("Station_t.StartTest pg reset status wrong\n");
+      return false;
+   }
+
+   tStation.SetStatus(station, ESS_Building);
+
+
+   // Test Production
+
+   funds = tLProduction.GetFunds(iSim.Cast(station));
+   if (100 != funds ){
+      debug Debug.PrintString("Station_t.StartTest funds value wrong\n");
+      return false;
+   }
+
+   // Test center
+
+   center = tLCenter.GetCenter(iSim.Cast(station));
+
+   if ("TestStationHab" != Sim.Name(center)) {
+      debug Debug.PrintString("Station_t.StartTest center not correct\n");
+      return false;
+   }
+
+   // Test fleets
+
+   fleets = tLFleet.GetFleets(iSim.Cast(station));
+   if ((fleets < 2.9) || (fleets > 3.1)) {
+      debug Debug.PrintString("Station_t.StartTest fleets value not correct\n");
+      return false;
+   }   
+
+   // Test mission
+   planner = tLMission.GetPlannerType(iSim.Cast(station));
+   if (5 != planner ){
+      debug Debug.PrintString("Station_t.StartTest mission planner wrong\n");
+      return false;
+   }
+
+
+   debug Debug.PrintString("Station_t.RestoreTest Done\n");
+
+   return true;
+}
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

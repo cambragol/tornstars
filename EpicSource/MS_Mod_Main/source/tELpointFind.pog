@@ -1,0 +1,374 @@
+//*******************************************************************************************/
+//
+// tELpointFind.pog
+//
+// Implements an lpoint search feature. It allows placing search waypoints where an 
+// lpoint might be located. The player can fly to these locations to reveal hidden 
+// lpoints.
+//
+//
+// October 2005, Jon Freise
+//******************************************************************************************/
+
+package tELpointFind;
+
+uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, 
+   iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+   iConversation, iFormation, Group, Text, iEmail, State, 
+   iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker, 
+   iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+   iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
+   iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
+   tEpicGuiEnum,
+   tEpicGui,
+   UniGUI;
+
+provides RunCheck,
+         MoonPress,
+         StartScreen,
+         ExitScreen,
+         StartSession,
+         EndSession,
+         DisplayWindow;
+
+
+prototype test_body();
+
+prototype refresh_moon_list();
+
+prototype hwindow create_button(hwindow parent, int x, int y, string name, string function);
+
+prototype set_known(hsim point);
+
+prototype bool is_known(hsim point);
+
+/*
+   Must you search out lpoints? Yes. So you need sensors. And that provides a new attachment
+   to your comp screen. Target a moon and it will calculate an lpoint position and drop 
+   a waypoint. 
+   
+   Once you get to that position, it will let you scan for an lpoint. If one exists, it 
+   will be revealed.
+   
+*/
+
+StartSession()
+{
+   debug Debug.PrintString("tELpointFind.Init\n");
+   Text.Add("csv:/TEXT/gt_jump_text");
+}
+
+EndSession()
+{
+    Text.Remove("csv:/TEXT/gt_jump_text");
+}
+
+
+/*
+
+The lpoint sensor Gui
+
+Need to place a possible lpoint marker for the player to fly near.
+Click on a moon to place a marker. Click on another moon to clear
+the current marker and place another.
+
+Need to scan the current area for possible lpoints.
+Press button, search for waypoint with jumptarget property.
+Make visible.
+
+Need to activate nearby known jump point. 
+Find nearby jump point, and if it is known to the player
+activate it (by starting a jump task). Then the player can 
+jump via this point.
+
+*/
+
+
+
+RunCheck()
+{
+   Global.SetBool("g_zz_ug_passme",true);
+
+   // This function needs to check that a Jump Point Sensor is docked as a cargo
+   // pod to the players ship. Only ships carrying this (huge) sensor can 
+   // navigate jump points.
+
+}
+
+
+hwindow create_moon_list(hwindow parent, 
+                         int x, int y, 
+                         int width, int height, 
+                         string function)
+{
+   hwindow list_box;
+   hwindow base_win;
+   hwindow button;
+   int count, i;
+   string name;
+   int left;
+   int cwidth = width - 4;
+   list moon_list;
+   hbody moon;                                
+   
+   cwidth = cwidth - Global.Int("GUI_scrollbar_width");
+
+   base_win = GUI.CreateWindow(x, y, width, height, parent);
+
+   // Create the parent listbox
+   list_box = GUI.CreateListBox( 0, 0,
+                                 cwidth, height,
+                                 base_win,
+                                 true,
+                                 false);
+
+   moon_list = List.FromSet(iBody.FilterOnType(iMapEntity.SystemBodies(),BT_Moon));
+
+   count = List.ItemCount(moon_list);
+   for (i=0;i<count;++i) {
+      moon = iBody.Cast(List.GetNth(moon_list,i));
+ 
+      name = Text.Field(Sim.Name(moon),FT_Text);
+
+      button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, 
+                                                      cwidth, 
+                                                      name,
+                                                      function);
+      
+      Object.AddHandleProperty(button,"gtMoonHandle",moon);
+
+      GUI.AddListBoxEntry(list_box, button);
+   }
+
+
+
+
+   // Add a scroll bar to the listbox.
+   //GUI.CreateVerticalScrollbarDecorator( list_box );
+
+   GUI.CreateVerticalScrollbar( cwidth+4,
+                                0,
+                                Global.Int("GUI_scrollbar_width"),
+                                height,
+                                base_win,
+                                list_box,
+                                Global.Float( "GUI_scrollbar_buttonratio"), 
+                                "");
+
+   return base_win;
+}
+
+task hud_select(hsim waypoint)
+{
+   Task.Sleep(Task.Current(), 0.1);
+   iHUD.SetTarget(waypoint);
+
+   UniGUI.UniGUIClose();
+}
+
+MoonPress()
+{
+   // A moon was selected, drop a waypoint at the halfway mark between the 
+   // planet and the moon. If a prior waypoint was placed, remove it.
+   // remember this waypoint.
+	// Get the currently focused window - it must be the correct system button.
+	hwindow button =	GUI.FocusedWindow();
+   hbody moon, planet;
+   hsim waypoint, prior;
+
+   moon = iBody.Cast(Object.HandleProperty(button,"gtMoonHandle"));
+   planet = iBody.Cast(iMapEntity.Parent(moon));
+   waypoint = Sim.Create("ini:/sims/nav/waypoint", "Possible Lpoint Location");
+
+   Sim.SetCullable(waypoint, false);
+   iSim.SetSensorVisibility(iSim.Cast(waypoint), true);
+
+   Sim.PlaceBetween(waypoint, planet, moon, 0.5);
+
+   Task.Detach(start hud_select(waypoint));
+
+   if (Global.Exists("gtPossibleJumpPoint")) {
+      prior = Sim.Cast(Global.Handle("gtPossibleJumpPoint"));
+      Sim.Destroy(prior);
+      Global.SetHandle("gtPossibleJumpPoint",waypoint);
+   }else {
+      Global.CreateHandle("gtPossibleJumpPoint",GA_Write|GA_NoSave, waypoint);      
+   }
+
+   // Focus the player on the possible lpoint, because it is far, far away,
+   // and will be at the bottom of the contact list.
+
+
+}
+
+
+
+DisplayWindow()
+{
+   hwindow shady_bar;
+   hwindow title;
+   hwindow subtitle;
+   hwindow exit;
+   hwindow help_win;
+
+   int width, height, network_offset, x, y;
+
+   list inventory_list, empty_list;
+
+   debug Debug.PrintString("tELpointFind.DisplayWindow\n");
+
+   Global.CreateList("gt_lpointfind_gui_trans_list",GA_Write|GA_NoSave,empty_list);
+   Global.CreateHandle("gt_lpointfind_gui_trans_list_box",GA_Write|GA_NoSave,none);
+   Global.CreateHandle("gt_lpointfind_gui_cargo_list_box",GA_Write|GA_NoSave,none);
+   Global.CreateHandle("gt_lpointfind_gui_cargo_info_win",GA_Write|GA_NoSave,none);
+
+
+   // Set left shady bar width.
+   shady_bar = iGUI.CreateWideShadyBar();
+   Global.CreateHandle("gt_lpointfind_gui_shady",GA_Write,shady_bar);
+
+
+   GUI.SetWindowClientArea( shady_bar, 
+                            0,
+                            0,
+                            500,
+                            GUI.WindowCanvasHeight( shady_bar));
+   
+
+
+   height = GUI.WindowCanvasHeight( shady_bar);
+   height = height - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+   // Take out double the footer space to leave room for the launch button.
+   height = height - Global.Int("EpicGui_content_footer");
+
+   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   width = width/2;
+   width = width - Global.Int("EpicGui_content_indent");
+   width = width - Global.Int("EpicGui_content_indent");
+      
+
+   tEpicGui.CreateTitle(shady_bar, Text.Field("lpointfind_gui_title", FT_Text));
+   tEpicGui.CreateSubtitle(shady_bar, Text.Field("lpointfind_gui_subtitle", FT_Text));
+
+   // Create the exit button
+   tEpicGui.CreateExitButton(shady_bar, Text.Field( "lpointfind_gui_exit", FT_Text), "tELpointFind.ExitScreen");
+
+
+   iGUI.CreateAndInitialiseStaticWindow( Global.Int("EpicGui_content_indent"),
+                                         Global.Int("EpicGui_content_drop") + 100,
+                                         width,
+                                         20,
+                                         shady_bar,
+                                         Global.String("GUI_title_font"),
+                                         Text.Field("lpointfind_gui_moon_list", FT_Text));
+//                                         Text.Field("lpointfind_inventory", FT_Text) );
+
+   refresh_moon_list();
+
+
+
+   y = GUI.WindowCanvasHeight( shady_bar );
+
+   // y position uses back button position, add room for fancy border, add a little whitespace
+   y= y - Global.Int("EpicGui_content_footer");
+   // use double footer spacing, to allow room
+   y= y - Global.Int("EpicGui_content_footer");
+   y=y+10;
+   y = y - Global.Int("GUI_fancybutton_alignmentoffset");
+   x = Global.Int("GUI_backbutton_left");
+
+  // create_button(shady_bar,x, y, Text.Field( "lpointfind_gui_scan", FT_Text), "tELpointFind.ScanPress");
+
+   y= y - Global.Int("EpicGui_content_footer");
+  // create_button(shady_bar,x, y, Text.Field( "lpointfind_gui_activate", FT_Text), "tELpointFind.ActivatePress");
+                                         
+
+   // Create help window
+   help_win = iGUI.CreateAndInitialiseTextWindow(250+Global.Int("EpicGui_content_indent"),
+                                      Global.Int("EpicGui_content_drop") ,
+                                      275,
+                                      height,
+                                      shady_bar,
+                                      "html:/html/lpointfind_help");
+
+   GUI.CreateVerticalScrollbar( 525+Global.Int("EpicGui_content_indent"),
+                                Global.Int("EpicGui_content_drop") ,
+                                Global.Int("GUI_scrollbar_width"),
+                                height,
+                                shady_bar,
+                                help_win,
+                                Global.Float( "GUI_scrollbar_buttonratio"), 
+                                "");
+}
+
+
+refresh_moon_list()
+{
+   hwindow list_box = GUI.Cast(Global.Handle("gt_lpointfind_gui_trans_list_box"));
+   hwindow base_win = GUI.Cast(Global.Handle("gt_lpointfind_gui_shady"));
+   int height, width;
+   list cargo_list = Global.List("gt_lpointfind_gui_trans_list");
+
+   if (none != list_box) {
+      GUI.DeleteWindow(list_box);
+   }
+
+   height = GUI.WindowCanvasHeight( base_win);
+   height = height - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+   height = height - Global.Int("EpicGui_content_footer");
+   // mark out room for the text fields
+   height = height - 120;
+
+   debug Debug.PrintString(String.FormatInt("HackGui Window height %d\n",height));
+
+   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   width = width/2;
+   width = width - Global.Int("EpicGui_content_indent");
+   width = width - Global.Int("EpicGui_content_indent");
+
+
+   list_box = create_moon_list(base_win, 
+                               Global.Int("EpicGui_content_indent"),
+                               Global.Int("EpicGui_content_drop")+120,
+                               width,
+                               height,
+                               "tELpointFind.MoonPress"); 
+
+
+
+   Global.SetHandle("gt_lpointfind_gui_trans_list_box",list_box);
+}
+
+
+
+StartScreen()
+{
+   GUI.PopScreensTo("icSpaceFlightScreen");
+   GUI.OverlayScreen("icPDAOverlayManager");
+   iGUI.OverlayCustomScreen( "tELpointFind.DisplayWindow" );
+}
+
+
+
+ExitScreen()
+{
+
+	UniGUI.UniGUIRemoveScreen();
+}
+
+
+
+
+
+
+
+
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

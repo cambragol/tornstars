@@ -1,0 +1,284 @@
+//*******************************************************************************************/
+//
+// zTestCargo.pog
+//
+// 
+// 
+//
+//
+//
+// May 6, 2005, jon freise
+//******************************************************************************************/
+
+package zTestCargo;
+
+uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, 
+   iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+   iConversation, iFormation, Group, Text, iEmail, State, 
+   iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker, 
+   iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+   iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
+   iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
+   ECargoTypes,
+   tEconUtil,
+   tETradeBuy,
+   tPogClass,
+   tLRoot,
+   tLTrade,
+   tEpicMoney,
+   tTime,
+   tEFaction,
+   tEpicFleet,
+   tPodUtil,
+   tEShipCreation,
+   tPcOwner;
+
+
+
+
+provides GiveMillion,
+         SetThousand,
+         UnhideStations,
+         AdvanceDay,
+         CreateCargo,
+         CreateWingmen,
+         CreateTargets,
+         RefuelShips,
+         EmptyShipsFuel,
+         CreateFuelPod;
+
+
+
+
+
+// Give the player an extra million to work with
+GiveMillion()
+{
+   tEpicMoney.ChangeShipAccount(1000000);
+}
+
+// Cut the player down to 1000 credits.
+SetThousand()
+{
+   tEpicMoney.ChangeShipAccount(-1*tEpicMoney.ShipAccount());
+   tEpicMoney.ChangeShipAccount(1000);
+}
+
+
+
+
+
+
+// This test finds all the stations in the current system that are hidden and unhides
+// them on the map. It will also unhide destroyed stations.
+UnhideStations()
+{
+   list stations;
+   int i, total;
+   hhabitat station;
+
+   stations = List.FromSet(iMapEntity.SystemHabitats());
+
+   total = List.ItemCount(stations);
+
+   for (i=0;i<total;++i) {
+      station = iHabitat.Cast(List.GetNth(stations,i));
+
+      iMapEntity.SetMapVisibility(station, true);
+      iMapEntity.SetHidden(station, false);
+   }
+
+}
+
+// Push the timer forward one day for testing purposes.
+AdvanceDay()
+{
+   tTime.AdvanceTime(Global.Int("gt_time_one_day"));
+}
+
+
+
+
+
+// Create Some cargo objects that can be kicked around.
+CreateCargo()
+{
+   hship pod;
+   hship player = iShip.FindPlayerShip();
+   hinifile cargo_file = INIFile.Create("ini:/ms_mod_debug");
+   string cargo_name;
+   int count, cargo_type, hack_level;
+
+   if (none == cargo_file) {
+      debug Debug.PrintString("zTestCargo.CreateCargo error failed to open ms_mod_debug\n");
+      return;
+   }
+
+   count = 0;
+   while (INIFile.NumberedExists(cargo_file, "TestCargo","cargo_type", count)) {
+      cargo_name = INIFile.NumberedString(cargo_file,"TestCargo","cargo_type",count,"none");
+      hack_level = INIFile.NumberedInt(cargo_file,"TestCargo","hack_level",count,0);
+      ++count;
+
+      cargo_type = tEconUtil.String2CargoType(cargo_name);
+      pod = iShip.Cast(tPodUtil.CreateCargoPod(cargo_type, "Independent", "Independent"));
+      Sim.SetCullable(pod, false);
+      Sim.PlaceNear(pod, player, 1km);
+      tPodUtil.SetHackLevel(pod, hack_level);
+   }
+
+   INIFile.Destroy(cargo_file);
+}
+
+
+
+CreateWingmen()
+{
+   hship wingman;
+   hship player = iShip.FindPlayerShip();
+   hinifile cargo_file = INIFile.Create("ini:/ms_mod_debug");
+   string ship_template, ship_name;
+   int count;
+
+   if (none == cargo_file) {
+      debug Debug.PrintString("zTestCargo.CreateWingmen error failed to open ms_mod_debug\n");
+      return;
+   }
+
+   count = 0;
+   while (INIFile.NumberedExists(cargo_file, "TestWingmen","ship_ini", count)) {
+      ship_template = INIFile.NumberedString(cargo_file,"TestWingmen","ship_ini",count,"none");
+      ship_name = INIFile.NumberedString(cargo_file,"TestWingmen","ship_name",count,"no name");
+      ++count;
+
+      wingman = iShip.Create(ship_template, ship_name);
+
+      if (none != wingman) {
+
+         tEpicFleet.HireShip(wingman);
+         Sim.PlaceNear(wingman, player, 10km);
+
+      }else {
+         debug Debug.PrintString("zTestCargo.CreateWingmen error invalid sim name:");
+         debug Debug.PrintString(ship_template);
+         debug Debug.PrintString("\n");
+      }
+   }
+
+   INIFile.Destroy(cargo_file);
+}
+
+
+CreateTargets()
+{
+   hship wingman;
+   hship player = iShip.FindPlayerShip();
+   hinifile cargo_file = INIFile.Create("ini:/ms_mod_debug");
+   string ship_template, ship_name;
+   int count;
+
+   if (none == cargo_file) {
+      debug Debug.PrintString("zTestCargo.CreateTargets error failed to open ms_mod_debug\n");
+      return;
+   }
+
+   count = 0;
+   while (INIFile.NumberedExists(cargo_file, "TestTargets","ship_ini", count)) {
+      ship_template = INIFile.NumberedString(cargo_file,"TestTargets","ship_ini",count,"none");
+      ship_name = INIFile.NumberedString(cargo_file,"TestTargets","ship_name",count,"no name");
+      ++count;
+
+      wingman = iShip.Create(ship_template, ship_name);
+
+      if (none != wingman) {
+
+         Sim.PlaceRelativeTo(wingman, player, 0, 0, 10km);
+
+      }else {
+         debug Debug.PrintString("zTestCargo.CreateTargets error invalid sim name:");
+         debug Debug.PrintString(ship_template);
+         debug Debug.PrintString("\n");
+      }
+   }
+
+   INIFile.Destroy(cargo_file);
+}
+
+
+
+
+// This fills up all wingmen with fuel.
+RefuelShips()
+{
+   list player_fleet;
+   hship ship;
+   hship player = iShip.FindPlayerShip();
+
+   ship = iShip.Cast(iShip.CurrentTarget(player));
+   tEpicFleet.SetFuel(ship, tEpicFleet.FuelMax(ship));
+
+}
+
+
+// This drains 500 units of fuel out of the players target
+EmptyShipsFuel()
+{
+   list player_fleet;
+   hship ship;
+   float fuel;
+   hship player = iShip.FindPlayerShip();
+
+   ship = iShip.Cast(iShip.CurrentTarget(player));
+
+   fuel = tEpicFleet.Fuel(ship);
+   fuel= fuel - 500.0;
+   if (fuel < 0.0)
+   {
+      fuel = 0.0;
+   }
+   tEpicFleet.SetFuel(ship, fuel);
+}
+
+
+CreateFuelPod()
+{
+   hship pod;
+   hship player  = iShip.FindPlayerShip();
+
+   pod = iShip.Cast(tPodUtil.CreateCargoPod(tEconUtil.String2CargoType("CT_LiquifiedFuel"),"Player","Player"));
+   Sim.PlaceNear(pod, player, 2km);
+
+}
+
+
+
+
+
+/*
+Failed attempts at finding a string property
+   class 
+   template
+   m_static_class_name 
+   class_name
+   template_name
+   static_class_name
+   template_ini
+
+*/
+
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+
+
+
+

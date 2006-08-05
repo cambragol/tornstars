@@ -1,0 +1,304 @@
+//*******************************************************************************************/
+//
+// tTestExp.pog
+//
+// This code block is for experiments and testing odds and ends of uncertain code.
+// It is a junkyard of ideas and code fragments.
+//
+//
+//
+// March, 2005, jon freise
+//******************************************************************************************/
+
+package zTestExp;
+
+uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, 
+   iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+   iConversation, iFormation, Group, Text, iEmail, State, 
+   iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker, 
+   iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+   iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
+   iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
+   ECargoTypes,
+   tEconUtil,
+   tETradeBuy,
+   tPogClass,
+   tLRoot,
+   tLTrade,
+   tEpicMoney,
+   tTime,
+   tEFaction,
+   tEpicFleet,
+   tPodUtil,
+   tEShipCreation,
+   tPcOwner;
+
+
+
+
+provides TestProperties,
+         TestOrder,
+         TestObjectAdd,
+         TestManyDays,
+         StartChannel;
+
+
+TestProperties()
+{
+   hcargo cargo;
+   int type;
+   string name, name_key;
+
+   
+   // Locate a cargo object we can use to display information.
+   cargo = iCargo.Find(1);
+
+
+   debug Debug.PrintString("Cargo Type:");
+   debug Debug.PrintInt(Object.IntProperty(cargo,"type"));
+   debug Debug.PrintString("\n");   
+
+   debug Debug.PrintString("Cargo Name:");
+   debug Debug.PrintString(Object.StringProperty(cargo,"name"));
+   debug Debug.PrintString("\n"); 
+
+   debug Debug.PrintString("Cargo Key:");
+   debug Debug.PrintString(Object.StringProperty(cargo,"name_key"));
+   debug Debug.PrintString("\n");
+
+
+}
+
+TestSubsims()
+{
+   hship ship = iShip.FindPlayerShip();
+   int i, subsim_count;
+   hsubsim subsim;
+   float effect;
+
+
+      debug {
+         Debug.PrintHandle(ship);
+         Debug.PrintString("\n");
+         Debug.PrintString(Object.StringProperty(ship, "name"));
+         Debug.PrintString(" name\n");
+         Debug.PrintString(Object.StringProperty(ship, "static_class"));
+         Debug.PrintString(" class\n");
+         Debug.PrintString(Object.StringProperty(ship, "template_ini"));
+         Debug.PrintString(" template\n");
+      }
+
+
+   subsim_count = Sim.SubsimCount(ship);
+   for (i=0;i<subsim_count;++i)
+   {
+      subsim = Sim.NthSubsim(ship, i);
+
+      debug {
+         Debug.PrintHandle(subsim);
+         Debug.PrintString("\n");
+         Debug.PrintString(Object.StringProperty(subsim, "name"));
+         Debug.PrintString(" name\n");
+         Debug.PrintString(Object.StringProperty(subsim, "static_class"));
+         Debug.PrintString(" class\n");
+         Debug.PrintString(Object.StringProperty(subsim, "template_ini"));
+         Debug.PrintString(" template\n");
+      }
+   }
+}
+
+
+
+TestOrder()
+{
+   hship ship;
+   hisim pod;
+   hmapentity station;
+   hship player = iShip.FindPlayerShip();
+   hgroup trade_group = Group.Create();
+   hfaction player_faction = tEFaction.PlayerFaction();
+
+
+
+   station = iHabitat.Nearest(iMapEntity.SystemHabitats(), player);
+
+   ship = iShip.Create("ini:/sims/ships/utility/freighter","CargoTest");
+   iShip.InstallAIPilot(ship, 4.0, 0.25, 0.5,"","","","");
+   iSim.SetFaction(ship, player_faction);
+   Sim.SetCullable(ship, false);
+
+   Sim.PlaceRelativeTo(ship, station, 10km, 5km, 5km);
+
+   pod = iSim.Cast (tPodUtil.CreateCargoPod(CT_Fruit ,"Police","Police"));
+   Sim.SetCullable(pod, false);
+   iSim.Dock(ship, pod);
+
+   pod = iSim.Cast (tPodUtil.CreateCargoPod(CT_Wire ,"MAAS Corporation","MAAS Corporation"));
+   Sim.SetCullable(pod, false);
+   iSim.Dock(ship, pod);
+
+   Group.AddSim(trade_group, ship);
+
+//   Task.Detach(start iScriptedOrders.Haulage( trade_group, station));
+
+   Task.Detach(start iScriptedOrders.LoiterNearSim( ship, iSim.Cast(station)));
+
+//task iScriptedOrders.Haulage( hgroup ships, hmapentity local_station );
+
+   Global.CreateHandle("gt_test_script",GA_Write|GA_NoSave, trade_group);
+}
+
+
+StopOrder()
+{
+   hgroup ship_group = Group.Cast(Global.Handle("gt_test_script"));
+
+
+   iScriptedOrders.CreateNewOrders(ship_group);
+}
+
+// 141 FPS without any in game waypoints
+// 71 with 1000 placed at random stations.
+// 40 with 2000
+// 37 with 3000
+
+CreateWaypoints()
+{
+   int i, total;
+   hisim waypoint;
+   set habitats;
+   hhabitat station;
+
+   debug Debug.PrintString("zTestCargo.CreateWaypoints\n");
+
+   habitats = iMapEntity.SystemHabitats();
+
+   total = 1000;
+
+   for (i=0;i<total;++i) {
+      waypoint = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint", "test sim"));
+      Sim.SetCullable(waypoint, false);      
+      station = iHabitat.Random(habitats);
+      Sim.PlaceNear(waypoint, station, 10km);
+   }
+}
+
+
+TestObjectAdd()
+{
+   float value;
+   hisim waypoint;
+   hsubsim subsim;
+   hship player = iShip.FindPlayerShip();
+
+
+   waypoint = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","test point"));
+
+   Object.AddIntProperty(waypoint, "distance", 100);
+
+   Object.AddIntProperty(waypoint, "distance", 200);
+
+   if (200 == Object.IntProperty(waypoint,"distance")) {
+      debug Debug.PrintString("Add will set existing property\n");
+   }else {
+      debug Debug.PrintString("Add fails on existing property\n");
+      debug Debug.PrintHandle(waypoint);
+      debug Debug.PrintString(" \n");
+   }
+
+
+   subsim = Subsim.Create("ini:/subsims/systems/nonplayer/tug_capsule");
+
+   Sim.AddSubsim(player, subsim);
+
+   // Move the subsim to be 200 meters in front of the player. Unable to be missed.
+   Subsim.Place(subsim, 0, 0, 200);
+}
+
+task many_days()
+{
+   int i;
+
+   for (i=0;i<10;++i) {
+      tTime.AdvanceTime(Global.Int("gt_time_one_day"));
+
+      Task.Sleep(Task.Current(), 5.0);
+   }
+}
+
+
+
+TestManyDays()
+{
+   
+   Task.Detach(start many_days());
+
+}
+
+
+
+task door_task(hship pod)
+{
+   float increment, value;
+
+   increment = 0.1;
+   
+   Sim.AvatarAddChannel(pod,"door",0.0);
+
+   while (1) {
+      Task.Sleep(Task.Current(), 0.5);
+      
+      value = Sim.AvatarChannelValue(pod, "door");
+
+      value = value + increment;
+
+      if (value > 1.0) {
+         value = 1.0;
+         increment = -0.1;
+      }else if (value < 0.0) {
+         value = 0.0;
+         increment = 0.1;
+      }
+
+      Sim.AvatarSetChannel(pod, "door", value);
+      
+   }
+}
+
+
+
+StartChannel()
+{
+   hship cargo_pod;
+   hship player = iShip.FindPlayerShip();
+
+   cargo_pod = iShip.Create("ini:/sims/megapod_open_rotated", "Channel Test");
+
+   if (none == cargo_pod) {
+      debug Debug.PrintString("zTestExp.Start Channel error cannot create cargo pod\n");
+      return;
+   }
+
+   Sim.SetCullable(cargo_pod, false);
+
+   Sim.PlaceRelativeTo(cargo_pod, player, 0, 0, 200);
+
+   Task.Detach(start door_task(cargo_pod));
+}
+
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+
+
+
+

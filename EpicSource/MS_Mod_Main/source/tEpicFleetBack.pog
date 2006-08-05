@@ -1,0 +1,1353 @@
+//*******************************************************************************************/
+//
+// tEpicFleet.pog
+//
+// This file reimplements iFleet for the epic mod. New features are cargo saving,
+// group and order saving, ship location saving, and unique ids for all player ships.
+// 
+// Rewritten to avoid conflicts with the original iFleet (which is a fine game in itself).
+//
+// Jan 2003, Jon Freise
+//******************************************************************************************/
+
+package tEpicFleet;
+
+uses    Sim,
+        iShip,
+        iSim,
+        iPilotSetup,
+        Debug,
+        Global,
+        GUI,
+        iDirector,
+        iGUI,
+        iHUD,
+        iHabitat,
+        iMapEntity,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        iUtilities,
+        iCargo,
+        iInventory,
+        iComms,
+        iAi,
+        iWingmen,
+        iRemotePilot,
+        iDeathScript,
+        iGame,
+        iUtilities,
+        Math,
+        iInventory,
+        iConversation,
+
+        tPodUtil,
+        tEpicComms;
+
+
+
+
+provides NewGame,
+        NewGameTest,
+        StartSession,
+        AddNewShip,    
+        IsPlayerFleetShip,
+        SaveFleet,
+        RestoreFleet,
+        RemoveShip,
+        AddPlayerWingman,
+        GroupRemoveShip,
+        GroupMoveShip,
+        ReturnGroup,
+        GroupNumber,
+        SetGroupNumber,
+        GetIdNumber,
+        ChangeShip,
+        PurchaseShip,
+        PlayerFleet,
+
+        PlayerDeath,
+        ChangeToTemplate,
+        WingmanComms,
+        CreateTestShip,
+        HireShip,
+        CaptureShip,
+        FireShip,
+        IsCaptured;
+
+
+
+        
+enum eefOwnership {
+   efoOwned,
+   efoHired,
+   efoCaptured
+};
+
+prototype NewGame(string player_ship_template, string system, string location, string name);
+
+prototype NewGameTest();
+
+prototype int AddNewShip(hship ship);
+
+prototype SaveFleet();
+
+prototype int GetIdNumber(hship ship);
+
+prototype int next_id_number();
+
+prototype add_ship_to_list(hship ship);
+
+prototype remove_ship_from_list(hship ship);
+
+prototype set_id_number(hship ship, int id);
+
+prototype location_by_sim(hsim sim, hsim relsim);   
+
+prototype hsim Nearest(hsim location, list items);
+
+prototype save_cargo_pods(hship ship, int ship_id);
+
+prototype restore_cargo_pods(hship ship, int ship_id);
+
+prototype hisim create_pod(string cargo_name, string faction_name);
+
+prototype AddPlayerWingman(hship ship, int group);
+
+// These next functions deal with storing player cargo pods floating in 
+// deep space.
+
+
+prototype ChangeShip();
+
+prototype PurchaseShip(hship ship);
+
+prototype bool PlayerShip(hsim ship);
+
+// Player order group related prototypes
+
+prototype bool GroupRemoveShip(hsim ship);
+
+prototype bool GroupMoveShip(hsim ship, int group);
+
+prototype int GroupNumber (hsim ship);
+
+prototype SetGroupNumber(hsim ship, int group);
+
+prototype group_add_ship(hsim ship, int group);
+
+prototype group_remove_ship(hsim ship, int group);
+
+
+prototype hship ChangeToTemplate(string ship_template, string name);
+
+prototype task delayed_sim_destroy(hship new_ship, hship old_ship);
+
+
+prototype release_wingman(hship ship);
+
+
+prototype task wingman_watch(hship wingman);
+
+//******************************************************************************************/
+
+// Initialize the EpicFleet package. Setup the unique number counter.
+
+//******************************************************************************************/
+NewGame(string player_ship_template, string system, string location, string name)
+{
+   list empty_list;
+   int save_id;
+
+   debug Debug.PrintString("eFleet NewGame\n");
+
+   Global.CreateInt("g_epic_fleet_id_count",GA_Write,500);
+   Global.CreateInt("g_epic_fleet_total_save_num", GA_Write, 1);
+   Global.CreateList("g_epic_fleet_player_list",GA_Write, empty_list);
+   Global.CreateBool("g_epic_fleet_new_game",GA_Write, true);
+
+   // Create the very first player ship
+
+   save_id = 0;
+   Global.CreateString(String.FormatInt("g_epic_fleet_ship_template_%d",save_id),GA_Write, player_ship_template);
+   Global.CreateString(String.FormatInt("g_epic_fleet_ship_name_%d",save_id),GA_Write, name);
+   // Set up unique player value for this very first ship
+   Global.CreateInt(String.FormatInt("g_epic_fleet_ship_id_%d",save_id),GA_Write, 499);
+
+   Global.CreateBool(String.FormatInt("g_epic_fleet_ship_dock_%d",save_id),GA_Write, false);
+
+   // Save system, location and establish x, y, z positions.
+   Global.CreateString(String.FormatInt("g_epic_fleet_ship_system_%d",save_id),GA_Write, system);
+   Global.CreateString(String.FormatInt("g_epic_fleet_ship_ref_%d",save_id),GA_Write, location);
+   Global.CreateFloat(String.FormatInt("g_epic_fleet_ship_x_%d",save_id),GA_Write, 10km);
+   Global.CreateFloat(String.FormatInt("g_epic_fleet_ship_y_%d",save_id),GA_Write, 10km);
+   Global.CreateFloat(String.FormatInt("g_epic_fleet_ship_z_%d",save_id),GA_Write, 10km);
+ 
+
+   //Global.CreateBool("g_epic_fleet_first_try",GA_Write,true);
+   //iGame.MovePlayerBase(system);
+
+   iGame.SetGameType(IGT_SinglePlayer);
+
+   //iGame.StartNewGame(system,"iActOne.ActOneStart()");
+
+   iGame.SetStartSystem(system);      
+
+   // test to see if we can keep the objectives screen from crashing.
+   Global.CreateInt("g_current_act", GA_Write,1);
+
+   Global.CreateBool("gt_fleet_non_base_save",GA_Write, true);
+
+}
+
+NewGameTest()
+{
+
+   hinifile player_config = INIFile.Create("ini:/player_start");
+
+   string ship, system, station, name;
+
+
+   ship = INIFile.String(player_config, "Player","start_ship","ini:/sims/ships/player/fast_attack_prefitted");
+   system = INIFile.String(player_config, "Player","start_system","map:/geog/middle/emerald_sys");
+   station = INIFile.String(player_config, "Player","start_station","Emerald STC");
+   name = INIFile.String(player_config, "Player","start_name","Jon's Revenge");
+
+   INIFile.Destroy(player_config);
+
+   NewGame(ship, system,station, name);
+}
+
+StartSession()
+{
+	Input.BindKey( "tEpicFleet.CreateTestShip", "AnySection.CallShiftFun" );  
+	Input.BindKey( "tEpicFleet.ChangeShip", "tEpicFleet.ChangeShip" );  
+
+}
+
+// Hands out the next unique ship id.
+int next_id_number()
+{
+   int id;
+
+   atomic {
+      id = Global.Int("g_epic_fleet_id_count");
+      ++id;
+      Global.SetInt("g_epic_fleet_id_count",id);
+   }
+   return id;
+}
+
+int GetIdNumber(hship ship)
+{
+   return Object.IntProperty(ship,"EpicFleetIdNum");
+}
+
+set_id_number(hship ship, int id)
+{
+   Object.AddIntProperty(ship,"EpicFleetIdNum",id);
+}
+
+//******************************************************************************************/
+// Add a new ship sim to the player fleet.
+// Create new id.
+// Add to fleet list for save.
+//******************************************************************************************/
+
+int AddNewShip(hship ship)
+{
+   int id = next_id_number();
+
+   add_ship_to_list(ship);
+
+   set_id_number(ship, id);
+   
+   // Attach a deathscript to autoremove this ship if it dies... 
+   // actually, it should get cleaned out at the next save...
+   // let see what happens.
+
+   return id;
+}
+
+
+add_ship_to_list(hship ship)
+{
+   list fleet;
+    
+   atomic {
+      fleet = Global.List("g_epic_fleet_player_list");
+
+      if (none != ship ) {
+         if (!List.Contains(fleet, ship)) {
+            List.AddTail(fleet,ship);
+            Global.SetList("g_epic_fleet_player_list",fleet);
+         }
+      }
+   }
+}
+
+remove_ship_from_list(hship ship)
+{
+   list fleet;
+    
+   atomic {
+      fleet = Global.List("g_epic_fleet_player_list");
+
+      if (none != ship ) {
+         List.Remove(fleet,ship);
+         Global.SetList("g_epic_fleet_player_list",fleet);
+      }
+   }   
+}
+         
+task place_player_ship(hship player, hsim reference, bool docked)
+{
+
+   iSim.CapsuleJump(player, iSim.Cast(reference));
+
+   while (iSim.IsCapsuleJumping(player)) {
+      Task.Sleep(Task.Current(),0.1);
+   }
+
+   if (docked) {
+      iSim.Dock(player, iSim.Cast(reference));
+   }
+}
+
+// Handles pods and ship changes needed when a player does a purchase.
+PurchaseShip(hship ship)
+{
+
+   if (TM_Ship & iSim.Type(iSim.Cast(ship))) {
+      AddNewShip(ship);
+      AddPlayerWingman(ship, 0);
+   }else if (T_CargoPod & iSim.Type(iSim.Cast(ship))) {
+      // Cargo pods should not be player wingmen.
+      // Removed this feature, now using player orders.
+      // Make the pod remote controllable.
+      //iRemotePilot.EnableRemoteConnection(ship, true);
+   }
+}
+
+
+
+// Use to signal that the last save will not need to recreate the player ship.
+// Instead, the player ship will be available.
+SetBaseSave(bool entered_base)
+{
+   Global.CreateBool("gt_epic_fleet_player_base_save", GA_Write, entered_base);
+}
+
+eefOwnership GetOwnership(hship ship)
+{
+   return Object.IntProperty(ship,"gt_epic_fleet_ownership");
+
+}
+
+SetOwnership(hship ship, eefOwnership owner)
+{
+   if (Object.PropertyExists(ship,"gt_epic_fleet_ownership")) {
+      Object.SetIntProperty(ship, "gt_epic_fleet_ownership", owner);
+   }else {
+      Object.AddIntProperty(ship,"gt_epic_fleet_ownership",owner);
+   }
+
+}
+
+list PlayerFleet()
+{
+   return Global.List("g_epic_fleet_player_list");
+}
+
+//******************************************************************************************/
+// Save the players fleet into a global array.
+// Do not destroy the fleet. Let the game cull normally.
+// Weed out all null ship entries.
+   
+//******************************************************************************************/
+
+SaveFleet()
+{
+   list fleet;
+   hship ship, player;
+   int count, i, save_id, ship_id;
+   hsim reference;
+   string system, template_name;
+
+   debug Debug.PrintString("eFleet Saving\n");
+   fleet = Global.List("g_epic_fleet_player_list");
+
+   player = iShip.FindPlayerShip();
+
+   // Make sure the player ship (where ever he is) is first in list
+   List.Remove(fleet, player);
+   List.AddHead(fleet,player);
+
+   count = List.ItemCount(fleet);
+   save_id = 0;
+
+   for (i=0;i<count;++i) {
+      ship = iShip.Cast(List.GetNth(fleet,i));
+
+      if (none != ship) {
+
+         // Handle the odd case where the player ship has no valid template.
+         Global.CreateString(String.FormatInt("g_epic_fleet_ship_template_%d",save_id),GA_Write, Sim.TemplateName(ship));
+         Global.CreateString(String.FormatInt("g_epic_fleet_ship_name_%d",save_id),GA_Write, Sim.Name(ship));
+
+         Global.CreateInt(String.FormatInt("g_epic_fleet_ship_id_%d",save_id),GA_Write, GetIdNumber(ship));
+
+         // Save any cargo pods.
+
+         save_cargo_pods(ship, i);
+
+         // Find the ships current location.
+         system = iSim.WorldName(ship);
+         if (0==i) {
+            // if this is the player, remember where we need to begin.
+            iGame.SetStartSystem(system);      
+         }
+
+         reference = Nearest(ship, List.FromSet(iMapEntity.SystemHabitatsInSystem(system)));
+         
+         if (iSim.IsDockedToStructure(iSim.Cast(ship), iSim.Cast(reference))) {
+            Global.CreateBool(String.FormatInt("g_epic_fleet_ship_dock_%d",save_id),GA_Write, true);
+         }else {
+            Global.CreateBool(String.FormatInt("g_epic_fleet_ship_dock_%d",save_id),GA_Write, false);
+         }
+
+         debug {
+            Debug.PrintString("Saving: ");
+            Debug.PrintHandle(ship);
+            Debug.PrintString(" ");
+            Debug.PrintHandle(reference);
+            Debug.PrintString(" ");
+            Debug.PrintString(system);
+            Debug.PrintString("\n");
+         }
+
+//         reference = iMapEntity.SystemCentre();
+         location_by_sim(ship, Sim.Cast(reference));
+
+
+
+         // Save system, x, y, z positions.
+         Global.CreateString(String.FormatInt("g_epic_fleet_ship_system_%d",save_id),GA_Write, system);
+         Global.CreateString(String.FormatInt("g_epic_fleet_ship_ref_%d",save_id),GA_Write, Sim.Name(reference));
+         Global.CreateFloat(String.FormatInt("g_epic_fleet_ship_x_%d",save_id),GA_Write, Object.VectorPropertyX(ship,"EpicFleetLoc"));
+         Global.CreateFloat(String.FormatInt("g_epic_fleet_ship_y_%d",save_id),GA_Write, Object.VectorPropertyY(ship,"EpicFleetLoc"));
+         Global.CreateFloat(String.FormatInt("g_epic_fleet_ship_z_%d",save_id),GA_Write, Object.VectorPropertyZ(ship,"EpicFleetLoc"));
+
+
+
+         // Save the damage state.
+
+         // Save the loadout state.
+
+         // Save order group.
+         Global.CreateInt(String.FormatInt("g_epic_fleet_ship_group_%d",save_id),GA_Write, GroupNumber(ship));
+
+
+         Global.CreateInt(String.FormatInt("g_epic_fleet_ship_ownership_%d",save_id),GA_Write, GetOwnership(ship));
+         // Save orders.
+
+         // Increment for next ship.
+         ++save_id;
+      }
+   }
+
+   Global.CreateInt("g_epic_fleet_total_save_num", GA_Write, save_id);
+
+//   save_depot();
+}
+
+
+
+
+//******************************************************************************************/
+//   Restores the player fleet from global array. Then erase the global array.
+
+//******************************************************************************************/
+
+RestoreFleet()
+{
+   list fleet, empty_list;
+   hship ship, player;
+   int count, i, ship_id, group_num, ownership;
+   string ship_template, ship_name, system;
+   float x, y, z;
+   hfaction player_faction = iFaction.Find("Player");
+
+   hsim reference, reference2, light;
+
+   debug Debug.PrintString("eFleet Restoring\n");
+
+
+   // Create all the player order groups.
+   for (i=0;i<10;++i) {
+      Global.CreateList(String.FormatInt("g_epic_fleet_group_%d",i),GA_Write|GA_NoSave, empty_list);
+   }
+
+
+
+   // This value will always have the players ship, 
+   // And that ship is always first.
+   count = Global.Int("g_epic_fleet_total_save_num");
+   Global.SetInt("g_epic_fleet_total_save_num",0);
+
+   debug Debug.PrintString(String.FormatInt("Restoring %d ships\n",count));
+
+   for (i=0;i<count;++i) {
+
+      // Restore the ship sim
+      ship_template = Global.String(String.FormatInt("g_epic_fleet_ship_template_%d",i));
+      ship_name = Global.String(String.FormatInt("g_epic_fleet_ship_name_%d",i));
+
+      Global.Destroy(String.FormatInt("g_epic_fleet_ship_template_%d",i));
+      Global.Destroy(String.FormatInt("g_epic_fleet_ship_name_%d",i));
+
+      ship = iShip.Create(ship_template, ship_name);
+
+      iSim.SetFaction(ship,iFaction.Find("Player"));
+      Sim.SetCullable(ship, false);
+
+      // Restore the ships id number
+      ship_id = Global.Int(String.FormatInt("g_epic_fleet_ship_id_%d",i));
+      Global.Destroy(String.FormatInt("g_epic_fleet_ship_id_%d",i));
+
+      set_id_number(ship, ship_id);
+
+
+      ownership = Global.Int(String.FormatInt("g_epic_fleet_ship_ownership_%d",i));
+      Global.Destroy(String.FormatInt("g_epic_fleet_ship_ownership_%d",i));
+      SetOwnership(ship, ownership);
+
+      // Add ship back into player fleet list
+      List.AddTail(fleet, ship);
+
+      // Restore cargo
+      restore_cargo_pods(ship, i);
+
+      // Restore ship to proper location
+      system = Global.String(String.FormatInt("g_epic_fleet_ship_system_%d",i));
+      reference = Sim.Cast(iSim.FindByNameInSystem(Global.String(String.FormatInt("g_epic_fleet_ship_ref_%d",i)),system));
+
+      x = Global.Float(String.FormatInt("g_epic_fleet_ship_x_%d",i));
+      y = Global.Float(String.FormatInt("g_epic_fleet_ship_y_%d",i));
+      z = Global.Float(String.FormatInt("g_epic_fleet_ship_z_%d",i));
+
+      debug {
+         if (none == reference) {
+            Debug.PrintString("EpicFleet: Station missing, ");
+            Debug.PrintString(Global.String(String.FormatInt("g_epic_fleet_ship_ref_%d",i)));
+            Debug.PrintString("\n");
+            Debug.PrintString(system);
+            Debug.PrintString("\n");
+         }
+      }
+
+      Global.Destroy(String.FormatInt("g_epic_fleet_ship_system_%d",i));
+      Global.Destroy(String.FormatInt("g_epic_fleet_ship_ref_%d",i));
+      Global.Destroy(String.FormatInt("g_epic_fleet_ship_x_%d",i));      
+      Global.Destroy(String.FormatInt("g_epic_fleet_ship_y_%d",i));
+      Global.Destroy(String.FormatInt("g_epic_fleet_ship_z_%d",i));
+
+      Sim.PlaceRelativeTo(ship, reference, x, y, z);
+
+      if (0 == i) {
+         player = iShip.FindPlayerShip();
+
+         if (none == player) {
+            iShip.InstallPlayerPilot(ship);
+         }else {
+            // Player already exists, he must have used the base
+            // launch. Get rid of the template ship
+            // and put the player in the correct location.
+            Sim.PlaceRelativeTo(player, reference, x, y, z);
+            Sim.Destroy(ship);
+            ship = player;
+         }
+
+         if (iSim.Type(ship) != T_CommandSection) {
+            // If the ship is larger than a command section, then it gets a command
+            // section for a life pod. otherwise, none.
+            Object.SetStringProperty(ship, "death_script", "tEpicFleet.PlayerDeath");
+         }else {
+            Object.SetStringProperty(ship, "death_script", "iDeathScript.PlayerDeathScript");
+         }
+
+         iSim.SetFaction(ship, player_faction);
+         //tEpicFaction.SetEpicFaction(ship, player_faction);
+
+      } else {
+         // Restore order group
+         group_num = Global.Int(String.FormatInt("g_epic_fleet_ship_group_%d",i));
+
+         // Restore orders
+         AddPlayerWingman(ship, group_num);
+      }
+
+      if (Global.Bool(String.FormatInt("g_epic_fleet_ship_dock_%d",i))){
+         iSim.Dock(ship, iSim.Cast(reference));
+      }
+
+
+      // Restore damage
+      // Restore loadout
+
+      debug{
+          Debug.PrintString("Restoring ");
+          Debug.PrintHandle(ship);
+          Debug.PrintString("\n");
+
+          Debug.PrintString(system);
+          Debug.PrintString("\n");
+          
+          Debug.PrintHandle(reference);
+          Debug.PrintString("\n");
+      }
+   }
+
+   Global.CreateList("g_epic_fleet_player_list", GA_Write, fleet);
+
+
+//   restore_depot();
+}
+
+
+
+//******************************************************************************************/
+
+//******************************************************************************************/
+
+RemoveShip(hship ship)
+{
+   remove_ship_from_list(ship);
+}
+
+
+bool IsPlayerFleetShip(hsim ship)
+{
+   list fleet = Global.List("g_epic_fleet_player_list");
+
+   if (List.Contains(fleet, ship)) {
+      return true;
+   }
+   return false;
+}
+
+//******************************************************************************************/
+// Remove the ship. Only use this command when removing a ship forever, such
+// as selling a ship or destroying one. Otherwise move the ship to 
+// group 0 using the move ship function.
+
+//******************************************************************************************/
+
+bool GroupRemoveShip(hsim ship)
+{
+   int group = GroupNumber(ship);
+
+   if ((group > 9) || (group<0)) {
+      debug Debug.PrintString("EpicFleet Move Ship bad group\n");
+   }else {
+      group_remove_ship(ship, group);
+   }
+
+   SetGroupNumber(ship, 0);
+
+   return true;
+}
+
+// Use this function to 'remove a ship' from a group. This is the 
+// default ship location. All player ships must be in a group.
+
+bool GroupMoveShip(hsim ship, int group)
+{
+   int old_group = GroupNumber(ship);
+
+   if ((group > 9) || (group<0)) {
+      debug Debug.PrintString("EpicFleet Move Ship bad group\n");
+      return false;
+   }
+
+   if (!IsPlayerFleetShip(ship)){
+      debug Debug.PrintString("EpicFleet Move Ship not player ship\n");
+      return false;
+   }
+
+   group_remove_ship(ship, old_group);
+
+   group_add_ship(ship, group);
+
+   SetGroupNumber(ship, group);
+
+   return true;
+}
+
+int GroupNumber(hsim ship)
+{
+   if (Object.PropertyExists(ship, "EpicFleetOGroup")) {
+      return Object.IntProperty(ship,"EpicFleetOGroup");
+   }
+
+   return 11;
+}
+
+SetGroupNumber(hsim ship, int group)
+{
+   if ((group > 9) || (group<0)) {
+      debug Debug.PrintString("EpicFleet Set Ship bad group\n");
+      group = 0;
+   }
+
+   if (Object.PropertyExists(ship,"EpicFleetOGroup")) {
+      Object.SetIntProperty(ship,"EpicFleetOGroup", group);
+   }else {
+      Object.AddIntProperty(ship,"EpicFleetOGroup", group);
+   }
+}
+
+group_remove_ship(hsim ship, int group)
+{
+   list fleet;
+   string name;
+    
+   if ((group > 9) || (group<0)) {
+      debug Debug.PrintString("EpicFleet Remove Ship bad group\n");
+      return;
+   }
+   name = String.FormatInt("g_epic_fleet_group_%d",group);
+    
+   if (none == ship) {
+      debug Debug.PrintString("EpicFleet Remove Ship is None\n");
+      return;
+   }
+
+   debug {
+      Debug.PrintHandle(ship);
+      Debug.PrintString(String.FormatInt(" remove ship, group %d\n", group));
+      Debug.PrintString(name);
+      Debug.PrintString(" \n");
+   }
+
+   atomic {
+      fleet = Global.List(name);
+      List.Remove(fleet,ship);
+      Global.SetList(name,fleet);
+   }
+}
+
+group_add_ship(hsim ship, int group)
+{
+   list fleet;
+   string name;
+    
+   if ((group > 9) || (group<0)) {
+      debug Debug.PrintString("EpicFleet Add Ship bad group\n");
+      return;
+   }
+   name = String.FormatInt("g_epic_fleet_group_%d",group);
+    
+   if (none == ship) {
+      debug Debug.PrintString("EpicFleet Add Ship is None\n");
+      return;
+   }
+
+   debug {
+      Debug.PrintHandle(ship);
+      Debug.PrintString(String.FormatInt(" add ship, group %d\n", group));
+      Debug.PrintString(name);
+      Debug.PrintString(" \n");
+   }
+
+   atomic {
+      fleet = Global.List(name);
+      List.AddTail(fleet,ship);
+      Global.SetList(name,fleet);
+   }
+}
+
+list ReturnGroup(int group)
+{
+   list fleet;
+   string name;
+
+   if ((group > 9) || (group<0)) {
+      debug Debug.PrintString("EpicFleet Return group bad group\n");
+      return fleet;
+   }
+
+   name = String.FormatInt("g_epic_fleet_group_%d",group);
+   fleet = Global.List(name);
+
+   debug {
+      Debug.PrintString(String.FormatInt("Return Group %d \n",group));
+      Debug.PrintString(String.FormatInt("Item Count %d\n",List.ItemCount(fleet)));
+      Debug.PrintString(name);
+      Debug.PrintString(" \n");
+   }
+   return fleet;
+}
+
+
+//******************************************************************************************/
+// sim = sim to find coords of,  relsim = find coords reletive to;
+
+//******************************************************************************************/
+location_by_sim(hsim sim, hsim relsim)   
+{
+  hsim Pnt1 = Sim.Create("ini:/sims/nav/waypoint", "Triangulation Point 1");
+  hsim Pnt2 = Sim.Create("ini:/sims/nav/waypoint", "Triangulation Point 2");
+  hsim Pnt3 = Sim.Create("ini:/sims/nav/waypoint", "Triangulation Point 3");
+  hsim marker;
+  float PDist = Sim.DistanceBetweenCentres(sim, relsim);		//Distance away from center to place triangulation
+  									//points.  Could be any number, but accuracy is proably
+  									//best if it is similar to other distances
+  float POrigDist;
+  float Pnt1Dist;
+  float Pnt2Dist;
+  float Pnt3Dist;
+  float temp;
+  float simx;
+  float simy;
+  float simz;
+  atomic					//Want to make sure that distances are calculated at the same time
+  {
+    Sim.PlaceRelativeTo(Pnt1, relsim, PDist, 0, 0);		//Place triangulation points
+    Sim.PlaceRelativeTo(Pnt2, relsim, 0, PDist, 0);
+    Sim.PlaceRelativeTo(Pnt3, relsim, 0, 0, PDist);
+    POrigDist = Sim.DistanceBetweenCentres(sim, relsim);	//Find Distances
+    Pnt1Dist = Sim.DistanceBetweenCentres(sim, Pnt1);
+    Pnt2Dist = Sim.DistanceBetweenCentres(sim, Pnt2);
+    Pnt3Dist = Sim.DistanceBetweenCentres(sim, Pnt3);
+  }
+  Sim.Destroy(Pnt1);			//Only needed points for distances
+  Sim.Destroy(Pnt2);
+  Sim.Destroy(Pnt3);
+
+  //simx = (POrigDist * POrigDist - Pnt1Dist * Pnt1Dist + PDist * PDist) / (2 * PDist)	//Can't use because of expansion bug
+  //simy = (POrigDist * POrigDist - Pnt2Dist * Pnt2Dist + PDist * PDist) / (2 * PDist)
+  //simz = (POrigDist * POrigDist - Pnt2Dist * Pnt2Dist + PDist * PDist) / (2 * PDist)
+
+  //Same as above, but separated out into multiple lines
+  simx = POrigDist * POrigDist;
+
+  temp = PDist * PDist;
+  temp = temp + simx;
+
+  simx = Pnt1Dist * Pnt1Dist;
+  simx = temp - simx;
+  simx = simx / 2;
+  simx = simx / PDist;
+
+  simy = Pnt2Dist * Pnt2Dist;
+  simy = temp - simy;
+  simy = simy / 2;
+  simy = simy / PDist;
+
+  simz = Pnt3Dist * Pnt3Dist;
+  simz = temp - simz;
+  simz = simz / 2;
+  simz = simz / PDist;
+
+  Object.AddVectorProperty(sim, "EpicFleetLoc", simx, simy, simz);
+}
+
+
+//******************************************************************************************/
+// Find the nearest sim in the set of sims.
+
+//******************************************************************************************/
+/* 
+Takes a list of sims, it returns the sim that is 
+nearest to the location provided.
+
+*/
+hsim Nearest(hsim location, list items)
+{
+   float dist;
+   hsim found, curr;
+   int i, total;
+
+   found = Sim.Cast(List.Head(items));
+   dist = Sim.DistanceBetween( location, found);
+
+   total = List.ItemCount(items);
+   for (i=1;i<total;++i) {
+      curr = Sim.Cast(List.GetNth(items, i));
+      if (Sim.DistanceBetween( location, curr) < dist) {
+         found = curr;
+         dist = Sim.DistanceBetween( location, curr);
+      }
+   }
+   return found;
+}
+
+// Returns all cargo pods docked to a ship.
+list ShipPodList(hsim ship)
+{
+   set pods;
+   list docked_pods;
+   hsim child;
+
+   // Search all subsims for cargo pods.
+   
+   pods = Sim.Children(ship);
+
+   while (!Set.IsEmpty(pods)) {
+      child = Sim.Cast(Set.FirstElement(pods));
+      Set.Remove(pods, child);
+
+      if (T_CargoPod == iSim.Type(child)) {
+         List.AddTail(docked_pods, child);
+      }
+   }
+
+   return docked_pods;
+}
+
+
+save_cargo_pods(hship ship, int ship_id)
+{
+   string cargo_name, faction, name;
+   int pod_count, i, cargo_faction;
+   list pod_list;
+   hsim pod;
+
+   // Get a list of pods
+   pod_list = ShipPodList(ship);
+
+   // Save each pod with unique ship id
+   pod_count = List.ItemCount(pod_list);
+   for (i=0;i<pod_count;++i) {
+      pod = Sim.Cast(List.GetNth(pod_list, i));
+
+      cargo_name = Object.StringProperty( pod, "name" );   
+      faction = iFaction.Name(iSim.Faction(iSim.Cast(pod)));
+      cargo_faction = Object.IntProperty( pod, "cargo_faction" );   
+
+      // Save string looks like "name ship_id pod_num type_name"
+      name = String.Join("g_epic_fleet_p",String.FormatInt("%d_",ship_id));
+      name = String.Join(name, String.FormatInt("%d_",i));
+
+      Global.CreateString(String.Join(name,"cargo"),GA_Write, cargo_name);
+      Global.CreateString(String.Join(name,"faction"),GA_Write, faction);
+      Global.CreateInt(String.Join(name,"cargo_faction"),GA_Write, cargo_faction);
+   }
+
+   Global.CreateInt(String.FormatInt("g_epic_fleet_%d_podtotal",ship_id),GA_Write, pod_count);
+}
+
+
+restore_cargo_pods(hship ship, int ship_id)
+{
+
+   string cargo_name, cargo_faction, name, faction;
+   int pod_count, i, cargo_faction_id;
+   list pod_list;
+   hisim pod;
+
+   // restore each pod with unique ship id
+   pod_count = Global.Int(String.FormatInt("g_epic_fleet_%d_podtotal",ship_id));
+   Global.Destroy(String.FormatInt("g_epic_fleet_%d_podtotal",ship_id));
+
+   for (i=0;i<pod_count;++i) {
+      pod = iSim.Cast(List.GetNth(pod_list, i));
+
+      // Save string looks like "name ship_id pod_num type_name"
+      name = String.Join("g_epic_fleet_p",String.FormatInt("%d_",ship_id));
+      name = String.Join(name, String.FormatInt("%d_",i));
+
+      cargo_name = Global.String(String.Join(name,"cargo"));
+      Global.Destroy(String.Join(name,"cargo"));
+
+      faction = Global.String(String.Join(name,"faction"));
+      Global.Destroy(String.Join(name,"faction"));
+
+      cargo_faction_id = Global.Int(String.Join(name,"cargo_faction"));
+      Global.Destroy(String.Join(name,"cargo_faction"));
+
+
+      // Create this pod and attach it to the ship, allow player control.
+      cargo_faction = iUtilities.FromAllegianceEnum( cargo_faction_id );
+      pod = iSim.Cast(tPodUtil.CreateCargoPod(cargo_name, faction, cargo_faction));
+      Sim.SetCullable(pod, false);
+      iSim.Dock(ship, pod);
+      iRemotePilot.EnableRemoteConnection(iShip.Cast(pod), true);
+   }
+}
+
+
+//******************************************************************************************/
+//
+// Allows the player to jump into a new ship.
+// Uses the currently targeted ship as change to location.
+// Only 
+//******************************************************************************************/
+
+ChangeShip()
+{
+   hship player = iShip.FindPlayerShip();
+   hisim target = iShip.CurrentTarget(player);
+   hfaction player_faction = iFaction.Find("Player");
+   hship new_ship;
+   eSimType target_type;
+
+   debug Debug.PrintString("EpicFleet: attempting to change ships\n");
+
+   target_type = iSim.Type(target);
+
+   if (TM_Ship & target_type) {
+      new_ship = iShip.Cast(target);
+
+//      if (IsPlayerFleetShip(new_ship)) {
+
+      // As an aid to testing, we allow jumping into *ANY* ship
+      // of course, this will need to be removed soon!
+      if (true){
+         iShip.RemovePilot(new_ship);
+         iShip.InstallPlayerPilot(new_ship);
+         iShip.Attacked(new_ship);
+         Object.SetStringProperty(new_ship,"death_script","iDeathScript.PlayerDeathScript");
+
+         AddPlayerWingman(player, GroupNumber(new_ship));
+         
+         Object.SetStringProperty(player,"death_script","");
+
+         //iMultiplay.LinkShipWeapons(new_ship);
+      }else {
+         debug Debug.PrintString("EpicFleet: not a player ship\n");
+         iHUD.PlayAudioCue(AC_InvalidInput);
+      }
+   }else {
+      debug Debug.PrintString("EpicFleet: target sim not a ship\n");
+      iHUD.PlayAudioCue(AC_InvalidInput);
+   }
+}
+
+AddPlayerWingman(hship ship, int group)
+{
+   hfaction player_faction = iFaction.Find("Player");
+
+   iShip.InstallAIPilot(ship, 4.0, 0.25, 0.5,"","","","");
+   iSim.SetSensorVisibility(iSim.Cast(ship), true);
+//   tEpicFaction.SetEpicFaction(ship, player_faction);
+   iSim.SetFaction(ship, player_faction);
+
+   Sim.SetCullable(ship, false);
+   group_add_ship(ship,  group);
+   SetGroupNumber(ship, group);
+   //GroupMoveShip(ship, group);
+
+   tEpicComms.AddComms(ship, "tEpicFleet.WingmanComms");
+}
+
+
+// Our player has botched the job. Toss him in an escape pod.
+
+task PlayerDeath( hsim sim )
+{
+   hship escape_pod;
+
+   // Make sure inventory knows the player has a life pod.
+   iInventory.AddCommandSection();
+
+   // We need to remove the players current ship from the hanger.
+   if (iSim.Type(iSim.Cast(sim)) == T_Tug) {
+      iInventory.RemoveTug();
+   }else if (iSim.Type(iSim.Cast(sim)) == T_Patcom) {
+      iInventory.RemoveFastAttackShip();
+   }else if (iSim.Type(iSim.Cast(sim)) == T_Corvette) {
+      iInventory.RemoveHeavyCorvette();
+   }else if (iSim.Type(iSim.Cast(sim)) == T_Fighter) {
+      iInventory.RemoveStormPetrel();
+   }else {
+
+   }
+
+   escape_pod = ChangeToTemplate("ini:/sims/ships/player/comsec_prefitted", "Escape Pod");
+
+   // Jettison pretty hard to escape the blast radius.
+   Sim.SetVelocity(escape_pod, 0, 0, 1000);
+}
+
+
+// Our player has botched the job. Toss him in an escape pod.
+/*
+task PlayerDeath( hsim sim )
+{
+   hship escape_pod;
+   
+//   escape_pod = iShip.Create("ini:/sims/ships/player/e_escape_pod","Escape Pod");
+   escape_pod = iShip.Create("ini:/sims/ships/player/comsec_prefitted","Escape Pod");
+	Sim.PlaceAt ( escape_pod, sim );
+
+   // We really mean it this time!
+   Object.SetStringProperty(escape_pod,"death_script","iDeathScript.PlayerDeathScript");
+   iShip.InstallPlayerPilot(escape_pod);
+
+   // Jettison pretty hard to escape the blast radius.
+   Sim.SetVelocity(escape_pod, 0, 0, 3000);
+
+   // Destroy the player ship
+	Sim.Destroy ( sim );
+}
+*/
+
+
+hship ChangeToTemplate(string ship_template, string name)
+{
+   hship player = iShip.FindPlayerShip();
+   hship new_ship;
+
+
+   new_ship = iShip.Create(ship_template, name);
+
+   Sim.PlaceAt(new_ship, player);
+
+   if (iSim.Type(new_ship) != T_CommandSection) {
+      // If the ship is larger than a command section, then it gets a command
+      // section for a life pod. otherwise, none.
+      Object.SetStringProperty(new_ship, "death_script", "tEpicFleet.PlayerDeath");
+   }else {
+      Object.SetStringProperty(new_ship, "death_script", "iDeathScript.PlayerDeathScript");
+   }
+
+   iShip.InstallPlayerPilot(new_ship);
+
+   Sim.SetVelocity(new_ship, 0, 0, 1);
+
+   Sim.Destroy(player);
+
+   return new_ship;
+}
+
+task delayed_sim_destroy(hship new_ship, hship old_ship)
+{
+   Task.Sleep(Task.Current(), 2.0);
+
+   iShip.InstallPlayerPilot(new_ship);
+
+   Task.Sleep(Task.Current(), 2.0);
+
+   Sim.Destroy(old_ship);
+}
+
+// used to remove a ship from the player service.
+release_wingman(hship ship)
+{
+   hfaction independent_faction = iFaction.Find("Independent");
+
+   // remove from further commands.
+   GroupRemoveShip(ship);
+
+   // remove from save restore list.
+   RemoveShip(ship);
+
+   // return the ship to standard sensor visibility.
+   iSim.SetSensorVisibility(iSim.Cast(ship), false);
+
+   iSim.SetStandardSensorVisibility( iSim.Cast(ship), true );
+
+   // change the faction to independent.
+   iSim.SetFaction(ship, independent_faction);
+
+   // allow the ship to be removed.
+   Sim.SetCullable(ship, true);
+}
+
+
+
+// Add this ship to the player fleet. Mark it as a hired ship.
+HireShip(hship ship)
+{
+   PurchaseShip(ship);
+
+   SetOwnership(ship, efoHired);
+}
+
+// Add this ship to the player fleet as a captured vessel.
+CaptureShip(hship ship)
+{
+   PurchaseShip(ship);
+
+   SetOwnership(ship, efoCaptured);
+}
+
+// Player releases a wingman from service. Send the ship toward the nearest lpoint.
+// Also used when the player cannot pay the upkeep of a ship.
+
+FireShip(hship ship)
+{
+   hlagrangepoint lpoint;
+
+   release_wingman(ship);
+
+   // Find the nearest lpoint.
+   lpoint = iLagrangePoint.Nearest( iMapEntity.SystemLagrangePoints(),
+                                    ship);
+
+   // Give the ship orders to approach the lpoint, hopefully it will be culled in route.
+   iAI.GiveApproachOrder( ship, lpoint );   
+
+}
+
+// Checks if a ship is owned by the player and if that ship
+// was captured. Only captured ships may be sold to ship breakers.
+bool IsCaptured(hship ship)
+{
+   if (efoCaptured == GetOwnership(ship)) {
+      return true;
+   }
+
+   return false;
+}
+
+//******************************************************************************************/
+// Communication Routines
+
+
+task WingmanComms()
+{
+   hship ship;
+
+   ship = iShip.Cast(tEpicComms.CommsSource());
+
+        // Start the conversation.
+    iConversation.Begin();
+
+
+    
+    // Response 1
+    iConversation.AddResponse(
+       "Nothing. Over and out.",
+       "Nothing. Over and out.");
+
+        // Response 2
+    iConversation.AddResponse(
+        "Wingman, you are released from service.",
+        "Wingman, you are released from service.");
+
+    // Ask the player a question and switch on their response.
+
+
+    switch ( iConversation.Ask( ship, "", "Sir! How can we be of service?" ) )
+    {
+        case 1 :
+           // Player said no.
+            iConversation.Say(ship,"", "Out." );
+            break;
+
+        case 2 :
+           // Player fired ship
+            iConversation.Say(ship,"", "Yes Sir! It has been good serving with you." );
+            FireShip(ship);
+            break;
+
+        default :
+            // Player selected "Nothing"
+            iConversation.Say(ship,"", "Out." );
+    }
+
+    // Finish the conversation.
+    iConversation.End();
+}
+
+
+// Wingman watch handles all polling operations that need to be done 
+// to wingmen
+task wingman_watch(hship wingman)
+{
+   hship player;
+   bool locked = false;
+
+   while (1) {
+      Task.Sleep(Task.Current(), 5.0);
+
+      player = iShip.FindPlayerShip();
+
+      if (200km < Sim.DistanceBetween(player, wingman)) {
+         // If the player is more than 200km away, lock down the weapons systems.
+         iShip.LockDownWeapons(wingman);
+         locked = true;
+      }else if (true == locked) {
+         // if the wingmans weapons were locked down, unlock them.
+         // Don't do this more than once.
+         iShip.WeaponTargetFromContactList(wingman);
+         locked = false;
+      }
+   }
+}
+
+//******************************************************************************************/
+
+
+
+//******************************************************************************************/
+
+CreateTestShip()
+{
+   hship ship, player;
+   hisim pod;
+   hsim waypoint;
+   hfaction faction;
+   int i, total, item_count;
+   list all_factions;
+   string cargo_name;
+
+   player = iShip.FindPlayerShip();
+
+   ship = iShip.Create("ini:/sims/ships/utility/freighter","Epic Test");
+
+
+   HireShip(ship);
+
+   Sim.PlaceRelativeTo(ship, player, 10km, 5km, 5km);
+
+   pod = iSim.Cast (tPodUtil.CreateCargoPod("Fruit" ,"Police","Player"));
+   Sim.SetCullable(pod, false);
+   iSim.Dock(ship, pod);
+   PurchaseShip(iShip.Cast(pod));
+
+   pod = iSim.Cast (tPodUtil.CreateCargoPod("Wire" ,"Player","MAAS Corporation"));
+   Sim.SetCullable(pod, false);
+   iSim.Dock(ship, pod);
+   PurchaseShip(iShip.Cast(pod));
+
+   debug
+   {
+      Debug.PrintHandle(ship);
+      Debug.PrintString(" : Epic Fleet\n");
+      Debug.PrintHandle(iSim.Faction(pod));
+      Debug.PrintString(" : Pod Faction Test\n");
+   }
+
+
+   waypoint = Sim.Create("ini:/sims/nav/waypoint","Test Depot");
+   Sim.SetCullable(waypoint, false);
+   Sim.PlaceNear(waypoint, player, 40km);
+   iSim.SetSensorVisibility(iSim.Cast(waypoint), true);
+
+
+   // Create a pod the player can pirate.
+   pod = iSim.Cast (tPodUtil.CreateCargoPod("Fruit" ,"Military","Player"));
+   Sim.SetCullable(pod, false);
+   Sim.PlaceRelativeTo(pod, waypoint, 5km, 5km, 5km);
+
+   // Create player owned pod
+   pod = iSim.Cast (tPodUtil.CreateCargoPod("Soya" ,"Player","Underworld"));
+   Sim.SetCullable(pod, false);
+   Sim.PlaceRelativeTo(pod, waypoint, 5km, 5km, 5km);
+   PurchaseShip(iShip.Cast(pod));
+}
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

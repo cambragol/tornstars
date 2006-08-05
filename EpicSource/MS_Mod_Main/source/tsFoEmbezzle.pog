@@ -1,0 +1,305 @@
+/*******************************************************************************************/
+//
+// tsFoEmbezzle.pog
+// 
+// Torn Stars Fleet Operation Embezzle
+// 
+// This function implements the decision making intellegence of an
+// Embezzle type of Fleet Operation.
+// 
+// March 2006
+//******************************************************************************************/
+
+package tsFoEmbezzle;
+
+
+uses  Sim,
+iSim,
+Debug,
+Global,
+iGame,
+iFaction,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+State,
+Text,
+Math,
+iShip,
+iHabitat,
+iMapEntity,
+   iHUD,
+   iComms,
+   tStationEnum,
+   tStation,
+   tEFaction,
+   tTime,
+   tUnderOp,
+   tLCenter,
+   tLProduction,
+   tLFleet,
+   tStationFilter,
+   tShipName,
+   tEShipCreation,
+   tsFleetOpCombat,
+   tsDebug;
+
+
+
+
+provides New,
+         Save,
+         Restore,
+         Update;
+
+
+
+prototype hhabitat find_production_station(hisim operation, hmapentity center, string system_name);
+
+prototype bool is_production(hmapentity center);
+
+prototype hhabitat find_non_dislike_station(hisim operation, hmapentity center, string system_name);
+
+//*******************************************************************************************/         
+//
+//*******************************************************************************************/
+
+
+
+
+New(hisim operation)
+{
+   string ship_name, ship_template;
+   hfaction faction;
+
+   faction = iSim.Faction(operation);
+
+   // We pick an underworld name for ourselves. 
+   // using a large number means we get a random name.
+   ship_name = tShipName.ShipName("underworld", 10000);
+
+   // Also pick a large freighter for collecting player sales.
+   ship_template = tEShipCreation.GetShip(faction, EST_FreightHeavy);
+
+   tUnderOp.SetName(operation, ship_name);
+   tUnderOp.SetShipTemplate(operation, ship_template);
+
+   // This is an embezzle op, so we set enough fleets for the 
+   // freighter and 2 tugs escort. Fleets use threat value for points.
+   tLFleet.SetFleets(operation, 200);
+   tLFleet.SetMaxFleets(operation, 200);
+}
+
+
+
+Save(hisim operation)
+{
+   // Nothing to save for this operation type.
+
+
+}
+
+
+
+Restore(hisim operation)
+{
+   // Nothing to restore for this operation type.
+
+
+}
+
+
+
+Update(hisim operation)
+{
+   hmapentity center = tLCenter.GetCenter(operation);
+   hhabitat target_station, supporter_station;
+   bool hostiles, wounded, home, move_home, move_production;
+   list local_operations;
+   hisim visitor;
+   hfaction faction, visitor_faction;
+   int fleets, i, total;
+   int update_delay = 1;
+
+   debug tsDebug.PrintString("tsfoembezzle_debug","tsFoEmbezzle.Update\n");
+
+   
+   faction = iSim.Faction(operation);
+
+
+   // If hostiles nearby flee, no matter what.
+   // If we are wounded, stay at home.
+   // If we are wounded, and not at home, move home, turn hidden.
+   // If we are at home, and not wounded, move to a production station.
+
+   // Here we look up what other operations are nearby. 
+   // Any combat between this and other operations happens here.
+
+   local_operations = tUnderOp.StationOperations(center);
+   List.Remove(local_operations, operation);
+   total = List.ItemCount(local_operations);
+
+   hostiles = false;
+
+   for (i=0;i<total;++i) {
+      visitor = iSim.Cast(List.GetNth(local_operations,i));
+      visitor_faction = iSim.Faction(visitor);
+
+      if (iFaction.Feeling(visitor_faction, faction) < -0.2) {
+         // Embezzle always evades.
+         tsFleetOpCombat.Defense(center, operation, visitor);
+
+         hostiles = true;
+      }
+   }
+
+   fleets = tLFleet.Fleets(operation);
+
+   if (fleets == 0) {
+      // Ouch, we died.
+      debug tsDebug.PrintString("tsfoembezzle_debug","tsFoEmbezzle lost fleets and died\n");
+
+      tUnderOp.DestroyOp(operation);
+      return;
+   }
+
+   // Are we damaged? Embezzle operations are wimpy.
+   // They assume any damage is wounded.
+   if (fleets < tLFleet.MaxFleets(operation)) {
+      wounded = true;
+   }else {
+      wounded = false;
+   }
+
+   supporter_station = tUnderOp.Supporter(operation);
+
+   // Are we home?
+   if (center == iMapEntity.Cast(supporter_station)) {
+      home = true;
+   }else {
+      home = false;
+   }
+
+   move_home = false;
+   move_production = false;
+
+
+   if (hostiles && !wounded) {
+      // if we are just scared, find another station.
+      move_production = true;
+   }else if (hostiles) {
+      // if we got hurt, run home.
+      move_home = true;
+   }else if (wounded && !home) {
+      move_home = true;
+   }else if (!wounded && !is_production(center)){
+      move_production = true;
+   }
+   // Otherwise, just park here and enjoy making lots of cash
+   // fenceing cargo throught the station.
+
+
+   // If we are at home, repair some fleets.
+   if (home) {
+      tLFleet.ChangeFleets(operation, 10 * update_delay);
+
+      debug tsDebug.PrintString("tsfoembezzle_debug",String.FormatInt("tsFoEmbezzle repairing at home %d fleets\n", 
+                                               tLFleet.Fleets(operation)));
+   }
+
+   if (move_home) {
+
+      tLCenter.SetCenter(operation, supporter_station);
+
+      debug {
+         tsDebug.PrintString("tsfoembezzle_debug","tsFoEmbezzle moving home\n");
+         tsDebug.PrintHandle("tsfoembezzle_debug",supporter_station);
+         tsDebug.PrintString("tsfoembezzle_debug"," supporter station\n");
+      }
+
+   }else if (move_production) {
+
+      target_station = find_production_station(operation, center, iSim.WorldName(center));
+
+      if (none != target_station) {
+         // To move an operation, we just move the center.
+         tLCenter.SetCenter(operation, target_station);
+      }else {
+         // We must be running, so pick any nearby non-hostile station.
+         target_station = find_non_dislike_station(operation, center, iSim.WorldName(center));
+
+         if (none != target_station) {
+            // To move an operation, we just move the center.
+            tLCenter.SetCenter(operation, target_station);
+         }else {
+            tLCenter.SetCenter(operation, supporter_station);
+         }
+      }
+
+      debug {
+         tsDebug.PrintString("tsfoembezzle_debug","tsFoEmbezzle moving to production\n");
+         tsDebug.PrintHandle("tsfoembezzle_debug",target_station);
+         tsDebug.PrintString("tsfoembezzle_debug"," new station\n");
+      }
+   }
+
+   // Next update, tomorrow.
+   tUnderOp.SetWakeTimer(operation, tTime.GetDay() + update_delay);
+}
+
+
+// Return true is this location is an operating production station.
+bool is_production(hmapentity center)
+{
+   if (T_Station == iSim.Type(center)) {
+      if (ESS_Normal == tStation.Status(iHabitat.Cast(center))) {
+         if ( (ESC_Mine|ESC_Process|ESC_Manufacture) & tStation.Category(iHabitat.Cast(center))){
+            return true;
+         }
+      }
+   }
+   return false;
+}
+
+hhabitat find_production_station(hisim operation, hmapentity center, string system_name)
+{
+   set habitats;
+
+   // Search system stations and find a production station where we can live.
+   habitats = tStationFilter.OnStatusAndCategory(iMapEntity.SystemHabitatsInSystem(system_name),
+                                                 ESS_Normal,
+                                                 (ESC_Mine|ESC_Process|ESC_Manufacture));
+
+   Set.Remove(habitats, center);
+   // We can hang out at neutral or better stations. We avoid people trying to
+   // kill us.
+   habitats = tStationFilter.OnGreaterFeeling(habitats,
+                                              iSim.Faction(operation),
+                                              tEFaction.Type2LowerLevel(FT_Neutral));
+
+   return iHabitat.Random(habitats);
+}
+
+hhabitat find_non_dislike_station(hisim operation, hmapentity center, string system_name)
+{
+   set habitats;
+
+   // We can hang out at neutral or better stations. We avoid people trying to
+   // kill us.
+   habitats = tStationFilter.OnGreaterFeeling(iMapEntity.SystemHabitatsInSystem(system_name),
+                                              iSim.Faction(operation),
+                                              tEFaction.Type2LowerLevel(FT_Neutral));
+   Set.Remove(habitats, center);
+
+   return iHabitat.Random(habitats);
+}
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

@@ -1,0 +1,100 @@
+//*******************************************************************************************/
+//
+// tECommEvent.pog
+//
+// This package converts the ship to ship events into sound bites for the player to listen
+// to. Should make for some entertainment.
+// 
+// 
+// 
+//
+// March 2004, Jon Freise
+//******************************************************************************************/
+
+package tECommEvent;
+
+uses    Sim,
+iShip,
+iSim,
+Debug,
+Global,
+GUI,
+Input,
+List,
+Object,
+String,
+Task,
+Text,
+Math,
+iComms,
+iGame,
+tEpicEventEnum,
+   tESoundEvent,
+   tEShipEvent;
+
+
+
+provides InitPlayer;
+
+         
+
+prototype task event_watch();
+
+// Setup player ship to be able to catch these sound events.
+InitPlayer()
+{
+   hship player = iShip.FindPlayerShip();
+
+   tEShipEvent.InitReciever(player);
+   tEShipEvent.SetListenType(player, eseTransportArrived| eseDistress| eseStationAttack| eseSelfAttacked| eseFlee);
+
+   tESoundEvent.InitReciever();
+
+   Task.Detach(start event_watch());
+}
+
+
+task event_watch()
+{
+   hship player = iShip.FindPlayerShip();
+   hisim sender, attacker;
+   int event_type;
+
+
+   while (1) {
+      if (Sim.IsDead(player)) {
+         // If the player is gone, restart another task for new ship.
+         InitPlayer();
+         return;
+      }
+
+      if (tEShipEvent.IsNewEvent(player)) {
+         // If something new has happened, evaluate and branch.
+         event_type = tEShipEvent.GetEventType(player);
+         sender = tEShipEvent.GetSender(player);
+         attacker = tEShipEvent.GetTarget(player);
+         tEShipEvent.ClearNewFlag(player);
+
+         switch (event_type) {
+         case eseTransportArrived:
+            tESoundEvent.SendEvent(esepImportant , "", "stock_clay_critical_player_attack_4", sender);
+            break;
+         case eseFlee:
+            tESoundEvent.SendEvent(esepImportant , "", "stock_flee_gangster_1_male_1", sender);
+            break;
+         case eseSelfAttacked:
+            tESoundEvent.SendEvent(esepImportant , "", "stock_clay_critical_player_attack_4", sender);
+            break;
+         case eseStationAttack:
+            tESoundEvent.SendEvent(esepCritical , "", "stock_station_attack_severe_2_female", sender);
+            break;
+         case eseDistress:
+            tESoundEvent.SendEvent(esepImportant , "", "stock_distress_4_male_1", sender);
+            break;
+         default:
+            break;
+         }
+      }
+   }// loop forever
+}// end task
+

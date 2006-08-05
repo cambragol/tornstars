@@ -1,0 +1,181 @@
+; PcConstructionShip
+pccs_introduction, "We are building a new station and need construction supplies."
+pccs_player_agrees, "Yes, Let's see what you need"
+pccs_player_refuses, "No, I have no supplies"
+pccs_ask_player, "We are willing to pay a bonus. Do you have any to sell?"
+pccs_player_refuse_response, "If you find any, stop back."
+pccs_player_nothing_response, "Not the talkative type?"
+
+
+
+; PcPodScrapper
+pcps_ask_player, "Do you want to sell pods for scrap?"
+pcps_ask_help, "Yes, what do I do?"
+pcps_take_pods, "Take my unloaded pods now."
+pcps_refuse, "No Thanks."
+pcps_help_response, "Unload the pods you want scrapped. Then talk to me again."
+pcps_remind_unload, "You need to unload some pods and keep them close."
+pcps_refuse_response, "If you cannot find a buyer for your pods, stop back." 
+
+
+
+; PcFenceShip
+pcfs_introduction, "Looking to unload any illegal cargo?"
+pcfs_player_agrees, "I do have a few cargo pods I.. found."
+pcfs_player_refuses, "No thanks. I only do legal trade."
+pcfs_ask_player, "is the kind of thing we handle."
+pcfs_player_low, "We don't trust you. You smell like the law."
+pcfs_player_refuse_reply, "If you find anything... stop back."
+
+
+
+; PcWeaponSeller
+pcws_player_agrees, "Yes, Lets Deal"
+pcws_player_refuses, "No Thanks"
+
+pcws_legal_ask_player, "We furnish the finest in ship systems. Care to look?"
+pcws_legal_player_said_no, "This is a dangerous place. You will be back." 
+pcws_legal_player_said_nothing, "The quiet type."
+
+pcws_crime_player_ask, "Can we hook you up with some 'restricted' equipment?"
+pcws_crime_refuse_reply, "Too bad. We have top of the line stuff. Real Navy."
+pcws_crime_nothing_reply, "Suit yourself."
+
+
+
+; PcRumorSeller
+pcrs_no_rumor_today, "I have no new rumors to tell you. Come back another day."
+pcrs_player_knows_all, "You already know everything. Now get!"
+pcrs_reputation_low, "Sorry, your reputation is not good enough to trust you." 
+pcrs_no_credits, "Sorry, you don't have the credits." 
+
+pcrs_ask_player, "Need to know where to find a hidden base or a cargo fence?"
+pcrs_player_agrees_base, "Yes Base "
+pcrs_player_agrees_base_say, "I want to hear about the hidden base."
+pcrs_player_agrees_fence, "Yes Fence "
+pcrs_player_agrees_fence_say, "Tell me about the cargo fence."
+pcrs_player_refuses, "No"
+pcrs_player_refuses_say, "No Thank you"
+pcrs_player_refuse_reply, "If you want cheap weapons or need to unload some hot cargo, stop back."
+
+pcrs_fence_intro, "I know where a fence hangs out...", 
+pcrs_station_desc, "The place I heard about is a "
+pcrs_station_name, "And the name is " 
+
+pcrs_dropped_nav, "Check your contact list for the Nav Location"
+
+
+
+; PcPirateToll
+pcpt_enemy_sighted, "Enemies sighted! Attack"
+pcpt_player_fled_attack, "Scum! I warned you not to leave! Attack!"
+pcpt_player_poor, "You don't have anything worth stealing. Leave! Now!" 
+pcpt_halt_warning, "Halt Your Ship! You must pay to cross this system." 
+pcpt_announce_inspection, "Wait here while we inspect your cargo."
+pcpt_distance_warning, "Do not move more than 10km from this location or we will attack." 
+pcpt_ask_toll_charge, "We want payment for safe passage."
+pcpt_player_pay_response, "Ok, here's your money dammit"
+pcpt_player_delay_response, "Uh, hold on a moment while I ... check my account"
+pcpt_player_refuse_response, "Go to Hell!"
+pcpt_player_short_funds, "Your short funds. Drop enough cargo to pay." 
+pcpt_call_back_after_drop, "Call back when you have dropped the cargo." 
+pcpt_no_leave_warning, "Don't even think of leaving." 
+pcpt_player_paid_can_leave, "Another sucker pays up. Heh. Ok Scum, leave!" 
+pcpt_call_back_when_pay, "Call back when your ready to pay."
+pcpt_call_beg, "Call and beg for mercy! I might let you live."
+pcpt_player_pay_response, "Ok, here's your money dammit"
+pcpt_player_second_refusal,"Eat plasma pirate!"
+pcpt_second_ask_toll, "Are you ready to pay up?"
+pcpt_attack_for_refusal, "Then we take payment in souls!"
+
+
+
+
+; PcHiredShip
+pchs_player_refuses, "No, Thanks."
+pchs_player_info, "Tell me about your ship"
+pchs_player_accepts, "Yes, I will hire you"
+pchs_player_refuse_response, "Very well."
+pchs_rep_low, "Sorry, your reputation is not good enough to trust you."
+pchs_credits_low, "Sorry, you do not have enough funds to afford our services."
+pchs_max_wingmen, "Sorry, you already have enough wingmen." 
+pchs_join_fleet, "Glad to join you. What are your orders?"
+
+pchs_player_ask_freighter, "Do you need to hire a freighter? Hire Fee "
+pchs_player_ask_warship, "Do you need to hire a Warship? Hire Fee "
+pchs_player_ask_tanker, "Do you need to hire a Tanker? Hire Fee "
+pchs_player_ask_miner, "Do you need to hire a Mining Rig? Hire Fee "
+pchs_player_ask_prospector, "Do you need to hire a Prospecting Ship? Hire Fee "
+
+;asked after the player requested info.
+pchs_ask_player_second, "Still looking to hire a ship? Hire Fee "
+
+
+; tPcTankerShip
+pcts_player_refuses, "No, Thank you."
+pcts_yes_fuel_fleet, "Yes, fuel the whole fleet"
+pcts_yes_fuel_me, "Yes, fuel just my ship"
+pcts_ask_player, "Do you need to refuel your ships?"
+pcts_player_refuse_reply, "Maybe Next Time"
+pcts_player_fuel_all, "Fueling All Ships"
+pcts_player_fuel_you, "Fueling You"
+pcts_fueling, "Fueling "
+pcts_invalid_value, "Tanker Invalid Ship Specified"
+pcts_player_low_credits, "You don't have enough credits to finish fueling"
+pcts_fueling_complete, "Fueling complete"
+
+
+; tPcCustomsToll
+
+pcct_enemy_sighted, "Range control, we have sighted hostiles. Commencing attack."
+pcct_player_fled_attack, "All wingmen, sieze those customs evaders!"
+pcct_player_poor, "You have nothing to declare. You are free to go."
+pcct_halt_warning, "Halt your ship for a customs inspection."
+pcct_announce_inspection, "Wait here while we asses your customs taxes."
+pcct_distance_warning, "Do not move more than 10km from this location or we will sieze your ships."
+
+pcct_ask_toll_charge, "Please make payment on these customs taxes: "
+pcct_player_pay_response, "Always glad to fund the Police"
+pcct_player_delay_response, "Uh, hold on a moment while I ... speed dial my lawyer"
+pcct_player_refuse_response, "No! These taxes are criminal!"
+pcct_player_short_funds, "Insufficent funds. Just this once we will accept cargo."
+pcct_call_back_after_drop, "Call back when you have dropped the cargo." 
+pcct_no_leave_warning, "Please stay close until payment has been made."
+pcct_player_paid_can_leave, "Thank you for your prompt payment. You are free to leave."
+pcct_call_back_when_pay, "Call back when your ready to make payment."
+
+pcct_call_beg, "Listen to this joker. Ok buddy, call back when your ready to pay."
+
+pcct_second_ask_toll, "Are you ready to make payment?"
+pcct_player_second_refusal,"Your just pirates with badges! Go to hell"
+pcct_second_refusal_response, "They don't pay us enough. Look, you pay, or you die. Get it?"
+
+; tPcGuard
+
+pcgs_guard_sweep_finished,"Control, our sweep shows a clear scope"
+pcgs_guard_sweep_finished_1,"Sweep complete, plotting next vector"
+
+pcgs_guard_hostile_spotted,"Hostile ships spotted, moving to attack"
+pcgs_guard_hostile_spotted_1,"Control, are you seeing these hostiles? Attacking"
+
+pcgs_answering_distress_call,"Distress call recieved, vectoring to intercept"
+pcgs_answering_distress_call_1,"Control, we are moving to assist mayday"
+pcgs_answering_distress_call_2,"Distress ship, help is on the way"
+
+
+; tsCargoScript
+
+pccgo_cargoship_requesting_cargo_dock,"Station, cargo freight inbound requesting cargo dock"
+pccgo_cargoship_requesting_cargo_dock_1,"Station, cargo freight inbound requesting cargo dock"
+
+pccgo_cargoship_docking_cleared,"Freighter, you are clear for docking"
+pccgo_cargoship_docking_cleared_1,"Freighter, you are clear for docking"
+
+pccgo_cargoship_starting_unload,"Cargo unlocked and clear for detachment"
+pccgo_cargoship_starting_unload_1,"Cargo unlocked and clear for detachment"
+
+pccgo_cargoship_starting_load,"Commencing cargo load"
+pccgo_cargoship_starting_load_1,"Commencing cargo load"
+
+pccgo_cargoship_abandon_dock,"Cancel that docking request station. We are moving to alternate"
+pccgo_cargoship_abandon_dock_1,"Cancel that docking request station. We are moving to alternate"

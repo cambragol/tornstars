@@ -1,0 +1,169 @@
+//*******************************************************************************************/
+//
+// tLProduction_t.pog
+//
+// Unit test package for production layer.
+// 
+//
+// 
+//
+// April 2004, Jon Freise
+//******************************************************************************************/
+
+package tLProduction_t;
+
+uses 
+iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, 
+Task, Debug, iFaction, iSim, iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+iConversation, iFormation, Group, Text, iEmail, State, iTrafficCreation, 
+iRangeCheck,iRemotePilot, iRegion, iMissionTracker, iWingmen,
+iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,
+iDirector, iEscort, 
+iLagrangePoint, iMusic, iGame, Stream,
+   tEpicFactionEnum,
+   tEpicFaction,
+   tLRoot,
+   tLProduction;
+
+
+
+provides Start,
+         Restore;
+
+
+prototype bool verify_properties(hisim item1, hisim item2);
+
+bool Start()
+{
+   hisim item1, item2;
+   int id1, id2;
+   hisim center1, center2;
+
+   item1 = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","item 1"));
+   item2 = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","item 2"));
+
+   
+   id1 = tLRoot.NewId();
+   tLRoot.SetId(item1, id1);
+
+   id2 = tLRoot.NewId();
+   tLRoot.SetId(item2, id2);
+
+
+   tLProduction.Create(item1, 1, 100, 25, 50, true);
+   tLProduction.Create(item2, 2, 120, 40, 30, false);
+
+   Global.CreateInt("gt_tlprod_test_item1",GA_Write,id1);
+   Global.CreateInt("gt_tlprod_test_item2",GA_Write,id2);
+
+   if (!verify_properties(item1, item2)) {
+      return false;
+   }
+
+   tLProduction.Save(item1);
+   tLProduction.Save(item2);
+
+   debug Debug.PrintString("tLProduction_t.Start passed!\n");
+
+   return true;
+}
+
+
+
+bool Restore()
+{
+   hisim item1, item2;
+   int id1, id2;
+
+   item1 = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","item 1"));
+   item2 = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","item 2"));
+
+   id1 = Global.Int("gt_tlprod_test_item1");
+   id2 = Global.Int("gt_tlprod_test_item2");
+
+   tLRoot.SetId(item1, id1);
+   tLRoot.SetId(item2, id2);
+
+   tLProduction.Restore(item1);
+   tLProduction.Restore(item2);
+
+   if (!verify_properties(item1, item2)) {
+      return false;
+   }
+
+   debug Debug.PrintString("tLProduction_t.Restore passed!\n");
+
+   return true;
+}
+
+//Create(hisim producer, int type, int funds, int loss, int loans, bool active)
+
+bool verify_properties(hisim item1, hisim item2)
+{
+
+//   tLProduction.Create(item1, 1, 100, 25, 50, true);
+
+   if (1 != tLProduction.GetType(item1)) {
+      debug Debug.PrintString("Test: tLProduction_t.verify_properties item1 get type\n");
+      return false ;
+   }
+
+   if (100 != tLProduction.GetFunds(item1)) {
+      debug Debug.PrintString("Test: tLProduction_t.verify_properties item1 get funds\n");
+      return false;
+   }
+
+   if (25 != tLProduction.GetLoss(item1)) {
+      debug Debug.PrintString("Test: tLProduction_t.verify_properties item1 get loss\n");
+      return false;
+   }
+
+   if (50 != tLProduction.GetLoans(item1)) {
+      debug Debug.PrintString("Test: tLProduction_t.verify_properties item1 get type\n");
+      return false;
+   }
+
+   if (true != tLProduction.IsActive(item1)) {
+      debug Debug.PrintString("Test: tLProduction_t.verify_properties item1 get type\n");
+      return false;
+   }
+
+
+//   tLProduction.Create(item2, 2, 120, 40, 30, false);
+
+
+   if (2 != tLProduction.GetType(item2)) {
+      debug Debug.PrintString("Test: tLProduction_t.verify_properties item2 get type\n");
+      return false ;
+   }
+
+   if (120 != tLProduction.GetFunds(item2)) {
+      debug Debug.PrintString("Test: tLProduction_t.verify_properties item2 get funds\n");
+      return false;
+   }
+
+   if (40 != tLProduction.GetLoss(item2)) {
+      debug Debug.PrintString("Test: tLProduction_t.verify_properties item2 get loss\n");
+      return false;
+   }
+
+   if (30 != tLProduction.GetLoans(item2)) {
+      debug Debug.PrintString("Test: tLProduction_t.verify_properties item2 get type\n");
+      return false;
+   }
+
+   if (false != tLProduction.IsActive(item2)) {
+      debug Debug.PrintString("Test: tLProduction_t.verify_properties item2 get type\n");
+      return false;
+   }
+
+   return true;
+}
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

@@ -1,0 +1,153 @@
+/*******************************************************************************************/
+//
+// tsFleetOpCombat
+// 
+// This module implements simulated combat between two fleet operations or a 
+// fleet operation and a station. It resolves the combat, doing damage. 
+// 
+// Handling of death is left to the update functions.
+// 
+// To keep things simple, flat percentage damage is used. Later some random chance might
+// be thrown in.
+// 
+// March 2006
+//******************************************************************************************/
+
+package tsFleetOpCombat;
+
+
+uses  Sim,
+iSim,
+Debug,
+Global,
+iGame,
+iFaction,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+State,
+Text,
+Math,
+iShip,
+iHabitat,
+iMapEntity,
+   iHUD,
+   iComms,
+   tStationEnum,
+   tStation,
+   tEFaction,
+   tTime,
+   tUnderOp,
+   tLCenter,
+   tLFleet,
+   tLProduction;
+
+
+
+
+
+provides Offense,
+         Defense,
+         Station;
+
+
+//*******************************************************************************************/         
+//
+//*******************************************************************************************/
+
+// This strategy is used by an operation intent on doing
+// maximum damage. And also taking maximum damage.
+Offense (hmapentity location, hisim attacking_op, hisim defending_op)
+{
+   int attackers, attack_value;
+   int defenders, defense_value;
+
+   // We use 25% damage when attacking
+   attackers = tLFleet.Fleets(attacking_op);
+   attack_value = attackers/4;
+
+   defenders = tLFleet.Fleets(defending_op);
+   defense_value = defenders/4;
+
+   tLFleet.ChangeFleets(attacking_op, -1*defense_value);
+   tLFleet.ChangeFleets(defending_op, -1*attack_value);
+
+   // Add the destroyed ships to the locations total wreckage.
+   tLFleet.ChangeWrecks(location, defense_value + attack_value);
+}
+
+
+// This strategy is used by an operation that is fleeing
+// either a stronger force, or is just cowardly.
+// It does less damage, and takes less damage.
+Defense(hmapentity location, hisim defending_op, hisim hostile_op)
+{
+   int attackers, attack_value;
+   int defenders, defense_value;
+
+   // We use 10% damage when dodging
+   attackers = tLFleet.Fleets(hostile_op);
+   attack_value = attackers/10;
+
+   defenders = tLFleet.Fleets(defending_op);
+   defense_value = defenders/10;
+
+   tLFleet.ChangeFleets(hostile_op, -1*defense_value);
+   tLFleet.ChangeFleets(defending_op, -1*attack_value);
+
+   // Add the destroyed ships to the locations total wreckage.
+   tLFleet.ChangeWrecks(location, defense_value + attack_value);
+}
+
+
+// This is used to resolve the special case of 
+// attacks against a station.
+
+// Some stations are armed, and add to thier attack.
+// Station defenders always suffer half damage. 
+// (it is easy for them to retreat, the attackers are
+// focusing on the station).
+
+// if all defending fleets are destroyed, the 
+// bool returns true. Then the attacker gets to choose
+// to capture, destroy, or abandon the station.
+bool Station(hisim attacking_op, hhabitat station)
+{
+   int attackers, attack_value;
+   int defenders, defense_value;
+
+   // attackers do 25% damage, but only half effect.
+   attackers = tLFleet.Fleets(attacking_op);
+   attack_value = attackers/8;
+
+   // defenders get the station guns bonus.
+   defenders = tLFleet.Fleets(station);
+   defenders = defenders + 200;
+   defense_value = defenders/4;
+
+   // Remove the ships the station shoots down.
+   tLFleet.ChangeFleets(attacking_op, -1*defense_value);
+
+   // Add those ships to the total wrecks near the station.
+   tLFleet.ChangeWrecks(station, defense_value);
+
+   // Remove the damage points from the stations fleets.
+   tLFleet.ChangeFleets(station, -1*attack_value);
+
+   if (tLFleet.Fleets(station) == 0) {
+      return true;
+   }
+
+   return false;
+}
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

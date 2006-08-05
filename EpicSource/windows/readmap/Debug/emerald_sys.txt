@@ -1,0 +1,235 @@
+Entity 0, type 0, body type 0 hab_type 0 yscale 0.000000 radius          0 name Emerald System
+Parent 0 2 0, Faction 0, Population 0
+Texture type 0, t1 0, t2 0, t3 0 
+Pos 0.000000e+000 0.000000e+000 0.000000e+000, Ori 0.000000 0.000000 0.000000
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 1, type 5, body type 5 hab_type 0 yscale 1.000000 radius    5000000 name Emerald Alpha
+Parent 0 2 5, Faction 0, Population 0
+Texture type 0, t1 0, t2 0, t3 0 
+Pos 0.000000e+000 0.000000e+000 0.000000e+000, Ori 0.000000 0.000000 0.000000
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 2, type 0, body type 2 hab_type 0 yscale 1.000000 radius    5000000 name Ruby
+Parent 1 2 2, Faction 0, Population 0
+Texture type 1, t1 1, t2 1, t3 0 
+Pos 4.000000e+010 0.000000e+000 0.000000e+000, Ori 0.000000 0.000000 0.000000
+Color r  99 g  46 b  40
+Color r 120 g 145 b  14
+Color r 127 g  44 b  34
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 3, type 0, body type 3 hab_type 0 yscale 1.000000 radius    5000000 name Blackstone
+Parent 2 2 3, Faction 0, Population 0
+Texture type 1, t1 1, t2 1, t3 0 
+Pos 4.040000e+010 0.000000e+000 0.000000e+000, Ori 0.000000 0.000000 0.000000
+Color r  99 g  46 b  40
+Color r 120 g 145 b  14
+Color r 127 g  44 b  34
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 4, type 0, body type 3 hab_type 0 yscale 1.000000 radius    5000000 name Bloodstone
+Parent 2 2 3, Faction 0, Population 0
+Texture type 1, t1 1, t2 1, t3 0 
+Pos 4.054560e+010 0.000000e+000 3.149998e+008, Ori 0.000000 0.000000 0.000000
+Color r  99 g  46 b  40
+Color r 120 g 145 b  14
+Color r 127 g  44 b  34
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 5, type 0, body type 2 hab_type 0 yscale 1.000000 radius    5000000 name Sapphire
+Parent 1 2 2, Faction 0, Population 0
+Texture type 1, t1 1, t2 1, t3 0 
+Pos 4.330128e+010 0.000000e+000 2.499998e+010, Ori 0.000000 0.000000 0.000000
+Color r  99 g  46 b  40
+Color r 120 g 145 b  14
+Color r 127 g  44 b  34
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 6, type 0, body type 3 hab_type 0 yscale 1.000000 radius    5000000 name Moonstone
+Parent 5 2 3, Faction 0, Population 0
+Texture type 1, t1 1, t2 1, t3 0 
+Pos 4.364769e+010 0.000000e+000 2.519998e+010, Ori 0.000000 0.000000 0.000000
+Color r  99 g  46 b  40
+Color r 120 g 145 b  14
+Color r 127 g  44 b  34
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 7, type 0, body type 2 hab_type 0 yscale 1.000000 radius    5000000 name Emerald
+Parent 1 2 2, Faction 0, Population 0
+Texture type 1, t1 1, t2 1, t3 0 
+Pos 3.125005e+010 0.000000e+000 5.412656e+010, Ori 0.000000 0.000000 0.000000
+Color r  99 g  46 b  40
+Color r 120 g 145 b  14
+Color r 127 g  44 b  34
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 8, type 1, body type 11 hab_type 66 yscale 0.000000 radius          0 name Emerald Beanstalk Orbital
+Parent 7 2 168641035, Faction 13, Population 10
+Texture type 0, t1 0, t2 0, t3 0 
+Pos 3.127505e+010 0.000000e+000 5.412656e+010, Ori 0.000000 0.000000 0.000000
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 9, type 1, body type 11 hab_type 66 yscale 0.000000 radius          0 name Emerald STC
+Parent 7 2 168641035, Faction 13, Population 10
+Texture type 0, t1 0, t2 0, t3 0 
+Pos 3.129162e+010 0.000000e+000 5.415056e+010, Ori 0.000000 0.000000 0.000000
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 10, type 1, body type 11 hab_type 66 yscale 0.000000 radius          0 name Emerald Defense Station
+Parent 7 2 168641035, Faction 13, Population 10
+Texture type 0, t1 0, t2 0, t3 0 
+Pos 3.128555e+010 0.000000e+000 5.418805e+010, Ori 0.000000 0.000000 0.000000
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 11, type 1, body type 11 hab_type 66 yscale 0.000000 radius          0 name Emerald Transfer Station
+Parent 7 2 168641035, Faction 13, Population 10
+Texture type 0, t1 0, t2 0, t3 0 
+Pos 3.125005e+010 0.000000e+000 5.422056e+010, Ori 0.000000 0.000000 0.000000
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 12, type 0, body type 3 hab_type 0 yscale 1.000000 radius    5000000 name Pearl
+Parent 7 2 3, Faction 0, Population 0
+Texture type 1, t1 1, t2 1, t3 0 
+Pos 3.145005e+010 0.000000e+000 5.447297e+010, Ori 0.000000 0.000000 0.000000
+Color r  99 g  46 b  40
+Color r 120 g 145 b  14
+Color r 127 g  44 b  34
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 13, type 1, body type 11 hab_type 66 yscale 0.000000 radius          0 name Pearl Research Station
+Parent 12 2 168641035, Faction 13, Population 10
+Texture type 0, t1 0, t2 0, t3 0 
+Pos 3.147505e+010 0.000000e+000 5.447297e+010, Ori 0.000000 0.000000 0.000000
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 14, type 0, body type 4 hab_type 0 yscale 1.000000 radius   60000000 name Jade
+Parent 1 2 4, Faction 0, Population 0
+Texture type 2, t1 1, t2 1, t3 0 
+Pos 1.036558e+005 0.000000e+000 7.812500e+010, Ori 0.000000 0.000000 0.000000
+Color r 127 g 116 b  96
+Color r 127 g 111 b  82
+Color r 127 g 116 b  96
+Cloud 0 Ring 5 Unk 255 Unk2 0 
+
+Entity 15, type 0, body type 3 hab_type 0 yscale 1.000000 radius    5000000 name Crystal
+Parent 14 2 3, Faction 0, Population 0
+Texture type 1, t1 1, t2 1, t3 0 
+Pos 1.039875e+005 0.000000e+000 7.837500e+010, Ori 0.000000 0.000000 0.000000
+Color r  99 g  46 b  40
+Color r 120 g 145 b  14
+Color r 127 g  44 b  34
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 16, type 1, body type 11 hab_type 66 yscale 0.000000 radius          0 name Jade Manufacturing Station
+Parent 15 2 168641035, Faction 13, Population 10
+Texture type 0, t1 0, t2 0, t3 0 
+Pos 2.510399e+007 0.000000e+000 7.837500e+010, Ori 0.000000 0.000000 0.000000
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 17, type 0, body type 3 hab_type 0 yscale 1.000000 radius    5000000 name Beryl
+Parent 14 2 3, Faction 0, Population 0
+Texture type 1, t1 1, t2 1, t3 0 
+Pos -2.398956e+008 0.000000e+000 7.854069e+010, Ori 0.000000 0.000000 0.000000
+Color r  99 g  46 b  40
+Color r 120 g 145 b  14
+Color r 127 g  44 b  34
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 18, type 1, body type 11 hab_type 66 yscale 0.000000 radius          0 name Emerald Shipyard
+Parent 17 2 168641035, Faction 13, Population 10
+Texture type 0, t1 0, t2 0, t3 0 
+Pos -2.148956e+008 0.000000e+000 7.854069e+010, Ori 0.000000 0.000000 0.000000
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 19, type 0, body type 2 hab_type 0 yscale 1.000000 radius    5000000 name Diamond
+Parent 1 2 2, Faction 0, Population 0
+Texture type 1, t1 1, t2 1, t3 0 
+Pos -4.882798e+010 0.000000e+000 8.457288e+010, Ori 0.000000 0.000000 0.000000
+Color r  99 g  46 b  40
+Color r 120 g 145 b  14
+Color r 127 g  44 b  34
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 20, type 0, body type 3 hab_type 0 yscale 1.000000 radius    5000000 name Zircon
+Parent 19 2 3, Faction 0, Population 0
+Texture type 1, t1 1, t2 1, t3 0 
+Pos -4.902797e+010 0.000000e+000 8.491929e+010, Ori 0.000000 0.000000 0.000000
+Color r  99 g  46 b  40
+Color r 120 g 145 b  14
+Color r 127 g  44 b  34
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 21, type 1, body type 11 hab_type 66 yscale 0.000000 radius          0 name Military Outpost
+Parent 20 2 168641035, Faction 13, Population 10
+Texture type 0, t1 0, t2 0, t3 0 
+Pos -4.900297e+010 0.000000e+000 8.491929e+010, Ori 0.000000 0.000000 0.000000
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 22, type 0, body type 3 hab_type 0 yscale 1.000000 radius    5000000 name Opal
+Parent 19 2 3, Faction 0, Population 0
+Texture type 1, t1 1, t2 1, t3 0 
+Pos -4.937357e+010 0.000000e+000 8.488788e+010, Ori 0.000000 0.000000 0.000000
+Color r  99 g  46 b  40
+Color r 120 g 145 b  14
+Color r 127 g  44 b  34
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 23, type 1, body type 11 hab_type 66 yscale 0.000000 radius          0 name MelNet FTL Relay
+Parent 22 2 168641035, Faction 13, Population 10
+Texture type 0, t1 0, t2 0, t3 0 
+Pos -4.934857e+010 0.000000e+000 8.488788e+010, Ori 0.000000 0.000000 0.000000
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 24, type 2, body type 15 hab_type 0 yscale 0.000000 radius          0 name Crystal Lpoint
+Parent 14 2 15, Faction 0, Population 0
+Texture type 0, t1 0, t2 0, t3 0 
+Pos 1.038217e+005 0.000000e+000 7.825000e+010, Ori 0.866024 0.000000 -0.500002
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 25, type 2, body type 17 hab_type 0 yscale 0.000000 radius          0 name Beryl Lpoint
+Parent 14 2 17, Faction 0, Population 0
+Texture type 0, t1 0, t2 0, t3 0 
+Pos -1.198960e+008 0.000000e+000 7.833284e+010, Ori 0.999385 0.000000 -0.035070
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+

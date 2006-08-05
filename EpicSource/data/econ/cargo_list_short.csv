@@ -1,0 +1,629 @@
+;Key Phrase_to_localise Sound_file_URL Comments,,
+;,,
+;PLEASE NOTE THAT ALL COMMENTS REFER TO THE TEXT IMMEDIATELY FOLLOWING THE COMMENT.,,
+;,,
+;List of possible cargo for trading, theft etc. ,
+;,,
+; ONSCREEN TEXT ONLY, NEVER SPOKEN,
+;,,
+; Must be restricted to 17 characters per name.,,
+;,,CT_Invalid
+Cargo_WasteBlocks,Lithium,CT_WasteBlocks
+Cargo_PlasticWaste,Beryllium,CT_PlasticWaste
+Cargo_OrganicPulp,Boron,CT_OrganicPulp
+Cargo_WastePaper,Carbon,CT_WastePaper
+Cargo_DiseasedSewage,Sodium,CT_DiseasedSewage
+Cargo_FrozenSewage,Magnesium,CT_FrozenSewage
+Cargo_RawSewage,Aluminum,CT_RawSewage
+Cargo_SugarCane,Silicon,CT_SugarCane
+Cargo_Fish,Phosphorus,CT_Fish
+Cargo_Fruit,Potassium,CT_Fruit
+Cargo_Grain,Calcium,CT_Grain
+Cargo_Meat,Scandium,CT_Meat 
+Cargo_Potatoes,Titanium,CT_Potatoes
+Cargo_Rice,Vanadium,CT_Rice
+Cargo_Soya,Chromium,CT_Soya
+Cargo_Vegetables,Vegetables,CT_Vegetables
+Cargo_EdibleFungi,Edible Fungi,CT_EdibleFungi
+Cargo_FoodBlocks,Food Blocks,CT_FoodBlocks
+Cargo_FoodPills,Food Pills,CT_FoodPills
+Cargo_MealInABar,Synthetic Carbos,CT_MealInABar
+Cargo_PseudoShake,Synthetic Fats,CT_PseudoShake 
+Cargo_RecoveredMeat,Recovered Meat,CT_RecoveredMeat
+Cargo_SyntheticCheese,Synthetic Cheese,CT_SyntheticCheese
+Cargo_SyntheticProtein,Synthetic Protein,CT_SyntheticProtein
+Cargo_SurvivalRations,Survival Rations,CT_SurvivalRations
+Cargo_DrinkingWater,Drinking Water,CT_DrinkingWater
+Cargo_Apes,Manganese,CT_Apes
+Cargo_Birds,Iron,CT_Birds
+Cargo_DonorPigs,Cobalt,CT_DonorPigs
+Cargo_DrugLeeches,Nickel,CT_DrugLeeches
+Cargo_Giraffes,Copper,CT_Giraffes
+Cargo_Horses,Zinc,CT_Horses
+Cargo_Lions,Gallium,CT_Lions 
+Cargo_Weasels,Germanium,CT_Weasels
+Cargo_Yaks,Arsenic,CT_Yaks
+Cargo_Zebras,Selenium,CT_Zebras
+Cargo_AttackDogs,Hydrogen,CT_AttackDogs
+Cargo_BiomassProcessingWorms,Helium,CT_BiomassProcessingWorms
+Cargo_Camels,Nitrogen,CT_Camels
+Cargo_CancerMice,Oxygen,CT_CancerMice
+Cargo_Chickens,Fluorine,CT_Chickens
+Cargo_Cows,Neon,CT_Cows
+Cargo_Dogs,Chlorine,CT_Dogs
+Cargo_EngineeredInsects,Argon,CT_EngineeredInsects
+Cargo_Goats,Bromine,CT_Goats 
+Cargo_Insects,Krypton,CT_Insects 
+Cargo_Pigs,Rubidium,CT_Pigs 
+Cargo_Rodents,Strontium,CT_Rodents 
+Cargo_Primates,Yttrium,CT_Primates 
+Cargo_HYL,Zirconium,CT_HYL 
+Cargo_Foetuses,Niobium,CT_Foetuses
+Cargo_CloneBoneTissue,Ruthenium,CT_CloneBoneTissue 
+Cargo_CloneEyes,Rhodium,CT_CloneEyes 
+Cargo_CloneGlands,Palladium,CT_CloneGlands 
+Cargo_CloneHearts,Silver,CT_CloneHearts 
+Cargo_CloneIntestines,Cadmium,CT_CloneIntestines
+Cargo_CloneKidneys,Indium,CT_CloneKidneys
+Cargo_CloneLimbs,Tin,CT_CloneLimbs 
+Cargo_CloneLivers,Antimony,CT_CloneLivers
+Cargo_CloneLungs,Molybdenum,CT_CloneLungs
+Cargo_CloneSkin,Xenon,CT_CloneSkin 
+Cargo_VatGrownMuscle,Radon,CT_VatGrownMuscle  
+Cargo_BlankTissueCulture,Caesium,CT_BlankTissueCulture 
+Cargo_CommonStrandMaterial,Barium,CT_CommonStrandMaterial
+Cargo_DNAChangers,Lanthanum,CT_DNAChangers
+Cargo_DNASequencers,Cerium,CT_DNASequencers
+Cargo_DNATattoos,Praseodymium,CT_DNATattoos 
+Cargo_GeneticMarkerAgents,Neodymium,CT_GeneticMarkerAgents 
+Cargo_GeneticRejuvinations,Samarium,CT_GeneticRejuvinations 
+Cargo_TransplantEyes,Europium,CT_TransplantEyes
+Cargo_TransplantGlands,Gadolinium,CT_TransplantGlands
+Cargo_TransplantHearts,Terbium,CT_TransplantHearts
+Cargo_TransplantIntestine,Dysprosium,CT_TransplantIntestine
+Cargo_TransplantKidneys,Holmium,CT_TransplantKidneys
+Cargo_TransplantLivers,Erbium,CT_TransplantLivers
+Cargo_TransplantLungs,Thulium,CT_TransplantLungs
+Cargo_TransplantSkin,Ytterbium,CT_TransplantSkin
+Cargo_Houseplants,Lutetium,CT_Houseplants
+Cargo_PotPlants,Hafnium,CT_PotPlants
+Cargo_Seedlings,Tantalum,CT_Seedlings
+Cargo_Seeds,Tungsten,CT_Seeds
+Cargo_Algae,Rhenium,CT_Algae
+Cargo_PlantPulp,Osmium,CT_PlantPulp
+Cargo_Woodpulp,Iridium,CT_Woodpulp
+Cargo_Trees,Platinum,CT_Trees
+Cargo_SlimeMould,Gold,CT_SlimeMould
+Cargo_Yeast,Mercury,CT_Yeast
+Cargo_NitroBacteria,Thallium,CT_NitroBacteria
+Cargo_SoilBacteria,Lead,CT_SoilBacteria
+Cargo_TerraformingBacteria,Bismuth,CT_TerraformingBacteria
+Cargo_RecyclingBacteria,Polonium,CT_RecyclingBacteria
+Cargo_AnimalFeed,Astatine,CT_AnimalFeed
+Cargo_Compost,Francium,CT_Compost
+Cargo_Fertiliser,Radium,CT_Fertiliser
+,,
+Cargo_Soil,Thorium,CT_Soil
+Cargo_SportingBodyArmour,Protactinium,CT_SportingBodyArmour
+Cargo_Footballs,Uranium,CT_Footballs
+Cargo_GolfSupplies,Chalcopyrite,CT_GolfSupplies
+Cargo_NullBox,Galena,CT_NullBox
+Cargo_PaintGuns,Marcasite,CT_PaintGuns
+Cargo_Scuba,Pyrite,CT_Scuba
+Cargo_TennisEquipment,Sphalerite,CT_TennisEquipment
+Cargo_SportsClothes,Anatase,CT_SportsClothes
+Cargo_ZeroGGymnasia,Zero-G Gymnasia,CT_ZeroGGymnasia
+Cargo_SportingWeapons,Boehmite,CT_SportingWeapons
+Cargo_Antiques,Antiques,CT_Antiques
+Cargo_Paintings,Paintings,CT_Paintings
+Cargo_Sculpture,Sculpture,CT_Sculpture
+Cargo_Caviar,Brookite,CT_Caviar
+Cargo_Chocolate,Corundum,CT_Chocolate
+Cargo_Lobster,Diaspore,CT_Lobster
+Cargo_RealCoffee,Real Coffee,CT_RealCoffee
+Cargo_RealMeat,Real Meat,CT_RealMeat
+Cargo_RealTea,Real Tea,CT_RealTea
+Cargo_Shellfish,Shellfish,CT_Shellfish
+Cargo_Milk,Milk,CT_Milk
+Cargo_Spices,Fluorite,CT_Spices
+Cargo_Game,Halite,CT_Game
+Cargo_Cigarettes,Tolbachite,CT_Cigarettes
+Cargo_Cigars,Sellaite,CT_Cigars
+Cargo_LeafTobacco,Moschelite,CT_LeafTobacco
+Cargo_Aphrodisiacs,Aphrodisiacs,CT_Aphrodisiacs
+Cargo_Caffeine,Azurite,CT_Caffeine
+Cargo_PhysicalEnhancers,Physical Enhancers,CT_PhysicalEnhancers
+Cargo_ErzatzCoffee,Calcite,CT_ErzatzCoffee
+Cargo_Euphorics,Euphorics,CT_Euphorics
+Cargo_Halluciogenics,Hallucinogenics,CT_Halluciogenics
+Cargo_MemoryEnhancers,Memory Enhancers,CT_MemoryEnhancers
+Cargo_MoodEnhancers,Mood Enhancers,CT_MoodEnhancers
+Cargo_MoodStabilsers,Mood Stabilisers,CT_MoodStabilsers
+Cargo_Stimulants,Stimulants,CT_Stimulants
+Cargo_Tranquilisers,Tranquilisers,CT_Tranquilisers
+Cargo_Spirits,Sake,CT_Spirits
+Cargo_Wine,Wine,CT_Wine
+Cargo_Champagne,Champagne,CT_Champagne
+Cargo_Scotch,Scotch,CT_Scotch
+Cargo_RealBeer,Beer,CT_RealBeer
+Cargo_ZeroBrew,GaoLiang,CT_ZeroBrew
+Cargo_Fur,Dolomite,CT_Fur
+Cargo_FurCoats,Malachite,CT_FurCoats
+Cargo_Vatfur,Nesosilicates,CT_Vatfur
+Cargo_BodyComps,Olivine,
+Cargo_GoldJewellery,Topaz,CT_GoldJewellery
+Cargo_Jewellery,Sorosilicates,CT_ValuableJewellery
+Cargo_SmartJewels,Cyclosilicates,CT_SmartJewels
+Cargo_Watches,Neptunium,CT_Watches
+Cargo_Books,Books,CT_Books
+Cargo_Cosmetics,Cosmetics,CT_Cosmetics
+Cargo_DesignerClothes,Designer Clothes,CT_DesignerClothes
+Cargo_MusicalInstruments,Music Instruments,CT_MusicalInstruments
+Cargo_Perfume,Perfume,CT_Perfume
+Cargo_Toys,Toys,CT_Toys
+Cargo_NaturalFibreClothing,Natural Clothing,CT_NaturalFibreClothing
+Cargo_LuxuryFurniture,Luxury Furniture,CT_LuxuryFurniture
+Cargo_CorporateData,Promethium,CT_CorporateData
+Cargo_XenoData,Technetium,CT_XenoData
+Cargo_ResearchData,Plutonium,CT_ResearchData
+Cargo_PersonalData,Americium,CT_PersonalData
+Cargo_Mail,Mail,CT_Mail
+Cargo_ConfidentialData,Curium,CT_ConfidentialData
+Cargo_GovernmentData,Berkelium,CT_GovernmentData
+Cargo_PoliceData,Californium,CT_PoliceData
+Cargo_MilitaryIntelligence,Einsteinium,CT_MilitaryIntelligence
+Cargo_SecretData,Fermium,CT_SecretData
+Cargo_Autopilots,Mendelevium,CT_SeekerMineBlueprints
+Cargo_MissileAI,Nobelium,CT_GnatBlueprint
+Cargo_UtilitySoftware,Lawrencium,CT_HarrowerBlueprint
+Cargo_ComputerGames,Rutherfordium,CT_HammerBlueprint
+Cargo_NewsVids,Dubnium,CT_SeekerBlueprint
+Cargo_EntertainmentVids,Seaborgium,CT_LDSiShortBlueprints
+Cargo_InteractiveText,Bohrium,CT_AssaultCannonAmmoBlueprints
+Cargo_MusicRecordings,Hassium,CT_TurretFighterBlueprints
+Cargo_CorporatePropaganda,Meitnerium,CT_RemoteFighterBlueprints
+,,CT_FlareBlueprints
+,,CT_AchillesBlueprints
+,,CT_AntimatterMineBlueprints
+,,CT_AntimatterMissileBlueprints
+,,CT_BlizzardMissileBlueprints
+,,CT_DeadshotBlueprints
+,,CT_DeathblowBlueprints
+,,CT_DecoyBlueprints
+,,CT_DisruptorBlueprints
+,,CT_LDSi3000Blueprints
+,,CT_LDSiMineBlueprints
+,,CT_LDSiMissileBlueprints
+,,CT_SniperCannonAmmoBlueprints
+,,CT_MiningChargeBlueprints
+,,CT_ProximityMineBlueprints
+,,CT_PulsarBlueprints
+,,CT_RemoteMissileBlueprints
+,,CT_RemoteProbeBlueprints
+,,CT_SmartDecoyBlueprints
+,,CT_Autopilots
+,,CT_MatchVelocityAutopilot
+,,CT_StealthProgram
+,,CT_SelfDefenceSoftware
+,,CT_EngineManagementProgram
+,,CT_OcclusionMonitoringSoftware
+,,CT_MilitaryTrackingProgram
+,,CT_MissileAI
+,,CT_UtilitySoftware
+,,CT_ComputerGames
+,,CT_NewsVids
+,,CT_EntertainmentVids
+,,CT_InteractiveText
+,,CT_MusicRecordings
+,,CT_CorporatePropaganda
+,,CT_CapsuleDriveGenerators
+,,CT_LDSClass1Drive
+,,CT_PowerPlant
+,,CT_ShipsDrive
+,,CT_ManoeuvreThrusters
+,,CT_AlphaHeatSink
+,,CT_BetaHeatSink
+,,CT_ColdGasThrusters
+,,CT_MilitaryJumpCapacitor
+,,CT_LDSClass2Drive
+,,CT_LDSClass3Drive
+,,CT_SealedHeatSink
+,,CT_CapsuleDrive
+,,CT_ImprovedManoeuverThrusters
+,,CT_PursuitDrivers
+,,CT_InterceptorDrivers
+,,CT_GammaHeatSink
+,,CT_DeltaHeatSink
+,,CT_AdvancedHeatSink
+,,CT_OmegaHeatSink
+,,CT_HeatSinkSupercooler
+,,CT_ActiveCooler
+,,CT_EmergencyCoolingPod
+,,CT_AntimatterPowerPod
+,,CT_HighYieldFusionInjector
+,,CT_SNRVReloadPod
+,,CT_Thrusterpods
+,,CT_DockOnAutoTurret
+,,CT_SecondaryRing
+,,CT_CapsuleDriveParts
+,,CT_LDSCarrierFields
+,,CT_LDSFieldGenerators
+,,CT_LDSFieldNodes
+,,CT_LDSGeneratorParts
+,,CT_ShipInstruments
+,,CT_ShipSystems
+,,CT_AISystems
+,,CT_CompParts
+,,CT_ShipCPUGradeI
+,,CT_ShipCPUGradeII
+,,CT_ShipCPUGradeIII
+,,CT_ShipCPUGradeIV
+,,CT_ShipCPUGradeV
+,,CT_CompactShipAI
+,,CT_ShipMemoryModule
+,,CT_CPUCores
+,,CT_CPUParts
+,,CT_AudioEquipment
+,,CT_AudioVisualEquipment
+,,CT_DataConsoles
+,,CT_DataScreens
+,,CT_PersonalCommunicators
+,,CT_BodyComps
+,,CT_HandheldScientificInstruments
+,,CT_DataCards
+,,CT_DataChips
+,,CT_DataModules
+,,CT_MemoryModules
+Cargo_NanoAssemblers,Darmstadtium,CT_NanoAssemblers
+Cargo_NanoFactories,Unununium,CT_NanoFactories
+Cargo_NanoProgrammers,Ununbium,CT_NanoProgrammers
+Cargo_NanoSurgeons,Ununquadium,CT_NanoSurgeons
+Cargo_NeuroConnectors,Carbon Nanotubes,CT_NeuroConnectors
+Cargo_PreprogrammedNanotech,Silicon Nanotubes,CT_PreprogrammedNanotech
+Cargo_TerraformingNanotech,Titanium Nanotubes,CT_TerraformingNanotech
+Cargo_GeneWriters,Carbon Fullerenes,CT_GeneWriters
+Cargo_CryogenicTanks,Silicon Fullerenes,CT_CryogenicTanks
+Cargo_Medkits,Titanium Full.,CT_Medkits
+Cargo_OrganMatrices,Carbon Nanosheets,CT_OrganMatrices
+Cargo_RemoteTables,Silicon Nanosheets,CT_RemoteTables
+Cargo_Autodocs,Autodocs,CT_Autodocs
+Cargo_Autosurgs,Autosurgs,CT_Autosurgs
+Cargo_HKCounters,Titanium Nanoshe.,CT_HKCounters
+Cargo_MolecularImagers,Molecular Imagers,CT_MolecularImagers
+Cargo_NanosurgeryEquipment,Nanosurgery Kits,CT_NanosurgeryEquipment
+Cargo_NMRs,NanoCarbonites,CT_NMRs
+Cargo_SurgeryKits,Surgery Kits,CT_SurgeryKits
+Cargo_CyberEyes,NanoSilicites,CT_CyberEyes
+Cargo_CyberLimbs,Cyber Limbs,CT_CyberLimbs
+Cargo_CyberneticJackPlugs,NanoAnonates,CT_CyberneticJackPlugs
+Cargo_CyberneticOrgans,Cybernetic Organs,CT_CyberneticOrgans
+Cargo_RoboticArms,Robotic Arms,CT_RoboticArms
+Cargo_RoboticChassis,Robotic Chassis,CT_RoboticChassis
+Cargo_RoboticCPUs,Robotic CPUs,CT_RoboticCPUs
+Cargo_RoboticSensors,Robotic Sensors,CT_RoboticSensors
+Cargo_DomesticRobots,Domestic Robots,CT_DomesticRobots
+Cargo_ConstructionRobots,Robo-Constructors,CT_ConstructionRobots
+Cargo_SecurityRobots,Security Robots,CT_SecurityRobots
+Cargo_AstronomicalInstruments,Astro-Instruments,CT_AstronomicalInstruments
+,,CT_ShortRangeActiveSensors
+,,CT_ShortrangePassiveSensors
+,,CT_UCPScanner
+,,CT_PassiveSensorPackage
+,,CT_IFFBeacon
+,,CT_ActiveSensorPackage
+,,CT_AdvancedActiveSensors
+,,CT_AdvancedPassiveSensors
+,,CT_MilitaryGradeActiveSensors
+,,CT_MilitaryGradePassiveSensors
+,,CT_LongRangePassiveSensors
+,,CT_LongRangeActiveSensors
+,,CT_SensorDisruptor
+,,CT_HighPowerSensorDisruptor
+,,CT_AdvancedSensorDisruptor
+,,CT_MarauderCommsScrambler 
+,,CT_HyperspaceTracker
+Cargo_LaserDetectors,NanoPhosphates,CT_LaserDetectors
+Cargo_MonitoringDevices,NanoOxides,CT_MonitoringDevices
+Cargo_BricABrac,NanoSulfides,CT_BricABrac
+Cargo_OfficeSupplies,Liq. SiliconFull.,CT_OfficeSupplies
+Cargo_ReligiousMaterial,Liq. TitaniumFull.,CT_ReligiousMaterial
+Cargo_Clothing,Clothing,CT_Clothing
+Cargo_DisposableClothing,Nano Lubricants,CT_DisposableClothing
+Cargo_HandTools,Hand Tools,CT_HandTools
+Cargo_Uniforms,Uniforms,CT_Uniforms 
+Cargo_Furniture,Furniture,CT_Furniture
+Cargo_CleaningProducts,Cleaning Products,CT_CleaningProducts
+Cargo_HygieneGoods,Hygiene Goods,CT_HygieneGoods
+Cargo_HumanitarianAid,Bonding Full.,CT_HumanitarianAid
+Cargo_WoundDressings,SAC Fibres,CT_WoundDressings
+Cargo_Anaesthetics,Anaesthetics,CT_Anaesthetics
+Cargo_Antibiotics,Antibiotics,CT_Antibiotics
+Cargo_Antispetics,Antiseptics,CT_Antiseptics
+Cargo_Immunosuppressives,ImmunoSupps,CT_Immunosuppressives
+Cargo_MedicalDrugs,Medical Drugs,CT_MedicalDrugs
+Cargo_Vaccines,Vaccines,CT_Vaccines
+Cargo_AntiAgingTreatments,Anti-aging Drugs,CT_AntiAgingTreatments
+Cargo_RejuvenationTratments,Rejuve Treatments,CT_RejuvenationTratments
+Cargo_PainKillers,Pain Killers,CT_PainKillers
+Cargo_EmergencySpaceSuits,Crisis Vac Suits,CT_EmergencySpaceSuits
+Cargo_PersonalGasJets,SAC Substrates,CT_PersonalGasJets
+Cargo_SpaceSuits,Vac Suits,CT_SpaceSuits
+Cargo_SuitPatches,SAC Solids,CT_SuitPatches
+Cargo_SurvivalBubbles,SAC Fluids,CT_SurvivalBubbles
+Cargo_SurvivalPacks,SAA Fibres,CT_SurvivalPacks
+Cargo_SurvivalCloaks,SAA Substrates,CT_SurvivalCloaks
+Cargo_EmergencyHeaters,SAA Solids,CT_EmergencyHeaters
+Cargo_FieldGenerators,Field Generators,CT_FieldGenerators
+Cargo_ReactorParts,Reactor Parts,CT_ReactorParts
+Cargo_ReactorSpares,Reactor Spares,CT_ReactorSpares
+Cargo_ReactorTargets,Reactor Targets,CT_ReactorTargets
+Cargo_FissionGenerators,Fission Generators,CT_FissionGenerators
+Cargo_FusionGenerators,Fusion Generators,CT_FusionGenerators
+Cargo_Batteries,Batteries,CT_Batteries
+Cargo_SolarPanels,Solar Panels,CT_SolarPanels
+Cargo_Solettas,SAA Fluids,CT_Solettas
+Cargo_AtmosphericScrubbers,Atmos Scrubbers,CT_AtmosphericScrubbers
+Cargo_PlanetHeaters,Planet Heaters,CT_PlanetHeaters
+Cargo_CFCGenerators,CFC Generators,CT_CFCGenerators
+Cargo_HydroponicsEquipment,Hydroponics Kits,CT_HydroponicsEquipment
+Cargo_Biovators,Biovators,CT_Biovators
+Cargo_AgriHarvestors,Agri Harvestors,CT_AgriHarvestors
+Cargo_Tractors,Tractors,CT_Tractors
+Cargo_TractorParts,Tractor Parts,CT_TractorParts
+Cargo_Aerodynes,Aerodynes,CT_Aerodynes
+Cargo_Aircars,Aircars,CT_Aircars
+Cargo_Dirigibles,Dirigibles,CT_Dirigibles
+Cargo_GroundCars,Ground Cars,CT_GroundCars
+Cargo_ConstructionVehicles,Construction ATVs,CT_ConstructionVehicles
+Cargo_Hovercars,Hovercars,CT_Hovercars
+Cargo_Hovercraft,Hovercraft,CT_Hovercraft
+Cargo_Rotorcraft,Rotorcraft,CT_Rotorcraft
+Cargo_Trucks,Trucks,CT_Trucks
+Cargo_LasTanks,SRC Fibres,CT_LasTanks
+Cargo_Lathes,SRC Substrates,CT_Lathes
+Cargo_MicroengineeringTools,MicroEng Tools,CT_MicroengineeringTools
+Cargo_Drillers,Drillers,CT_Drillers
+Cargo_HabitationPods,Habitation Pods,CT_HabitationPods
+Cargo_HousingModules,Housing Modules,CT_HousingModules
+Cargo_LifeSupportSystems,Enviro Systems,CT_LifeSupportSystems
+Cargo_StationComponents,Station Components,CT_StationComponents
+Cargo_PrefabricatedStationModules,Prefab Modules,CT_PrefabricatedStationModules
+Cargo_StationConnectors,Station Connectors,CT_StationConnectors
+Cargo_PrefabricatedHousing,Prefab Housing,CT_PrefabricatedHousing
+Cargo_Recyclers,Recyclers,CT_Recyclers
+Cargo_VaccumeDomes,Vaccuum Domes,CT_VaccumeDomes
+Cargo_ArmourPatches,Armour Patches,CT_ArmourPatches
+Cargo_ArmourPlates,Armour Plates,CT_ArmourPlates
+Cargo_Hullplates,Hullplates,CT_Hullplates
+Cargo_HullRepairKits,Hull Repair Kits,CT_HullRepairKits
+Cargo_Conduits,Conduits,CT_Conduits
+Cargo_FloorGrids,Floor Grids,CT_FloorGrids
+Cargo_GravGrids,Grav Grids,CT_GravGrids
+Cargo_Wiring,SRC Solids,CT_Wiring
+Cargo_EarthMovers,Earth Movers,CT_EarthMovers
+Cargo_HandDrills,Hand Drills,CT_HandDrills
+Cargo_LaserDrills,Laser Drills,CT_LaserDrills
+Cargo_MiningDisplacers,Mining Displacers,CT_MiningDisplacers
+Cargo_MiningDrones,Mining Drones,CT_MiningDrones
+Cargo_VehicleDrills,Vehicle Drills,CT_VehicleDrills
+Cargo_Rubble,SRC Fluids,CT_Rubble
+Cargo_Aggregates,SRA Fibres,CT_Aggregates
+Cargo_RockDust,SRA Substrates,CT_RockDust
+Cargo_Sand,SRA Solids,CT_Sand
+Cargo_NeutroniumOre,Neutronium Ore,CT_NeutroniumOre
+Cargo_GoldOre,SRA Fluids,CT_GoldOre
+Cargo_Ore,Int. Fibres,CT_CommonOre
+Cargo_SilverOre,Int. Substrates,CT_SilverOre 
+Cargo_PlatinumOre,Int. Fluids,CT_PlatinumOre
+Cargo_RadioactiveOre,Int. Solids,CT_RadioactiveOre
+Cargo_UnprocessedGas,Int. Semi-Org.,CT_UnprocessedGas
+Cargo_Air,Int. Bio-Inorg.,CT_Air
+Cargo_Helium3,Int. Enzymatics,CT_Helium3
+Cargo_BlockIce,Adv. NanoFibres,CT_BlockIce
+Cargo_CrushedIce,Adv. NanoSubstr.,CT_CrushedIce
+Cargo_DirtyIce,Adv. NanoSolids,CT_DirtyIce
+Cargo_Water,Adv. NanoFluids,CT_DeionisedWater
+,,CT_Carbon
+,,CT_Nitrates
+,,CT_Oxygen
+,,CT_Phosphates
+,,CT_Sulphur
+,,CT_Alkalines
+,,CT_Sodium
+,,CT_Phosphides
+,,CT_Sulfides
+,,CT_Tellurides
+,,CT_InorganicAcids
+,,CT_Intermetallics
+,,CT_BattleScrap
+,,CT_CompactedScrapMetal
+,,CT_MisCasts
+,,CT_ScrapMetal
+,,CT_Gold
+,,CT_Platinum
+,,CT_Silver
+,,CT_MetalBars
+,,CT_MetalBillets
+,,CT_MetalRods
+,,CT_Wire
+,,CT_Rivets
+,,CT_RadioactiveWaste
+,,CT_Uranium
+,,CT_Plutonium
+,,CT_FissionInitiators
+,,CT_Neutronium
+,,CT_ExoticMetals
+,,CT_RareMetals
+,,CT_FeedStock
+,,CT_PressurisedHydrocarbonGas
+,,CT_Oil
+,,CT_Petroleum
+,,CT_PlasticBars
+,,CT_PlasticBlocks
+,,CT_PlasticCables
+,,CT_PlasticGel
+,,CT_PlasticPellets
+,,CT_LiquifiedFuel
+,,CT_LiquifiedFusionPremix
+,,CT_BoosterAgent
+,,CT_FuelPellets
+,,CT_FuelRods
+,,CT_FloorPlates
+,,CT_Girders
+,,CT_WallPlates
+,,CT_BeanstalkWire
+,,CT_FoamMetal
+,,CT_MacroCrystallineMetals
+,,CT_Monowire
+,,CT_HeavyGirders
+,,CT_CutGemstones
+,,CT_IndustrialGemstones
+,,CT_UncutGemstones
+,,CT_AntimatterContainers
+,,CT_Antimatter
+,,CT_AntimatterPods
+,,CT_APCs
+,,CT_TurretFighter
+,,CT_RemoteFighter
+,,CT_ArtilleryFVs
+,,CT_FireSupportFVs
+,,CT_GravTanks
+,,CT_HoverTanks
+,,CT_Tanks
+,,CT_TankParts
+,,CT_AntimatterFuses
+,,CT_TwinPackMissileLauncher
+,,CT_LDSiShortMissiles
+,,CT_LDSiShortMissile
+,,CT_Flares
+,,CT_Flare
+,,CT_SeekerMissiles
+,,CT_SeekerMissile
+,,CT_HarrowerMissiles
+,,CT_HarrowerMissile
+,,CT_GnatRockets
+,,CT_GnatRocket
+,,CT_HammerRockets
+,,CT_HammerRocket
+,,CT_LDSiMissiles
+,,CT_LDSiMissile
+,,CT_MiningCharges
+,,CT_MiningCharge
+,,CT_TripackMissileLauncher
+,,CT_BlizzardRocketPod
+,,CT_BlizzardRocket
+,,CT_RemoteProbes
+,,CT_RemoteProbe
+,,CT_RemoteMissiles
+,,CT_RemoteMissile
+,,CT_DeadshotMissiles
+,,CT_DeadshotMissile
+,,CT_LDSi3000Missiles
+,,CT_LDSi3000Missile
+,,CT_QuadpackMissileLauncher
+,,CT_DeathblowRemote
+,,CT_DeathblowRemoteMissile
+,,CT_AntimatterRemote
+,,CT_AntimatterRemoteMissile
+,,CT_InternalMissileMagazine
+,,CT_DisruptorMissiles
+,,CT_DisruptorMissile
+,,CT_SmartDecoy
+,,CT_SmartDecoyCountermeasure
+,,CT_Decoys
+,,CT_Decoy
+,,CT_PulsarDisruptors
+,,CT_PulsarDisruptor
+,,CT_HullMissileHardPoint
+,,CT_AchillesShieldDisruptors
+,,CT_AchillesShieldDisruptor
+,,CT_ProximityMines
+,,CT_ProximityMine
+,,CT_AntimatterMines
+,,CT_AntimatterMine
+,,CT_LDSIMines
+,,CT_LDSIMine
+,,CT_SeekerMines
+,,CT_SeekerMine
+,,CT_LDSIWarheads
+,,CT_MissileParts
+,,CT_MissileThrusters
+,,CT_MissileWarheads
+,,CT_CombatPowersuits
+,,CT_SidearmClips
+,,CT_BattlePacks
+,,CT_Explosives
+,,CT_Grenades
+,,CT_HandWeapons
+,,CT_ManpackMissiles
+,,CT_BiologicalWeaponsAgents
+,,CT_ChemicalWeaponsAgents
+,,CT_NeutronWarheads
+,,CT_DirtyFissionWarheads
+,,CT_HostileTerraformingAgents
+,,CT_NanotechWeapons
+,,CT_AcceleratorRings
+,,CT_NeutronBeamCannon
+,,CT_WeaponLinkHardware
+,,CT_CommunicationsLaser
+,,CT_TrackingComputer
+,,CT_ParticleBeamCannon
+,,CT_MiningLasers
+,,CT_AssaultCannon
+,,CT_AssaultCannonAmmo
+,,CT_AssaultCannonAmmoRound
+,,CT_LightPBC
+,,CT_CooledPBC
+,,CT_RapidFirePBC
+,,CT_LongRangeCannon
+,,CT_CuttingBeam
+,,CT_WideanglePBC
+,,CT_EnhancedAimPBC
+,,CT_QuadLightPBC
+,,CT_HeavyBeamCannon
+,,CT_LongRangeCannonAmmo
+,,CT_LongRangeCannonAmmoRound
+,,CT_TargetedPBC
+,,CT_AssaultCannonRingModel
+,,CT_PulseAcceleratedPBC
+,,CT_AntimatterParticleBeam
+,,CT_AntimatterStreamer
+,,CT_Accumulators
+,,CT_PointDefenceTurret
+,,CT_FireControlSensors
+,,CT_PBCAccelerators
+,,CT_PlasmaStorageRings
+,,CT_GatlingPBCs
+,,CT_HeavyPBCs
+,,CT_LightPBCs
+,,CT_PBCs
+,,CT_MeteorShield
+,,CT_Level1AutorepairSystem
+,,CT_DefenceShield
+,,CT_Level2AutorepairSystem
+,,CT_RepairControlProgram
+,,CT_LightDefenceShield
+,,CT_InstantShieldControl
+,,CT_ReactorHardening
+,,CT_ArmouredHullPlates
+,,CT_Level3Autorepairsystem
+,,CT_LowSignatureHullplates
+,,CT_MilitaryShields
+,,CT_ShieldSynchroniser
+,,CT_Level4Autorepairsystem
+,,CT_CombatShields
+,,CT_MilitaryAggressorShields
+,,CT_AggressorShieldUpgrade
+,,CT_MinersShield
+,,CT_Level5Autorepairsystem
+,,CT_ParticleScreenShieldUpgrade
+,,CT_AssaultShield
+,,CT_PowerPlantAutorepair
+,,CT_ShieldBooster
+,,CT_AdvancedHullMaterialRefit
+
+Cargo_Hydrocarbons,Actinium
+Cargo_ConsumerGoods,Liq. CarbonFull.
+Cargo_Pharmaceuticals,Pharmaceuticals
+Cargo_Accumulators,Accumulators
+Cargo_MiningCharges,Mining Charges

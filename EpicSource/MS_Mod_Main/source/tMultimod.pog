@@ -1,0 +1,495 @@
+//
+// (c) 1999-2000 Particle Systems Ltd. All Rights Reserved
+//
+// package iMultimod
+// 
+// Allows initialisation of multiple script mods.
+//
+// Revision control information:
+//
+// $Header: c:/epic/cvs/EpicSource/MS_Mod_Main/source/tMultimod.pog,v 1.3 2006/03/28 13:28:53 Owner Exp $
+//
+
+// Package name
+package tMultimod;
+
+// Imports ////////////////////////////////////////////////////////////////////
+// these are the packages we're going to use
+
+uses 
+	Debug,
+	iMod,
+	INIFile,
+	String,
+	Task;
+
+// Exports ////////////////////////////////////////////////////////////////////
+// these are the functions that are going to be called from other packages
+// n.b. these start with uppercase letters, no underscores
+
+provides
+	
+	GameEnter,
+	SessionEnter,
+	SessionExit,
+	BaseEnter,
+	BaseExit,
+	SpaceEnter,
+	SpaceFinalSetup,
+	SpaceExit,
+	SystemEnter,
+	SystemExit,
+        SaveGame,
+        DayUpdate,
+        PlayerDocked,
+        PlayerUndocked,
+	TestFunction;
+
+
+
+// Local functions ////////////////////////////////////////////////////////////
+// these are definitions of local calls found under the main routine
+
+// Run mod game enter scripts.
+prototype GameEnter();											
+
+// Run mod game session enter scripts.
+prototype SessionEnter();											
+
+// Run mod game session exit scripts.
+prototype SessionExit();												
+
+// Run mod base enter scripts.
+prototype BaseEnter();													
+
+// Run mod base exit scripts.
+prototype BaseExit();													
+
+// Run mod space enter scripts.
+prototype SpaceEnter();													
+
+// Run mod space final setup scripts.
+prototype SpaceFinalSetup();											
+
+// Run mod space exit scripts.
+prototype SpaceExit();													
+
+// Run mod system enter scripts.
+prototype SystemEnter();											
+
+// Run mod system exit scripts.
+prototype SystemExit();	
+
+// Run mod save game scripts
+prototype SaveGame();
+
+// a full game day has passed.
+prototype DayUpdate();
+
+// player undocks from a station
+prototype PlayerDocked();
+
+// player docks to a station
+prototype PlayerUndocked();
+
+// Test function for the package.
+prototype TestFunction();
+
+// Run specified mod scripts.
+prototype run_mod_scripts( string entry );				
+
+// Get the script function for a particular entry
+prototype string get_script_function( string mod_name, string entry );
+	
+
+// *********************************************
+// CODE BEGINS HERE
+// *********************************************
+
+
+// Wrapper functions
+
+
+// *********************************************
+// * GameEnter()
+// *
+// * Run mod game enter scripts.
+// *********************************************
+
+GameEnter()
+{
+
+	debug Debug.PrintString( "iMultimod.GameEnter: CALLED\n" ); 
+	run_mod_scripts( "start_new_game" );
+
+
+} // GameEnter
+
+
+// *********************************************
+// * SessionEnter()
+// *
+// * Run session enter scripts.
+// *********************************************
+
+SessionEnter()
+{
+	debug Debug.PrintString( "iMultimod.SessionEnter: CALLED\n" ); 
+	run_mod_scripts( "start_session" );
+
+} // SessionEnter
+
+
+
+// *********************************************
+// * SessionExit()
+// *
+// * Run session exit scripts.
+// *********************************************
+
+SessionExit()
+{
+
+	debug Debug.PrintString( "iMultimod.SessionExit: CALLED\n" ); 
+	run_mod_scripts( "end_session" );
+
+
+} // SessionExit
+
+
+
+// *********************************************
+// * BaseEnter()
+// *
+// * Run base enter scripts.
+// *********************************************
+
+BaseEnter()
+{
+	debug Debug.PrintString( "iMultimod.BaseEnter: CALLED\n" ); 
+	run_mod_scripts( "enter_base" );
+
+} // BaseEnter
+
+
+
+// *********************************************
+// * BaseExit()
+// *
+// * Run base exit scripts.
+// *********************************************
+
+BaseExit()
+{
+
+	debug Debug.PrintString( "iMultimod.BaseExit: CALLED\n" ); 
+	run_mod_scripts( "exit_base" );
+
+
+} // BaseExit
+
+
+
+// *********************************************
+// * SpaceEnter()
+// *
+// * Run space enter scripts.
+// *********************************************
+
+SpaceEnter()
+{
+
+	debug Debug.PrintString( "iMultimod.SpaceEnter: CALLED\n" ); 
+	run_mod_scripts( "enter_space" );
+
+} // SpaceEnter
+
+
+
+// *********************************************
+// * SpaceFinalSetup()
+// *
+// * Run space final setup scripts.
+// *********************************************
+
+SpaceFinalSetup()
+{
+
+	debug Debug.PrintString( "iMultimod.SpaceFinalSetup: CALLED\n" ); 
+	run_mod_scripts( "final_setup" );
+
+
+} // SpaceFinalSetup
+
+
+// *********************************************
+// * SpaceExit()
+// *
+// * Run space exit scripts.
+// *********************************************
+
+SpaceExit()
+{
+
+	debug Debug.PrintString( "iMultimod.SpaceExit: CALLED\n" ); 
+	run_mod_scripts( "exit_space" );
+
+
+} // SpaceExit
+
+
+
+// *********************************************
+// * SystemEnter()
+// *
+// * Run system enter scripts.
+// *********************************************
+
+SystemEnter()
+{
+
+	debug Debug.PrintString( "iMultimod.SystemEnter: CALLED\n" ); 
+	run_mod_scripts( "enter_system" );
+
+} // SystemEnter
+
+
+
+// *********************************************
+// * SystemExit()
+// *
+// * Run system exit scripts.
+// *********************************************
+
+SystemExit()
+{
+
+	debug Debug.PrintString( "iMultimod.SystemExit: CALLED\n" ); 
+	run_mod_scripts( "exit_system" );
+
+} // SystemExit
+
+// *********************************************
+// * SaveGame()
+// *
+// * Run scripts that need to save something
+// *********************************************
+
+SaveGame()
+{
+
+	debug Debug.PrintString( "iMultimod.SaveGame: CALLED\n" ); 
+	run_mod_scripts( "save_game" );
+
+} // SaveGame
+
+
+// *********************************************
+// * DayUpdate()
+// *
+// * Run scripts when a full game day has passed
+// *********************************************
+
+DayUpdate()
+{
+
+	debug Debug.PrintString( "iMultimod.DayUpdate: CALLED\n" ); 
+	run_mod_scripts( "day_update" );
+
+} // DayUpdate
+
+
+// *********************************************
+// * PlayerDocked
+// *
+// * Run scripts when player docks to the nearest station
+// *********************************************
+
+PlayerDocked()
+{
+
+	debug Debug.PrintString( "iMultimod.PlayerDocked: CALLED\n" ); 
+	run_mod_scripts( "player_docked" );
+
+} // DayUpdate
+
+
+
+// *********************************************
+// * PlayerUndocked
+// *
+// * Run scripts when player undockes from nearest station
+// *********************************************
+
+PlayerUndocked()
+{
+
+	debug Debug.PrintString( "iMultimod.PlayerUndock: CALLED\n" ); 
+	run_mod_scripts( "player_undocked" );
+
+} // DayUpdate
+
+// *********************************************
+// * TestFunction()
+// *
+// * A dummy function to use as a test.
+// *********************************************
+
+TestFunction()
+{
+
+	debug Debug.PrintString( "iMultimod.TestFunction: Test function called.\n" ); 
+
+} // TestFunction
+
+
+// Mod reading functions
+
+// *************************************************
+// * run_mod_scripts( string section, string entry )
+// *
+// * Run scripts for any mod that has a valid entry.
+// *************************************************
+
+run_mod_scripts( string entry )
+{
+
+	int number_of_mods = iMod.Count();	// Number of mods found.
+	string mod_name;					// Actual name of the mod.
+	string script_function;				// the script function to use.
+	int count;							// Counter
+
+	
+	// If there are no mods then we might as well quit
+
+	if ( number_of_mods == 0 )
+	{
+		debug Debug.PrintString( "iMultimod.run_mod_scripts: No mods to process.\n" );
+		return;
+	}
+
+/*
+	debug
+	{
+		Debug.PrintString( "iMultimod.run_mod_scripts: Checking " );
+		Debug.PrintInt( number_of_mods );
+		Debug.PrintString( " mods for scripts to run for \"" );
+		Debug.PrintString( entry );
+		Debug.PrintString( "\"\n" );	
+	}
+*/
+
+
+	// Iterate through the mods
+	for ( count = 0 ; count < number_of_mods ; ++count )
+	{
+		// Get the mod name.
+		mod_name = iMod.Name( count );
+	/*
+		debug
+		{
+			Debug.PrintString( "iMultimod.run_mod_scripts: Processing Mod " );
+			Debug.PrintInt( count );
+			Debug.PrintString( ": " );
+			Debug.PrintString( mod_name );
+			Debug.PrintString( "\n" );
+		}
+*/
+		// Get the script function for the mod.
+		script_function = get_script_function( mod_name, entry );
+
+		// If the script function is valid, call it.		
+		if ( script_function != "NONE" )
+		{
+         /*
+			debug Debug.PrintString( "iMultimod.run_mod_scripts: Calling script - " );
+			debug Debug.PrintString( script_function );
+			debug Debug.PrintString( "\n" );
+*/
+			Task.Call( script_function );
+		}
+
+	} // End for
+
+} // run_mod_scripts
+
+
+// *************************************************************
+// * string get_script_function( string mod_name,
+// *							 string entry );
+// *
+// * Get a script function for the specified section and entry
+// *************************************************************
+
+string get_script_function( string mod_name, string entry )
+{
+
+	hinifile mod_ini = INIFile.Create( String.Join( "ini:/", mod_name ) );
+	string script_function;
+
+	//debug Debug.PrintString( "iMultimod.get_script_function: " );
+
+	// Check the mod inifile handle is valid. If not it doesn't exist.
+	if ( ! mod_ini )
+	{
+
+		//debug Debug.PrintString( " Mod inactive or INI File " );
+	  // debug Debug.PrintString( mod_name );
+		//debug Debug.PrintString( ".ini not present.\n" );
+
+		// Return the default value.
+		return "NONE";
+	
+	}
+
+
+	//debug Debug.PrintString( "Opened mod INI file - " );
+	//debug Debug.PrintString( mod_name );
+	//debug Debug.PrintString( ".ini. " );
+
+
+	// Check that the required section exists
+	if ( INIFile.Exists( mod_ini, "Multimod", entry ) )
+	{
+		// It does exist so get the entry.
+		script_function = INIFile.String( mod_ini, "Multimod", entry, "" );
+
+
+		debug
+		{
+			if ( script_function == "" )
+			{
+		
+				//Debug.PrintString( "Entry found, but no script call specified.\n" );
+				script_function = "NONE";
+			
+			}
+			else
+			{
+				Debug.PrintString( "Script function = " );
+				Debug.PrintString( script_function );
+				Debug.PrintString( "\n" );
+			}
+		}
+
+	}
+	else
+	{
+		//debug Debug.PrintString( "Entry not found.\n" );
+		
+		script_function = "NONE";
+	
+	}
+	
+
+	// Close the INI file
+	INIFile.Destroy( mod_ini );
+
+
+	// Return the script function value.
+	return script_function;
+
+} // string get_script_function
+
+
+// EOF ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

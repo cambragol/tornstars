@@ -1,0 +1,413 @@
+/*******************************************************************************************/
+//
+// tsFoProtection.pog
+// 
+// Torn Stars Fleet Operation Protection
+// 
+// This function implements the decision making intellegence of an
+// Protection type of Fleet Operation.
+// 
+// March 2006
+//******************************************************************************************/
+
+package tsFoProtection;
+
+
+uses  Sim,
+iSim,
+Debug,
+Global,
+iGame,
+iFaction,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+State,
+Text,
+Math,
+iShip,
+iHabitat,
+iMapEntity,
+   iLagrangePoint,
+   iHUD,
+   iComms,
+   tStationEnum,
+   tStation,
+   tEFaction,
+   tTime,
+   tUnderOp,
+   tLCenter,
+   tLProduction,
+   tLFleet,
+   tStationFilter,
+   tShipName,
+   tEShipCreation,
+   tsFleetOpCombat,
+   tsDebug;
+
+
+
+
+provides New,
+         Save,
+         Restore,
+         Update;
+
+
+
+prototype bool is_production(hmapentity center);
+
+prototype hhabitat find_production_station(hisim operation, hmapentity center, string system_name);
+
+prototype hlagrangepoint find_lpoint(hisim operation, hmapentity center, string system_name);
+
+prototype hhabitat find_non_dislike_station(hisim operation, hmapentity center, string system_name);
+
+//*******************************************************************************************/         
+//
+//*******************************************************************************************/
+
+
+
+
+New(hisim operation)
+{
+   string ship_name, ship_template;
+   hfaction faction;
+
+   faction = iSim.Faction(operation);
+
+   // We pick an underworld name for ourselves. 
+   // using a large number means we get a random name.
+   ship_name = tShipName.ShipName("underworld", 10000);
+
+   // Also pick a large freighter for collecting player sales.
+   ship_template = tEShipCreation.GetShip(faction, EST_CombatLight);
+
+   tUnderOp.SetName(operation, ship_name);
+   tUnderOp.SetShipTemplate(operation, ship_template);
+
+   // This is an protection op, so we set enough fleets for the 
+   // freighter and 2 tugs escort. Fleets use threat value for points.
+   tLFleet.SetFleets(operation, 400);
+   tLFleet.SetMaxFleets(operation, 400);
+}
+
+
+
+Save(hisim operation)
+{
+   // Nothing to save for this operation type.
+
+
+}
+
+
+
+Restore(hisim operation)
+{
+   // Nothing to restore for this operation type.
+
+
+}
+
+
+
+Update(hisim operation)
+{
+   hmapentity center = tLCenter.GetCenter(operation);
+   hhabitat target_station, supporter_station;
+   bool hostiles, wounded, dying, out_gunned, home;
+   bool move_home, move_safe, stay_still;
+   list local_operations;
+   hisim visitor;
+   hfaction faction, visitor_faction;
+   int i, total;
+   int total_hostiles, hostile_fleets, fleets;
+   int update_delay = 1;
+   hlagrangepoint lpoint;
+
+
+   debug tsDebug.PrintString("tsfoprotection_debug",
+                                String.FormatStrStr("tsFoProtection %s update\n%s",
+                                                    Text.Field(tUnderOp.Name(operation),FT_Text),
+                                                    ""));
+   
+   faction = iSim.Faction(operation);
+
+
+   local_operations = tUnderOp.StationOperations(center);
+   List.Remove(local_operations, operation);
+   total = List.ItemCount(local_operations);
+
+   hostiles = false;
+   total_hostiles = 0;
+
+   for (i=0;i<total;++i) {
+      visitor = iSim.Cast(List.GetNth(local_operations,i));
+      visitor_faction = iSim.Faction(visitor);
+
+      if (iFaction.Feeling(visitor_faction, faction) < -0.2) {
+         // There are hostile forces at this station
+         fleets = tLFleet.Fleets(operation);
+         hostile_fleets = tLFleet.Fleets(operation);
+
+         if (fleets > hostile_fleets) {
+            // We have the advantage, pound them.
+            tsFleetOpCombat.Offense(center, operation, visitor);
+         }else {
+            // We are outnumbered, so switch to evasive tactics.
+            tsFleetOpCombat.Defense(center, operation, visitor);
+         }
+         // Remember this total, so we can choose to flee later.
+         total_hostiles += hostile_fleets;
+         hostiles = true;
+      }
+   }
+
+
+   fleets = tLFleet.Fleets(operation);
+
+   if (fleets == 0) {
+      // Ouch, we died.
+      debug tsDebug.PrintString("tsfoprotection_debug",
+                                String.FormatStrStr("tsFoProtection %s died\n%s",
+                                                    Text.Field(tUnderOp.Name(operation),FT_Text),
+                                                    ""));
+
+      tUnderOp.DestroyOp(operation);
+      return;
+   }
+
+   // Are we damaged
+   if (fleets < tLFleet.MaxFleets(operation)) {
+      wounded = true;
+   }else {
+      wounded = false;
+   }
+
+   // Are we dying? Anything over half damage for protection operations.
+   if (fleets < (tLFleet.MaxFleets(operation)/2)) {
+      dying = true;
+   }else {
+      dying = false;
+   }
+
+   // Check if we are outnumbered.
+   if (fleets < total_hostiles) {
+      out_gunned = true;
+   }else {
+      out_gunned = false;
+   }
+
+
+   supporter_station = tUnderOp.Supporter(operation);
+
+   // Are we home?
+   if (center == iMapEntity.Cast(supporter_station)) {
+      home = true;
+   }else {
+      home = false;
+   }
+
+
+   // Repair some fleets. Double rate if at home.
+   if (home) {
+      tLFleet.ChangeFleets(operation, 20 * update_delay);
+   }else {
+      tLFleet.ChangeFleets(operation, 10 * update_delay);
+   }
+
+
+   move_home = false;
+   move_safe = false;
+   stay_still = false;
+
+   if (dying && !home) {
+      // Badly hurt, flee home.
+      move_home = true;
+   }else if (wounded && home) {
+      // Stay here to heal.
+      stay_still = true;
+   }else if (out_gunned) {
+      // Retreat to a safe place.
+      move_safe = true;
+   }
+
+
+
+   // Otherwise, pick a place to earn funds.
+   if (move_home) {
+
+      tLCenter.SetCenter(operation, supporter_station);
+
+      debug {
+         tsDebug.PrintString("tsfoprotection_debug",
+                             String.FormatStrStr("tsFoProtection %s moving home\n%s",
+                                                 Text.Field(tUnderOp.Name(operation),FT_Text),
+                                                 ""));
+         tsDebug.PrintHandle("tsfoprotection_debug",supporter_station);
+         tsDebug.PrintString("tsfoprotection_debug"," supporter station\n");
+      }
+
+   }else if (move_safe) {
+
+      target_station = find_non_dislike_station(operation, center, iSim.WorldName(center));
+
+      if (none != target_station) {
+         // To move an operation, we just move the center.
+         tLCenter.SetCenter(operation, target_station);
+
+         debug {
+            tsDebug.PrintString("tsfoprotection_debug",
+                                String.FormatStrStr("tsFoProtection %s moving to safety\n%s",
+                                                    Text.Field(tUnderOp.Name(operation),FT_Text),
+                                                    ""));
+            tsDebug.PrintHandle("tsfoprotection_debug",target_station);
+            tsDebug.PrintString("tsfoprotection_debug"," new station\n");
+         }
+      }
+
+   }else if (!stay_still){
+      
+      // Check if we are on a production station or an lpoint we can haunt.
+      // If not, pick a new location.
+      if ((T_LagrangePoint != iSim.Type(center)) && (!is_production(center))) {
+
+         lpoint = find_lpoint(operation, center, iSim.WorldName(center));
+
+         if (none != lpoint) {
+            // If there is an empty lpoint, take it.
+            tLCenter.SetCenter(operation, lpoint);
+
+            debug {
+               tsDebug.PrintString("tsfoprotection_debug",
+                                   String.FormatStrStr("tsFoProtection %s moving to lpoint\n%s",
+                                                       Text.Field(tUnderOp.Name(operation),FT_Text),
+                                                       ""));
+               tsDebug.PrintHandle("tsfoprotection_debug",lpoint);
+               tsDebug.PrintString("tsfoprotection_debug"," \n");
+            }
+         }else {
+            // Look for a station.
+            target_station = find_production_station(operation, center, iSim.WorldName(center));
+
+            if (none != target_station) {
+               // To move an operation, we just move the center.
+               tLCenter.SetCenter(operation, target_station);
+
+               debug {
+                  tsDebug.PrintString("tsfoprotection_debug",
+                                      String.FormatStrStr("tsFoProtection %s moving to production\n%s",
+                                                          Text.Field(tUnderOp.Name(operation),FT_Text),
+                                                          ""));
+                  tsDebug.PrintHandle("tsfoprotection_debug",target_station);
+                  tsDebug.PrintString("tsfoprotection_debug"," new station\n");
+               }
+            }
+            // Nothing presents itself, defer move to next cycle.
+         }
+      }
+   }
+
+   // Next update, tomorrow.
+   tUnderOp.SetWakeTimer(operation, tTime.GetDay() + update_delay);
+}
+
+
+// Return true is this location is an operating production station.
+bool is_production(hmapentity center)
+{
+   if (T_Station == iSim.Type(center)) {
+      if (ESS_Normal == tStation.Status(iHabitat.Cast(center))) {
+         if ( (ESC_Mine|ESC_Process|ESC_Manufacture) & tStation.Category(iHabitat.Cast(center))){
+
+            /*
+            debug {
+               Debug.PrintString("tsFoProtection.is_production true \n");
+               Debug.PrintHandle(center);
+               Debug.PrintString("\n");
+            }
+            */
+
+            return true;
+         }
+      }
+   }
+   return false;
+}
+
+hhabitat find_production_station(hisim operation, hmapentity center, string system_name)
+{
+   set habitats;
+
+   // Search system stations and find a production station where we can live.
+   habitats = tStationFilter.OnStatusAndCategory(iMapEntity.SystemHabitatsInSystem(system_name),
+                                                 ESS_Normal,
+                                                 (ESC_Mine|ESC_Process|ESC_Manufacture));
+
+   Set.Remove(habitats, center);
+   // We can hang out at neutral or better stations. We avoid people trying to
+   // kill us.
+   habitats = tStationFilter.OnGreaterFeeling(habitats,
+                                              iSim.Faction(operation),
+                                              tEFaction.Type2LowerLevel(FT_Neutral));
+
+   return iHabitat.Random(habitats);
+}
+
+// Move to a place to heal. Even empty stations are fine.
+hhabitat find_non_dislike_station(hisim operation, hmapentity center, string system_name)
+{
+   set habitats;
+
+   habitats = tStationFilter.OnGreaterFeeling(iMapEntity.SystemHabitatsInSystem(system_name),
+                                              iSim.Faction(operation),
+                                              tEFaction.Type2LowerLevel(FT_Neutral));
+   Set.Remove(habitats, center);
+
+   return iHabitat.Random(habitats);
+}
+
+// Return an Lpoint that is on a standard route and has no other
+// operations already located on it.
+hlagrangepoint find_lpoint(hisim operation, hmapentity center, string system_name)
+{
+   set lpoints, final_set;
+   hlagrangepoint lpoint;
+   list lpoint_ops;
+
+
+   lpoints = iMapEntity.SystemLagrangePointsInSystem(system_name);
+
+   Set.Remove(lpoints, center);
+
+   while (!Set.IsEmpty(lpoints)) {
+      lpoint = iLagrangePoint.Cast(Set.FirstElement(lpoints));
+      Set.Remove(lpoints, lpoint);
+
+      if (Object.BoolProperty(lpoint,"standard_route")) {
+
+         lpoint_ops = tUnderOp.StationOperations(iSim.Cast(lpoint));
+         if (List.IsEmpty(lpoint_ops)) {
+            Set.Add(final_set, lpoint);
+         }
+      }
+   }
+
+   if (Set.IsEmpty(final_set)) {
+      return none;
+   }
+
+   return iLagrangePoint.Cast(Set.FirstElement(final_set));
+}
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

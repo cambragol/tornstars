@@ -1,0 +1,406 @@
+//*******************************************************************************************/
+//
+// ts_StationEvent.pog
+//
+// This module reads an INI file for events it should apply to stations or operations
+// on the current day. It allows building whole story lines based on station creation
+// and destruction. The events also support sending emails or news items to the player.
+// 
+//
+// February 2006, Jon Freise
+//******************************************************************************************/
+
+package ts_StationEvent;
+
+
+uses  Sim,
+iShip,
+iSim,
+Debug,
+Global,
+GUI,
+iGame,
+iGUI,
+iHUD,
+iHabitat,
+iMapEntity,
+iLagrangePoint,
+iFaction,
+iAI,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+State,
+Text,
+iUtilities,
+iCargo,
+iInventory,
+iComms,
+Math,
+iPilotSetup,
+iMusic,
+iMod,
+iShipCreation,
+iDockport,
+UniGUI,
+tTime,
+tEFaction,
+   tMail,
+   tShipMail,
+   tNewsNet,
+   tStationEnum,
+   tStation,
+   tEconUtil,
+   tUnderOp,
+   tLProduction;
+
+
+
+
+provides DayUpdate;
+
+
+
+
+
+// Operation event types used to 
+// add or remove operations.
+enum eOpEvent{
+   EOE_Invalid =0,
+   EOE_Add=1,
+   EOE_Remove=2
+};
+
+
+prototype eOpEvent String2OpEvent(string event_name);
+
+prototype handle_script(string event_file_name, int offset, bool test_run);
+
+/*
+
+[EventList]
+item[0]="NameOfEvent"
+send_day[0]=1
+
+[NameOfEvent]
+station_name=
+system_name=
+faction=
+station_event="ESS_Building"
+
+;Use these to change standing to a new level.
+second_faction=
+faction_standing=
+
+; Use these to tell the player they 
+news_sender=
+news_subject=
+news_html=
+
+
+
+Station Event Types
+
+   ESS_Destroyed: Station is only debris field.
+   ESS_Empty:     Station exists, but abandond.
+   ESS_Building:  Station under construction.
+   ESS_Normal:    Station intact and operating.
+   ESS_Leaving:   Station is being abandond.
+   ESS_Fleeing:   Station was destroyed, survivors fleeing.
+   ESS_NeverBuilt: Station has not yet been created.
+
+
+
+
+*/
+
+    // File structure
+
+// [News]
+// item[0]="NameOfNewsItem"
+
+// name must not have spaces
+// [NameOfNewsItem]
+// send_day=1
+// subject="subject line text in quote"
+// sender="sender line text"
+// html_file="html:/html/news/news1"
+
+
+DayUpdate()
+{
+
+   handle_script("ini:/cluster_events", 0, true);
+
+}
+
+
+
+// test_run will execute all events on the current day if set to true.
+// allows unit testing the scripts.
+handle_script(string event_file_name, int offset, bool test_run)
+{
+   hinifile event_file = INIFile.Create(event_file_name);
+   string station_name, system_name;
+   string event_name, op_event_name, op_type_name;
+
+   string email_sender, email_subject, email_html;
+   string news_sender, news_subject, news_html;
+   string item_name;
+   string faction_name;
+
+   int count, send_day, i, total;
+   int event, op_event, op_type;
+   int current_day = tTime.GetDay() + offset;
+
+   hisim location;
+   hisim operation;
+   hfaction faction;
+
+   hsim news_archive;
+
+   bool success;
+
+   list operations;
+
+
+
+
+
+   if (none == event_file) {
+      debug {
+         Debug.PrintString(event_file_name);
+         Debug.PrintString(" error cannot create event file\n");
+      }
+      return;
+   }
+
+
+   news_archive = tMail.FindArchive("Network54");
+   if (none == news_archive)
+   {
+      debug Debug.PrintString("ts_StationEvent.handle_script error news archive does not exist.\n");
+      return;
+   }
+
+
+
+   count=0;
+   while (INIFile.NumberedExists(event_file,"EventList","item",count))
+   {
+      item_name = INIFile.NumberedString(event_file,"EventList","item",count,"none");
+      send_day = INIFile.NumberedInt(event_file,"EventList","send_day",count,0);      
+
+      ++count;
+
+      success = false;
+
+      if (((0 != send_day) && (send_day == current_day))|| test_run) {
+
+         station_name = INIFile.String(event_file, item_name, "station", "none");
+         system_name = INIFile.String(event_file, item_name, "system", "none");
+
+         location = iSim.FindByNameInSystem(station_name, system_name);
+
+         if (none == location) {
+            debug {
+               Debug.PrintString(station_name);
+               Debug.PrintString(" station\n");
+               Debug.PrintString(system_name);
+               Debug.PrintString(" system\n");
+               Debug.PrintString(" not found in game error\n");
+            }
+         }
+
+         faction_name = INIFile.String(event_file, item_name, "faction", "none");
+
+         second_faction_name = INIFile.String(event_file, item_name, "second_faction", "none");
+
+         faction_standing = INIFile.String(event_file, item_name, "set_standing", "none");
+
+
+         faction = tEFaction.EFind(faction_name);
+
+         second_faction = tEFaction.EFind(second_faction_name);
+
+
+         event_name = INIFile.String(event_file, item_name, "station_event", "none");
+
+         if (("none" != event_name) && (none != faction)) {
+            event = tStation.String2Status(event_name);
+
+            if (ESS_Invalid != event) {
+               // For now, we just change the status. Later, we use station rules
+               // to have other impacts on the station.
+               tStation.SetStatus(iHabitat.Cast(location), event);
+
+            }else {
+               debug {
+                  Debug.PrintString(event_name);
+                  Debug.PrintString(" invalid station event error\n");
+               }
+            }
+         }// if station event exists and needs to be handled.
+
+
+
+         // Handle the Email and News related to this event.
+         if (none != news_archive) {
+            news_subject = INIFile.String(event_file, item_name, "subject", "MissingSubject");
+            news_sender = INIFile.String(event_file, item_name, "sender", "MissingSender");
+            news_html = INIFile.String(event_file, item_name, "html_file", "html:/html/news/missing");
+
+            tMail.SendMail(news_archive, 
+                           news_sender, 
+                           news_subject, 
+                           news_html,
+                           "",      //no accept function.
+                           none,
+                           "Date", 
+                           true,   //dont save
+                           false,  //not critical
+                           true);  //always html 
+         }//
+
+
+      }// if the send day of the event matches the current day.
+   }// while more events
+
+   INIFile.Destroy(event_file);
+}
+
+
+
+
+test_script(string event_file_name)
+{
+   hinifile event_file = INIFile.Create(event_file_name);
+   string station_name, system_name;
+   string event_name, op_event_name, op_type_name;
+
+   string email_sender, email_subject, email_html;
+   string news_sender, news_subject, news_html;
+   string item_name;
+   string faction_name;
+
+   int count, send_day;
+   int event, op_event, op_type;
+
+   hisim location;
+   hfaction faction;
+
+   if (none == event_file) {
+      debug {
+         Debug.PrintString(event_file_name);
+         Debug.PrintString(" error cannot create event file\n");
+      }
+   }
+
+   count=0;
+   while (INIFile.NumberedExists(event_file,"EventList","item",count))
+   {
+      item_name = INIFile.NumberedString(event_file,"EventList","item",count,"none");
+      send_day = INIFile.NumberedInt(event_file,"EventList","send_day",count,0);      
+
+      ++count;
+
+      station_name = INIFile.String(event_file, item_name, "station", "none");
+      system_name = INIFile.String(event_file, item_name, "system", "none");
+
+      location = iSim.FindByNameInSystem(station_name, system_name);
+
+      if (none == location) {
+        debug {
+            Debug.PrintString(station_name);
+            Debug.PrintString(" station\n");
+            Debug.PrintString(system_name);
+            Debug.PrintString(" system\n");
+            Debug.PrintString(" not found in game error\n");
+         }
+      }
+
+
+      faction_name = INIFile.String(event_file, item_name, "system", "none");
+
+      faction = tEFaction.EFind(faction_name);
+
+      if (none == faction) {
+        debug {
+            Debug.PrintString(faction_name);
+            Debug.PrintString(" faction not found in game error\n");
+         }
+      }
+
+
+      event_name = INIFile.String(event_file, item_name, "station_event", "none");
+
+      if ("none" != event_name) {
+         event = tStation.String2Status(event_name);
+
+         if (ESS_Invalid == event) {
+            debug {
+               Debug.PrintString(event_name);
+               Debug.PrintString(" invalid station event error\n");
+            }
+         }
+      }
+
+      op_event_name = INIFile.String(event_file, item_name, "operation_event", "none");
+
+      if ("none" != op_event_name) {
+         op_event = String2OpEvent(op_event_name);
+
+         if (EOE_Invalid == op_event) {
+            debug {
+               Debug.PrintString(op_event_name);
+               Debug.PrintString(" invalid operation event error\n");
+            }
+         }
+      }
+
+      op_type_name = INIFile.String(event_file, item_name, "operation", "none");
+
+      if ("none" != op_type_name) {
+         op_type = tEconUtil.StationStringToEnum(op_type_name);
+
+         if (ept_Invalid == op_type) {
+            debug {
+               Debug.PrintString(op_type_name);
+               Debug.PrintString(" invalid operation type error\n");
+            }
+         }
+      }
+   }// while more events
+
+   INIFile.Destroy(event_file);
+}
+
+
+
+
+eOpEvent String2OpEvent(string event_name)
+{
+   if ("EOE_Invalid" == event_name) {
+      return EOE_Invalid;
+
+   }else if ("EOE_Add" == event_name) {
+      return EOE_Add;
+
+   }else if ("EOE_Remove" == event_name) {
+      return EOE_Remove;
+   }
+
+   return EOE_Invalid;
+}
+
+ 
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

@@ -1,0 +1,426 @@
+package UniGUIMisc;
+
+uses    Sim,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        GUI,
+        iGUI,
+        iHUD,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        iUtilities,
+        iMod,
+        UniGUI;
+
+provides Initialise,
+         UniGUIMiscScreen,
+         RunCheck,
+         RunScreen,
+         OnQuit,
+         True,
+         RunTest1,
+         RunTest2,
+         OnRun,
+         OnSelectList;
+
+prototype Initialise();
+prototype UniGUIMiscScreen();
+prototype RunCheck();
+prototype RunScreen();
+prototype OnSelectList();
+prototype OnRun();
+prototype OnQuit();
+prototype True();
+prototype RunTest1();
+prototype RunTest2();
+prototype hwindow create_combo_window( hwindow window, string title, int y, int height, bool scrollbar );
+prototype create_text_box( hwindow shady_bar );
+
+Initialise()
+{
+  list empty_list;
+   debug Debug.PrintString("UniGUIMisc: Initialising Globals.\n");
+
+   Global.CreateBool("g_zz_um_active", GA_Write | GA_NoSave, false);
+   Global.CreateBool("g_zz_um_passme", GA_Write | GA_NoSave, false);
+   Global.CreateList("g_zz_um_buttons_list", GA_Write | GA_NoSave, empty_list );
+   Global.CreateString("g_zz_um_selected_function", GA_Write | GA_NoSave, "" );
+   Global.CreateHandle("g_zz_um_text_box", GA_Write | GA_NoSave, none );
+
+   Text.Add( "csv:/text/UniGUIMisc" );
+}
+
+True()
+{
+  Global.SetBool("g_zz_um_passme",true);
+}
+
+UniGUIMiscScreen()
+{
+    // Windows
+    hwindow shady_bar;
+    hwindow shady_bar_r;
+    hwindow button;
+    hwindow current_button;
+    hwindow buttons_list_box;
+
+    int count;
+    int waypoint_border_left;
+    int waypoint_border_top;
+
+    list action_button_list;
+    list buttons;
+
+    htask monitor_task;
+
+    string def;
+    string title;
+
+    int button_width = Global.Int( "GUI_inversebutton_width" );
+    int scrollbar_width = Global.Int( "GUI_scrollbar_width" );
+
+    // Misc things:
+    int number = iMod.Count();
+    int i;
+    int i2;
+    int t;
+    hinifile mod_ini;
+    string mod_name;
+    string mod_display_name;
+    string enter_ask;
+    string mod_function;
+    string html;
+    bool flag;
+    int lockable;
+
+    button_width = button_width - ( scrollbar_width + 4 );
+
+    GUI.StopAllMovies();
+
+    GUI.SetDefaultFont( Global.String( "GUI_title_font" ) );
+
+    shady_bar = iGUI.CreateShadyBar();
+    shady_bar_r = iGUI.CreateShadyBarRight();
+
+    iGUI.AddTitle( shady_bar, Text.Field( "zz_um_title", FT_Text ) );
+
+    buttons_list_box = create_combo_window( shady_bar, "zz_um_misc", Global.Int( "GUI_title_yoffset" ) + 23, 435, true );
+
+    for ( i = 0; i < number ; ++i )
+    {
+      flag = false;
+      mod_name = iMod.Name( i );
+      mod_ini = INIFile.Create( String.Join( "ini:/", mod_name ) );
+      t = iUtilities.FindNumberOfINIEntries( mod_ini, "UniGUIMisc", "function" );
+
+      debug
+      {
+          Debug.PrintString( "UniGUIMisc: Processing Mod " );
+          Debug.PrintInt( i );
+          Debug.PrintString( ": " );
+          Debug.PrintString( mod_name );
+          Debug.PrintString( ".\n" );
+      }
+
+      if ( INIFile.Exists( mod_ini, "UniGUIMisc", "function" ) )
+      {
+         for ( i2 = 0; i2 < t ; ++i2 )
+         {
+
+            mod_display_name = INIFile.NumberedString( mod_ini, "UniGUIMisc", "display_name",i2, "ERROR" );
+            enter_ask = INIFile.NumberedString( mod_ini, "UniGUIMisc", "enter_ask", i2, "ERROR" );
+            mod_function = INIFile.NumberedString( mod_ini, "UniGUIMisc", "function", i2, "ERROR" );
+            lockable = INIFile.NumberedInt( mod_ini, "UniGUIMisc", "lockable", i2, 1 );
+            html = INIFile.NumberedString( mod_ini, "UniGUIMisc", "html_file", i2, "ERROR");
+
+            if ( lockable == 1 )
+            {
+              if ( Global.Int( "g_zz_ug_lock_count" ) > 0 )
+              {
+                debug
+                {
+                  Debug.PrintString("UniGUIMisc: Locked = ");
+                  Debug.PrintString( mod_display_name );
+                  Debug.PrintString( ".\n");
+                }
+                enter_ask = "";
+              }
+            }
+
+            debug
+            {
+              Debug.PrintString( "UniGUIMisc: Display Name = " );
+              Debug.PrintString( mod_display_name );
+              Debug.PrintString( "\n" );
+
+              Debug.PrintString( "UniGUIMisc: Mod function = " );
+              Debug.PrintString( mod_function );
+              Debug.PrintString( "\n" );
+
+              Debug.PrintString( "UniGUIMisc: Enter_ask script = " );
+              Debug.PrintString( enter_ask );
+              Debug.PrintString( "\n" );
+            }
+
+            Task.Call( enter_ask );
+
+            flag = Global.Bool("g_zz_um_passme");
+
+            if ( flag )
+            {
+
+              button = iGUI.CreateAndInitialiseRectangularInverseRadioButton(
+                      none,
+                      0,
+                      0,
+                      button_width,
+                      mod_display_name,
+                      false );
+
+              iGUI.MakeRectangularInverseButtonIconic( button );
+
+              Object.AddStringProperty( button, "mod_function", mod_function );
+              Object.AddStringProperty( button, "mod_display_name", mod_display_name );
+              Object.AddStringProperty( button, "html_file", html );
+
+              GUI.SetInputOverrideFunctions(
+                button,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "UniGUIMisc.OnSelectList",
+                "",
+                "" );
+
+                List.AddTail( buttons, button );
+            }
+         }
+      }
+    }
+
+    INIFile.Destroy( mod_ini );
+
+    buttons = List.SortByStringProperty( buttons, "mod_display_name" );
+
+    for ( count = 0 ; count < List.ItemCount( buttons ) ; ++count )
+    {
+        GUI.AddListBoxEntry( buttons_list_box, GUI.Cast( List.GetNth( buttons, count ) ) );
+    }
+
+    Global.SetList( "g_zz_um_buttons_list", buttons );
+    GUI.SelectListBoxEntry( buttons_list_box, 0 );
+
+    Global.SetString("g_zz_um_selected_function", Object.StringProperty( GUI.Cast( List.GetNth( buttons, 0 ) ) , "mod_function" ) );
+
+    current_button = iGUI.CreateAndInitialiseParentlessInverseButton(
+            "UniGUIMisc.OnRun",
+            Text.Field( "zz_um_run", FT_Text ),
+            action_button_list );
+
+        GUI.SetInputOverrideFunctions(
+            current_button,
+            "", "", "", "", "",
+            "UniGUIMisc.OnQuit",
+            "", "", "" );
+
+    waypoint_border_left = Global.Int( "GUI_alignment_offset" ) + Global.Int( "GUI_fancyborder_alignmentoffset" );
+    waypoint_border_top = GUI.WindowCanvasHeight( shady_bar ) - 75;
+
+    iGUI.CreateWindowListInFancyBorder(
+        shady_bar,
+        action_button_list,
+        waypoint_border_left,
+        waypoint_border_top );
+
+    current_button = iGUI.CreateAndInitialiseFancyButton(
+        shady_bar,
+        GUI.WindowCanvasHeight( shady_bar ) - ( Global.Int( "GUI_fancybutton_height" ) + 8 ),
+        Text.Field( "zz_um_exit", FT_Text ),
+        "UniGUIMisc.OnQuit" );
+
+    create_text_box( shady_bar_r );
+    GUI.SetTextWindowResource( GUI.Cast( Global.Handle("g_zz_um_text_box") ), Object.StringProperty( GUI.Cast( List.GetNth( buttons, 0 ) ), "html_file" ) );
+}
+
+hwindow create_combo_window( hwindow window, string title, int y, int height, bool scrollbar )
+{
+
+    hwindow pane;
+    hwindow title_window;
+
+    hsim current_location;
+
+    string title_font = Global.String( "GUI_subtitle_font" );
+
+    int button_height = Global.Int( "GUI_inversebutton_height" );
+    int list_box_gap = 3;
+    int button_width = Global.Int( "GUI_inversebutton_width" );
+
+    int i;
+
+    int scrollbar_width = Global.Int( "GUI_scrollbar_width" );
+
+    hwindow list_box;
+    hwindow button;
+    hwindow splitter;
+
+    list buttons;
+    list goods_list;
+
+    int x;
+    int width;
+    int splitter_y_bottom_offset = 120;
+    int splitter_alignment_offset = 4;
+    int split = ( 2 * Global.Int( "GUI_fancyborder_width" ) ) + 13;
+    int element_gap = 10;
+
+    x = Global.Int( "GUI_alignment_offset" ) + splitter_alignment_offset;
+
+    width = Global.Int( "GUI_shader_width" ) + splitter_alignment_offset - ( x * 2 );
+
+    if ( height == -1 )
+    {
+        height = ( GUI.WindowCanvasHeight( window ) - ( y + splitter_y_bottom_offset ) );
+    }
+
+    splitter = GUI.CreateSplitterWindow(
+        x, y,
+        width, height,
+        window,
+        split,
+        false );
+
+    pane = GUI.SplitterWindowTopWindow( splitter );
+
+    title_window = iGUI.CreateAndInitialiseStaticWindow(
+        0,
+        0,
+        GUI.WindowCanvasWidth( pane ),
+        GUI.WindowCanvasHeight( pane ),
+        pane,
+        title_font,
+        Text.Field( title, FT_Text ) );
+
+    GUI.SetWindowTextFormatting( title_window, false, 9 );
+
+    pane = GUI.SplitterWindowBottomWindow( splitter );
+
+    if ( scrollbar )
+    {
+        button_width = button_width - ( scrollbar_width + 4);
+    }
+
+    list_box = GUI.CreateListBox(
+        0, 0,
+        button_width,
+        GUI.WindowCanvasHeight( pane ),
+        pane,
+        true,
+        false );
+
+    List.AddHead( goods_list, list_box );
+
+    if ( scrollbar )
+    {
+        GUI.CreateVerticalScrollbar(
+            GUI.WindowCanvasWidth( pane ) - scrollbar_width,
+            0,
+            scrollbar_width,
+            GUI.WindowCanvasHeight( pane ),
+            pane,
+            list_box,
+            Global.Float( "GUI_scrollbar_buttonratio" ),
+            "" );
+    }
+
+    return list_box;
+
+} // create_combo_window
+
+create_text_box( hwindow shady_bar )
+{
+    hwindow border_box;
+    hwindow text_box;
+
+    int top_border = 24;
+    int splitter_alignment_offset = 4;
+    int height = 540;
+    int x = Global.Int( "GUI_alignment_offset" ) + splitter_alignment_offset;
+    int y = top_border;
+    int width = Global.Int( "GUI_shader_width" ) - ( x * 2 );
+
+    border_box = GUI.CreateStaticWindow( x, y, width, height, shady_bar );
+    GUI.CreateBorder( border_box );
+
+    text_box = GUI.CreateTextWindow( x + 5, y + 5, width - 10, height - 10, shady_bar );
+
+    GUI.SetWindowFont( text_box, Global.String( "GUI_detail_font" ) );
+
+    Global.SetHandle( "g_zz_um_text_box", text_box );
+
+} // create_text_box
+
+OnRun()
+{
+    string func = Global.String( "g_zz_um_selected_function" );
+
+    debug
+    {
+      Debug.PrintString("UniGUIMisc: OnRun. Func = \"");
+      Debug.PrintString( func );
+      Debug.PrintString("\"\n");
+    }
+
+    Global.SetBool("g_zz_um_active", false );
+    UniGUI.UniGUIClose();
+    Task.Call( func );
+}
+
+OnSelectList()
+{
+
+    hwindow selected = GUI.FocusedWindow();
+
+    GUI.SetTextWindowResource( GUI.Cast( Global.Handle("g_zz_um_text_box") ), Object.StringProperty( selected, "html_file" ) );
+    Global.SetString( "g_zz_um_selected_function", Object.StringProperty( selected, "mod_function" ) );
+
+}
+
+RunCheck()
+{
+  Global.SetBool("g_zz_ug_passme", true);
+}
+
+RunScreen()
+{
+  Global.SetBool( "g_zz_um_active", true );
+  UniGUI.UniGUIAddScreen( "UniGUIMisc.UniGUIMiscScreen" );
+}
+
+OnQuit()
+{
+  Task.Halt( Task.Cast( Global.Handle( "g_zz_um_monitor_task" ) ) );
+    Global.SetBool( "g_zz_um_active", false );
+    UniGUI.UniGUIRemoveScreen();
+}
+
+RunTest1()
+{
+  iHUD.Print("UniGUIMisc: Test1.");
+}
+
+RunTest2()
+{
+  iHUD.Print("UniGUIMisc: Test2.");
+}
+

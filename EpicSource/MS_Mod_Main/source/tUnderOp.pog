@@ -1,0 +1,599 @@
+/*******************************************************************************************/
+//
+// tUnderOp
+//
+// These objects represent fleet operations in game. They are persistant fleets that 
+// live through saves. They track surviving ships. The track fleets current location.
+//	
+// 
+//
+// October, 2003
+// Reworked May 2005 jon freise, adding into Middle States release.
+// Reworked March 2006 jf, changed to be fleet operations only.
+//******************************************************************************************/
+
+package tUnderOp;
+
+
+uses  Sim,
+iSim,
+Debug,
+Global,
+iGame,
+iFaction,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+State,
+Text,
+Math,
+iShip,
+iHabitat,
+iMapEntity,
+tUnderOpEnum,
+   tEFaction,
+   tStationEnum,
+   tStation,
+
+   tLRoot,
+   tLProduction,
+   tLCenter,
+   tLFleet;
+
+
+
+
+provides 
+   NewOp,
+   Create,
+   DestroyOp,
+   IsOperation,
+   Find,
+   SetKnown,
+   IsKnown,
+   EventTimer,
+   SetEventTimer,
+   WakeTimer,
+   SetWakeTimer,
+   IsCreated,
+   SetCreated,
+   Name,
+   SetName,
+   ShipTemplate,
+   SetShipTemplate,
+   OperationList,
+   StationOperations,
+   StationOperationsOfType,
+   SupportedOperations,
+   SetSupporter,
+   Supporter,
+DisplayOps;
+
+
+
+
+
+//*******************************************************************************************/         
+//
+//*******************************************************************************************/
+
+
+
+//*******************************************************************************************/
+// 
+//*******************************************************************************************/
+
+prototype bool IsKnown(hisim operation);
+
+
+prototype list OperationList();
+
+prototype hisim Create(int op_id, hfaction faction, bool known, int wake_day);
+
+
+prototype DisplayOps();
+
+prototype bool IsOperation(hisim operation);
+
+
+prototype string Name(hisim operation);
+
+
+prototype add_list(hisim operation);
+
+
+prototype hhabitat Supporter(hisim operation);
+
+/* 
+Operation Notes:
+
+Operations have an running cost. You must pay the cost even if no production. The operation can go 'underground', to 
+avoid snooping police and agents, but then it cannot generate profits or complete missions. 
+
+All operations have a list of station types where they might be created. Some need resource attributes to be 
+present.
+
+Operations are state objects. They have these properties.
+
+Station Name
+Hide Value - how hidden is the operation. Determined by type.
+Operation Type
+Owning Faction
+Parent Boss (might be none)
+Boss Name
+Relation State
+    Independent (top level)
+    Joined (has parent)
+Relation Level - hate if forced to join, love if started by faction.
+Boss Decision Level - determines the kind of missions started here.
+    Trade and Operation only
+    Create new Suboperations
+    Alliance and Diplomacy 
+Security Level - how expensive protections, hard to get informers inside.
+Alarm Value - how much public alarm does this operation raise.
+
+
+Stations are allowed only one outlaw operation. Each station has an 
+operation handle list attached, to quickly find operations.
+*/
+
+
+
+list SupportedOperations(hhabitat station)
+{
+   return Object.ListProperty(station,"gtUnderOpSupported");
+}
+
+// Removes this operation from its current supporter.
+RemoveSupporter(hisim operation)
+{
+   list attach_list;
+   hhabitat station = Supporter(operation);
+
+   if (station != none) {
+      atomic {
+         if (Object.PropertyExists(station,"gtUnderOpSupported")) {
+            attach_list = Object.ListProperty(station,"gtUnderOpSupported");
+            List.Remove(attach_list, operation);
+            Object.SetListProperty(station,"gtUnderOpSupported", attach_list);
+         }
+      }
+   }
+
+   Object.AddHandleProperty(operation,"gtOpHome", none);
+}
+
+SetSupporter(hisim operation, hhabitat station)
+{
+   list attach_list;
+
+   if (station == none) {
+      return;
+   }
+
+   atomic {
+      if (!Object.PropertyExists(station,"gtUnderOpSupported")) {
+         List.AddTail(attach_list, operation);
+         Object.AddListProperty(station,"gtUnderOpSupported", attach_list);
+      }else {
+         attach_list = Object.ListProperty(station,"gtUnderOpSupported");
+         List.AddTail(attach_list, operation);
+         Object.SetListProperty(station,"gtUnderOpSupported", attach_list);
+      }
+   }
+
+   // Attach this station to the operation for fast return link.
+   Object.AddHandleProperty(operation,"gtOpHome", station);
+}
+
+
+
+hhabitat Supporter(hisim operation)
+{
+   return iHabitat.Cast(Object.HandleProperty(operation,"gtOpHome"));
+}
+
+
+
+
+hisim Find(int operation_id)
+{
+   list op_list = OperationList();
+   int i, total;
+   hisim op;
+
+   total = List.ItemCount(op_list);
+   for (i=0;i<total;++i) {
+      op = iSim.Cast(List.GetNth(op_list, i));
+
+      if (operation_id == tLRoot.GetId(op)) {
+         return op;
+      }
+   }
+
+   return none;
+}
+
+
+
+DestroyOp(hisim operation)
+{
+   hisim op;
+   list op_list;
+   hhabitat station;
+
+   debug {
+      Debug.PrintString("UnderOp.DestroyOp ");
+      Debug.PrintString(Text.Field(Name(operation), FT_Text));
+      Debug.PrintString("\n");
+   }
+
+   if (none != operation) {
+      atomic {
+         op_list = Global.List("gt_underop_all_list");
+         List.Remove(op_list, operation);
+         Global.SetList("gt_underop_all_list", op_list);
+      }
+
+      station = Supporter(operation);
+
+      // Clear the operation from the supporters list.
+      RemoveSupporter(operation);
+
+      // Let the station know that it lost an operation.
+      tStation.SetAwake(station, true);
+
+      // Clear the operation from the centers list.
+      tLCenter.SetCenter(operation, none);
+
+      // Remove the operation sim.
+      Sim.Destroy(operation);
+   }
+}
+
+
+
+list OperationList()
+{
+   return Global.List("gt_underop_all_list");
+
+}
+
+
+
+list StationOperations(hisim station)
+{
+   list op_list = tLCenter.GetAttached(station);
+   list final_list;
+   int i, total;
+   hisim op;
+
+   total = List.ItemCount(op_list);
+   for (i=0;i<total;++i) {
+      op = iSim.Cast(List.GetNth(op_list, i));
+      
+      if (IsOperation(op)) {
+         List.AddTail(final_list, op);
+      }
+   }
+
+   return final_list;
+}
+
+
+
+list StationOperationsOfType(hisim station, int type)
+{
+   list op_list = tLCenter.GetAttached(station);
+   list final_list;
+   int i, total;
+   hisim op;
+
+   total = List.ItemCount(op_list);
+   for (i=0;i<total;++i) {
+      op = iSim.Cast(List.GetNth(op_list, i));
+      
+      if (IsOperation(op)) {
+         if (type == tLProduction.GetType(op)) {
+            List.AddTail(final_list, op);
+         }
+      }
+   }
+
+   return final_list;
+}
+
+
+SetEventTimer(hisim operation, int day)
+{
+   Object.AddIntProperty(operation,"gtUnderOpEvent", day);
+}
+
+int EventTimer(hisim operation)
+{
+   return Object.IntProperty(operation,"gtUnderOpEvent");
+}
+
+
+SetWakeTimer(hisim operation, int day)
+{
+   Object.AddIntProperty(operation,"gtUnderOpWake", day);
+}
+
+int WakeTimer(hisim operation)
+{
+   return Object.IntProperty(operation,"gtUnderOpWake");
+}
+
+
+SetKnown(hisim operation, bool known)
+{
+   Object.AddBoolProperty(operation,"gtUnderOpKnown", known);
+}
+
+bool IsKnown(hisim operation)
+{
+   return Object.BoolProperty(operation,"gtUnderOpKnown");
+}
+
+
+// This function is used to track if an operation already has an in game
+// representation. This function should be set true when 
+// an in game version is created, and set false when that version
+// has been culled.
+// This is not a saved property (has no meaning after a restore).
+SetCreated(hisim operation, bool existing)
+{
+   Object.AddBoolProperty(operation,"gtUnderOpExists", existing);
+}
+
+bool IsCreated(hisim operation)
+{
+   return Object.BoolProperty(operation,"gtUnderOpExists");
+}
+
+
+// The name is remembered in the save file. This allows
+// the operation core ship to have the same name
+// each time the player encounters it.
+SetName(hisim operation, string name)
+{
+   Object.AddStringProperty(operation,"gtUnderOpName", name);
+}
+
+string Name(hisim operation)
+{
+   return Object.StringProperty(operation,"gtUnderOpName");
+}
+
+// The core ship template is remembered. This allows
+// the core ship to be the same every time the player
+// encounters this operation.
+SetShipTemplate(hisim operation, string ship_template)
+{
+   Object.AddStringProperty(operation,"gtUnderOpTemplate", ship_template);
+}
+
+string ShipTemplate(hisim operation)
+{
+   return Object.StringProperty(operation,"gtUnderOpTemplate");
+}
+
+
+
+
+bool IsOperation(hisim operation)
+{
+   if (none == operation) {
+      return false;
+   }
+   if (Sim.IsDead(operation)) {
+      return false;
+   }
+
+   if (Object.PropertyExists(operation, "gtUnderOpKnown")) {
+      return true;
+   }
+
+   return false;
+}
+
+
+hisim NewOp(int op_type,
+            hfaction faction,
+            hmapentity center)
+{
+   int id = tLRoot.NewId();
+   hisim operation;
+
+   operation = Create(id, faction, false, 1);
+
+   tLProduction.Create(operation, op_type, 100, 0, 0, true);
+
+   tLFleet.Create(operation, 200, 200, 200, 200);
+
+   // New operations are created at thier owner station.
+   SetSupporter(operation, iHabitat.Cast(center));
+
+   // New operations are placed at thier owner station.
+   tLCenter.Create(operation, center);
+
+   return operation;
+}
+
+
+
+hisim Create(int op_id,
+             hfaction faction,
+             bool known,
+             int wake_day)
+
+{
+
+   list station_list, empty_list;
+   hisim operation;
+   hisim efaction;
+   list op_list;
+   string name, station_name;
+
+   name = "op placeholder";
+
+   operation = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint", name));
+
+
+   tLRoot.SetId(operation, op_id);
+
+   SetKnown(operation, known);
+   SetEventTimer(operation, 0);
+   SetWakeTimer(operation, wake_day);
+   SetCreated(operation, false);
+
+   add_list(operation);
+
+   iSim.SetFaction(operation, faction);
+
+   return operation;
+}
+
+
+add_list(hisim operation)
+{
+   list op_list;
+
+   atomic {
+      if (Global.Exists("gt_underop_all_list")) {
+         op_list = Global.List("gt_underop_all_list");
+         List.AddTail(op_list, operation);
+         Global.SetList("gt_underop_all_list",op_list);
+      }else{
+         List.AddTail(op_list, operation);
+         Global.CreateList("gt_underop_all_list",GA_Write, op_list);
+      }
+   }
+}
+
+
+
+
+
+string Operation2String(int op_type)
+{
+
+   switch (op_type) {
+   case ept_PirateHQOp:
+      return "Pirate Command Center";
+      break;
+   // Planted on production stations to drain off funds for use by pirates.
+   case ept_EmbezzleOp:
+      return "Embezzling Operation";
+      break;
+   // Planted on entertainment stations and habitats to generate funds for pirates.
+   case ept_ViceDenOp:
+      return "Vice Den Operation";
+      break;
+   // Planted on research stations to create and sell hacking tools.
+   case ept_HackerOp:
+      return "Hacker Tools Operation";
+      break;
+   // Planted on a medical station to provide and sell Cyber gear, new identities, transplants.
+   case ept_CyberOp:
+      return "Cyber Tools Operation";
+      break;
+   //Planted by pirates on anyone elses station. This provides defense fleets for the
+   //station, but at a cost to the station. 
+   case ept_ProtectionOp:
+      return "Protection Operation";
+      break;
+   // A special operation, used to attack and destroy a specific target faction
+   // from a specific location. Replaces the "plan" system.
+   case ept_FleetAttackOp:
+      return "Attack Planning";
+      break;
+   // A special operation that adds extra defense to a station.
+   case ept_FleetDefenseOp:
+      return "Defense Planning";
+      break;
+   // A covert operations center, with the goal of destroying a faction.
+   case ept_SpyAttackOp:
+      return "Covert Attack Planning";   
+      break;
+   case ept_SpyDefenseOp:
+      return "Covert Defense Planning";   
+      break;
+   // A covert operations center, with the goal of neutralizing a 
+   // faction to break them away from allies.
+   case ept_SpyNeutralOp:
+      return "Covert Neutralize Planning";   
+      break;
+   // A special operation that signifies a major invasion of another
+   // system. Run by an admiral and launched only from a Defense Dock,
+   // the invasion tries to capture opposing stations, and destroy
+   // rival fleets.
+   case ept_InvasionOp:
+      return "Invasion Planning";   
+      break;
+
+   // This base draws funds and people from sympathetic habitats. 
+   case ept_RebelSupportOp:
+      return "Rebel Recruitment";
+      break;
+
+   // Creates a black market importer/exporter into the station.
+   // Hides just outside of station range, and deals in goods with
+   // the criminal element at marked up prices.
+   // Especially popular when attached to weapons stations.
+   case ept_BlackMarketOp:
+      return "Black Market";
+      break;
+   case ept_RebelHQOp:
+      return "Rebel Command Center";
+      break;
+   default:
+      break;
+   }
+
+   return "Invalid Operation";
+}
+
+
+
+DisplayOps()
+{
+   int op_count, link_count, opnum, linknum;
+   list op_list, link_list;
+
+   hisim operation;
+
+   int iproperty;
+   string sproperty;
+
+   debug Debug.PrintString("UnderOp.DisplayOps\n");
+   // Get list of operations
+   // Get count of operations
+   op_list = OperationList();
+   op_count = List.ItemCount(op_list);
+
+   for (opnum=0;opnum<op_count;++opnum) {
+      operation = iSim.Cast(List.GetNth(op_list,opnum));
+      debug{
+         Debug.PrintString(String.FormatInt("Op %d ",tLRoot.GetId(operation)));
+         Debug.PrintHandle(operation);
+         Debug.PrintString("\n");
+      }
+   }
+}
+
+
+
+/*
+   Finding Operations:
+
+   Recruiting Operations:
+   
+   Some operations require finding a willing accomplice high 
+   up inside the station management. These operations
+   require extensive recruiting steps as the first part of setup.
+*/

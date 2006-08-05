@@ -1,0 +1,109 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 1
+PreviewLastFrame 100
+PreviewFrameStep 1
+FramesPerSecond 25.000000
+
+AddNullObject dock_arm_dock01
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -100 -570 0 90 180 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ShadowOptions 7
+
+AddNullObject dock_arm_dock02
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -100 570 180 90 180 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ShadowOptions 7
+
+AddNullObject freighter_dock
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1130 0 90 90 180 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 53
+ShadowOptions 7
+
+
+AmbientColor 255 255 255
+AmbIntensity 0.250000
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -135 -340 772 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+ShadowType 1
+
+ShowCamera 1 7
+CameraMotion (unnamed)
+  9
+  1
+  0 0 -904.28 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ZoomFactor 3.200000
+Resolution 1
+PixelAspectRatio 3
+SegmentMemory 10500000
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+FilmSize 2
+FieldRendering 0
+MotionBlur 0
+DepthOfField 0
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 0
+ClipRayColors 0
+DataOverlayLabel  
+FullSceneParamEval 0
+
+ViewMode 2
+ViewAimpoint -2.787060 -86.211121 581.348877
+ViewDirection 1.572542 -0.240854 0.000000
+ViewZoomFactor 2.666667
+GridNumber 30
+GridSize 200.000000
+ShowMotionPath 1
+ShowBGImage 0
+ShowFogRadius 0
+ShowRedraw 0
+ShowSafeAreas 0
+ShowFieldChart 0

@@ -1,0 +1,287 @@
+//*******************************************************************************************/
+//
+// tPlayerWatch.pog
+//
+// This module follows the player and wakes nearby objects before player arrival.
+// It also handles watching for daily updates. Music. And a good place for anything
+// else that needs to be checked over every second or so.
+// 
+//
+// 
+//	
+// 
+//
+// August 2003, Jon Freise
+//******************************************************************************************/
+
+package tEPlayerWatch;
+
+
+uses  Sim,
+iShip,
+iSim,
+Debug,
+Global,
+GUI,
+iGame,
+iGUI,
+iHUD,
+iHabitat,
+iMapEntity,
+iLagrangePoint,
+iFaction,
+iAI,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+State,
+Text,
+iUtilities,
+iCargo,
+iInventory,
+iComms,
+Math,
+iPilotSetup,
+iMusic,
+iMod,
+iShipCreation,
+iDockport,
+UniGUI,
+tTime,
+tLCenter,
+tEFaction,
+tEpicFleet,
+tFormation,
+tEpicFleetUpkeep,
+tMusic,
+tRepWatch,
+tLocationInit,
+    tEJump;
+
+/*
+      tMail,
+      tShipMail,
+      tBaseNet,
+      tNewsNet,
+      tEAction,
+*/
+
+
+
+provides PlayerWatch,
+SystemEnter;
+
+prototype task location_watch(hmapentity location);
+
+
+
+task watch_task()
+{
+   hship player = iShip.FindPlayerShip();
+   hisim target;
+   set nearby_stations;
+   int total, i;
+   string system, prior_system, saved_system;
+   list location_list;
+
+   hmapentity location;
+   hmapentity near_location;
+   hmapentity near_lpoint;
+
+   string prior_location;
+   string saved_location;
+
+   int current_day = 0;
+   int two_counter = 0;
+
+   bool docked = false;
+   bool jumping = false;
+   hsim nearest_station, station;
+   hfaction faction;
+
+   string order_name;
+   hisim order_target;
+
+
+   debug Debug.PrintString("Epic Action: Player watch active\n");
+
+   current_day = tTime.GetDay();
+
+   while (1) {
+
+      if (!tEJump.IsCapsuleJumping()) {
+
+         /*
+         debug atomic {
+            Debug.PrintString("player watch\n");
+         }
+         */
+
+      ++two_counter;
+      player = iShip.FindPlayerShip();
+      system = iSim.ActiveWorld();
+
+      // Check if the player is near any stations or lpoints
+      nearby_stations = iMapEntity.SystemLagrangePoints();
+      near_lpoint = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), player);
+
+      Set.Union(nearby_stations, iMapEntity.SystemHabitats());
+
+      nearby_stations = iSim.SimsInRadiusFromSet(nearby_stations, 
+                                                 player, 
+                                                 Global.Float("gt_distance_culling"), 
+                                                 T_Station|T_LagrangePoint);
+
+      nearest_station = iHabitat.Nearest(nearby_stations, player);
+
+
+      location_list = List.FromSet(nearby_stations);
+      total = List.ItemCount(location_list);
+
+      for (i=0;i<total;++i) {
+         location = iMapEntity.Cast(List.GetNth(location_list,i));
+
+         // If the station has already been culled, we 
+         // restart the objects around the station.
+         if (!tLCenter.GetCullMarker(iSim.Cast(location))) {
+            debug {
+               Debug.PrintString(" PlayerWatch: Waking ");
+               Debug.PrintHandle(location);
+               Debug.PrintString(" \n");               
+            }
+
+            tLocationInit.Arrives(location);
+
+            Task.Detach(start location_watch(location));
+         }
+
+      }//For each station less than culling distance away, check if warned.
+
+      // Check player docking status.
+      if (iSim.IsDockedToStructure(player, iSim.Cast(nearest_station)) ) {
+         if (!docked) {
+            debug Debug.PrintString("EPlayerWatch player just docked to station\n");
+            // player just docked, report
+            Task.Call("tEpicMain.PlayerDocked");
+            docked = true;
+
+            // Unhide the faction where the player has docked.
+            faction = iSim.Faction(iSim.Cast(nearest_station));
+            tEFaction.SetKnown(faction, true);
+         }
+      } else {
+         if (docked) {
+            debug Debug.PrintString("EPlayerWatch player just docked to station\n");
+            // player just undocked, report.
+            Task.Call("tEpicMain.PlayerUndocked");
+            docked = false;
+         }
+      }
+
+
+      if (two_counter > 1) {
+         two_counter = 0;
+
+         // Checks if the player or his fleet have been attacking factions.
+         // updates faction standing to match.
+         // tRepWatch.CheckForAttacks();
+
+         tMusic.SoundNear();
+
+         // Check if a day has passed. Check all waiting actions for update.
+         if (tTime.GetDay() > current_day) {
+            current_day = tTime.GetDay();
+            // Tell all other scripts that the day has passed.
+            Task.Call("tEpicMain.DayUpdate");
+         }
+      }// every 2 seconds
+      }//If not capsule jumping.
+
+      Task.Sleep(Task.Current(), 1.0);
+   }// While forever
+}
+
+
+
+// This task watches the player and takes action when the player has traveled
+// more than the culling distance away.
+task location_watch(hmapentity location)
+{
+   hship player;
+   bool near = true;
+
+   do {
+      Task.Sleep(Task.Current(), 1.0);
+
+      if (tEJump.IsCapsuleJumping()) {
+         near = false;
+      }else {
+         player = iShip.FindPlayerShip();
+         if (Global.Float("gt_distance_culling") < Sim.DistanceBetween(player, Sim.Cast(location))) {
+            near = false;
+         }
+      }
+   } while (near);
+
+   debug{
+      Debug.PrintString("PlayerWatch leaving ");
+      Debug.PrintHandle(location);
+      Debug.PrintString("\n");
+   }
+
+   tLocationInit.Leaves(location);
+}
+
+
+
+
+// Call at final setup.
+PlayerWatch()
+{
+   Task.Detach(start watch_task());
+}
+
+
+// Used to track when the player has jumped to a new system.
+SystemEnter()
+{
+   string prior_world, current_world;
+   hship player;
+   float fuel;
+
+   current_world = iSim.ActiveWorld();
+
+   if (!Global.Exists("gt_fleet_update_system")) {
+      Global.CreateString("gt_fleet_update_system",GA_Write, current_world);
+
+      debug Debug.PrintString("JumpWatch: Startingup\n");
+   } else {
+      prior_world = Global.String("gt_fleet_update_system");
+
+      if (prior_world != current_world) {
+         debug Debug.PrintString("JumpWatch: Player changed systems\n");
+         Global.SetString("gt_fleet_update_system", current_world);
+
+         if (!tEJump.IsCapsuleSpace(current_world)){
+            // We advance the game clock one full day for the jump.
+            // But only on exiting capsule space.
+            tTime.AdvanceTime(Global.Int("gt_time_one_day"));
+         }else{
+            debug Debug.PrintString("JumpWatch: Player in capsule space.\n");
+         }
+
+      } else {
+         debug Debug.PrintString("JumpWatch: Player arrived back in old system\n");
+      }
+   }
+}
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

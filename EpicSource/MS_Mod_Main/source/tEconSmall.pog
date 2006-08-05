@@ -1,0 +1,1244 @@
+//*******************************************************************************************/
+//
+// tEconSmall.pog
+//
+// A simplified economic system for Epic. Based on the concept that all prices are just
+// adjustments off of average.
+//
+//
+//
+// March 2005, Jon Freise
+//******************************************************************************************/
+package tEconSmall;
+
+
+uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, 
+   iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+   iConversation, iFormation, Group, Text, iEmail, State, 
+   iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker, 
+   iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+   iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
+   iEscort, iLagrangePoint, iMusic, iGame, Stream, 
+   iInventory,
+   tEconCargoTypes,
+   tEconUtil,
+   tLProduction,
+   tLTrade,
+   tEFaction,
+   ECargoTypes,
+   uString,
+   tStationEnum,
+   tStation;
+
+
+
+provides CargoList,
+         StationProducedCargo,
+         StationSupplyCargo,
+         StationUsedCargo,
+         CargoPrice,
+         TradedItem,
+         CargoMinStanding,
+         CargoStanding,
+         HaulFee,
+         CategoryName,
+         SellAdjustment,
+         PurchaseAdjustment,
+         RunCheck,
+         CopyPricing,
+         ExitBase,
+         EnterSpace,
+         StartSystem,
+         TestRun,
+         TestINIFiles,
+         DebugNotPlayerCargo;
+
+
+
+
+prototype CreateSystems();
+
+prototype TabulateSupply();
+
+prototype CreateCategories();
+
+prototype SetPricing();
+
+prototype hsim find(list items, string name);
+
+prototype int distance_to_system(hsim system, string name);
+
+prototype float price_from_distance(hinifile price_file, int distance);
+
+prototype list CargoList(hsim category);
+
+prototype task test_ini();
+
+prototype task test_run();
+
+prototype CopyPricing();
+
+prototype set station_cargo(string trade_file, string key_string,  string category_string);
+
+prototype int find_volume(int station_type, int station_value, int mine_value);
+
+
+
+
+RunCheck()
+{
+   Global.SetBool("g_zz_ug_passme",true);
+}
+
+TestRun()
+{
+   Task.Detach(start test_run());
+}
+
+task test_run()
+{
+   CreateCategories();
+
+   CreateSystems();
+
+   TabulateSupply();
+
+   SetPricing();
+
+   CopyPricing();
+
+   debug Debug.PrintString("Econ setup completed\n");
+}
+
+// You cannot enter the game without a base exit. Except at new game.
+// Which works fine for this.
+ExitBase()
+{
+   Global.Destroy("gt_econ_small_init");
+}
+
+EnterSpace()
+{
+   // We only need to do this once until the systems or categories
+   // have been culled.
+   if (!Global.Exists("gt_econ_small_init")) {
+      Global.CreateInt("gt_econ_small_init",GA_Write|GA_NoSave,0);
+
+      CreateCategories();
+
+      CreateSystems();
+
+      TabulateSupply();
+
+      SetPricing();
+
+      CopyPricing();
+   }
+}
+
+StartSystem()
+{
+   CopyPricing();
+}
+
+
+/* 
+
+   Creates a global list of systems with attached economic properties.
+
+*/
+
+CreateSystems()
+{
+   int system_num = 0; 
+   hinifile system_file = INIFile.Create("ini:/geog/clusters");
+   hinifile distance_file;
+   list system_list;
+   hsim system, neighbor, category;
+   string system_name, category_name, neighbor_name;
+   int i, total, j;
+   int distance;
+   list category_list;
+
+   category_list = Global.List("gtEconSmallCategoryList");
+
+   while (INIFile.NumberedExists( system_file,
+                                       "badlands",
+                                       "system",
+                                       system_num ))
+   {
+      system_name = INIFile.NumberedString(system_file, "badlands", "system", system_num, "Empty");
+      system = Sim.Create("ini:/sims/nav/waypoint", system_name);      
+      ++system_num;
+
+      debug Debug.PrintHandle(system);
+      debug Debug.PrintString(system_name);
+      debug Debug.PrintString("\n");
+
+      Object.AddStringProperty(system,"gtEconShortName", uString.EndName(system_name));
+
+      // Create properties for every cargo catagory.
+      total = List.ItemCount(category_list);
+      for (i=0;i<total;++i) {
+         category = Sim.Cast(List.GetNth(category_list, i));
+         category_name = Sim.Name(category);
+         Object.AddIntProperty(system,String.Join(category_name, "_surplus"),0);
+         Object.AddIntProperty(system,String.Join(category_name, "_output"),0);
+         Object.AddIntProperty(system,String.Join(category_name, "_input"),0);
+         Object.AddIntProperty(system,String.Join(category_name, "_price"),0);
+      }
+
+      List.AddTail(system_list, system);
+   }
+
+
+   Global.CreateList("gt_econ_system_list",GA_Write|GA_NoSave, system_list);
+
+   INIFile.Destroy(system_file);
+
+   // Build the distance lookup tables attached to each system.
+
+   distance_file = INIFile.Create("ini:/trade_data");
+
+   debug {
+      if (none == distance_file) {
+         Debug.PrintString("Error: tEconSmall.CreateSystems no trade data\n");
+      }
+   }
+
+   // For each system, add a lookup for distance to all other systems.
+   total = List.ItemCount(system_list);
+   for (i=0;i<total;++i) {
+      system = Sim.Cast(List.GetNth(system_list, i));
+      system_name = Object.StringProperty(system,"gtEconShortName");
+/*
+      debug Debug.PrintString(system_name);
+      debug Debug.PrintString("\n");
+*/
+      for (j=0;j<total;++j) {
+         neighbor = Sim.Cast(List.GetNth(system_list, j));
+         neighbor_name = Object.StringProperty(neighbor,"gtEconShortName");
+
+         distance = INIFile.Int(distance_file, system_name, neighbor_name,0);
+
+         Object.AddIntProperty(system,neighbor_name,distance);
+/*
+         debug {
+            Debug.PrintString(neighbor_name);
+            Debug.PrintString(String.FormatInt(" %d\n",distance));
+         }
+         */
+      }
+   }
+
+   INIFile.Destroy(distance_file);
+}
+
+
+
+
+/*
+   Each system has production data tabulated based on the number and type of
+   stations. 
+
+   After this function runs, the economy can calculate final pricing.
+*/
+TabulateSupply()
+{
+   list system_list = Global.List("gt_econ_system_list");
+   list category_list, supply_list, input_list, output_list;
+   int sys_num, cat_num, stotal, htotal, hab_num, hab_type;
+   int amount, count, prod, used;
+   int input_volume, output_volume, supply_volume, mine_input, mine_output;
+   hsim system, category;
+   hhabitat hab;
+   list hab_list;
+   string station_str, property_name, category_name;
+   hinifile formula_file = INIFile.Create("ini:/station_cargo");
+   int i, total;
+   
+
+   debug Debug.PrintString("Econ Tabulate \n");
+
+
+   // Read in the number of cargo pods each station input or output produces.
+   // Supply also. Supply is typically 1/10th of production or less.
+   input_volume = INIFile.Int(formula_file,"Volume","input",1);
+   output_volume = INIFile.Int(formula_file,"Volume","output",1);
+   supply_volume = INIFile.Int(formula_file,"Volume","supply",1);
+   mine_input = INIFile.Int(formula_file,"Volume","mine_input",1);
+   mine_output = INIFile.Int(formula_file,"Volume","mine_output",1);
+
+   category_list = Global.List("gtEconSmallCategoryList");
+
+   stotal = List.ItemCount(system_list);
+   for (sys_num=0; sys_num<stotal; ++sys_num) {
+      system = Sim.Cast(List.GetNth(system_list, sys_num));
+      hab_list = List.FromSet(iMapEntity.SystemHabitatsInSystem(Sim.Name(system)));
+
+/*
+      debug Debug.PrintHandle(system);
+      debug Debug.PrintString(Sim.Name(system));
+      debug Debug.PrintString("\n");
+*/
+      // For each station
+      htotal = List.ItemCount(hab_list);
+      for (hab_num=0; hab_num<htotal; ++hab_num) {
+         hab = iHabitat.Cast(List.GetNth(hab_list,hab_num));
+
+
+         if (ESS_Normal == tStation.Status(hab)){
+
+            //hab_type = iHabitat.Type(hab);
+            hab_type = tLProduction.GetType(iSim.Cast(hab));
+
+            // Turn the hab type into a Section string for the formula ini file
+            station_str = tEconUtil.StationIntToString(hab_type);
+/*
+         debug {
+            Debug.PrintString(Sim.Name(hab));
+            Debug.PrintString(" ");
+            Debug.PrintString(station_str);
+            Debug.PrintString("\n");
+         }
+*/
+            // Get the input categories
+            count=0;
+            List.RemoveAll(input_list);
+            while (INIFile.NumberedExists( formula_file,station_str,"input_category",count)) {
+               category_name = INIFile.NumberedString(formula_file, station_str, "input_category", count, "");
+               category = find(category_list, category_name);
+
+               if (none == category) {
+                  debug Debug.PrintString("Tab cat invalid");
+                  debug Debug.PrintString(category_name);
+                  debug Debug.PrintString("\n");
+               } else {
+                  // for each type under the hab, find the value and increment.
+                  property_name = String.Join(category_name,"_input");
+                  amount = Object.IntProperty(system, property_name);
+                  amount += find_volume(hab_type, input_volume, mine_input);
+                  Object.SetIntProperty(system, property_name, amount);
+/*
+               debug {
+                  Debug.PrintString("Input ");
+                  Debug.PrintString(category_name);
+                  Debug.PrintString(String.FormatInt(" %d\n",amount));
+               }
+*/
+                  List.AddTail(input_list, category);
+               }//if not invalid
+               ++count;                           
+
+            }//while
+
+            Object.AddListProperty(hab,"tEconInput",input_list);
+            Object.SetListProperty(hab,"tEconInput",input_list);
+
+            // Get the output categories
+            count=0;
+            while (INIFile.NumberedExists( formula_file,station_str,"output_category",count)) {
+               category_name = INIFile.NumberedString(formula_file, station_str, "output_category", count, "");
+               category = find(category_list, category_name);
+
+               if (none == category) {
+                  debug Debug.PrintString("Tab cat invalid");
+                  debug Debug.PrintString(category_name);
+                  debug Debug.PrintString("\n");
+               } else {
+                  // for each type under the hab, find the value and increment.
+                  property_name = String.Join(category_name,"_output");
+                  amount = Object.IntProperty(system, property_name);
+                  amount += find_volume(hab_type, output_volume, mine_output);
+                  Object.SetIntProperty(system, property_name, amount);
+/*
+               debug {
+                  Debug.PrintString("Output ");
+                  Debug.PrintString(category_name);
+                  Debug.PrintString(String.FormatInt(" %d\n",amount));
+               }
+*/
+                  List.AddTail(output_list, category);
+               }//if not invalid
+               ++count;                           
+
+            }//while
+
+            Object.AddListProperty(hab, "tEconOutput", output_list);
+            Object.SetListProperty(hab, "tEconOutput", output_list);
+
+            // Get the supply categories
+            List.RemoveAll(output_list);
+            count=0;
+            while (INIFile.NumberedExists( formula_file,station_str,"supply_category",count)) {
+               category_name = INIFile.NumberedString(formula_file, station_str, "supply_category", count, "");
+               category = find(category_list, category_name);
+
+               if (none == category) {
+                  debug Debug.PrintString("Tab cat invalid");
+                  debug Debug.PrintString(category_name);
+                  debug Debug.PrintString("\n");
+               } else {
+                  // for each type under the hab, find the value and increment.
+                  property_name = String.Join(category_name,"_supply");
+                  amount = Object.IntProperty(system, property_name);
+                  amount += supply_volume;
+                  Object.SetIntProperty(system, property_name, amount);
+/*
+               debug {
+                  Debug.PrintString("Supply ");
+                  Debug.PrintString(category_name);
+                  Debug.PrintString(String.FormatInt(" %d\n",amount));
+               }
+               */
+
+                  List.AddTail(supply_list, category);
+               }//if not invalid
+               ++count;                           
+
+
+            }//while
+
+            Object.AddListProperty(hab, "tEconSupply", supply_list);
+            Object.SetListProperty(hab, "tEconSupply", supply_list);
+
+         }//If hab status is normal
+
+      }//For Each Habitat in the system.
+
+      /* Find the surplus in each category. */
+
+      total = List.ItemCount(category_list);
+      for (i=0;i<total;++i)
+      {
+         category = Sim.Cast(List.GetNth(category_list, i));
+         category_name = Sim.Name(category);
+
+         prod = Object.IntProperty(system, String.Join(category_name,"_output"));
+         used = Object.IntProperty(system, String.Join(category_name,"_input"));
+
+         Object.SetIntProperty(system, String.Join(category_name,"_surplus"), prod - used);
+  
+/*
+         if ((prod - used)!=0)
+         {
+            debug Debug.PrintString(category_name);
+            debug Debug.PrintString(
+               String.FormatInt(" %d \n",
+                                Object.IntProperty(system, 
+                                String.Join(category_name,"_surplus"))));
+         }
+               */
+      }
+
+
+   }// for each system
+
+   INIFile.Destroy(formula_file);
+}
+ 
+/*
+The test INI files function spills INI file data to the debug port. It helps
+modders test that they have properly edited the cargo_category.ini and station_cargo.ini files.
+
+*/
+
+TestINIFiles()
+{
+   Task.Detach(start test_ini());
+}
+
+task test_ini()
+{
+   int station_int, category_int, count;
+   int i, total, j, total_cargo;
+   string station_name, category_name;
+   hinifile formula_file = INIFile.Create("ini:/station_cargo");
+   list category_list, cargo_list;
+   hsim category;
+   hcargo cargo;
+
+   CreateCategories();
+
+   category_list = Global.List("gtEconSmallCategoryList");
+
+   total = List.ItemCount(category_list);
+
+   for (i=0;i<total;++i) {
+      category = Sim.Cast(List.GetNth(category_list, i));
+      
+      debug {
+         Debug.PrintHandle(category);
+         Debug.PrintString("\n");
+      }
+
+
+      cargo_list = CargoList(category);
+
+      total_cargo = List.ItemCount(cargo_list);
+      for (j=0;j<total_cargo;++j) {
+         cargo = iCargo.Cast(List.GetNth(cargo_list,j));
+
+         debug {
+            Debug.PrintString("cargo: ");
+            Debug.PrintHandle(cargo);
+            Debug.PrintString("\n");
+         }
+      }
+
+   }
+
+   for (station_int=HT_Disused+1;station_int<=HT_TransferStation;++station_int) {
+
+      station_name = tEconUtil.StationIntToString(station_int);
+
+      debug Debug.PrintString(station_name);
+      debug Debug.PrintString("\n");
+
+      count=0;
+      while (INIFile.NumberedExists( formula_file,station_name,"output_category",count))
+      {
+         category_name = INIFile.NumberedString(formula_file, station_name, "output_category", count, "None");
+
+         debug Debug.PrintString("O:");
+         debug Debug.PrintString(category_name);
+         debug Debug.PrintString("\n");
+
+         find(category_list, category_name);
+
+         ++count;
+      }//while
+
+      count=0;
+      while (INIFile.NumberedExists( formula_file,station_name,"input_category",count))
+      {
+         category_name = INIFile.NumberedString(formula_file, station_name, "input_category", count, "None");
+
+         debug Debug.PrintString("I:");
+         debug Debug.PrintString(category_name);
+         debug Debug.PrintString("\n");
+
+         find(category_list, category_name);
+
+         ++count;
+      }//while
+
+      count=0;
+      while (INIFile.NumberedExists( formula_file,station_name,"supply_category",count))
+      {
+         category_name = INIFile.NumberedString(formula_file, station_name, "supply_category", count, "None");
+
+         debug Debug.PrintString("S:");
+         debug Debug.PrintString(category_name);
+         debug Debug.PrintString("\n");
+
+         find(category_list, category_name);
+
+         ++count;
+      }//while
+   }
+
+   INIFile.Destroy(formula_file);   
+}
+
+
+
+/*
+
+;Initial
+   Read INI files to find categories.
+   Assign pod types to categories.
+   
+
+;Part 1, total production, when player enters space.
+   For each system.
+   Visit each station.
+   Total categories produced, and used.
+   Attach categories to the station for later use.
+
+   
+;Part 2, calculate pricing.
+   For each category.
+   Sort the systems by the number produced.
+   For each system.
+   Find the distance to the highest producer. 
+   Assign price based on distance.
+
+
+;Part 3, setup trade price.
+   When the player arrives in a system
+   Read the base price for each category
+   Add the adjustment for this system
+   For each cargo item in the category
+   Assign the adjusted price
+
+
+;Trade code.
+   Read the station where the player is docked.
+   Read the cargo pod types the station sells.
+   Read the cargo pod types the station will buy.
+
+*/
+
+
+CreateCategories()
+{
+   hinifile category_file = INIFile.Create("ini:/cargo_category");
+   int category_count, cargo_count, cargo_int;
+   string category_name, cargo_name, standing_string;
+   hsim category;
+   int base_price, traded;
+   bool traded_item;
+   float standing;
+   list category_list, cargo_list;
+   hcargo cargo;
+   eFeelingType standing_type;
+   set test_dup;
+
+
+   debug Debug.PrintString("tEconSmall.CreateCategories\n");
+
+   if (none == category_file) {
+      debug Debug.PrintString("Cannot open cargo_category.ini file\n");
+   }
+
+   category_count=0;
+   while (INIFile.NumberedExists( category_file,"CategoryList","name",category_count))
+   {
+      category_name = INIFile.NumberedString(category_file,"CategoryList","name",category_count,"");
+
+      if ("" != category_name) {
+
+         /*
+         debug {
+            Debug.PrintString("Cat: ");
+            Debug.PrintString(category_name);
+            Debug.PrintString("\n");
+         }
+         */
+
+         category = Sim.Create("ini:/sims/nav/waypoint",category_name);
+         base_price = INIFile.Int( category_file, category_name, "base_price",0);
+         traded = INIFile.Int(category_file, category_name, "traded",1);
+         standing_string = INIFile.String( category_file, category_name, "standing","FT_Neutral");
+         
+         standing_type = tEFaction.String2Type(standing_string);
+         standing = tEFaction.String2LowerLevel(standing_string);
+
+
+         if (traded == 0) {
+            traded_item = false;
+         }else {
+            traded_item = true;
+         }
+
+         Object.AddIntProperty(category,"gtBasePrice", base_price);
+         Object.AddFloatProperty(category,"gtStanding", standing);
+         Object.AddIntProperty(category,"gtStandingType", standing_type);
+         Object.AddIntProperty(category,"gtCurrentPrice", 0);
+         Object.AddIntProperty(category,"gtHaulFee", 0);
+         Object.AddBoolProperty(category,"gtTradedItem", traded_item);
+
+         List.RemoveAll(cargo_list);
+
+         cargo_count=0;
+         while (INIFile.NumberedExists( category_file,category_name,"pod_name",cargo_count))
+         {
+            cargo_name = INIFile.NumberedString(category_file,category_name,"pod_name",cargo_count,"CT_Invalid");
+            ++cargo_count;
+
+            cargo_int = ECargoTypes.String2CargoType(cargo_name);
+
+            if (CT_Invalid != cargo_int) {
+               cargo = iCargo.Find(cargo_int);
+
+               // Provide a quick link back to the category.
+               Object.AddHandleProperty(cargo,"gt_cargo_category", category);
+               Object.SetHandleProperty(cargo,"gt_cargo_category", category);
+
+               List.AddTail(cargo_list, cargo);
+
+               debug {
+                  if (Set.Contains(test_dup, cargo)) {
+                     Debug.PrintString("Error: Duplicate cargo entry detected\n");
+                     Debug.PrintString(category_name);
+                     Debug.PrintString(" category ");
+                     Debug.PrintString(cargo_name);
+                     Debug.PrintString(" cargo\n");
+                  }
+
+                  Set.Add(test_dup, cargo);
+
+                  /*
+                  if (iCargo.PlayerSystem(cargo)) {
+
+                     Debug.PrintString("Warning: player system cargo entry detected\n");
+                     Debug.PrintString(category_name);
+                     Debug.PrintString(" category ");
+                     Debug.PrintString(cargo_name);
+                     Debug.PrintString(" cargo\n");
+
+                  }
+
+                  if (iInventory.IsPieceOfAmmo(Object.IntProperty(cargo,"type"))) {
+                     Debug.PrintString("Warning: player ammo cargo entry detected\n");
+                     Debug.PrintString(category_name);
+                     Debug.PrintString(" category ");
+                     Debug.PrintString(cargo_name);
+                     Debug.PrintString(" cargo\n");
+                  }
+                  */
+
+               }
+            }else {
+               debug {
+                  Debug.PrintString("tEconSmall.Error invalid pod_name entry in category :");
+                  Debug.PrintString(category_name);
+                  Debug.PrintString(":\n");
+               }
+
+            }
+            
+
+
+         }//while more cargo items
+
+         Object.AddListProperty(category,"gtEconCargoList",cargo_list);
+      }
+      
+      List.AddTail(category_list, category);
+
+      ++category_count;
+   }//while more categories
+
+
+   Global.CreateList("gtEconSmallCategoryList",GA_Write|GA_NoSave, category_list);
+
+   INIFile.Destroy(category_file);
+
+   debug Debug.PrintString("tEconSmall.CreateCategories Complete\n");
+}
+
+// 
+
+SetPricing()
+{
+   hinifile price_file = INIFile.Create("ini:/trade_data");
+   list category_list, system_list;
+   int categories, systems, i, j, distance, price_int, haul_fee_int;
+   float price, haul_fee;
+   string category_name, category_string, price_string;
+   hsim category, system, producer;
+
+   category_list = Global.List("gtEconSmallCategoryList");
+   system_list = Global.List("gt_econ_system_list");
+
+   categories = List.ItemCount(category_list);
+   systems = List.ItemCount(system_list);
+
+   for (i=0;i<categories;++i) {
+      category = Sim.Cast(List.GetNth(category_list,i));
+      category_name = Sim.Name(category);
+      category_string = String.Join(category_name, "_surplus");
+
+      // Find the system that has the highest production.
+      system_list = List.SortByIntProperty(system_list, category_string);
+
+      producer = Sim.Cast(List.Tail(system_list));
+
+      // Sellers discount off the local haul fee. This allows a player
+      // to earn a small profit doing local in system hauls. This value
+      // counters the price for a zero distance haul. Essentially setting
+      // the player profit for that haul.
+      haul_fee = price_from_distance(price_file, 0);
+      haul_fee_int = haul_fee * Object.IntProperty(category,"gtBasePrice");
+      haul_fee_int = haul_fee_int - Object.IntProperty(category,"gtBasePrice");
+      Object.SetIntProperty(category, "gtHaulFee", haul_fee_int);
+
+
+      /*
+      debug Debug.PrintString(category_name);
+      debug Debug.PrintString("\n");
+
+      debug Debug.PrintString(Sim.Name(producer));
+      debug Debug.PrintString(String.FormatInt(" %d",Object.IntProperty(producer,category_string)));
+      debug Debug.PrintString(" producer\n");
+      */
+
+      for (j=0;j<systems;++j) {
+         system = Sim.Cast(List.GetNth(system_list,j));
+
+         distance = distance_to_system(system, Object.StringProperty(producer,"gtEconShortName"));
+         
+            price = price_from_distance(price_file, distance);
+            price = price * Object.IntProperty(category,"gtBasePrice");
+            price_int = price;
+
+         // Create the price from the base price times the distance to 
+         // the producer system. Then attach the price to the 
+         // system object itself for when the player jumps into
+         // that system.
+
+         // We use the category name to make access of this price as fast as possible.
+         Object.AddIntProperty(system, category_name, price_int);
+
+         /*
+         debug {
+            Debug.PrintString(Sim.Name(system));
+            Debug.PrintString(String.FormatInt(" %d\n",Object.IntProperty(system, category_name)));
+         }
+         */
+      }
+   }
+
+   INIFile.Destroy(price_file);
+}
+
+// This function will copy the pricing from the current system to the
+// category objects. Call when the player has moved to a new system.
+CopyPricing()
+{
+   list systems = Global.List("gt_econ_system_list");
+   list category_list = Global.List("gtEconSmallCategoryList");
+   int i, categories, price;
+   hsim category, system;
+   string category_name, price_string;
+
+   system = find(systems, iSim.ActiveWorld());
+
+   if (none == system) {
+      debug {
+         Debug.PrintString("tEconSmall.CopyPricing error to find the players current system\n");
+         Debug.PrintString(iSim.ActiveWorld());
+         Debug.PrintString("\n");
+      }
+      return;
+   }
+
+   categories = List.ItemCount(category_list);
+   for (i=0;i<categories;++i) {
+      category = Sim.Cast(List.GetNth(category_list,i));
+      category_name = Sim.Name(category);
+
+      price = Object.IntProperty(system, category_name);
+
+      Object.SetIntProperty(category, "gtCurrentPrice", price);
+   }
+}
+
+
+
+hsim find(list items, string name)
+{
+   int i, total;
+   hsim item;
+
+   total = List.ItemCount(items);
+   for (i=0;i<total;++i) {
+      item = Sim.Cast(List.GetNth(items,i));
+
+      if (Sim.Name(item)==name) {
+         return item;
+      }
+   }
+
+   debug {
+      Debug.PrintString("tEconSmall.find Cannot find item:");
+      Debug.PrintString(name);
+      Debug.PrintString(":\n");
+   }
+
+   return none;
+}
+
+int distance_to_system(hsim system, string name)
+{
+   return Object.IntProperty(system, name);
+}
+
+float price_from_distance(hinifile price_file, int distance)
+{
+   return INIFile.NumberedFloat(price_file,"Pricing","jump",distance, 0.01);
+}
+
+
+
+list CargoList(hsim category)
+{
+   return Object.ListProperty(category,"gtEconCargoList");
+}
+
+
+// Return the category, give a cargo object.
+hsim CategoryFromCargo(hcargo cargo)
+{
+   return Sim.Cast(Object.HandleProperty(cargo,"gt_cargo_category"));
+}
+
+string CategoryName(hcargo cargo)
+{
+   return  Sim.Name(Sim.Cast(Object.HandleProperty(cargo,"gt_cargo_category")));
+}
+
+
+set StationSupplyCargo(hisim trade_center)
+{
+   string key_string, trade_file;
+
+   key_string = tLTrade.KeyName(trade_center);
+   trade_file = tLTrade.TradeFile(trade_center);
+
+   return station_cargo(trade_file, key_string, "supply_category");
+}
+
+set StationProducedCargo(hisim trade_center)
+{
+   string key_string, trade_file;
+
+   key_string = tLTrade.KeyName(trade_center);
+   trade_file = tLTrade.TradeFile(trade_center);
+
+   return station_cargo(trade_file, key_string, "output_category");
+}
+
+set StationUsedCargo(hisim trade_center)
+{
+   string key_string, trade_file;
+
+   key_string = tLTrade.KeyName(trade_center);
+   trade_file = tLTrade.TradeFile(trade_center);
+
+   return station_cargo(trade_file, key_string, "input_category");
+}
+
+
+set station_cargo(string trade_file, string key_string,  string category_string)
+{
+   string category_name;
+   int count;
+   hsim category;
+   set cargo_set;
+   hinifile formula_file = INIFile.Create(trade_file);
+   list category_list;
+
+   if (none == formula_file) {
+      debug {
+         Debug.PrintString("Error tEconSmall cannot create trade_file ");
+         Debug.PrintString(trade_file);
+         Debug.PrintString("\n");
+      }
+   }
+
+   category_list = Global.List("gtEconSmallCategoryList");
+
+   count=0;
+   while (INIFile.NumberedExists( formula_file, key_string, category_string, count))
+   {
+      category_name = INIFile.NumberedString(formula_file, key_string, category_string, count, "None");
+      ++count;
+
+      category = find(category_list, category_name);
+
+      if (none != category) {
+         Set.Union(cargo_set, Set.FromList(CargoList(category)));
+      }
+   }
+
+   INIFile.Destroy(formula_file);
+
+   return cargo_set;
+}
+
+// The INI file supports a price adjusting feature that
+// allows discounted prices, elevated prices, or cut rate sales from fences.
+float PurchaseAdjustment(hisim trade_center)
+{
+   hinifile formula_file;
+   string key_string, trade_file;
+   float adjustment;
+   hfaction player = iFaction.Find("Player");
+
+   // If this is a player owned station, the player does not pay for
+   // cargo. 
+   if (player == iSim.Faction(trade_center))
+   {
+      return 0.0;
+   }
+
+   key_string = tLTrade.KeyName(trade_center);
+   trade_file = tLTrade.TradeFile(trade_center);
+
+   formula_file = INIFile.Create(trade_file);
+
+   adjustment = INIFile.Float(formula_file, key_string, "buy_adjust", 1.0);
+
+   INIFile.Destroy(formula_file);
+
+   return adjustment;
+}
+
+
+float SellAdjustment(hisim trade_center)
+{
+   hinifile formula_file;
+   string key_string, trade_file;
+   float adjustment;
+   hfaction player = iFaction.Find("Player");
+
+   // If this is a player owned station, the player is not paid for
+   // cargo. 
+   if (player == iSim.Faction(trade_center))
+   {
+      return 0.0;
+   }
+
+   key_string = tLTrade.KeyName(trade_center);
+   trade_file = tLTrade.TradeFile(trade_center);
+
+   formula_file = INIFile.Create(trade_file);
+
+   adjustment = INIFile.Float(formula_file, key_string, "sell_adjust", 1.0);
+
+   INIFile.Destroy(formula_file);
+
+   return adjustment;
+}
+
+
+int CategoryPrice(hsim category)
+{
+   return Object.IntProperty(category,"gtBasePrice");
+}
+
+int CategoryCurrentPrice(hsim category)
+{
+   return Object.IntProperty(category,"gtCurrentPrice");
+}
+
+int CategoryHaulFee(hsim category)
+{
+   return Object.IntProperty(category,"gtHaulFee");
+}
+
+
+int CargoPrice(hcargo cargo)
+{
+   hsim category;
+   int price;
+
+   category = CategoryFromCargo(cargo);
+
+   if (Object.BoolProperty(category,"gtTradedItem")) {
+      price = CategoryCurrentPrice(category);
+   }else{
+      price = CategoryPrice(category);
+   }
+
+   return price;
+}
+
+float CargoMinStanding(hcargo cargo)
+{
+   hsim category;
+
+   category = CategoryFromCargo(cargo);
+
+   if (none == category) {
+      return 0.0;
+   }
+
+   return Object.FloatProperty(category,"gtStanding");
+}
+
+int CargoStanding(hcargo cargo)
+{
+   hsim category;
+
+   category = CategoryFromCargo(cargo);
+
+   if (none == category) {
+      return FT_Neutral;
+   }
+
+   return Object.IntProperty(category,"gtStandingType");
+}
+
+bool TradedItem(hcargo cargo)
+{
+   hsim category;
+   int price;
+
+   category = CategoryFromCargo(cargo);
+
+   return Object.BoolProperty(category,"gtTradedItem");
+}
+
+// Looks up the purchase fee attached to the category object.
+// This value sets the amount paid to local shippers.
+int HaulFee(hcargo cargo)
+{
+   hsim category;
+
+   category = CategoryFromCargo(cargo);
+
+   return CategoryHaulFee(category);
+}
+
+
+DebugNotPlayerCargo()
+{
+   hcargo cargo;
+   list cargo_list;
+   int total,i;
+
+   for (i=0;i<=CT_AdvancedHullMaterialRefit;++i) {
+      cargo = iCargo.Find(i);
+
+      if (!iCargo.PlayerSystem(cargo)) {
+         if (!iInventory.IsPieceOfAmmo(i)) {
+            debug Debug.PrintString(iCargo.Name(cargo));
+            debug Debug.PrintString("\n");
+         }
+      }
+   }
+
+}
+
+
+
+int find_volume(int station_type, int station_value, int mine_value)
+{
+   switch (station_type) {
+   case ept_WaterMine : 
+   case ept_OrganicsMine : 
+   case ept_InorganicsMine : 
+   case ept_BiomassMine : 
+   case ept_CommonMetalsMine : 
+   case ept_RareMetalsMine : 
+   case ept_ExoticMetalsMine : 
+   case ept_RadioactivesMine : 
+   case ept_FusionableGasesMine : 
+   case ept_NeutroniumMine :
+      return mine_value;
+      break;
+   default:
+      break;
+   }
+
+   return station_value;
+}
+
+
+
+/*
+Functions that are needed
+
+Know all cargo types that belong to a category.
+   
+   
+   
+;
+; Cargo and Category INI File
+;
+[CategoryList]   
+; Ore - need to break out for each mine type
+name[0]=ECC_OrganicOre
+name[1]=ECC_InorganicOre
+name[2]=ECC_ExoticOre
+name[3]=ECC_RadioactiveOre
+name[4]=ECC_NeutroniumOre
+   
+   
+[ECC_OrganicOre]   
+base_price=1000
+standing=-0.1
+pod_name[0]=CT_Carbon
+pod_name[1]=CT_Petroleum
+pod_name[2]=CT_Oil
+
+
+;
+; Station Cargo INI File
+;
+
+[HT_CommonMetalsProcessingPlant]
+output_category[0]=ECC_Metal
+input_category[0]=ECC_CommonOre
+supply_category[0]=ECC_Manufacture
+
+*/
+
+/*
+[aleppo]
+
+aleppo=0
+al_wadi=2        
+ivory_garden=1
+new_const=1  
+    
+saladin=2        
+nureddin=3 
+      
+hant=3           
+akra=4           
+epitaph=12        
+lombard=7        
+ripon=9
+        
+nisami=4         
+corliss=5 
+       
+watts=6  
+        
+kronholm=7       
+li_po=8          
+tau_tsun=8       
+xu_xuan=9  
+      
+providence=9     
+emerald_sys=10    
+penda=11          
+huang=11 
+         
+bumpys_star=10    
+alcuin=11         
+bedalov=11        
+powys=12          
+t_ang=12 
+
+
+
+
+; This is the percentage of cargo value paid to a freight hauler based on the 
+; number of capsule jumps, read from the distance chart above.
+; Floating point value. The zero number is used to calculate in system
+; freight hauling fees.
+[Pricing]
+jump[0]=1.005
+jump[1]=1.01
+jump[2]=
+jump[3]=
+jump[4]=
+jump[5]=
+jump[6]=
+
+jump[20]=
+*/
+
+/* 
+
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+
+*/
+
+
+
+
+
+
+
+
+

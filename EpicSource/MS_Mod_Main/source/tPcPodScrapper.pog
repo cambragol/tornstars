@@ -1,0 +1,301 @@
+  //*******************************************************************************************/
+//
+// tPcPodScrapper
+//
+// This pog object implements a ship that will purchase cargo pods for scrap prices.
+// It will purchase all undocked cargo pods within 10km of the player.
+//
+// May 2005, Jon Freise
+//******************************************************************************************/
+
+package tPcPodScrapper;
+
+uses    Sim,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        GUI,
+        iGUI,
+        iHUD,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        Math,
+        iShipCreation,
+        iComms,
+        iConversation,
+        iDockport,
+        tPodUtil,
+        tEpicComms,
+        tEpicFleet,
+        tEFaction,
+        tEpicMoney,
+        tShipName,
+        tsCull;
+
+
+provides PogCreate,
+         PogStart,
+         Comms;
+
+
+prototype setup_ship(hsim ship);
+
+
+/*
+
+*/
+
+hsim PogCreate(string template_name, string object_name)
+{
+
+   hinifile object_file;
+   string name;
+   string item_template, pog_class, start_function;
+   hsim item;
+
+   debug Debug.PrintString("tPcPodScrapper.PogCreate\n");
+
+
+   object_file = INIFile.Create(template_name);
+
+   if (none == object_file) {
+      debug {
+         Debug.PrintString("tPcPodScrapper.PogCreate, failed to find object file\n");
+      }
+
+      return none;
+   }
+
+   // Pull needed items out of template file. Create the object.
+   // Attach them
+
+   pog_class = INIFile.String(object_file, "PogClass","name","none");
+
+
+   ///********************
+   // This block of code is class dependent. The rest must be done to adhere
+   // to the pog otbject calling conventions.
+
+   item_template = INIFile.String(object_file, "Properties","template","none");
+
+   INIFile.Destroy(object_file);
+
+
+   name = tShipName.ShipName( "general", Math.RandomInt(0, 343));
+
+   item = Sim.Create(item_template, name);
+
+   if (none == item) {
+      debug {
+         Debug.PrintString("tPcPodScrapper.PogCreate, bad object template\n");
+      }
+      return none;
+   }
+   ///********************
+
+
+   // All 
+   Object.AddStringProperty(item, "gt_pog_object_class", pog_class);
+   Object.AddStringProperty(item, "gt_pog_object_template", template_name);
+
+      
+   return item;
+}
+
+
+/*
+This function is called after the ship has been placed. 
+
+*/
+task PogStart(hsim pog_object)
+{
+   debug Debug.PrintString("tPcPodScrapper: starting\n");
+
+   ///***************************************
+   // This part of the start code is object dependent. The prior pieces must
+   // be done to adhere to the pog class calling convention.
+
+   setup_ship(pog_object);
+
+   ///***************************************
+}
+
+/*
+; 
+; Example INI file for setting up a hired ship.
+; One of these template files should be created
+; for each kind of ship that can be hired.
+; Freighter, warship, etc.
+
+[PogClass]
+name=tPcPodScrapper
+
+[Properties]
+
+template=ini:/sims/ships/utility/freighter
+
+ship_template="ship ini string"
+hiring_fee=integer one time hiring fee
+upkeep_fee=integer daily cost to support the ship
+faction_standing=float, minimum faction standing the player must have
+
+; This code will be called by the players communication subsystem
+; It will check to see if the player has a high enough standing to hire the ship.
+; Then it will offer the player the choice of hiring. It will display fee info.
+; 
+comm_start_function="tPodScrapperComm.Freighter"
+
+
+*/
+
+
+
+// Read the ini file, setup the object. 
+setup_ship(hsim ship)
+{
+   hinifile control_file;
+   int scrap_price;
+   string template_file_name, comm_function;
+   hfaction faction;
+   hhabitat station;
+
+   template_file_name = Object.StringProperty(ship, "gt_pog_object_template");
+   control_file = INIFile.Create(template_file_name);
+
+   if (none == control_file) {
+      debug Debug.PrintString("ERROR tPcPodScrapper. invalid template_file\n");
+      debug Debug.PrintString(template_file_name);
+      debug Debug.PrintString("\n");
+   }
+
+   // Read in the belt control properties
+   scrap_price = INIFile.Int(control_file, "Properties", "scrap_price", 100);
+
+//   comm_function = INIFile.String(control_file, "Properties", "comm_start_function", "");
+
+   INIFile.Destroy(control_file);
+
+   comm_function = "tPcPodScrapper.Comms";
+                                  
+   Object.AddIntProperty(ship, "gtPodScrapperPrice", scrap_price);
+
+   tEpicComms.AddComms(ship, comm_function);
+
+   tEpicComms.DisplayComms(ship, true);
+
+
+
+   station = iHabitat.Nearest(iMapEntity.SystemHabitats(),ship);
+
+   faction = iSim.Faction(iSim.Cast(station));
+
+   iSim.SetFaction(iSim.Cast(ship), faction);
+
+   tsCull.AddSim(iSim.Cast(station), ship);
+}
+
+
+task Comms()
+{
+   hship ship;
+   hship player = iShip.FindPlayerShip();
+   string ask_string, result_string;
+   list undocked_pods;
+   int scrap_price, total_price;
+   hgroup pod_group;
+
+   ship = iShip.Cast(tEpicComms.CommsSource());
+
+   // Turn off the comms display, now that the player knows he can talk to this ship.
+   tEpicComms.DisplayComms(ship, false);
+
+   scrap_price = Object.IntProperty(ship, "gtPodScrapperPrice");
+
+   // pcps_ask_player, ""Do you want to sell pods for scrap?"
+   ask_string = String.FormatInt(" %d credits each.", scrap_price);
+   ask_string = String.Join(Text.Field("pcps_ask_player", FT_Text), ask_string);
+
+        // Start the conversation.
+    iConversation.Begin();
+
+    // pcps_ask_help, "Yes, what do I do?"
+    iConversation.AddResponse(
+       "pcps_ask_help",
+       "pcps_ask_help");
+
+    // pcps_take_pods, "Take my unloaded pods now."
+    iConversation.AddResponse(
+       "pcps_take_pods",
+       "pcps_take_pods");
+
+    // pcps_refuse, "No Thanks."
+    iConversation.AddResponse(
+       "pcps_refuse",
+       "pcps_refuse");
+
+    
+    // Ask the player a question and switch on their response.
+    switch ( iConversation.Ask( ship, "", ask_string ) )
+    {
+    case 1 :
+       {
+          // pcps_help_response, "Unload the pods you want scrapped. Then talk to me again.
+          iConversation.Say(ship,"", "pcps_help_response");
+       }
+       break;
+    case 2:
+       {
+          undocked_pods = tPodUtil.UndockedPodList(player, 10km);
+
+          // Total the money and pay the player.
+          total_price = List.ItemCount(undocked_pods);
+          total_price = total_price * scrap_price;
+          tEpicMoney.ChangeShipAccount(total_price);
+
+          // Wipe out the pods.
+          pod_group = Group.FromList(undocked_pods);
+          Group.Destroy(pod_group, true);
+
+          if (0 == total_price) {
+             // pcps_remind_unload, "You need to unload some pods and keep them close."
+             iConversation.Say(ship,"", "pcps_remind_unload");
+          }else {
+             // Tell the player what happened.
+             result_string = String.FormatInt("Here are your %d credits for", total_price);
+             result_string = String.Join(result_string, String.FormatInt(" %d pods.", 
+                                                                         List.ItemCount(undocked_pods)));
+
+             iConversation.Say(ship,"", result_string );
+          }
+
+          // Log the event. 
+          debug Debug.PrintString(String.FormatInt("Ship Account %d\n",tEpicMoney.ShipAccount()));
+       }
+       break;
+    case 3 :
+       // pcps_refuse_response, "If you cannot find a buyer for your pods, stop back." 
+
+       iConversation.Say(ship,"", "pcps_refuse_response");
+       break;
+
+    default :
+       break;
+    }
+
+    // Finish the conversation.
+    iConversation.End();
+}
+
+/*   
+
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

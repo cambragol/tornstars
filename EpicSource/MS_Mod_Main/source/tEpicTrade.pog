@@ -1,0 +1,1146 @@
+//*******************************************************************************************/
+//
+// tEpicTrade.pog
+//
+// 
+// 
+// 
+// Adding trade ships is done in the generate trade sets.
+//
+// Jan 2003, Jon Freise
+//******************************************************************************************/
+
+package tEpicTrade;
+
+uses	Sim,
+		iShip,
+		iSim,
+		Debug,
+		Global,
+		GUI,
+		iDirector,
+		iGame,
+		iGUI,
+		iHUD,
+		iHabitat,
+		iMapEntity,
+		INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+		iUtilities,
+		iCargo,
+		iInventory,
+		iComms,
+		Math,
+      iDockPort,                
+		UniGUI,
+      ECargoTypes,
+      ECargoScript,
+      tStationEnum,
+      tEpicGuiEnum,
+      tEpicGui,
+      tEconCargoTypes,
+		tEconUtil,
+      tEconSmall,
+		tPodUtil,                
+		tEpicFleet;
+
+
+
+
+provides TradeWindow,
+         RunCheck,
+         StartScreen,
+         SellPressed,
+         SellAllPressed,
+         BuyPressed,
+         StorePressed,
+         UnloadPressed,
+         ExitTradeScreen,
+         TradeItemSelected,
+         ReadCargoList,
+         PlayerFunds,
+         AdjustFunds;
+
+
+
+prototype int PlayerFunds();
+
+prototype int AdjustFunds(int amount);
+
+
+prototype int get_sell_price(hcargo cargo);
+
+prototype int get_buy_price(hcargo cargo);
+
+
+prototype set inventory_set();
+
+prototype set generate_trade_sets(hisim trade_center);
+
+prototype update_selected_trade(hcargo item);
+
+prototype set filter_on_faction(set cargo_set, hsim station);
+
+prototype set PlayerBuySet(hsim station);
+
+prototype set PlayerSellSet(hsim station);
+
+prototype string StationTypeToString(int type);
+
+prototype CreateCargoList();
+
+prototype hwindow CreateTradeListBox(hwindow parent, int x, int y, int width, int height, set cargo_set);
+
+
+prototype hsim SearchTradeShip(hship player);
+
+prototype SetTradeShipProperties(hsim ship);
+
+prototype set TradeShipBuySet(hsim ship);
+
+prototype set TradeShipSellSet(hsim ship);
+
+prototype task delay_info_update();
+
+
+
+
+RunCheck()
+{
+   Global.SetBool("g_zz_ug_passme",true);
+}
+
+
+//*******************************************************************************
+// 
+
+//*******************************************************************************
+hwindow CreateTradeListBox(hwindow parent, int x, int y, int width, int height, set cargo_set)
+{
+   int i, count;
+   hcargo cargo;
+   hwindow list_box, button;
+   list button_list;
+   list cargo_list = List.FromSet(cargo_set);
+
+   cargo_list = List.SortByStringProperty(cargo_list, "name");
+
+   list_box = GUI.CreateListBox( x, y,
+                                 width, height,
+                                 parent,
+                                 true,
+                                 false);
+
+   // Add just a little space around the buttons.
+   width = width -4;
+
+   count = List.ItemCount(cargo_list);
+   for (i=0;i<count;++i) {
+      cargo = iCargo.Cast(List.GetNth(cargo_list,i));
+      button = iGUI.CreateAndInitialiseRectangularInverseRadioButton( parent, 0, 0, 
+                                                                      width, 
+                                                                      iCargo.Name(cargo),
+                                                                      false );
+      // We will need to be able to look up the cargo 
+      // for buying and selling later.
+      Object.AddHandleProperty(button,"g_epic_trade_cargo",cargo);
+
+      GUI.SetInputOverrideFunctions( button,
+											"", 
+											"",
+											"", 
+											"", 
+											"", 
+											"",
+											"tEpicTrade.TradeItemSelected",
+											"",
+											"" );
+
+      GUI.AddListBoxEntry(list_box, button);
+   }
+
+   GUI.SetListBoxSelectFunction( list_box, "tEpicTrade.TradeItemSelected" );
+
+   return list_box;
+}
+
+
+CreateActionButtonList(hwindow parent)
+{
+   hwindow button, list_box;
+   int count;
+   list action_list;
+   int button_width =    Global.Int( "GUI_inversebutton_width");
+   int height;
+
+   // Create sell 
+   button = iGUI.CreateAndInitialiseRectangularInverseButton( none, 0, 0, button_width, "Sell", "tEpicTrade.SellPressed" );
+   List.AddTail( action_list, button );
+
+   // Create sell all 
+   button = iGUI.CreateAndInitialiseRectangularInverseButton( none, 0, 0, button_width, "SellAll", "tEpicTrade.SellAllPressed" );
+   List.AddTail( action_list, button );
+
+   // Create buy 
+   button = iGUI.CreateAndInitialiseRectangularInverseButton( none, 0, 0, button_width, "Buy", "tEpicTrade.BuyPressed" );
+   List.AddTail( action_list, button );
+
+   // Check if this is an inventory station.
+
+
+   // Create store 
+   button = iGUI.CreateAndInitialiseRectangularInverseButton( none, 0, 0, button_width, "Store", "tEpicTrade.StorePressed" );
+   List.AddTail( action_list, button );
+
+   // Create unload 
+   button = iGUI.CreateAndInitialiseRectangularInverseButton( none, 0, 0, button_width, "Unload", "tEpicTrade.UnloadPressed" );
+   List.AddTail( action_list, button );
+   
+
+					
+   height = 5 * Global.Int( "GUI_inversebutton_height");
+   height = height + 6 * 2;
+
+   list_box = GUI.CreateListBox( Global.Int("EpicGui_content_indent"), 
+                                 420,
+                                 button_width+4, 
+                                 height,
+                                 parent,
+                                 true,
+                                 false);
+
+
+   for ( count = 0 ; count < List.ItemCount( action_list ) ; ++count )
+   {
+		GUI.AddListBoxEntry( list_box, GUI.Cast( List.GetNth( action_list, count ) ) );
+   }
+
+
+   GUI.CreateBorder(list_box);
+
+}
+
+
+/*
+
+
+
+*/
+
+UpdateTradeInfoBox()
+{
+   hwindow parent = GUI.Cast(Global.Handle("g_epic_trade_info_parent"));
+   hcargo cargo = iCargo.Cast(Global.Handle("g_epic_trade_current_trade"));
+   hwindow info = GUI.Cast(Global.Handle("g_epic_trade_info_box"));
+   hisim trade_center = iSim.Cast(Global.Handle("g_epic_trade_start_object"));
+   string info_string;
+   int buy_price, sell_price, cargo_type, legal_pods, illegal;
+
+   // if there was an info box, destroy it.
+
+   if (none == info) {
+      info = GUI.CreateTextWindow(Global.Int("EpicGui_content_indent"),
+                                  Global.Int("EpicGui_content_drop")+100,
+                                  200, 
+                                  200, 
+                                  parent);
+      Global.CreateHandle("g_epic_trade_info_box",GA_Write|GA_NoSave,info);
+      GUI.SetWindowFont( info, Global.String( "GUI_detail_font" ) );
+   }
+
+   buy_price = Object.IntProperty(cargo,"g_epic_trade_buy_price");
+   sell_price = Object.IntProperty(cargo,"g_epic_trade_sell_price");
+
+   cargo_type = iInventory.CargoTypeFromName(iCargo.Name(cargo));
+
+   legal_pods = tPodUtil.NumberOfCargoType(trade_center, 10km, cargo_type, true);   
+   illegal = tPodUtil.NumberOfCargoType(trade_center, 10km, cargo_type, false);   
+
+   info_string = iCargo.Name(cargo);
+   info_string = String.Join(info_string,String.FormatInt("<p>Buy $ %d K ", buy_price/1000));
+   info_string = String.Join(info_string,String.FormatInt("<p>Sell $ %d K ", sell_price/1000));
+   
+   info_string = String.Join(info_string,
+                             String.FormatInt("<p>Store : %d ",
+                                              iInventory.NumberOfCargoType( cargo_type)));
+
+   info_string = String.Join(info_string,String.FormatInt("<p>Legal Pods : %d",legal_pods));
+
+   info_string = String.Join(info_string,String.FormatInt("<p>Stolen Pods : %d", illegal - legal_pods));
+
+   info_string = String.Join(info_string,String.FormatInt("<p>Funds $%d K ", PlayerFunds()/1000));
+
+   info_string = String.Join(info_string,"</BODY></HTML>");   
+   info_string = String.Join("<HTML><BODY>",info_string);   
+
+   GUI.SetTextWindowString(info, info_string);
+
+
+
+   // Build string
+   // Name
+   // Buy price
+   // Sell price
+   // Inventory number
+   // Pods number
+}
+
+
+TradeWindow()
+{
+   hwindow lh_shady, rh_shady;
+   hwindow trade_list_box;
+   hwindow station_title;
+   hwindow fac_title;
+   set trade_set;
+   hisim trade_center = iSim.Cast(Global.Handle("g_epic_trade_start_object"));
+   hsim waypoint;
+   string fac_string;
+   hfaction faction;
+   string title_font = Global.String( "GUI_subtitle_font" );
+
+   int rwidth, rheight, rx, ry;
+
+   debug Debug.PrintString("Trade Window\n");
+
+   // Set right hand shady bar width.
+   lh_shady = iGUI.CreateWideShadyBar();
+
+   GUI.SetShadyBarWidth(400);
+
+   rh_shady = iGUI.CreateShadyBarRight();
+   
+   tEpicGui.CreateTitle(lh_shady,"CARGO COMP");
+   tEpicGui.CreateSubtitle(lh_shady,"Trade and Inventory");
+
+   tEpicGui.CreateExitButton(lh_shady, "EXIT", "tEpicTrade.ExitTradeScreen" );   
+
+   // Place the station name
+
+   station_title = iGUI.CreateAndInitialiseStaticWindow(Global.Int("EpicGui_content_indent"), 
+                                                        Global.Int("EpicGui_content_drop"),
+                                                        GUI.WindowCanvasWidth( lh_shady ) - Global.Int("EpicGui_content_indent"), 
+                                                        20,
+                                                        lh_shady,
+                                                        title_font,
+                                                        Sim.Name(trade_center) );
+
+
+   GUI.SetWindowTextFormatting( station_title, false, 0);
+
+
+   // Place the faction name and standing
+   faction = iSim.Faction(iSim.Cast(trade_center));
+   fac_string = String.Join(iFaction.Name(faction),": ");
+   fac_string = String.Join(fac_string,String.FromFloat(iFaction.Feeling(faction,iFaction.Find("Player"))));
+
+   station_title = iGUI.CreateAndInitialiseStaticWindow(Global.Int("EpicGui_content_indent"), 
+                                                        Global.Int("EpicGui_content_drop")+20,
+                                                        GUI.WindowCanvasWidth( lh_shady )- 2*Global.Int("EpicGui_content_indent"), 
+                                                        20,
+                                                        lh_shady,
+                                                        title_font,
+                                                        fac_string );
+
+   GUI.SetWindowTextFormatting( station_title, false, 0);
+
+
+   station_title = iGUI.CreateAndInitialiseStaticWindow(Global.Int("EpicGui_content_indent"), 
+                                                        Global.Int("EpicGui_content_drop")+40,
+                                                        GUI.WindowCanvasWidth( lh_shady )- 2*Global.Int("EpicGui_content_indent"), 
+                                                        20,
+                                                        lh_shady,
+                                                        title_font,
+                                                        tEconUtil.StationIntToString(iHabitat.Type(iHabitat.Cast(trade_center))));
+
+   GUI.SetWindowTextFormatting( station_title, false, 0);
+
+
+
+   // Create the action button list
+   CreateActionButtonList(lh_shady);
+
+   // Create the exit button
+   /*
+	iGUI.CreateAndInitialiseFancyButton(lh_shady,
+                                       GUI.WindowCanvasHeight( lh_shady ) - 
+                                       ( Global.Int( "GUI_fancybutton_height" ) + 8 ),
+                                       "Exit",
+                                       "tEpicTrade.ExitTradeScreen" );
+*/
+
+   // Create the trade item list box
+   trade_set = generate_trade_sets(trade_center);
+
+   rwidth = GUI.WindowCanvasWidth(rh_shady) - 2 * Global.Int("EpicGui_content_indent");
+   rheight = GUI.WindowCanvasHeight(rh_shady) - Global.Int("EpicGui_content_drop"); 
+   rheight = rheight - Global.Int("EpicGui_content_footer");
+
+   rx = Global.Int("EpicGui_content_indent");
+   ry = Global.Int("EpicGui_content_drop");
+
+   trade_list_box = CreateTradeListBox(rh_shady, rx, ry, rwidth, rheight, trade_set);
+   GUI.SelectListBoxEntry( trade_list_box, 0 );
+
+   // add scroll bar
+   GUI.CreateVerticalScrollbar( rx+rwidth, ry,
+                                Global.Int("GUI_scrollbar_width"),
+                                rheight,
+                                rh_shady,
+                                trade_list_box,
+                                Global.Float( "GUI_scrollbar_buttonratio"),
+                                "");
+
+
+   
+   // Create the info box, setting needed globals.
+   Global.CreateHandle("g_epic_trade_info_parent",GA_Write|GA_NoSave,lh_shady);
+   Global.CreateHandle("g_epic_trade_current_trade",GA_Write|GA_NoSave, Set.FirstElement(trade_set));
+
+   UpdateTradeInfoBox();
+
+   // Create any global items and lists that are needed for running.
+
+   // Create the location that new pods will be placed when they are created.
+   waypoint = Sim.Create("ini:/sims/nav/waypoint","pod_mark");
+   Sim.PlaceNear(waypoint, trade_center, 5km);
+   Global.CreateHandle("g_epic_trade_pod_marker", GA_Write|GA_NoSave, waypoint);
+
+}
+
+StartScreen()
+{
+   hship player = iShip.FindPlayerShip();
+
+   hsim station_handle = Sim.Cast( Global.Handle( "g_zz_ug_station" ) );
+
+   // Check for station or trade ship, if not bail out.
+
+   debug Debug.PrintString("Trade: StartScreen\n");
+   if (none == station_handle) {
+
+      // Go look around for a nearby trade ship
+      station_handle = SearchTradeShip(player);
+      if (none == station_handle) {
+         // Beep, cause there is nothing to trade with.
+         // bail out.
+         debug Debug.PrintString("Trade: No Trade Ship or Station!\n");
+         iHUD.PlayAudioCue(AC_InvalidInput);
+         return;
+      }else {
+         // We have a trade ship.
+         Global.CreateHandle("g_epic_trade_start_object",GA_Write | GA_NoSave, station_handle);
+      }
+   } else {
+      // Mark all stations as legal, until we get the station property code running.
+      Object.AddBoolProperty(station_handle,"g_epic_trade_legal_station", true);
+      Object.SetBoolProperty(station_handle,"g_epic_trade_legal_station", true);
+
+      // Mark all stations as able to handle inventory.
+      Object.AddBoolProperty(station_handle,"g_epic_trade_inventory_station", true);
+      Object.SetBoolProperty(station_handle,"g_epic_trade_inventory_station", true);
+
+      Global.CreateHandle("g_epic_trade_start_object",GA_Write | GA_NoSave, station_handle);
+   }
+
+   debug Debug.PrintHandle(station_handle);
+   debug Debug.PrintString("Trade: Screens\n");
+
+   GUI.PopScreensTo("icSpaceFlightScreen");
+   GUI.OverlayScreen("icPDAOverlayManager");
+   iGUI.OverlayCustomScreen( "tEpicTrade.TradeWindow" );
+}
+
+StartTradeShip(hsim ship)
+{
+   // Check if the ship is really a trade ship
+   Global.CreateHandle("g_epic_trade_start_object",GA_Write | GA_NoSave, ship);
+
+   GUI.PopScreensTo("icSpaceFlightScreen");
+   GUI.OverlayScreen("icPDAOverlayManager");
+   iGUI.OverlayCustomScreen( "tEpicTrade.TradeWindow" );
+}
+
+
+SellPressed()
+{
+   hisim trade_center =  iSim.Cast(Global.Handle("g_epic_trade_start_object"));
+   hcargo cargo = iCargo.Cast(Global.Handle("g_epic_trade_current_trade"));
+   int price, type ;
+   bool legal = Object.BoolProperty(trade_center,"g_epic_trade_legal_station");
+
+   debug Debug.PrintString("Trade: Sell press\n");
+
+
+   type= iInventory.CargoTypeFromName(iCargo.Name(cargo));
+
+   // Check if player has this item in inventory or pod.
+   // Then deduct or remove this item.
+   if (tPodUtil.NumberOfCargoType(trade_center, 10km, type, legal) > 0){
+
+      tPodUtil.RemoveType(trade_center, 10km, type, 1, legal);
+      AdjustFunds(get_sell_price(cargo));
+
+   }else if (iInventory.NumberOfCargoType(type) > 0){
+
+      iInventory.Remove(type, 1);
+      AdjustFunds(get_sell_price(cargo));
+
+   } 
+
+   Task.Detach(start delay_info_update());
+}
+
+
+SellAllPressed()
+{
+   hisim trade_center =  iSim.Cast(Global.Handle("g_epic_trade_start_object"));
+   hcargo cargo = iCargo.Cast(Global.Handle("g_epic_trade_current_trade"));
+   int total, type;
+   bool legal = Object.BoolProperty(trade_center,"g_epic_trade_legal_station");
+
+   debug Debug.PrintString("Trade: Sell all press\n");
+
+   type= iInventory.CargoTypeFromName(iCargo.Name(cargo));
+
+   // Check if player has this item in inventory or pod.
+   // Then deduct or remove this item.
+
+   total = tPodUtil.NumberOfCargoType(trade_center, 10km, type, legal);
+   if (total > 0){ 
+      tPodUtil.RemoveType(trade_center, 10km, type, total, legal);
+      AdjustFunds(total * get_sell_price(cargo));      
+   } 
+
+   total = iInventory.NumberOfCargoType(type);
+   if (total  > 0){
+      iInventory.Remove(type, total);
+      AdjustFunds(total * get_sell_price(cargo));
+   }
+
+   Task.Detach(start delay_info_update());
+}
+
+
+BuyPressed()
+{
+   hsim trade_center =  Sim.Cast(Global.Handle("g_epic_trade_start_object"));
+   set buy_set = Global.Set("g_epic_trade_buy_set");
+   hcargo cargo = iCargo.Cast(Global.Handle("g_epic_trade_current_trade"));
+   hsim marker = Sim.Cast(Global.Handle("g_epic_trade_pod_marker"));
+   int price;
+   hsim pod;
+
+   debug Debug.PrintString("Trade: buy press\n");
+
+   // Check if current item is in buy list.
+   // And the player has the funds.
+   if (Set.Contains(buy_set,cargo)) {
+      if (PlayerFunds() > get_buy_price(cargo)) {
+         AdjustFunds(-1* get_buy_price(cargo));
+
+         //iInventory.AddWithoutMarkingNew(iInventory.CargoTypeFromName(iCargo.Name(cargo)), 1 );
+         // All buys show up as pods. The player can store them, but then they lose faction.
+         pod = tPodUtil.CreateCargoPod(iCargo.Name(cargo), "Player", iFaction.Name(iSim.Faction(iSim.Cast(trade_center))));
+         //tEpicFleet.PurchaseShip(iShip.Cast(pod));
+         Sim.PlaceAt(pod, marker);
+      } 
+   }
+
+   Task.Detach(start delay_info_update());
+
+}
+
+
+StorePressed()
+{
+   hisim trade_center =  iSim.Cast(Global.Handle("g_epic_trade_start_object"));
+   hcargo cargo = iCargo.Cast(Global.Handle("g_epic_trade_current_trade"));
+   int price, type ;
+   bool legal = Object.BoolProperty(trade_center,"g_epic_trade_legal_station");
+   bool inventory = Object.BoolProperty(trade_center,"g_epic_trade_inventory_station");
+
+
+   debug Debug.PrintString("Trade: Store press\n");
+
+   if (false == inventory) {
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   type= iInventory.CargoTypeFromName(iCargo.Name(cargo));
+
+   // Check if player has this item in pod.
+   // Then deduct or remove this item.
+
+   if (tPodUtil.NumberOfCargoType(trade_center, 10km, type, legal) > 0){
+      tPodUtil.RemoveType(trade_center, 10km, type, 1, legal);
+
+      iInventory.AddWithoutMarkingNew(iInventory.CargoTypeFromName(iCargo.Name(cargo)), 1 );
+   }
+
+   Task.Detach(start delay_info_update());
+
+}
+
+
+
+UnloadPressed()
+{
+
+   hsim trade_center =  Sim.Cast(Global.Handle("g_epic_trade_start_object"));
+   hcargo cargo = iCargo.Cast(Global.Handle("g_epic_trade_current_trade"));
+   hsim marker = Sim.Cast(Global.Handle("g_epic_trade_pod_marker"));
+   hsim pod;
+   bool inventory = Object.BoolProperty(trade_center,"g_epic_trade_inventory_station");
+
+
+   int price, type ;
+
+   debug Debug.PrintString("Trade: uload press\n");
+
+   if (false == inventory) {
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   type= iInventory.CargoTypeFromName(iCargo.Name(cargo));
+
+   if (iInventory.NumberOfCargoType(type) > 0){
+      iInventory.Remove(type, 1);
+
+      pod = tPodUtil.CreateCargoPod(iCargo.Name(cargo), "Player", "Player");
+      //tEpicFleet.PurchaseShip(iShip.Cast(pod));
+
+      Sim.PlaceAt(pod, marker);
+   }
+
+   Task.Detach(start delay_info_update());
+}
+
+task delay_info_update()
+{
+   Task.Sleep (Task.Current(), 0.1);
+
+   UpdateTradeInfoBox();
+}
+
+
+TradeItemSelected()
+{
+   hcargo cargo;
+   hwindow button = GUI.FocusedWindow();
+
+   debug Debug.PrintString("Trade: item press\n");
+   // Find the item under the cursor
+   // Read the cargo item 
+   cargo = iCargo.Cast(Object.HandleProperty(button,"g_epic_trade_cargo"));
+
+   // Call update function
+   update_selected_trade(cargo);
+}
+
+ExitTradeScreen()
+{
+	UniGUI.UniGUIRemoveScreen();
+}
+
+update_selected_trade(hcargo item)
+{
+   Global.CreateHandle("g_epic_trade_current_trade",GA_Write,item);
+
+   UpdateTradeInfoBox();
+
+}
+
+
+set_cargo_price(set cargo, set buy, set sell)
+{
+   list cargo_list = List.FromSet(cargo);
+   hcargo item;
+   int count, i;
+
+   count = List.ItemCount(cargo_list);
+   for (i=0;i<count;++i) {
+      item = iCargo.Cast(List.GetNth(cargo_list,i));
+
+      if (Set.Contains(buy, item)) {
+         Object.SetIntProperty(item,
+                               "g_epic_trade_buy_price", 
+                               Object.IntProperty(item,"g_epic_trade_system_price"));
+      }else {
+         Object.SetIntProperty(item,"g_epic_trade_buy_price", 0);
+      }
+
+      if (Set.Contains(sell, item)) {
+         Object.SetIntProperty(item,
+                               "g_epic_trade_sell_price", 
+                               Object.IntProperty(item,"g_epic_trade_system_price"));
+      }else {
+         Object.SetIntProperty(item,"g_epic_trade_sell_price", 1000);
+      }      
+   }
+}
+
+int get_buy_price(hcargo cargo)
+{
+   return Object.IntProperty(cargo,"g_epic_trade_buy_price");
+}
+
+int get_sell_price(hcargo cargo)
+{
+   return Object.IntProperty(cargo,"g_epic_trade_sell_price");
+}
+
+
+
+
+set filter_on_faction(set cargo_set, hsim station)
+{
+   list cargo_list = List.FromSet(cargo_set);
+   set result_set;
+   int total, i;
+   hcargo cargo;
+
+   hfaction station_fac = iSim.Faction(iSim.Cast(station));
+   hfaction player = iFaction.Find("Player");
+   float feeling;
+
+   feeling = iFaction.Feeling(station_fac, player);
+
+   total = List.ItemCount(cargo_list);
+   for (i=0;i<total;++i) {
+      cargo = iCargo.Cast(List.GetNth(cargo_list,i));
+
+      if (Object.FloatProperty(cargo,"ECargoStanding") <= feeling) {
+         Set.Add(result_set, cargo);
+      }
+   }
+
+   return result_set;
+}
+
+
+set generate_trade_sets(hisim trade_center)
+{
+   set buy_set, sell_set, inv_set, pod_set, total_set;
+
+
+   // Check if this is a trade ship, or a station
+   if (Object.PropertyExists(trade_center, "op_trade_ship_url")) {
+      // Trade ship. So we look up the buy and sell lists.
+      buy_set = TradeShipBuySet(trade_center);
+      sell_set = TradeShipSellSet(trade_center);
+   }else {
+      buy_set = PlayerBuySet(trade_center);
+      sell_set = PlayerSellSet(trade_center);
+   }
+
+   // Filter the buy set based on the player faction
+
+   buy_set = filter_on_faction(buy_set, trade_center);
+
+
+   // Check if this is an inventory station.
+   // then Get player inventory.
+
+   if (Object.BoolProperty(trade_center,"g_epic_trade_inventory_station")){
+      inv_set = inventory_set();
+   }
+
+   // Get set of player pods nearby.
+   pod_set = tPodUtil.PlayerPodCargoSet(trade_center, 10km);
+
+   Global.CreateSet("g_epic_trade_buy_set",GA_Write|GA_NoSave, buy_set);
+   Global.CreateSet("g_epic_trade_sell_set",GA_Write|GA_NoSave, sell_set);
+
+   Set.Union(total_set, buy_set);
+   Set.Union(total_set, sell_set);
+   Set.Union(total_set, inv_set);
+   Set.Union(total_set, pod_set);
+
+   set_cargo_price(total_set, buy_set, sell_set);
+
+   return total_set;
+}
+
+set inventory_set()
+{
+   set inv_set;
+   int i, count;
+   hcargo cargo;
+
+   // Find all the cargo types where the player has at least one pod.
+   count = iInventory.NumberOfCargoTypes();
+
+   for (i=0;i<count;++i) {
+      if (iInventory.NumberOfCargoType( i ) > 0){
+
+         cargo = iCargo.Find(i);
+         if (none != cargo) {
+            Set.Add(inv_set, iCargo.Find(i));
+         }
+      }
+   }
+
+   return inv_set;
+}
+
+// Player sell, station used
+/*
+set StationSellSet(hsim station)
+{
+   int hab_type;
+   int total, i;
+   set pod_set;
+   list pods;
+   hcargo cargo;
+
+   debug Debug.PrintString("Trade; station sell set\n");
+
+   // Create a system from ini file.
+   hab_type = tStation.Type(station);
+
+   // Get sell types
+   pod_set = ECargoScript.HabitatCargoSet(hab_type, 1);
+
+
+   // Debug Stuff.
+   pods = List.FromSet(pod_set);
+   total = List.ItemCount(pods);
+   for (i=0;i<total;++i) 
+   {
+     cargo = iCargo.Cast(List.GetNth(pods,i));
+
+     debug Debug.PrintHandle(cargo);
+     debug Debug.PrintString("\n");
+     debug Debug.PrintString(iCargo.Name(cargo));
+     debug Debug.PrintString("\n");
+   }
+   return pod_set;
+}
+*/
+// Player buy, station produced.
+/*
+set StationBuySet(hsim station)
+{
+   int cat_num, hab_type, pod_count, cargo_type;
+   int catagory, amount, total, count, i;
+   string station_str, cat_str;
+   set pod_set;
+   list pods;
+   hcargo cargo;
+
+   debug Debug.PrintString("Trade; station buy set\n");
+
+   // Create a system from ini file.
+   hab_type = tStation.Type(station);
+
+   // Get buy types
+   pod_set = ECargoScript.HabitatCargoSet(hab_type, 2);
+
+
+   // Debug Stuff.
+   pods = List.FromSet(pod_set);
+   total = List.ItemCount(pods);
+   for (i=0;i<total;++i) 
+   {
+     cargo = iCargo.Cast(List.GetNth(pods,i));
+
+     debug Debug.PrintHandle(cargo);
+     debug Debug.PrintString("\n");
+     debug Debug.PrintString(iCargo.Name(cargo));
+     debug Debug.PrintString("\n");
+   }
+   return pod_set;
+}
+*/
+
+// Form a set of cargo pods that the player can sell to this type 
+// of station.
+set PlayerSellSet(hsim station)
+{
+   int i, total;
+   hsim category;
+   list pod_list, category_list;
+
+
+   debug Debug.PrintString("Trade; player sell set\n");
+
+   category_list = Object.ListProperty(station, "tEconInput");
+
+   total = List.ItemCount(category_list);
+   for (i=0;i<total;++i) {
+      category = Sim.Cast(List.GetNth(category_list, i));
+      List.Append(pod_list, tEconSmall.CargoList(category));
+   }
+
+   category_list = Object.ListProperty(station, "tEconSupply");
+   total = List.ItemCount(category_list);
+   for (i=0;i<total;++i) {
+      category = Sim.Cast(List.GetNth(category_list, i));
+      List.Append(pod_list, tEconSmall.CargoList(category));
+   }
+
+   return Set.FromList(pod_list);
+}
+
+
+
+set PlayerBuySet(hsim station)
+{
+   int i, total;
+   hsim category;
+   list pod_list, category_list;
+
+   debug Debug.PrintString("Trade; player buy set\n");
+
+   category_list = Object.ListProperty(station, "tEconOutput");
+
+   total = List.ItemCount(category_list);
+   for (i=0;i<total;++i) {
+      category = Sim.Cast(List.GetNth(category_list, i));
+      List.Append(pod_list, tEconSmall.CargoList(category));
+   }
+
+   return Set.FromList(pod_list);
+}
+
+
+//*******************************************************************
+// Reads the cargo data file and updates the cargo with base price 
+// and faction data.
+
+//*******************************************************************
+ReadCargoList()
+{
+   //hinifile cargo_file = INIFile.Create("ini:/cargo_data");
+   int i, count;
+   hcargo cargo;
+   float price, standing;
+   string cargo_str;
+
+
+   count = iInventory.NumberOfCargoTypes();
+
+   for (i=0;i<count;++i) {
+
+      cargo = iCargo.Find(i);
+
+      cargo_str = String.FormatInt("%d",i);
+
+      //standing = INIFile.Float(cargo_file, cargo_str, "standing", 0);
+      //price = INIFile.Float(cargo_file, cargo_str, "baseprice", 0);
+
+      //Object.AddFloatProperty(cargo, "g_epic_trade_standing", standing);
+      price = iCargo.Value(cargo);
+
+      Object.AddIntProperty(cargo, "g_epic_trade_sell_price", 200);
+      Object.AddIntProperty(cargo, "g_epic_trade_buy_price", 0);
+      Object.AddIntProperty(cargo, "g_epic_trade_system_price", price);
+   }
+
+   //INIFile.Destroy(cargo_file);
+}
+
+
+
+
+
+/*
+
+[cargo_name]
+standing= (value * 0.1)
+baseprice= (value* manuf*1000)
+
+This function is used to create the cargo ini file by generating some
+base default values for all known cargo types.
+*/
+CreateCargoList()
+{
+   int i, count;
+   hcargo cargo;
+
+  
+   count = iInventory.NumberOfCargoTypes();
+
+   for (i=0;i<count;++i) {
+
+      cargo = iCargo.Find(i);
+      debug {
+         Debug.PrintString(String.FormatStrStr("q[%s] ; %s\n",String.FormatInt("%d",i), iCargo.Name(cargo)));
+
+         Debug.PrintString("qstanding=");
+         Debug.PrintFloat(iCargo.Value(cargo)*0.1);
+         Debug.PrintString("\n");
+
+         Debug.PrintString("qbaseprice=");
+         Debug.PrintFloat(iCargo.Value(cargo)*iCargo.RecycleValue(cargo)*1000);
+         Debug.PrintString("\n");         
+         Debug.PrintString("q\n");
+      }
+   }
+}
+
+int PlayerFunds()
+{
+   if (!Global.Exists("g_epic_trade_player_money")) {
+      Global.CreateInt("g_epic_trade_player_money",GA_Write,9999999);
+   }
+
+   return Global.Int("g_epic_trade_player_money");
+}
+
+int AdjustFunds(int amount)
+{
+   int money;
+
+   atomic {
+      if (!Global.Exists("g_epic_trade_player_money")) {
+         Global.CreateInt("g_epic_trade_player_money",GA_Write,9999999);
+      }
+
+      money = Global.Int("g_epic_trade_player_money");
+      money = money + amount;
+      Global.SetInt("g_epic_trade_player_money", money);
+   }
+
+   return money;
+}
+
+
+hsim SearchTradeShip(hship player)
+{
+   set ships;
+   hsim ship;
+
+   // Look for a ship with a trade url within 5km of the player vessel.
+
+   ships = iSim.ShipsInRadius( player, 5km);
+
+   while (!Set.IsEmpty(ships)) {
+      ship = Sim.Cast(Set.FirstElement(ships));
+      Set.Remove(ships,ship);
+
+      if (Object.PropertyExists(ship, "op_trade_ship_url")) {
+         debug Debug.PrintString("Trade: Found a trade ship!\n");
+
+         // Set up trade properties
+         SetTradeShipProperties(ship);
+
+         return ship;
+      }
+   }
+
+   return none;
+}
+
+
+SetTradeShipProperties(hsim ship)
+{
+
+   string trade_url =Object.StringProperty(ship, "op_trade_ship_url");
+   hinifile trade_file = INIFile.Create(trade_url);
+   bool legal;
+   int illegal;
+
+   if (none == trade_file) {
+      debug Debug.PrintString("Trade: Ship ini file not found!\n");
+      Object.AddBoolProperty(ship,"g_epic_trade_legal_station", true);
+      return;
+   }
+   
+   illegal = INIFile.Int(trade_file,"TradeShip","illegal",0);
+
+   if (0 == illegal) {
+      legal = true;
+   }else {
+      debug Debug.PrintString("Trade: Found an illegal trade ship\n");
+      legal = false;
+   }
+
+   Object.AddBoolProperty(ship,"g_epic_trade_legal_station", legal);
+   Object.SetBoolProperty(ship,"g_epic_trade_legal_station", legal);
+
+   Object.AddBoolProperty(ship,"g_epic_trade_inventory_station", false);
+   Object.SetBoolProperty(ship,"g_epic_trade_inventory_station", false);
+   
+   INIFile.Destroy(trade_file);
+}
+
+
+set TradeShipBuySet(hsim ship)
+{  
+   set trade;
+   hinifile trade_file;
+   int count;
+   string cargo_name, trade_url;
+
+
+   trade_url =Object.StringProperty(ship, "op_trade_ship_url");
+   trade_file = INIFile.Create(trade_url);
+
+   if (none == trade_file) {
+      debug Debug.PrintString("Trade: Ship ini file not found!\n");
+      return trade;
+   }
+
+   // Get the cargo types used by the trade ship 
+   count=0;
+   while (INIFile.NumberedExists( trade_file,"TradeShip","used",count)){
+      cargo_name = INIFile.NumberedString(trade_file, "TradeShip", "used", count, "None");
+      ++count;
+      Set.Add(trade,iCargo.Find(iInventory.CargoTypeFromName(cargo_name)));
+   }//while
+
+   INIFile.Destroy(trade_file);
+
+   return trade;
+
+}
+
+set TradeShipSellSet(hsim ship)
+{
+   set trade;
+   hinifile trade_file;
+   int count;
+   string cargo_name, trade_url;
+   hcargo cargo;
+
+
+   trade_url =Object.StringProperty(ship, "op_trade_ship_url");
+   trade_file = INIFile.Create(trade_url);
+
+   if (none == trade_file) {
+      debug Debug.PrintString("Trade: Ship ini file not found!\n");
+      return trade;
+   }
+
+   // Get the cargo types produced by the trade ship 
+   count=0;
+   while (INIFile.NumberedExists( trade_file,"TradeShip","produced",count)){
+      cargo_name = INIFile.NumberedString(trade_file, "TradeShip", "produced", count, "None");
+      ++count;
+      cargo = iCargo.Find(iInventory.CargoTypeFromName(cargo_name));
+      if (none != cargo) {
+         Set.Add(trade, cargo);
+      }
+
+   }//while
+
+   INIFile.Destroy(trade_file);
+
+   return trade;
+}
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

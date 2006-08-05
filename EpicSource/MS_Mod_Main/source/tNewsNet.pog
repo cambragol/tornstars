@@ -1,0 +1,392 @@
+//*******************************************************************************************/
+//
+// tNewsNet forms the Network 54 news service. This is intended to bring stories and 
+// background material to the player. Also to let the player see the impact of their
+// actions on the badlands, through the responses of others.
+// 
+// The Network54 archive is the primary news channel. News sent here displays to the 
+// player immediately. This is the way most news should be delivered.
+//
+// The second archive is the pending queue. This is where news read out 
+// of *.INI files waits. Every few minutes a new mail is pulled from the pending queue
+// and sent to the Network54 archive for viewing. This second interface forms a
+// background information mechanism, that does not need any POG code to use.
+// Great for hints, articles, helpful ideas, and jokes.
+// Because the stories are pulled in random order, it is not good for story arcs,
+// instead write some pog code to use SendNews, and submit the story mails in 
+// correct order.
+//******************************************************************************************/
+
+package tNewsNet;
+
+uses	Sim,
+		Debug,
+		Global,
+		GUI,
+		INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+  		Math,
+		iSim,
+      iMod,
+		UniGUI,
+      tTime,
+		tMail;
+
+provides StartNewsNet,
+         SendNews,
+         NewsAr,
+         DayUpdate;
+
+
+
+prototype StartNewsNet();
+
+prototype ReadNewsMods();
+
+prototype task NewsUpdate();
+
+prototype hsim NewsAr();
+
+prototype SendNews(string sender,
+                   string subject,
+                   string body,
+                   bool html_body);
+
+prototype DayUpdate();
+
+//*******************************************************************************************/
+//
+// SendNews is the primary interface to the News service. It is the simplest of the Sends. 
+//   news sent with this function will show up in the news message list immediately.
+// 
+//  sender - is a normal string "Personals". Typically sectional - politics, travel, garden
+//  subject - is a normal string "Android Wanted".
+//  body - has two forms
+//  1. a HTML resource string - "html:/html/wanted_email" 
+//  2. a string with a HTML wrapper -  <html><body>Android looking for Similar</html></body>"
+//  html_body - set this true if the body string is an HTML resource string.
+// 
+// Note the lack of return code or function header. News items may never be read by player
+// so they are lacking in features. Note also that news items START deleted. Once the 
+// player has looked at them, they are discarded.
+//
+//******************************************************************************************/
+SendNews(string sender,
+         string subject,
+         string body,
+         bool html_body)
+{
+   hsim archive = tMail.FindArchive("Network54");
+   int id;
+   tMail.SendMail(archive,
+                  sender, 
+                  subject, 
+                  body, 
+                  "",      //never a return function
+                  none,
+                  "Date",
+                  true,    //starts deleted
+                  false,   //not critical
+                  html_body);
+}
+
+//*******************************************************************************************/
+//
+// Lets mods request the NetNews archive. Useful for testing.
+// 
+// 
+//******************************************************************************************/
+hsim NewsAr()
+{
+   return tMail.FindArchive("Network54");
+}
+
+
+//*******************************************************************************************/
+//
+// Local functions that implement the NewsNet app.
+// 
+// 
+//******************************************************************************************/
+
+//*******************************************************************************************/
+//
+// StartNewsNet is started by the ShipMail app at the Enter_Space event. It creates
+// the archives for the first time, looks for new material, and launches the update task.
+// 
+//******************************************************************************************/
+StartNewsNet(){
+   hsim archive;
+
+   // Create the archives.
+   archive = tMail.FindArchive("Network54");
+   if(none == archive){
+      debug Debug.PrintString("ShipMail: Creating Archive Network54\n");
+      archive = tMail.CreateArchive("Network54",
+                                    "Network 54",
+                                    "Your guide to what is happening in the BadLands. Politics, events, travel, and gossip. All the news that is fit to print, and then some.",
+                                    false,
+                                    true);
+
+      // Pull in the news for the current day.
+      DayUpdate();
+   }
+
+   /*
+   archive = tMail.FindArchive("NewsNetSubmit");
+   if(none == archive){
+      debug Debug.PrintString("ShipMail: Creating Archive NewsNetSubmit\n");
+      archive = tMail.CreateArchive("NewsNetSubmit",
+                                    "Pending News List",
+                                    "Only visible in this debug version. This is where news waits hidden before going to player.",
+                                    false, // base only 
+                                    false); // player viewable 
+   }
+   */
+
+   // Look for new news mods.
+   //ReadNewsMods();
+
+   // Launch the news update task.
+//   start NewsUpdate();
+
+
+
+}
+
+//*******************************************************************************************/
+//
+// ReadNewsMods is run at Enter_Space. It looks for new mods that have some news material
+// in them. It posts this material to the submit queue. This way users can add background 
+// material to go along with their missions.
+// 
+// It remembers mods and does not read them again.
+//
+// Here is the *.ini format. As many numbered entries as you wish. All the parts must
+// match in number. Only need one [NewsNetMod] entry.
+// [NewsNetMod]
+//   sender[0] = "Travel"
+//   subj[0] = "The Effreet"     
+//   body[0] = "<html><body>The body text goes here, or use a resource file</html></body>"
+//   html[0] = 0   ;set 0 if body html wrapped string, or set 1 if body is html resource file 
+//
+//
+//
+//******************************************************************************************/
+ReadNewsMods()
+{
+   int cmod, cmessage, count;
+   string mod_name;
+   hinifile modini;
+   string sender;
+   string subj;
+   string body;
+   int id;
+   int html;
+   bool html_body;
+   hsim archive = tMail.FindArchive("NewsNetSubmit");
+
+   count = iMod.Count();
+
+   for (cmod=0;cmod<count;++cmod) {
+      mod_name = iMod.Name(cmod);
+
+      if (!Global.Exists(String.FormatStrStr("g_trout_newsnet_read_%s%s",mod_name,""))) {
+
+
+         modini = INIFile.Create(String.Join("ini:/",mod_name));
+
+         debug Debug.PrintHandle(modini);
+         debug Debug.PrintString(String.FormatStrStr("sSeeking %s %s \n",mod_name,""));
+
+         if (none != modini) {
+            cmessage = 0;
+
+            if (INIFile.NumberedExists(modini,"NewsNetMod","sender",cmessage)) {
+               // This mod ini file has some news messages, so remember that we read it in.
+               Global.CreateBool(String.FormatStrStr("g_trout_newsnet_read_%s%s",mod_name,""), GA_Write,true);
+            }
+
+            //Read each entry in the Ini and send a mail message.
+            while(INIFile.NumberedExists(modini,"NewsNetMod","sender",cmessage)){
+               sender = INIFile.NumberedString(modini,"NewsNetMod","sender",cmessage,"NoSend");
+               subj = INIFile.NumberedString(modini,"NewsNetMod","subj",cmessage,"NoSubj");
+               body = INIFile.NumberedString(modini,"NewsNetMod","body",cmessage,"NoBody");
+               html = INIFile.NumberedInt(modini,"NewsNetMod","html",cmessage,0);
+
+               debug Debug.PrintString(String.FormatStrStr("sender %s %s\n",sender,body));
+
+               if (html==1) {
+                  html_body = true;
+               }else{
+                  html_body = false;
+               }
+
+               id = tMail.SendMail(archive, 
+                                   sender, 
+                                   subj, 
+                                   body, 
+                                   "",      //no accept function.
+                                   none,
+                                   "Date", 
+                                   false,    // save
+                                   false,   //not critical
+                                   html_body);  
+          
+               ++cmessage;
+            }//while more messages 
+
+            INIFile.Destroy(modini);
+         }// mod ini exists
+      }//we have not read this mod
+   }// each mod
+}//ReadNewsMods
+
+
+
+//*******************************************************************************************/
+//
+// NewsUpdate grabs mails out of the submit mail queue and sends the to the player visible
+// read queue. 
+// 
+//******************************************************************************************/
+
+task NewsUpdate()
+{
+   hsim read, submit;
+   hsim mail;
+   list mail_list;
+   int count;
+
+   schedule {
+
+      //every 10:{
+      every 900:{
+         // every 15 min of flight time:
+         // grab a random mail out of the submit queue, 
+         // and put it in the read queue.
+         submit = tMail.FindArchive("NewsNetSubmit");
+         read = tMail.FindArchive("Network54");
+
+         atomic{
+
+            mail_list = tMail.GetArchiveMail(submit);
+            count = List.ItemCount(mail_list);
+            mail = Sim.Cast(List.GetNth(mail_list,Math.RandomInt(0,count)));
+
+            if (none != mail) {
+               tMail.MoveMail(mail, submit, read);
+            }
+         }
+
+         debug {
+            Debug.PrintString("Moving Mail Item");
+            Debug.PrintHandle(mail);
+            Debug.PrintString(" Item\n");
+         }
+      }
+   }
+}
+
+//******************************************************************************************/
+//  Called once per day, this checks the news_day.ini file for any news items that should
+// be shipped out today.
+
+//******************************************************************************************/
+
+// File structure
+
+// [News]
+// item[0]="NameOfNewsItem"
+
+// name must not have spaces
+// [NameOfNewsItem]
+// send_day=1
+// subject="subject line text in quote"
+// sender="sender line text"
+// html_file="html:/html/news/news1"
+
+
+DayUpdate()
+{
+   hinifile news_data = INIFile.Create("ini:/html/news/news_day");
+   int current_day = tTime.GetDay();
+   int send_day;
+   int count;
+   int id;
+
+   string item_name, news_filename, subject, sender;
+   hsim news_archive;
+
+
+   if (none == news_data)
+   {
+      debug Debug.PrintString("tNewsNet.DayUpdate cannot create news_day.ini file.\n");
+      return;
+   }
+   
+   
+   news_archive = tMail.FindArchive("Network54");
+   if (none == news_archive)
+   {
+      debug Debug.PrintString("tNewsNet.DayUpdate news archive does not exist.\n");
+      return;
+   }
+
+
+   // Put in some protection from double posting.
+   // This should never run in theory, but just in case.
+   send_day = Global.Int("gt_news_done_day");
+   Global.CreateInt("gt_news_done_day", GA_Write, current_day);
+
+   if (send_day == current_day)
+   { 
+      debug Debug.PrintString("tNewsNet.DayUpdate news already sent.\n");
+      return;
+   }
+
+
+
+   // We check each news message, to see if it matches the current day.
+   // If it does, then we pull it in.
+
+   count=0;
+   while (INIFile.NumberedExists(news_data,"News","item",count))
+   {
+      item_name = INIFile.NumberedString(news_data,"News","item",count,"none");
+      ++count;
+      
+      send_day = INIFile.Int(news_data,item_name,"send_day",0);
+
+      if (0 != send_day)
+      {
+         if (send_day == current_day)
+         {
+            subject = INIFile.String(news_data, item_name, "subject", "MissingSubject");
+            sender = INIFile.String(news_data, item_name, "sender", "MissingSender");
+            news_filename = INIFile.String(news_data, item_name, "html_file", "html:/html/news/missing");
+
+            id = tMail.SendMail(news_archive, 
+                                sender, 
+                                subject, 
+                                news_filename, 
+                                "",      //no accept function.
+                                none,
+                                "Date", 
+                                false,   //save
+                                false,  //not critical
+                                true);  //always html 
+         }
+      }
+   }
+
+
+
+   INIFile.Destroy(news_data);
+}
+

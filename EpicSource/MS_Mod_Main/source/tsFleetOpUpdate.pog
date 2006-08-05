@@ -1,0 +1,89 @@
+/*******************************************************************************************/
+//
+// tsFleetOpUpdate
+//
+// This package gives the operations the chance to move and respond.
+// 
+// 
+// March 2006
+//******************************************************************************************/
+
+package tsFleetOpUpdate;
+
+
+uses  Sim,
+iSim,
+Debug,
+Global,
+iGame,
+iFaction,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+State,
+Text,
+Math,
+iShip,
+iHabitat,
+iMapEntity,
+   iHUD,
+   iComms,
+   tStationEnum,
+   tTime,
+   tUnderOp,
+   tsFleetOperation;
+
+
+
+
+
+
+provides UpdateAll;
+
+
+
+
+
+
+UpdateAll()
+{
+   int op_count, opnum;
+   list op_list;
+   hisim operation;
+   int timer, current_day;
+
+   current_day = tTime.GetDay();
+
+   op_list = tUnderOp.OperationList();
+   op_count = List.ItemCount(op_list);
+
+   debug {
+      Debug.PrintString(String.FormatInt("tsFleetOpUpdate.UpdateAll %d ops\n", op_count));
+   }
+
+   for (opnum=0;opnum<op_count;++opnum) {
+
+      operation = iSim.Cast(List.GetNth(op_list,opnum));
+
+      timer = tUnderOp.WakeTimer(operation);
+      if (current_day >= timer) {
+
+         // This operation wants to take action.
+         tsFleetOperation.Update(operation);
+      }
+   }
+}
+
+
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

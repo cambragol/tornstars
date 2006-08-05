@@ -1,0 +1,188 @@
+/**************************************************************************************/
+
+// jGiftCargo.pog
+// 
+// This program will read an ini file and give the player a bunch of cargo listed in
+// that file. Used to start up a new game.
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+/**************************************************************************************/
+
+package jGiftCargo;
+
+
+uses    Sim,
+        iShip,
+        iSim,
+        iAi,
+        iPilotSetup,
+        Debug,
+        Global,
+        GUI,
+        iDirector,
+        iGUI,
+        iHUD,
+        iHabitat,
+        iFaction,
+        iMapEntity,
+      	iGame,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        iUtilities,
+        iCargo,
+        iInventory,
+        iComms,
+        Math,
+        iMod,
+        CargoTypes,
+        tEconUtil,
+        tEpicMoney;
+
+
+provides AddInventory,
+         NewGame;
+
+/*
+   Expected file definition
+   
+   [PlayerCargo]
+   cargo[0]="name of cargo"
+   quantity[0]=integer cargo number
+   
+   
+   [PlayerShip]
+   ship[0]="CommandSection"
+   ship[1]="FastAttack"
+   ship[2]="HeavyCorvette"
+   ship[3]="StormPetrel"
+   ship[4]="Tug"
+
+   [PlayerFunds]
+   ship_account=
+   private_account=
+*/
+
+// Call this function at the start of a new game to include player cargo.
+
+AddInventory()
+{
+   hinifile cargo_list = INIFile.Create("ini:/startingcargo");
+   int item_count, i;
+   int cargo_number, cargo_type;
+   string ship_name, cargo_name;
+   int cargo;
+   int funds;
+
+   // We only do this once, only after a new game has been started.
+   if (Global.Bool("gt_gift_cargo_new_game")) {
+      return;
+   }
+
+   Global.SetBool("gt_gift_cargo_new_game", true);
+
+   debug Debug.PrintString("AddInventory: Loading player starting items\n");
+
+   if (none == cargo_list) {
+      debug Debug.PrintString("AddInventory: Cannot find cargo list\n");
+      return;
+   }
+
+
+   item_count=0;
+   while (INIFile.NumberedExists(cargo_list,"PlayerCargo","cargo",item_count)) {
+      cargo_name = INIFile.NumberedString(cargo_list,"PlayerCargo","cargo", item_count, "CT_Invalid");
+      cargo_number = INIFile.NumberedInt(cargo_list,"PlayerCargo","quantity",item_count,0);
+      ++item_count;
+
+      cargo_type = tEconUtil.String2CargoType(cargo_name);
+
+      if (CT_Invalid != cargo_type) {
+   
+         iInventory.AddWithoutMarkingNew(cargo_type, cargo_number);
+      
+      }
+
+      debug {
+         Debug.PrintString(iCargo.Name(iCargo.Find(cargo_type)));
+         Debug.PrintString(" ");
+         Debug.PrintInt(cargo_number);
+         Debug.PrintString(" added\n");
+      }
+   }
+
+   iInventory.RemoveCommandSection();
+   iInventory.RemoveFastAttackShip();
+   iInventory.RemoveHeavyCorvette();
+   iInventory.RemoveStormPetrel();
+   iInventory.RemoveTug();
+
+
+   item_count=0;
+   while (INIFile.NumberedExists(cargo_list,"PlayerShip","ship",item_count)) {
+      ship_name = INIFile.NumberedString(cargo_list,"PlayerShip","ship",item_count,"none");
+
+      if (ship_name =="CommandSection"){
+         iInventory.AddCommandSection();
+      }else if (ship_name == "FastAttack"){
+         iInventory.AddFastAttackShip();
+      }else if (ship_name =="HeavyCorvette") {
+         iInventory.AddHeavyCorvette();
+      }else if (ship_name =="StormPetrel"){
+         iInventory.AddStormPetrel();
+      }else if (ship_name =="Tug"){
+         iInventory.AddTug();
+      }
+      ++item_count;
+   }
+
+   funds = INIFile.Int(cargo_list,"PlayerFunds","ship_account",0);
+   tEpicMoney.ChangeShipAccount(funds);
+
+   funds = INIFile.Int(cargo_list,"PlayerFunds","private_account",0);
+   tEpicMoney.ChangePrivateAccount(funds);
+
+   debug {
+      Debug.PrintString(String.FormatInt("Ship account %d ",tEpicMoney.ShipAccount()));
+      Debug.PrintString(String.FormatInt("Private account %d\n",tEpicMoney.PrivateAccount()));
+   }
+
+   INIFile.Destroy(cargo_list);
+
+
+
+   // Pour out the currently supported inventory items, so I can figure out what
+   // the heck id going on!
+
+/*
+   item_count = iInventory.NumberOfCargoTypes();
+   for (i=0;i<item_count;++i) {
+      cargo_name = iCargo.Name(iCargo.Find(i));
+      debug {
+         Debug.PrintString(cargo_name);
+         Debug.PrintString(" Cargo: ");
+         Debug.PrintInt(i);
+         Debug.PrintString("\n");
+      }
+   }
+   */
+}
+
+
+// Called by the new game to make sure the player gets cargo
+// every time.
+NewGame()
+{
+    Global.CreateBool("gt_gift_cargo_new_game",GA_Write, false);
+}

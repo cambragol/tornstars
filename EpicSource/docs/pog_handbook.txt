@@ -1,0 +1,19 @@
+Cargo
+
+The key issue for cargo items is that there is only exactly as many as the 
+enumeration. For this reason, you can use a fixed function to convert from 
+a text name to a cargo type. And that is really how you must do it.
+
+the type is stored in Object.IntProperty(cargo,"type");
+
+
+Cargo Pods
+
+Properties
+cargo enumeration value = Object.IntProperty(pod,"cargo"
+
+that special shipper faction is stored as the allegiance value 
+Object.IntProperty(pod,"cargo_faction"
+
+
+
