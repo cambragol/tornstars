@@ -354,7 +354,7 @@ hsim Create(string name,
 
    // Factions are also holding centers for fleets that get
    // tossed when stations and operations are destroyed.
-   tLFleet.Create(iSim.Cast(efaction), 1.0, 5.0);
+   tLFleet.Create(iSim.Cast(efaction), 1.0, 5.0, 1.0, 5.0);
 
    return efaction;
 }
