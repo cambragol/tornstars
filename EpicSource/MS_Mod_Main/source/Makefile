@@ -38,7 +38,7 @@ vpath %.pkg ../packages
 
 # Pattern rule
 %.pkg: %.pog
-	$(POG_COMPILER) -i $(INCLUDE_PATH) -i $(PS_INCLUDE_PATH) -i $(INCLUDE_PKG) -hp $(INCLUDE_PKG) -pp $(PACKAGE_PATH) $<
+	$(POG_COMPILER) -q -i $(INCLUDE_PATH) -i $(PS_INCLUDE_PATH) -i $(INCLUDE_PKG) -hp $(INCLUDE_PKG) -pp $(PACKAGE_PATH) $<
 #	copy $(PACKAGE_PATH)\$(*B).pkg $(MOD_PATH)\packages
 
 
@@ -49,6 +49,11 @@ vpath %.pkg ../packages
 #
 
 #	tECommEvent.pkg \
+#	tEpicFleetBack.pkg \
+#	tStation_t.pkg \
+#	tsCargoShip.pkg \
+#	ts_StationEvent.pkg \
+
 
 PACKAGES = ECargoTypes.pkg \
 	ExitCrashTest.pkg \
@@ -77,7 +82,6 @@ PACKAGES = ECargoTypes.pkg \
 	tEpicFaction.pkg \
 	tEpicFaction_t.pkg \
 	tEpicFleet.pkg \
-	tEpicFleetBack.pkg \
 	tEpicFleetUpkeep.pkg \
 	tEpicGui.pkg \
 	tEpicLFPlus.pkg \
@@ -132,7 +136,6 @@ PACKAGES = ECargoTypes.pkg \
 	tStationFilter.pkg \
 	tStationRules.pkg \
 	tStationSave.pkg \
-	tStation_t.pkg \
 	tSysInventory.pkg \
 	tTime.pkg \
 	tTimeAdvance.pkg \
@@ -142,7 +145,6 @@ PACKAGES = ECargoTypes.pkg \
 	tUnderOpSave.pkg \
 	tViewDock.pkg \
 	tWingComm.pkg \
-	tsCargoShip.pkg \
 	tsCrewSpeak.pkg \
 	tsCull.pkg \
 	tsDebug.pkg \
@@ -160,7 +162,6 @@ PACKAGES = ECargoTypes.pkg \
 	tsFoRaider.pkg \
 	tsFoThugs.pkg \
 	tsPilotSetup.pkg \
-	ts_StationEvent.pkg \
 	uString.pkg \
 	zHeadMove.pkg \
 	zTestCapsule.pkg \
@@ -188,7 +189,9 @@ UniGUIMisc.pkg : UniGUIMisc.pog
 jGiftCargo.pkg : jGiftCargo.pog tEconUtil.pog tEpicMoney.pog
 tDistance.pkg : tDistance.pog
 tEAutoWatch.pkg : tEAutoWatch.pog tTime.pog tLCenter.pog tEFaction.pog tEpicFleet.pog tFormation.pog tEpicFleetUpkeep.pog tMusic.pog tRepWatch.pog tLocationInit.pog
+
 #tECommEvent.pkg : tECommEvent.pog
+
 tEFaction.pkg : tEFaction.pog
 tEFleetGui.pkg : tEFleetGui.pog tEpicGui.pog tLProduction.pog tEpicMoney.pog tEpicFleet.pog tEpicFleetUpkeep.pog tEconUtil.pog uString.pog
 tEJump.pkg : tEJump.pog tEpicGui.pog tEpicFleet.pog tTime.pog
@@ -208,13 +211,19 @@ tEpicFacGui.pkg : tEpicFacGui.pog tEFaction.pog tEpicGui.pog tEpicMoney.pog
 tEpicFaction.pkg : tEpicFaction.pog tLRoot.pog tLProduction.pog tLFleet.pog
 tEpicFaction_t.pkg : tEpicFaction_t.pog tEpicFaction.pog
 tEpicFleet.pkg : tEpicFleet.pog tEconUtil.pog tPodUtil.pog tEpicComms.pog tFormation.pog tEFaction.pog tMegaTrucking.pog
-tEpicFleetBack.pkg : tEpicFleetBack.pog tPodUtil.pog tEpicComms.pog
+
+#tEpicFleetBack.pkg : tEpicFleetBack.pog tPodUtil.pog tEpicComms.pog
+
 tEpicFleetUpkeep.pkg : tEpicFleetUpkeep.pog tStation.pog tEFaction.pog tEpicFleet.pog tEpicMoney.pog tLProduction.pog tLInventory.pog tEconUtil.pog tEconSmall.pog tPodUtil.pog tShipMail.pog
 tEpicGui.pkg : tEpicGui.pog
 tEpicLFPlus.pkg : tEpicLFPlus.pog tStation.pog tEpicGui.pog tEconUtil.pog tLProduction.pog tLFleet.pog tUnderOp.pog tUnderOpFilter.pog tESysSetup.pog tEJump.pog 
 tEpicMain.pkg : tEpicMain.pog tTime.pog tDistance.pog tMultimod.pog UniGUI.pog UniGUIBase.pog tEpicLFPlus.pog tEFaction.pog tEpicGui.pog tEpicFleet.pog tDistance.pog jGiftCargo.pog tWingComm.pog tEPlayerWatch.pog tStationEnv.pog tEpicComms.pog tEpicFleetUpkeep.pog tUnderOp.pog tUnderOpSave.pog tLInventory.pog tEconSmall.pog tETradeBuy.pog tETradeSell.pog tEFleetGui.pog tExitGui.pog tStationSave.pog tESysSetup.pog tMusic.pog tMail.pog tNewsNet.pog tShipMail.pog tViewDock.pog tEJump.pog  tELpointFind.pog tStationRules.pog tsFleetOpUpdate.pog tsCrewSpeak.pog tRepUpdate.pog tOptionsGui.pog
 tEpicMoney.pkg : tEpicMoney.pog
-tEpicTrade.pkg : tEpicTrade.pog UniGUI.pog ECargoTypes.pog ECargoScript.pog tEpicGui.pog tEconCargoTypes.pog tEconUtil.pog tEconSmall.pog tPodUtil.pog tEpicFleet.pog
+
+# ECargoScript.pog 
+
+tEpicTrade.pkg : tEpicTrade.pog UniGUI.pog ECargoTypes.pog tEpicGui.pog tEconUtil.pog tEconSmall.pog tPodUtil.pog tEpicFleet.pog
+
 tExitGui.pkg : tExitGui.pog UniGUI.pog tEpicGui.pog tLProduction.pog tEconSmall.pog tEconUtil.pog tEpicMoney.pog tPodUtil.pog uString.pog
 tFormation.pkg : tFormation.pog
 tJumpSim.pkg : tJumpSim.pog tEpicGui.pog UniGUI.pog
@@ -263,7 +272,9 @@ tStationEnv.pkg : tStationEnv.pog tPogClass.pog tPcOwner.pog tsCull.pog
 tStationFilter.pkg : tStationFilter.pog tEconUtil.pog tEFaction.pog tStation.pog tLRoot.pog tLProduction.pog tLCenter.pog tLTrade.pog tESysSetup.pog
 tStationRules.pkg : tStationRules.pog tTime.pog tStation.pog tUnderOp.pog tUnderOpFilter.pog tEconUtil.pog tLProduction.pog tLFleet.pog tsFleetOperation.pog tEFaction.pog
 tStationSave.pkg : tStationSave.pog tEconUtil.pog tEFaction.pog tStation.pog tStationRules.pog tLRoot.pog tLProduction.pog tLFleet.pog tLCenter.pog tLTrade.pog tESysSetup.pog
-tStation_t.pkg : tStation_t.pog tEpicFaction.pog tStation.pog tLProduction.pog tLCenter.pog tLFleet.pog tLMission.pog
+
+#tStation_t.pkg : tStation_t.pog tEpicFaction.pog tStation.pog tLProduction.pog tLCenter.pog tLFleet.pog tLMission.pog
+
 tSysInventory.pkg : tSysInventory.pog
 tTime.pkg : tTime.pog
 tTimeAdvance.pkg : tTimeAdvance.pog tPodUtil.pog tStation.pog tTime.pog
@@ -273,7 +284,9 @@ tUnderOpGui.pkg : tUnderOpGui.pog tTime.pog tEpicGui.pog UniGUI.pog tLRoot.pog t
 tUnderOpSave.pkg : tUnderOpSave.pog tEFaction.pog tEconUtil.pog tUnderOp.pog tLRoot.pog tLProduction.pog tLCenter.pog tLFleet.pog tsFleetOperation.pog
 tViewDock.pkg : tViewDock.pog UniGUI.pog
 tWingComm.pkg : tWingComm.pog tPodUtil.pog tEpicFleet.pog tEPlayerOrders.pog
-tsCargoShip.pkg : tsCargoShip.pog tEconUtil.pog tEconSmall.pog tStation.pog tStationFilter.pog tETradeBuy.pog tPogClass.pog tLRoot.pog tLTrade.pog tLProduction.pog tEpicMoney.pog tTime.pog tEFaction.pog tEpicFleet.pog tPodUtil.pog tSpewerOps.pog tsPilotSetup.pog tEShipCreation.pog tShipName.pog uString.pog
+
+#tsCargoShip.pkg : tsCargoShip.pog tEconUtil.pog tEconSmall.pog tStation.pog tStationFilter.pog tETradeBuy.pog tPogClass.pog tLRoot.pog tLTrade.pog tLProduction.pog tEpicMoney.pog tTime.pog tEFaction.pog tEpicFleet.pog tPodUtil.pog tSpewerOps.pog tsPilotSetup.pog tEShipCreation.pog tShipName.pog uString.pog
+
 tsCrewSpeak.pkg : tsCrewSpeak.pog uString.pog
 tsCull.pkg : tsCull.pog tPogClass.pog tPcOwner.pog
 tsDebug.pkg : tsDebug.pog UniGUI.pog tEpicGui.pog
@@ -291,7 +304,9 @@ tsFoProtection.pkg : tsFoProtection.pog
 tsFoRaider.pkg : tsFoRaider.pog tStation.pog tEFaction.pog tTime.pog tUnderOp.pog tLRoot.pog tLCenter.pog tLProduction.pog tLFleet.pog tStationFilter.pog tEconUtil.pog tShipName.pog tEShipCreation.pog tsFleetOpCombat.pog tsDebug.pog
 tsFoThugs.pkg : tsFoThugs.pog tStation.pog tEFaction.pog tTime.pog tUnderOp.pog tLRoot.pog tLCenter.pog tLProduction.pog tLFleet.pog tStationFilter.pog tEconUtil.pog tShipName.pog tEShipCreation.pog tsFleetOpCombat.pog tsDebug.pog
 tsPilotSetup.pkg : tsPilotSetup.pog tEpicComms.pog tEpicFleet.pog tLRoot.pog tLTrade.pog tEFaction.pog tETradeSell.pog tEpicMoney.pog tShipName.pog tPcOwner.pog tLProduction.pog tLFleet.pog tUnderOp.pog tPodUtil.pog tRepWatch.pog tsEvent.pog
-ts_StationEvent.pkg : ts_StationEvent.pog UniGUI.pog tTime.pog tEFaction.pog tMail.pog tShipMail.pog tNewsNet.pog tStation.pog tEconUtil.pog tUnderOp.pog tLProduction.pog
+
+#ts_StationEvent.pkg : ts_StationEvent.pog UniGUI.pog tTime.pog tEFaction.pog tMail.pog tShipMail.pog tNewsNet.pog tStation.pog tEconUtil.pog tUnderOp.pog tLProduction.pog
+
 uString.pkg : uString.pog
 zHeadMove.pkg : zHeadMove.pog tEconUtil.pog tEpicMoney.pog
 zTestCapsule.pkg : zTestCapsule.pog tEpicFleet.pog
