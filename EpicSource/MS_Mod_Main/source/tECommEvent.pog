@@ -29,9 +29,7 @@ Math,
 iComms,
 iGame,
 tEpicEventEnum,
-   tESoundEvent,
-   tEShipEvent;
-
+tsEvent;
 
 
 provides InitPlayer;
@@ -45,10 +43,10 @@ InitPlayer()
 {
    hship player = iShip.FindPlayerShip();
 
-   tEShipEvent.InitReciever(player);
-   tEShipEvent.SetListenType(player, eseTransportArrived| eseDistress| eseStationAttack| eseSelfAttacked| eseFlee);
+   tsEvent.InitReciever(player);
+   tsEvent.SetListenType(player, eseTransportArrived| eseDistress| eseStationAttack| eseSelfAttacked| eseFlee);
 
-   tESoundEvent.InitReciever();
+   //tESoundEvent.InitReciever();
 
    Task.Detach(start event_watch());
 }
@@ -70,26 +68,26 @@ task event_watch()
 
       if (tEShipEvent.IsNewEvent(player)) {
          // If something new has happened, evaluate and branch.
-         event_type = tEShipEvent.GetEventType(player);
-         sender = tEShipEvent.GetSender(player);
-         attacker = tEShipEvent.GetTarget(player);
-         tEShipEvent.ClearNewFlag(player);
+         event_type = tsEvent.GetEventType(player);
+         sender = tsEvent.GetSender(player);
+         attacker = tsEvent.GetTarget(player);
+         tsEvent.ClearNewFlag(player);
 
          switch (event_type) {
          case eseTransportArrived:
-            tESoundEvent.SendEvent(esepImportant , "", "stock_clay_critical_player_attack_4", sender);
+            tsEvent.SendEvent(esepImportant , "", "stock_clay_critical_player_attack_4", sender);
             break;
          case eseFlee:
-            tESoundEvent.SendEvent(esepImportant , "", "stock_flee_gangster_1_male_1", sender);
+            tsEvent.SendEvent(esepImportant , "", "stock_flee_gangster_1_male_1", sender);
             break;
          case eseSelfAttacked:
-            tESoundEvent.SendEvent(esepImportant , "", "stock_clay_critical_player_attack_4", sender);
+            tsEvent.SendEvent(esepImportant , "", "stock_clay_critical_player_attack_4", sender);
             break;
          case eseStationAttack:
-            tESoundEvent.SendEvent(esepCritical , "", "stock_station_attack_severe_2_female", sender);
+            tsEvent.SendEvent(esepCritical , "", "stock_station_attack_severe_2_female", sender);
             break;
          case eseDistress:
-            tESoundEvent.SendEvent(esepImportant , "", "stock_distress_4_male_1", sender);
+            tsEvent.SendEvent(esepImportant , "", "stock_distress_4_male_1", sender);
             break;
          default:
             break;
