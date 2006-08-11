@@ -546,7 +546,7 @@ BuyPressed()
 
          //iInventory.AddWithoutMarkingNew(iInventory.CargoTypeFromName(iCargo.Name(cargo)), 1 );
          // All buys show up as pods. The player can store them, but then they lose faction.
-         pod = tPodUtil.CreateCargoPod(iCargo.Name(cargo), "Player", iFaction.Name(iSim.Faction(iSim.Cast(trade_center))));
+         pod = tPodUtil.CreateCargoPod(tEconUtil.String2CargoType(iCargo.Name(cargo)), "Player", iFaction.Name(iSim.Faction(iSim.Cast(trade_center))));
          //tEpicFleet.PurchaseShip(iShip.Cast(pod));
          Sim.PlaceAt(pod, marker);
       } 
@@ -614,7 +614,7 @@ UnloadPressed()
    if (iInventory.NumberOfCargoType(type) > 0){
       iInventory.Remove(type, 1);
 
-      pod = tPodUtil.CreateCargoPod(iCargo.Name(cargo), "Player", "Player");
+      pod = tPodUtil.CreateCargoPod(tEconUtil.String2CargoType(iCargo.Name(cargo)), "Player", "Player");
       //tEpicFleet.PurchaseShip(iShip.Cast(pod));
 
       Sim.PlaceAt(pod, marker);
