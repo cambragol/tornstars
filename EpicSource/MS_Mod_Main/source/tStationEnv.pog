@@ -27,6 +27,7 @@ uses    Sim,
         Task,
         Text,
         iMod,
+        iMapEntity,
         tPogClass,
         tPcOwner,
         tsCull;
@@ -434,7 +435,7 @@ SetupEnv(hisim station)
       file_mark = Sim.Cast(List.GetNth(file_list, i));
       file_name = Sim.Name(file_mark);
       if ("" != file_name) {
-         SetupObjects(station, station, file_name, 0, 0, 0);
+         SetupObjects(iMapEntity.Cast(station), station, file_name, 0, 0, 0);
       }
    }
 }
