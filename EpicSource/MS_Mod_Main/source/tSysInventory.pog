@@ -11,7 +11,7 @@ package tSysInventory;
 uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, 
    Debug, iFaction, iSim, iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
    Group, Text, iEmail, State, iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker, iWingmen,
-   iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,
+   iCargo, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,
    iDirector, iEscort, iLagrangePoint, iMusic, iGame, Stream, iBackToBase, iDeathScript, iInventory;
 
 
@@ -45,8 +45,8 @@ SystemEnter()
 
          total = iInventory.NumberOfCargoTypes();
          for (pod=0;pod<total;++pod) {
-            items = iInventory.NumberOfCargoType( iCargo.Type(pod) );
-//            items = iInventory.QuantityOfNthTypeInInventory( pod );
+//            items = iInventory.NumberOfCargoType( iCargo.Type(pod) );
+            items = iInventory.QuantityOfNthTypeInInventory( pod );
             iInventory.Remove(pod, items);
             Global.CreateInt(String.FormatStrStr("g_trout_sys_inv_%s%s",prior_system,String.FormatInt("%d",pod)), 
                              GA_Write, items);
