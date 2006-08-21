@@ -55,6 +55,8 @@ vpath %.pog ../source
 #	tStation_t.pkg \
 #	tsCargoShip.pkg \
 #	ts_StationEvent.pkg \
+#	tEpicFaction_t.pkg \
+#	tLProduction_t.pkg \
 
 
 PACKAGES = ECargoTypes.pkg \
@@ -82,7 +84,6 @@ PACKAGES = ECargoTypes.pkg \
 	tEpicComms.pkg \
 	tEpicFacGui.pkg \
 	tEpicFaction.pkg \
-	tEpicFaction_t.pkg \
 	tEpicFleet.pkg \
 	tEpicFleetUpkeep.pkg \
 	tEpicGui.pkg \
@@ -97,7 +98,6 @@ PACKAGES = ECargoTypes.pkg \
 	tLFleet.pkg \
 	tLInventory.pkg \
 	tLProduction.pkg \
-	tLProduction_t.pkg \
 	tLRoot.pkg \
 	tLTrade.pkg \
 	tLocationInit.pkg \
@@ -215,7 +215,9 @@ tEconUtil.pkg : tEconUtil.pog
 tEpicComms.pkg : tEpicComms.pog
 tEpicFacGui.pkg : tEpicFacGui.pog tEFaction.pog tEpicGui.pog tEpicMoney.pog
 tEpicFaction.pkg : tEpicFaction.pog tLRoot.pog tLProduction.pog tLFleet.pog
-tEpicFaction_t.pkg : tEpicFaction_t.pog tEpicFaction.pog
+
+#tEpicFaction_t.pkg : tEpicFaction_t.pog tEpicFaction.pog
+
 tEpicFleet.pkg : tEpicFleet.pog tEconUtil.pog tPodUtil.pog tEpicComms.pog tFormation.pog tEFaction.pog tMegaTrucking.pog
 
 #tEpicFleetBack.pkg : tEpicFleetBack.pog tPodUtil.pog tEpicComms.pog
@@ -237,7 +239,9 @@ tLCenter.pkg : tLCenter.pog tLRoot.pog
 tLFleet.pkg : tLFleet.pog tLRoot.pog
 tLInventory.pkg : tLInventory.pog tTime.pog tLRoot.pog tEconUtil.pog tStation.pog
 tLProduction.pkg : tLProduction.pog tLRoot.pog
-tLProduction_t.pkg : tLProduction_t.pog tEpicFaction.pog tLRoot.pog tLProduction.pog
+
+#tLProduction_t.pkg : tLProduction_t.pog tEpicFaction.pog tLRoot.pog tLProduction.pog
+
 tLRoot.pkg : tLRoot.pog
 tLTrade.pkg : tLTrade.pog tLRoot.pog
 tLocationInit.pkg : tLocationInit.pog tEconUtil.pog tStation.pog tUnderOp.pog tLCenter.pog tLProduction.pog tStationEnv.pog tEpicFleetUpkeep.pog
