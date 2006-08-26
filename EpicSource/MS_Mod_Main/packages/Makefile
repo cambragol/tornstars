@@ -64,6 +64,8 @@ PACKAGES = ECargoTypes.pkg \
 	UniGUI.pkg \
 	UniGUIBase.pkg \
 	UniGUIMisc.pkg \
+	jcEChangeIdGui.pkg \
+	jcEpicShipPurGUI.pkg \
 	jGiftCargo.pkg \
 	tDistance.pkg \
 	tEAutoWatch.pkg \
@@ -193,6 +195,10 @@ UniGUI.pkg : UniGUI.pog
 UniGUIBase.pkg : UniGUIBase.pog
 UniGUIMisc.pkg : UniGUIMisc.pog
 jGiftCargo.pkg : jGiftCargo.pog tEconUtil.pog tEpicMoney.pog
+
+jcEChangeIdGui.pkg : UniGUI.pog tEpicGuiEnum.pog tEpicGui.pog tSaveGui.pog tEconUtil.pog tEpicFleet.pog tEpicMoney.pog tEFaction.pog
+jcEpicShipPurGUI.pkg : UniGUI.pog tEFactionEnum.pog tEFaction.pog tEpicGuiEnum.pog tEpicGui.pog tSaveGui.pog tStationEnum.pog tEpicMoney.pog
+
 tDistance.pkg : tDistance.pog
 tEAutoWatch.pkg : tEAutoWatch.pog tTime.pog tLCenter.pog tEFaction.pog tEpicFleet.pog tFormation.pog tEpicFleetUpkeep.pog tMusic.pog tRepWatch.pog tLocationInit.pog
 
