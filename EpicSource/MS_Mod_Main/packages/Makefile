@@ -196,8 +196,8 @@ UniGUIBase.pkg : UniGUIBase.pog
 UniGUIMisc.pkg : UniGUIMisc.pog
 jGiftCargo.pkg : jGiftCargo.pog tEconUtil.pog tEpicMoney.pog
 
-jcEChangeIdGui.pkg : UniGUI.pog tEpicGuiEnum.pog tEpicGui.pog tSaveGui.pog tEconUtil.pog tEpicFleet.pog tEpicMoney.pog tEFaction.pog
-jcEpicShipPurGUI.pkg : UniGUI.pog tEFactionEnum.pog tEFaction.pog tEpicGuiEnum.pog tEpicGui.pog tSaveGui.pog tStationEnum.pog tEpicMoney.pog
+jcEChangeIdGui.pkg : jcEChangeIdGui.pog UniGUI.pog tEpicGui.pog tSaveGui.pog tEconUtil.pog tEpicFleet.pog tEpicMoney.pog tEFaction.pog
+jcEpicShipPurGUI.pkg : jcEpicShipPurGUI.pog UniGUI.pog tEFaction.pog tEpicGui.pog tSaveGui.pog tEpicMoney.pog
 
 tDistance.pkg : tDistance.pog
 tEAutoWatch.pkg : tEAutoWatch.pog tTime.pog tLCenter.pog tEFaction.pog tEpicFleet.pog tFormation.pog tEpicFleetUpkeep.pog tMusic.pog tRepWatch.pog tLocationInit.pog
@@ -214,7 +214,7 @@ tEReferenceGui.pkg : tEReferenceGui.pog tEpicGui.pog tLProduction.pog tEconSmall
 tEShipCreation.pkg : tEShipCreation.pog tEFaction.pog
 tESysSetup.pkg : tESysSetup.pog tEFaction.pog tStation.pog tLProduction.pog tEJump.pog
 tETradeBuy.pkg : tETradeBuy.pog tStation.pog tEpicGui.pog tEFaction.pog tLProduction.pog tLInventory.pog tLTrade.pog tEconSmall.pog tEconUtil.pog tEpicMoney.pog tPodUtil.pog uString.pog tSpewerOps.pog
-tETradeSell.pkg : tETradeSell.pog tSpewerOps.pog tMegaTrucking.pog tStation.pog tEpicGui.pog tEFaction.pog tLProduction.pog tEconSmall.pog tEconUtil.pog tEpicMoney.pog tPodUtil.pog tLTrade.pog uString.pog
+tETradeSell.pkg : tETradeSell.pog tSpewerOps.pog tMegaTrucking.pog tStation.pog tEpicGui.pog tEFaction.pog tLProduction.pog tEconSmall.pog tEconUtil.pog tEpicMoney.pog tPodUtil.pog tLTrade.pog uString.pkg
 tEconCategory.pkg : tEconCategory.pog tEpicGui.pog tUnderOp.pog
 tEconSmall.pkg : tEconSmall.pog tEconUtil.pog tLProduction.pog tLTrade.pog tEFaction.pog ECargoTypes.pog uString.pog tStation.pog
 tEconUtil.pkg : tEconUtil.pog
