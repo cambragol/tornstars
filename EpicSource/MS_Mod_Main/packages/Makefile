@@ -2,32 +2,29 @@
 #  Make file for constructing Epic: Middle States Main package.
 #
 
-RELEASE_NUMBER = 10_17_0
 
-
-BASE_PATH= f:/eoc/tornstars/trunk/EpicSource
-CODE_PATH= $(BASE_PATH)/pog
-MAIN_PATH= $(BASE_PATH)/MS_Mod_Main
-PS_INCLUDE_PATH= $(CODE_PATH)/include_ps
-
-INCLUDE_PATH= $(CODE_PATH)/include
-INCLUDE_PKG= $(CODE_PATH)/include_pkg
-PACKAGE_PATH= $(MAIN_PATH)/packages
-
-TEXT_PATH= $(BASE_PATH)/TEXT
-HTML_PATH= $(BASE_PATH)/html
-INI_PATH= $(BASE_PATH)/INI
-IMAGE_PATH= $(BASE_PATH)/images
-DEBUG_PATH= $(BASE_PATH)/debug
+# Several environment variables need to be defined for this make script to run.
+# They depend on local install locations
+# define EPIC_BASE as the path to the start of the source working directory
+# define EPIC_INSTALL as the path to the iwar2 install directory
 
 MODULE=MS_Mod_Main
-DEBUG_MODULE=EpicDebug
-MOD_PATH=f:/eoc_tornstars/mods/$(MODULE)
 
-RELEASE_PATH=f:/projects/epic/release/Epic
+SOURCE_PATH=$(EPIC_BASE)/EpicSource
+
+CODE_PATH= $(SOURCE_PATH)/pog
+MODULE_PATH= $(SOURCE_PATH)/$(MODULE)
+
+PS_INCLUDE_PATH= $(CODE_PATH)/include_ps
+INCLUDE_PATH= $(CODE_PATH)/include
+INCLUDE_PKG= $(CODE_PATH)/include_pkg
+
+PACKAGE_PATH= $(MODULE_PATH)/packages
 
 
-POG_COMPILER = f:/eoc_tornstars/bin/release/pc.exe
+MOD_PATH= $(EPIC_INSTALL)/mods/$(MODULE)
+
+POG_COMPILER = $(EPIC_INSTALL)/bin/release/pc.exe
 
 .PHONY: all clean
 
@@ -196,8 +193,13 @@ UniGUIBase.pkg : UniGUIBase.pog
 UniGUIMisc.pkg : UniGUIMisc.pog
 jGiftCargo.pkg : jGiftCargo.pog tEconUtil.pog tEpicMoney.pog
 
+<<<<<<< .mine
+jcEChangeIdGui.pkg : UniGUI.pog  tEpicGui.pog tSaveGui.pog tEconUtil.pog tEpicFleet.pog tEpicMoney.pog tEFaction.pog
+jcEpicShipPurGUI.pkg : UniGUI.pog  tEFaction.pog  tEpicGui.pog tSaveGui.pog tEpicMoney.pog
+=======
 jcEChangeIdGui.pkg : jcEChangeIdGui.pog UniGUI.pog tEpicGui.pog tSaveGui.pog tEconUtil.pog tEpicFleet.pog tEpicMoney.pog tEFaction.pog
 jcEpicShipPurGUI.pkg : jcEpicShipPurGUI.pog UniGUI.pog tEFaction.pog tEpicGui.pog tSaveGui.pog tEpicMoney.pog
+>>>>>>> .r51
 
 tDistance.pkg : tDistance.pog
 tEAutoWatch.pkg : tEAutoWatch.pog tTime.pog tLCenter.pog tEFaction.pog tEpicFleet.pog tFormation.pog tEpicFleetUpkeep.pog tMusic.pog tRepWatch.pog tLocationInit.pog
