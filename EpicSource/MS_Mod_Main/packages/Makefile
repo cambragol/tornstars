@@ -193,13 +193,10 @@ UniGUIBase.pkg : UniGUIBase.pog
 UniGUIMisc.pkg : UniGUIMisc.pog
 jGiftCargo.pkg : jGiftCargo.pog tEconUtil.pog tEpicMoney.pog
 
-<<<<<<< .mine
-jcEChangeIdGui.pkg : UniGUI.pog  tEpicGui.pog tSaveGui.pog tEconUtil.pog tEpicFleet.pog tEpicMoney.pog tEFaction.pog
-jcEpicShipPurGUI.pkg : UniGUI.pog  tEFaction.pog  tEpicGui.pog tSaveGui.pog tEpicMoney.pog
-=======
+
 jcEChangeIdGui.pkg : jcEChangeIdGui.pog UniGUI.pog tEpicGui.pog tSaveGui.pog tEconUtil.pog tEpicFleet.pog tEpicMoney.pog tEFaction.pog
 jcEpicShipPurGUI.pkg : jcEpicShipPurGUI.pog UniGUI.pog tEFaction.pog tEpicGui.pog tSaveGui.pog tEpicMoney.pog
->>>>>>> .r51
+
 
 tDistance.pkg : tDistance.pog
 tEAutoWatch.pkg : tEAutoWatch.pog tTime.pog tLCenter.pog tEFaction.pog tEpicFleet.pog tFormation.pog tEpicFleetUpkeep.pog tMusic.pog tRepWatch.pog tLocationInit.pog
