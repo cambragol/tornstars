@@ -22,234 +22,234 @@ SolidCompression=true
 VersionInfoVersion=10.18
 VersionInfoTextVersion=Epic 10.18
 UsePreviousAppDir=false
-WizardImageFile=.\EpicSource\Installer\Left_Install.bmp
-WizardSmallImageFile=.\EpicSource\Installer\install_small.bmp
+WizardImageFile=.\Left_Install.bmp
+WizardSmallImageFile=.\install_small.bmp
 [_ISTool]
 Use7zip=true
 [Dirs]
 Name: {app}\movies
 [Files]
 ; misc
-Source: .\EpicSource\ExtraMods\no_launch_sequence.zip; DestDir: {app}\mods
+Source: .\..\EpicSource\ExtraMods\no_launch_sequence.zip; DestDir: {app}\mods
 
 
 
 ; movies
-Source: .\EpicArt\movies\*; DestDir: {app}\movies
+Source: .\..\EpicArt\movies\*; DestDir: {app}\movies
 
 ; cluster models
-Source: .\EpicSource\MS_Mod_ClusterModels\*; DestDir: {app}\mods\MS_Mod_ClusterModels; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\avatars\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\avatars\planets\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\planets; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\avatars\asteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\asteroids; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\avatars\ModularStations\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\ModularStations; Flags: skipifsourcedoesntexist
-;Source: .\EpicSource\MS_Mod_ClusterModels\avatars\ModularStations\chenyuang\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\ModularStations\chenyuang; Flags: skipifsourcedoesntexist
-;Source: .\EpicSource\MS_Mod_ClusterModels\avatars\ModularStations\emerald\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\ModularStations\emerald; Flags: skipifsourcedoesntexist
-;Source: .\EpicSource\MS_Mod_ClusterModels\avatars\ModularStations\tseng\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\ModularStations\tseng; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\darkasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\darkasteroids; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\exoticasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\exoticasteroids; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\frostasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\frostasteroids; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\hardasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\hardasteroids; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\hotasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\hotasteroids; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\iceasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\iceasteroids; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\metalasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\metalasteroids; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\neutroniumasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\neutroniumasteroids; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\redasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\redasteroids; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\softasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\softasteroids; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\collisionhulls\*; DestDir: {app}\mods\MS_Mod_ClusterModels\collisionhulls; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\sims\stations\*; DestDir: {app}\mods\MS_Mod_ClusterModels\sims\stations; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\sims\epicasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\sims\epicasteroids; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\sims\epicfieldasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\sims\epicfieldasteroids; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\sims\regions\*; DestDir: {app}\mods\MS_Mod_ClusterModels\sims\regions; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\sims\shipfields\*; DestDir: {app}\mods\MS_Mod_ClusterModels\sims\shipfields; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\fields\*; DestDir: {app}\mods\MS_Mod_ClusterModels\fields; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\sfx\*; DestDir: {app}\mods\MS_Mod_ClusterModels\sfx; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\sfx\asteroid_impact\*; DestDir: {app}\mods\MS_Mod_ClusterModels\sfx\asteroid_impact; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_ClusterModels\sfx\kibble\*; DestDir: {app}\mods\MS_Mod_ClusterModels\sfx\kibble; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\*; DestDir: {app}\mods\MS_Mod_ClusterModels; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\planets\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\planets; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\asteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\asteroids; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\ModularStations\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\ModularStations; Flags: skipifsourcedoesntexist
+;Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\ModularStations\chenyuang\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\ModularStations\chenyuang; Flags: skipifsourcedoesntexist
+;Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\ModularStations\emerald\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\ModularStations\emerald; Flags: skipifsourcedoesntexist
+;Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\ModularStations\tseng\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\ModularStations\tseng; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\darkasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\darkasteroids; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\exoticasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\exoticasteroids; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\frostasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\frostasteroids; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\hardasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\hardasteroids; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\hotasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\hotasteroids; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\iceasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\iceasteroids; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\metalasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\metalasteroids; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\neutroniumasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\neutroniumasteroids; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\redasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\redasteroids; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\softasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\avatars\epicasteroids\softasteroids; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\collisionhulls\*; DestDir: {app}\mods\MS_Mod_ClusterModels\collisionhulls; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\sims\stations\*; DestDir: {app}\mods\MS_Mod_ClusterModels\sims\stations; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\sims\epicasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\sims\epicasteroids; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\sims\epicfieldasteroids\*; DestDir: {app}\mods\MS_Mod_ClusterModels\sims\epicfieldasteroids; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\sims\regions\*; DestDir: {app}\mods\MS_Mod_ClusterModels\sims\regions; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\sims\shipfields\*; DestDir: {app}\mods\MS_Mod_ClusterModels\sims\shipfields; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\fields\*; DestDir: {app}\mods\MS_Mod_ClusterModels\fields; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\sfx\*; DestDir: {app}\mods\MS_Mod_ClusterModels\sfx; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\sfx\asteroid_impact\*; DestDir: {app}\mods\MS_Mod_ClusterModels\sfx\asteroid_impact; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\sfx\kibble\*; DestDir: {app}\mods\MS_Mod_ClusterModels\sfx\kibble; Flags: skipifsourcedoesntexist
 
 
 ; debug
-Source: .\EpicSource\MS_Mod_Test\*; DestDir: {app}\mods\MS_Mod_Test
+Source: .\..\EpicSource\MS_Mod_Test\*; DestDir: {app}\mods\MS_Mod_Test
 
 ; debug
-Source: .\EpicSource\MS_Mod_Debug\*; DestDir: {app}\mods\MS_Mod_Debug
-Source: .\EpicSource\MS_Mod_Debug\html\*; DestDir: {app}\mods\MS_Mod_Debug\html
+Source: .\..\EpicSource\MS_Mod_Debug\*; DestDir: {app}\mods\MS_Mod_Debug
+Source: .\..\EpicSource\MS_Mod_Debug\html\*; DestDir: {app}\mods\MS_Mod_Debug\html
 
 ; autowatch
-;Source: .\EpicSource\MS_Mod_Auto\*; DestDir: {app}\mods\MS_Mod_Auto
+;Source: .\..\EpicSource\MS_Mod_Auto\*; DestDir: {app}\mods\MS_Mod_Auto
 
 ; econ
-Source: .\EpicSource\MS_Mod_Econ\*; DestDir: {app}\mods\MS_Mod_Econ; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Econ\TEXT\*; DestDir: {app}\mods\MS_Mod_Econ\TEXT; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Econ\*; DestDir: {app}\mods\MS_Mod_Econ; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Econ\TEXT\*; DestDir: {app}\mods\MS_Mod_Econ\TEXT; Flags: skipifsourcedoesntexist
 
 ; environ
-Source: .\EpicSource\MS_Mod_Environ\*; DestDir: {app}\mods\MS_Mod_Environ; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_EnvPog\*; DestDir: {app}\mods\MS_Mod_EnvPog; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Environ\*; DestDir: {app}\mods\MS_Mod_Environ; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_EnvPog\*; DestDir: {app}\mods\MS_Mod_EnvPog; Flags: skipifsourcedoesntexist
 
 
 ; geog
-Source: .\EpicSource\clusters\US_Mod_Geog\*; DestDir: {app}\mods\US_Mod_Geog
-Source: .\EpicSource\clusters\US_Mod_Geog\data\*; DestDir: {app}\mods\US_Mod_Geog\data
-Source: .\EpicSource\clusters\US_Mod_Geog\geog\*; DestDir: {app}\mods\US_Mod_Geog\geog
-Source: .\EpicSource\clusters\US_Mod_Geog\geog\middle\*; DestDir: {app}\mods\US_Mod_Geog\geog\middle
-Source: .\EpicSource\clusters\US_Mod_Geog\source\*; DestDir: {app}\mods\US_Mod_Geog\source; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\clusters\US_Mod_Geog\TEXT\*; DestDir: {app}\mods\US_Mod_Geog\TEXT
-Source: .\EpicSource\clusters\US_Mod_Geog\TEXT\geog\*; DestDir: {app}\mods\US_Mod_Geog\TEXT\geog
+Source: .\..\EpicSource\clusters\US_Mod_Geog\*; DestDir: {app}\mods\US_Mod_Geog
+Source: .\..\EpicSource\clusters\US_Mod_Geog\data\*; DestDir: {app}\mods\US_Mod_Geog\data
+Source: .\..\EpicSource\clusters\US_Mod_Geog\geog\*; DestDir: {app}\mods\US_Mod_Geog\geog
+Source: .\..\EpicSource\clusters\US_Mod_Geog\geog\middle\*; DestDir: {app}\mods\US_Mod_Geog\geog\middle
+Source: .\..\EpicSource\clusters\US_Mod_Geog\source\*; DestDir: {app}\mods\US_Mod_Geog\source; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\clusters\US_Mod_Geog\TEXT\*; DestDir: {app}\mods\US_Mod_Geog\TEXT
+Source: .\..\EpicSource\clusters\US_Mod_Geog\TEXT\geog\*; DestDir: {app}\mods\US_Mod_Geog\TEXT\geog
 
 ; main
-Source: .\EpicSource\MS_Mod_Main\*; DestDir: {app}\mods\MS_Mod_Main
-Source: .\EpicSource\MS_Mod_Main\html\*; DestDir: {app}\mods\MS_Mod_Main\html
-Source: .\EpicSource\MS_Mod_Main\html\news\*; DestDir: {app}\mods\MS_Mod_Main\html\news
-Source: .\EpicSource\MS_Mod_Main\images\*; DestDir: {app}\mods\MS_Mod_Main\images; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Main\images\gui\*; DestDir: {app}\mods\MS_Mod_Main\images\gui
-Source: .\EpicSource\pog\include\*; DestDir: {app}\mods\MS_Mod_Main\include; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\pog\include_pkg\*; DestDir: {app}\mods\MS_Mod_Main\include_pkg; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Main\packages\*; DestDir: {app}\mods\MS_Mod_Main\packages
-Source: .\EpicSource\MS_Mod_Main\source\*; DestDir: {app}\mods\MS_Mod_Main\source
-Source: .\EpicSource\MS_Mod_Main\TEXT\*; DestDir: {app}\mods\MS_Mod_Main\TEXT
-Source: .\EpicSource\MS_Mod_Main\cfg\*; DestDir: {app}\mods\MS_Mod_Main\cfg
+Source: .\..\EpicSource\MS_Mod_Main\*; DestDir: {app}\mods\MS_Mod_Main
+Source: .\..\EpicSource\MS_Mod_Main\html\*; DestDir: {app}\mods\MS_Mod_Main\html
+Source: .\..\EpicSource\MS_Mod_Main\html\news\*; DestDir: {app}\mods\MS_Mod_Main\html\news
+Source: .\..\EpicSource\MS_Mod_Main\images\*; DestDir: {app}\mods\MS_Mod_Main\images; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Main\images\gui\*; DestDir: {app}\mods\MS_Mod_Main\images\gui
+Source: .\..\EpicSource\pog\include\*; DestDir: {app}\mods\MS_Mod_Main\include; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\pog\include_pkg\*; DestDir: {app}\mods\MS_Mod_Main\include_pkg; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Main\packages\*; DestDir: {app}\mods\MS_Mod_Main\packages
+Source: .\..\EpicSource\MS_Mod_Main\source\*; DestDir: {app}\mods\MS_Mod_Main\source
+Source: .\..\EpicSource\MS_Mod_Main\TEXT\*; DestDir: {app}\mods\MS_Mod_Main\TEXT
+Source: .\..\EpicSource\MS_Mod_Main\cfg\*; DestDir: {app}\mods\MS_Mod_Main\cfg
 
 
 ; jump sim
-Source: .\EpicSource\US_Mod_JumpTube\*; DestDir: {app}\mods\US_Mod_JumpTube;
-Source: .\EpicSource\US_Mod_JumpTube\avatars\*; DestDir: {app}\mods\US_Mod_JumpTube\avatars;Flags: skipifsourcedoesntexist
-Source: .\EpicSource\US_Mod_JumpTube\avatars\jumptube\*; DestDir: {app}\mods\US_Mod_JumpTube\avatars\jumptube;
-Source: .\EpicSource\US_Mod_JumpTube\collisionhulls\*; DestDir: {app}\mods\US_Mod_JumpTube\collisionhulls;
-Source: .\EpicSource\US_Mod_JumpTube\sims\*; DestDir: {app}\mods\US_Mod_JumpTube\sims; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\US_Mod_JumpTube\sims\ships\*; DestDir: {app}\mods\US_Mod_JumpTube\sims\ships;
-Source: .\EpicSource\US_Mod_JumpTube\subsims\*; DestDir: {app}\mods\US_Mod_JumpTube\subsims; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\US_Mod_JumpTube\subsims\dockports\*; DestDir: {app}\mods\US_Mod_JumpTube\subsims\dockports;
-Source: .\EpicSource\US_Mod_JumpTube\subsims\systems\*; DestDir: {app}\mods\US_Mod_JumpTube\subsims\systems; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\US_Mod_JumpTube\subsims\systems\nonplayer\*; DestDir: {app}\mods\US_Mod_JumpTube\systems\nonplayer;
+Source: .\..\EpicSource\US_Mod_JumpTube\*; DestDir: {app}\mods\US_Mod_JumpTube;
+Source: .\..\EpicSource\US_Mod_JumpTube\avatars\*; DestDir: {app}\mods\US_Mod_JumpTube\avatars;Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\US_Mod_JumpTube\avatars\jumptube\*; DestDir: {app}\mods\US_Mod_JumpTube\avatars\jumptube;
+Source: .\..\EpicSource\US_Mod_JumpTube\collisionhulls\*; DestDir: {app}\mods\US_Mod_JumpTube\collisionhulls;
+Source: .\..\EpicSource\US_Mod_JumpTube\sims\*; DestDir: {app}\mods\US_Mod_JumpTube\sims; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\US_Mod_JumpTube\sims\ships\*; DestDir: {app}\mods\US_Mod_JumpTube\sims\ships;
+Source: .\..\EpicSource\US_Mod_JumpTube\subsims\*; DestDir: {app}\mods\US_Mod_JumpTube\subsims; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\US_Mod_JumpTube\subsims\dockports\*; DestDir: {app}\mods\US_Mod_JumpTube\subsims\dockports;
+Source: .\..\EpicSource\US_Mod_JumpTube\subsims\systems\*; DestDir: {app}\mods\US_Mod_JumpTube\subsims\systems; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\US_Mod_JumpTube\subsims\systems\nonplayer\*; DestDir: {app}\mods\US_Mod_JumpTube\systems\nonplayer;
 
 ; music
-Source: .\EpicArt\MS_Mod_Music\*; DestDir: {app}\mods\MS_Mod_Music; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\audio\*; DestDir: {app}\mods\MS_Mod_Music\audio; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\audio\music\*; DestDir: {app}\mods\MS_Mod_Music\audio\music; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\audio\sfx\*; DestDir: {app}\mods\MS_Mod_Music\audio\sfx; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\avatars\*; DestDir: {app}\mods\MS_Mod_Music\avatars; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\avatars\admin_station_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\admin_station_sound; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\avatars\fortress_station_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\fortress_station_sound; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\avatars\giant_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\giant_sound; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\avatars\habitat_station_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\habitat_station_sound; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\avatars\leung_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\leung_sound; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\avatars\moon_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\moon_sound; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\avatars\old_corvette\*; DestDir: {app}\mods\MS_Mod_Music\avatars\old_corvette; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\avatars\patcom\*; DestDir: {app}\mods\MS_Mod_Music\avatars\patcom; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\avatars\pirate_station_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\pirate_station_sound; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\avatars\planet_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\planet_sound; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\avatars\production_station_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\production_station_sound; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\avatars\station_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\station_sound; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\avatars\sultan_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\sultan_sound; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\avatars\sun_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\sun_sound; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Music\sims\*; DestDir: {app}\mods\MS_Mod_Music\sims; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\*; DestDir: {app}\mods\MS_Mod_Music; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\audio\*; DestDir: {app}\mods\MS_Mod_Music\audio; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\audio\music\*; DestDir: {app}\mods\MS_Mod_Music\audio\music; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\audio\sfx\*; DestDir: {app}\mods\MS_Mod_Music\audio\sfx; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\avatars\*; DestDir: {app}\mods\MS_Mod_Music\avatars; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\avatars\admin_station_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\admin_station_sound; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\avatars\fortress_station_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\fortress_station_sound; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\avatars\giant_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\giant_sound; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\avatars\habitat_station_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\habitat_station_sound; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\avatars\leung_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\leung_sound; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\avatars\moon_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\moon_sound; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\avatars\old_corvette\*; DestDir: {app}\mods\MS_Mod_Music\avatars\old_corvette; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\avatars\patcom\*; DestDir: {app}\mods\MS_Mod_Music\avatars\patcom; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\avatars\pirate_station_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\pirate_station_sound; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\avatars\planet_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\planet_sound; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\avatars\production_station_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\production_station_sound; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\avatars\station_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\station_sound; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\avatars\sultan_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\sultan_sound; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\avatars\sun_sound\*; DestDir: {app}\mods\MS_Mod_Music\avatars\sun_sound; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Music\sims\*; DestDir: {app}\mods\MS_Mod_Music\sims; Flags: skipifsourcedoesntexist
 
 ; nebula
-Source: .\EpicArt\MS_Mod_Nebula\*; DestDir: {app}\mods\MS_Mod_Nebula; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Nebula\images\sfx\*; DestDir: {app}\mods\MS_Mod_Nebula\images\sfx
-Source: .\EpicArt\MS_Mod_Nebula\models\al43551\*; DestDir: {app}\mods\MS_Mod_Nebula\models\al43551; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Nebula\models\bumpys_star\*; DestDir: {app}\mods\MS_Mod_Nebula\models\bumpys_star; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Nebula\models\emerald\*; DestDir: {app}\mods\MS_Mod_Nebula\models\emerald; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Nebula\models\epitaph\*; DestDir: {app}\mods\MS_Mod_Nebula\models\epitaph; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Nebula\models\farnorth\*; DestDir: {app}\mods\MS_Mod_Nebula\models\farnorth; Flags: skipifsourcedoesntexist
-;Source: .\EpicArt\MS_Mod_Nebula\models\farsouth\*; DestDir: {app}\mods\MS_Mod_Nebula\models\farsouth; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Nebula\models\hd3887\*; DestDir: {app}\mods\MS_Mod_Nebula\models\hd3887; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Nebula\models\hd4045\*; DestDir: {app}\mods\MS_Mod_Nebula\models\hd4045; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Nebula\models\li_po\*; DestDir: {app}\mods\MS_Mod_Nebula\models\li_po; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Nebula\models\lombard\*; DestDir: {app}\mods\MS_Mod_Nebula\models\lombard; Flags: skipifsourcedoesntexist
-;Source: .\EpicArt\MS_Mod_Nebula\models\multiplayer\*; DestDir: {app}\mods\MS_Mod_Nebula\models\multiplayer; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Nebula\models\new_const\*; DestDir: {app}\mods\MS_Mod_Nebula\models\new_const; Flags: skipifsourcedoesntexist
-;Source: .\EpicArt\MS_Mod_Nebula\models\north\*; DestDir: {app}\mods\MS_Mod_Nebula\models\north; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Nebula\models\penda\*; DestDir: {app}\mods\MS_Mod_Nebula\models\penda; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Nebula\models\providence\*; DestDir: {app}\mods\MS_Mod_Nebula\models\providence; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Nebula\models\ripon\*; DestDir: {app}\mods\MS_Mod_Nebula\models\ripon; Flags: skipifsourcedoesntexist
-;Source: .\EpicArt\MS_Mod_Nebula\models\south\*; DestDir: {app}\mods\MS_Mod_Nebula\models\south; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Nebula\models\x472\*; DestDir: {app}\mods\MS_Mod_Nebula\models\x472; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Nebula\models\xu_xuan\*; DestDir: {app}\mods\MS_Mod_Nebula\models\xu_xuan; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Nebula\*; DestDir: {app}\mods\MS_Mod_Nebula; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Nebula\images\sfx\*; DestDir: {app}\mods\MS_Mod_Nebula\images\sfx
+Source: .\..\EpicArt\MS_Mod_Nebula\models\al43551\*; DestDir: {app}\mods\MS_Mod_Nebula\models\al43551; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Nebula\models\bumpys_star\*; DestDir: {app}\mods\MS_Mod_Nebula\models\bumpys_star; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Nebula\models\emerald\*; DestDir: {app}\mods\MS_Mod_Nebula\models\emerald; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Nebula\models\epitaph\*; DestDir: {app}\mods\MS_Mod_Nebula\models\epitaph; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Nebula\models\farnorth\*; DestDir: {app}\mods\MS_Mod_Nebula\models\farnorth; Flags: skipifsourcedoesntexist
+;Source: .\..\EpicArt\MS_Mod_Nebula\models\farsouth\*; DestDir: {app}\mods\MS_Mod_Nebula\models\farsouth; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Nebula\models\hd3887\*; DestDir: {app}\mods\MS_Mod_Nebula\models\hd3887; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Nebula\models\hd4045\*; DestDir: {app}\mods\MS_Mod_Nebula\models\hd4045; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Nebula\models\li_po\*; DestDir: {app}\mods\MS_Mod_Nebula\models\li_po; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Nebula\models\lombard\*; DestDir: {app}\mods\MS_Mod_Nebula\models\lombard; Flags: skipifsourcedoesntexist
+;Source: .\..\EpicArt\MS_Mod_Nebula\models\multiplayer\*; DestDir: {app}\mods\MS_Mod_Nebula\models\multiplayer; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Nebula\models\new_const\*; DestDir: {app}\mods\MS_Mod_Nebula\models\new_const; Flags: skipifsourcedoesntexist
+;Source: .\..\EpicArt\MS_Mod_Nebula\models\north\*; DestDir: {app}\mods\MS_Mod_Nebula\models\north; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Nebula\models\penda\*; DestDir: {app}\mods\MS_Mod_Nebula\models\penda; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Nebula\models\providence\*; DestDir: {app}\mods\MS_Mod_Nebula\models\providence; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Nebula\models\ripon\*; DestDir: {app}\mods\MS_Mod_Nebula\models\ripon; Flags: skipifsourcedoesntexist
+;Source: .\..\EpicArt\MS_Mod_Nebula\models\south\*; DestDir: {app}\mods\MS_Mod_Nebula\models\south; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Nebula\models\x472\*; DestDir: {app}\mods\MS_Mod_Nebula\models\x472; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Nebula\models\xu_xuan\*; DestDir: {app}\mods\MS_Mod_Nebula\models\xu_xuan; Flags: skipifsourcedoesntexist
 
 ; planets
-Source: .\EpicArt\MS_Mod_Planets\*; DestDir: {app}\mods\MS_Mod_Planets; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Planets\images\*; DestDir: {app}\mods\MS_Mod_Planets\images; Flags: skipifsourcedoesntexist
-Source: .\EpicArt\MS_Mod_Planets\images\planets\*; DestDir: {app}\mods\MS_Mod_Planets\images\planets; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Planets\*; DestDir: {app}\mods\MS_Mod_Planets; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Planets\images\*; DestDir: {app}\mods\MS_Mod_Planets\images; Flags: skipifsourcedoesntexist
+Source: .\..\EpicArt\MS_Mod_Planets\images\planets\*; DestDir: {app}\mods\MS_Mod_Planets\images\planets; Flags: skipifsourcedoesntexist
 
 ; pog
-Source: .\EpicSource\MS_Mod_Pog\*; DestDir: {app}\mods\MS_Mod_Pog; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Pog\html\*; DestDir: {app}\mods\MS_Mod_Pog\html; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Pog\packages\*; DestDir: {app}\mods\MS_Mod_Pog\packages; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Pog\source\*; DestDir: {app}\mods\MS_Mod_Pog\source; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Pog\*; DestDir: {app}\mods\MS_Mod_Pog; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Pog\html\*; DestDir: {app}\mods\MS_Mod_Pog\html; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Pog\packages\*; DestDir: {app}\mods\MS_Mod_Pog\packages; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Pog\source\*; DestDir: {app}\mods\MS_Mod_Pog\source; Flags: skipifsourcedoesntexist
 
 ; reference
-Source: .\EpicSource\MS_Mod_Reference\*; DestDir: {app}\mods\MS_Mod_Reference; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Reference\html\*; DestDir: {app}\mods\MS_Mod_Reference\html; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Reference\html\prison\*; DestDir: {app}\mods\MS_Mod_Reference\html\prison; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Reference\html\encyclopedia\*; DestDir: {app}\mods\MS_Mod_Reference\html\encyclopedia; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Reference\html\encyclopedia\politics\*; DestDir: {app}\mods\MS_Mod_Reference\html\encyclopedia\politics; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Reference\html\encyclopedia\geography\*; DestDir: {app}\mods\MS_Mod_Reference\html\encyclopedia\geography; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Reference\html\encyclopedia\images\*; DestDir: {app}\mods\MS_Mod_Reference\html\encyclopedia\images; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Reference\html\encyclopedia\images\maps\*; DestDir: {app}\mods\MS_Mod_Reference\html\encyclopedia\images\maps; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Reference\TEXT\*; DestDir: {app}\mods\MS_Mod_Reference\TEXT; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Reference\*; DestDir: {app}\mods\MS_Mod_Reference; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Reference\html\*; DestDir: {app}\mods\MS_Mod_Reference\html; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Reference\html\prison\*; DestDir: {app}\mods\MS_Mod_Reference\html\prison; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Reference\html\encyclopedia\*; DestDir: {app}\mods\MS_Mod_Reference\html\encyclopedia; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Reference\html\encyclopedia\politics\*; DestDir: {app}\mods\MS_Mod_Reference\html\encyclopedia\politics; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Reference\html\encyclopedia\geography\*; DestDir: {app}\mods\MS_Mod_Reference\html\encyclopedia\geography; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Reference\html\encyclopedia\images\*; DestDir: {app}\mods\MS_Mod_Reference\html\encyclopedia\images; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Reference\html\encyclopedia\images\maps\*; DestDir: {app}\mods\MS_Mod_Reference\html\encyclopedia\images\maps; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Reference\TEXT\*; DestDir: {app}\mods\MS_Mod_Reference\TEXT; Flags: skipifsourcedoesntexist
 
 ; ships
-Source: .\EpicSource\MS_Mod_Ships\*; DestDir: {app}\mods\MS_Mod_Ships;
-Source: .\EpicSource\MS_Mod_Ships\collisionhulls\*; DestDir: {app}\mods\MS_Mod_Ships\collisionhulls;
-Source: .\EpicSource\MS_Mod_Ships\audio\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\audio\sfx;
-Source: .\EpicSource\MS_Mod_Ships\avatars\beam\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\beam;
-Source: .\EpicSource\MS_Mod_Ships\avatars\capital_beam_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\capital_beam_bolt;
-Source: .\EpicSource\MS_Mod_Ships\avatars\cutting_beam_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\cutting_beam_bolt;
-Source: .\EpicSource\MS_Mod_Ships\avatars\eamp\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\eamp;
-Source: .\EpicSource\MS_Mod_Ships\avatars\edrone\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\edrone;
-Source: .\EpicSource\MS_Mod_Ships\avatars\pulsar\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\pulsar;
-Source: .\EpicSource\MS_Mod_Ships\avatars\tug_hull\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\tug_hull;
-Source: .\EpicSource\MS_Mod_Ships\avatars\us_capital_beam_turret\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\us_capital_beam_turret;
-Source: .\EpicSource\MS_Mod_Ships\avatars\us_mining_beam_turret\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\us_mining_beam_turret;
+Source: .\..\EpicSource\MS_Mod_Ships\*; DestDir: {app}\mods\MS_Mod_Ships;
+Source: .\..\EpicSource\MS_Mod_Ships\collisionhulls\*; DestDir: {app}\mods\MS_Mod_Ships\collisionhulls;
+Source: .\..\EpicSource\MS_Mod_Ships\audio\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\audio\sfx;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\beam\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\beam;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\capital_beam_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\capital_beam_bolt;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\cutting_beam_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\cutting_beam_bolt;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\eamp\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\eamp;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\edrone\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\edrone;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\pulsar\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\pulsar;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\tug_hull\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\tug_hull;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\us_capital_beam_turret\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\us_capital_beam_turret;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\us_mining_beam_turret\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\us_mining_beam_turret;
 
 
-Source: .\EpicSource\MS_Mod_Ships\images\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\images\sfx; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Ships\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\sfx; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\images\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\images\sfx; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\sfx; Flags: skipifsourcedoesntexist
 
-Source: .\EpicSource\MS_Mod_Ships\sims\*; DestDir: {app}\mods\MS_Mod_Ships\sims; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Ships\sims\explosions\*; DestDir: {app}\mods\MS_Mod_Ships\sims\explosions; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Ships\sims\ships\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Ships\sims\ships\default\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\default; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Ships\sims\ships\player\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\player; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Ships\sims\ships\utility\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\utility; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sims\*; DestDir: {app}\mods\MS_Mod_Ships\sims; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sims\explosions\*; DestDir: {app}\mods\MS_Mod_Ships\sims\explosions; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\default\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\default; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\player\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\player; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\utility\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\utility; Flags: skipifsourcedoesntexist
 
-Source: .\EpicSource\MS_Mod_Ships\sims\weapons\*; DestDir: {app}\mods\MS_Mod_Ships\sims\weapons; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sims\weapons\*; DestDir: {app}\mods\MS_Mod_Ships\sims\weapons; Flags: skipifsourcedoesntexist
 
-Source: .\EpicSource\MS_Mod_Ships\subsims\*; DestDir: {app}\mods\MS_Mod_Ships\subsims; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Ships\subsims\systems\*; DestDir: {app}\mods\MS_Mod_Ships\subsims\systems; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Ships\subsims\systems\nonplayer\*; DestDir: {app}\mods\MS_Mod_Ships\subsims\systems\nonplayer; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Ships\subsims\systems\nonplayer\external\*; DestDir: {app}\mods\MS_Mod_Ships\subsims\systems\nonplayer\external; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Ships\subsims\systems\player\*; DestDir: {app}\mods\MS_Mod_Ships\subsims\systems\player; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Ships\subsims\systems\player\programs\*; DestDir: {app}\mods\MS_Mod_Ships\subsims\systems\player\programs; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\MS_Mod_Ships\subsims\systems\player\subsystems\*; DestDir: {app}\mods\MS_Mod_Ships\subsims\systems\player\subsystems; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\subsims\*; DestDir: {app}\mods\MS_Mod_Ships\subsims; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\subsims\systems\*; DestDir: {app}\mods\MS_Mod_Ships\subsims\systems; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\subsims\systems\nonplayer\*; DestDir: {app}\mods\MS_Mod_Ships\subsims\systems\nonplayer; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\subsims\systems\nonplayer\external\*; DestDir: {app}\mods\MS_Mod_Ships\subsims\systems\nonplayer\external; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\subsims\systems\player\*; DestDir: {app}\mods\MS_Mod_Ships\subsims\systems\player; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\subsims\systems\player\programs\*; DestDir: {app}\mods\MS_Mod_Ships\subsims\systems\player\programs; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\subsims\systems\player\subsystems\*; DestDir: {app}\mods\MS_Mod_Ships\subsims\systems\player\subsystems; Flags: skipifsourcedoesntexist
 
 
 ; station test
-Source: .\EpicSource\clusters\MS_Mod_StationTest\*; DestDir: {app}\mods\MS_Mod_StationTest; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\clusters\MS_Mod_StationTest\data\*; DestDir: {app}\mods\MS_Mod_StationTest\data; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\clusters\MS_Mod_StationTest\geog\*; DestDir: {app}\mods\MS_Mod_StationTest\geog; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\clusters\MS_Mod_StationTest\geog\middle\*; DestDir: {app}\mods\MS_Mod_StationTest\geog\middle; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\clusters\MS_Mod_StationTest\TEXT\*; DestDir: {app}\mods\MS_Mod_StationTest\TEXT; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\clusters\MS_Mod_StationTest\TEXT\geog\*; DestDir: {app}\mods\MS_Mod_StationTest\TEXT\geog; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\clusters\MS_Mod_StationTest\*; DestDir: {app}\mods\MS_Mod_StationTest; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\clusters\MS_Mod_StationTest\data\*; DestDir: {app}\mods\MS_Mod_StationTest\data; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\clusters\MS_Mod_StationTest\geog\*; DestDir: {app}\mods\MS_Mod_StationTest\geog; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\clusters\MS_Mod_StationTest\geog\middle\*; DestDir: {app}\mods\MS_Mod_StationTest\geog\middle; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\clusters\MS_Mod_StationTest\TEXT\*; DestDir: {app}\mods\MS_Mod_StationTest\TEXT; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\clusters\MS_Mod_StationTest\TEXT\geog\*; DestDir: {app}\mods\MS_Mod_StationTest\TEXT\geog; Flags: skipifsourcedoesntexist
 
 
 ; Test Files
-Source: .\EpicSource\MS_Mod_Test\*; DestDir: {app}\mods\MS_Mod_Test;
-Source: .\EpicSource\MS_Mod_Test\html\*; DestDir: {app}\mods\MS_Mod_Test\html; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Test\*; DestDir: {app}\mods\MS_Mod_Test;
+Source: .\..\EpicSource\MS_Mod_Test\html\*; DestDir: {app}\mods\MS_Mod_Test\html; Flags: skipifsourcedoesntexist
 
 
 
 ; config and other files
-;Source: .\EpicSource\docs\Epic User Manual.rtf; DestDir: {app}\mods
-Source: .\EpicSource\docs\ts_*_config.ini; DestDir: {app}\configs
-;Source: .\EpicSource\docs\InstallInstructions.rtf; DestDir: {app}\epic_docs; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\docs\keybind.txt; DestDir: {app}\epic_docs; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\docs\credits.rtf; DestDir: {app}\epic_docs; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\docs\unstable_space_bugs.xls; DestDir: {app}\epic_docs; Flags: skipifsourcedoesntexist
-Source: .\EpicSource\Installer\epic5.ico; DestDir: {app}
-Source: .\EpicSource\Installer\epic6.ico; DestDir: {app}
+;Source: .\..\EpicSource\docs\Epic User Manual.rtf; DestDir: {app}\mods
+Source: .\..\EpicSource\docs\ts_*_config.ini; DestDir: {app}\configs
+;Source: .\..\EpicSource\docs\InstallInstructions.rtf; DestDir: {app}\epic_docs; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\docs\keybind.txt; DestDir: {app}\epic_docs; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\docs\credits.rtf; DestDir: {app}\epic_docs; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\docs\unstable_space_bugs.xls; DestDir: {app}\epic_docs; Flags: skipifsourcedoesntexist
+Source: .\epic5.ico; DestDir: {app}
+Source: .\epic6.ico; DestDir: {app}
 
 
 [INI]
