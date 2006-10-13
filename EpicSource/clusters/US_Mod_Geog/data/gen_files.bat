@@ -1,4 +1,4 @@
-@set PATH=c:\iwar2\bin\release;c:\epic\epicsource\windows\jump_cluster\debug;%path%
+@set PATH=d:\iwar2\bin\release;c:\epic\epicsource\windows\jump_cluster\debug;%path%
 
 
 jump_cluster all_systems.csv
