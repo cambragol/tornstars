@@ -1,7 +1,8 @@
 [Setup]
 UseSetupLdr=true
 OutputBaseFilename=unstable_space_10_18
-OutputDir=D:\Epic\EpicRelease\USpace10_18
+;OutputDir=D:\Epic\EpicRelease\USpace10_18
+OutputDir=.
 AppCopyright=Epic Team
 AppName=Unstable Space
 AppVerName=Unstable Space 10.18
