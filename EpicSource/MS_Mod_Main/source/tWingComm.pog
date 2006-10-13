@@ -791,7 +791,7 @@ KeyEight()
 
 //   iHUD.Print("Key Eight");
 
-   Global.SetInt("gtWingCommKey",1);
+   Global.SetInt("gtWingCommKey",8);
 
    switch (depth) {
    case WCS_GroupSelect:
