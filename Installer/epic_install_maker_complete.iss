@@ -1,11 +1,11 @@
 [Setup]
 UseSetupLdr=true
-OutputBaseFilename=unstable_space_10_18
-;OutputDir=D:\Epic\EpicRelease\USpace10_18
-OutputDir=.
+OutputBaseFilename=unstable_space_10_19
+;OutputDir=D:\Epic\EpicRelease\USpace10_19
+OutputDir=G:\Projects\USpace10_19
 AppCopyright=Epic Team
 AppName=Unstable Space
-AppVerName=Unstable Space 10.18
+AppVerName=Unstable Space 10.19
 DisableProgramGroupPage=true
 UsePreviousGroup=false
 AlwaysShowDirOnReadyPage=true
@@ -20,8 +20,8 @@ Uninstallable=false
 DisableStartupPrompt=true
 DirExistsWarning=no
 SolidCompression=true
-VersionInfoVersion=10.18
-VersionInfoTextVersion=Epic 10.18
+VersionInfoVersion=10.19
+VersionInfoTextVersion=Epic 10.19
 UsePreviousAppDir=false
 WizardImageFile=.\Left_Install.bmp
 WizardSmallImageFile=.\install_small.bmp
