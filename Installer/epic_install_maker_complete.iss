@@ -2,7 +2,7 @@
 UseSetupLdr=true
 OutputBaseFilename=unstable_space_10_19
 ;OutputDir=D:\Epic\EpicRelease\USpace10_19
-OutputDir=G:\Projects\USpace10_19
+OutputDir=.
 AppCopyright=Epic Team
 AppName=Unstable Space
 AppVerName=Unstable Space 10.19
@@ -252,6 +252,7 @@ Source: .\..\EpicSource\docs\ts_*_config.ini; DestDir: {app}\configs
 Source: .\..\EpicSource\docs\keybind.txt; DestDir: {app}\epic_docs; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\docs\credits.rtf; DestDir: {app}\epic_docs; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\docs\unstable_space_bugs.xls; DestDir: {app}\epic_docs; Flags: skipifsourcedoesntexist
+Source: .\tornstars.ico; DestDir: {app}
 Source: .\epic5.ico; DestDir: {app}
 Source: .\epic6.ico; DestDir: {app}
 

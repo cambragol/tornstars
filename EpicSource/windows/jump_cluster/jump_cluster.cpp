@@ -16,6 +16,16 @@ struct {
 } model_table[256];
 
 
+struct {
+	char name [2048];
+	int habitat_enum;
+} habitat_type_table[1024];
+
+struct {
+	char name [2048];
+	int faction_enum;
+} faction_table[256];
+
 void ParseName(char *name);
 
 double PrintGiant(FILE * out, char *name, char *parent, double orbit, double rot);
@@ -86,82 +96,13 @@ int cgassy_texture_count = 10;
 int cbump_texture = 9;
 
 int model_entries = 0;
+int faction_entries = 0;
+int habitat_entries = 0;
 
 FILE *error_log;
 
 
-//These are named to match the models, 
-// not the intended purpose.
-enum {
-	MT_MiningStation = 0,
-	MT_ProcessingPlant = 1,
-	MT_OrbitalGarden = 2,
-	MT_RichSettlement =3,
-	MT_PoorSettlement =4,
-	MT_ManufacturePlant = 5,
-	MT_ResearchStation = 6,
-	MT_ShipYardStation = 7,
-	MT_Beanstalk = 8,
-	//MT_TransferStation = 8,
-	MT_AdminStation = 9,
-	MT_SecurityStation = 10,
 
-	MT_CasinoStation = 11,
-	MT_STC = 12,
-	MT_MarauderBase = 13,
-	MT_FortressStation = 14,
-	MT_NavalBaseStation = 15,
-	MT_PirateStation = 16,
-	MT_CorporateHQ = 17,
-
-	MT_Communications =18,
-	MT_Prison=19,
-	MT_AsteroidSmall = 20,
-	MT_AsteroidMedium = 22,
-	MT_AsteroidLarge = 23,
-	MT_AsteroidPlain = 26,
-	MT_JumpAccel = 29,
-	MT_Biobomber = 32,
-
-	// Haven is used as a marker for
-	// a model error because it is so distinct.
-	MT_HavenStation = 34,
-	MT_PoliceStation = 36,
-	MT_SmallPirate = 37,
-	MT_CurvedStation = 38,
-	MT_NewAsteroid01 = 39, 
-	MT_NewAsteroid03 = 40,
-	MT_NewAsteroid05 = 41,
-	MT_NewAsteroid06 = 42,
-	
-	// Some planets are also stations
-	MT_Emerald = 43,
-	MT_Chenyuang = 44,
-	MT_Tseng = 45,
-
-	MT_SmallBiomassMine = 46,
-	MT_SmallCommonMetalsMine = 47,
-	MT_SmallRareMetalsMine = 48,
-	MT_SmallExoticMetalsMine = 49,
-	MT_SmallFusionableGassesMine = 50,
-	MT_SmallInorganicsMine = 51,
-	MT_SmallOrganicsMine = 52,
-	MT_SmallRadioactivesMine = 53,
-	MT_SmallWaterMine = 54,
-	MT_SmallNeutroniumMine = 55,
-
-	MT_LargeBiomassMine = 56,
-	MT_LargeCommonMetalsMine = 57,
-	MT_LargeRareMetalsMine = 58,
-	MT_LargeExoticMetalsMine = 59,
-	MT_LargeFusionableGassesMine = 60,
-	MT_LargeInorganicsMine = 61,
-	MT_LargeOrganicsMine = 62,
-	MT_LargeRadioactivesMine = 63,
-	MT_LargeWaterMine = 64,
-	MT_LargeNeutroniumMine = 65,
-
-};
 
 
 
@@ -225,6 +166,8 @@ int main(int argc, char* argv[])
 	int difficulty;
 	int offset;
 
+    int habitat_type;
+    int faction_enum;
 
 
 	// counter for number of lpoint jump routes
@@ -312,6 +255,36 @@ int main(int argc, char* argv[])
 			model_table[model_entries].model = model;
 
 			++model_entries;
+
+		}else if (0 == strcmp("Habitat",ptoken)){ 
+			// This entry lets us build a symbol table converting from string names
+			// to model numbers. This makes life easy on the cluster builder and
+			// allows changes without need of recompiling the jump_cluster program.
+
+			ParseName(name);
+			ptoken = strtok(NULL," \t,");
+			sscanf(ptoken,"%d",&int_value);
+			habitat_type = int_value;
+			
+			strncpy(habitat_type_table[habitat_entries].name, name, 1000);
+			habitat_type_table[habitat_entries].habitat_enum = habitat_type;
+
+			++habitat_entries;
+
+		}else if (0 == strcmp("Faction",ptoken)){ 
+			// This entry lets us build a symbol table converting from string names
+			// to model numbers. This makes life easy on the cluster builder and
+			// allows changes without need of recompiling the jump_cluster program.
+
+			ParseName(name);
+			ptoken = strtok(NULL," \t,");
+			sscanf(ptoken,"%d",&int_value);
+			faction_enum = int_value;
+			
+			strncpy(faction_table[faction_entries].name, name, 1000);
+			faction_table[faction_entries].faction_enum = faction_enum;
+
+			++faction_entries;
 
 		}else if (0 == strcmp("Station",ptoken)){ 
 			ParseName(name);
@@ -1328,6 +1301,24 @@ int NameToOpType(char * name)
 	fprintf(error_log,"Error: invalid operation type n->s: %s\n",name);
 	return 0;
 }
+
+int NameToFaction(char * name)
+{ 
+
+	int i;
+
+	for (i=0;i<faction_entries;++i)
+	{
+		if (strcmp(name, faction_table[i].name) == 0){
+			return faction_table[i].faction_enum;
+		}
+	}
+
+	// This in an invalid value, return faction 0 (neutral)
+	fprintf(error_log,"Error: invalid faction name n->s:%s:\n",name);
+	return 0;
+}
+/*
 int NameToFaction(char * name)
 { 
 	
@@ -1404,6 +1395,7 @@ if (0==strcmp(name,"AllianceNavy")) { return A_Military;
 	return A_Neutral; // The empty faction.
 }
 
+*/
 int NameToModel(char * name)
 { 
 
@@ -1412,7 +1404,7 @@ int NameToModel(char * name)
 	for (i=0;i<model_entries;++i)
 	{
 		if (strcmp(name, model_table[i].name) == 0){
-			return i;
+			return model_table[i].model;
 		}
 	}
 
@@ -1422,6 +1414,8 @@ int NameToModel(char * name)
 	return 0;
 }
 
+
+/*
 int NameToStation(char * name)
 { 
 	if (0==strcmp(name,"WaterMine")){return MT_SmallWaterMine;
@@ -1554,8 +1548,26 @@ int NameToStation(char * name)
 	fprintf(error_log,"Error: invalid station type n->s: %s\n",name);
 	return MT_HavenStation;
 }
+*/
+int NameToStationType(char * name)
+{ 
 
+	int i;
 
+	for (i=0;i<habitat_entries;++i)
+	{
+		if (strcmp(name, habitat_type_table[i].name) == 0){
+			return habitat_type_table[i].habitat_enum;
+		}
+	}
+
+	// This in an invalid value, and should lead to a station
+	// that is clearly not correct.
+	fprintf(error_log,"Error: invalid habitat type name n->s:%s:\n",name);
+	return 0;
+}
+
+/*
 int NameToStationType(char * name)
 { 
   if ( 0==strcmp(name,"HT_Invalid" )) {
@@ -1925,6 +1937,7 @@ int NameToStationType(char * name)
 fprintf(error_log,"Error: invalid station name n->t:%s:\n",name);
 	return 116;
 }
+*/
 
 // Returns 0 if the station type is not supported by Torn Stars
 // MetaGame.

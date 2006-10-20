@@ -104,7 +104,6 @@ RunUpkeep()
       }
 
       // Deduct the days fuel usage from the ships fuel tanks.
-
       atomic {
          fuel_cost = tEpicFleet.Fuel(ship);
          fuel_cost = fuel_cost - tEpicFleet.DailyFuel(ship);
@@ -112,13 +111,12 @@ RunUpkeep()
       }
 
 
+
       if (Object.IntProperty(ship,"miner") > 0) {
          mining_rig_upkeep(ship);
-      }
-
-      if (Object.IntProperty(ship,"prospector") > 0) {
+      } else if (Object.IntProperty(ship,"prospector") > 0) {
          prospector_upkeep(ship);
-      }
+      } 
 
    }
 
@@ -231,6 +229,9 @@ mining_rig_upkeep(hship rig)
    int i, total;
    float pods, efficiency;
    string global_name;
+   string email_sender;
+   string email_body;
+   string email_subject;
 
    // is the ship docked to a station?
    // is the station player owned?
@@ -272,58 +273,87 @@ mining_rig_upkeep(hship rig)
 
                debug Debug.PrintString("Rig in position\n");
 
-               // Ok, the prospecting rig is in position. Charge the player a 
-               // fee and increment another day of prospecting.
-               mining_fee = Object.IntProperty(rig, "miner");
-               if (mining_fee < tEpicMoney.ShipAccount()) {
+               // If we don't have fuel, we don't drill.
+               if (tEpicFleet.Fuel(rig) > 0.1) {
 
-                  debug Debug.PrintString("Rig charging\n");
+                  // Ok, the rig is in position. Charge the player a 
+                  // fee and produce some ore
+                  mining_fee = Object.IntProperty(rig, "miner");
+                  if (mining_fee < tEpicMoney.ShipAccount()) {
 
-                  tEpicMoney.ChangeShipAccount(-1*mining_fee);
+                     debug Debug.PrintString("Rig charging\n");
 
-
-                  // Ok, we read the richness of this asteroid. We
-                  // add cargo pods of stuff based on the richness.
-
+                     tEpicMoney.ChangeShipAccount(-1*mining_fee);
 
 
-                  // The standard economy also starts out station inventories full
-                  // of cargo. we don't want to give the player that boost.
-                  // So we clear all the production back to zero.
+                     // Ok, we read the richness of this asteroid. We
+                     // add cargo pods of stuff based on the richness.
 
-                  /*
-                  cargo_list = List.FromSet(tEconSmall.StationProducedCargo(iSim.Cast(station)));
-                  total = List.ItemCount(cargo_list);
+                     // The standard economy also starts out station inventories full
+                     // of cargo. we don't want to give the player that boost.
+                     // So we clear all the production back to zero.
 
-                  for (i=0;i<total;++i) {
-                     cargo = iCargo.Cast(List.GetNth(cargo_list, i));
+                     /*
+                     cargo_list = List.FromSet(tEconSmall.StationProducedCargo(iSim.Cast(station)));
+                     total = List.ItemCount(cargo_list);
+   
+                     for (i=0;i<total;++i) {
+                        cargo = iCargo.Cast(List.GetNth(cargo_list, i));
+   
+                        // Increment by one pod
+                        tLInventory.ChangeInventory(iSim.Cast(station), cargo, 1);
+                     }
+                     */
 
-                     // Increment by one pod
-                     tLInventory.ChangeInventory(iSim.Cast(station), cargo, 1);
-                  }
-                  */
+                     // Increment the global count of pods waiting for pickup.
 
-                  // Increment the global count of pods waiting for pickup.
+                     richness = tStation.Richness(station);
+                     efficiency = Object.FloatProperty(rig,"mining_efficiency");
 
-                  richness = tStation.Richness(station);
-                  efficiency = Object.FloatProperty(rig,"mining_efficiency");
+                     pods = int2float(richness) * efficiency;
 
-                  pods = int2float(richness) * efficiency;
+                     global_name = String.Join("ts_mine", Sim.Name(station));
 
-                  global_name = String.Join("ts_mine", Sim.Name(station));
-                  
-                  if (Global.Exists(global_name)) {
-                     pods += Global.Float(global_name);
-                     Global.SetFloat(global_name, pods);
-                  }else {
-                     Global.CreateFloat(global_name, GA_Write, pods);
-                  }
+                     if (Global.Exists(global_name)) {
+                        pods += Global.Float(global_name);
+                        Global.SetFloat(global_name, pods);
+                     } else {
+                        Global.CreateFloat(global_name, GA_Write, pods);
+                     }
 
-               }// if player has funds to pay rig
+                  }// if player has funds to pay rig
+
+               } else {// if rig has no fuel
+                  // Send the player an email, and let them know the asteroid is thiers.
+                  email_sender = Text.Field(Sim.Name(rig), FT_Text);
+                  email_sender = String.Join("Mining Ship ", email_sender);
+
+                  email_subject = Text.Field(Sim.Name(station), FT_Text);
+                  email_subject = String.Join("Out of Fuel ", email_subject);
+
+                  // Our mining rig "name" is out of fuel and mining has stopped. We are
+                  // located at "asteroid" in system "system". Please return ASAP.
+
+                  email_body = "<html><body>Our mining rig ";
+                  email_body = String.Join(email_body, Text.Field(Sim.Name(rig), FT_Text));
+                  email_body = String.Join(email_body, " is our of fuel and mining has stopped. We are located at ");
+                  email_body = String.Join(email_body, Text.Field(Sim.Name(station), FT_Text));
+                  email_body = String.Join(email_body, " in system ");
+                  email_body = String.Join(email_body, Text.Field(iSim.WorldName(station), FT_Text));
+                  email_body = String.Join(email_body, ". Please return ASAP.");
+                  email_body = String.Join(email_body, "</body></html>");
+
+                  tShipMail.SendEmail(email_sender,
+                                      email_subject,
+                                      email_body,
+                                      "",
+                                      false,
+                                      false);  
+               }// mining rig was out of fuel.
             }// if station is a mine
          }// if the mine is empty and can be claimed
-      }// if the prospector is docked to the mine
-   }// if the prospector is docked at all
+      }// if the miner is docked to the mine
+   }// if the miner is docked at all
 }
 
 
@@ -389,7 +419,6 @@ prospector_upkeep(hship explorer) {
    }
 
 
-
    if (iSim.IsDocked(explorer)) {
       debug Debug.PrintString("Prospector docked\n");
 
@@ -448,7 +477,7 @@ prospector_upkeep(hship explorer) {
 
                      iSim.SetFaction(iSim.Cast(station), player_faction);
 
-                     
+
                      // Send the player an email, and let them know the asteroid is thiers.
                      email_sender = Text.Field(Sim.Name(explorer), FT_Text);
                      email_sender = String.Join("Prospecting Ship ", email_sender);
@@ -475,7 +504,7 @@ prospector_upkeep(hship explorer) {
                                          false,
                                          false);
 
-                     
+
                      // The standard economy should no longer grow pods in this
                      // station. Set the growth rate to nothing to prevent it.
                      tLInventory.SetGrowthRate(iSim.Cast(station), 0.0);

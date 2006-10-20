@@ -1365,7 +1365,7 @@ bool jump_simulation(hship player, hisim target_lpoint, int difficulty)
    // Render the view dark while we move the player pilot.
    iGame.EnableBlackout(true);
 
-   velocity = Sim.Speed(player);
+//   velocity = Sim.Speed(player);
 
    // Shut down the player autopilot, so we don't get hauled somewhere unexpected.
    iAI.ClearAutopilot();
@@ -1394,6 +1394,7 @@ bool jump_simulation(hship player, hisim target_lpoint, int difficulty)
    // Read out the number of seconds the player has to run the course.
    route_time = INIFile.Float(jump_file, difficulty_key, "time", 240);
 
+   velocity = INIFile.Float(jump_file, difficulty_key, "velocity", 1000);
 
    INIFile.Destroy(jump_file);
 
