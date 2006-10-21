@@ -1,11 +1,11 @@
 [Setup]
 UseSetupLdr=true
-OutputBaseFilename=unstable_space_10_19
+OutputBaseFilename=unstable_space_10_20
 ;OutputDir=D:\Epic\EpicRelease\USpace10_19
-OutputDir=.
+OutputDir=G:\Projects\USpace10_20
 AppCopyright=Epic Team
 AppName=Unstable Space
-AppVerName=Unstable Space 10.19
+AppVerName=Unstable Space 10.20
 DisableProgramGroupPage=true
 UsePreviousGroup=false
 AlwaysShowDirOnReadyPage=true
@@ -20,8 +20,8 @@ Uninstallable=false
 DisableStartupPrompt=true
 DirExistsWarning=no
 SolidCompression=true
-VersionInfoVersion=10.19
-VersionInfoTextVersion=Epic 10.19
+VersionInfoVersion=10.20
+VersionInfoTextVersion=Epic 10.20
 UsePreviousAppDir=false
 WizardImageFile=.\Left_Install.bmp
 WizardSmallImageFile=.\install_small.bmp
@@ -122,6 +122,7 @@ Source: .\..\EpicSource\US_Mod_JumpTube\avatars\jumptube\*; DestDir: {app}\mods\
 Source: .\..\EpicSource\US_Mod_JumpTube\collisionhulls\*; DestDir: {app}\mods\US_Mod_JumpTube\collisionhulls;
 Source: .\..\EpicSource\US_Mod_JumpTube\sims\*; DestDir: {app}\mods\US_Mod_JumpTube\sims; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\US_Mod_JumpTube\sims\ships\*; DestDir: {app}\mods\US_Mod_JumpTube\sims\ships;
+Source: .\..\EpicSource\US_Mod_JumpTube\sims\regions\*; DestDir: {app}\mods\US_Mod_JumpTube\sims\regions;
 Source: .\..\EpicSource\US_Mod_JumpTube\subsims\*; DestDir: {app}\mods\US_Mod_JumpTube\subsims; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\US_Mod_JumpTube\subsims\dockports\*; DestDir: {app}\mods\US_Mod_JumpTube\subsims\dockports;
 Source: .\..\EpicSource\US_Mod_JumpTube\subsims\systems\*; DestDir: {app}\mods\US_Mod_JumpTube\subsims\systems; Flags: skipifsourcedoesntexist

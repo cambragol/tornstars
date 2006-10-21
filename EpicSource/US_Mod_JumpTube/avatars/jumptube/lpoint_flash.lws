@@ -22,21 +22,6 @@ ShadowOptions 7
 AmbientColor 255 255 255
 AmbIntensity 0.250000
 
-
-AddLight
-LightName Light
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  -2 2 -2 45 35 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LightColor 255 255 255
-LgtIntensity 1
-LightType 0
-ShadowType 1
-
 AddLight
 LightName <glow_and_flare>
 ShowLight 1 7
@@ -47,15 +32,10 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LightColor 243 243 243
-LgtIntensity (envelope)
-  1
-  1
-  1
-  0 0 0 0 0
-EndBehavior 1
+LgtIntensity 0.000000
 LightType 1
 LightFalloff 1
-LightRange 100000
+LightRange 100000.000000
 LensFlare 1
 FlareIntensity (envelope)
   1
@@ -75,13 +55,13 @@ FlareIntensity (envelope)
   0
   60 1 0 0 0
 EndBehavior 1
-FlareNominalDistance 25
-FlareDissolve 0
+FlareNominalDistance 25.000000
+FlareDissolve 0.000000
 LensFlareFade 14
 LensFlareOptions 215
 FlareRingColor 80 20 10
-FlareRingSize 0.22
-FlareDistortFactor 7.01
+FlareRingSize 0.220000
+FlareDistortFactor 7.010000
 FlareStarFilter 5
 ShadowType 1
 
@@ -97,13 +77,29 @@ EndBehavior 1
 LightColor 243 243 243
 LgtIntensity (envelope)
   1
-  1
+  9
   1
   0 0 0 0 0
+  0.8800001
+  7 0 0 0 0
+  0.6
+  15 0 0 0 0
+  0.4339999
+  23 0 0 0 0
+  0.364
+  30 0 0 0 0
+  0.37
+  31 0 0 0 0
+  0.36
+  39 0 0 0 0
+  0.04
+  42 0 0 0 0
+  0
+  45 0 0 0 0
 EndBehavior 1
 LightType 1
 LightFalloff 1
-LightRange 100000
+LightRange 100000.000000
 LensFlare 1
 FlareIntensity (envelope)
   1
@@ -123,17 +119,15 @@ FlareIntensity (envelope)
   0
   60 1 0 0 0
 EndBehavior 1
-FlareNominalDistance 25
-FlareDissolve 0
+FlareNominalDistance 25.000000
+FlareDissolve 0.000000
 LensFlareFade 14
 LensFlareOptions 7
 FlareRingColor 100 100 255
-FlareRingSize 0.2250001
+FlareRingSize 0.225000
 FlareStarFilter 10
-FlareRotationAngle 33.5
+FlareRotationAngle 33.500000
 ShadowType 1
-
-
 
 ShowCamera 1 7
 CameraMotion (unnamed)

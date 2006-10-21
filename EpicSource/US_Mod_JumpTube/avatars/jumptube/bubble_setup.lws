@@ -45,7 +45,7 @@ ShadowOptions 7
 AmbientColor 255 255 255
 AmbIntensity 0.25
 
-AddNullObject <node template=ini||audio|sfx|capsule_tunnel>
+AddNullObject <node template=ini||audio|sfx|capsule_tunnel_2>
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -90,7 +90,7 @@ LgtIntensity (envelope)
 EndBehavior 1
 LightType 1
 LightFalloff 1
-LightRange 3000
+LightRange 2000
 LensFlare 1
 FlareIntensity (envelope)
   1
