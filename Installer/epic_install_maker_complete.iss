@@ -2,7 +2,7 @@
 UseSetupLdr=true
 OutputBaseFilename=unstable_space_10_20
 ;OutputDir=D:\Epic\EpicRelease\USpace10_19
-OutputDir=G:\Projects\USpace10_20
+OutputDir=.
 AppCopyright=Epic Team
 AppName=Unstable Space
 AppVerName=Unstable Space 10.20
