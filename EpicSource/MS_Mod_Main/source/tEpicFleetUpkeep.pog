@@ -114,7 +114,9 @@ RunUpkeep()
 
       if (Object.IntProperty(ship,"miner") > 0) {
          mining_rig_upkeep(ship);
-      } else if (Object.IntProperty(ship,"prospector") > 0) {
+      } 
+      
+      if (Object.IntProperty(ship,"prospector") > 0) {
          prospector_upkeep(ship);
       } 
 
