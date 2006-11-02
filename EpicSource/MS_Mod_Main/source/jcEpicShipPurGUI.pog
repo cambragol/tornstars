@@ -15,7 +15,7 @@
 
 package		jcEpicShipPurGUI;
 
-
+ 
 uses
 	Debug,
 	String,
@@ -66,7 +66,9 @@ uses
 	tEconUtil,
 	tEpicFleet,
 	tEpicMoney,
-	tEFaction;
+	tEFaction,
+   tStationEnum,
+   tStation;
 
 
 	
@@ -79,7 +81,9 @@ provides
 	BuyBtn,
 	SellBtn,
 	ConfirmBtn,
-	CancelBtn;
+	CancelBtn,
+   PurchaseShip,
+   ShipLost;
 
 
 enum ePurState
@@ -107,6 +111,9 @@ prototype SellBtn();			// Selling button
 prototype ConfirmBtn();			// Confirm action
 prototype hwindow create_shady_box( hwindow shady_bar );
 
+prototype PurchaseShip(string entry_key);
+prototype ShipLost();
+
 
 //
 // Fn: RunCheck
@@ -116,14 +123,14 @@ RunCheck()
 {
 	hship player = iShip.FindPlayerShip();
 	
-    if ( iSim.IsDockedToStructure(iSim.Cast(player), iSim.Cast(docked_to_station())) )
-    {
-		Global.SetBool("g_zz_ug_passme",true);
-    }
-    else
-	{
-		Global.SetBool("g_zz_ug_passme",false);
-    }
+   Global.SetBool("g_zz_ug_passme",false);
+
+   if ( iSim.IsDockedToStructure(iSim.Cast(player), iSim.Cast(docked_to_station())) )
+   {
+      if (ESS_Normal == tStation.Status(iHabitat.Cast(docked_to_station()))) {
+         Global.SetBool("g_zz_ug_passme",true);
+      }
+   }
 }
 
 
@@ -387,7 +394,6 @@ ConfirmBtn()
 	// confirmed sell
 	if( Object.IntProperty(get_top_container(), "state") == SE_Sell )
 	{
-		iInventory.RemoveCommandSection();
 		iInventory.RemoveTug();
 		iInventory.RemoveFastAttackShip();
 		iInventory.RemoveHeavyCorvette();
@@ -406,6 +412,9 @@ ConfirmBtn()
 		hide_window( bbtn );		// buy visible
 		// enter station gui
 		enter_station = true;
+
+      // Remove any player equipment that was added as part of the ship.
+      ShipLost();
 	}
 	
 	// confirmed buy
@@ -421,14 +430,7 @@ ConfirmBtn()
 		// determine what has been purchased, and do the add inventory call.
 		selected = GUI.ListBoxValue( list_box );
 		Task.Call( Object.StringProperty( selected, "inventory_fn" ) );
-		// add in the special equipment for this purchase
-		equip_i = 0;
-		while( Object.PropertyExists( selected, String.FormatInt( "add_equipment_%d", equip_i )) )
-		{
-			iInventory.Add(Object.IntProperty(selected, String.FormatInt( "add_equipment_%d", equip_i )), 1);
-			++equip_i;
-		}
-		
+
 		// take off the $$ for the purchase
 		price = Object.IntProperty( selected, "price" );
 		tEpicMoney.ChangeShipAccount(-price);
@@ -439,6 +441,9 @@ ConfirmBtn()
 		hide_window( bbtn );		// buy visible
 		// enter station gui
 		enter_station = true;
+
+      // Add the extra equipment that comes with the ship hull.
+      PurchaseShip(Object.StringProperty(selected,"ship_key"));
 	}
 	
 	
@@ -608,20 +613,11 @@ hwindow create_ship_list(hwindow parent, int x, int y, int width, int height, st
 					// make a button with that name and hook to btn function
 					button = iGUI.CreateAndInitialiseRectangularInverseButton(none, 0, 0, 180, ship_name, btn_fn);
 					
-		            // add in ship specific attributes as needed, from ini file
-		            Object.AddStringProperty( button, "ship_key", ship_key);
-		            Object.AddIntProperty( button, "price", INIFile.Int( shipyard_ini, ship_key, "price", 0) );
-		            Object.AddStringProperty( button, "html_description", INIFile.String( shipyard_ini, ship_key, "html_description", "") );
-		            Object.AddStringProperty( button, "inventory_fn", INIFile.String( shipyard_ini, ship_key, "inventory_fn", "") );
-		            
-					cargo_i = 0;
-					while( INIFile.NumberedExists( shipyard_ini, ship_key, "add_equipment", cargo_i ) )
-					{
-						cargo_type_txt = INIFile.NumberedString( shipyard_ini, ship_key, "add_equipment", cargo_i, "");
-						cargo_type = ECargoTypes.String2CargoType( cargo_type_txt );
-						Object.AddIntProperty( button, String.FormatInt( "add_equipment_%d", cargo_i ), cargo_type  );
-						++cargo_i;
-					}
+               // add in ship specific attributes as needed, from ini file
+               Object.AddStringProperty( button, "ship_key", ship_key);
+               Object.AddIntProperty( button, "price", INIFile.Int( shipyard_ini, ship_key, "price", 0) );
+               Object.AddStringProperty( button, "html_description", INIFile.String( shipyard_ini, ship_key, "html_description", "") );
+               Object.AddStringProperty( button, "inventory_fn", INIFile.String( shipyard_ini, ship_key, "inventory_fn", "") );
 		            
 		            // add button to list box
 					GUI.AddListBoxEntry(list_box, button);
@@ -729,3 +725,76 @@ hsim docked_to_station()
     
     return none;
 }
+
+
+
+// Handle the ship systems change a purchased ship.
+PurchaseShip(string entry_key)
+{
+   string prior_ship_entry = Global.String("jc_current_player_ship_entry");
+   hinifile player_ships;
+   string cargo_name;
+   int item_count, cargo_type;
+
+   ShipLost();
+   // Run through the new entries equipment and add it.
+
+   player_ships = INIFile.Create("ini:/player_ship");
+
+   item_count=0;
+   while (INIFile.NumberedExists(player_ships,entry_key,"add_equipment",item_count)) {
+      cargo_name = INIFile.NumberedString(player_ships,entry_key,"add_equipment", item_count, "CT_Invalid");
+      ++item_count;
+      
+      cargo_type = tEconUtil.String2CargoType(cargo_name);
+
+      if (CT_Invalid != cargo_type) {
+         iInventory.AddWithoutMarkingNew(cargo_type, 1);
+      }
+   }
+
+   INIFile.Destroy(player_ships);
+
+
+   // update the current entry global.
+   Global.CreateString("jc_current_player_ship_entry", GA_Write, entry_key);
+}
+
+
+
+
+
+// Call this function if a ship is shot down or sold.
+ShipLost()
+{
+   string entry_key = Global.String("jc_current_player_ship_entry");
+   hinifile player_ships;
+   int item_count, cargo_type;
+   string cargo_name;
+
+   if (entry_key != "") {
+      player_ships = INIFile.Create("ini:/player_ship");
+
+      item_count=0;
+      while (INIFile.NumberedExists(player_ships,entry_key,"add_equipment",item_count)) {
+         cargo_name = INIFile.NumberedString(player_ships,entry_key,"add_equipment", item_count, "CT_Invalid");
+         ++item_count;
+
+         cargo_type = tEconUtil.String2CargoType(cargo_name);
+
+         if (CT_Invalid != cargo_type) {
+            iInventory.Remove(cargo_type, 1);
+         }
+      }
+
+      INIFile.Destroy(player_ships);      
+   }
+
+   // Zero the prior ship entry to avoid any chance of double deduction.
+   Global.CreateString("jc_current_player_ship_entry", GA_Write, "");
+}
+
+
+
+
+
