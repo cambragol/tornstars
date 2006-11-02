@@ -28,7 +28,7 @@ POG_COMPILER = $(EPIC_INSTALL)/bin/release/pc.exe
 
 .PHONY: all clean
 
-.SUFFIXES:
+#.SUFFIXES:
 .SUFFIXES: .pkg .pog
 
 #vpath %.pkg ./packages
@@ -37,8 +37,8 @@ vpath %.pog ../source
 # Pattern rule
 %.pkg: %.pog
 	$(POG_COMPILER) -q -i $(INCLUDE_PATH) -i $(PS_INCLUDE_PATH) -i $(INCLUDE_PKG) -hp $(INCLUDE_PKG) -pp $(PACKAGE_PATH) $<
-#	copy $(PACKAGE_PATH)\$(*B).pkg $(MOD_PATH)\packages
-
+	cp $(PACKAGE_PATH)/$@ $(MOD_PATH)/packages
+# copy the target to the iwar mod directory (to save a manual copy for the programmer which keeps all files up to date).
 
 
 #
@@ -109,6 +109,7 @@ PACKAGES = ECargoTypes.pkg \
 	tMusicGui.pkg \
 	tNewsNet.pkg \
 	tOptionsGui.pkg \
+	tStartGui.pkg \
 	tPcAsteroidBelt.pkg \
 	tPcCargoShip.pkg \
 	tPcConstructionShip.pkg \
@@ -230,7 +231,7 @@ tEpicFleet.pkg : tEpicFleet.pog tEconUtil.pog tPodUtil.pog tEpicComms.pog tForma
 tEpicFleetUpkeep.pkg : tEpicFleetUpkeep.pog tStation.pog tEFaction.pog tEpicFleet.pog tEpicMoney.pog tLProduction.pog tLInventory.pog tEconUtil.pog tEconSmall.pog tPodUtil.pog tShipMail.pog
 tEpicGui.pkg : tEpicGui.pog
 tEpicLFPlus.pkg : tEpicLFPlus.pog tStation.pog tEpicGui.pog tEconUtil.pog tLProduction.pog tLFleet.pog tUnderOp.pog tUnderOpFilter.pog tESysSetup.pog tEJump.pog 
-tEpicMain.pkg : tEpicMain.pog tTime.pog tDistance.pog tMultimod.pog UniGUI.pog UniGUIBase.pog tEpicLFPlus.pog tEFaction.pog tEpicGui.pog tEpicFleet.pog tDistance.pog jGiftCargo.pog tWingComm.pog tEPlayerWatch.pog tStationEnv.pog tEpicComms.pog tEpicFleetUpkeep.pog tUnderOp.pog tUnderOpSave.pog tLInventory.pog tEconSmall.pog tETradeBuy.pog tETradeSell.pog tEFleetGui.pog tExitGui.pog tStationSave.pog tESysSetup.pog tMusic.pog tMail.pog tNewsNet.pog tShipMail.pog tViewDock.pog tEJump.pog  tELpointFind.pog tStationRules.pog tsFleetOpUpdate.pog tsCrewSpeak.pog tRepUpdate.pog tOptionsGui.pog
+tEpicMain.pkg : tEpicMain.pog tTime.pog tDistance.pog tMultimod.pog UniGUI.pog UniGUIBase.pog tEpicLFPlus.pog tEFaction.pog tEpicGui.pog tEpicFleet.pog tDistance.pog jGiftCargo.pog tWingComm.pog tEPlayerWatch.pog tStationEnv.pog tEpicComms.pog tEpicFleetUpkeep.pog tUnderOp.pog tUnderOpSave.pog tLInventory.pog tEconSmall.pog tETradeBuy.pog tETradeSell.pog tEFleetGui.pog tExitGui.pog tStationSave.pog tESysSetup.pog tMusic.pog tMail.pog tNewsNet.pog tShipMail.pog tViewDock.pog tEJump.pog  tELpointFind.pog tStationRules.pog tsFleetOpUpdate.pog tsCrewSpeak.pog tRepUpdate.pog tOptionsGui.pog tStartGui.pog
 tEpicMoney.pkg : tEpicMoney.pog
 
 #ECargoScript.pog 
@@ -259,6 +260,7 @@ tMusicChange.pkg : tMusicChange.pog tMusic.pog tLProduction.pog
 tMusicGui.pkg : tMusicGui.pog tMusic.pog tEpicGui.pog
 tNewsNet.pkg : tNewsNet.pog UniGUI.pog tTime.pog tMail.pog
 tOptionsGui.pkg : tOptionsGui.pog UniGUI.pog tEpicGui.pog
+tStartGui.pkg : tStartGui.pog UniGUI.pog tEpicGui.pog
 tPcAsteroidBelt.pkg : tPcAsteroidBelt.pog tsCull.pog tLCenter.pog
 tPcCargoShip.pkg : tPcCargoShip.pog tEconUtil.pog tEconSmall.pog tStation.pog tStationFilter.pog tETradeBuy.pog tPogClass.pog tLRoot.pog tLTrade.pog tLProduction.pog tEpicMoney.pog tTime.pog tEFaction.pog tEpicFleet.pog tPodUtil.pog tSpewerOps.pog tsPilotSetup.pog tEShipCreation.pog tShipName.pog uString.pog
 tPcConstructionShip.pkg : tPcConstructionShip.pog tEpicComms.pog tEpicFleet.pog tLRoot.pog tLCenter.pog tLTrade.pog tEFaction.pog tETradeSell.pog tEpicMoney.pog tShipName.pog tPcOwner.pog tsCull.pog
