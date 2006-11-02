@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/jcEpicShipPurGUI.h,v 1.1 2005/06/10 19:56:33 Owner Exp $
+// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////
@@ -33,6 +33,10 @@ prototype jcEpicShipPurGUI.SellBtn();
 prototype jcEpicShipPurGUI.ConfirmBtn();
 
 prototype jcEpicShipPurGUI.CancelBtn();
+
+prototype jcEpicShipPurGUI.PurchaseShip( string entry_key );
+
+prototype jcEpicShipPurGUI.ShipLost();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 
