@@ -2152,6 +2152,10 @@ int SupportedStation(char * name, char * station_name)
       return HT_TransferStation; 
    }
 
+   if ( 0==strcmp(name,"HT_OreTransferStation" )) {
+      return HT_OreTransferStation; 
+   }
+
    fprintf(error_log,"Warning: Unsupported station type %s :%s:\n",station_name, name);
 	return 0;
 }
