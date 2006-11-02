@@ -1,0 +1,639 @@
+//*******************************************************************************************/
+//
+// tStartGui.pog
+//
+// A GUI package that allows the player to pick a start position in the game.
+// 
+// 
+// 
+//
+// November 2006, Jon Freise
+//******************************************************************************************/
+
+package tStartGui;
+
+uses	Sim,  
+		iShip,
+		iSim,
+		Debug,
+		Global,
+		GUI,
+		iGame, 
+		iGUI,
+		iHUD,
+		iHabitat,
+		iMapEntity,
+      INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+      iDockport,
+      iCargo,
+      iInventory,
+      CargoTypes,
+      tEconUtil,
+      tPodUtil,
+      tEFaction,
+		UniGUI,
+      tEpicGuiEnum,
+      tEpicGui,
+      tEpicFleet,
+      tEpicMoney;
+
+
+
+provides DisplayWindow,
+         OnButtonPress,
+         StartGame,
+         NewGame,
+         FinalSetup;
+
+         
+
+prototype StartScreen();
+
+prototype task start_gui();
+
+prototype task setup_player();
+
+prototype choose_position(hwindow button);
+
+prototype add_player_cargo(string entry_key, hinifile start_file);
+
+prototype add_player_wingmen(string entry_key, hinifile start_file);
+
+prototype add_cargo_pods(string entry_key, hinifile start_file);
+
+prototype adjust_player_standing(string entry_key, hinifile start_file);
+
+
+prototype PurchaseShip(string entry_key);
+
+prototype ShipLost();
+
+
+NewGame()
+{
+   Global.CreateBool("gt_start_gui_new", GA_Write, false);
+}
+
+
+FinalSetup()
+{
+   if (!Global.Bool("gt_start_gui_new")) {
+      Task.Detach(start start_gui());
+   }
+}
+
+task start_gui()
+{
+   Task.Sleep(Task.Current(), 1.0);
+
+   StartScreen();
+}
+
+
+SetStandardGuiColors(hwindow window)
+{
+
+
+   GUI.SetWindowStateColours( window,
+                              Global.Float( "GUI_neutral_red"),
+                              Global.Float( "GUI_neutral_green"),
+                              Global.Float( "GUI_neutral_blue"),
+                              Global.Float( "GUI_focused_red"),
+                              Global.Float( "GUI_focused_green"),
+                              Global.Float( "GUI_focused_blue"),
+                              Global.Float( "GUI_selected_red"),
+                              Global.Float( "GUI_selected_green"),
+                              Global.Float( "GUI_selected_blue"));
+
+}
+
+string button_text(string name, bool value)
+{
+   if (value) {
+      return String.Join(name," On");
+   }
+
+   return String.Join(name, " Off");
+}
+
+
+
+hwindow CreateOptionList(hwindow parent, int x, int y, int width, int height, string function)
+{
+   hwindow list_box;
+   hwindow base_win;
+   hwindow button;
+   int count, i;
+   string entry_key, entry_name, html_file;
+   hinifile start_file = INIFile.Create("ini:/player_start_choice");
+   int cwidth = width - 4;
+   list button_list;
+
+   if (none == start_file) {
+      debug Debug.PrintString("tStartGui error missing player_start_choice.ini file\n");
+      return none;
+   }
+                                   
+   
+   cwidth = cwidth - Global.Int("GUI_scrollbar_width");
+
+
+
+   base_win = GUI.CreateWindow(x, y, width, height, parent);
+
+   // Create the parent listbox
+   list_box = GUI.CreateListBox( 0, 0,
+                                 cwidth, height,
+                                 base_win,
+                                 true,
+                                 false);
+   count = 0;
+   while (INIFile.NumberedExists(start_file,"StartSetup","setup", count)) {
+
+      entry_key = INIFile.NumberedString(start_file,"StartSetup","setup", count, "");
+
+      entry_name = INIFile.String(start_file, entry_key, "setup_name", "name_missing");
+      html_file = INIFile.String(start_file, entry_key, "setup_html", "file_missing");
+
+
+
+      button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, 
+                                                      cwidth, 
+                                                      entry_name,
+                                                      function);
+
+      Object.AddStringProperty(button, "gt_startgui_entry", entry_key);
+
+      Object.AddStringProperty(button, "gt_startgui_html", html_file);
+
+      Object.AddIntProperty(button, "gt_startgui_count", count);      
+
+      GUI.AddListBoxEntry(list_box, button);
+
+      ++count;      
+   }
+
+   INIFile.Destroy(start_file);
+
+
+   // Add a scroll bar to the listbox.
+
+   GUI.CreateVerticalScrollbar( cwidth+4,
+                                0,
+                                Global.Int("GUI_scrollbar_width"),
+                                height,
+                                base_win,
+                                list_box,
+                                Global.Float( "GUI_scrollbar_buttonratio"), 
+                                
+                                "");
+
+
+   // Set the first item as the default selection.
+   GUI.SelectListBoxEntry(list_box, 0 );
+
+   choose_position(GUI.Cast(List.Head(button_list)));
+
+   return list_box;
+}
+
+
+
+choose_position(hwindow button)
+{
+   string entry_key;
+   hwindow text_window = GUI.Cast(Global.Handle("gt_startgui_text_win"));
+
+   entry_key = Object.StringProperty(button, "gt_startgui_entry");
+
+   Global.CreateString("gt_startgui_entry_key",GA_Write|GA_NoSave, entry_key);
+
+   // Update the help for the new selection.
+   GUI.SetTextWindowResource(text_window, Object.StringProperty(button,"gt_startgui_html"));
+   
+}
+
+
+
+OnButtonPress()
+{
+	// Get the currently focused window - it must be the correct system button.
+	hwindow button =	GUI.FocusedWindow();
+   hwindow list_box = GUI.Cast( Global.Handle("gt_startgui_list_box"));
+   int index = Object.IntProperty(button, "gt_startgui_count");
+
+   GUI.SelectListBoxEntry(list_box, index);
+
+   choose_position(button);
+}
+
+
+
+
+
+DisplayWindow()
+{
+   hwindow shady_bar;
+   hwindow shady_bar_right;
+   hwindow title;
+   hwindow subtitle;
+   hwindow exit;
+   hwindow debug_list_box;
+   hwindow help_win;
+
+   int width, height;
+
+   list debug_list, empty_list;
+
+   debug Debug.PrintString("tStartGui.DisplayWindow\n");
+
+   // Set right hand shady bar width.
+   shady_bar = iGUI.CreateWideShadyBar();
+
+   shady_bar_right = iGUI.CreateShadyBarRight();
+
+
+   Global.CreateHandle("gt_debug_gui_shady",GA_Write,shady_bar);
+
+
+   GUI.SetWindowClientArea( shady_bar, 
+                            0,
+                            0,
+                            500,
+                            GUI.WindowCanvasHeight( shady_bar));
+   
+
+
+   height = GUI.WindowCanvasHeight( shady_bar);
+   height = height - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+
+
+   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   //width = width/2;
+   width = width - Global.Int("EpicGui_content_indent");
+   width = width - Global.Int("EpicGui_content_indent");
+      
+
+   tEpicGui.CreateTitle(shady_bar, "Start Game");
+   tEpicGui.CreateSubtitle(shady_bar, "Select your starting position");
+
+   // Create the exit button
+   tEpicGui.CreateExitButton(shady_bar, "Start", "tStartGui.StartGame");
+
+
+
+
+
+   // Create help window
+   help_win = iGUI.CreateAndInitialiseTextWindow(250+Global.Int("EpicGui_content_indent"),
+                                      Global.Int("EpicGui_content_drop") ,
+                                      275,
+                                      height,
+                                      shady_bar_right,
+                                      "html:/html/player_start_welcome");
+
+   GUI.CreateVerticalScrollbar( 525+Global.Int("EpicGui_content_indent"),
+                                Global.Int("EpicGui_content_drop") ,
+                                Global.Int("GUI_scrollbar_width"),
+                                height,
+                                shady_bar_right,
+                                help_win,
+                                Global.Float( "GUI_scrollbar_buttonratio"), 
+                                "");
+
+   Global.CreateHandle("gt_startgui_text_win", GA_Write|GA_NoSave, help_win);
+
+
+
+
+   debug_list_box = CreateOptionList(shady_bar, 
+                                     Global.Int("EpicGui_content_indent"),
+                                     Global.Int("EpicGui_content_drop") ,
+                                     width,
+                                     height,
+                                     "tStartGui.OnButtonPress");
+
+   Global.CreateHandle("gt_startgui_list_box", GA_Write|GA_NoSave, debug_list_box);
+
+}
+
+
+
+StartScreen()
+{
+   GUI.PopScreensTo("icSpaceFlightScreen");
+   GUI.OverlayScreen("icPDAOverlayManager");
+   iGUI.OverlayCustomScreen( "tStartGui.DisplayWindow" );
+}
+
+StartGame()
+{
+
+   Task.Detach(start setup_player());
+
+   Global.SetBool("gt_start_gui_new", true);
+
+	UniGUI.UniGUIRemoveScreen();
+}
+
+
+task setup_player()
+{
+   string entry_key;
+   string start_system, start_location;
+   hisim station;
+   hinifile start_file;
+   hship player = iShip.FindPlayerShip();
+   hship prefit;
+   int item_count, cargo_number, cargo_type, funds;
+   string cargo_name;
+   string player_ship, player_ship_prefit;
+
+
+   // Curtains close for to rearrange the set.
+   iGame.EnableBlackout(true);
+
+   entry_key = Global.String("gt_startgui_entry_key");
+
+   debug {
+      Debug.PrintString("tStartGui.setup_player selected ");
+      Debug.PrintString(entry_key);
+      Debug.PrintString("\n");
+   }
+
+   start_file = INIFile.Create("ini:/player_start_choice");
+
+   start_system = INIFile.String(start_file, entry_key, "start_system","none");
+   start_location = INIFile.String(start_file, entry_key, "start_station","none");
+
+   station = iSim.FindByNameInSystem(start_location, start_system);
+
+   if (none != station) {
+      Sim.PlaceNear(player, station, 10km);
+   }else {
+      debug {
+         Debug.PrintString("Start Location Not Found\n");
+         Debug.PrintString(start_location);
+         Debug.PrintString("\n");
+         Debug.PrintString(start_system);
+         Debug.PrintString("\n");
+      }
+   }
+
+   funds = INIFile.Int(start_file, entry_key,"ship_account",0);
+   tEpicMoney.ChangeShipAccount(funds);
+
+
+   player_ship = INIFile.String(start_file, entry_key, "player_ship_entry","none");
+
+   // If there is a specified prefit ship, then
+   player_ship_prefit = INIFile.String(start_file, entry_key, "player_ship_prefit","none");
+
+   if ("none" != player_ship_prefit) {
+      prefit = iShip.Create(player_ship_prefit, "player_ship_name");
+      Sim.SetCullable(prefit, false);
+
+      if (none != prefit) {
+         Sim.PlaceNear(prefit, player, 1km);
+         // Drop the player into the prefit ship.
+         tEpicFleet.NewPlayerShip(prefit);
+
+         // Give the player pilot a moment to move over.
+         Task.Sleep(Task.Current(), 0.1);
+
+         // Remove the old player ship.
+         Sim.Destroy(player);
+      }
+   }
+
+   PurchaseShip(player_ship);
+
+   add_player_cargo(entry_key, start_file);
+
+   add_player_wingmen(entry_key, start_file);
+
+   add_cargo_pods(entry_key, start_file);
+
+   adjust_player_standing(entry_key, start_file);
+
+
+   INIFile.Destroy(start_file);
+
+
+   iGame.EnableBlackout(false);
+}
+
+
+add_player_cargo(string entry_key, hinifile start_file)
+{
+   int item_count, cargo_type, cargo_number;
+   string cargo_name;
+
+   item_count=0;
+   while (INIFile.NumberedExists(start_file,entry_key,"cargo",item_count)) {
+      cargo_name = INIFile.NumberedString(start_file,entry_key,"cargo", item_count, "CT_Invalid");
+      cargo_number = INIFile.NumberedInt(start_file,entry_key,"quantity",item_count,0);
+      ++item_count;
+
+      cargo_type = tEconUtil.String2CargoType(cargo_name);
+
+      if (CT_Invalid != cargo_type) {
+   
+         iInventory.AddWithoutMarkingNew(cargo_type, cargo_number);
+      
+      }
+
+      debug {
+         Debug.PrintString(iCargo.Name(iCargo.Find(cargo_type)));
+         Debug.PrintString(" ");
+         Debug.PrintInt(cargo_number);
+         Debug.PrintString(" added\n");
+      }
+   }
+
+}
+
+add_player_wingmen(string entry_key, hinifile start_file)
+{
+   int item_count, cargo_type, cargo_number;
+   string cargo_name;
+   hship player = iShip.FindPlayerShip();
+   hship wingman;
+   string wingman_name, wingman_ini;
+
+   item_count=0;
+   while (INIFile.NumberedExists(start_file,entry_key,"wingman_name",item_count)) {
+      wingman_name = INIFile.NumberedString(start_file,entry_key,"wingman_name", item_count, "");
+      wingman_ini = INIFile.NumberedString(start_file,entry_key,"wingman_ini",item_count,"");
+      ++item_count;
+      
+      wingman = iShip.Create(wingman_ini, wingman_name);
+
+      if (none != wingman) {
+         Sim.PlaceNear(wingman, player, 5km);
+
+         tEpicFleet.HireShip(wingman);
+      }
+
+      debug {
+         Debug.PrintString(wingman_name);
+         Debug.PrintString(" ");
+         Debug.PrintString(wingman_ini);
+         Debug.PrintString("\n");
+      }
+   }
+}
+
+add_cargo_pods(string entry_key, hinifile start_file)
+{
+   int item_count, cargo_type, cargo_number, pods;
+   string cargo_name;
+   hship player = iShip.FindPlayerShip();
+   hship cargo_pod;
+
+   item_count=0;
+   while (INIFile.NumberedExists(start_file,entry_key,"cargo_pod",item_count)) {
+      cargo_name = INIFile.NumberedString(start_file,entry_key,"cargo_pod", item_count, "CT_Invalid");
+      cargo_number = INIFile.NumberedInt(start_file,entry_key,"quantity_pod",item_count,0);
+      ++item_count;
+
+      cargo_type = tEconUtil.String2CargoType(cargo_name);
+
+      if (CT_Invalid != cargo_type) {
+         for (pods = 0; pods < cargo_number;++pods) {
+
+            cargo_pod = iShip.Cast(tPodUtil.CreateCargoPod(cargo_type, "Player", "Player"));
+
+            if (none != cargo_pod) {
+               Sim.PlaceNear(cargo_pod, player, 5km);
+            }
+         }
+      }
+
+      debug {
+         Debug.PrintString(iCargo.Name(iCargo.Find(cargo_type)));
+         Debug.PrintString(" ");
+         Debug.PrintInt(cargo_number);
+         Debug.PrintString(" pods added\n");
+      }
+   }
+
+}
+
+
+adjust_player_standing(string entry_key, hinifile start_file)
+{
+   int adjust_count, adjust_known;
+   string adjust_name, adjust_string;
+   hfaction player_faction = tEFaction.PlayerFaction();
+   hfaction target;
+   float adjust_level;
+
+   adjust_count =0;
+   while (INIFile.NumberedExists(start_file, entry_key,"adjust_name",adjust_count)) {
+      adjust_name = INIFile.NumberedString(start_file,entry_key,"adjust_name",adjust_count,"none");
+      adjust_string = INIFile.NumberedString(start_file,entry_key,"adjust_level",adjust_count,"FT_Neutral");
+      adjust_known = INIFile.NumberedInt(start_file,entry_key,"adjust_known",adjust_count,0);
+
+      // Lookup the faction
+      target = tEFaction.EFind(adjust_name);
+      adjust_level = tEFaction.String2Level(adjust_string);
+
+      // Change the feeling
+      iFaction.SetFeeling(player_faction, target, adjust_level);
+      iFaction.SetFeeling(target, player_faction, adjust_level);
+
+      // The player may begin the game knowing some otherwise hidden factions.
+      if (adjust_known > 0) {
+         tEFaction.SetKnown(target, true);
+      }
+
+      debug {
+         Debug.PrintHandle(player_faction);
+         Debug.PrintString(" to ");
+         Debug.PrintHandle(target);
+         Debug.PrintString(" adjusted ");
+         Debug.PrintFloat(adjust_level);
+         Debug.PrintString("\n");
+      }
+      ++adjust_count;
+   }
+}
+
+
+// Handle the ship systems change a purchased ship.
+PurchaseShip(string entry_key)
+{
+   string prior_ship_entry = Global.String("jc_current_player_ship_entry");
+   hinifile player_ships;
+   string cargo_name;
+   int item_count, cargo_type;
+
+   ShipLost();
+   // Run through the new entries equipment and add it.
+
+   player_ships = INIFile.Create("ini:/player_ship");
+
+   item_count=0;
+   while (INIFile.NumberedExists(player_ships,entry_key,"add_equipment",item_count)) {
+      cargo_name = INIFile.NumberedString(player_ships,entry_key,"add_equipment", item_count, "CT_Invalid");
+      ++item_count;
+      
+      cargo_type = tEconUtil.String2CargoType(cargo_name);
+
+      if (CT_Invalid != cargo_type) {
+         iInventory.AddWithoutMarkingNew(cargo_type, 1);
+      }
+   }
+
+   INIFile.Destroy(player_ships);
+
+
+   // update the current entry global.
+   Global.CreateString("jc_current_player_ship_entry", GA_Write, entry_key);
+}
+
+
+// Call this function if a ship is shot down or sold.
+ShipLost()
+{
+   string entry_key = Global.String("jc_current_player_ship_entry");
+   hinifile player_ships;
+   int item_count, cargo_type;
+   string cargo_name;
+
+   if (entry_key != "") {
+      player_ships = INIFile.Create("ini:/player_ship");
+
+      item_count=0;
+      while (INIFile.NumberedExists(player_ships,entry_key,"add_equipment",item_count)) {
+         cargo_name = INIFile.NumberedString(player_ships,entry_key,"add_equipment", item_count, "CT_Invalid");
+         ++item_count;
+
+         cargo_type = tEconUtil.String2CargoType(cargo_name);
+
+         if (CT_Invalid != cargo_type) {
+            iInventory.Remove(cargo_type, 1);
+         }
+      }
+
+      INIFile.Destroy(player_ships);      
+   }
+
+   // Zero the prior ship entry to avoid any chance of double deduction.
+   Global.CreateString("jc_current_player_ship_entry", GA_Write, "");
+}
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
