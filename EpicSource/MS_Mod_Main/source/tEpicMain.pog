@@ -64,7 +64,8 @@ uses
    tsFleetOpUpdate,
    tsCrewSpeak,
    tRepUpdate,
-   tOptionsGui;
+   tOptionsGui,
+   tStartGui;
 
 
 
@@ -86,11 +87,11 @@ provides
    PlayerDocked,
    PlayerUndocked;
 
-
+  
 
 GameEnter()
 {
-   jGiftCargo.NewGame();
+//   jGiftCargo.NewGame();
 
    tEpicFleet.NewGameTest();
    
@@ -101,6 +102,8 @@ GameEnter()
    tEJump.StartGame();
 
    tOptionsGui.NewGame();
+
+   tStartGui.NewGame();
 }
 
 
@@ -182,7 +185,7 @@ BaseExit()
 
 SpaceEnter()
 {
-   jGiftCargo.AddInventory();
+//   jGiftCargo.AddInventory();
 
    UniGUIBase.EnterSpace();
 
@@ -217,6 +220,8 @@ FinalSetup()
    tShipMail.StartMyMod();
 
    tsCrewSpeak.Init();
+
+   tStartGui.FinalSetup();
 }
 
 SystemEnter()
