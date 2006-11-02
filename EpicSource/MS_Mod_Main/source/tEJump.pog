@@ -44,7 +44,7 @@ prototype set_known(string start_lpoint, string end_lpoint);
 
 prototype bool is_known(string start_lpoint, string end_lpoint);
 
-prototype jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty);
+prototype bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty);
 
 prototype set find_following_ships(hship ship);
 
@@ -132,6 +132,7 @@ bool IsCapsuleJumping()
 }
 
 /*
+
    Jump routes come in 5 flavors
    
    Stable     1
@@ -318,6 +319,7 @@ task jump_watch() {
     hsim  end_location;
     hship player;
     float velocity;
+    bool success;
 
     debug Debug.PrintString("tEJump.jump_watch\n");
 
@@ -348,9 +350,11 @@ task jump_watch() {
                 target_lpoint = iLagrangePoint.Cast(Object.HandleProperty(jump_point,"tEJumpDest"));
                 difficulty = Object.IntProperty(jump_point,"tEJumpDiff");
 
-                set_known(Sim.Name(jump_point), Sim.Name(Sim.Cast(target_lpoint)));
+                success = jump_player_fleet(jump_point, target_lpoint, difficulty);
 
-                jump_player_fleet(jump_point, target_lpoint, difficulty);
+                if (true == success) {
+                   set_known(Sim.Name(jump_point), Sim.Name(Sim.Cast(target_lpoint)));
+                }
 
                 Object.RemoveProperty(jump_point,"tEJumpDest");
                 Object.RemoveProperty(jump_point,"tEJumpDiff");
@@ -855,14 +859,14 @@ add_flash(hship player)
 }
 
 
-jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
+bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
     hship player = iShip.FindPlayerShip();
     hship wingman;
     list player_fleet;
     int i, total, final_difficulty;
     hisim destination;
     float fuel, jump_cost;
-    bool jump_success;
+    bool jump_success = false;
     eCamera camera;
 
     // Create a list of wingmen to jump after player.
@@ -872,7 +876,7 @@ jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
 
     // phase 1:
     // jump the player ship
-
+  
 
     // Stop the player if he is going to jump and leave wingmen behind.
     total = List.ItemCount(player_fleet);
@@ -884,10 +888,15 @@ jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
 
         if (jump_cost > fuel) {
            // ejump_low_fuel, "We don't have enough fuel to jump Sir"
-            iComms.Shout(wingman, "", "ejump_low_fuel");
-            return;
-        }
+           debug {
+              Debug.PrintString(Text.Field(Sim.Name(wingman),FT_Text));
+              Debug.PrintString(" cannot jump low fuel\n");
+           }
 
+           iComms.Shout(wingman, "", "ejump_low_fuel");
+           return false;
+        }
+ 
         
         // Check here for lack of capsule drive.
 
@@ -917,13 +926,6 @@ jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
         //jump_ship(player, target_lpoint, difficulty);   
         jump_success = jump_simulation(player, target_lpoint, difficulty);   
 
-        if (jump_success) {
-           // If the player succeeds, send them out the target lpoint.
-           destination = target_lpoint;
-        }else {
-           // If the player fails, toss them back out the starting lpoint.
-           destination = jump_point;
-        }
         
         // If the player makes the jump without hitting anything,
         // don't damage the ships. If they didn't pass, smash 
@@ -941,7 +943,21 @@ jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
 
         // Put the player in the destination system, near the exit, but not at it yet.
         // This is safely inside of culling distance, and the system should wake up.
+
+        // If the player failed the jump, then drop them 1000km from the starting
+        // lpoint. This is outside the cull position of any traffic. And makes it feel like 
+        // the player did move somewhere, if not where he was expecting. 
         Sim.PlaceNear(player, destination, Global.Float("gt_distance_wakeup") - 10km);
+
+        if (jump_success) {
+           Sim.PlaceNear(player, target_lpoint, Global.Float("gt_distance_wakeup") - 10km);
+           destination = target_lpoint;
+        } else {
+           destination = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","jump_destination"));
+           Sim.SetCullable(destination, false);
+           Sim.PlaceNear(destination, jump_point, 1000km);
+           Sim.PlaceNear(player, target_lpoint, Global.Float("gt_distance_wakeup") - 10km);
+        }
 
         // Give the lpoint time to wake up and place all objects. And give the day update
         // time to begin running.
@@ -992,9 +1008,20 @@ jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
            Debug.PrintString("tEJump.wingmen complete\n");
         }
 
+        // If we needed to create a waypoint for this jump destination, then 
+        // allow it to be culled.
+        if (T_Waypoint == iSim.Type(destination)) {
+           Sim.SetCullable(destination, true);
+        }
+
     } else {
+        debug {
+           Debug.PrintString("tEJump.jump_player_fleet player fuel to low to jump\n");
+        }
         iComms.Shout(none, "name_az", "ejump_low_fuel");
     }
+
+    return jump_success;
 }
 
 
