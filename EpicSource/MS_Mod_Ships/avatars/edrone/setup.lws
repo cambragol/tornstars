@@ -4,12 +4,12 @@ LWSC
 FirstFrame 1
 LastFrame 100
 FrameStep 1
-PreviewFirstFrame 1
+PreviewFirstFrame 0
 PreviewLastFrame 100
 PreviewFrameStep 1
 FramesPerSecond 25.000000
 
-AddNullObject <detail_switch min=0.0 max=0.01>
+AddNullObject <detail_switch min=0.0 max=0.z>
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -40,17 +40,6 @@ EndBehavior 1
 LockedChannels 6
 ShadowOptions 7
 
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\edrone.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 180 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 5
-ShadowOptions 7
-
 AddNullObject root
 ShowObject 8 7
 ObjectMotion (unnamed)
@@ -60,406 +49,6 @@ ObjectMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 ParentObject 1
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\ED_LArm.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 -180 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 5
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\ED_RArm.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 -180 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 5
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\ML_LOD0_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  -19.64506 -20.4 44.92688 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 5
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\LOD0_RTO_GatlingGun_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  -27.30553 -20.5 51.23186 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 5
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\ML_LOD0_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  11.06149 -22.8 55.96415 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 5
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\LOD0_RTO_StandardPBC_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  17.57901 -23.5 60.04462 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 5
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\DroneUArm0_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  -8.796084 -6.399998 36.2556 90.10001 5.999997 4.2 8.000001 8.000001 8.000001
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 56
-ParentObject 5
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\DroneUArm0_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  7.298088 -7.1 36.26112 0 0 2.2 8.000001 8.000001 8.000001
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 29
-ParentObject 5
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\DroneUElb0_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  7.658671 -8.2 36.31176 0 0 0 8 8 8
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 1
-ParentObject 5
-ShadowOptions 7
-
-AddNullObject EngBoom_Control
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 1.4 -15.0748 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 5
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\ED_EngBoom.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0.1000005 -0.5817766 0 0 -4.1 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 541
-PivotPoint 0 1.500001 14.4
-ParentObject 15
-ShadowOptions 7
-
-AddNullObject <anim channel="LZ?-s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  27.89999 0.9000001 15.20002 0 0 0 1 1 1
-  0 0 0 0 0
-  27.89999 0.9000001 15.20002 0 180 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 4
-ShadowOptions 7
-
-AddNullObject <anim channel="RY?+s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 0 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 17
-ShadowOptions 7
-
-AddNullObject <anim channel="RY?-s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 180 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 18
-ShadowOptions 7
-
-AddNullObject <anim channel="RP?-s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 90 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 19
-ShadowOptions 7
-
-AddNullObject <anim channel="RP?+s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 -90 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 20
-ShadowOptions 7
-
-AddNullObject <anim channel="RR?-s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 -90 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 21
-ShadowOptions 7
-
-AddNullObject <anim channel="RR?+s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 -90 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 22
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\RT_FrogMiner_LeftEngine_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  -21.89386 -5.299998 -23.90016 -179.9998 0 0 4.288001 4.288001 4.288001
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 55
-ParentObject 23
-ShadowOptions 7
-
-AddNullObject <anim channel="LZ?-s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  -27.9 1.6 14.80001 0 0 0 1 1 1
-  0 0 0 0 0
-  -27.9 1.6 14.80001 0 180 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-LockedChannels 5
-ParentObject 4
-ShadowOptions 7
-
-AddNullObject <anim channel="RY?+s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 180 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 25
-ShadowOptions 7
-
-AddNullObject <anim channel="RY?-s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 0 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 26
-ShadowOptions 7
-
-AddNullObject <anim channel="RP?-s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 90 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 27
-ShadowOptions 7
-
-AddNullObject <anim channel="RP?+s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 -90 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 28
-ShadowOptions 7
-
-AddNullObject <anim channel="RR?-s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 90 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 29
-ShadowOptions 7
-
-AddNullObject <anim channel="RR?+s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 -90 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 30
-ShadowOptions 7
-
-AddNullObject <anim channel="LZ?+j(0.5) LZ?-j(0.5) RP?+j(0.5) RP?-j(0.5) RR?+j(0.5) RR?-j(0.5) RY?+j(0.5) RY?-j(0.5)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  -6.699999 1.3 -7 0 0 0 1 1 0
-  0 0 0 0 0
-  -6.699999 1.3 -7 0 0 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-LockedChannels 5
-ParentObject 24
-ShadowOptions 7
-
-AddNullObject <anim channel="LZ?+j(0.5) LZ?-j(0.5) RP?+j(0.5) RP?-j(0.5) RR?+j(0.5) RR?-j(0.5) RY?+j(0.5) RY?-j(0.5)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  -6.699997 1.3 -7 0 0 0 1 1 0
-  0 0 0 0 0
-  -6.699997 1.3 -7 0 0 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-LockedChannels 6
-ParentObject 34
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\RT_FrogMiner_LeftEngine_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  21.80002 5.399998 -23.00001 0 180 0 4.288005 4.288005 4.288005
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 45
-ParentObject 31
-ShadowOptions 7
-
-AddNullObject <scene name=miner_eng0>
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 1 1 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 32
-ShadowOptions 7
-
-AddNullObject <scene name=miner_eng0>
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 1 1 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 33
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\edrone.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 180 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 38
 ShadowOptions 7
 
 AddNullObject root
@@ -473,396 +62,31 @@ EndBehavior 1
 ParentObject 2
 ShadowOptions 7
 
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\ED_LArm.lwo
-ShowObject 8 7
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\edrone_1.lwo
+ShowObject 8 3
 ObjectMotion (unnamed)
   9
   1
-  0 0 0 -180 0 0 1 1 1
+  0 0 0 -177.9999 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 48
-ParentObject 38
+ParentObject 5
 ShadowOptions 7
 
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\ED_RArm.lwo
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\RT_FrogMiner_LeftEngine_LOD1_T.lwo
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
-  0 0 0 -180 0 0 1 1 1
+  6.400021 5.399998 8.499997 -180.0001 180 0 4.288005 4.288005 4.288005
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 48
-ParentObject 38
+ParentObject 5
 ShadowOptions 7
 
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\ML_LOD0_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  -19.64506 -20.4 44.92688 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 38
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\LOD0_RTO_GatlingGun_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  -27.30553 -20.5 51.23186 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 38
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\ML_LOD0_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  11.06149 -22.8 55.96415 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 38
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\LOD0_RTO_StandardPBC_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  17.57901 -23.5 60.04462 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 38
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\DroneUArm0_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  -8.796084 -6.399998 36.2556 90.10001 5.999997 4.2 8.000001 8.000001 8.000001
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 56
-ParentObject 38
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\DroneUArm0_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  7.298088 -7.1 36.26112 0 0 2.2 8.000001 8.000001 8.000001
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 29
-ParentObject 38
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\DroneUElb0_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  7.658671 -8.2 36.31176 0 0 0 8 8 8
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 1
-ParentObject 38
-ShadowOptions 7
-
-AddNullObject EngBoom_Control
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 1.4 -15.0748 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 38
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\ED_EngBoom.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0.1000005 -0.5817766 0 0 -4.1 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 541
-PivotPoint 0 1.500001 14.4
-ParentObject 48
-ShadowOptions 7
-
-AddNullObject <anim channel="LZ?-s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  27.89999 0.9000001 15.20002 0 0 0 1 1 1
-  0 0 0 0 0
-  27.89999 0.9000001 15.20002 0 180 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 37
-ShadowOptions 7
-
-AddNullObject <anim channel="RY?+s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 0 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 50
-ShadowOptions 7
-
-AddNullObject <anim channel="RY?-s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 180 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 51
-ShadowOptions 7
-
-AddNullObject <anim channel="RP?-s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 90 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 52
-ShadowOptions 7
-
-AddNullObject <anim channel="RP?+s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 -90 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 53
-ShadowOptions 7
-
-AddNullObject <anim channel="RR?-s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 -90 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 54
-ShadowOptions 7
-
-AddNullObject <anim channel="RR?+s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 -90 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 55
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\RT_FrogMiner_LeftEngine_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  -21.89386 -5.299998 -23.90016 -179.9998 0 0 4.288001 4.288001 4.288001
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 55
-ParentObject 56
-ShadowOptions 7
-
-AddNullObject <anim channel="LZ?-s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  -27.9 1.6 14.80001 0 0 0 1 1 1
-  0 0 0 0 0
-  -27.9 1.6 14.80001 0 180 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-LockedChannels 5
-ParentObject 37
-ShadowOptions 7
-
-AddNullObject <anim channel="RY?+s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 180 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 58
-ShadowOptions 7
-
-AddNullObject <anim channel="RY?-s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 0 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 59
-ShadowOptions 7
-
-AddNullObject <anim channel="RP?-s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 90 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 60
-ShadowOptions 7
-
-AddNullObject <anim channel="RP?+s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 -90 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 61
-ShadowOptions 7
-
-AddNullObject <anim channel="RR?-s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 90 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 62
-ShadowOptions 7
-
-AddNullObject <anim channel="RR?+s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-  0 0 0 0 -90 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 63
-ShadowOptions 7
-
-AddNullObject <anim channel="LZ?+j(0.5) LZ?-j(0.5) RP?+j(0.5) RP?-j(0.5) RR?+j(0.5) RR?-j(0.5) RY?+j(0.5) RY?-j(0.5)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  -6.699999 1.3 -7 0 0 0 1 1 0
-  0 0 0 0 0
-  -6.699999 1.3 -7 0 0 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-LockedChannels 5
-ParentObject 57
-ShadowOptions 7
-
-AddNullObject <anim channel="LZ?+j(0.5) LZ?-j(0.5) RP?+j(0.5) RP?-j(0.5) RR?+j(0.5) RR?-j(0.5) RY?+j(0.5) RY?-j(0.5)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  -6.699997 1.3 -7 0 0 0 1 1 0
-  0 0 0 0 0
-  -6.699997 1.3 -7 0 0 0 1 1 1
-  1 0 0 0 0
-EndBehavior 1
-LockedChannels 6
-ParentObject 67
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\RT_FrogMiner_LeftEngine_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  21.80002 5.399998 -23.00001 0 180 0 4.288005 4.288005 4.288005
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 45
-ParentObject 64
-ShadowOptions 7
-
-AddNullObject <scene name=miner_eng0>
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 1 1 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 65
-ShadowOptions 7
-
-AddNullObject <scene name=miner_eng0>
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 1 1 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 66
-ShadowOptions 7
-
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\edrone.lwo
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\edrone.lwo
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -870,7 +94,7 @@ ObjectMotion (unnamed)
   0 0 0 180 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 71
+ParentObject 9
 ShadowOptions 7
 
 AddNullObject root
@@ -884,7 +108,7 @@ EndBehavior 1
 ParentObject 3
 ShadowOptions 7
 
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\ED_LArm.lwo
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\ED_LArm.lwo
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -893,10 +117,10 @@ ObjectMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 48
-ParentObject 71
+ParentObject 9
 ShadowOptions 7
 
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\ED_RArm.lwo
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\ED_RArm.lwo
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -905,10 +129,10 @@ ObjectMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 48
-ParentObject 71
+ParentObject 9
 ShadowOptions 7
 
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\ML_LOD0_T.lwo
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\ML_LOD0_T.lwo
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -917,10 +141,10 @@ ObjectMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 71
+ParentObject 9
 ShadowOptions 7
 
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\LOD0_RTO_GatlingGun_T.lwo
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\LOD0_RTO_GatlingGun_T.lwo
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -928,10 +152,10 @@ ObjectMotion (unnamed)
   -27.30553 -20.5 51.23186 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 71
+ParentObject 9
 ShadowOptions 7
 
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\ML_LOD0_T.lwo
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\ML_LOD0_T.lwo
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -939,10 +163,10 @@ ObjectMotion (unnamed)
   11.06149 -22.8 55.96415 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 71
+ParentObject 9
 ShadowOptions 7
 
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\LOD0_RTO_StandardPBC_T.lwo
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\LOD0_RTO_StandardPBC_T.lwo
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -951,10 +175,10 @@ ObjectMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 71
+ParentObject 9
 ShadowOptions 7
 
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\DroneUArm0_T.lwo
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\DroneUArm0_T.lwo
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -963,10 +187,10 @@ ObjectMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 56
-ParentObject 71
+ParentObject 9
 ShadowOptions 7
 
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\DroneUArm0_T.lwo
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\DroneUArm0_T.lwo
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -975,10 +199,10 @@ ObjectMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 29
-ParentObject 71
+ParentObject 9
 ShadowOptions 7
 
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\DroneUElb0_T.lwo
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\DroneUElb0_T.lwo
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -987,7 +211,7 @@ ObjectMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 1
-ParentObject 71
+ParentObject 9
 ShadowOptions 7
 
 AddNullObject EngBoom_Control
@@ -999,10 +223,10 @@ ObjectMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 71
+ParentObject 9
 ShadowOptions 7
 
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\ED_EngBoom.lwo
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\ED_EngBoom.lwo
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -1012,7 +236,7 @@ ObjectMotion (unnamed)
 EndBehavior 1
 LockedChannels 541
 PivotPoint 0 1.500001 14.4
-ParentObject 81
+ParentObject 19
 ShadowOptions 7
 
 AddNullObject <anim channel="LZ?-s(1.0)">
@@ -1026,7 +250,7 @@ ObjectMotion (unnamed)
   1 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 70
+ParentObject 8
 ShadowOptions 7
 
 AddNullObject <anim channel="RY?+s(1.0)">
@@ -1039,7 +263,7 @@ ObjectMotion (unnamed)
   0 0 0 0 0 0 1 1 1
   1 0 0 0 0
 EndBehavior 1
-ParentObject 83
+ParentObject 21
 ShadowOptions 7
 
 AddNullObject <anim channel="RY?-s(1.0)">
@@ -1052,7 +276,7 @@ ObjectMotion (unnamed)
   0 0 0 0 180 0 1 1 1
   1 0 0 0 0
 EndBehavior 1
-ParentObject 84
+ParentObject 22
 ShadowOptions 7
 
 AddNullObject <anim channel="RP?-s(1.0)">
@@ -1062,10 +286,10 @@ ObjectMotion (unnamed)
   2
   0 0 0 0 0 0 1 1 1
   0 0 0 0 0
-  0 0 0 0 90 0 1 1 1
+  0 0 0 0 89.99999 0 1 1 1
   1 0 0 0 0
 EndBehavior 1
-ParentObject 85
+ParentObject 23
 ShadowOptions 7
 
 AddNullObject <anim channel="RP?+s(1.0)">
@@ -1075,10 +299,10 @@ ObjectMotion (unnamed)
   2
   0 0 0 0 0 0 1 1 1
   0 0 0 0 0
-  0 0 0 0 -90 0 1 1 1
+  0 0 0 0 -89.99999 0 1 1 1
   1 0 0 0 0
 EndBehavior 1
-ParentObject 86
+ParentObject 24
 ShadowOptions 7
 
 AddNullObject <anim channel="RR?-s(1.0)">
@@ -1088,10 +312,10 @@ ObjectMotion (unnamed)
   2
   0 0 0 0 0 0 1 1 1
   0 0 0 0 0
-  0 0 0 0 -90 0 1 1 1
+  0 0 0 0 -89.99999 0 1 1 1
   1 0 0 0 0
 EndBehavior 1
-ParentObject 87
+ParentObject 25
 ShadowOptions 7
 
 AddNullObject <anim channel="RR?+s(1.0)">
@@ -1101,13 +325,13 @@ ObjectMotion (unnamed)
   2
   0 0 0 0 0 0 1 1 1
   0 0 0 0 0
-  0 0 0 0 -90 0 1 1 1
+  0 0 0 0 -89.99999 0 1 1 1
   1 0 0 0 0
 EndBehavior 1
-ParentObject 88
+ParentObject 26
 ShadowOptions 7
 
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\RT_FrogMiner_LeftEngine_T.lwo
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\RT_FrogMiner_LeftEngine_T.lwo
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -1116,7 +340,7 @@ ObjectMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 55
-ParentObject 89
+ParentObject 27
 ShadowOptions 7
 
 AddNullObject <anim channel="LZ?-s(1.0)">
@@ -1130,7 +354,7 @@ ObjectMotion (unnamed)
   1 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 70
+ParentObject 8
 ShadowOptions 7
 
 AddNullObject <anim channel="RY?+s(1.0)">
@@ -1143,7 +367,7 @@ ObjectMotion (unnamed)
   0 0 0 0 180 0 1 1 1
   1 0 0 0 0
 EndBehavior 1
-ParentObject 91
+ParentObject 29
 ShadowOptions 7
 
 AddNullObject <anim channel="RY?-s(1.0)">
@@ -1156,7 +380,7 @@ ObjectMotion (unnamed)
   0 0 0 0 0 0 1 1 1
   1 0 0 0 0
 EndBehavior 1
-ParentObject 92
+ParentObject 30
 ShadowOptions 7
 
 AddNullObject <anim channel="RP?-s(1.0)">
@@ -1166,10 +390,10 @@ ObjectMotion (unnamed)
   2
   0 0 0 0 0 0 1 1 1
   0 0 0 0 0
-  0 0 0 0 90 0 1 1 1
+  0 0 0 0 89.99999 0 1 1 1
   1 0 0 0 0
 EndBehavior 1
-ParentObject 93
+ParentObject 31
 ShadowOptions 7
 
 AddNullObject <anim channel="RP?+s(1.0)">
@@ -1179,10 +403,10 @@ ObjectMotion (unnamed)
   2
   0 0 0 0 0 0 1 1 1
   0 0 0 0 0
-  0 0 0 0 -90 0 1 1 1
+  0 0 0 0 -89.99999 0 1 1 1
   1 0 0 0 0
 EndBehavior 1
-ParentObject 94
+ParentObject 32
 ShadowOptions 7
 
 AddNullObject <anim channel="RR?-s(1.0)">
@@ -1192,10 +416,10 @@ ObjectMotion (unnamed)
   2
   0 0 0 0 0 0 1 1 1
   0 0 0 0 0
-  0 0 0 0 90 0 1 1 1
+  0 0 0 0 89.99999 0 1 1 1
   1 0 0 0 0
 EndBehavior 1
-ParentObject 95
+ParentObject 33
 ShadowOptions 7
 
 AddNullObject <anim channel="RR?+s(1.0)">
@@ -1205,10 +429,10 @@ ObjectMotion (unnamed)
   2
   0 0 0 0 0 0 1 1 1
   0 0 0 0 0
-  0 0 0 0 -90 0 1 1 1
+  0 0 0 0 -89.99999 0 1 1 1
   1 0 0 0 0
 EndBehavior 1
-ParentObject 96
+ParentObject 34
 ShadowOptions 7
 
 AddNullObject <anim channel="LZ?+j(0.5) LZ?-j(0.5) RP?+j(0.5) RP?-j(0.5) RR?+j(0.5) RR?-j(0.5) RY?+j(0.5) RY?-j(0.5)">
@@ -1222,7 +446,7 @@ ObjectMotion (unnamed)
   1 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 90
+ParentObject 28
 ShadowOptions 7
 
 AddNullObject <anim channel="LZ?+j(0.5) LZ?-j(0.5) RP?+j(0.5) RP?-j(0.5) RR?+j(0.5) RR?-j(0.5) RY?+j(0.5) RY?-j(0.5)">
@@ -1236,10 +460,10 @@ ObjectMotion (unnamed)
   1 0 0 0 0
 EndBehavior 1
 LockedChannels 6
-ParentObject 100
+ParentObject 38
 ShadowOptions 7
 
-LoadObject C:\WINDOWS\Desktop\avatars\edrone\RT_FrogMiner_LeftEngine_T.lwo
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\RT_FrogMiner_LeftEngine_T.lwo
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -1248,7 +472,7 @@ ObjectMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 45
-ParentObject 97
+ParentObject 35
 ShadowOptions 7
 
 AddNullObject <scene name=miner_eng0>
@@ -1259,7 +483,7 @@ ObjectMotion (unnamed)
   0 0 0 0 0 0 1 1 5
   0 0 0 0 0
 EndBehavior 1
-ParentObject 98
+ParentObject 36
 ShadowOptions 7
 
 AddNullObject <scene name=miner_eng0>
@@ -1270,7 +494,7 @@ ObjectMotion (unnamed)
   0 0 0 0 0 0 1 1 5
   0 0 0 0 0
 EndBehavior 1
-ParentObject 99
+ParentObject 37
 ShadowOptions 7
 
 AddNullObject <anim channel="LZ?+s(1.0)">
@@ -1283,35 +507,7 @@ ObjectMotion (unnamed)
   0 1.5 -23.7 0 0 0 10 10 6
   1 0 0 0 0
 EndBehavior 1
-LockedChannels 195
-ParentObject 5
-ShadowOptions 7
-
-AddNullObject <anim channel="LZ?+s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 1.5 -23.7 0 0 0 1 1 0
-  0 0 0 0 0
-  0 1.5 -23.7 0 0 0 10 10 6
-  1 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 38
-ShadowOptions 7
-
-AddNullObject <anim channel="LZ?+s(1.0)">
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  2
-  0 1.5 -23.7 0 0 0 1 1 0
-  0 0 0 0 0
-  0 1.5 -23.7 0 0 0 10 10 6
-  1 0 0 0 0
-EndBehavior 1
-ParentObject 71
+ParentObject 9
 ShadowOptions 7
 
 AddNullObject <scene name=miner_eng0>
@@ -1322,29 +518,7 @@ ObjectMotion (unnamed)
   0 0 0 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 103
-ShadowOptions 7
-
-AddNullObject <scene name=miner_eng0>
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 104
-ShadowOptions 7
-
-AddNullObject <scene name=miner_eng0>
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 105
+ParentObject 41
 ShadowOptions 7
 
 AddNullObject <node template=ini||audio|sfx|medium_ship>
@@ -1356,7 +530,52 @@ ObjectMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 71
+ParentObject 9
+ShadowOptions 7
+
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\RT_FrogMiner_LeftEngine_LOD1_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -6.093874 -5.299998 8.499843 -359.9996 0 0 4.288001 4.288001 4.288001
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 5
+ShadowOptions 7
+
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\edrone_2.lwo
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 -179.9999 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\ML_LOD1_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -20.44506 -20.4 45.4269 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 5
+ShadowOptions 7
+
+LoadObject I:\Independence War 2 - Edge of Chaos\mods\MS_Mod_Ships\avatars\edrone\ML_LOD1_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  10.86154 -22.8 56.66413 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 5
 ShadowOptions 7
 
 AmbientColor 255 255 255
@@ -1385,8 +604,10 @@ CameraMotion (unnamed)
 EndBehavior 1
 ZoomFactor 3.200000
 Resolution 1
-PixelAspectRatio 3
-SegmentMemory 1050000
+CustomSize 752 576
+PixelAspectRatio -1
+CustomPixelRatio 1.018600
+SegmentMemory 8000000
 Antialiasing 0
 AdaptiveSampling 1
 AdaptiveThreshold 16
@@ -1407,14 +628,13 @@ AnimatedDither 0
 
 RenderMode 2
 RayTraceEffects 0
-ClipRayColors 0
 DataOverlayLabel  
 FullSceneParamEval 0
 
-ViewMode 1
-ViewAimpoint 100.000000 0.000000 -29.200054
-ViewDirection -2.949609 -0.415388 0.000000
-ViewZoomFactor 4.982658
+ViewMode 3
+ViewAimpoint 92.992615 0.000000 -32.957268
+ViewDirection -0.012217 -1.703442 0.000000
+ViewZoomFactor 1.464022
 GridNumber 40
 GridSize 20.000000
 ShowMotionPath 1
