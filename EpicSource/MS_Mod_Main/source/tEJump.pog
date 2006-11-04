@@ -320,6 +320,7 @@ task jump_watch() {
     hship player;
     float velocity;
     bool success;
+    int rating;
 
     debug Debug.PrintString("tEJump.jump_watch\n");
 
@@ -328,6 +329,15 @@ task jump_watch() {
 
     while (1) {
         player = iShip.FindPlayerShip();
+        rating = jump_rating(player);
+
+        // if the player ship has no capsule drive, end the task.
+        if (rating < 1){
+            Object.RemoveProperty(jump_point,"tEJumpDest");
+            Object.RemoveProperty(jump_point,"tEJumpDiff");
+            Object.RemoveProperty(jump_point,"tEJumpName");
+            return;
+        }
 
         // if the player has moved out of range, get rid of this task.
         if (Sim.DistanceBetween(player, jump_point) > Global.Float("gt_distance_culling")) {
@@ -524,7 +534,7 @@ list KnownList(hlagrangepoint lpoint) {
 
 
 task select_dialog() {
-    int i, total, selection, response, difficulty;
+    int i, total, selection, response, difficulty, rating;
     list route_list;
     hsim route;
     string system_name, target_name, route_name;
@@ -535,6 +545,15 @@ task select_dialog() {
 
     // Stop other keypresses from starting the dialog
     Global.CreateBool("gt_ejump_running",GA_Write|GA_NoSave, true);
+
+    // ejump_no_lpoint, We don't have a capsule drive!"
+    rating = jump_rating(player);
+
+    if (rating < 1){
+       iComms.Shout(none, "name_lori", "ejump_no_capsule_drive");
+       Global.SetBool("gt_ejump_running", false);
+       return;
+    }
 
     // Create a list of possible routes from the nearest lpoint.
     lpoint = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), player);
@@ -583,7 +602,7 @@ task select_dialog() {
 
     if (1 == response) {
        // ejump_cancel_response, "Order cancelled Sir"
-        iConversation.Say(none,"name_lori","ejump_cancel_request");
+        iConversation.Say(none,"name_lori","ejump_cancel_response");
         halt = true;
     } else {
         selection = response - 2;
@@ -812,12 +831,18 @@ jump_ship(hship ship, hisim lpoint, int difficulty) {
     // Calculate and apply ship damage.
     drive_rating = jump_rating(ship);
 
+
     // If the ship does not have a drive, it can't jump.
+    // At this point, the ship was already allowed to jump
+    // So we still place it. Prior code should have blocked the jump.
+    /*
     if (drive_rating < 1) {
        // ejump_wingman_no_drive, "We don't have a capsule drive! Sir"
        iComms.Shout(ship, "", "ejump_wingman_no_drive");
         return;
     }
+    */
+
 
     // Place the arriving ship within 1km of the lpoint, facing the correct way.
     atomic {
@@ -825,6 +850,7 @@ jump_ship(hship ship, hisim lpoint, int difficulty) {
        Sim.SetVelocityLocalToSim(ship, 0, 0, 1000);
        Sim.PlaceNear(ship, lpoint, 1km);
     }
+
 
     // if jumping a hard route, take damage.
     if (difficulty > drive_rating) {
@@ -845,10 +871,12 @@ jump_ship(hship ship, hisim lpoint, int difficulty) {
                 hit_points = 0.0;
                 iSim.Kill(ship);
             }
+
             Object.SetFloatProperty(ship, "hit_points", hit_points);
         }
     }
 }
+
 
 add_flash(hship player)
 {
@@ -876,7 +904,11 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
 
     // phase 1:
     // jump the player ship
-  
+    // Check here for lack of capsule drive.
+    if (jump_rating(player) < 1) {
+       iComms.Shout(none, "name_lori", "ejump_no_capsule_drive");
+       return false;
+    }  
 
     // Stop the player if he is going to jump and leave wingmen behind.
     total = List.ItemCount(player_fleet);
@@ -899,7 +931,11 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
  
         
         // Check here for lack of capsule drive.
-
+        if (jump_rating(wingman) < 1) {
+           // ejump_no_wingman_capsule_drive, "We don't have a capsule drive"
+           iComms.Shout(wingman, "", "ejump_wingman_no_drive");
+           return false;
+        }
     }
 
     // The player is now clear to jump.
@@ -1330,7 +1366,7 @@ bool create_simulation(hmapentity center,
    }
 
    // Now put some objects into the tubes for the player to run into.
-   for (i=1;i<count;++i) {
+   for (i=0;i<count;++i) {
       tube2 = iShip.Cast(Sim.FindByName(String.FormatInt("jump_section%d",i)));
 
       if (tube2 == none) {
@@ -1494,7 +1530,7 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
    float start_distance, half_distance;
    float low_hit_points;
    float start_time, elapsed_time;
-   bool success;
+   bool halfway = false;
 
    if (none == player) {
       debug Debug.PrintString("tEJump.player_watch error no player\n");
@@ -1512,7 +1548,7 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
    // side.
    start_distance = Sim.DistanceBetween(player, exit_mark);
    half_distance = start_distance/2.0;
-   success = false;
+   halfway = false;
 
    low_hit_points = Object.FloatProperty(player, "hit_points");
    low_hit_points = low_hit_points * 0.5;
@@ -1522,7 +1558,7 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
       if (Sim.IsDead(player)) {
          // Player hit a wall, return based on distance travelled.
          debug Debug.PrintString("tEJump.player_watch player sim dead\n");
-         return success;
+         return halfway;
       }
 
       if (Sim.DistanceBetween(player, exit_mark) < 5km) {
@@ -1538,14 +1574,14 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
 
       // Check if the player is halfway to the exit.
       if (Sim.DistanceBetween(player, exit_mark) < half_distance ) {
-         success = true;
+         halfway = true;
       }
 
 
       // Check if the player is low on hit points.
       if (Object.FloatProperty(player, "hit_points") < low_hit_points) {
          debug Debug.PrintString("tEJump.player_watch player damaged.\n");
-         return success;
+         return halfway;
       }
 
 
@@ -1557,7 +1593,7 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
          // Keep this commented out to leave record of how fast crossing jump.
          //iHUD.SetPrompt("","");
          iHUD.SetPrompt(String.FormatInt("%d Elapsed Seconds", float2int(elapsed_time)),"");
-         return success;
+         return halfway;
       }
 
       // Update the hud with the time remaining
@@ -1593,8 +1629,16 @@ set find_following_ships(hship ship) {
         // Then recurse on that ship to get nested order groups.
         if ("ScriptedEscort" == iAI.CurrentOrderName(follower)) {
             if (ship == iShip.Cast(iAI.CurrentOrderTarget(follower))) {
-                Set.Add(following_ships, follower);
-                Set.Union(following_ships, find_following_ships(follower));
+
+               // Following ship must be close. Wingmen a system or two away cannot 
+               // jump with the player.
+               if (iSim.ActiveWorld() == iSim.WorldName(follower)) {
+
+                  if (Sim.DistanceBetween(ship, follower) < 400km) {
+                     Set.Add(following_ships, follower);
+                     Set.Union(following_ships, find_following_ships(follower));
+                  }
+               }
             }
         }
     }
