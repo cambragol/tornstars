@@ -30,7 +30,7 @@ uses	Sim,
 		String,
 		Task,
 		Text,
-      iDockport,
+      iAI,
       iCargo,
       iInventory,
       CargoTypes,
@@ -353,7 +353,7 @@ task setup_player()
    hship player = iShip.FindPlayerShip();
    hship prefit;
    int item_count, cargo_number, cargo_type, funds;
-   string cargo_name;
+   string cargo_name, cutscene;
    string player_ship, player_ship_prefit;
 
 
@@ -372,6 +372,8 @@ task setup_player()
 
    start_system = INIFile.String(start_file, entry_key, "start_system","none");
    start_location = INIFile.String(start_file, entry_key, "start_station","none");
+
+   cutscene = INIFile.String(start_file, entry_key, "cutscene","");  
 
    station = iSim.FindByNameInSystem(start_location, start_system);
 
@@ -428,9 +430,13 @@ task setup_player()
 
 
    iGame.EnableBlackout(false);
+
+   if ("" != cutscene) {
+      iGame.PlayMovie(cutscene);
+   }
 }
 
-
+ 
 add_player_cargo(string entry_key, hinifile start_file)
 {
    int item_count, cargo_type, cargo_number;
