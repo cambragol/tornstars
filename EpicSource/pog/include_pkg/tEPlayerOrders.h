@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/tEPlayerOrders.h,v 1.7 2006/03/11 05:58:33 Owner Exp $
+// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////
@@ -25,6 +25,8 @@ prototype bool tEPlayerOrders.AttackTarget( int group, hisim target );
 prototype bool tEPlayerOrders.DefendTarget( int group, hisim target );
 
 prototype bool tEPlayerOrders.DockTarget( int group, hisim target );
+
+prototype bool tEPlayerOrders.Undock( int group );
 
 prototype bool tEPlayerOrders.ApproachTarget( int group, hisim target );
 

@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/tEpicFleet.h,v 1.7 2006/03/04 18:33:28 Owner Exp $
+// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////
@@ -18,7 +18,6 @@ enum eefOwnership {
    efoHired,
    efoCaptured
 };
-
 
 // Functions ///////////////////////////////////////////////////////////////////
 
@@ -72,7 +71,7 @@ prototype tEpicFleet.RestoreFleet();
 
 prototype tEpicFleet.RemoveShip( hship ship );
 
-prototype tEpicFleet.SetupPlayerWingman( hship ship, int id, int group, eefOwnership owner, string world );
+prototype tEpicFleet.SetupPlayerWingman( hship ship, int id, int group, eefOwnership owner, string world, eOrderType prior_order );
 
 prototype tEpicFleet.NewPlayerShip( hship ship );
 
@@ -86,7 +85,7 @@ prototype int tEpicFleet.GroupNumber( hsim ship );
 
 prototype tEpicFleet.SetGroupNumber( hsim ship, int group );
 
-prototype task tEpicFleet.PlayerDeath( hsim sim );
+prototype task tEpicFleet.PlayerDeath( hship sim );
 
 prototype task tEpicFleet.WingmanDeath( hsim wingman );
 
@@ -97,6 +96,8 @@ prototype tEpicFleet.HireShip( hship ship );
 prototype tEpicFleet.CaptureShip( hship ship );
 
 prototype tEpicFleet.FireShip( hship ship );
+
+prototype bool tEpicFleet.IsDockedToLarger( hship ship );
 
 prototype tEpicFleet.RunCheck();
 
