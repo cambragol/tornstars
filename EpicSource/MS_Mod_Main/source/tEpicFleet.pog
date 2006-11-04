@@ -118,6 +118,8 @@ provides NewGame,
         CaptureShip,
         FireShip,
 
+        IsDockedToLarger,
+
         RunCheck,
         CreateTestShip,
         CreateTargets,
@@ -168,7 +170,7 @@ prototype restore_docks();
 
 
 
-prototype SetupPlayerWingman(hship ship, int id, int group, eefOwnership owner, string world);
+prototype SetupPlayerWingman(hship ship, int id, int group, eefOwnership owner, string world, eOrderType prior_order);
 
 prototype SetupPlayer(hship ship, int id);
 
@@ -691,7 +693,9 @@ SaveFleet()
 
 //         Global.CreateInt(String.FormatInt("g_epic_fleet_ship_jump_%d",save_id),GA_Write, FuelPerJump(ship));
 
-         Global.CreateString(String.FormatInt("g_epic_fleet_ship_world_%d",save_id),GA_Write, World(ship));         
+         Global.CreateString(String.FormatInt("g_epic_fleet_ship_world_%d",save_id),GA_Write, World(ship));            
+
+         Global.CreateInt(String.FormatInt("g_epic_fleet_ship_order_%d",save_id),GA_Write, Object.IntProperty(ship,"gt_prior_order"));
 
          // Save any cargo pods.
          save_cargo_pods(ship, i);
@@ -777,7 +781,7 @@ RestoreFleet()
    float x, y, z;
    hfaction player_faction = iFaction.Find("Player");
    bool docked;
-   int linked;
+   int linked, prior_order;
    hsim reference, reference2, light;
    hgroup combat_group = Group.Create();
 
@@ -837,6 +841,16 @@ RestoreFleet()
       linked = Global.Int(String.FormatInt("g_epic_fleet_ship_linked_%d",i));
       Global.Destroy(String.FormatInt("g_epic_fleet_ship_linked_%d",i));
 
+      prior_order = Global.Int(String.FormatInt("g_epic_fleet_ship_order_%d",i));
+      Global.Destroy(String.FormatInt("g_epic_fleet_ship_order_%d",i));
+
+
+      // After restore, all targets are lost, so clear all orders except the dock
+      // order which we restore correctly by docking the ship.
+      if (prior_order != OT_Dock) {
+         prior_order = OT_None;
+      }
+
 
 //    upkeep = Global.Int(String.FormatInt("g_epic_fleet_ship_upkeep_%d",i));
 //    Global.Destroy(String.FormatInt("g_epic_fleet_ship_upkeep_%d",i));
@@ -878,7 +892,8 @@ RestoreFleet()
          // This is a player wingman. set the properties
          //read_ini_file(ship);
 
-         SetupPlayerWingman(ship, ship_id, group_num, ownership, world);
+
+         SetupPlayerWingman(ship, ship_id, group_num, ownership, world, prior_order);
 
 //         SetFuelPerJump(ship, fuel_per_jump);
 //         SetDailyUpkeep(ship, upkeep);
@@ -938,12 +953,8 @@ RestoreFleet()
 
       if (docked){
          iSim.Dock(ship, iSim.Cast(reference));
-
-         // Lock down wingman only
-         if (i != 0) {
-            iSim.SetDockingLock(ship, iSim.Cast(reference), true);
-         }
       }
+
 
 
 
@@ -1442,7 +1453,7 @@ restore_cargo_pods(hship ship, int ship_id)
 
 
 
-SetupPlayerWingman(hship ship, int id, int group, eefOwnership owner, string world)
+SetupPlayerWingman(hship ship, int id, int group, eefOwnership owner, string world, eOrderType prior_order)
 {
    hfaction player_faction = iFaction.Find("Player");
    hgroup combat_group = Group.Cast(Global.Handle("gt_epic_fleet_combat_group"));
@@ -1453,6 +1464,7 @@ SetupPlayerWingman(hship ship, int id, int group, eefOwnership owner, string wor
 
    read_ini_file(ship);
 
+   Object.AddIntProperty(ship,"gt_prior_order", prior_order);
 
    iShip.InstallAIPilot(ship, 4.0, 0.25, 0.5,"","","","");
    iSim.SetSensorVisibility(iSim.Cast(ship), true);
@@ -1640,7 +1652,7 @@ HireShip(hship ship)
 {
    int id = next_id_number();
 
-   SetupPlayerWingman(ship, id, 0, efoHired, iSim.ActiveWorld());
+   SetupPlayerWingman(ship, id, 0, efoHired, iSim.ActiveWorld(), OT_None);
 }
 
 // Add this ship to the player fleet as a captured vessel.
@@ -1648,7 +1660,7 @@ CaptureShip(hship ship)
 {
    int id = next_id_number();
 
-   SetupPlayerWingman(ship, id, 0, efoCaptured, iSim.ActiveWorld());
+   SetupPlayerWingman(ship, id, 0, efoCaptured, iSim.ActiveWorld(), OT_None);
 }
 
 // Player releases a wingman from service. Send the ship toward the nearest lpoint.
@@ -1752,11 +1764,12 @@ task wingman_watch(hship wingman)
    string prior_world, current_world;
    float fuel;
    int halt_timer;
-
+   int flee_timer;
+   bool fleeing = false;
 
 
    while (1) {
-      Task.Sleep(Task.Current(), 5.0);
+      Task.Sleep(Task.Current(), 1.0);
 
          //Our wingman bit the dust. Bail out.
          if (Sim.IsDead(wingman)) {
@@ -1778,17 +1791,62 @@ task wingman_watch(hship wingman)
             if (OT_None == Object.IntProperty(wingman, "gt_prior_order") || 
                 OT_Attack == Object.IntProperty(wingman, "gt_prior_order") ){
 
-               Object.SetBoolProperty(wingman, "gt_prior_order", OT_Formate);
-               iAI.PurgeOrders(wingman);
-               iAI.GiveEscortOrder(wingman, 
-                                   player,
-                                   tFormation.Xpos(wingman),
-                                   tFormation.Ypos(wingman),
-                                   tFormation.Zpos(wingman),
-                                   50km);
+               // Only go seeking the player if the player is still close.
+               if (Sim.DistanceBetween(wingman, player) < 200km) {
+
+                  Object.SetBoolProperty(wingman, "gt_prior_order", OT_Formate);
+                  iAI.PurgeOrders(wingman);
+                  iAI.GiveEscortOrder(wingman, 
+                                      player,
+                                      tFormation.Xpos(wingman),
+                                      tFormation.Ypos(wingman),
+                                      tFormation.Zpos(wingman),
+                                      50km);
+               }
             }
          }
+         
+         if (OT_Flee == iAI.CurrentOrderType(wingman)) {
+            if (!fleeing) {
+               // We just started fleeing. 
+               flee_timer=0;
+               fleeing = true;
+               debug {
+                  Debug.PrintString(Text.Field(Sim.Name(wingman),FT_Text));
+                  Debug.PrintString(" is fleeing\n");
+               }
+            }else {
+               ++flee_timer;
 
+               if (flee_timer > 30) {
+                  // Ship has fled enough. Force it to go back to the player.
+
+                  // Only go seeking the player if the player is still close.
+                  if (Sim.DistanceBetween(wingman, player) < 200km) {
+                     Object.SetBoolProperty(wingman, "gt_prior_order", OT_Formate);
+                     iAI.PurgeOrders(wingman);
+                     iAI.GiveEscortOrder(wingman, 
+                                         player,
+                                         tFormation.Xpos(wingman),
+                                         tFormation.Ypos(wingman),
+                                         tFormation.Zpos(wingman),
+                                         50km);
+                  }else {
+                     // If the player is far, just cancel the flee order.
+                     Object.SetBoolProperty(wingman, "gt_prior_order", OT_None);
+                     iAI.PurgeOrders(wingman);
+                  }
+                  debug {
+                     Debug.PrintString(Text.Field(Sim.Name(wingman),FT_Text));
+                     Debug.PrintString(" done fleeing\n");
+                  }
+               }
+            }
+
+         }else {
+            // Reset the flee boolean.
+            fleeing = false;
+         }
 
          fuel = Fuel(wingman);
 
@@ -2416,6 +2474,37 @@ DisruptShip()
    iShip.Disrupt(target, 60, false);
 }
 
+
+// This function returns a parent ship if this ship is docked to a larger vessel.
+hisim IsDockedToLarger(hship ship)
+{
+   list nearby_ships;
+   int i, total;
+   hisim docker;
+
+
+   if (iSim.IsDocked(ship)) {
+      // Find all nearby objects. Check if we are docked to any of those.
+      nearby_ships = List.FromSet(iSim.SimsInRadius(ship, 10km, TM_Ship|T_Station|T_Gunstar|T_BioBomber));
+
+      total = List.ItemCount(nearby_ships);
+      for (i=0;i<total;++i) {
+         docker = iSim.Cast(List.GetNth(nearby_ships,i));
+
+         if (iSim.Type(docker) == T_Station) {
+            if (iSim.IsDockedToStructure(ship, docker)) {
+               return docker;
+            }
+         }else if (iSim.IsDockedTo(ship, docker)) {
+            if (Object.FloatProperty(ship,"docking_priority") < Object.FloatProperty(docker,"docking_priority")) {
+               return docker;
+            }
+         }
+      }
+   }
+  
+   return none;
+}
 
 /*  
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
