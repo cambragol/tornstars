@@ -31,13 +31,14 @@ uses	Sim,
 		String,
 		Task,
 		Text,
+      iAI,
 		iUtilities,
 		iCargo,
 		iInventory,
 		iComms,
 		Math,
-      iDockPort,                
       CargoTypes,
+   
 
 		UniGUI,
       tEpicGuiEnum,
@@ -120,7 +121,7 @@ update_wingman_info(hship wingman)
    hwindow wingman_info = GUI.Cast(Global.Handle("gt_efleetgui_wingman_info"));
    string text;
    int upkeep, current_fuel, max_fuel, daily_fuel, jump_fuel;
-   int scan_range, prospector, survey_days, mining_cost;
+   int scan_range, prospector, survey_days, mining_cost, percent_hits;
    float efficiency;
 
    upkeep = tEpicFleet.DailyUpkeep(wingman);
@@ -138,6 +139,12 @@ update_wingman_info(hship wingman)
    text = String.Join(text, "<br>");
    text = String.Join(text, "Class ");
    text = String.Join(text,Text.Field(tEconUtil.ShipType2String(iSim.Type(wingman)),FT_Text));
+
+   percent_hits = (Object.FloatProperty(wingman, "hit_points") * 100.0)/Object.FloatProperty(wingman, "max_hit_points");
+
+   text = String.Join(text, "<br>");
+   text = String.Join(text,Text.Field("gt_efleetgui_health",FT_Text));
+   text = String.Join(text,String.FormatInt(" %d<br>", percent_hits));
 
    text = String.Join(text, "<br>");
    text = String.Join(text,Text.Field("gt_efleetgui_used_fuel",FT_Text));
