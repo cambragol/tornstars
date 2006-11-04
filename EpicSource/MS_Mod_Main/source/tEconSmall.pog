@@ -912,6 +912,9 @@ set StationUsedCargo(hisim trade_center)
 }
 
 
+/*
+   Returns a set of cargo used, produced, or needed in supply for a station.
+*/
 set station_cargo(string trade_file, string key_string,  string category_string)
 {
    string category_name;

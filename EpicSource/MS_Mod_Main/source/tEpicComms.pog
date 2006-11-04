@@ -55,7 +55,7 @@ Keypress()
 
    debug Debug.PrintString("EpicComms: player attempting communication\n");
 
-   if (10km < Sim.DistanceBetween(player, target)) {
+   if (20km < Sim.DistanceBetween(player, target)) {
       // The player needs to be withing short range scanning distance.
       iHUD.Print("Move Closer");
       iHUD.PlayAudioCue(AC_InvalidInput);

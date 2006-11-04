@@ -1515,7 +1515,7 @@ hwindow create_location_sublist_window()
 
 
    if (T_Station == iSim.Type(current_location)) {
-      title = "Operations at Station";
+      title = "Fleets at Station";
    }else if (T_LagrangePoint == iSim.Type(current_location)) {
       title = "Lpoint Routes";
    }else{
@@ -1580,7 +1580,7 @@ hwindow create_location_sublist_window()
 
          if (T_Station == iSim.Type(current_location)) {
             // The list is operations, so report the type.
-            item_name = tEconUtil.StationIntToString(tLProduction.GetType(item));
+            item_name = Text.Field(tEconUtil.StationIntToString(tLProduction.GetType(item)), FT_Text);
          }else if (T_LagrangePoint == iSim.Type(current_location)) {
             // The list is lpoint routes, so report the target system.
             // This allows the player to plan a path through the cluster.
@@ -1750,11 +1750,11 @@ update_location_info(hmapentity location, int selected)
 
    if (none == location) {
 
-      update_text_box_info( Text.Field("zz_lf_empty_system",FT_Text),
-                            Text.Field("zz_lf_empty",FT_Text),
+      update_text_box_info( "zz_lf_empty_system",
+                            "zz_lf_empty",
                             Global.String( "g_zz_lf_selected_system" ),
-                            Text.Field("zz_lf_empty",FT_Text),
-                            Text.Field("zz_lf_none", FT_Text),
+                            "zz_lf_empty",
+                            "zz_lf_none",
                             fleets,
                             selected );
       return;
@@ -1776,23 +1776,23 @@ update_location_info(hmapentity location, int selected)
      }else{
         if (ESC_Mine == tStation.Category(iHabitat.Cast(location))){
            // This hides unclaimed mines from being seen.
-           location_type = Text.Field("zz_lf_unknown_mine",FT_Text);
+           location_type = "zz_lf_unknown_mine";
         }
-        status_name = Text.Field("zz_lf_unknown_status",FT_Text);     
-        faction_name = Text.Field("zz_lf_unknown_owner",FT_Text);
+        status_name = "zz_lf_unknown_status";
+        faction_name = "zz_lf_unknown_owner";
      }
 
   }else if (T_LagrangePoint == iSim.Type(iSim.Cast(location))) {
      
-     location_type = Text.Field("zz_lf_unknown_type",FT_Text);
-     status_name = Text.Field("zz_lf_none", FT_Text);
-     faction_name = Text.Field("zz_lf_no_owner",FT_Text);
+     location_type = "zz_lf_unknown_type";
+     status_name = "zz_lf_none";
+     faction_name = "zz_lf_no_owner";
   
   }else {
      
-     location_type = Text.Field("zz_lf_body",FT_Text);
-     status_name = Text.Field("zz_lf_unknown_status",FT_Text);     
-     faction_name = Text.Field("zz_lf_no_owner",FT_Text);
+     location_type = "zz_lf_body";
+     status_name = "zz_lf_unknown_status";
+     faction_name = "zz_lf_no_owner";
   
   }
 
@@ -1841,10 +1841,12 @@ update_text_box_info( string location,
 	string selected_location_heading = Text.Field( "zz_lf_selected_location", FT_Text );   // The 'SELECTED LOCATION' header
 	string system_heading = Text.Field( "zz_lf_system", FT_Text );						   // The 'SYSTEM' heading
 	string faction_heading = Text.Field( "trading_faction", FT_Text );					// The 'FACTION' heading
+
    string system_name = Text.Field(system, FT_Text);
    string type_string = Text.Field(location_type, FT_Text);
    string status_string = Text.Field(status, FT_Text);
-   string fleet_string = String.FormatInt("Fleets %d", fleets);
+   string fleet_string = String.FormatInt("Guards %d", fleets);
+   string faction_name = Text.Field(faction, FT_Text);
 
 	// Set the html for the upper window
 	// If the location is selected it displays 'SELECTED LOCATION, 
@@ -2119,10 +2121,9 @@ tEpicLFPlusScreen()
 	Global.SetInt("g_zz_lf_filter", 0 );
 
 
-	// Create the set and clear waypoint buttons 
+   // Create and setup favorites here.
 	// *****************************************
-	
-	// Create the set waypoint button
+
 	current_button = iGUI.CreateAndInitialiseParentlessInverseButton(
 			"tEpicLFPlus.OnAddFavourite",
 			Text.Field( "zz_lf_add_fav", FT_Text ),
@@ -2150,10 +2151,17 @@ tEpicLFPlusScreen()
 			"", "", "" );
 */
 
+	// Create the set and clear waypoint buttons 
+	// *****************************************
+	
+	// Create the set waypoint button
+
+   /*
 	current_button = iGUI.CreateAndInitialiseParentlessInverseButton(
 			"tEpicLFPlus.OnSetWaypoint",
 			Text.Field( "zz_lf_set_waypoint", FT_Text ),
 			waypoint_button_list );
+         */
 /*
 		// Override the functions
 		GUI.SetInputOverrideFunctions( 
@@ -2164,10 +2172,12 @@ tEpicLFPlusScreen()
 */
 
 	// Create the clear waypoint button
+/*
 	current_button = iGUI.CreateAndInitialiseParentlessInverseButton( 
 			"tEpicLFPlus.OnClearWaypoint",
 			Text.Field( "zz_lf_clear_waypoint", FT_Text ),
 			waypoint_button_list );
+         */
 /*
 		// Override the functions
 		GUI.SetInputOverrideFunctions( 
@@ -2180,14 +2190,16 @@ tEpicLFPlusScreen()
 	waypoint_border_left = Global.Int( "GUI_alignment_offset" ) + Global.Int( "GUI_fancyborder_alignmentoffset" );
 	waypoint_border_top = GUI.WindowCanvasHeight( shady_bar ) - 95;
 		
+   /*
 	// Create the splitter using a layout helper
 	iGUI.CreateWindowListInFancyBorder( 
 		shady_bar,
 		waypoint_button_list, 
 		waypoint_border_left, 
 		waypoint_border_top );
+*/
+	waypoint_border_top = GUI.WindowCanvasHeight( shady_bar ) - 140;
 
-	waypoint_border_top = GUI.WindowCanvasHeight( shady_bar ) - 155;
 
 	// Create the splitter using a layout helper
 	iGUI.CreateWindowListInFancyBorder(
