@@ -68,7 +68,8 @@ enum eWingCommState{
    WCS_GroupComm,
    WCS_CargoComm,
    WCS_CombatComm,
-   WCS_MiningComm
+   WCS_MiningComm,
+   WCS_DockComm
 };
 
 // External interface to the package
@@ -84,11 +85,13 @@ prototype   defend_me();
 prototype   attack();
 prototype   defend();
 prototype   dock();
+prototype   undock();
 prototype   approach();
 prototype   cargo_command();
 prototype   group_command();
 prototype   remove_ship();
 prototype   mining_command();
+prototype   dock_command();
 prototype   add_ship();
 
 prototype   refuel();
@@ -103,6 +106,7 @@ prototype   cargo_prompt();
 prototype   group_prompt();
 prototype   combat_prompt();
 prototype   mining_prompt();
+prototype   dock_prompt();
 prototype   empty_group_prompt();
 
 // spoken acknoledgements
@@ -111,6 +115,7 @@ prototype defend_me_ack();
 prototype attack_ack();
 prototype defend_ack();
 prototype dock_ack();
+prototype undock_ack();
 prototype approach_ack();
 prototype flee_ack();
 prototype capture_ack();
@@ -316,6 +321,22 @@ dock()
    clear_command();
 }
 
+
+undock()
+{
+   int group = Global.Int("gtWingCommGroup");
+   hship player = iShip.FindPlayerShip();
+
+   if (empty_group_check(group)) {
+      return;
+   }
+
+   tEPlayerOrders.Undock(group);
+
+   clear_command();
+}
+
+
 capture()
 {
    int group = Global.Int("gtWingCommGroup");
@@ -332,6 +353,7 @@ capture()
 
    clear_command();
 }
+
 
 refuel()
 {
@@ -541,6 +563,11 @@ mining_command()
    mining_prompt();
 }
 
+dock_command()
+{
+   Global.SetInt("gtWingCommDepth",WCS_DockComm);
+   dock_prompt();
+}
 
 // All terminating cases should clear command prompts.
 clear_prompt()
@@ -588,6 +615,13 @@ mining_prompt()
    iHUD.SetPrompt("4 Detach Ship","5 Scan Space, 6 Study Asteroid, 7 Start Mining");
 
 }
+
+dock_prompt()
+{
+   clear_prompt();
+   iHUD.SetPrompt("5 Dock To My Target, 6 Undock","");
+}
+
 
 KeyOne()
 {
@@ -720,10 +754,13 @@ KeyFive()
       clear_command();
       break;
    case WCS_Command:
-      dock();
+      dock_command();
       break;
    case WCS_MiningComm:
       scan_sky();
+      break;
+   case WCS_DockComm:
+      dock();
       break;
    default:
       clear_command();
@@ -751,6 +788,9 @@ KeySix()
       break;
    case WCS_MiningComm:
       start_prospecting();
+      break;
+   case WCS_DockComm:
+      undock();
       break;
    default:
       clear_command();
