@@ -120,24 +120,35 @@
    "HT_Beanstalk","Beanstalk"
    "HT_TransferStation","Transfer Station"
 
+
    "HT_PirateHQOp","Pirate HQ Operation" 
-   "HT_EmbezzleOp","Embezzle Operation" 
+   "HT_EmbezzleOp","Fence Ship" 
+   
    "HT_ViceDenOp","ViceDen Operation" 
    "HT_HackerOp","Hacker Operation" 
    "HT_CyberOp","Cybernetics Operation" 
-   "HT_ProtectionOp","Protection Operation" 
-   "HT_FleetAttackOp","Fleet Attack Operation" 
-   "HT_FleetDefenseOp","Fleet Defense Operation" 
+   "HT_ProtectionOp","Protection Racket" 
+   
+   "HT_FleetAttackOp","Attack Fleet" 
+   "HT_FleetDefenseOp","Defense Fleet" 
+   
    "HT_SpyAttackOp","Spy Attack Operation" 
    "HT_SpyDefenseOp","Spy Defense Operation" 
    "HT_SpyNeutralOp","Spy Neutral Operation" 
-   "HT_InvasionOp","Invasion Operation" 
+   
+   "HT_InvasionOp","Invasion Fleet" 
    "HT_RebelSupportOp","Rebel Support Operation" 
    "HT_BlackMarketOp","Black Market Operation" 
    "HT_RebelHQOp","Rebel HQ Operation" 
-   "HT_CustomsOp","Customs Operation" 
-   "HT_PirateTollOp","Pirate Toll Operation" 
    
+   "HT_CustomsOp","Customs Patrol" 
+   "HT_PirateTollOp","Protection Racket" 
+   
+   "HT_ThugsOp", "Pirate Thugs"
+   "HT_PatrolOp", "Security Patrol"
+   "HT_RaiderOp", "Pirate Raiders"
+
+
 
 
 T_None,"None"
@@ -170,6 +181,15 @@ T_Freighter,"Freighter"
 T_Destroyer,"Destroyer"
 T_Cruiser,"Cruiser"
 T_Carrier,"Carrier"
+
+ESS_Invalid,"Invalid"
+ESS_Destroyed,"Destroyed"
+ESS_Normal,"Normal"
+ESS_Empty,"Abandond"
+ESS_Building,"Being Built"
+ESS_Leaving,"Owner Leaving"
+ESS_Fleeing,"Owner Fleeing"
+ESS_NeverBuilt,"Unbuilt"
 
 
 
