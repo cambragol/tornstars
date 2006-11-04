@@ -59,6 +59,7 @@ AttackTarget,
 DefendTarget,
 
 DockTarget,
+   Undock,
 ApproachTarget,
 
 CaptureShip,
@@ -224,8 +225,7 @@ bool AttackTarget(int group, hisim target) {
    for (i=0;i<total;++i) {
       ship = iShip.Cast(List.GetNth(fleet,i));
 
-      iShip.UndockSelf(ship);
-      //iAI.PurgeOrders(ship);
+      iAI.PurgeOrders(ship);
       iAI.GiveAttackOrder(ship, target);
 
       SetOrderTarget(ship, iSim.Cast(target));
@@ -258,7 +258,6 @@ bool DefendMe(int group ) {
 
       if (iSim.WorldName(ship) == iSim.ActiveWorld()) {
 
-         iShip.UndockSelf(ship);
          iAI.PurgeOrders(ship);
          iAI.GiveEscortOrder(ship, 
                              player,
@@ -325,8 +324,6 @@ bool DefendTarget(int group, hisim target) {
    for (i=0;i<total;++i) {
       ship = iShip.Cast(List.GetNth(fleet,i));
 
-      iShip.UndockSelf(ship);
-
       iAI.PurgeOrders(ship);
 
       iAI.GiveEscortOrder(ship, 
@@ -385,7 +382,6 @@ bool DockTarget(int group, hisim target) {
    for (i=0;i<total;++i) {
       ship = iShip.Cast(List.GetNth(fleet,i));
 
-      iShip.UndockSelf(ship);
       iAI.PurgeOrders(ship);
       iAI.GiveDockOrder(ship, target);
 
@@ -401,6 +397,47 @@ bool DockTarget(int group, hisim target) {
    }
 
    iComms.Shout(List.Head(fleet), "", "epo_dock_target_ack");
+   return true;
+}
+
+
+
+bool Undock(int group) {
+   list fleet;
+   int i, total;
+   hship ship, group_leader;
+   hship player = iShip.FindPlayerShip();
+
+   fleet = tEpicFleet.ReturnGroup(group);
+   group_leader = iShip.Cast(List.Head(fleet));
+
+
+   fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(fleet), 
+                                                 player, Global.Float("gt_distance_wakeup"), TM_Ship));
+
+
+   total = List.ItemCount(fleet);
+
+   // There are no ships nearby, so tell player that will not work.
+   if (total == 0) {
+      iComms.Shout(group_leader, "", "epo_refuse_player_far");
+      return false;
+   }
+
+   for (i=0;i<total;++i) {
+      ship = iShip.Cast(List.GetNth(fleet,i));
+
+      iShip.UndockSelf(ship);      
+      iAI.PurgeOrders(ship);
+      SetPriorOrder(ship, OT_None);
+
+      debug {
+         Debug.PrintHandle(ship);
+         Debug.PrintString(" undock Order\n");
+      }
+   }
+
+   iComms.Shout(List.Head(fleet), "", "epo_undock_ack");
    return true;
 }
 
@@ -436,8 +473,6 @@ bool ApproachTarget(int group, hisim target) {
    for (i=0;i<total;++i) {
       ship = iShip.Cast(List.GetNth(fleet,i));
 
-      iShip.UndockSelf(ship);
-      iAI.PurgeOrders(ship);
 //      iAI.GiveApproachOrder(ship, target);
 
       // Try not to have the ships all bash up against one another. Keep thier distance
@@ -666,9 +701,6 @@ bool FuelTarget(int group, hship target) {
          fuel_left = tEpicFleet.Fuel(ship);
 
          if (fuel_left > min_fuel) {
-            //iShip.UndockSelf(ship);
-            //iAI.PurgeOrders(ship);
-            //iAI.GiveFormateOrder(ship, target, 1.5km, 0.0km, 0.0km);
 
             SetPriorOrder(ship, OT_Formate);
 
@@ -835,7 +867,6 @@ bool FuelDrainTarget(int group, hship target) {
       ship = iShip.Cast(List.GetNth(fleet,i));
 
       if (Object.IntProperty(ship,"tanker") >= 1) {
-         iShip.UndockSelf(ship);
          iAI.PurgeOrders(ship);
          iAI.GiveFormateOrder(ship, target, 1.5km, 0.0km, 0.0km);
          SetPriorOrder(ship, OT_Formate);
@@ -1061,7 +1092,6 @@ bool MineAsteroid(int group) {
 
       if (Object.IntProperty(ship,"miner") >= 1) {
 
-         iShip.UndockSelf(ship);
          iAI.PurgeOrders(ship);
          iAI.GiveDockOrder(ship, asteroid);
 
@@ -1101,8 +1131,6 @@ task mining_task(hship miner, hhabitat target) {
 
       // Check if we are docked, tell the player we touched down.
       if (iSim.IsDockedTo(miner, target)) {
-
-         iSim.SetDockingLock(miner, target, true);
 
          iConversation.OneLiner(miner,"","epo_mining_rig_docked");
          return;
@@ -1173,7 +1201,6 @@ bool ProspectAsteroid(int group) {
 
       if (Object.IntProperty(ship,"prospector") >= 1) {
 
-         iShip.UndockSelf(ship);
          iAI.PurgeOrders(ship);
          iAI.GiveDockOrder(ship, asteroid);
 
@@ -1215,8 +1242,6 @@ task prospecting_task(hship prospector, hhabitat target) {
       if (iSim.IsDockedTo(prospector, target)) {
 
          //iComms.Shout(prospector, "", "ProspectingDocked");
-
-         iSim.SetDockingLock(prospector, target, true);
 
          iConversation.Begin();
          // epo_prospector_attaching, "We are attached to the surface."
@@ -1739,7 +1764,7 @@ bool station_known(int station_type) {
    }
 
    return true;
-}
+} 
 
 
 
