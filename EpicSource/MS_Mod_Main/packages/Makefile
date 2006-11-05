@@ -67,6 +67,7 @@ PACKAGES = ECargoTypes.pkg \
 	jcEChangeIdGui.pkg \
 	jcEpicShipPurGUI.pkg \
 	jGiftCargo.pkg \
+	tClaimGui.pkg \
 	tDistance.pkg \
 	tEAutoWatch.pkg \
 	tEFaction.pkg \
@@ -263,6 +264,7 @@ tMusicChange.pkg : tMusicChange.pog tMusic.h tLProduction.h
 tMusicGui.pkg : tMusicGui.pog tMusic.h tEpicGui.h
 tNewsNet.pkg : tNewsNet.pog UniGUI.h tTime.h tMail.h
 tOptionsGui.pkg : tOptionsGui.pog UniGUI.h tEpicGui.h
+tClaimGui.pkg : tOptionsGui.pog UniGUI.h tEpicGui.h tEFaction.h
 tStartGui.pkg : tStartGui.pog UniGUI.h tEpicGui.h
 tPcAsteroidBelt.pkg : tPcAsteroidBelt.pog tsCull.h tLCenter.h
 tPcCargoShip.pkg : tPcCargoShip.pog tEconUtil.h tEconSmall.h tStation.h tStationFilter.h tETradeBuy.h tPogClass.h tLRoot.h tLTrade.h tLProduction.h tEpicMoney.h tTime.h tEFaction.h tEpicFleet.h tPodUtil.h tSpewerOps.h tsPilotSetup.h tEShipCreation.h tShipName.h uString.h
