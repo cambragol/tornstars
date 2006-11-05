@@ -1455,8 +1455,8 @@ hwindow create_location_sublist_window()
 
    if (T_Station == iSim.Type(current_location)) {
       // The submenu for stations is operations.
-      item_list = tUnderOpFilter.FilterKnown(tUnderOp.StationOperations(current_location), true);
-//      item_list = tUnderOp.StationOperations(current_location);
+//      item_list = tUnderOpFilter.FilterKnown(tUnderOp.StationOperations(current_location), true);
+      item_list = tUnderOp.StationOperations(current_location);
    }else if (T_LagrangePoint == iSim.Type(current_location)) {
       item_list = tEJump.KnownList(iLagrangePoint.Cast(current_location));
    }else {
