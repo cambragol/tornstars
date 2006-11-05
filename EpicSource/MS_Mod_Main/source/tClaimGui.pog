@@ -1,0 +1,593 @@
+//*******************************************************************************************/
+//
+// tClaimGui.pog
+//
+// A GUI package that allows the player to pick a start position in the game.
+// 
+// 
+// 
+//
+// November 2006, Jon Freise
+//******************************************************************************************/
+package tClaimGui;
+
+uses	Sim,  
+		iShip,
+		iSim,
+		Debug,
+		Global,
+		GUI,
+		iGame, 
+		iGUI,
+		iHUD,
+		iHabitat,
+		iMapEntity,
+      INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+      iAI,
+      iCargo,
+      iInventory,
+      CargoTypes,
+      tEconUtil,
+      tPodUtil,
+      tEFaction,
+		UniGUI,
+      tEpicGuiEnum,
+      tEpicGui,
+      tStationEnum,
+      tStation,
+      tEconSmall,
+      tEpicFleet,
+      tEpicMoney,
+      uString;
+
+
+
+provides DisplayWindow,
+         OnClaimPress,
+         OnAbandonPress,
+         OnSellPress,
+         Exit,
+         StartScreen;
+         
+
+
+prototype StartScreen();
+
+prototype choose_position(hwindow button);
+
+prototype hwindow create_claim_list(list station_list, hwindow parent, int x, int y, int width, int height, string function);
+
+prototype create_abandon_button();
+
+prototype create_sell_button();
+
+prototype create_claim_window();
+
+prototype remove_all_buttons();
+
+
+
+float int2float(int value)
+{
+   return value;
+}
+
+int float2int(float value)
+{
+   return value;
+}
+
+
+
+SetStandardGuiColors(hwindow window)
+{
+
+
+   GUI.SetWindowStateColours( window,
+                              Global.Float( "GUI_neutral_red"),
+                              Global.Float( "GUI_neutral_green"),
+                              Global.Float( "GUI_neutral_blue"),
+                              Global.Float( "GUI_focused_red"),
+                              Global.Float( "GUI_focused_green"),
+                              Global.Float( "GUI_focused_blue"),
+                              Global.Float( "GUI_selected_red"),
+                              Global.Float( "GUI_selected_green"),
+                              Global.Float( "GUI_selected_blue"));
+
+}
+
+
+
+hwindow create_claim_list(list station_list, hwindow parent, int x, int y, int width, int height, string function)
+{
+   hwindow list_box;
+   hwindow base_win;
+   hwindow button;
+   int i, total;
+   string station_name;
+   int cwidth = width - 4;
+   list button_list;
+   hhabitat station;
+   int price, richness, value;
+   float factor;
+   list cargo_list;
+   hsim category;
+
+   cwidth = cwidth - Global.Int("GUI_scrollbar_width");
+
+
+   base_win = GUI.CreateWindow(x, y, width, height, parent);
+
+   // Create the parent listbox
+   list_box = GUI.CreateListBox( 0, 0,
+                                 cwidth, height,
+                                 base_win,
+                                 true,
+                                 false);
+
+
+
+
+   total = List.ItemCount(station_list);
+
+   for (i=0;i<total;++i) {
+      station= iHabitat.Cast(List.GetNth(station_list,i));
+
+
+      button = iGUI.CreateAndInitialiseInverseButton( none, 0, 0, 
+                                                      cwidth, 
+                                                      Text.Field(Sim.Name(station), FT_Text),
+                                                      function);
+
+      debug {
+         Debug.PrintHandle(station);
+         Debug.PrintString(" Claim\n");
+      }
+
+
+      Object.AddHandleProperty(button, "gt_claimgui_station", station);
+
+      Object.AddIntProperty(button, "gt_claimgui_count", i);
+
+      category = tEconSmall.CategoryFromCargo(iCargo.Cast(Set.FirstElement(tEconSmall.StationProducedCargo(iSim.Cast(station)))));
+      price = tEconSmall.CategoryPrice(category);
+
+      richness = tStation.Richness(station);
+
+      value = float2int(int2float(price * richness) * Global.Float("gt_claimgui_sell_factor"));
+
+      debug {
+         Debug.PrintString(String.FormatInt("claim price %d", price));
+         Debug.PrintString(String.FormatInt(" value %d\n", value));
+         Debug.PrintHandle(category);
+         Debug.PrintString("\n");
+      }
+
+      Object.AddIntProperty(station, "gt_claimgui_price", value);
+
+
+      GUI.AddListBoxEntry(list_box, button);
+   }
+
+   // Add a scroll bar to the listbox. 
+   GUI.CreateVerticalScrollbar( cwidth+4,
+                                0,
+                                Global.Int("GUI_scrollbar_width"),
+                                height,
+                                base_win,
+                                list_box,
+                                Global.Float( "GUI_scrollbar_buttonratio"), 
+                                "");
+
+
+   // Set the first item as the default selection.
+   GUI.SelectListBoxEntry(list_box, 0 );
+
+   return list_box;
+}
+
+
+
+choose_position(hwindow button)
+{
+   string description;
+   hwindow text_window = GUI.Cast(Global.Handle("gt_claimgui_text_win"));
+   hhabitat station = iHabitat.Cast(Object.HandleProperty(button, "gt_claimgui_station"));
+   hfaction player_faction = tEFaction.PlayerFaction();
+
+
+   description = "Mine: ";
+   description = String.Join(description, Text.Field(Sim.Name(Sim.Cast(station)),FT_Text));
+   description = String.Join(description, "<br>System:");
+   description = String.Join(description, Text.Field(iSim.WorldName(iSim.Cast(station)), FT_Text));
+   description = String.Join(description, "<br>Ore Quality: ");
+   description = String.Join(description, tStation.Richness2String(tStation.Richness(station)));
+   description = String.Join(description, "<br>Claim Selling Price:");
+   description = String.Join(description, String.FromInt(Object.IntProperty(station, "gt_claimgui_price")));
+
+   if (!Set.IsEmpty(iSim.SimsInRadiusOfFaction(station, 400km, player_faction))) {
+      description = String.Join(description, "<br>Wingmen at Mine");
+   }
+
+   description = uString.Htmlize(description);
+
+   GUI.SetTextWindowString(text_window, description);
+}
+
+
+
+
+OnClaimPress()
+{
+	// Get the currently focused window - it must be the correct system button.
+	hwindow button =	GUI.FocusedWindow();
+   hwindow list_box = GUI.Cast( Global.Handle("gt_claimgui_list_box"));
+   int index = Object.IntProperty(button, "gt_claimgui_count");
+
+   GUI.SelectListBoxEntry(list_box, index);
+
+   // Store away the station for later button presses.
+   Global.CreateHandle("gt_claimgui_station", GA_Write|GA_NoSave, Object.HandleProperty(button, "gt_claimgui_station"));
+
+   create_abandon_button();
+
+   create_sell_button();
+
+   choose_position(button);
+}
+
+
+
+
+OnSellPress()
+{
+   hhabitat station = iHabitat.Cast(Global.Handle("gt_claimgui_station"));
+
+   tEFaction.AddStation(station, tEFaction.EmptyFaction());
+
+   tEpicMoney.ChangeShipAccount(Object.IntProperty(station, "gt_claimgui_price"));
+
+   remove_all_buttons();
+
+   create_claim_window();
+}
+
+
+
+
+OnAbandonPress()
+{
+   hhabitat station = iHabitat.Cast(Global.Handle("gt_claimgui_station"));
+
+   // Return the station to the empty faction.
+   tEFaction.AddStation(station, tEFaction.EmptyFaction());
+
+   remove_all_buttons();
+
+   create_claim_window();
+}
+
+
+
+DisplayWindow()
+{
+   hwindow shady_bar;
+   hwindow shady_bar_right;
+   hwindow title;
+   hwindow subtitle;
+   hwindow exit;
+   hwindow debug_list_box;
+   hwindow help_win;
+   hinifile cost_file;
+   int width, height;
+
+   list debug_list, empty_list;
+
+   debug Debug.PrintString("tClaimGui.DisplayWindow\n");
+
+   cost_file = INIFile.Create("ini:/trade_data");
+   Global.CreateFloat("gt_claimgui_sell_factor",
+                      GA_Write|GA_NoSave,
+                      INIFile.Float(cost_file,"MineClaim","richness_to_credit", 1.0));
+   INIFile.Destroy(cost_file);
+
+
+   // Set right hand shady bar width.
+   shady_bar = iGUI.CreateWideShadyBar();
+
+   shady_bar_right = iGUI.CreateShadyBarRight();
+
+
+   Global.CreateHandle("gt_claimgui_shady",GA_Write,shady_bar);
+
+
+   GUI.SetWindowClientArea( shady_bar, 
+                            0,
+                            0,
+                            500,
+                            GUI.WindowCanvasHeight( shady_bar));
+   
+
+
+   height = GUI.WindowCanvasHeight( shady_bar);
+   height = height - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+
+
+   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   //width = width/2;
+   width = width - Global.Int("EpicGui_content_indent");
+   width = width - Global.Int("EpicGui_content_indent");
+      
+
+   tEpicGui.CreateTitle(shady_bar, "SELL CLAIM");
+   tEpicGui.CreateSubtitle(shady_bar, "Sell your claims to asteroid mines");
+
+   // Create the exit button
+   tEpicGui.CreateExitButton(shady_bar, "Exit", "tClaimGui.Exit");
+
+
+
+   // Create help window
+   help_win = iGUI.CreateAndInitialiseTextWindow(Global.Int("EpicGui_content_indent"),
+                                                 Global.Int("EpicGui_content_drop") ,
+                                                 200,
+                                                 height,
+                                                 shady_bar_right,
+                                                 "html:/html/claim_gui_welcome");
+
+   GUI.CreateVerticalScrollbar( Global.Int("EpicGui_content_indent")+200,
+                                Global.Int("EpicGui_content_drop"),
+                                Global.Int("GUI_scrollbar_width"),
+                                height,
+                                shady_bar_right,
+                                help_win,
+                                Global.Float( "GUI_scrollbar_buttonratio"), 
+                                "");
+
+   Global.CreateHandle("gt_claimgui_text_win", GA_Write|GA_NoSave, help_win);
+
+   
+   create_claim_window();
+}
+
+
+
+StartScreen()
+{
+   GUI.PopScreensTo("icSpaceFlightScreen");
+   GUI.OverlayScreen("icPDAOverlayManager");
+   iGUI.OverlayCustomScreen( "tClaimGui.DisplayWindow" );
+}
+
+
+
+
+Exit()
+{
+
+	UniGUI.UniGUIRemoveScreen();
+}
+
+
+
+
+
+
+create_claim_window()
+{
+
+   hwindow shady_bar = GUI.Cast(Global.Handle("gt_claimgui_shady"));
+   hwindow base = GUI.Cast(Global.Handle("gt_claimgui_list_box_base"));
+   hwindow list_box;
+
+   int width, height;
+   hfaction player;
+   list station_list;
+
+   // Get rid of the prior list of claims.
+   if (none != base) {
+      GUI.DeleteWindow(base);
+      Global.CreateHandle("gt_claimgui_list_box_base", GA_Write|GA_NoSave, none);
+   }
+
+
+   player = iFaction.Find("Player");
+   station_list = tEFaction.Stations(player);
+
+   if (0 == List.ItemCount(station_list)) {
+      // there are no claims, so bail out.
+      return;
+   }
+
+   // The claims list will take up the top half of the GUI.
+   height = GUI.WindowCanvasHeight( shady_bar);
+   height = height - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+   height = height/2;
+
+
+   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   //width = width/2;
+   width = width - Global.Int("EpicGui_content_indent");
+   width = width - Global.Int("EpicGui_content_indent");
+
+   
+   base = GUI.CreateWindow( Global.Int("EpicGui_content_indent"),
+                            Global.Int("EpicGui_content_drop") ,
+                            width, 
+                            height, 
+                            shady_bar );
+
+   list_box = create_claim_list(station_list,
+                                base, 
+                                0,
+                                0,
+                                GUI.WindowCanvasWidth(base),
+                                GUI.WindowCanvasHeight(base),
+                                "tClaimGui.OnClaimPress");
+
+   Global.CreateHandle("gt_claimgui_list_box", GA_Write|GA_NoSave, list_box);
+   Global.CreateHandle("gt_claimgui_list_box_base", GA_Write|GA_NoSave, base);
+}
+
+
+
+
+hwindow create_border_button(int x, int y, int width, int height, hwindow parent, string name, string function)
+{
+   hwindow button, border;
+   int button_x, button_y, button_width, button_height;
+
+   // We need to change the button size to make room for the border.
+   button_x = x + 8;
+   button_y = y + 8;
+
+   button_width = width - 16;
+   button_height = height - 16;
+
+   button = GUI.CreateButton( button_x,
+                              button_y,
+                              button_width,
+                              button_height,
+                              parent);
+
+
+   GUI.SetWindowTitle(button, name);
+
+   GUI.SetWindowFont(button, Global.String("GUI_title_font"));
+
+   GUI.SetButtonFunctionPog(button, function);
+
+   // Add the border
+   border = GUI.CreateBorder(button);
+
+   // we still return the button, because the function might need to change
+   // or something. This is one of those no good choice decisions.
+
+   tEpicGui.SetStandardStateColours(button);
+
+   return button;
+}
+
+
+
+create_abandon_button()
+{
+   hwindow button_parent = GUI.Cast(Global.Handle("gt_claimgui_shady"));
+   hwindow button_base = GUI.Cast(Global.Handle("gt_claimgui_abandon"));
+   int width, height;
+
+   if (none != button_base) {
+      GUI.DeleteWindow(button_base);
+   }
+
+   // The claims list will take up the top half of the GUI.
+   height = GUI.WindowCanvasHeight( button_parent);
+   height = height - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+   height = height/2;
+
+
+   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   //width = width/2;
+   width = width - Global.Int("EpicGui_content_indent");
+   width = width - Global.Int("EpicGui_content_indent");
+
+
+   button_base = GUI.CreateWindow(Global.Int("EpicGui_content_indent"),   
+                                  Global.Int("EpicGui_content_drop") + height + 20,
+                                  Global.Int("GUI_fancybutton_width"),
+                                  Global.Int("GUI_fancybutton_height"),
+                                  button_parent);
+
+   
+   Global.CreateHandle("gt_claimgui_abandon", GA_Write, button_base);
+
+
+   create_border_button(0,
+                        0,
+                        GUI.WindowCanvasWidth( button_base),
+                        GUI.WindowCanvasHeight( button_base),
+                        button_base,
+                        "Abandon Claim", 
+                        "tClaimGui.OnAbandonPress");
+}
+
+
+
+
+create_sell_button()
+{
+   hwindow button_parent = GUI.Cast(Global.Handle("gt_claimgui_shady"));
+   hwindow button_base = GUI.Cast(Global.Handle("gt_claimgui_sell"));
+   int width, height;
+
+   if (none != button_base) {
+      GUI.DeleteWindow(button_base);
+   }
+
+   // The claims list will take up the top half of the GUI.
+   height = GUI.WindowCanvasHeight( button_parent);
+   height = height - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+   height = height/2;
+
+
+   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   //width = width/2;
+   width = width - Global.Int("EpicGui_content_indent");
+   width = width - Global.Int("EpicGui_content_indent");
+
+
+   button_base = GUI.CreateWindow(Global.Int("EpicGui_content_indent") + Global.Int("GUI_fancybutton_width") + 20,
+                                  Global.Int("EpicGui_content_drop") + height + 20,
+                                  Global.Int("GUI_fancybutton_width"),
+                                  Global.Int("GUI_fancybutton_height"),
+                                  button_parent);
+
+   
+   Global.CreateHandle("gt_claimgui_sell", GA_Write, button_base);
+
+
+   create_border_button(0,
+                        0,
+                        GUI.WindowCanvasWidth( button_base),
+                        GUI.WindowCanvasHeight( button_base),
+                        button_base,
+                        "Sell Claim", 
+                        "tClaimGui.OnSellPress");
+}
+
+
+
+
+remove_all_buttons()
+{
+   hwindow button_base = GUI.Cast(Global.Handle("gt_claimgui_sell"));
+
+   if (none != button_base) {
+      GUI.DeleteWindow(button_base);
+   }
+
+   button_base = GUI.Cast(Global.Handle("gt_claimgui_abandon"));
+
+   if (none != button_base) {
+      GUI.DeleteWindow(button_base);
+   }
+}
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
