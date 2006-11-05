@@ -66,7 +66,10 @@ provides Init,
          Level2String,
          Feeling2String,
          Type2String,
-         Type2LowerLevel;
+         Type2LowerLevel,
+
+         AddStation,
+         Stations;
          
 
 
@@ -218,13 +221,62 @@ Init()
                        iFaction.Find("Neutral"));
 
 }
-
+ 
 SaveGame()
 {
    debug Debug.PrintString("tEFaction.Save\n");
 
    save_properties();
 
+}
+
+
+/*
+   Stations get special handling. The meta game make use of the
+   lists of all stations belonging to a faction. So we track
+   when stations are added or removed from a faction.
+
+*/
+
+AddStation(hhabitat station, hfaction faction)
+{
+   list station_list;
+   hfaction prior_faction;
+
+   // Pull the station out of the prior factions list.
+   prior_faction = iSim.Faction(iSim.Cast(station));
+
+   if (prior_faction != none) {
+      if (Object.PropertyExists(prior_faction,"station_list")) {
+         atomic {
+            station_list = Object.ListProperty(prior_faction, "station_list");
+            List.Remove(station_list, station);
+            Object.SetListProperty(prior_faction,"station_list",station_list);
+         }
+      }
+   }
+
+   iSim.SetFaction(iSim.Cast(station), faction);
+
+   // Add it to the new factions list.
+   if (Object.PropertyExists(faction,"station_list")) {
+      atomic {
+         station_list = Object.ListProperty(faction, "station_list");
+         List.AddTail(station_list, station);
+         Object.SetListProperty(faction,"station_list",station_list);
+      }
+   }else {
+      List.RemoveAll(station_list);
+      List.AddTail(station_list, station);
+      Object.AddListProperty(faction,"station_list",station_list);
+   }
+}
+
+
+
+list Stations(hfaction faction)
+{
+   return Object.ListProperty(faction, "station_list");
 }
 
 

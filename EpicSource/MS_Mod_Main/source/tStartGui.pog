@@ -78,6 +78,10 @@ prototype ShipLost();
 NewGame()
 {
    Global.CreateBool("gt_start_gui_new", GA_Write, false);
+
+   // Set the default player ship name early.
+   Global.CreateString("gt_player_ship_name", GA_Write, "player_ship_name");
+
 }
 
 
@@ -355,7 +359,7 @@ task setup_player()
    int item_count, cargo_number, cargo_type, funds;
    string cargo_name, cutscene;
    string player_ship, player_ship_prefit;
-
+   string player_name;
 
    // Curtains close for to rearrange the set.
    iGame.EnableBlackout(true);
@@ -391,6 +395,11 @@ task setup_player()
 
    funds = INIFile.Int(start_file, entry_key,"ship_account",0);
    tEpicMoney.ChangeShipAccount(funds);
+
+
+   player_name = INIFile.String(start_file, entry_key, "player_name","player_name");
+
+   Global.CreateString("gt_player_ship_name", GA_Write, player_name);
 
 
    player_ship = INIFile.String(start_file, entry_key, "player_ship_entry","none");

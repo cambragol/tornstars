@@ -286,7 +286,8 @@ AdjustStatus(hhabitat station, eStationStatus status)
          hidden = false;
          destroyed = false;
          empty = tEFaction.EmptyFaction();
-         iSim.SetFaction(station, empty);
+         tEFaction.AddStation(station, empty);
+         //iSim.SetFaction(station, empty);
          break;
 
       case ESS_NeverBuilt:
@@ -303,7 +304,6 @@ AdjustStatus(hhabitat station, eStationStatus status)
       case ESS_Building:
          hidden = false;
          destroyed = true;
-
          // It takes 3 months to build the station.
          tStation.SetChangeTime(station, tTime.GetDay()+90);
          break;

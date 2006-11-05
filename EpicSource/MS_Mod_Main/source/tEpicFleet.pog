@@ -298,6 +298,7 @@ NewGame(string player_ship_template, string system, string location, string name
 
    Global.CreateBool("gt_fleet_non_base_save",GA_Write, true);
 
+
 }
 
 NewGameTest()
@@ -886,7 +887,7 @@ RestoreFleet()
          // with a new loadout system.
          //read_ship_upkeep(ship);
 
-         iUtilities.RenameSim(ship, "player_ship_name");
+         iUtilities.RenameSim(ship, Global.String("gt_player_ship_name"));
 
       } else {
          // This is a player wingman. set the properties

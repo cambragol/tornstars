@@ -3496,6 +3496,7 @@ bool IsAllowedMegaCorp(int type)
       // 
    case ept_Beanstalk : 
    case ept_TransferStation :
+   case ept_OreTransferStation : 
       return true;
    default:
       break;

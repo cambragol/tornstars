@@ -267,7 +267,7 @@ mining_rig_upkeep(hship rig)
             Debug.PrintString(" player faction\n");
          }
 
-         if (player_faction == iSim.Faction(iSim.Cast(station))) {
+         if (player_faction != iSim.Faction(iSim.Cast(station))) {
             debug Debug.PrintString("Rig station player\n");
 
             // We only work mining stations.
@@ -353,7 +353,7 @@ mining_rig_upkeep(hship rig)
                                       false);  
                }// mining rig was out of fuel.
             }// if station is a mine
-         }// if the mine is empty and can be claimed
+         } // if the mine belongs to the player
       }// if the miner is docked to the mine
    }// if the miner is docked at all
 }
@@ -477,8 +477,8 @@ prospector_upkeep(hship explorer) {
                      // We are done studying this asteroid, claim it for the
                      // player.
 
-                     iSim.SetFaction(iSim.Cast(station), player_faction);
-
+                     //iSim.SetFaction(iSim.Cast(station), player_faction);
+                     tEFaction.AddStation(station, player_faction);
 
                      // Send the player an email, and let them know the asteroid is thiers.
                      email_sender = Text.Field(Sim.Name(explorer), FT_Text);

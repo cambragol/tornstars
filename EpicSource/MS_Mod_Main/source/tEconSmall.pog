@@ -42,6 +42,8 @@ provides CargoList,
          CargoStanding,
          HaulFee,
          CategoryName,
+         CategoryPrice,
+         CategoryFromCargo,
          SellAdjustment,
          PurchaseAdjustment,
          RunCheck,
@@ -930,6 +932,8 @@ set station_cargo(string trade_file, string key_string,  string category_string)
          Debug.PrintString(trade_file);
          Debug.PrintString("\n");
       }
+
+      return cargo_set;
    }
 
    category_list = Global.List("gtEconSmallCategoryList");

@@ -312,7 +312,7 @@ ReadSystemIni(string system_file, string system)
 
    int count;
 
-   string name, faction_name, status_string, visible_name;
+   string name, efaction_name, status_string, visible_name;
    int destroyed_int, build_int, hidden_int, visible_int, type;
 
    bool destroyed, hidden, visible, known;
@@ -361,7 +361,7 @@ ReadSystemIni(string system_file, string system)
       // read strings
       name = INIFile.NumberedString(sys_info,"starting_stations","name",count,"");
 
-      faction_name = INIFile.NumberedString(sys_info,"starting_stations","faction",count,"F_Empty");
+      efaction_name = INIFile.NumberedString(sys_info,"starting_stations","faction",count,"F_Empty");
 
       // read ints
       type = INIFile.NumberedInt(sys_info,"starting_stations","type",count,0);
@@ -373,12 +373,12 @@ ReadSystemIni(string system_file, string system)
       //*************************
       // Check the faction for the station is correct
       
-      station_faction = tEFaction.EFind(faction_name);
+      station_faction = tEFaction.EFind(efaction_name);
 
       if (none == station_faction) {
          debug{
             Debug.PrintString("tStationSave.ReadSystemIni Error\n");
-            Debug.PrintString(faction_name);
+            Debug.PrintString(efaction_name);
             Debug.PrintString(" faction name error.\n");
          }
       }
@@ -438,7 +438,7 @@ ReadSystemIni(string system_file, string system)
       station = iHabitat.Cast(iSim.FindByNameInSystem(name, system));
 
       // create the station
-      tStation.Create(station, faction_name, status, build_time, 0, 0, richness, known, true);
+      tStation.Create(station, iFaction.Name(station_faction), status, build_time, 0, 0, richness, known, true);
 
       id = tLRoot.NewId();
       tLRoot.SetId(iSim.Cast(station), id);
