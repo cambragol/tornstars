@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/tEFaction.h,v 1.5 2006/03/17 04:35:19 Owner Exp $
+// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////
@@ -84,7 +84,9 @@ prototype string tEFaction.Type2String( int faction_type );
 
 prototype float tEFaction.Type2LowerLevel( eFeelingType feeling_type );
 
-prototype tEFaction.UnitTest();
+prototype tEFaction.AddStation( hhabitat station, hfaction faction );
+
+prototype list tEFaction.Stations( hfaction faction );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

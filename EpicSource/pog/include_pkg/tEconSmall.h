@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/tEconSmall.h,v 1.4 2005/06/27 05:38:37 Owner Exp $
+// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////
@@ -35,6 +35,10 @@ prototype int tEconSmall.CargoStanding( hcargo cargo );
 prototype int tEconSmall.HaulFee( hcargo cargo );
 
 prototype string tEconSmall.CategoryName( hcargo cargo );
+
+prototype int tEconSmall.CategoryPrice( hsim category );
+
+prototype hsim tEconSmall.CategoryFromCargo( hcargo cargo );
 
 prototype float tEconSmall.SellAdjustment( hisim trade_center );
 
