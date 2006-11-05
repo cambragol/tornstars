@@ -208,7 +208,7 @@ string ShipType2String(eShipType ship_type)
    case EST_CombatFighter: return "EST_CombatFighter";break; 
    case EST_CombatLight: return "EST_CombatLight";break; 
    case EST_CombatHeavy: return "EST_CombatHeavy";break;
-	case EST_CombatCaptial: return "EST_CombatCaptial";break; 
+	case EST_CombatCaptial: return "EST_CombatCapitial";break; 
    case EST_CombatAll: return "EST_CombatAll";break; 
 
    case EST_Medical: return "EST_Medical";break; 
@@ -269,7 +269,7 @@ eShipType String2ShipType(string type_name)
    else if ("EST_CombatFighter"==type_name) { return EST_CombatFighter; } 
    else if ("EST_CombatLight"==type_name) { return EST_CombatLight; } 
    else if ("EST_CombatHeavy"==type_name) { return EST_CombatHeavy; }
-	else if ("EST_CombatCaptial"==type_name) { return EST_CombatCaptial; } 
+	else if ("EST_CombatCapitial"==type_name) { return EST_CombatCaptial; } 
    else if ("EST_CombatAll"==type_name) { return EST_CombatAll; } 
 
    else if ("EST_Medical"==type_name) { return EST_Medical; } 
