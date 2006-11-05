@@ -257,6 +257,11 @@ DisplayWindow()
 
    debug Debug.PrintString("tStartGui.DisplayWindow\n");
 
+
+   // Stop the player from exiting this screen via UniGUI.
+   Input.SuspendBindings();
+
+
    // Set right hand shady bar width.
    shady_bar = iGUI.CreateWideShadyBar();
 
@@ -343,6 +348,9 @@ StartGame()
    Task.Detach(start setup_player());
 
    Global.SetBool("gt_start_gui_new", true);
+
+   // Ok, player can now type keys normally.
+   Input.ResumeBindings();
 
 	UniGUI.UniGUIRemoveScreen();
 }
