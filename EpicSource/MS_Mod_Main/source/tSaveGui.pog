@@ -69,13 +69,11 @@ provides DockSave,
    SaveScreen,
    BaseLaunch,
    BaseExit,
-   SaveScreen_OnBackButton,
-   SaveScreen_OnSaveButton,
-   SaveScreen_OnLoadButton,
    PressEnterStation,
-   EditComplete,
-   EditCancel,
-   QuitGame;
+   Exit,
+   StartEdit,
+   CancelEdit,
+   EndEdit;
 
 
 
@@ -231,251 +229,13 @@ SaveAndLoad()
 
 
 
-
-SaveScreen()
-// this is the actual save/load screen
+Exit()
 {
-	hwindow shady_bar;
-	hwindow window;
-	hwindow border;
-	hwindow save_button;
-	hwindow load_button;
-	hwindow text;
-	hwindow editbox;
-
-	hwindow radio1;
-	hwindow radio2;
-	hwindow radio3;
-	hwindow radio4;
-	hwindow radio5;
-	hwindow radio6;
-	hwindow radio7;
-	hwindow radio8;
-	hwindow radio9;
-	hwindow radio10;
-	hwindow radio11;
-	hwindow radio12;
-	hwindow radio13;
-	hwindow radio14;
-
-	int windowx;
-	int windowy;
-	int windowwidth;
-	int windowheight;
-
-	int savex;
-	int savey;
-	int savewidth;
-
-	int loadx;
-	int loady;
-	int loadwidth;
-
-	int radiox;
-	int radioy;
-	int radiowidth;
-	int radioheight;
-
-	int texty;
-
-	int editx;
-	int editheight;
-	int editwidth;
-
-	int count, i;
-	string function;
-
-	list radiobuttons;
-
-	// create the shady bar
-	shady_bar = iGUI.CreateWideShadyBar();
-
-	// set font
-	GUI.SetDefaultFont( Global.String( "GUI_title_font" ) );
-
-	// add title
-	//iGUI.AddTitle( shady_bar, "Save/Load Game" );
-
-	// add the back buttons
-	//iGUI.AddBackButton( shady_bar, "tSaveGui.SaveScreen_OnBackButton" );
-
-   tEpicGui.CreateTitle(shady_bar, "SAVE GAME");
-
-   tEpicGui.CreateSubtitle(shady_bar, "Select slot then type name and save");
-
-   tEpicGui.CreateExitButton(shady_bar,"EXIT", "tSaveGui.SaveScreen_OnBackButton");
-
-
-
-	// save and load button dimentions
-	loady = GUI.WindowCanvasHeight( shady_bar ) - ( 40 + Global.Int( "GUI_backbutton_rise" ) );
-	savey = loady - ( Global.Int( "GUI_main_title_height" ) + 4 );
-
-	// create save and load buttons
-	save_button = iGUI.CreateAndInitialiseFancyButton( shady_bar, savey, "Save Game",
-		"tSaveGui.SaveScreen_OnSaveButton" );
-
-   // Remove load game functions.
-//	load_button = iGUI.CreateAndInitialiseFancyButton( shady_bar, loady, "Load Game",
-//		"tSaveGui.SaveScreen_OnLoadButton" );
-
-	// find blank window dimentions
-   /*
-	windowx = Global.Int( "GUI_fancyborder_width" ) + Global.Int( "GUI_main_title_x_offset" );
-	windowy = Global.Int( "GUI_title_yoffset" ) + Global.Int( "GUI_main_title_height" ) + windowx;
-	windowwidth = GUI.WindowCanvasWidth( shady_bar ) - ( windowx * 2 );
-	windowheight = ( ( Global.Int( "GUI_inversebutton_height" ) + 4 ) * 14 ) + 4;
-*/
-
-   windowx = Global.Int("EpicGui_content_indent");
-   windowy = Global.Int("EpicGui_content_drop");
-
-   windowwidth = GUI.WindowCanvasWidth( shady_bar ) - ( windowx * 2 );
-   windowheight = Global.Int("EpicGui_content_footer") - windowy;
-
-
-	// create a window w/ a border
-	window = GUI.CreateWindow( windowx, windowy, windowwidth, windowheight, shady_bar );
-	border = GUI.CreateBorder( window );
-
-	// save game labels
-	radiox = windowx + 4;
-	radiowidth = windowwidth - 8;
-	radioy = windowy + 4;
-	radio1 = iGUI.CreateAndInitialiseRectangularInverseRadioButton( shady_bar, radiox, radioy, radiowidth,
-		iGame.NameOfSaveInSlot( 0 ), false );
-	iGUI.MakeRectangularInverseButtonIconic( radio1 );
-	List.AddHead( radiobuttons, radio1 );
-
-	radioy = radioy + 4 + Global.Int( "GUI_inversebutton_height" );
-	radio2 = iGUI.CreateAndInitialiseRectangularInverseRadioButton( shady_bar, radiox, radioy, radiowidth,
-		iGame.NameOfSaveInSlot( 1 ), false );
-	iGUI.MakeRectangularInverseButtonIconic( radio2 );
-	List.AddTail( radiobuttons, radio2 );
-
-	radioy = radioy + 4 + Global.Int( "GUI_inversebutton_height" );
-	radio3 = iGUI.CreateAndInitialiseRectangularInverseRadioButton( shady_bar, radiox, radioy, radiowidth,
-		iGame.NameOfSaveInSlot( 2 ), false );
-	iGUI.MakeRectangularInverseButtonIconic( radio3 );
-	List.AddTail( radiobuttons, radio3 );
-
-	radioy = radioy + 4 + Global.Int( "GUI_inversebutton_height" );
-	radio4 = iGUI.CreateAndInitialiseRectangularInverseRadioButton( shady_bar, radiox, radioy, radiowidth,
-		iGame.NameOfSaveInSlot( 3 ), false );
-	iGUI.MakeRectangularInverseButtonIconic( radio4 );
-	List.AddTail( radiobuttons, radio4 );
-
-	radioy = radioy + 4 + Global.Int( "GUI_inversebutton_height" );
-	radio5 = iGUI.CreateAndInitialiseRectangularInverseRadioButton( shady_bar, radiox, radioy, radiowidth,
-		iGame.NameOfSaveInSlot( 4 ), false );
-	iGUI.MakeRectangularInverseButtonIconic( radio5 );
-	List.AddTail( radiobuttons, radio5 );
-
-	radioy = radioy + 4 + Global.Int( "GUI_inversebutton_height" );
-	radio6 = iGUI.CreateAndInitialiseRectangularInverseRadioButton( shady_bar, radiox, radioy, radiowidth,
-		iGame.NameOfSaveInSlot( 5 ), false );
-	iGUI.MakeRectangularInverseButtonIconic( radio6 );
-	List.AddTail( radiobuttons, radio6 );
-
-	radioy = radioy + 4 + Global.Int( "GUI_inversebutton_height" );
-	radio7 = iGUI.CreateAndInitialiseRectangularInverseRadioButton( shady_bar, radiox, radioy, radiowidth,
-		iGame.NameOfSaveInSlot( 6 ), false );
-	iGUI.MakeRectangularInverseButtonIconic( radio7 );
-	List.AddTail( radiobuttons, radio7 );
-
-	radioy = radioy + 4 + Global.Int( "GUI_inversebutton_height" );
-	radio8 = iGUI.CreateAndInitialiseRectangularInverseRadioButton( shady_bar, radiox, radioy, radiowidth,
-		iGame.NameOfSaveInSlot( 7 ), false );
-	iGUI.MakeRectangularInverseButtonIconic( radio8 );
-	List.AddTail( radiobuttons, radio8 );
-
-	radioy = radioy + 4 + Global.Int( "GUI_inversebutton_height" );
-	radio9 = iGUI.CreateAndInitialiseRectangularInverseRadioButton( shady_bar, radiox, radioy, radiowidth,
-		iGame.NameOfSaveInSlot( 8 ), false );
-	iGUI.MakeRectangularInverseButtonIconic( radio9 );
-	List.AddTail( radiobuttons, radio9 );
-
-	radioy = radioy + 4 + Global.Int( "GUI_inversebutton_height" );
-	radio10 = iGUI.CreateAndInitialiseRectangularInverseRadioButton( shady_bar, radiox, radioy, radiowidth,
-		iGame.NameOfSaveInSlot( 9 ), false );
-	iGUI.MakeRectangularInverseButtonIconic( radio10 );
-	List.AddTail( radiobuttons, radio10 );
-
-	radioy = radioy + 4 + Global.Int( "GUI_inversebutton_height" );
-	radio11 = iGUI.CreateAndInitialiseRectangularInverseRadioButton( shady_bar, radiox, radioy, radiowidth,
-		iGame.NameOfSaveInSlot( 10 ), false );
-	iGUI.MakeRectangularInverseButtonIconic( radio11 );
-	List.AddTail( radiobuttons, radio11 );
-
-	radioy = radioy + 4 + Global.Int( "GUI_inversebutton_height" );
-	radio12 = iGUI.CreateAndInitialiseRectangularInverseRadioButton( shady_bar, radiox, radioy, radiowidth,
-		iGame.NameOfSaveInSlot( 11 ), false );
-	iGUI.MakeRectangularInverseButtonIconic( radio12 );
-	List.AddTail( radiobuttons, radio12 );
-
-	radioy = radioy + 4 + Global.Int( "GUI_inversebutton_height" );
-	radio13 = iGUI.CreateAndInitialiseRectangularInverseRadioButton( shady_bar, radiox, radioy, radiowidth,
-		iGame.NameOfSaveInSlot( 12 ), false );
-	iGUI.MakeRectangularInverseButtonIconic( radio13 );
-	List.AddTail( radiobuttons, radio13 );
-
-	radioy = radioy + 4 + Global.Int( "GUI_inversebutton_height" );
-	radio14 = iGUI.CreateAndInitialiseRectangularInverseRadioButton( shady_bar, radiox, radioy, radiowidth,
-		iGame.NameOfSaveInSlot( 13 ), false );
-	iGUI.MakeRectangularInverseButtonIconic( radio14 );
-	List.AddTail( radiobuttons, radio14 );
-
-	// save list as global
-	Global.CreateList( "g_gt_radiobuttons", GA_Write, radiobuttons );
-
-
-/*
-   for (i=0;i<List.ItemCount(radiobuttons);++i) {
-      radio14 = GUI.Cast(List.GetNth(radiobuttons, i));
-      GUI.SetInputOverrideFunctions(
-         radio14,
-         "",
-         "",
-         "",
-         "",
-         "",
-         "",
-         "tSaveGui.SaveScreen_OnSaveButton",
-         "",
-         "");
-
-   }
-   */
-
-	// warning box
-//	texty = ( windowy + windowheight + Global.Int( "GUI_fancyborder_width" ) + 4 );
-//text = GUI.CreateTextWindow( windowx, texty, windowwidth, 2 * Global.Int( "GUI_inversebutton_height" ), shady_bar );
-	//GUI.SetTextWindowString( text, "<HTML><BODY> WARNING: Do not press esc from this screen unless you intend to quit.</BODY></HTML>" );
-	//GUI.SetWindowStateColours( text, 1, 0, 0, 1, 0, 0, 1, 0, 0 );
-	//GUI.SetWindowFont( text, Global.String( "GUI_detail_font" ) );
-
-	// edit box: Removing ability for player to type in save game names, for the reason
-   // that it fires weapons and other irritating issues.
-   /*
-	editx = ( 2 * Global.Int( "GUI_main_title_x_offset" ) ) + Global.Int( "GUI_fancybutton_width" );
-	editheight = Global.Int( "GUI_fancybutton_height" );
-	editwidth = GUI.WindowCanvasWidth( shady_bar ) - ( editx + ( 2 * Global.Int( "GUI_main_title_x_offset" ) ) );
-	editbox = GUI.CreateEditBox( editx, savey, editwidth, editheight, shady_bar, false, "Enter the save name here.", false );
-	GUI.CreateBorder( editbox );
-	GUI.SetWindowStateColours( editbox, .6, .451, 0, .6, .451, 0, .6, .451, 0 );
-	Global.CreateHandle( "g_gt_editbox", GA_Write, editbox );
-   */
-}
-
-SaveScreen_OnBackButton()
-{
-	Global.Destroy( "g_gt_radiobuttons" );
-	Global.Destroy( "g_gt_editbox" );
+   Input.ResumeBindings();
 
    // Return control back to UniGUI
    UniGUI.UniGUIRemoveScreen();
 }
-
 
 
 // Finds the closest location or station.
@@ -493,202 +253,6 @@ hmapentity nearby_location(hisim center)
 
    return lpoint;
 }
-
-
-
-
-SaveScreen_OnSaveButton()
-{
-	list radiobuttons;
-	int selected;
-	int count = 0;
-	hwindow radio;
-	hwindow editbox;
-	string name;
-   hship player = iShip.FindPlayerShip();
-   hmapentity location = nearby_location(player);
-
-//   hsim station_handle = Sim.Cast( Global.Handle( "g_zz_ug_station" ) );
-
-
-
-	// debug message
-	debug Debug.PrintString( "g_gt: saving game\n" );
-
-	// retrieve the list of radio buttons from global
-	radiobuttons = Global.List( "g_gt_radiobuttons" );
-
-	// use a while loop to check for which is selected
-	while( count < 14 )
-	{
-		radio = GUI.Cast( List.GetNth( radiobuttons, count ) );
-		if( GUI.RadioButtonValue( radio ) == true )
-		{
-			selected = count;
-			break;
-		}
-		count = count + 1;
-	}
-
-	// determine title of save
-
-   name = tTime.TimeToString();
-   name = String.Join(name,"  ");
-   name = String.Join(name,Sim.Name(location));
-   name = String.Join(name,"  ");
-   name = String.Join(name,Text.Field(iSim.ActiveWorld(), FT_Text));
-
-   /*
-	editbox = GUI.Cast( Global.Handle( "g_gt_editbox" ) );
-	name = GUI.EditBoxValue( editbox );
-*/
-
-   //radio = GUI.Cast( List.GetNth( radiobuttons, selected ) );
-
-   /*
-   editbox = GUI.CreateEditBox( 0, 0,
-                                GUI.WindowCanvasWidth(radio), 
-                                GUI.WindowCanvasHeight(radio), 
-                                radio,
-                                false,
-                                name,
-                                false);
-
-   GUI.SetEditBoxMaxCharLength( editbox, 120 );   
-
-   GUI.SetEditBoxOverrides( editbox,
-                            "",
-                            "tSaveGui.EditCancel",
-                            "tSaveGui.EditComplete");
-
-	GUI.SetWindowStateColours( editbox, .6, .451, 0, .6, .451, 0, .6, .451, 0 );
-
-   GUI.SetFocus(editbox);
-*/
-/*
-   editbox = iGUI.CreateAndInitialiseListBoxEntryComponentWindow( 0,
-                                                                  GUI.WindowCanvasWidth(radio),                                                                    
-                                                                  GUI.WindowCanvasHeight(radio), 
-                                                                  radio,
-                                                                  Global.String( "GUI_detail_font" ),
-                                                                  "edit test" );
-
-
-   Global.CreateHandle("g_gt_editbox", GA_Write|GA_NoSave, editbox);
-
-   Global.CreateInt("gt_savegui_number",GA_Write|GA_NoSave, selected);
-
-   debug Debug.PrintString(String.FormatInt("selected %d\n", selected));
-*/
-
-
-   Global.SetBool("gt_fleet_non_base_save", true);
-      
-   atomic {
-
-      // Tell all other game mods that we are now saving.
-      tEpicMain.SaveGame();
-   }
-
-	// save game to the selected slot
-	iGame.SaveGame( selected, name );
-   
-	// refresh savegames screen
-	Global.Destroy( "g_gt_radiobuttons" );
-	Global.Destroy( "g_gt_editbox" );
-	GUI.RemoveLastOverlay();
-	iGUI.OverlayCustomScreen( "tSaveGui.SaveScreen" );
-}
-
-
-
-
-
-EditCancel()
-{
-   hwindow editbox = GUI.Cast(Global.Handle( "g_gt_editbox" ));
-
-   debug Debug.PrintString("tSaveGui.EditCancel\n");
-
-   GUI.DeleteWindow(editbox);
-}
-
-EditComplete()
-{
-   hwindow editbox = GUI.Cast(Global.Handle( "g_gt_editbox" ));
-   int selected = Global.Int("gt_savegui_number");
-   string name;
-
-   debug Debug.PrintString("tSaveGui.EditComplete\n");
-   debug Debug.PrintString(String.FormatInt("selected %d\n", selected));
-
-   name = GUI.EditBoxValue( editbox );
-
-   debug Debug.PrintString(name);
-   debug Debug.PrintString(" name\n");
-
-   /*
-   Global.SetBool("gt_fleet_non_base_save", true);
-      
-   atomic {
-
-      // Tell all other game mods that we are now saving.
-      tEpicMain.SaveGame();
-   }
-
-	// save game to the selected slot
-	iGame.SaveGame( selected, name );
-   
-   */
-
-	// refresh savegames screen
-	Global.Destroy( "g_gt_radiobuttons" );
-	Global.Destroy( "g_gt_editbox" );
-	GUI.RemoveLastOverlay();
-	iGUI.OverlayCustomScreen( "tSaveGui.SaveScreen" );
-}
-
-
-
-SaveScreen_OnLoadButton()
-{
-	list radiobuttons;
-	int selected;
-	int count = 0;
-	hwindow radio;
-	hisim base;
-	hship player;
-
-	//debug message
-	debug Debug.PrintString( "g_gt: loading game\n" );
-
-	// retrieve list of radio buttons from global
-	radiobuttons = Global.List( "g_gt_radiobuttons" );
-
-	// use a while loop to check for which is selected
-	while( count < 14 )
-	{
-		radio = GUI.Cast( List.GetNth( radiobuttons, count ) );
-		if( GUI.RadioButtonValue( radio ) == true )
-		{
-			selected = count;
-			break;
-		}
-		count = count + 1;
-	}
-
-   // Load will push a master screen.
-   // We need to pop back to the Main PDA
-   // To get the screens right.
-   //GUI.PopScreensTo("icSPMainPDAScreen");
-
-	// load the save
-	iGame.LoadGame( iGame.NameOfSaveInSlot( selected ) );
-	// note: at this point the game will put the player into the base screen, so we have to start space again
-
-   // We have other code to catch this event, so we are done here.
-}
-
 
 
 // 
@@ -775,6 +339,196 @@ bool is_enterable(hhabitat station)
 
    return true;
 }
+
+
+
+StartEdit()
+{
+   hwindow edit_box = GUI.FocusedWindow();
+   string name;
+   hship player = iShip.FindPlayerShip();
+   hmapentity location = nearby_location(player);
+
+
+   debug Debug.PrintString("Start Edit Pressed!\n");
+
+   name = tTime.TimeToString();
+   name = String.Join(name,"  ");
+   name = String.Join(name,Sim.Name(location));
+   name = String.Join(name,"  ");
+   name = String.Join(name,Text.Field(iSim.ActiveWorld(), FT_Text));
+
+   GUI.SetEditBoxValue(edit_box, name);
+
+}
+
+CancelEdit()
+{
+   hwindow edit_box = GUI.FocusedWindow();
+   int index;
+   string button_name;
+
+   debug Debug.PrintString("Cancel Edit Pressed!\n");
+   
+   index = Object.IntProperty(edit_box, "save_slot");
+
+   button_name = iGame.NameOfSaveInSlot(index);
+
+   if (button_name == "") {
+      button_name = "[Empty Save]";
+   }
+
+   GUI.SetEditBoxValue(edit_box, button_name);
+
+}
+
+EndEdit()
+{   
+   hwindow edit_box = GUI.FocusedWindow();
+   int index;
+   string button_name;
+
+   debug Debug.PrintString("End Edit Pressed!\n");
+
+   index = Object.IntProperty(edit_box, "save_slot");
+   button_name = GUI.EditBoxValue(edit_box);
+
+   // Flush all player data to global variables.
+   atomic {
+      tEpicMain.SaveGame();
+   }
+
+   iGame.SaveGame( index, button_name );
+}
+
+SaveScreen()
+{
+   string save_name, button_name;
+   int total,i;
+   hwindow shady_bar;
+   hwindow shady_bar_right;
+   hwindow title;
+   hwindow subtitle;
+   hwindow exit;
+   hwindow list_box;
+   hwindow current_button;
+   hwindow edit_box;
+
+   int width, height, drop;
+
+   list button_list, edit_list;
+
+   debug Debug.PrintString("tSaveGui.SaveScreen\n");
+
+   Input.SuspendBindings();
+
+
+   // Set right hand shady bar width.
+   shady_bar = iGUI.CreateWideShadyBar();
+
+   Global.CreateHandle("gt_save_gui_shady",GA_Write,shady_bar);
+
+
+   GUI.SetWindowClientArea( shady_bar, 
+                            0,
+                            0,
+                            500,
+                            GUI.WindowCanvasHeight( shady_bar));
+   
+
+
+   height = GUI.WindowCanvasHeight( shady_bar);
+   height = height - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+
+
+   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   //width = width/2;
+   width = width - Global.Int("EpicGui_content_indent");
+   width = width - Global.Int("EpicGui_content_indent");
+      
+
+   tEpicGui.CreateTitle(shady_bar, "SAVE GAME");
+   tEpicGui.CreateSubtitle(shady_bar, "Save your current progress");
+
+   // Create the exit button
+   tEpicGui.CreateExitButton(shady_bar, "Exit", "tSaveGui.Exit");
+
+
+
+   total = iGame.NumberOfSavedGameSlots();
+
+   for (i=0;i<total;++i) {
+
+      current_button = iGUI.CreateAndInitialiseRectangularInverseButton( none,
+                                                                         0,
+                                                                         0,
+                                                                         400,
+                                                                         "",
+                                                                         "");
+
+      List.AddTail(button_list, current_button);
+
+      Object.AddIntProperty(current_button, "save_slot", i);
+   }
+   
+
+
+   iGUI.CreateWindowListInFancyBorder(
+      shady_bar,
+		button_list,
+      Global.Int("EpicGui_content_indent"),
+      Global.Int("EpicGui_content_drop"));
+
+
+
+   for (i=0;i<total;++i) {
+
+      button_name = iGame.NameOfSaveInSlot(i);
+
+      if (button_name == "") {
+         button_name = "[Empty Save]";
+      }
+
+      drop = Global.Int("EpicGui_content_drop");
+
+      //   drop = drop + Global.Int( "GUI_fancyborder_width" ); // fancy border width.
+      drop = drop + (i * Global.Int( "GUI_inversebutton_height" ));
+      drop = drop + (i * Global.Int("GUI_buttonlist_gap")); // Some space between buttons
+      drop = drop + Global.Int("GUI_buttonlist_gap"); // Some space between buttons
+
+      edit_box = GUI.CreateEditBox( Global.Int("EpicGui_content_indent") + 10,
+                                    drop,
+                                    380,
+                                    20,
+                                    shady_bar,
+                                    false,
+                                    button_name,
+                                    false);
+
+      GUI.SetWindowFont( edit_box, Global.String( "GUI_detail_font" ));
+
+      GUI.SetEditBoxMaxCharLength(edit_box, 60);
+
+      GUI.SetEditBoxCursorToEnd(edit_box);
+
+      Object.AddIntProperty(edit_box, "save_slot", i);
+
+      GUI.SetEditBoxOverrides( edit_box,
+                               "tSaveGui.StartEdit",
+                               "tSaveGui.CancelEdit",
+                               "tSaveGui.EndEdit");
+
+      List.AddTail(edit_list, edit_box);
+   }
+
+
+   Global.CreateList("tsavegui_edit_list",GA_Write|GA_NoSave,edit_list);
+}
+
+
+
+
 
 /*  
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
