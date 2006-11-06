@@ -1305,7 +1305,7 @@ bool create_simulation(hmapentity center,
 
    section_name = INIFile.NumberedString(jump_file, difficulty_key, "section", 0, "invalid");
 
-   tube1 = create_tube(section_name,"jump_section");
+   tube1 = create_tube(section_name,"jump_section0");
 
    if (tube1 == none) {
       debug Debug.PrintString("tEJump.jump_simulation Error section ini error\n");
