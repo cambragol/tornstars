@@ -43,6 +43,7 @@ iUtilities,
 iCargo,
 iInventory,
 iComms,
+iRegion,
 Math,
 iPilotSetup,
 iMusic,
@@ -75,6 +76,11 @@ provides PlayerWatch,
 SystemEnter;
 
 prototype task location_watch(hmapentity location);
+
+
+prototype ldsi_drop(hship player);
+prototype task ldsi_watch(hisim waypoint);
+
 
 
 
@@ -181,6 +187,8 @@ task watch_task()
          }
       }
 
+      // Check if the player has been shooting LDSI missiles. Create the fields and timers.
+      ldsi_drop(player);
 
       if (two_counter > 1) {
          two_counter = 0;
@@ -278,6 +286,65 @@ SystemEnter()
       }
    }
 }
+
+
+
+
+// Search around the player for LDSI weapon effects.
+ldsi_drop(hship player)
+{
+   list waypoints;
+   int i, total;
+   hisim waypoint;
+
+   waypoints = List.FromSet(iSim.SimsInRadius(player, 400km, T_Waypoint));
+
+   total = List.ItemCount(waypoints);
+   for (i=0;i<total;++i) {
+      waypoint = iSim.Cast(List.GetNth(waypoints,i));
+
+      /*
+      debug {
+         Debug.PrintHandle(waypoint);
+         Debug.PrintString(" possible LDSI\n");
+      }
+      */
+
+      if ("LDSI Marker" == Sim.Name(waypoint)) {
+         if (!Object.PropertyExists(waypoint,"gt_field_handle")) {
+            Object.AddHandleProperty(waypoint, "gt_field_handle", none);
+            Task.Detach(start ldsi_watch(waypoint));
+         }
+      }
+   }
+}
+
+
+task ldsi_watch(hisim waypoint)
+{
+   int timer = 100;
+   hregion ldsi;
+
+   /*
+   debug {
+      Debug.PrintHandle(waypoint);
+      Debug.PrintString("\n");
+   }
+   */
+
+   ldsi = iRegion.CreateLDSI(waypoint, 30km);
+
+   while (1) {
+      Task.Sleep(Task.Current(), 1.0);
+      --timer;
+      if (timer < 0) {
+         iRegion.Destroy(ldsi);
+         Sim.Destroy(waypoint);
+         return;
+      }
+   }
+}
+
 
 /*  
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
