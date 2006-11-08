@@ -123,7 +123,7 @@ Source: .\..\EpicSource\US_Mod_JumpTube\sims\regions\*; DestDir: {app}\mods\MS_M
 Source: .\..\EpicSource\US_Mod_JumpTube\subsims\*; DestDir: {app}\mods\MS_Mod_Main\subsims; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\US_Mod_JumpTube\subsims\dockports\*; DestDir: {app}\mods\MS_Mod_Main\subsims\dockports;
 Source: .\..\EpicSource\US_Mod_JumpTube\subsims\systems\*; DestDir: {app}\mods\MS_Mod_Main\subsims\systems; Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\US_Mod_JumpTube\subsims\systems\nonplayer\*; DestDir: {app}\mods\MS_Mod_Main\systems\nonplayer;
+Source: .\..\EpicSource\US_Mod_JumpTube\subsims\systems\nonplayer\*; DestDir: {app}\mods\MS_Mod_Main\subsims\systems\nonplayer;
 
 ; music
 Source: .\..\EpicArt\MS_Mod_Music\*; DestDir: {app}\mods\MS_Mod_Main; Flags: skipifsourcedoesntexist
