@@ -13,6 +13,7 @@
 // Dependencies ////////////////////////////////////////////////////////////////
 
 // Enumerated types ////////////////////////////////////////////////////////////
+
 enum eefOwnership {
    efoOwned,
    efoHired,
@@ -65,6 +66,8 @@ prototype bool tEpicFleet.IsCaptured( hship ship );
 
 prototype list tEpicFleet.ShipPodList( hsim ship );
 
+prototype tEpicFleet.ReadIniFile( hship ship );
+
 prototype tEpicFleet.SaveFleet();
 
 prototype tEpicFleet.RestoreFleet();
@@ -97,7 +100,7 @@ prototype tEpicFleet.CaptureShip( hship ship );
 
 prototype tEpicFleet.FireShip( hship ship );
 
-prototype bool tEpicFleet.IsDockedToLarger( hship ship );
+prototype hisim tEpicFleet.IsDockedToLarger( hship ship );
 
 prototype tEpicFleet.RunCheck();
 

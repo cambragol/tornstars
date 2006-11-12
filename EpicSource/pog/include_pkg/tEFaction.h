@@ -18,6 +18,8 @@
 
 prototype tEFaction.Init();
 
+prototype tEFaction.NewGame();
+
 prototype tEFaction.SaveGame();
 
 prototype tEFaction.SetDescription( hfaction faction, string html_file );
