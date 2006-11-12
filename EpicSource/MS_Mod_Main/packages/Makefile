@@ -194,7 +194,6 @@ ExitCrashTest.pkg : ExitCrashTest.pog
 UniGUI.pkg : UniGUI.pog
 UniGUIBase.pkg : UniGUIBase.pog
 UniGUIMisc.pkg : UniGUIMisc.pog
-jGiftCargo.pkg : jGiftCargo.pog tEconUtil.h tEpicMoney.h
 
 
 jcEChangeIdGui.pkg : jcEChangeIdGui.pog UniGUI.h tEpicGui.h tSaveGui.h tEconUtil.h tsShip.h tEpicMoney.h tsFaction.h
@@ -244,7 +243,7 @@ tsPlayerSave.pkg : tsPlayerSave.pog tsShip.h tsShipSave.h
 tEpicFleetUpkeep.pkg : tEpicFleetUpkeep.pog tStation.h tsFaction.h tsShip.h tEpicMoney.h tLProduction.h tLInventory.h tEconUtil.h tEconSmall.h tPodUtil.h tShipMail.h
 tEpicGui.pkg : tEpicGui.pog
 tEpicLFPlus.pkg : tEpicLFPlus.pog tStation.h tEpicGui.h tEconUtil.h tLProduction.h tLFleet.h tUnderOp.h tUnderOpFilter.h tESysSetup.h tEJump.h 
-tEpicMain.pkg : tEpicMain.pog tTime.h tDistance.h tMultimod.h UniGUI.h UniGUIBase.h tEpicLFPlus.h tsFaction.h tEpicGui.h tsShip.h tDistance.h jGiftCargo.h tsWingComm.h tEPlayerWatch.h tStationEnv.h tEpicComms.h tEpicFleetUpkeep.h tUnderOp.h tUnderOpSave.h tLInventory.h tEconSmall.h tETradeBuy.h tETradeSell.h tEFleetGui.h tExitGui.h tStationSave.h tESysSetup.h tMusic.h tMail.h tNewsNet.h tShipMail.h tViewDock.h tEJump.h  tELpointFind.h tStationRules.h tsFleetOpUpdate.h tsCrewSpeak.h tRepUpdate.h tOptionsGui.h tStartGui.h
+tEpicMain.pkg : tEpicMain.pog tTime.h tDistance.h tMultimod.h UniGUI.h UniGUIBase.h tEpicLFPlus.h tsFaction.h tEpicGui.h tsShip.h tDistance.h tsWingComm.h tEPlayerWatch.h tStationEnv.h tEpicComms.h tEpicFleetUpkeep.h tUnderOp.h tUnderOpSave.h tLInventory.h tEconSmall.h tETradeBuy.h tETradeSell.h tEFleetGui.h tExitGui.h tStationSave.h tESysSetup.h tMusic.h tMail.h tNewsNet.h tShipMail.h tViewDock.h tEJump.h  tELpointFind.h tStationRules.h tsFleetOpUpdate.h tsCrewSpeak.h tRepUpdate.h tOptionsGui.h tStartGui.h
 tEpicMoney.pkg : tEpicMoney.pog
 
 #ECargoScript.h 
