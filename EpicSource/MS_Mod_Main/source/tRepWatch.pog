@@ -45,10 +45,11 @@ uses  Sim,
 
       UniGUI,
       tTime,
-      tEpicFleet,
-      tEFaction,
+      tsShipEnum,
+      tsPlayerFleet,
+      tsFaction,
       tESysSetup,
-      tEPlayerOrders;
+      tsWingman;
 
 
 
@@ -59,8 +60,8 @@ provides CheckForAttacks,
 ship_was_attacked(hisim target)
 {
 
-   hfaction player_faction = tEFaction.PlayerFaction();
-   hfaction empty_faction = tEFaction.EmptyFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
+   hfaction empty_faction = tsFaction.EmptyFaction();
    hfaction gov_faction;
    hfaction target_faction;
    float feeling;
@@ -128,7 +129,7 @@ ship_was_attacked(hisim target)
             Debug.PrintString(" faction\n");
          }
 
-         if (!tEFaction.IsCriminal(target_faction)) {
+         if (!tsFaction.IsCriminal(target_faction)) {
             // If the faction is not criminal, the government will step in to
             // protect the civilians. So change the government of this system
             // to hostile.
@@ -198,7 +199,7 @@ CheckForAttacks()
                   Debug.PrintString("Player attacks!\n");
                   Debug.PrintHandle(target);
                   Debug.PrintString("\n");
-                  Debug.PrintString(tEFaction.EName(iSim.Faction(target)));
+                  Debug.PrintString(tsFaction.EName(iSim.Faction(target)));
                   //Debug.PrintHandle(iSim.Faction(target));
                   Debug.PrintString("\n");
                }
@@ -211,7 +212,7 @@ CheckForAttacks()
 
    // Find all the player wingmen within Global.Float("gt_distance_culling") of the player.
    // And check if they have been ordered to shoot people.
-   player_fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tEpicFleet.PlayerFleet()),
+   player_fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tsPlayerFleet.PlayerFleet()),
                                                         player,
                                                         Global.Float("gt_distance_culling"),
                                                         TM_Ship));
@@ -223,7 +224,7 @@ CheckForAttacks()
       // If the player ordered an attack, the target will be attached.
       // We want to change factions once the attack has actually been 
       // made, and not before.
-      target = iShip.Cast(tEPlayerOrders.OrderTarget(player_ship));
+      target = iShip.Cast(tsWingman.OrderTarget(player_ship));
 
       if (none != target) {
          if (iShip.LastAttacker(target) == player_ship) {
@@ -264,8 +265,8 @@ CheckForAttacks()
 
 apply_penalty(hship target, float penalty)
 {
-   hfaction player_faction = tEFaction.PlayerFaction();
-   hfaction empty_faction = tEFaction.EmptyFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
+   hfaction empty_faction = tsFaction.EmptyFaction();
    hfaction target_faction = iSim.Faction(target);
    hfaction gov_faction;
 
@@ -290,10 +291,10 @@ apply_penalty(hship target, float penalty)
 
    // The player is marked for the damage. The day update will
    // change the faction standing based on the damage.
-   tEFaction.AdjustCurrentAction(target_faction, penalty);
+   tsFaction.AdjustCurrentAction(target_faction, penalty);
 
 
-   if (!tEFaction.IsCriminal(target_faction)) {
+   if (!tsFaction.IsCriminal(target_faction)) {
       // If the faction is not criminal, the government will step in to
       // protect the civilians. So change the government of this system
       // to hostile.
@@ -305,7 +306,7 @@ apply_penalty(hship target, float penalty)
          // government has already been lowered, don't lower it again.
 
          if (empty_faction != gov_faction) {
-            tEFaction.AdjustCurrentAction(gov_faction, penalty);
+            tsFaction.AdjustCurrentAction(gov_faction, penalty);
          }
       }
    }
@@ -319,7 +320,7 @@ ShipAttacked(hship target_ship, float penalty)
    hship player = iShip.FindPlayerShip();
    hship last_attacker;
 
-   list fleet = tEpicFleet.PlayerFleet();
+   list fleet = tsPlayerFleet.PlayerFleet();
 
    debug Debug.PrintString("tRepWatch.ShipAttacked\n");
 
@@ -341,7 +342,7 @@ ShipAttacked(hship target_ship, float penalty)
          // A player wingman is the culprit, check if the player
          // ordered this attack.
 
-         if (target_ship == iShip.Cast(tEPlayerOrders.OrderTarget(last_attacker))){
+         if (target_ship == iShip.Cast(tsWingman.OrderTarget(last_attacker))){
             // Yes, the attack was ordered, apply the penalty.
             apply_penalty(target_ship, penalty);
          }

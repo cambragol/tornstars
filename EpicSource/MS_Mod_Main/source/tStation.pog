@@ -24,7 +24,7 @@ iLagrangePoint,
    iGame, 
    Stream, 
    iDockport,
-   tEFaction,
+   tsFaction,
    tStationEnum;
 
 
@@ -302,7 +302,7 @@ Create(hhabitat station,
 
    faction = iFaction.Find(faction_name);
 //   iSim.SetFaction(iSim.Cast(station), faction);
-   tEFaction.AddStation(station, faction);
+   tsFaction.AddStation(station, faction);
 
    // Commented out until stations can be replaced.
    //iSim.SetIndestructable(station, false);

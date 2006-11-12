@@ -47,7 +47,7 @@ iMapEntity,
    iComms,
    tStationEnum,
    tStation,
-   tEFaction,
+   tsFaction,
    tTime,
    tUnderOp,
    tLRoot,
@@ -364,7 +364,7 @@ hhabitat find_raiding_station(hisim operation, hmapentity center, string system_
 
    habitats = tStationFilter.OnLowerFeeling(habitats,
                                               iSim.Faction(operation),
-                                              tEFaction.Type2LowerLevel(FT_Neutral));
+                                              tsFaction.Type2LowerLevel(FT_Neutral));
 
    return iHabitat.Random(habitats);
 }
@@ -384,7 +384,7 @@ hhabitat find_safe_station(hisim operation, hmapentity center, string system_nam
 
    habitats = tStationFilter.OnGreaterFeeling(iMapEntity.SystemHabitatsInSystem(system_name),
                                               iSim.Faction(operation),
-                                              tEFaction.Type2LowerLevel(FT_Neutral));
+                                              tsFaction.Type2LowerLevel(FT_Neutral));
    Set.Remove(habitats, center);
 
    return iHabitat.Random(habitats);

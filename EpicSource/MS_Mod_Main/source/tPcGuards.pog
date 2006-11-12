@@ -39,10 +39,10 @@ uses    Sim,
         iShipCreation,
         iEscort,
         ABB_Common,
+
         tPodUtil,
         tEpicComms,
-        tEpicFleet,
-        tEFaction,
+        tsFaction,
         tEpicMoney,
         tShipName,
         tLCenter,
@@ -56,7 +56,8 @@ uses    Sim,
         tEpicEventEnum,
         tsEvent,
         tsDistress,
-        tPcOwner;
+        tPcOwner,
+        tsShip;
 
 
 provides PogCreate,
@@ -229,7 +230,7 @@ setup_guards(hisim marker)
    string template_file_name;
    hmapentity location;
    hfaction guard_faction;
-   hfaction player_faction = tEFaction.PlayerFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
    hisim owner;
 
    string leader_type, escort_type;
@@ -318,13 +319,14 @@ task guard_controller(hmapentity location, hgroup patrol_group)
 {
    set dislike_set;
    hship player;
-   hfaction player_faction = tEFaction.PlayerFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
    hfaction guard_faction;
    hfaction sender_faction, target_faction;
    hship patrol_leader;
    hship target_ship;
    hisim sender, target;
    hisim marker;
+   string speech_style;
    float delay_time = 3.0; // Allow some pause between state changes.
    int timer = 0;
    float spacing, radius, rotation, distance;
@@ -341,7 +343,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
    tsEvent.InitReciever(patrol_group);
    tsEvent.SetListenType(patrol_group, eseDistress | eseSelfAttacked | eseStationAttack);
 
-
+   speech_style = tsFaction.SpeechStyle(guard_faction);
 
    while (1) {
 
@@ -428,7 +430,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
 
          if (!Set.IsEmpty(dislike_set)) {
 
-            iComms.Shout(patrol_leader,"", uString.CommsStringRandom("pcgs_guard_hostile_spotted","", 5));
+            iComms.Shout(patrol_leader,"", uString.CommsStringRandom("pcgs_guard_hostile_spotted",speech_style, 5));
 
             // Pick the first one, attack.
             target_ship = iShip.Cast(Set.FirstElement(dislike_set));
@@ -447,7 +449,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
 
          }else {
 
-            iComms.Shout(patrol_leader,"",uString.CommsStringRandom("pcgs_guard_sweep_finished","",5));
+            iComms.Shout(patrol_leader,"",uString.CommsStringRandom("pcgs_guard_sweep_finished",speech_style,5));
             state = change_state(state, eCS_ToDestination, debug_on);
 
          }
@@ -470,9 +472,9 @@ task guard_controller(hmapentity location, hgroup patrol_group)
             
             // Answer the stations distress call.
             if (event_type == eseStationAttack ) {
-               iComms.Shout(patrol_leader,"",uString.CommsStringRandom("pcgs_answering_distress_call","", 5));
+               iComms.Shout(patrol_leader,"",uString.CommsStringRandom("pcgs_answering_distress_call",speech_style, 5));
             }else {
-               iComms.Shout(patrol_leader,"", uString.CommsStringRandom("pcgs_guard_hostile_spotted","", 5));
+               iComms.Shout(patrol_leader,"", uString.CommsStringRandom("pcgs_guard_hostile_spotted",speech_style, 5));
             }
 
             iAI.PurgeOrders(patrol_leader);
@@ -551,8 +553,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          }// if close.
 
          if (do_rescue) {
-
-            iComms.Shout(patrol_leader,"","pcgs_answering_distress_call");
+            iComms.Shout(patrol_leader,"", uString.CommsStringRandom("pcgs_answering_distress_call",speech_style, 5));
 
             iAI.PurgeOrders(patrol_leader);
 
@@ -707,7 +708,7 @@ hship create_leader (hmapentity location, hisim operation, hgroup cull_group, st
 
    INIFile.Destroy(leader_file);
 
-   leader = iShip.Create(leader_template, leader_name);
+   leader = tsShip.Create(leader_template, leader_name);
 
    tsPilotSetup.SetupEscort(leader, 0.9, 0.5);
 
@@ -749,7 +750,7 @@ create_escorts(hisim operation, int fleets, hship leader, hgroup cull_group, str
    total = fleets/threat;
 
    for (i=0;i<total;++i) {
-      escort = iShip.Create(escort_template, tShipName.ShipName("govornment",10000));
+      escort = tsShip.Create(escort_template, tShipName.ShipName("govornment",10000));
 
       tsPilotSetup.SetupEscort(escort, 0.9, 0.5);
 

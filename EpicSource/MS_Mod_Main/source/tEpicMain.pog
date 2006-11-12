@@ -35,13 +35,13 @@ uses
    UniGUI,
    UniGUIBase,
    tEpicLFPlus,
-   tEFaction,
+   tsFaction,
    tEpicGuiEnum,
    tEpicGui,
-   tEpicFleet,
+   tsShip,
    tDistance,
    jGiftCargo,
-   tWingComm,
+   tsWingComm,
    tEPlayerWatch,
    tStationEnv,
    tEpicComms,
@@ -68,7 +68,9 @@ uses
    tsCrewSpeak,
    tRepUpdate,
    tOptionsGui,
-   tStartGui;
+   tStartGui,
+   tsShipSave,
+   tsPlayerSave;
 
 
 
@@ -94,9 +96,7 @@ provides
 
 GameEnter()
 {
-//   jGiftCargo.NewGame();
-
-   tEpicFleet.NewGameTest();
+   tsPlayerSave.NewGame();
    
    tStationSave.ReadNewStations();
 
@@ -107,6 +107,8 @@ GameEnter()
    tOptionsGui.NewGame();
 
    tStartGui.NewGame();
+
+   tsFaction.NewGame();
 }
 
 
@@ -119,7 +121,7 @@ SessionEnter()
    tDistance.Init();
 
    iFactionScript.Initialise();
-   tEFaction.Init();
+   tsFaction.Init();
 
 
    tTime.InitGlobals();
@@ -129,8 +131,6 @@ SessionEnter()
 
 
    tEpicGui.InitGlobals();
-
-   tEpicFleet.StartSession();
 
    tETradeBuy.SessionStart();
    tETradeSell.SessionStart();
@@ -209,9 +209,10 @@ SpaceExit()
 FinalSetup()
 {
    tEPlayerWatch.PlayerWatch();
-   tEpicFleet.RestoreFleet();
+   tsPlayerSave.Restore();
 
-   tWingComm.Setup();
+   tsShipSave.Relink();
+   tsWingComm.Setup();
    tEpicComms.Setup();
 
    tEconSmall.TestRun();
@@ -257,10 +258,9 @@ SaveGame()
    tTime.SaveTime();
 
    tStationSave.SaveAllStations();
-   tEFaction.SaveGame();
-   tEpicFleet.SaveFleet();
+   tsFaction.SaveGame();
+   tsPlayerSave.Save();
 
-//   tReputation.SaveReputation();
    tUnderOpSave.Save();
 
 

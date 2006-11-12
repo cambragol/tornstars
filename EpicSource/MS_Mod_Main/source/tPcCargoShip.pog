@@ -20,6 +20,7 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
    ABB_Common,
    ECargoTypes,
+
    tStationEnum,
    tEconUtil,
    tEconSmall,
@@ -32,14 +33,14 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    tLProduction,
    tEpicMoney,
    tTime,
-   tEFaction,
-   tEpicFleet,
+   tsFaction,
    tPodUtil,
    tSpewerOps,
    tsPilotSetup,
    tEShipCreation,
    tShipName,
-   uString;
+   uString,
+   tsShip;
 
 
 
@@ -189,9 +190,9 @@ setup_ship(hisim marker)
    name = tShipName.ShipName( "general", Math.RandomInt(0, 343));
    ship_template = tEShipCreation.GetShip(station_faction, EST_FreightAll);
 
-   ship = iShip.Create("ini:/sims/ships/utility/freighter","CargoTest");
+   ship = tsShip.Create("ini:/sims/ships/utility/freighter","CargoTest");
 
-   ship = iShip.Create(ship_template, name);
+   ship = tsShip.Create(ship_template, name);
 
    if (ship == none) {
       debug Debug.PrintString("tsCargoShip.TestScript ship failed to create\n");
@@ -229,7 +230,7 @@ setup_ship(hisim marker)
       name = tShipName.ShipName( "general", Math.RandomInt(0, 343));
       ship_template = tEShipCreation.GetShip(station_faction, EST_CombatLight);
 
-      escort = iShip.Create(ship_template, name);
+      escort = tsShip.Create(ship_template, name);
 
       tsPilotSetup.SetupEscort(escort, 0.9, 0.5);
 

@@ -64,9 +64,8 @@ uses
 	tSaveGui,
 	ECargoTypes,
 	tEconUtil,
-	tEpicFleet,
 	tEpicMoney,
-	tEFaction,
+	tsFaction,
    tStationEnum,
    tStation;
 
@@ -580,7 +579,7 @@ hwindow create_ship_list(hwindow parent, int x, int y, int width, int height, st
 			add_btn = false;
 			station_type_docked = iHabitat.Type( iHabitat.Cast(docked_to_station()));
 			standing_const = INIFile.String( shipyard_ini, ship_key, "standing", "FT_Neutral");
-			standing_const_val = tEFaction.String2LowerLevel( standing_const );
+			standing_const_val = tsFaction.String2LowerLevel( standing_const );
 			station_faction = iSim.Faction( iSim.Cast(docked_to_station()) );
 			player_faction = iFaction.Find( "Player" );
 			

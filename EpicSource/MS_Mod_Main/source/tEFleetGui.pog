@@ -45,7 +45,9 @@ uses	Sim,
       tEpicGui,
       tLProduction,
       tEpicMoney,
-      tEpicFleet,
+      tsShipEnum,
+      tsShip,
+      tsPlayerFleet,
       tEpicFleetUpkeep,
       tEconUtil,
       uString;
@@ -124,11 +126,11 @@ update_wingman_info(hship wingman)
    int scan_range, prospector, survey_days, mining_cost, percent_hits;
    float efficiency;
 
-   upkeep = tEpicFleet.DailyUpkeep(wingman);
-   jump_fuel = float2int(tEpicFleet.FuelPerJump(wingman));
-   daily_fuel = float2int(tEpicFleet.DailyFuel(wingman));
-   max_fuel = float2int(tEpicFleet.FuelMax(wingman));
-   current_fuel = float2int(tEpicFleet.Fuel(wingman));
+   upkeep = tsShip.DailyUpkeep(wingman);
+   jump_fuel = float2int(tsShip.FuelPerJump(wingman));
+   daily_fuel = float2int(tsShip.DailyFuel(wingman));
+   max_fuel = float2int(tsShip.FuelMax(wingman));
+   current_fuel = float2int(tsShip.Fuel(wingman));
 
 
 
@@ -156,7 +158,7 @@ update_wingman_info(hship wingman)
 
    text = String.Join(text," <br>");
    text = String.Join(text,Text.Field("gt_efleetgui_group",FT_Text));
-   text = String.Join(text,String.FormatInt(" %d", tEpicFleet.GroupNumber(wingman)));
+   text = String.Join(text,String.FormatInt(" %d", 0));
 
    text = String.Join(text,"<p>");
 
@@ -268,7 +270,7 @@ create_wingman_list()
    int button_width, height, list_x, list_y;
 
    string name;
-   list wingman_list = tEpicFleet.PlayerFleet();
+   list wingman_list = tsPlayerFleet.PlayerFleet();
 
 
 
@@ -679,7 +681,7 @@ create_cargo_list_window(hship wingman)
 		"" );
 
    
-   item_list = tEpicFleet.ShipPodList(wingman);
+   item_list = tsShip.ShipPodList(wingman);
 
 	// Count the buttons
 	button_count = List.ItemCount( item_list );

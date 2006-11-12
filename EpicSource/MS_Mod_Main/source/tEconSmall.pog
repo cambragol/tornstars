@@ -24,7 +24,7 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    tEconUtil,
    tLProduction,
    tLTrade,
-   tEFaction,
+   tsFaction,
    ECargoTypes,
    uString,
    tStationEnum,
@@ -624,8 +624,8 @@ CreateCategories()
          traded = INIFile.Int(category_file, category_name, "traded",1);
          standing_string = INIFile.String( category_file, category_name, "standing","FT_Neutral");
          
-         standing_type = tEFaction.String2Type(standing_string);
-         standing = tEFaction.String2LowerLevel(standing_string);
+         standing_type = tsFaction.String2Type(standing_string);
+         standing = tsFaction.String2LowerLevel(standing_string);
 
 
          if (traded == 0) {

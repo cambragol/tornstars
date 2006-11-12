@@ -1,6 +1,6 @@
 //*******************************************************************************************/
 //
-// tEFaction
+// tsFaction
 //
 // This code modifies the games basic factions to support a little extra information
 // such as fleet style, known to player, and an html description. 
@@ -10,18 +10,19 @@
 // May 2005, Jon Freise
 //******************************************************************************************/
 
-package tEFaction;
+package tsFaction;
 
 uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
 iConversation, iFormation, Group, Text, iEmail, State, iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker, iWingmen,
 iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,
 iDirector, iEscort, iLagrangePoint, iMusic, iGame, Stream, iBackToBase, iDeathScript,
-   tEFactionEnum;
+   tsFactionEnum;
 
 
 
 
 provides Init,
+         NewGame,
          SaveGame,
 
          SetDescription,
@@ -29,6 +30,9 @@ provides Init,
 
          SetFleetStyle,
          FleetStyle,
+
+         SetSpeechStyle,
+         SpeechStyle,
 
          SetKnown,
          IsKnown,
@@ -101,7 +105,7 @@ eFeelingType String2Type(string level)
    }
 
    debug{
-       Debug.PrintString("Error: tEFaction.String2Type invalid string ");
+       Debug.PrintString("Error: tsFaction.String2Type invalid string ");
        Debug.PrintString(level);
        Debug.PrintString("\n");
    }
@@ -123,7 +127,7 @@ float String2Level(string level)
    }
 
    debug{
-       Debug.PrintString("Error: tEFaction.String2Level invalid string ");
+       Debug.PrintString("Error: tsFaction.String2Level invalid string ");
        Debug.PrintString(level);
        Debug.PrintString("\n");
    }
@@ -146,7 +150,7 @@ float String2LowerLevel(string level)
    }
 
    debug{
-       Debug.PrintString("Error: tEFaction.String2LowerLevel invalid string ");
+       Debug.PrintString("Error: tsFaction.String2LowerLevel invalid string ");
        Debug.PrintString(level);
        Debug.PrintString("\n");
    }
@@ -207,7 +211,7 @@ Init()
 {
    list empty_list;
 
-   debug Debug.PrintString("tEFaction.Init\n");
+   debug Debug.PrintString("tsFaction.Init\n");
 
    restore_properties();
 
@@ -224,7 +228,7 @@ Init()
  
 SaveGame()
 {
-   debug Debug.PrintString("tEFaction.Save\n");
+   debug Debug.PrintString("tsFaction.Save\n");
 
    save_properties();
 
@@ -347,7 +351,7 @@ hfaction EFind (string epic_name)
    }
 
    debug {
-      Debug.PrintString("tEFaction.EFind error missing faction ");
+      Debug.PrintString("tsFaction.EFind error missing faction ");
       Debug.PrintString(epic_name);
       Debug.PrintString("\n");
    }
@@ -423,6 +427,20 @@ string FleetStyle(hfaction faction)
    return Object.StringProperty(faction,"gt_epic_fac_fleet_style");
 }
 
+
+SetSpeechStyle(hfaction faction, string speech_style)
+{
+   if (Object.PropertyExists(faction, "gt_epic_fac_speech_style")){
+      Object.SetStringProperty(faction, "gt_epic_fac_speech_style", speech_style);
+   }else {
+      Object.AddStringProperty(faction, "gt_epic_fac_speech_style", speech_style);
+   }
+}
+
+string SpeechStyle(hfaction faction)
+{
+   return Object.StringProperty(faction,"gt_epic_fac_speech_style");
+}
 
 
 // Returns the amount of harm or good the player has caused
@@ -588,43 +606,54 @@ save_properties()
    faction_list = iFaction.All();
    atomic{
 
-   total = List.ItemCount(faction_list);
-   for (i=0;i<total;++i) {
-      faction = iFaction.Cast(List.GetNth(faction_list, i));
-      start_string = String.FormatInt("gt_ef%d",iFaction.Allegiance(faction));
+      total = List.ItemCount(faction_list);
+      for (i=0;i<total;++i) {
+         faction = iFaction.Cast(List.GetNth(faction_list, i));
+         start_string = String.FormatInt("gt_ef%d",iFaction.Allegiance(faction));
 
-      Global.CreateInt(String.Join(start_string,"type"),GA_Write, 
-                       Type(faction));
-      
-      Global.CreateBool(String.Join(start_string,"known"),GA_Write, 
-                        IsKnown(faction));
-      
-      Global.CreateString(String.Join(start_string,"html"),GA_Write, 
-                          Description(faction));
-      
-      Global.CreateString(String.Join(start_string,"fleet"),GA_Write, 
-                          FleetStyle(faction));
-      
-      Global.CreateString(String.Join(start_string,"name"),GA_Write, 
-                          EName(faction));
+         Global.CreateInt(String.Join(start_string,"type"),GA_Write, 
+                          Type(faction));
 
-      Global.CreateFloat(String.Join(start_string,"caction"),GA_Write, 
-                         CurrentAction(faction));
+         Global.CreateBool(String.Join(start_string,"known"),GA_Write, 
+                           IsKnown(faction));
 
-      Global.CreateFloat(String.Join(start_string,"paction"),GA_Write, 
-                         PastAction(faction));
+         Global.CreateString(String.Join(start_string,"html"),GA_Write, 
+                             Description(faction));
 
-      Global.CreateFloat(String.Join(start_string,"default"),GA_Write, 
-                         DefaultFeeling(faction));
+         Global.CreateString(String.Join(start_string,"fleet"),GA_Write, 
+                             FleetStyle(faction));
 
-      
+         Global.CreateString(String.Join(start_string,"speech"),GA_Write, 
+                             SpeechStyle(faction));
+
+
+         Global.CreateString(String.Join(start_string,"name"),GA_Write, 
+                             EName(faction));
+
+         Global.CreateFloat(String.Join(start_string,"caction"),GA_Write, 
+                            CurrentAction(faction));
+
+         Global.CreateFloat(String.Join(start_string,"paction"),GA_Write, 
+                            PastAction(faction));
+
+         Global.CreateFloat(String.Join(start_string,"default"),GA_Write, 
+                            DefaultFeeling(faction));
+
+
 //      debug Debug.PrintString(iFaction.Name(faction));
 //      debug Debug.PrintString(" faction\n");
-   }
-   }
+      }
+   } 
    save_feelings();
 }
 
+
+NewGame()
+{
+      Global.CreateBool("gt_epic_fac_readini", GA_Write, false);
+}
+
+ 
 restore_properties()
 {
    int total, i;
@@ -634,8 +663,8 @@ restore_properties()
 
    // If this is the first time after a new game, we read the ini file
    // instead of a normal restore.
-   if (!Global.Exists("gt_epic_fac_readini")){
-      Global.CreateBool("gt_epic_fac_readini", GA_Write, false);
+   if (!Global.Bool("gt_epic_fac_readini")){
+      Global.SetBool("gt_epic_fac_readini", true);
 
       read_factions("ini:/faction_info");
 
@@ -656,6 +685,7 @@ restore_properties()
          SetKnown(faction, Global.Bool(String.Join(start_string,"known")));
          SetDescription(faction, Global.String(String.Join(start_string,"html")));
          SetFleetStyle(faction, Global.String(String.Join(start_string,"fleet")));
+         SetSpeechStyle(faction, Global.String(String.Join(start_string,"speech")));
          SetEName(faction, Global.String(String.Join(start_string,"name")));
 
          SetCurrentAction(faction, Global.Float(String.Join(start_string,"caction")));
@@ -668,6 +698,7 @@ restore_properties()
          Global.Destroy(String.Join(start_string,"known"));
          Global.Destroy(String.Join(start_string,"html"));
          Global.Destroy(String.Join(start_string,"fleet"));
+         Global.Destroy(String.Join(start_string,"speech"));
          Global.Destroy(String.Join(start_string,"name"));
          Global.Destroy(String.Join(start_string,"caction"));
          Global.Destroy(String.Join(start_string,"paction"));
@@ -686,7 +717,7 @@ read_factions(string file_name)
 {
    hinifile faction_file = INIFile.Create(file_name);
    int faction_total, i, known_int, type, alignment;
-   string key_name, html_file, epic_name, eoc_name, fleet_style;
+   string key_name, html_file, epic_name, eoc_name, fleet_style, speech_style;
    string level_string, feelee_name;
    float level_value;
    bool known, secret;
@@ -724,13 +755,15 @@ read_factions(string file_name)
 
          // This faction entry does exist, fill the rest of the properties.
          html_file = INIFile.String(faction_file, key_name, "desc","none");
-         fleet_style = INIFile.String(faction_file, key_name, "fleet_style","none");
+         fleet_style = INIFile.String(faction_file, key_name, "fleet_style","");
+         speech_style = INIFile.String(faction_file, key_name, "speech_style","");
          type = INIFile.Int(faction_file, key_name, "type", 0);
          known = INIFile.Int(faction_file, key_name, "known", 0);
 
          SetType(faction, type);
          SetDescription(faction, html_file);
          SetFleetStyle(faction, fleet_style);
+         SetSpeechStyle(faction, speech_style);
          SetEName(faction, epic_name);
 
          SetCurrentAction(faction, 0.0);

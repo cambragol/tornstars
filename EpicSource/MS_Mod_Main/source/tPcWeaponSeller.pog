@@ -33,10 +33,10 @@ uses    Sim,
 
         tPcOwner,
         tEpicComms,
-        tEpicFleet,
+        tsShip,
         tLRoot,
         tLTrade,
-        tEFaction,
+        tsFaction,
         tETradeBuy,
         tEpicMoney,
         tShipName,
@@ -263,7 +263,7 @@ task Comms()
     switch ( iConversation.Ask( ship, "", "pcws_legal_ask_player" ) )
     {
     case 1 :
-       player_faction = tEFaction.PlayerFaction();
+       player_faction = tsFaction.PlayerFaction();
        source_faction = iSim.Faction(iSim.Cast(ship));
        start_deal = true;
 
@@ -324,7 +324,7 @@ task CriminalComms()
     switch ( iConversation.Ask( ship, "", "pcws_crime_player_ask") )
     {
     case 1 :
-       player_faction = tEFaction.PlayerFaction();
+       player_faction = tsFaction.PlayerFaction();
        source_faction = iSim.Faction(iSim.Cast(ship));
 
        start_deal = true;

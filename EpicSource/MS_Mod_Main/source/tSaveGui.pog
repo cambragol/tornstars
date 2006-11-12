@@ -7,11 +7,11 @@
 // 
 // Loading Design: Epic will have no Lucretias base. When the game loads, the enter base
 // event will be used to launch into spaceflight screen. The player will be placed at the last 
-// save location, either docked, or in free flight. (placing is done by tEpicFleet.
+// save location, either docked, or in free flight. (placing is done by tsShip.
 //
 // New Game: A new game will allow the player to be placed in any template ship, near
 // any MapEntity, in any world, and possibly docked. It will do this by setting up the 
-// global variables for the first load. Also done in tEpicFleet.
+// global variables for the first load. Also done in tsShip.
 //
 // Save Design: The Save screen will be implemented as a UniGui application. When the 
 // Player presses the save button, a new MultiMod save event will be generated. This 

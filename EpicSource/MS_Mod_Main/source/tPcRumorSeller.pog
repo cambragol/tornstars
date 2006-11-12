@@ -41,8 +41,7 @@ uses    Sim,
         tUnderOp,
         tUnderOpFilter,
         tEpicComms,
-        tEpicFleet,
-        tEFaction,
+        tsFaction,
         tEpicMoney,
         tShipName,
         tLCenter,
@@ -200,7 +199,7 @@ setup_ship(hsim ship)
    fence_fee = INIFile.Int(control_file, "Properties", "hiring_fee_fence", 105);
 
    
-   faction_standing = tEFaction.String2LowerLevel(INIFile.String(control_file, 
+   faction_standing = tsFaction.String2LowerLevel(INIFile.String(control_file, 
                                                                  "Properties", 
                                                                  "faction_standing",
                                                                  "FT_Neutral"));
@@ -235,7 +234,7 @@ task Comms()
 {
    hship ship;
    hisim waypoint;
-   hfaction player = tEFaction.PlayerFaction();
+   hfaction player = tsFaction.PlayerFaction();
    hfaction source_faction;
    string ask_string, info_string;
    int base_fee, fence_fee;

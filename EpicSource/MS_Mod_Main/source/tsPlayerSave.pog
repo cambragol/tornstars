@@ -1,0 +1,161 @@
+//*******************************************************************************************/
+//
+// tsPlayerSave.pog
+//
+// This file implements player specific save information. Such as wingmen and player pods.
+// 
+// 
+// 
+//
+// November 2006, Jon Freise
+//******************************************************************************************/
+ 
+package tsPlayerSave;
+
+uses    Sim,
+iShip,
+iSim,
+iPilotSetup,
+Debug,
+Global,
+GUI,
+iDirector,
+iGUI,
+iHUD,
+iHabitat,
+iMapEntity,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+Text,
+iUtilities,
+iCargo,
+iInventory,
+iComms,
+iConversation,
+iAi,
+Math,
+CargoTypes,
+   iGame,
+   tsShipEnum,
+   tsShip,
+   tsShipSave,
+   tsPlayerFleet;
+
+
+
+provides Save,
+         Restore,
+         NewGame;
+
+
+prototype hship create_new_player();
+
+
+
+NewGame()
+{
+   hinifile player_config = INIFile.Create("ini:/player_start");
+   string system;
+   system = INIFile.String(player_config, "Player","start_system","map:/geog/middle/emerald_sys");
+   INIFile.Destroy(player_config);
+
+   iGame.SetGameType(IGT_SinglePlayer);
+   iGame.SetStartSystem(system);      
+   Global.CreateInt("g_current_act", GA_Write,1);
+   Global.CreateBool("gt_fleet_non_base_save",GA_Write, true);
+}
+
+
+Save()
+{
+   hship player = iShip.FindPlayerShip();
+   int id;
+   
+   id = tsShipSave.Save(player);
+   Global.CreateInt("ts_player_save",GA_Write, id);
+
+
+   tsShipSave.SaveList(tsPlayerFleet.PlayerFleet(), "ts_pfleet");
+}
+ 
+
+
+Restore()
+{
+   list player_fleet;
+   hship player = iShip.FindPlayerShip();
+   int player_id = Global.Int("ts_player_save");
+   hship restored_ship;
+   hship wingman;
+   list fleet;
+   int i, total;
+
+   restored_ship = tsShipSave.Restore(player_id);
+
+   if (none == player) {
+      // The player did not launch from base.
+
+      if (none == restored_ship) {
+         // There is no prior stored ship.
+         player = create_new_player();
+      }else {
+         // standard restore, player is saved ship.
+         player = restored_ship;
+      }
+
+   }else if (none != restored_ship){
+      Sim.PlaceAt(player, restored_ship);
+      Sim.Destroy(restored_ship);
+   }else {
+      debug {
+         Debug.PrintString("Error: tsPlayerSave.Restore There is no player starting ship\n");
+         return;
+      }
+   }
+
+   tsPlayerFleet.NewPlayerShip(player);
+
+   player_fleet = tsShipSave.RestoreList("ts_pfleet");
+
+   total = List.ItemCount(player_fleet);
+   for (i=0;i<total;++i) {
+      wingman = iShip.Cast(List.GetNth(player_fleet,i));
+      tsPlayerFleet.SetupPlayerWingman(wingman);
+   }
+} 
+
+
+// Open the starting position INI and read out the player start ship and position.
+// Create the player and place them at the start location. 
+hship create_new_player()
+{
+   hinifile player_config = INIFile.Create("ini:/player_start");
+   hship player;
+   hisim start_location;
+   string ship, system, station, name;
+
+
+   ship = INIFile.String(player_config, "Player","start_ship","ini:/sims/ships/player/fast_attack_prefitted");
+   system = INIFile.String(player_config, "Player","start_system","map:/geog/middle/emerald_sys");
+   station = INIFile.String(player_config, "Player","start_station","Emerald STC");
+   name = INIFile.String(player_config, "Player","start_name","Jon's Revenge");
+
+   INIFile.Destroy(player_config);
+
+   player = tsShip.Create(ship, "player_ship_name");
+   Sim.SetCullable(player, false);
+   start_location = iSim.FindByNameInSystem(station, system);
+   Sim.PlaceNear(player, start_location, 20km);
+   return player;
+}
+
+/*    
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

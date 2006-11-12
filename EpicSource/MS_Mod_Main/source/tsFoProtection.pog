@@ -36,7 +36,7 @@ iMapEntity,
    iComms,
    tStationEnum,
    tStation,
-   tEFaction,
+   tsFaction,
    tTime,
    tUnderOp,
    tLCenter,
@@ -354,7 +354,7 @@ hhabitat find_production_station(hisim operation, hmapentity center, string syst
    // kill us.
    habitats = tStationFilter.OnGreaterFeeling(habitats,
                                               iSim.Faction(operation),
-                                              tEFaction.Type2LowerLevel(FT_Neutral));
+                                              tsFaction.Type2LowerLevel(FT_Neutral));
 
    return iHabitat.Random(habitats);
 }
@@ -366,7 +366,7 @@ hhabitat find_non_dislike_station(hisim operation, hmapentity center, string sys
 
    habitats = tStationFilter.OnGreaterFeeling(iMapEntity.SystemHabitatsInSystem(system_name),
                                               iSim.Faction(operation),
-                                              tEFaction.Type2LowerLevel(FT_Neutral));
+                                              tsFaction.Type2LowerLevel(FT_Neutral));
    Set.Remove(habitats, center);
 
    return iHabitat.Random(habitats);

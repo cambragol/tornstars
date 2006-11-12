@@ -26,7 +26,7 @@ iLagrangePoint,
    iDockport,
    tEconUtil,
    tEpicFactionEnum,
-   tEFaction,
+   tsFaction,
    tStationEnum,
    tStation,
    tStationRules,
@@ -373,7 +373,7 @@ ReadSystemIni(string system_file, string system)
       //*************************
       // Check the faction for the station is correct
       
-      station_faction = tEFaction.EFind(efaction_name);
+      station_faction = tsFaction.EFind(efaction_name);
 
       if (none == station_faction) {
          debug{
@@ -686,7 +686,7 @@ eSystemVisible string2visible(string visible_name)
 
 bool is_allowed_station(hhabitat station, hfaction owner)
 {
-   int faction_type = tEFaction.Type(owner);
+   int faction_type = tsFaction.Type(owner);
    int station_type = tLProduction.GetType(station);
 
    if ((FCT_Independent|FCT_MegaCorp) == faction_type){
@@ -725,7 +725,7 @@ bool is_allowed_station(hhabitat station, hfaction owner)
       Debug.PrintString(" ");
       Debug.PrintString(iSim.WorldName(station));
       Debug.PrintString("\n");
-      Debug.PrintString(tEFaction.EName(owner));
+      Debug.PrintString(tsFaction.EName(owner));
       Debug.PrintString(" ");
       Debug.PrintHandle(owner);
       Debug.PrintString("\n");

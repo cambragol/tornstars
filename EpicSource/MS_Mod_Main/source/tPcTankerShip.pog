@@ -33,8 +33,10 @@ uses    Sim,
         iAI,
 
         tEpicComms,
-        tEpicFleet,
-        tEFaction,
+        tsShipEnum,
+        tsShip,
+        tsPlayerFleet,
+        tsFaction,
         tEpicMoney,
         tShipName,
         tPcOwner,
@@ -206,13 +208,13 @@ task TankerComms()
 {
    hship ship;
    hship wingman;
-   hfaction player = tEFaction.PlayerFaction();
+   hfaction player = tsFaction.PlayerFaction();
    hfaction source_faction;
    string ask_string, response_string;
    int fleet_total, i, answer, ship_number;
    float fuel_cost;
    hhabitat station;
-   list player_fleet = tEpicFleet.PlayerFleet();
+   list player_fleet = tsPlayerFleet.PlayerFleet();
    list target_fleet;
    int level;
    hinifile tanker_file;
@@ -237,7 +239,7 @@ task TankerComms()
 
    level = iFaction.FeelingType(iFaction.Feeling(source_faction, player));
 
-   fuel_cost = INIFile.Float(tanker_file, "FuelCost", tEFaction.Level2String(level), 1.0);
+   fuel_cost = INIFile.Float(tanker_file, "FuelCost", tsFaction.Level2String(level), 1.0);
 
    INIFile.Destroy(tanker_file);
 
@@ -361,17 +363,17 @@ task fuel_list(hship ship, float fuel_cost, list target_list)
    {
       target = iShip.Cast(List.GetNth(target_list, i));
       
-      max_fuel = tEpicFleet.FuelMax(target);
+      max_fuel = tsShip.FuelMax(target);
 
       atomic {
-         fuel_needed = max_fuel - tEpicFleet.Fuel(target);
+         fuel_needed = max_fuel - tsShip.Fuel(target);
          
          cost = fuel_needed * fuel_cost;
 
          if (cost < tEpicMoney.ShipAccount())
          {
             // Player can afford transfer, fill up wingman
-            tEpicFleet.SetFuel(target, max_fuel );
+            tsShip.SetFuel(target, max_fuel );
             tEpicMoney.ChangeShipAccount(-1*cost);
          }else {
             failed = true;

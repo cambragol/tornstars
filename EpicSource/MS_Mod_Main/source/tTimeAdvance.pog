@@ -45,7 +45,8 @@ uses    Sim,
         tPodUtil,
         tStationEnum,
         tStation,
-        tTime;
+        tTime,
+        tsShip;
 
 provides AdvanceDay,
          TestAdvanceDay,
@@ -108,7 +109,7 @@ task do_advance()
       docked = true;
    }
 
-   new_ship = iShip.Create("ini:/sims/ships/player/comsec_prefitted","advance_time");
+   new_ship = tsShip.Create("ini:/sims/ships/player/comsec_prefitted","advance_time");
    Sim.SetCullable(new_ship, false);
    Sim.PlaceNear(new_ship, station, Global.Float("gt_distance_culling") * 2.0);
 

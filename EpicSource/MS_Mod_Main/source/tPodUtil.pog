@@ -54,7 +54,8 @@ uses    Sim,
         iRemotePilot,
         iHUD,
 //        CargoTypes,
-        tEFaction,
+        tsFaction,
+        tsShip,
         ECargoTypes;
 //        ECargoScript;
 
@@ -151,7 +152,7 @@ hship CreateCargoPodCustom(int cargo_enum, string owner_faction, string cargo_fa
 
    cargo_name = ECargoTypes.CargoString2DBKey(ECargoTypes.CargoType2String(cargo_enum));
 
-   pod = iShip.Create(pod_template, cargo_name);
+   pod = tsShip.Create(pod_template, cargo_name);
 
    iSim.SetFaction(iSim.Cast(pod), iFaction.Find(owner_faction));
    Object.AddIntProperty(pod,"cargo", cargo_enum);
@@ -725,7 +726,7 @@ TogglePodTag()
 
    hship player = iShip.FindPlayerShip();
    hship target_pod;
-   hfaction player_faction = tEFaction.PlayerFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
 
 
    target_pod = iShip.Cast(iShip.CurrentTarget(player));

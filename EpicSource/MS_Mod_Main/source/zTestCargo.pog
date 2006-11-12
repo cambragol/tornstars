@@ -27,8 +27,9 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    tLTrade,
    tEpicMoney,
    tTime,
-   tEFaction,
-   tEpicFleet,
+   tsFaction,
+   tsShip,
+   tsPlayerFleet,
    tPodUtil,
    tEShipCreation,
    tPcOwner;
@@ -151,11 +152,11 @@ CreateWingmen()
       ship_name = INIFile.NumberedString(cargo_file,"TestWingmen","ship_name",count,"no name");
       ++count;
 
-      wingman = iShip.Create(ship_template, ship_name);
+      wingman = tsShip.Create(ship_template, ship_name);
 
       if (none != wingman) {
 
-         tEpicFleet.HireShip(wingman);
+         tsPlayerFleet.HireShip(wingman);
          Sim.PlaceNear(wingman, player, 10km);
 
       }else {
@@ -188,7 +189,7 @@ CreateTargets()
       ship_name = INIFile.NumberedString(cargo_file,"TestTargets","ship_name",count,"no name");
       ++count;
 
-      wingman = iShip.Create(ship_template, ship_name);
+      wingman = tsShip.Create(ship_template, ship_name);
 
       if (none != wingman) {
 
@@ -215,7 +216,7 @@ RefuelShips()
    hship player = iShip.FindPlayerShip();
 
    ship = iShip.Cast(iShip.CurrentTarget(player));
-   tEpicFleet.SetFuel(ship, tEpicFleet.FuelMax(ship));
+   tsShip.SetFuel(ship, tsShip.FuelMax(ship));
 
 }
 
@@ -230,13 +231,13 @@ EmptyShipsFuel()
 
    ship = iShip.Cast(iShip.CurrentTarget(player));
 
-   fuel = tEpicFleet.Fuel(ship);
+   fuel = tsShip.Fuel(ship);
    fuel= fuel - 500.0;
    if (fuel < 0.0)
    {
       fuel = 0.0;
    }
-   tEpicFleet.SetFuel(ship, fuel);
+   tsShip.SetFuel(ship, fuel);
 }
 
 

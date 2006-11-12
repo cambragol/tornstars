@@ -47,7 +47,7 @@ iShipCreation,
 iDockport,
 UniGUI,
 tTime,
-tEFaction,
+tsFaction,
    tMail,
    tShipMail,
    tNewsNet,
@@ -222,9 +222,9 @@ handle_script(string event_file_name, int offset, bool test_run)
          faction_standing = INIFile.String(event_file, item_name, "set_standing", "none");
 
 
-         faction = tEFaction.EFind(faction_name);
+         faction = tsFaction.EFind(faction_name);
 
-         second_faction = tEFaction.EFind(second_faction_name);
+         second_faction = tsFaction.EFind(second_faction_name);
 
 
          event_name = INIFile.String(event_file, item_name, "station_event", "none");
@@ -325,7 +325,7 @@ test_script(string event_file_name)
 
       faction_name = INIFile.String(event_file, item_name, "system", "none");
 
-      faction = tEFaction.EFind(faction_name);
+      faction = tsFaction.EFind(faction_name);
 
       if (none == faction) {
         debug {

@@ -1,0 +1,487 @@
+//*******************************************************************************************/
+//
+// tsShipSave.pog
+//
+// This file implements ship save and restore routines.
+// 
+// 
+// 
+//
+// November 2006, Jon Freise
+//******************************************************************************************/
+ 
+package tsShipSave;
+
+uses    Sim,
+iShip,
+iSim,
+iPilotSetup,
+Debug,
+Global,
+GUI,
+iDirector,
+iGUI,
+iHUD,
+iHabitat,
+iMapEntity,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+Text,
+iUtilities,
+iCargo,
+iInventory,
+iComms,
+iConversation,
+iAi,
+Math,
+CargoTypes,
+
+   tsPosition,
+   tsShip;
+
+
+
+provides Save,
+         Restore,
+         SaveList,
+         RestoreList,
+         Relink;
+
+
+
+prototype int Save(hship ship);
+
+prototype hship Restore(int id);
+
+prototype string save_cargo_pods(hship ship);
+
+prototype list restore_cargo_pods(hship ship);
+
+prototype save_subsims(hship ship);
+
+prototype add_restore_list(hship ship);
+
+prototype hship find(list ship_list, int id);
+
+/*
+   Saves the ship and any cargo pods docked to the ship.
+   It uses the ship object id as the save id because this is unique.
+   Returns the id used to save.
+   
+*/
+
+
+int SaveList(list ship_list, string save_key)
+{
+   int id, i, total, count;
+   hship ship;
+
+   debug {
+       Debug.PrintString("tsShipSave.SaveList :");
+       Debug.PrintString(save_key);       
+       Debug.PrintString(":\n");       
+   }
+
+   total = List.ItemCount(ship_list);
+   count = 0;
+   for (i=0;i<total;++i) {
+      ship = iShip.Cast(List.GetNth(ship_list,i));
+      
+      if (none == ship) {
+         debug {
+            Debug.PrintString("tsShipSave.SaveList invalid ship handle\n");
+         }
+      }else {
+         id = Save(ship);
+         // Save the id code so we can restore this ship.
+         Global.CreateInt(String.Join(save_key,String.FromInt(count)), GA_Write, id);
+         ++count;
+      }
+   }
+
+   return total;
+}
+
+
+// Uses the save key to search for saved ships.
+list RestoreList(string save_key)
+{
+   list ship_list;
+   bool more_ships = true;
+   string key_string;
+   int id, count;
+   hship ship;
+   
+   debug {
+       Debug.PrintString("tsShipSave.RestoreList :");
+       Debug.PrintString(save_key);       
+       Debug.PrintString(":\n");       
+   }
+
+
+
+   count = 0;
+   do {
+      key_string = String.Join(save_key,String.FromInt(count));
+
+      if (Global.Exists(key_string)) {
+         id = Global.Int(key_string);
+         Global.Destroy(key_string);
+
+         ship = Restore(id);
+         List.AddTail(ship_list, ship);
+         ++count;
+      }else {
+         more_ships = false;
+      }
+   } while (more_ships);
+
+   return ship_list;
+}
+
+
+
+int Save(hship ship)
+{
+   int id = Object.IDModulus( ship, 2147483647);
+   int ship_type = iSim.Type(ship);
+   string save_key = String.Join("tsSS",String.FromInt(id));
+   string pod_key;
+   hsim reference, parent;
+   string system;
+   bool docked;
+
+   if (none == ship) {
+      debug {
+         Debug.PrintString("tsShipSave.Save invalid ship handle\n");
+      }
+      return 0;
+   }
+
+
+   Global.CreateString(String.Join(save_key,"template"),GA_Write, Sim.TemplateName(ship));
+   Global.CreateString(String.Join(save_key,"name"),GA_Write, Sim.Name(ship));
+   Global.CreateString(String.Join(save_key,"faction"),GA_Write, iFaction.Name(iSim.Faction(ship)));            
+   
+   if (T_CargoPod == ship_type) {
+      Global.CreateInt(String.Join(save_key,"cargo"),GA_Write, Object.IntProperty(ship,"cargo"));
+      Global.CreateInt(String.Join(save_key,"cargo_faction"),GA_Write, Object.IntProperty( ship, "cargo_faction" ));  
+   }else {
+      Global.CreateFloat(String.Join(save_key,"fuel"),GA_Write, tsShip.Fuel(ship));
+   }
+
+
+
+   // Find the ships current location.
+   system = iSim.WorldName(ship);
+   reference = tsPosition.Nearest(ship, List.FromSet(iMapEntity.SystemHabitatsInSystem(system)));
+
+   // Record if the ship is docked to the nearest station. requires special handling.
+   docked = iSim.IsDockedToStructure(iSim.Cast(ship), iSim.Cast(reference));
+   Global.CreateBool(String.Join(save_key,"station_dock"),GA_Write, docked);         
+
+   // Save the id of any ship we are docked to.
+   parent = Sim.Parent(ship);
+   if (none != parent) {
+      Global.CreateInt(String.Join(save_key,"ship_dock"),GA_Write, Object.IDModulus( parent, 2147483647));
+   }else {
+      Global.CreateInt(String.Join(save_key,"ship_dock"),GA_Write, 0);
+   }
+
+
+   debug {
+      Debug.PrintString("Saving: ");
+      Debug.PrintHandle(ship);
+      Debug.PrintString(" ");
+      Debug.PrintHandle(reference);
+      Debug.PrintString(" ");
+      Debug.PrintString(system);
+      Debug.PrintString("\n");
+      Debug.PrintString(save_key);
+      Debug.PrintString(" key\n");
+   }
+
+   tsPosition.Location(ship, Sim.Cast(reference), "ship_loc");
+
+   // Save system, x, y, z positions.
+   Global.CreateString(String.Join(save_key,"system"),GA_Write, system);
+   Global.CreateString(String.Join(save_key,"reference"),GA_Write, Sim.Name(reference));
+   Global.CreateFloat(String.Join(save_key,"x"),GA_Write, Object.VectorPropertyX(ship,"ship_loc"));
+   Global.CreateFloat(String.Join(save_key,"y"),GA_Write, Object.VectorPropertyY(ship,"ship_loc"));
+   Global.CreateFloat(String.Join(save_key,"z"),GA_Write, Object.VectorPropertyZ(ship,"ship_loc"));
+
+   // Save the damage state.
+   // Save the loadout state.
+   save_subsims( ship);
+
+   // Save cargo pods.
+   save_cargo_pods(ship);
+
+   return id;
+}
+
+
+
+hship Restore(int id)
+{
+   int ship_type;
+   string save_key = String.Join("tsSS",String.FromInt(id));
+
+   float fuel_used;
+   string ship_template, ship_name, system, world, faction_name;
+   float x, y, z;
+
+   bool docked;
+   int parent_id;
+   hisim reference;
+   hship ship;
+
+   int cargo, cargo_faction_id;
+
+   debug Debug.PrintString("tsShipSave.Restore\n");
+
+
+   // Restore the ship sim
+   ship_template = Global.String(String.Join(save_key,"template"));
+   Global.Destroy(String.Join(save_key,"template"));
+
+   ship_name = Global.String(String.Join(save_key,"name"));
+   Global.Destroy(String.Join(save_key,"name"));
+
+   faction_name = Global.String(String.Join(save_key,"faction"));
+   Global.Destroy(String.Join(save_key,"faction"));
+
+   ship = tsShip.Create(ship_template, ship_name);
+
+   iSim.SetFaction(ship,iFaction.Find(faction_name));
+   Sim.SetCullable(ship, false);
+
+   // Attach the old id of this object so we can relink
+   // to any prior ships from old save.
+   Object.AddIntProperty(ship, "tsss_save_id", id);
+
+   ship_type = iSim.Type(ship);
+
+   if (T_CargoPod == ship_type) {
+      cargo = Global.Int(String.Join(save_key,"cargo"));
+      Global.Destroy(String.Join(save_key,"cargo"));
+
+      cargo_faction_id = Global.Int(String.Join(save_key,"cargo_faction"));
+      Global.Destroy(String.Join(save_key,"cargo_faction"));
+
+      Object.AddIntProperty(ship,"cargo", cargo);
+      Object.AddIntProperty(ship, "cargo_faction", cargo_faction_id);
+
+   } else {
+      // Restore all the ships properties that are read out of the
+      // INI Files.
+      tsShip.ReadIniFile(ship);
+
+      fuel_used = Global.Float(String.Join(save_key,"fuel"));
+      Global.Destroy(String.Join(save_key,"fuel"));
+
+      tsShip.SetFuel(ship, fuel_used);
+   }
+
+
+   // Restore ship to proper location
+
+
+   system = Global.String(String.Join(save_key,"system"));
+
+   reference = iSim.FindByNameInSystem(Global.String(String.Join(save_key,"reference")), system);
+
+   x = Global.Float(String.Join(save_key,"x"));
+   y = Global.Float(String.Join(save_key,"y"));
+   z = Global.Float(String.Join(save_key,"z"));
+
+   debug {
+      if (none == reference) {
+         Debug.PrintString("Error tsSaveShip Reference missing");
+         Debug.PrintString(Global.String(String.Join(save_key,"reference")));
+         Debug.PrintString("\n");
+         Debug.PrintString(system);
+         Debug.PrintString("\n");
+      }
+   }
+
+   Global.Destroy(String.Join(save_key,"system"));
+   Global.Destroy(String.Join(save_key,"reference"));
+   Global.Destroy(String.Join(save_key,"x"));      
+   Global.Destroy(String.Join(save_key,"y"));
+   Global.Destroy(String.Join(save_key,"z"));
+
+
+
+   Sim.PlaceRelativeTo(ship, reference, x, y, z);
+
+   // Check if the ship was docked to a station and restore it to proper location.
+   docked = Global.Bool(String.Join(save_key,"station_dock"));
+   Global.Destroy(String.Join(save_key,"station_dock"));
+
+   if (docked) {
+      iSim.Dock(ship, reference);
+   }
+
+   // Attach a property that allows relinking to any prior parent ship
+   // or cargo pod.
+
+   parent_id = Global.Int(String.Join(save_key,"ship_dock"));
+
+   Global.Destroy(String.Join(save_key,"ship_dock"));
+
+   Object.AddIntProperty(ship, "tsss_prior_parent", parent_id);
+
+
+   // Restore damage
+   // Restore loadout
+
+   debug{
+      Debug.PrintString("Restoring ");
+      Debug.PrintHandle(ship);
+      Debug.PrintString("\n");
+
+      Debug.PrintString(system);
+      Debug.PrintString("\n");
+
+      Debug.PrintHandle(reference);
+      Debug.PrintString("\n");
+   }
+
+   restore_cargo_pods(ship);
+
+   add_restore_list(ship);
+
+   return ship;
+}
+
+
+// Call this function after all restore operations are done.
+// It will relink between all restored groups.
+Relink()
+{
+   list ship_list, empty_list;
+   int i, total, parent_id;
+   hship ship, parent;
+
+   ship_list = Global.List("tsss_restore_list");
+   total = List.ItemCount(ship_list);
+   for (i=0;i<total;++i) {
+      ship = iShip.Cast(List.GetNth(ship_list,i));
+
+      parent_id = Object.IntProperty(ship,"tsss_prior_parent");
+      if (0 != parent_id) {
+         parent = find(ship_list, parent_id);
+
+         iSim.Dock(ship, parent);
+      }
+   }
+
+   Global.Destroy("tsss_restore_list");
+}
+
+
+
+hship find(list ship_list, int id)
+{
+   int total, i;
+   hship ship;
+
+   total = List.ItemCount(ship_list);
+   for (i=0;i<total;++i) {
+      ship = iShip.Cast(List.GetNth(ship_list, i));
+
+      if (Object.IntProperty(ship,"tsss_save_id") == id) {
+         return ship;
+      }
+   }
+
+   return none;
+}
+
+
+
+
+
+string save_cargo_pods(hship ship)
+{
+   string save_key;
+   int id = Object.IDModulus( ship, 2147483647);
+   list pod_list = tsShip.ShipPodList(ship);
+
+   // pod id numbers stored as a string like "tsSS#shipnum#pod#podcount#
+   save_key = String.Join("tsSS",String.FromInt(id));
+   save_key = String.Join(save_key, "pod");
+
+   SaveList(pod_list, save_key);
+   return save_key;
+}
+
+
+list restore_cargo_pods(hship ship)
+{
+   list pod_list;
+   int id = Object.IntProperty(ship, "tsss_save_id");
+   string save_key;
+
+   // pod id numbers stored as a string like "tsSS#shipnum#pod#podcount#
+   save_key = String.Join("tsSS",String.FromInt(id));
+   save_key = String.Join(save_key, "pod");
+
+   pod_list = RestoreList(save_key);
+   return pod_list;
+}
+
+
+save_subsims(hship ship)
+{
+   int i, total;
+   hsubsim subsim;
+
+   total = Sim.SubsimCount(ship);
+   for (i=0;i<total;++i) {
+      subsim = Sim.NthSubsim(ship, i);
+
+      debug {
+         Debug.PrintHandle(subsim);
+         Debug.PrintString(" subsim\n");
+      }
+   }
+}
+
+
+
+save_subsim(hsubsim subsim)
+{
+
+}
+ 
+
+
+add_restore_list(hship ship)
+{
+   list ship_list;
+
+   atomic {
+      if (Global.Exists("tsss_restore_list")) {
+         ship_list = Global.List("tsss_restore_list");
+         List.AddTail(ship_list, ship);
+         Global.SetList("tsss_restore_list", ship_list);
+      }else {
+         List.AddTail(ship_list, ship);
+         Global.CreateList("tsss_restore_list", GA_Write|GA_NoSave, ship_list);
+      }
+   }
+}
+
+
+/*    
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

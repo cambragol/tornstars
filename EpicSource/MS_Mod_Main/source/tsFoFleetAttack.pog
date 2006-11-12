@@ -43,7 +43,7 @@ iMapEntity,
    iComms,
    tStationEnum,
    tStation,
-   tEFaction,
+   tsFaction,
    tTime,
    tUnderOp,
    tLRoot,
@@ -289,7 +289,7 @@ hhabitat find_patrol_station(hisim operation, hmapentity center, string system_n
    // Patrols neutral or better stations.
    habitats = tStationFilter.OnGreaterFeeling(habitats,
                                               iSim.Faction(operation),
-                                              tEFaction.Type2LowerLevel(FT_Neutral));
+                                              tsFaction.Type2LowerLevel(FT_Neutral));
 
    return iHabitat.Random(habitats);
 }

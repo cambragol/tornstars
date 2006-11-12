@@ -43,7 +43,7 @@ uses	Sim,
       tStation,
       tEpicGuiEnum,
       tEpicGui,
-      tEFaction,
+      tsFaction,
       tLProduction,
       tLInventory,
       tLTrade,
@@ -109,12 +109,12 @@ RunCheck()
    }
 
    // If the player owns this station, do not allow trade.
-   if (station_faction == tEFaction.PlayerFaction()){
+   if (station_faction == tsFaction.PlayerFaction()){
       allow_trade = false;
    }
 
    // If no one owns this station (it was abandond) do not allow trade.
-   if (station_faction == tEFaction.EmptyFaction()){
+   if (station_faction == tsFaction.EmptyFaction()){
       allow_trade = false;
    }
 
@@ -355,7 +355,7 @@ update_cargo_info(hcargo cargo)
    text = String.Join(text,String.FormatInt(" %d<p>",price));
 
    text = String.Join(text,"Required Standing: ");
-   text = String.Join(text, Text.Field( tEFaction.Level2String(tEconSmall.CargoStanding(cargo)),
+   text = String.Join(text, Text.Field( tsFaction.Level2String(tEconSmall.CargoStanding(cargo)),
                                         FT_Text));
 
    text = uString.Htmlize(text);
@@ -1270,7 +1270,7 @@ TradeWindow()
                                      Text.Field(iFaction.Name(trade_faction), FT_Text));
    trade_center_string = String.Join(trade_center_string,"<p>");
    trade_center_string = String.Join(trade_center_string, 
-                                     Text.Field(tEFaction.Feeling2String(player_standing), FT_Text));
+                                     Text.Field(tsFaction.Feeling2String(player_standing), FT_Text));
    trade_center_string = uString.Htmlize(trade_center_string);
 
    trade_center_info = GUI.CreateTextWindow( 0,

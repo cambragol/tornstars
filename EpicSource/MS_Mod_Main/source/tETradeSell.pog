@@ -46,7 +46,7 @@ uses	Sim,
       tStation,
       tEpicGuiEnum,
       tEpicGui,
-      tEFaction,
+      tsFaction,
       tLProduction,
       tEconSmall,
       tEconUtil,
@@ -107,12 +107,12 @@ RunCheck()
    }
 
    // If the player owns this station, do not allow trade.
-   if (station_faction == tEFaction.PlayerFaction()){
+   if (station_faction == tsFaction.PlayerFaction()){
       allow_trade = false;
    }
 
    // If no one owns this station (it was abandond) do not allow trade.
-   if (station_faction == tEFaction.EmptyFaction()){
+   if (station_faction == tsFaction.EmptyFaction()){
       allow_trade = false;
    }
 
@@ -1165,7 +1165,7 @@ TradeWindow()
 
    Global.CreateFloat("gt_etradesell_standing",GA_Write|GA_NoSave, player_standing);
 
-   Global.CreateBool("gt_etradesell_legal",GA_Write|GA_NoSave, tEFaction.IsCriminal(trade_faction));
+   Global.CreateBool("gt_etradesell_legal",GA_Write|GA_NoSave, tsFaction.IsCriminal(trade_faction));
 
    set_price_adjust(tEconSmall.SellAdjustment(trade_center));
    ///***********************************
@@ -1230,7 +1230,7 @@ TradeWindow()
                                      Text.Field(iFaction.Name(trade_faction), FT_Text));
    trade_center_string = String.Join(trade_center_string,"<p>");
    trade_center_string = String.Join(trade_center_string,
-                                     Text.Field(tEFaction.Feeling2String(player_standing), FT_Text));
+                                     Text.Field(tsFaction.Feeling2String(player_standing), FT_Text));
    trade_center_string = uString.Htmlize(trade_center_string);
 
    trade_center_info = GUI.CreateTextWindow( 0,

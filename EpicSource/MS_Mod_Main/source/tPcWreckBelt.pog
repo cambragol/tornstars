@@ -32,7 +32,7 @@ uses    Sim,
         iDockport,
         iUtilities,
         tsCull,
-        tEFaction,
+        tsFaction,
         tLCenter,
         tLFleet,
         tPodUtil;
@@ -164,7 +164,7 @@ setup_wreck_belt(hisim center)
 
    list cull_list;
 
-   hfaction empty = tEFaction.EmptyFaction();
+   hfaction empty = tsFaction.EmptyFaction();
 
    hmapentity location = nearby_location(center);
 

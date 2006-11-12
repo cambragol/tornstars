@@ -53,8 +53,7 @@ iDockport,
 UniGUI,
 tTime,
 tLCenter,
-tEFaction,
-tEpicFleet,
+tsFaction,
 tFormation,
 tEpicFleetUpkeep,
 tMusic,
@@ -176,7 +175,7 @@ task watch_task()
 
             // Unhide the faction where the player has docked.
             faction = iSim.Faction(iSim.Cast(nearest_station));
-            tEFaction.SetKnown(faction, true);
+            tsFaction.SetKnown(faction, true);
          }
       } else {
          if (docked) {

@@ -44,7 +44,7 @@ uses  Sim,
       iShipCreation,
       iDockport,
       iRegion,
-      tEFaction,
+      tsFaction,
       tStationEnum,
       tStation,
       tLProduction,
@@ -157,7 +157,7 @@ FindGovernment()
       }
    }
 
-   SetGovernment(tEFaction.EmptyFaction());
+   SetGovernment(tsFaction.EmptyFaction());
 }
 
 bool IsKnown(string system)

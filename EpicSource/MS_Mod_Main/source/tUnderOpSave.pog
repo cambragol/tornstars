@@ -37,7 +37,7 @@ iHabitat,
 iMapEntity,
 //   tEpicFactionEnum,
 //   tEpicFaction,
-   tEFaction,
+   tsFaction,
    CargoTypes,
    iCargo,
    tEconUtil,
@@ -384,7 +384,7 @@ read_system(string station_file, string system_name)
          }
       }
 
-      faction = tEFaction.EFind(faction_name);
+      faction = tsFaction.EFind(faction_name);
       
       operation = tsFleetOperation.New(op_type, faction, center);
 

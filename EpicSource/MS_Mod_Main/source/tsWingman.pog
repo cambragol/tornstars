@@ -1,0 +1,848 @@
+//*******************************************************************************************/
+//
+// tsWingman.pog
+//
+// This file implements a wingman control task. It takes orders from the player and gives
+// feedback to the player when orders are complete, or have gone wrong.
+// 
+// Each wingman becomes a state driven AI entity. This forms a new layer between the PS AI
+// interface and the player orders.
+//
+// November 2006, Jon Freise
+//******************************************************************************************/
+
+package tsWingman;
+
+uses    Sim,
+iShip,
+iSim,
+iPilotSetup,
+Debug,
+Global,
+GUI,
+iDirector,
+iGUI,
+iHUD,
+iHabitat,
+iMapEntity,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+Text,
+iUtilities,
+iCargo,
+iInventory,
+iComms,
+iConversation,
+iAi,
+Math,
+CargoTypes,
+
+   tsShipEnum,
+tsShip,
+tFormation,
+tPodUtil,
+tsFaction,
+tStationEnum,
+tStation,
+tLProduction,
+tMegaTrucking;
+
+
+
+provides GiveOrder,
+         Start,
+         OrderTarget,
+         CurrentOrder,
+         Save,
+         Restore;
+
+   
+
+
+
+
+
+// These are a series of states that implement orders.
+enum eShipState {
+   eSS_None,
+   eSS_Init,
+   eSS_Escort,
+   eSS_Attack,
+   eSS_AttackStart,
+   eSS_AttackNewTarget,
+   eSS_Flee,
+   eSS_FleeStart,
+   eSS_LoadPodWait,
+   eSS_LoadPodStart,
+   eSS_LoadPodComplete
+};
+
+
+
+prototype task evaluate_order(hship ship, ePlayerOrder order, hisim target);
+
+prototype task wingman_watch(hship ship);
+
+
+
+
+// These belong in tsShip.pog
+prototype bool is_warship(hship ship);
+
+prototype bool is_tanker(hship ship);
+
+prototype bool is_miner(hship ship);
+
+prototype bool is_prospector(hship ship);
+
+prototype bool is_long_range_scan(hship ship);
+
+prototype hisim DockParent(hship ship);
+
+
+
+
+// Debug tools.
+prototype string state2string(eShipState state);
+
+prototype eShipState change_state(eShipState state, eShipState new_state, bool debug_on);
+
+
+
+
+
+
+
+prototype bool DockPodSet(int group, set pods);
+
+prototype bool station_known(int station_type);
+
+prototype bool is_mine(hisim station);
+
+prototype task mining_task(hship miner, hhabitat target);
+
+prototype task prospecting_task(hship prospector, hhabitat target);
+
+prototype bool is_valid_target(hisim target);
+
+prototype bool is_valid_destination(hisim target);
+
+
+
+
+// These functions signal to the reputation code that the
+// wingman is attacking a target intentionally. It is meant
+// to keep from charging the player in unintentional attacks.
+
+hisim OrderTarget(hship ship) {
+
+   return iSim.Cast(Object.HandleProperty(ship,"gtWingTarget"));
+
+}
+
+
+
+SetOrderTarget(hship ship, hisim target) {
+
+   Object.AddHandleProperty(ship,"gtWingTarget", target);
+
+}
+
+
+CurrentOrder(hship ship)
+{
+   Object.IntProperty(ship,"gtCurrentOrder");
+}
+
+
+
+GiveOrder(hship ship, ePlayerOrder order, hisim target)
+{
+
+   Task.Detach(start evaluate_order(ship, order, target));
+
+}
+
+// Begin the wingman task. If this is a restore, pass in old orders and target.
+Start(hship ship, ePlayerOrder order, hisim target)
+{
+   Object.AddHandleProperty(ship,"gtWingTarget", none);
+   Object.AddIntProperty(ship,"gtCurrentOrder", ePO_None);
+
+   Object.AddIntProperty(ship,"gtNewOrder", ePO_None);
+   Object.AddHandleProperty(ship,"gtNewOrderTarget", none);
+
+   Task.Detach(start evaluate_order(ship, order, target));
+
+   Task.Detach(start wingman_watch(ship));
+
+}
+
+Save(hship ship)
+{
+   int id = Object.IDModulus( ship, 2147483647);
+   string save_key = String.Join("tsWing",String.FromInt(id));
+   hisim target;
+
+   target = OrderTarget(ship);
+
+   Global.CreateInt(String.Join(save_key,"order"), GA_Write, Object.IntProperty(ship,"gtCurrentOrder"));
+   Global.CreateString(String.Join(save_key,"target"), GA_Write, Sim.Name(target));
+   Global.CreateString(String.Join(save_key,"system"), GA_Write, iSim.WorldName(target));
+}
+
+// Will restore the prior orders of the wing man. And try to restore the prior target.
+Restore(hship ship)
+{
+   int id = Object.IDModulus( ship, 2147483647);
+   string save_key = String.Join("tsWing",String.FromInt(id));
+   hisim target;
+   int order;
+   string name, system;
+
+   order = Global.Int(String.Join(save_key,"order"));
+   name = Global.String(String.Join(save_key,"target"));
+   system = Global.String(String.Join(save_key,"system"));
+
+   target = iSim.FindByNameInSystem(name, system);
+
+   Start(ship, order, target);
+}
+
+task evaluate_order(hship ship, ePlayerOrder order, hisim target)
+{
+   hfaction player_faction = tsFaction.PlayerFaction();
+   hfaction empty_faction = tsFaction.EmptyFaction();
+   ePlayerOrder final_order;
+   ePlayerOrder current_order;
+   hisim parent;
+   hisim final_target;
+   hship player = iShip.FindPlayerShip();
+
+
+   debug Debug.PrintString("tsWingman.evaluate_order\n");
+
+   // Some orders just ask for responses.
+   switch (order) {
+   case ePO_Respond:
+      iConversation.OneLiner( ship, "", "Group Here");
+      return;
+      break;
+   case ePO_Status:
+      iConversation.OneLiner( ship, "", "Sounding off");
+      return;
+      break;
+   default:
+      break;
+   }
+
+   // Test if we are out of system.
+   // Tell player, ship out of system.
+   if (iSim.ActiveWorld() != iSim.WorldName(ship)) {
+      iConversation.OneLiner( ship, "", "Negative. Our ship is out of system");
+      return;
+   }
+
+
+   // Reject if target does not exist, or is out of system.
+   switch (order) {
+   case ePO_Attack:
+   case ePO_Escort:
+   case ePO_Formate:
+   case ePO_Dock:
+   case ePO_FuelShip:
+   case ePO_DrainFuel:
+   case ePO_CollectPod:
+   case ePO_Prospect:
+   case ePO_Mine:
+   
+      if (none == target) {
+         iConversation.OneLiner( ship, "", "Negative. No target");
+         return;
+      }
+
+      if (iSim.ActiveWorld() != iSim.WorldName(target)) {
+         iConversation.OneLiner( ship, "", "Negative. Target out of system");
+         return;
+      }
+      break;
+   default:
+      break;
+   }
+
+
+   // Reject if the ship is docked to a larger ship.
+   switch (order) {
+   case ePO_Attack:
+   case ePO_DefendMe:
+   case ePO_Escort:
+   case ePO_Formate:
+   case ePO_FuelShip:
+   case ePO_FuelFleet:
+   case ePO_DrainFuel:
+      if (DockParent(ship) != none) {
+         iConversation.OneLiner( ship, "", "Negative. Our ship is docked");
+         return;
+      }
+      break;
+   case ePO_Dock:
+   case ePO_Prospect:
+   case ePO_Mine:
+      // Reject if docked, and ordered to dock to a different target.
+      parent = DockParent(ship);
+      if (parent != none) {
+         if (target != parent){
+            iConversation.OneLiner( ship, "", "Negative. Our ship is docked");
+            return;         
+         }
+      }
+      break;
+   default:
+      break;
+   }
+
+
+
+
+   // Now reject all special cases where the target needs to be evaluated in detail.
+   switch (order) {
+   
+   case ePO_Attack:
+      if (!is_valid_target(target)) {
+         iConversation.OneLiner( ship, "", "Negative. We cannot attack that target");
+         return;
+      }
+
+      if (player_faction == iSim.Faction(iSim.Cast(target))) {
+         iConversation.OneLiner( ship, "", "epo_refuse_player_ship_target");
+         return;
+      }
+
+      // Do other ship checks here, like is the target the wrong faction etc.
+
+      break;
+   case ePO_Dock:
+
+      if (!is_valid_target(target)) {
+         iConversation.OneLiner( ship, "", "Negative. Invalid target");
+         return;
+      }
+
+      break;
+   case ePO_Escort:
+   case ePO_Formate:
+      // Allows Lpoints and waypoints.
+      if (!is_valid_destination(target)) {
+         iConversation.OneLiner( ship, "", "Negative. Invalid destination");
+         return;
+      }
+
+      break;
+   case ePO_FuelShip:
+      if (!(TM_Ship & iSim.Type(target))) {
+         iConversation.OneLiner( ship, "", "Negative. Target not a ship");
+         return;
+      }
+
+      break;
+   case ePO_DrainFuel:
+
+      // The target must be a player fuel cargo pod or a ship of faction empty.
+      if (TM_Ship & iSim.Type(target)) {
+         if (empty_faction != iSim.Faction(target)) {
+            iConversation.OneLiner(ship, "", "epo_refuse_not_empty_ship");
+            return;
+         }
+      } else if (T_CargoPod == iSim.Type(target)) {
+         if (CT_LiquifiedFuel != Object.IntProperty(target,"cargo")) {
+            iConversation.OneLiner(ship, "", "epo_refuse_not_fuel_pod");
+            return;
+         }
+
+         // Only dock player controlled pods.
+         if (player_faction != iSim.Faction(target)) {
+            iConversation.OneLiner(ship, "", "epo_not_player_pod");
+            return;
+         }
+
+         // Don't dock sold pods.
+         if (Object.BoolProperty(target, "md_epic_podsold"))
+         {
+            iConversation.OneLiner(ship, "", "epo_not_player_pod");
+            return;
+         }
+      } else {
+         iConversation.OneLiner(ship, "", "Negative. Target cannot supply fuel");
+         return;
+      }
+
+
+      break;
+   case ePO_CollectPod:
+
+      // Only dock cargo pods.
+      if (T_CargoPod != iSim.Type(target)) {
+         iConversation.OneLiner(ship, "", "epo_not_cargo_pod");
+         return;
+      }
+
+      // Don't dock sold pods.
+      if (Object.BoolProperty(target, "md_epic_podsold"))
+      {
+         iConversation.OneLiner(ship, "", "epo_not_player_pod");
+         return;
+      }
+
+      // Only dock player controlled pods.
+      if (player_faction != iSim.Faction(target)) {
+         iConversation.OneLiner(ship, "", "epo_not_player_pod");
+         return;
+      }
+      break;
+
+   case ePO_Mine:
+      if (!is_mine(target)) {
+         iConversation.OneLiner(ship, "", "epo_refuse_not_mine");
+         return;
+      }
+
+
+      if (player_faction != iSim.Faction(target)) {
+         iConversation.OneLiner(ship, "", "epo_refuse_not_player_mine");
+         return;
+      }
+      break;
+
+   case ePO_Prospect:
+      if (!is_mine(target)) {
+         iConversation.OneLiner(ship, "", "epo_refuse_not_mine");
+         return;
+      }
+
+
+      if (empty_faction != iSim.Faction(target)) {
+         iConversation.OneLiner(ship, "", "epo_refuse_claimed_asteroid");
+         return;
+      }
+      break;
+
+   default:
+      break;
+   }
+
+
+   // Reject if the new order conflicts with the current order
+   // Some orders are persisant. 
+   switch (current_order) {
+   case ePO_CollectPods:
+      switch (order) {
+      case ePO_Halt:
+         break;
+      default:
+         iConversation.OneLiner(ship, "", "Negative. Loading Cargo");
+         return;
+         break;
+      }
+      break;
+   case ePO_CollectPod:
+      switch (order) {
+      case ePO_Halt:
+         break;
+      default:
+         iConversation.OneLiner(ship, "", "Negative. Loading Cargo");
+         return;
+         break;
+      }
+      break;
+   case ePO_FuelShip:
+      switch (order) {
+      case ePO_Halt:
+         break;
+      default:
+         iConversation.OneLiner(ship, "", "Negative. Fueling Ship");
+         return;
+         break;
+      }
+      break;
+   case ePO_FuelFleet:
+      switch (order) {
+      case ePO_Halt:
+         break;
+      default:
+         iConversation.OneLiner(ship, "", "Negative. Fueling Fleet");
+         return;
+         break;
+      }
+      break;
+   case ePO_DrainFuel:
+      switch (order) {
+      case ePO_Halt:
+         break;
+      default:
+         iConversation.OneLiner(ship, "", "Negative. Draining Fuel");
+         return;
+         break;
+      }
+      break;
+   default:
+      break;
+   }
+
+   // The final check. See if the ship has the ability to execute the order.
+   // Transport ships modify escort and defense orders into formate orders.
+   final_order = order;
+   final_target = target;
+
+   switch (order) {
+   case ePO_Attack:
+      if (!is_warship(ship)) {
+         iConversation.OneLiner(ship, "", "Negative. This is not a warship I am flying!");
+         return;
+      }
+      break;
+   case ePO_DefendMe:
+      if (!is_warship(ship)) {
+         // Freighters just move to formation.
+         final_order = ePO_Formate;
+         final_target = player;
+      }else {
+      }
+      break;
+   case ePO_Escort:
+      // Freighters just move to formation.
+      if (!is_warship(ship)) {
+         final_order = ePO_Formate;
+      }
+      break;
+   case ePO_Dock:
+      break;
+   case ePO_Undock:
+      break;
+   case ePO_CollectPods:
+      break;
+   case ePO_CollectPod:
+      break;
+   case ePO_UndockPods:
+      break;
+   case ePO_FuelShip:
+   case ePO_FuelFleet:
+   case ePO_DrainFuel:
+      if (!is_tanker(ship)) {
+         iConversation.OneLiner(ship, "", "Negative. I am not a tanker");
+         return;
+      }
+      break;
+   case ePO_Prospect:
+      if (!is_prospector(ship)) {
+         iConversation.OneLiner(ship, "", "Negative. I am not a science ship");
+         return;
+      }
+      break;
+   case ePO_ScanSky:
+      if (!is_long_range_scan(ship)) {
+         iConversation.OneLiner(ship, "", "Negative. No long range sensors");
+         return;
+      }
+      break;
+   case ePO_Mine:
+      if (!is_miner(ship)) {
+         iConversation.OneLiner(ship, "", "Negative. I am not a mining rig");
+         return;
+      }
+      break;
+   default:
+      break;
+   }
+
+   // Our command made it. Give the acknolegement.
+   switch (final_order) {
+   case ePO_Halt:
+      iConversation.OneLiner(ship, "", "Halting");
+      break;
+   case ePO_Attack:
+      iConversation.OneLiner(ship, "", "Attacking your target");
+      break;
+   case ePO_DefendMe:
+      iConversation.OneLiner(ship, "", "Defending you");
+      break;
+   case ePO_Escort:
+      iConversation.OneLiner(ship, "", "Moving to escort");
+      break;
+   case ePO_Formate:
+      iConversation.OneLiner(ship, "", "Moving into formation");
+      break;
+   case ePO_Dock:
+      iConversation.OneLiner(ship, "", "Docking");
+      break;
+   case ePO_Undock:
+      iConversation.OneLiner(ship, "", "Undocking");
+      break;
+   case ePO_CollectPods:
+      iConversation.OneLiner(ship, "", "Loading pods");
+      break;
+   case ePO_CollectPod:
+      iConversation.OneLiner(ship, "", "Loading target pod");
+      break;
+   case ePO_UndockPods:
+      iConversation.OneLiner(ship, "", "Unloading all pods");
+      break;
+   case ePO_FuelShip:
+      iConversation.OneLiner(ship, "", "Fueling ship");
+      break;
+   case ePO_FuelFleet:
+      iConversation.OneLiner(ship, "", "Fueling fleet");
+      break;
+   case ePO_DrainFuel:
+      iConversation.OneLiner(ship, "", "Draining fuel pod");
+      break;
+   case ePO_Prospect:
+      iConversation.OneLiner(ship, "", "Science ship going for asteroid");
+      break;
+   case ePO_ScanSky:
+      iConversation.OneLiner(ship, "", "Scanning for asteroids");
+      break;
+   case ePO_Mine:
+      iConversation.OneLiner(ship, "", "Mining rig going for asteroid");
+      break;
+   default:
+      break;
+   }
+
+   // Set the ships new orders, so the watch task can pick them up.
+
+   atomic {
+      Object.SetIntProperty(ship, "gtNewOrder", final_order);
+      Object.SetHandleProperty(ship, "gtNewOrderTarget", final_target);
+   }
+}
+
+
+
+task wingman_watch(hship ship)
+{
+   int wingman_state;
+   bool debug_on = true;
+
+   while (1) {
+      switch (wingman_state) {
+      case eSS_None:
+         break;
+      case eSS_Escort:
+         break;
+      case eSS_Attack:
+         break;
+      case eSS_AttackStart:
+         break;
+      case eSS_AttackNewTarget:
+         break;
+      case eSS_Flee:
+         // If new order, and not acceptable type, reject it, tell player we are fleeing.
+         break;
+      case eSS_FleeStart:
+         break;
+      case eSS_LoadPodWait:
+         // if new order, and not a valid type, reject it, tell player we are loading pods.
+         break;
+      case eSS_LoadPodStart:
+         break;
+      case eSS_LoadPodComplete:
+         break;
+      default:
+         // Should not be here, change state to eSS_None.
+         wingman_state = change_state(wingman_state, eSS_None, debug_on);
+         break;
+      }
+   }
+}
+
+
+// If this ship is docked to a larger ship, return that ship.
+// Move this code to tsShip.
+hisim DockParent(hship ship)
+{
+   return iSim.Cast(Sim.Parent(ship));
+}
+
+
+eShipState change_state(eShipState state, eShipState new_state, bool debug_on)
+{
+   if (debug_on) {
+      debug Debug.PrintString(String.FormatStrStr("tPcGuards state change %s->%s\n",
+                                                  state2string(state),
+                                                  state2string(new_state)));
+   }
+
+   return new_state;
+}
+
+
+
+
+string state2string(eShipState state)
+{
+   switch (state) {
+   case eSS_Init:
+      return "eSS_Init";
+      break;
+   case eSS_None:   
+      return "eSS_None";
+      break;
+   case eSS_Escort:   
+      return "eSS_Escort";
+      break;
+   case eSS_Attack:   
+      return "eSS_Attack";
+      break;
+   case eSS_AttackStart:   
+      return "eSS_AttackStart";
+      break;
+   case eSS_AttackNewTarget:   
+      return "eSS_AttackNewTarget";
+      break;
+   case eSS_Flee:   
+      return "eSS_Flee";
+      break;
+   case eSS_FleeStart:   
+      return "eSS_FleeStart";
+      break;
+   case eSS_LoadPodWait:   
+      return "eSS_LoadPodWait";
+      break;
+   case eSS_LoadPodStart:   
+      return "eSS_LoadPodStart";
+      break;
+   case eSS_LoadPodComplete:   
+      return "eSS_LoadPodComplete";
+      break;
+   default:
+      break;
+   }
+
+   return "eSS_Invalid";
+
+}
+
+
+int PriorOrder(hship ship)
+{
+   return Object.IntProperty(ship,"gt_prior_order");
+}
+
+SetPriorOrder(hship ship, int order_type)
+{
+   Object.AddIntProperty(ship,"gt_prior_order", order_type);
+}
+
+bool is_long_range_scan(hship ship)
+{
+   return (Object.IntProperty(ship,"scan_range") >= 1);
+}
+
+bool is_prospector(hship ship)
+{
+   return (Object.IntProperty(ship,"prospector") >= 1);
+}
+
+bool is_miner(hship ship)
+{
+   return (Object.IntProperty(ship,"miner") >= 1);
+}
+
+bool is_tanker(hship ship)
+{
+   return (Object.IntProperty(ship,"tanker") >= 1);
+}
+
+
+// Is this an armed ship? Transports and utility vessels are excluded.
+bool is_warship(hship ship)
+{
+   if (iSim.Type(ship) & (T_Fighter | T_Tug | T_Patcom | T_Interceptor | T_Corvette | T_Destroyer | T_Cruiser | T_Carrier)) {
+      return true;
+   }
+   return false;
+}
+
+
+// Don't allow attacks on planets, nebula or other non-ship or station type items.
+bool is_valid_target(hisim target)
+{
+   if (iSim.Type(target) & (TM_Ship | T_Asteroid | T_CargoPod | T_Gunstar | T_Station | T_BioBomber)) {
+      return true;
+   }
+
+   return false;
+}
+
+// Don't allow approch orders to stars or planets or missiles or other odd items.
+bool is_valid_destination(hisim target)
+{
+   if (iSim.Type(target) & (TM_Ship | T_Waypoint | T_LagrangePoint | T_Asteroid | T_CargoPod
+                            | T_Gunstar | T_Station | T_BioBomber)) {
+      return true;
+   }
+
+   return false;
+}
+
+
+bool station_known(int station_type) {
+
+   switch (station_type) {
+   case ept_PirateBase :
+   case ept_PirateCove :
+   case ept_PirateOutpost:
+   case ept_GangsterHideout:
+      return false;
+      break;
+   default:
+      break;
+   }
+
+   return true;
+} 
+
+
+
+//bool is_mine(hhabitat station) {
+bool is_mine(hisim station) {
+   int station_type;
+
+
+   if (T_Station != iSim.Type(station)) {
+      return false;
+   }
+
+   station_type = tLProduction.GetType(station);
+
+   switch (station_type) {
+   case HT_WaterMine:
+   case HT_OrganicsMine:
+   case HT_InorganicsMine:
+   case HT_BiomassMine:
+   case HT_CommonMetalsMine:
+   case HT_RareMetalsMine:
+   case HT_ExoticMetalsMine:
+   case HT_RadioactivesMine:
+   case HT_FusionableGasesMine:
+   case HT_NeutroniumMine:
+      return true;
+      break;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+
+/*    
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

@@ -27,8 +27,8 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    tLTrade,
    tEpicMoney,
    tTime,
-   tEFaction,
-   tEpicFleet,
+   tsFaction,
+   tsShip,
    tPodUtil,
    tEShipCreation,
    tPcOwner;
@@ -116,13 +116,13 @@ TestOrder()
    hmapentity station;
    hship player = iShip.FindPlayerShip();
    hgroup trade_group = Group.Create();
-   hfaction player_faction = tEFaction.PlayerFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
 
 
 
    station = iHabitat.Nearest(iMapEntity.SystemHabitats(), player);
 
-   ship = iShip.Create("ini:/sims/ships/utility/freighter","CargoTest");
+   ship = tsShip.Create("ini:/sims/ships/utility/freighter","CargoTest");
    iShip.InstallAIPilot(ship, 4.0, 0.25, 0.5,"","","","");
    iSim.SetFaction(ship, player_faction);
    Sim.SetCullable(ship, false);

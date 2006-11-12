@@ -20,10 +20,13 @@ iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker,
 iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
 iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
 iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
-tEpicGuiEnum,
-tEpicGui,
-tEpicFleet,
-tTime;
+
+   tEpicGuiEnum,
+   tEpicGui,
+   tsShipEnum,
+   tsShip,
+   tsPlayerFleet,
+   tTime;
 
 
 
@@ -915,8 +918,8 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
     for (i=0;i<total;++i) {
         wingman = iShip.Cast(List.GetNth(player_fleet,i));
 
-        fuel = tEpicFleet.Fuel(wingman);
-        jump_cost = tEpicFleet.FuelPerJump(wingman);
+        fuel = tsShip.Fuel(wingman);
+        jump_cost = tsShip.FuelPerJump(wingman);
 
         if (jump_cost > fuel) {
            // ejump_low_fuel, "We don't have enough fuel to jump Sir"
@@ -939,8 +942,8 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
     }
 
     // The player is now clear to jump.
-    fuel = tEpicFleet.Fuel(player);
-    jump_cost = tEpicFleet.FuelPerJump(player);
+    fuel = tsShip.Fuel(player);
+    jump_cost = tsShip.FuelPerJump(player);
 
     if (jump_cost < fuel) {
 
@@ -950,9 +953,9 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
         }
 
         atomic{
-            fuel = tEpicFleet.Fuel(player);
+            fuel = tsShip.Fuel(player);
             fuel = fuel - jump_cost;
-            tEpicFleet.SetFuel(player, fuel);
+            tsShip.SetFuel(player, fuel);
         }
 
         Global.CreateBool("gt_ejump_passed", GA_Write|GA_NoSave, false);
@@ -1023,14 +1026,14 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
         for (i=0;i<total;++i) {
            wingman = iShip.Cast(List.GetNth(player_fleet,i));
 
-           fuel = tEpicFleet.Fuel(wingman);
-           jump_cost = tEpicFleet.FuelPerJump(wingman);
+           fuel = tsShip.Fuel(wingman);
+           jump_cost = tsShip.FuelPerJump(wingman);
 
            if (jump_cost < fuel) {
 
               atomic{
-                 fuel = tEpicFleet.Fuel(wingman);
-                 tEpicFleet.SetFuel(wingman, fuel-jump_cost);
+                 fuel = tsShip.Fuel(wingman);
+                 tsShip.SetFuel(wingman, fuel-jump_cost);
               }
 
               // Put a bit of time between each one.
@@ -1619,7 +1622,7 @@ set find_following_ships(hship ship) {
 
     // Find all player fleet ships that are formated to the player
     // and jump them to the players current Lpoint.
-    player_ships = tEpicFleet.PlayerFleet();
+    player_ships = tsPlayerFleet.PlayerFleet();
     total = List.ItemCount(player_ships);
 
     for (i=0;i<total;++i) {

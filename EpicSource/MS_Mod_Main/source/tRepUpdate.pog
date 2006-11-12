@@ -42,7 +42,7 @@ uses  Sim,
       iMod,
       iShipCreation,
       iDockport,
-      tEFaction;
+      tsFaction;
 
 
 
@@ -81,14 +81,14 @@ Update()
       faction = iFaction.Cast(Set.FirstElement(factions));
       Set.Remove(factions, faction);
 
-      current_action = tEFaction.CurrentAction(faction);
+      current_action = tsFaction.CurrentAction(faction);
 
 
       level_change = current_action * events_to_level;
 
       level_change = level_change + iFaction.Feeling(faction, player);
       
-      default_level = tEFaction.DefaultFeeling(faction);
+      default_level = tsFaction.DefaultFeeling(faction);
 
       // Time moves the faction level slowly toward default.
       if (level_change > default_level) {
@@ -115,11 +115,11 @@ Update()
       iFaction.SetFeeling(player, faction, level_change);
 
       // The current action is accounted for, clear it.
-      tEFaction.SetCurrentAction(faction, 0);
+      tsFaction.SetCurrentAction(faction, 0);
 
       
       // Now remember these new actions for a while.
-      past_action = tEFaction.PastAction(faction);
+      past_action = tsFaction.PastAction(faction);
 
       past_action = past_action + current_action;
 

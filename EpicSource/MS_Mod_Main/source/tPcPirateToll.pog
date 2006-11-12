@@ -39,8 +39,9 @@ uses    Sim,
         tEShipCreation,
         tPodUtil,
         tEpicComms,
-        tEpicFleet,
-        tEFaction,
+        tsShip,
+        tsPlayerFleet,
+        tsFaction,
         tEpicMoney,
         tShipName,
         tLCenter,
@@ -192,7 +193,7 @@ setup_toll_marker(hisim marker)
    hmapentity location;
    hgroup station_cull;
    hfaction toll_faction;
-   hfaction player_faction = tEFaction.PlayerFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
    hisim owner;
    eFeelingType level;
 
@@ -228,7 +229,7 @@ setup_toll_marker(hisim marker)
 
    // Read the toll setup properties. Basically, how much we should charge
    // the player.
-   toll_percent = INIFile.Float(control_file, "Toll", tEFaction.Level2String(level), 0.1);
+   toll_percent = INIFile.Float(control_file, "Toll", tsFaction.Level2String(level), 0.1);
    minimum_value = INIFile.Int(control_file, "Toll", "minimum_value", 6000);
 
    // Read the percent chance that this toll is actually operating.
@@ -268,7 +269,7 @@ attack_player_order(hship patrol_ship)
    set player_set;
    hgroup player_fleet;
    hgroup patrol_group = Sim.Group(patrol_ship);
-   hfaction player_faction = tEFaction.PlayerFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
    int total, i;
 
    debug Debug.PrintString("tPcPirateToll.attack_player_order\n");
@@ -305,7 +306,7 @@ task toll_controller(hmapentity location, hship ship)
    hship player = iShip.FindPlayerShip();
    set player_set;
    hgroup player_fleet;
-   hfaction player_faction = tEFaction.PlayerFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
    hfaction toll_faction;
    hgroup patrol_group = Sim.Group(ship);
 
@@ -369,7 +370,7 @@ task toll_controller(hmapentity location, hship ship)
          // Player refused to pay
 
          // Penalty to the player same as attacking a ship.
-         tEFaction.AdjustCurrentAction(toll_faction, -2.0);
+         tsFaction.AdjustCurrentAction(toll_faction, -2.0);
 
          attack_player_order(ship);
 
@@ -401,7 +402,7 @@ task toll_controller(hmapentity location, hship ship)
          iComms.Shout(ship, "", "pcpt_player_fled_attack");
 
          // Penalty to the player same as attacking a ship.
-         tEFaction.AdjustCurrentAction(toll_faction, -2.0);
+         tsFaction.AdjustCurrentAction(toll_faction, -2.0);
 
          attack_player_order(ship);
 
@@ -766,7 +767,7 @@ int cargo_pod_value(hmapentity location)
    set pod_set;
 
    // Build a set of all pods near player ships
-   fleet_list = tEpicFleet.PlayerFleet();
+   fleet_list = tsPlayerFleet.PlayerFleet();
    total = List.ItemCount(fleet_list);
    for (i=0;i<total;++i) {
       ship = iSim.Cast(List.GetNth(fleet_list,i));
@@ -859,7 +860,7 @@ create_patrol(hisim operation, hisim waypoint, hgroup cull_group, string ship_ty
    total = float2int(int2float(fleets)/threat);
 
    for (i=0;i<total;++i) {
-      escort = iShip.Create(escort_template, tShipName.ShipName("underworld",10000));
+      escort = tsShip.Create(escort_template, tShipName.ShipName("underworld",10000));
 
       tsPilotSetup.SetupEscort(escort, 0.9, 0.5);
 

@@ -62,15 +62,12 @@ uses
 //	Input,
 //	iRegion,
 	UniGUI,
-	tEFactionEnum,
-	tEFaction,
+	tsFactionEnum,
+	tsFaction,
 	tEpicGuiEnum,
 	tEpicGui,
 	tSaveGui,
    tStationEnum,
-//	ECargoTypes,
-//	tEconUtil,
-//	tEpicFleet,
 	tEpicMoney;
 
 	
@@ -89,7 +86,7 @@ prototype hide_window( hwindow win );
 prototype show_window( hwindow win );
 prototype hwindow get_top_container();
 prototype hsim docked_to_station();	// returns handle to station the player is docked to, else returns none
-prototype copy_feelings(hfaction source, hfaction new_faction);		// should be form tEFaction but can't get compiler to find it
+prototype copy_feelings(hfaction source, hfaction new_faction);		// should be form tsFaction but can't get compiler to find it
 prototype RunCheck();			// UniGui start checker
 prototype StartScreen();		// Start screen
 prototype ExitScreen();			// End screen
@@ -308,7 +305,7 @@ hwindow create_shady_box( hwindow shady_bar )
 EraseIdBtn()
 {
 	hwindow button = GUI.FocusedWindow();
-	hfaction player_faction = tEFaction.PlayerFaction();
+	hfaction player_faction = tsFaction.PlayerFaction();
 	hfaction independents = iFaction.Find("Independents");
    hfaction owner;
    hisim station = iSim.Cast(docked_to_station());
@@ -319,7 +316,7 @@ EraseIdBtn()
    owner = iSim.Faction(station);
 
    // If the player is not at least liked by this faction, refuse the identity change.
-   if (iFaction.Feeling(owner, player_faction) < tEFaction.String2LowerLevel("FT_Like")){
+   if (iFaction.Feeling(owner, player_faction) < tsFaction.String2LowerLevel("FT_Like")){
       iHUD.PlayAudioCue(AC_InvalidInput);
       return;
    }

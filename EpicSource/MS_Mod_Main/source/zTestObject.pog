@@ -48,7 +48,7 @@ task object_task()
    debug {
       Debug.PrintHandle(state);
       Debug.PrintString("\n");
-      Debug.PrintInt(Object.IDModulus(state, 1));
+      Debug.PrintInt(Object.IDModulus(state, 2147483647));
       Debug.PrintString("\n");
    }
 

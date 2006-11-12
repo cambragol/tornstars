@@ -1,0 +1,142 @@
+//*******************************************************************************************/
+//
+// tsPosition.pog
+//
+// This file implements utilities dealing with relations between objects. 
+// Nearest, and vectors;
+// 
+// 
+//
+// November 2006, Jon Freise
+//******************************************************************************************/
+package tsPosition;
+
+uses    Sim,
+iShip,
+iSim,
+iPilotSetup,
+Debug,
+Global,
+GUI,
+iDirector,
+iGUI,
+iHUD,
+iHabitat,
+iMapEntity,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+Text,
+iUtilities,
+iCargo,
+iInventory,
+iComms,
+iConversation,
+iAi,
+Math;
+
+
+
+
+provides Location,
+         Nearest;
+
+
+//******************************************************************************************/
+// sim = sim to find coords of,  relsim = find coords reletive to;
+// vector_string is the name of the vector object property that will be used to store the result
+// attached to the sim.
+//******************************************************************************************/
+Location(hsim sim, hsim relsim, string vector_string)   
+{
+  hsim Pnt1 = Sim.Create("ini:/sims/nav/waypoint", "Triangulation Point 1");
+  hsim Pnt2 = Sim.Create("ini:/sims/nav/waypoint", "Triangulation Point 2");
+  hsim Pnt3 = Sim.Create("ini:/sims/nav/waypoint", "Triangulation Point 3");
+  hsim marker;
+
+  float PDist = Sim.DistanceBetweenCentres(sim, relsim);		//Distance away from center to place triangulation
+  									//points.  Could be any number, but accuracy is proably
+  									//best if it is similar to other distances
+  float POrigDist;
+  float Pnt1Dist;
+  float Pnt2Dist;
+  float Pnt3Dist;
+  float temp;
+  float simx;
+  float simy;
+  float simz;
+
+  atomic					//Want to make sure that distances are calculated at the same time
+  {
+    Sim.PlaceRelativeTo(Pnt1, relsim, PDist, 0, 0);		//Place triangulation points
+    Sim.PlaceRelativeTo(Pnt2, relsim, 0, PDist, 0);
+    Sim.PlaceRelativeTo(Pnt3, relsim, 0, 0, PDist);
+    POrigDist = Sim.DistanceBetweenCentres(sim, relsim);	//Find Distances
+    Pnt1Dist = Sim.DistanceBetweenCentres(sim, Pnt1);
+    Pnt2Dist = Sim.DistanceBetweenCentres(sim, Pnt2);
+    Pnt3Dist = Sim.DistanceBetweenCentres(sim, Pnt3);
+  }
+
+  Sim.Destroy(Pnt1);			//Only needed points for distances
+  Sim.Destroy(Pnt2);
+  Sim.Destroy(Pnt3);
+
+  //simx = (POrigDist * POrigDist - Pnt1Dist * Pnt1Dist + PDist * PDist) / (2 * PDist)	//Can't use because of expansion bug
+  //simy = (POrigDist * POrigDist - Pnt2Dist * Pnt2Dist + PDist * PDist) / (2 * PDist)
+  //simz = (POrigDist * POrigDist - Pnt2Dist * Pnt2Dist + PDist * PDist) / (2 * PDist)
+
+  //Same as above, but separated out into multiple lines
+  simx = POrigDist * POrigDist;
+
+  temp = PDist * PDist;
+  temp = temp + simx;
+
+  simx = Pnt1Dist * Pnt1Dist;
+  simx = temp - simx;
+  simx = simx / 2;
+  simx = simx / PDist;
+
+  simy = Pnt2Dist * Pnt2Dist;
+  simy = temp - simy;
+  simy = simy / 2;
+  simy = simy / PDist;
+
+  simz = Pnt3Dist * Pnt3Dist;
+  simz = temp - simz;
+  simz = simz / 2;
+  simz = simz / PDist;
+
+  Object.AddVectorProperty(sim, vector_string, simx, simy, simz);
+}
+
+
+
+hsim Nearest(hsim location, list items)
+{
+   float dist;
+   hsim found, curr;
+   int i, total;
+
+   found = Sim.Cast(List.Head(items));
+   dist = Sim.DistanceBetween( location, found);
+
+   total = List.ItemCount(items);
+   for (i=1;i<total;++i) {
+      curr = Sim.Cast(List.GetNth(items, i));
+      if (Sim.DistanceBetween( location, curr) < dist) {
+         found = curr;
+         dist = Sim.DistanceBetween( location, curr);
+      }
+   }
+   return found;
+}
+
+/*    
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

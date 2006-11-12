@@ -29,7 +29,7 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    tLProduction,
    tLFleet,
    tsFleetOperation,
-   tEFaction;
+   tsFaction;
 
 
 
@@ -285,8 +285,8 @@ AdjustStatus(hhabitat station, eStationStatus status)
       case ESS_Empty:
          hidden = false;
          destroyed = false;
-         empty = tEFaction.EmptyFaction();
-         tEFaction.AddStation(station, empty);
+         empty = tsFaction.EmptyFaction();
+         tsFaction.AddStation(station, empty);
          //iSim.SetFaction(station, empty);
          break;
 

@@ -36,8 +36,8 @@ uses	Sim,
 		iComms,
 		Math,
 		UniGUI,
-      tEFactionEnum,
-      tEFaction,
+      tsFactionEnum,
+      tsFaction,
 		tEpicGuiEnum,
 		tEpicGui,
       tEpicMoney;
@@ -213,7 +213,7 @@ update_faction_list()
    count = List.ItemCount(fac_list);
    for (i=0;i<count;++i) {
       fac = iFaction.Cast(List.GetNth(fac_list,i));
-      if (tEFaction.IsKnown(fac)) {
+      if (tsFaction.IsKnown(fac)) {
 //      if (true) {
          faction = CreateSliderWindow(button_width, 30, Text.Field(iFaction.Name(fac), FT_Text),iFaction.Feeling(fac,player), -1,1);
 
@@ -261,7 +261,7 @@ OnSelectFaction()
 	// Get the currently focused window - it must be the correct system button.
 	hwindow selected_button =	GUI.FocusedWindow();
    hfaction faction = iFaction.Cast(Object.HandleProperty(selected_button, "epic_faction"));	
-   hfaction player = tEFaction.PlayerFaction();
+   hfaction player = tsFaction.PlayerFaction();
 
    Global.CreateHandle("gt_epic_fac_gui_faction",GA_Write,faction);
 
@@ -283,7 +283,7 @@ OnSelectFaction()
 UpgradePress()
 {
    hfaction faction = iFaction.Cast(Global.Handle("gt_epic_fac_gui_faction"));
-   hfaction player = tEFaction.PlayerFaction();
+   hfaction player = tsFaction.PlayerFaction();
    float standing;
    string standing_string;
    string faction_string;
@@ -294,9 +294,9 @@ UpgradePress()
       debug Debug.PrintString("ERROR: upgrade file not found\n");
    }
 
-   faction_string = tEFaction.Type2String(tEFaction.Type(faction));
+   faction_string = tsFaction.Type2String(tsFaction.Type(faction));
    standing = iFaction.Feeling(faction, player);
-   standing_string = tEFaction.Level2String(iFaction.FeelingType(standing));
+   standing_string = tsFaction.Level2String(iFaction.FeelingType(standing));
 
    upgrade_price = INIFile.Int(upgrade_file,faction_string,standing_string,0);
 
@@ -347,7 +347,7 @@ UpgradePress()
 DowngradePress()
 {
    hfaction faction = iFaction.Cast(Global.Handle("gt_epic_fac_gui_faction"));
-   hfaction player = tEFaction.PlayerFaction();
+   hfaction player = tsFaction.PlayerFaction();
    float standing;
    string standing_string;
    string faction_string;
@@ -415,8 +415,8 @@ create_upgrade_button()
    hwindow button_base = GUI.Cast(Global.Handle("tEpicFacGui_upgrade_base"));
 
    hfaction selected_faction = iFaction.Cast(Global.Handle("gt_epic_fac_gui_faction"));
-   hfaction player_faction = tEFaction.PlayerFaction();
-   hfaction empty_faction = tEFaction.PlayerFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
+   hfaction empty_faction = tsFaction.PlayerFaction();
    float standing;
 
    if (none != button_base) {
@@ -445,8 +445,8 @@ create_upgrade_button()
 
    // If the player has been blowing up the factions stuff, don't allow an
    // upgrade. Negative actions are negative values.
-   if ((tEFaction.CurrentAction(selected_faction) < -0.1) || 
-       (tEFaction.PastAction(selected_faction) < -0.1)) {
+   if ((tsFaction.CurrentAction(selected_faction) < -0.1) || 
+       (tsFaction.PastAction(selected_faction) < -0.1)) {
       return;
    }
 
@@ -474,8 +474,8 @@ create_downgrade_button()
    hwindow button_base = GUI.Cast(Global.Handle("tEpicFacGui_downgrade_base"));
 
    hfaction selected_faction = iFaction.Cast(Global.Handle("gt_epic_fac_gui_faction"));
-   hfaction player_faction = tEFaction.PlayerFaction();
-   hfaction empty_faction = tEFaction.PlayerFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
+   hfaction empty_faction = tsFaction.PlayerFaction();
    float standing;
 
    if (none != button_base) {
@@ -881,9 +881,9 @@ hwindow create_faction_detail()
       debug Debug.PrintString("ERROR: upgrade file not found\n");
    }
 
-   faction_string = tEFaction.Type2String(tEFaction.Type(faction));
+   faction_string = tsFaction.Type2String(tsFaction.Type(faction));
    standing = iFaction.Feeling(faction, player);
-   standing_string = tEFaction.Feeling2String(standing);
+   standing_string = tsFaction.Feeling2String(standing);
 
    upgrade_price = INIFile.Int(upgrade_file,faction_string,standing_string,0);
 
@@ -969,7 +969,7 @@ hwindow create_faction_detail()
    width = GUI.WindowCanvasWidth( detail_window) -Global.Int("GUI_scrollbar_width");
    height = GUI.WindowCanvasHeight( detail_window) - 70;
    
-   text_url = tEFaction.Description(faction);
+   text_url = tsFaction.Description(faction);
 
   // text_url = "html:/html/gt_sample_desc";
 
@@ -1012,7 +1012,7 @@ setup_player_allies()
 {
    list factions = iFaction.All();
    int total, i;
-   hfaction player = tEFaction.PlayerFaction();
+   hfaction player = tsFaction.PlayerFaction();
    hfaction faction;
    float feeling;
    set friendly, allied;

@@ -33,8 +33,9 @@ uses    Sim,
         iAI,
 
         tEpicComms,
-        tEpicFleet,
-        tEFaction,
+        tsShipEnum,
+        tsPlayerFleet,
+        tsFaction,
         tEpicMoney,
         tShipName,
         tPcOwner,
@@ -186,7 +187,7 @@ setup_hired_ship(hship ship)
 
    ship_template = INIFile.String(control_file, "Properties", "template", "none");
 
-   faction_standing = tEFaction.String2LowerLevel(INIFile.String(control_file, 
+   faction_standing = tsFaction.String2LowerLevel(INIFile.String(control_file, 
                                                                  "Properties", 
                                                                  "faction_standing",
                                                                  "FT_Neutral"));
@@ -239,7 +240,7 @@ task Comms() {
     float standing;
     hhabitat station;
     hgroup station_cull;
-    list player_fleet = tEpicFleet.PlayerFleet();
+    list player_fleet = tsPlayerFleet.PlayerFleet();
     bool finished;
 
     fleet_total = List.ItemCount(player_fleet);
@@ -340,7 +341,7 @@ task Comms() {
                 iConversation.Say(ship,"", "pchs_join_fleet");
 
                 tEpicMoney.ChangeShipAccount(-1*hire_fee);
-                tEpicFleet.HireShip(ship);
+                tsPlayerFleet.HireShip(ship);
 
 
                 // Prevent this sim from culling!

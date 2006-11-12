@@ -47,7 +47,7 @@ uses	Sim,
 		tEconUtil,
       tEconSmall,
 		tPodUtil,                
-		tEpicFleet;
+		tsShip;
 
 
 
@@ -547,7 +547,7 @@ BuyPressed()
          //iInventory.AddWithoutMarkingNew(iInventory.CargoTypeFromName(iCargo.Name(cargo)), 1 );
          // All buys show up as pods. The player can store them, but then they lose faction.
          pod = tPodUtil.CreateCargoPod(tEconUtil.String2CargoType(iCargo.Name(cargo)), "Player", iFaction.Name(iSim.Faction(iSim.Cast(trade_center))));
-         //tEpicFleet.PurchaseShip(iShip.Cast(pod));
+         //tsShip.PurchaseShip(iShip.Cast(pod));
          Sim.PlaceAt(pod, marker);
       } 
    }
@@ -615,7 +615,7 @@ UnloadPressed()
       iInventory.Remove(type, 1);
 
       pod = tPodUtil.CreateCargoPod(tEconUtil.String2CargoType(iCargo.Name(cargo)), "Player", "Player");
-      //tEpicFleet.PurchaseShip(iShip.Cast(pod));
+      //tsShip.PurchaseShip(iShip.Cast(pod));
 
       Sim.PlaceAt(pod, marker);
    }

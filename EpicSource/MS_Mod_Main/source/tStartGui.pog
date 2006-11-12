@@ -36,11 +36,12 @@ uses	Sim,
       CargoTypes,
       tEconUtil,
       tPodUtil,
-      tEFaction,
+      tsFaction,
 		UniGUI,
       tEpicGuiEnum,
       tEpicGui,
-      tEpicFleet,
+      tsShip,
+      tsPlayerFleet,
       tEpicMoney;
 
 
@@ -416,13 +417,13 @@ task setup_player()
    player_ship_prefit = INIFile.String(start_file, entry_key, "player_ship_prefit","none");
 
    if ("none" != player_ship_prefit) {
-      prefit = iShip.Create(player_ship_prefit, "player_ship_name");
+      prefit = tsShip.Create(player_ship_prefit, "player_ship_name");
       Sim.SetCullable(prefit, false);
 
       if (none != prefit) {
          Sim.PlaceNear(prefit, player, 1km);
          // Drop the player into the prefit ship.
-         tEpicFleet.NewPlayerShip(prefit);
+         tsPlayerFleet.NewPlayerShip(prefit);
 
          // Give the player pilot a moment to move over.
          Task.Sleep(Task.Current(), 0.1);
@@ -497,12 +498,12 @@ add_player_wingmen(string entry_key, hinifile start_file)
       wingman_ini = INIFile.NumberedString(start_file,entry_key,"wingman_ini",item_count,"");
       ++item_count;
       
-      wingman = iShip.Create(wingman_ini, wingman_name);
+      wingman = tsShip.Create(wingman_ini, wingman_name);
 
       if (none != wingman) {
          Sim.PlaceNear(wingman, player, 5km);
 
-         tEpicFleet.HireShip(wingman);
+         tsPlayerFleet.HireShip(wingman);
       }
 
       debug {
@@ -555,7 +556,7 @@ adjust_player_standing(string entry_key, hinifile start_file)
 {
    int adjust_count, adjust_known;
    string adjust_name, adjust_string;
-   hfaction player_faction = tEFaction.PlayerFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
    hfaction target;
    float adjust_level;
 
@@ -566,8 +567,8 @@ adjust_player_standing(string entry_key, hinifile start_file)
       adjust_known = INIFile.NumberedInt(start_file,entry_key,"adjust_known",adjust_count,0);
 
       // Lookup the faction
-      target = tEFaction.EFind(adjust_name);
-      adjust_level = tEFaction.String2Level(adjust_string);
+      target = tsFaction.EFind(adjust_name);
+      adjust_level = tsFaction.String2Level(adjust_string);
 
       // Change the feeling
       iFaction.SetFeeling(player_faction, target, adjust_level);
@@ -575,7 +576,7 @@ adjust_player_standing(string entry_key, hinifile start_file)
 
       // The player may begin the game knowing some otherwise hidden factions.
       if (adjust_known > 0) {
-         tEFaction.SetKnown(target, true);
+         tsFaction.SetKnown(target, true);
       }
 
       debug {

@@ -139,24 +139,33 @@ string TranslatedString(string key_string, string style, int index)
 {
    string full_key;
    string returned_string;
+   string style_key;
 
-   // A zero index means don't use the index.
-   if (index != 0) {
-      full_key = String.Join(key_string,String.FormatInt("_%d", index));
-   }
+   full_key = key_string;
 
    // an empty string means don't use the style feature
    if ("" !=style) {
       full_key = String.Join(key_string,"_");
-      full_key = String.Join(key_string,style);
+      full_key = String.Join(full_key,style);
+      style_key = full_key;
+   }
+
+   // A zero index means don't use the index.
+   if (index != 0) {
+      full_key = String.Join(full_key,String.FormatInt("_%d", index));
    }
 
    returned_string = Text.Field(full_key, FT_Text);
 
-
    if ("*"==String.Left(returned_string,1)) {
-      // This string failed to translate, fall back on default.
-      returned_string = Text.Field(key_string, FT_Text);
+      // Numbered string failed to translate, fall back on style.
+
+      returned_string = Text.Field(style_key, FT_Text);
+
+      if ("*"==String.Left(returned_string,1)) {
+         // Style string failed to translate, fall back on default.
+         returned_string = Text.Field(key_string, FT_Text);
+      }
    }
 
    return returned_string;
@@ -175,25 +184,38 @@ string TranslatedStringRandom(string key_string, string style, int highest_index
 string CommsString(string key_string, string style, int index)
 {
    string full_key;
+   string style_key = "";
    string returned_string;
 
-   // A zero index means don't use the index.
-   if (index != 0) {
-      full_key = String.Join(key_string,String.FormatInt("_%d", index));
-   }
+   full_key = key_string;
 
    // an empty string means don't use the style feature
    if ("" !=style) {
       full_key = String.Join(key_string,"_");
-      full_key = String.Join(key_string,style);
+      full_key = String.Join(full_key,style);
+      style_key = full_key;
+   }
+
+   // A zero index means don't use the index.
+   if (index != 0) {
+      full_key = String.Join(full_key,String.FormatInt("_%d", index));
    }
 
    returned_string = Text.Field(full_key, FT_Text);
 
 
    if ("*"==String.Left(returned_string,1)) {
-      // This string failed to translate, fall back on default.
-      return key_string;
+      // Numbered string failed to translate, fall back on style.
+
+      returned_string = Text.Field(style_key, FT_Text);
+
+      if ("*"==String.Left(returned_string,1)) {
+         // Style string failed to translate, fall back on default.
+
+         return key_string;
+      }
+      
+      return style_key;
    }
 
    return full_key;

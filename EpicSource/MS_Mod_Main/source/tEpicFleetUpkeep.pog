@@ -22,8 +22,10 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    iGUI,
    tStationEnum,
    tStation,
-   tEFaction,
-   tEpicFleet,
+   tsFaction,
+   tsShipEnum,
+   tsShip,
+   tsPlayerFleet,
    tEpicMoney,
    tLProduction,
    tLInventory,
@@ -82,19 +84,19 @@ RunUpkeep()
    bool deserted = false;
 
    // Get list of player ships
-   player_fleet = tEpicFleet.PlayerFleet();
+   player_fleet = tsPlayerFleet.PlayerFleet();
 
    total = List.ItemCount(player_fleet);
    for (i=0;i<total;++i) {
       ship = iShip.Cast(List.GetNth(player_fleet,i));
-      upkeep = tEpicFleet.DailyUpkeep(ship);
+      upkeep = tsShip.DailyUpkeep(ship);
 
 
 
       if (upkeep > tEpicMoney.ShipAccount()) {
          // Player does not have the funds. Desert the ship.
          if (player != ship) {
-            tEpicFleet.FireShip(ship);
+            tsPlayerFleet.FireShip(ship);
             deserted = true;
             leaving_ship = ship;
          }
@@ -105,9 +107,9 @@ RunUpkeep()
 
       // Deduct the days fuel usage from the ships fuel tanks.
       atomic {
-         fuel_cost = tEpicFleet.Fuel(ship);
-         fuel_cost = fuel_cost - tEpicFleet.DailyFuel(ship);
-         tEpicFleet.SetFuel(ship, fuel_cost);
+         fuel_cost = tsShip.Fuel(ship);
+         fuel_cost = fuel_cost - tsShip.DailyFuel(ship);
+         tsShip.SetFuel(ship, fuel_cost);
       }
 
 
@@ -223,7 +225,7 @@ debug_type(int ship_type, string type_name)
 
 mining_rig_upkeep(hship rig)
 {
-   hfaction player_faction = tEFaction.PlayerFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
    hhabitat station;
    int mining_fee, richness;
    list cargo_list;
@@ -276,7 +278,7 @@ mining_rig_upkeep(hship rig)
                debug Debug.PrintString("Rig in position\n");
 
                // If we don't have fuel, we don't drill.
-               if (tEpicFleet.Fuel(rig) > 0.1) {
+               if (tsShip.Fuel(rig) > 0.1) {
 
                   // Ok, the rig is in position. Charge the player a 
                   // fee and produce some ore
@@ -392,8 +394,8 @@ ProduceCargo(hhabitat station)
 }
 
 prospector_upkeep(hship explorer) {
-   hfaction empty_faction= tEFaction.EmptyFaction();
-   hfaction player_faction = tEFaction.PlayerFaction();
+   hfaction empty_faction= tsFaction.EmptyFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
    hhabitat station;
    int prospecting_fee, study_days;
    string global_name;
@@ -478,7 +480,7 @@ prospector_upkeep(hship explorer) {
                      // player.
 
                      //iSim.SetFaction(iSim.Cast(station), player_faction);
-                     tEFaction.AddStation(station, player_faction);
+                     tsFaction.AddStation(station, player_faction);
 
                      // Send the player an email, and let them know the asteroid is thiers.
                      email_sender = Text.Field(Sim.Name(explorer), FT_Text);

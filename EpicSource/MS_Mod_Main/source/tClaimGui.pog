@@ -2,7 +2,7 @@
 //
 // tClaimGui.pog
 //
-// A GUI package that allows the player to pick a start position in the game.
+// A GUI package that allows the player to sell claims to asteroids.
 // 
 // 
 // 
@@ -36,14 +36,13 @@ uses	Sim,
       tEconUtil,
       tPodUtil,
       tEpicFactionEnum,
-      tEFaction,
+      tsFaction,
 		UniGUI,
       tEpicGuiEnum,
       tEpicGui,
       tStationEnum,
       tStation,
       tEconSmall,
-      tEpicFleet,
       tEpicMoney,
       uString;
 
@@ -204,7 +203,7 @@ choose_position(hwindow button)
    string description;
    hwindow text_window = GUI.Cast(Global.Handle("gt_claimgui_text_win"));
    hhabitat station = iHabitat.Cast(Object.HandleProperty(button, "gt_claimgui_station"));
-   hfaction player_faction = tEFaction.PlayerFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
 
 
    description = "Mine: ";
@@ -256,7 +255,7 @@ OnSellPress()
    hhabitat buyer_station;
    hship player = iShip.FindPlayerShip();
    hfaction station_faction;
-   hfaction player_faction = tEFaction.PlayerFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
 
    buyer_station = iHabitat.Nearest(iMapEntity.SystemHabitats(),player);
    station_faction = iSim.Faction(iSim.Cast(buyer_station));
@@ -266,7 +265,7 @@ OnSellPress()
       return;
    }
 
-   tEFaction.AddStation(station, station_faction);
+   tsFaction.AddStation(station, station_faction);
 
    tEpicMoney.ChangeShipAccount(Object.IntProperty(station, "gt_claimgui_price"));
 
@@ -284,7 +283,7 @@ OnAbandonPress()
    hhabitat station = iHabitat.Cast(Global.Handle("gt_claimgui_station"));
 
    // Return the station to the empty faction.
-   tEFaction.AddStation(station, tEFaction.EmptyFaction());
+   tsFaction.AddStation(station, tsFaction.EmptyFaction());
 
    remove_all_buttons();
 
@@ -418,7 +417,7 @@ create_claim_window()
 
 
    player = iFaction.Find("Player");
-   station_list = tEFaction.Stations(player);
+   station_list = tsFaction.Stations(player);
 
    if (0 == List.ItemCount(station_list)) {
       // there are no claims, so bail out.
@@ -553,7 +552,7 @@ create_sell_button()
    hship player = iShip.FindPlayerShip();
    hhabitat station;
    hfaction station_faction;
-   hfaction player_faction = tEFaction.PlayerFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
 
    if (none != button_base) {
       GUI.DeleteWindow(button_base);
@@ -566,7 +565,7 @@ create_sell_button()
       return;
    }
 
-   if (!(tEFaction.Type(station_faction) & FCT_MegaCorp)){
+   if (!(tsFaction.Type(station_faction) & FCT_MegaCorp)){
       // not a mega corp, so they don't buy mines.
       return;
    }

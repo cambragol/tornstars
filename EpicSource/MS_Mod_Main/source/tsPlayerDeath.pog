@@ -1,0 +1,102 @@
+//*******************************************************************************************/
+//
+// tsPlayerDeath.pog
+//
+// Called when the players ship is killed
+//
+//******************************************************************************************/
+
+package tsPlayerDeath;
+
+uses    Sim,
+        iShip,
+        iSim,
+        iPilotSetup,
+        Debug,
+        Global,
+        GUI,
+        iDirector,
+        iGUI,
+        iHUD,
+        iHabitat,
+        iMapEntity,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        iUtilities,
+        iCargo,
+        iInventory,
+        iComms,
+        iAi,
+        iWingmen,
+        iRemotePilot,
+        iDeathScript,
+        iGame,
+        Math,
+        iInventory,
+        iConversation,
+        CargoTypes,
+   
+        tStationEnum,
+        tsFaction,
+        tsPlayerFleet,
+        tsShip; 
+
+provides Death;
+
+
+task final_view(hship escape_pod, hship ex_player)
+{
+   eCamera camera;
+
+   iSim.SetIndestructable(escape_pod, true);
+   iSim.StartExplosion(ex_player);
+   
+   // Give the player a few seconds to see they are toast.
+   Task.Sleep(Task.Current(), 3.0);
+
+   iSim.StopExplosion(ex_player, SE_Normal, false);
+   iSim.Kill(ex_player);
+
+   iConversation.OneLiner(none, "name_az","Our ship is gone! We ejected just in time.");
+
+   Task.Sleep(Task.Current(), 10.0);
+
+   iSim.SetIndestructable(escape_pod, false);
+}
+
+// Our player has botched the job. Toss him in an escape pod.
+task Death( hship ship )
+{
+   hship escape_pod;
+
+   // This ship has left the player fleet in a real way.
+   tsPlayerFleet.RemoveFleetShip(ship);
+
+   escape_pod = tsShip.Create("ini:/sims/ships/player/comsec_prefitted", "Escape Pod");
+
+   tsPlayerFleet.NewPlayerShip(escape_pod);
+
+   // Put 100 meters below, as though player detached.
+   Sim.PlaceRelativeTo(escape_pod, ship, 0, 100, -200);
+   Sim.PointAt(escape_pod, ship);
+
+   // Jettison pretty hard to escape the blast radius.
+   // We run reverse to allow the player to see what is happening.
+   Sim.SetVelocityLocalToSim(escape_pod, 0, 0, -100);
+
+   Task.Detach( start final_view(escape_pod, ship));
+}
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

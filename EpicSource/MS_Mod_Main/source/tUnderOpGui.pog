@@ -27,7 +27,7 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    tLCenter,
    tStationEnum,
    tEpicFactionEnum,
-   tEFaction,
+   tsFaction,
    tEconUtil,
    tLProduction,
    tLFleet,
@@ -563,7 +563,7 @@ update_op_info()
    if (none != op) {
 
       op_type = tEconUtil.StationIntToString(tLProduction.GetType(op));
-      faction_name = Text.Field(tEFaction.EName(iSim.Faction(op)), FT_Text);
+      faction_name = Text.Field(tsFaction.EName(iSim.Faction(op)), FT_Text);
       location_name = Text.Field(Sim.Name(center), FT_Text);
       system = Text.Field(iSim.WorldName(center), FT_Text);
 

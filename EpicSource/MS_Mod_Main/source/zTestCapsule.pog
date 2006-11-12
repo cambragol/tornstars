@@ -15,7 +15,8 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
    iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
    iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
-   tEpicFleet;
+   tsPlayerFleet,
+   tsShip;
 
 
 
@@ -35,7 +36,7 @@ task jump_task()
    target = iShip.CurrentTarget(player);
 
    if (T_Station == iSim.Type(target)) {
-      player_fleet = Group.FromList(tEpicFleet.PlayerFleet());
+      player_fleet = Group.FromList(tsPlayerFleet.PlayerFleet());
 
       waypoint = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","jump target"));
 

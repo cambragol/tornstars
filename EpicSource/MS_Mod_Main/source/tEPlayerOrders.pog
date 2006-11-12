@@ -39,10 +39,10 @@ iConversation,
 iAi,
 Math,
 CargoTypes,
-tEpicFleet,
+tsShip,
 tFormation,
 tPodUtil,
-tEFaction,
+tsFaction,
 tStationEnum,
 tStation,
 tLProduction,
@@ -126,7 +126,7 @@ SetPriorOrder(hship ship, int order_type)
 
 bool GroupExists(int group) {
 
-   list fleet = tEpicFleet.ReturnGroup(group);
+   list fleet = tsShip.ReturnGroup(group);
 
    if (List.IsEmpty(fleet)) {
       return false;
@@ -151,7 +151,7 @@ bool Halt(int group) {
    hship ship;
    hship player = iShip.FindPlayerShip();
 
-   fleet = tEpicFleet.ReturnGroup(group);
+   fleet = tsShip.ReturnGroup(group);
 
 
    total = List.ItemCount(fleet);
@@ -187,7 +187,7 @@ bool AttackTarget(int group, hisim target) {
    hship player = iShip.FindPlayerShip();
    hfaction player_faction = iFaction.Find("Player");
 
-   fleet = tEpicFleet.ReturnGroup(group);
+   fleet = tsShip.ReturnGroup(group);
    group_leader = iShip.Cast(List.Head(fleet));
 
    if (none == target){
@@ -211,7 +211,7 @@ bool AttackTarget(int group, hisim target) {
       return false;
    }
 
-   fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tEpicFleet.ReturnGroup(group)), 
+   fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tsShip.ReturnGroup(group)), 
                                                  player, Global.Float("gt_distance_wakeup"), TM_Ship));
 
    total = List.ItemCount(fleet);
@@ -247,7 +247,7 @@ bool DefendMe(int group ) {
    hship player = iShip.FindPlayerShip();
    bool out_system;
 
-   fleet = tEpicFleet.ReturnGroup(group);
+   fleet = tsShip.ReturnGroup(group);
 
    total = List.ItemCount(fleet);
 
@@ -292,7 +292,7 @@ bool DefendTarget(int group, hisim target) {
    bool near;
    hship player = iShip.FindPlayerShip();
 
-   fleet = tEpicFleet.ReturnGroup(group);
+   fleet = tsShip.ReturnGroup(group);
    group_leader = iShip.Cast(List.Head(fleet));
 
    if (none == target){
@@ -347,7 +347,7 @@ bool DockTarget(int group, hisim target) {
    hship ship, group_leader;
    hship player = iShip.FindPlayerShip();
 
-   fleet = tEpicFleet.ReturnGroup(group);
+   fleet = tsShip.ReturnGroup(group);
    group_leader = iShip.Cast(List.Head(fleet));
 
 
@@ -408,7 +408,7 @@ bool Undock(int group) {
    hship ship, group_leader;
    hship player = iShip.FindPlayerShip();
 
-   fleet = tEpicFleet.ReturnGroup(group);
+   fleet = tsShip.ReturnGroup(group);
    group_leader = iShip.Cast(List.Head(fleet));
 
 
@@ -449,7 +449,7 @@ bool ApproachTarget(int group, hisim target) {
    hship ship, group_leader;
    hship player = iShip.FindPlayerShip();
 
-   fleet = tEpicFleet.ReturnGroup(group);
+   fleet = tsShip.ReturnGroup(group);
    group_leader = iShip.Cast(List.Head(fleet));
 
    if (none == target){
@@ -507,19 +507,19 @@ bool tanker_fill_ship(hship tanker, hship target) {
    float fuel_left, fuel_needed, fuel_moved, fuel_target, fuel_tanker;
    string response;
 
-   min_fuel = 2 * tEpicFleet.FuelPerJump(tanker);
-   max_fuel = tEpicFleet.FuelMax(target);
+   min_fuel = 2 * tsShip.FuelPerJump(tanker);
+   max_fuel = tsShip.FuelMax(target);
 
    atomic {
 
       // Calculate max that we can fit in target.
       // This is the transfer amount.
-      fuel_target = tEpicFleet.Fuel(target);
+      fuel_target = tsShip.Fuel(target);
       fuel_needed = max_fuel - fuel_target;
 
       // Clip the transfer amount to the minimum the tanker
       // has remaining.
-      fuel_tanker = tEpicFleet.Fuel(tanker);
+      fuel_tanker = tsShip.Fuel(tanker);
       fuel_left = fuel_tanker - min_fuel;
 
       if (fuel_left < fuel_needed) {
@@ -529,8 +529,8 @@ bool tanker_fill_ship(hship tanker, hship target) {
          fuel_moved = fuel_needed;
       }
 
-      tEpicFleet.SetFuel(tanker, fuel_tanker - fuel_moved);
-      tEpicFleet.SetFuel(target, fuel_target + fuel_moved);
+      tsShip.SetFuel(tanker, fuel_tanker - fuel_moved);
+      tsShip.SetFuel(target, fuel_target + fuel_moved);
    }
 
    response = String.Join("epo_refueling_finished+",Sim.Name(target));
@@ -550,12 +550,12 @@ bool TankersFillFleet(int group) {
    hship player = iShip.FindPlayerShip();
    bool filled;
 
-   group_list = tEpicFleet.ReturnGroup(group);
+   group_list = tsShip.ReturnGroup(group);
    leader = iShip.Cast(List.Head(group_list));
 
    // Get a list of all tankers in the order group.
    // Only allow player ships within Global.Float("gt_distance_wakeup") to do the fueling.
-   group_list = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tEpicFleet.ReturnGroup(group)), 
+   group_list = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tsShip.ReturnGroup(group)), 
                                                       player, Global.Float("gt_distance_wakeup"), TM_Ship));
 
    total = List.ItemCount(group_list);
@@ -575,7 +575,7 @@ bool TankersFillFleet(int group) {
    }
 
    // Refuels all player ships in Global.Float("gt_distance_wakeup").
-   target_list = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tEpicFleet.PlayerFleet()),
+   target_list = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tsShip.PlayerFleet()),
                                                        player, Global.Float("gt_distance_wakeup"), TM_Ship));
 
    List.AddHead(target_list, player);
@@ -647,7 +647,7 @@ bool FuelTarget(int group, hship target) {
    bool have_tankers;
 
 
-   fleet = tEpicFleet.ReturnGroup(group);
+   fleet = tsShip.ReturnGroup(group);
    group_leader = iShip.Cast(List.Head(fleet));
 
    if (none == target) {
@@ -675,7 +675,7 @@ bool FuelTarget(int group, hship target) {
    }
 
    // Only allow player ships within Global.Float("gt_distance_wakeup") to do the fueling.
-   fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tEpicFleet.ReturnGroup(group)), 
+   fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tsShip.ReturnGroup(group)), 
                                                  player, Global.Float("gt_distance_wakeup"), TM_Ship));
 
    // Ship cannot refuel itself.
@@ -697,8 +697,8 @@ bool FuelTarget(int group, hship target) {
 
          have_tankers = true;
 
-         min_fuel = 2 * tEpicFleet.FuelPerJump(ship);
-         fuel_left = tEpicFleet.Fuel(ship);
+         min_fuel = 2 * tsShip.FuelPerJump(ship);
+         fuel_left = tsShip.Fuel(ship);
 
          if (fuel_left > min_fuel) {
 
@@ -737,7 +737,7 @@ task take_fuel_task(hship tanker, hship target) {
    bool finished = false;
    float max_fuel, fuel_left, fuel_needed, fuel_used;
 
-   max_fuel = tEpicFleet.FuelMax(tanker);
+   max_fuel = tsShip.FuelMax(tanker);
 
    while (1) {
       Task.Sleep(Task.Current(), 1.0);
@@ -747,7 +747,7 @@ task take_fuel_task(hship tanker, hship target) {
       if (2km > Sim.DistanceBetween(tanker, target)) {
          atomic {
             // Calc the amount of fuel to transfer in this time
-            fuel_used = tEpicFleet.Fuel(tanker);
+            fuel_used = tsShip.Fuel(tanker);
             fuel_needed = max_fuel - fuel_used;
 
             if (fuel_needed < 25.0) {
@@ -759,7 +759,7 @@ task take_fuel_task(hship tanker, hship target) {
             }
 
             // Calculate fuel left in pod after we pump some out.
-            fuel_left = tEpicFleet.Fuel(target);
+            fuel_left = tsShip.Fuel(target);
 
             if (fuel_left < fuel_needed) {
 
@@ -772,8 +772,8 @@ task take_fuel_task(hship tanker, hship target) {
 
             // Now that we have max transfer amount, move fuel.
             fuel_used = fuel_used + fuel_needed;
-            tEpicFleet.SetFuel(tanker, fuel_used);
-            tEpicFleet.SetFuel(target, fuel_left);
+            tsShip.SetFuel(tanker, fuel_used);
+            tsShip.SetFuel(target, fuel_left);
          }
 
          if (T_CargoPod & iSim.Type(target)) {
@@ -816,7 +816,7 @@ bool FuelDrainTarget(int group, hship target) {
    hfaction player_faction = iFaction.Find("Player");
 
 
-   fleet = tEpicFleet.ReturnGroup(group);
+   fleet = tsShip.ReturnGroup(group);
    group_leader = iShip.Cast(List.Head(fleet));
 
 
@@ -830,7 +830,7 @@ bool FuelDrainTarget(int group, hship target) {
       return false;
    }
 
-   fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tEpicFleet.ReturnGroup(group)), 
+   fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tsShip.ReturnGroup(group)), 
                                                  player, Global.Float("gt_distance_wakeup"), TM_Ship));
    List.Remove(fleet, target);
 
@@ -881,8 +881,8 @@ bool FuelDrainTarget(int group, hship target) {
          // Cargo pods need properties attached to handle being
          // drained. Change type to invalid.
          if (T_CargoPod & iSim.Type(target)) {
-            tEpicFleet.SetFuelMax(target, 500.0);
-            tEpicFleet.SetFuel(target, 500.0);
+            tsShip.SetFuelMax(target, 500.0);
+            tsShip.SetFuel(target, 500.0);
          }
 
          Task.Detach(start take_fuel_task(ship, target));
@@ -909,7 +909,7 @@ bool DetachAsteroid(int group) {
    hhabitat station;
    bool undocked;
 
-   fleet = tEpicFleet.ReturnGroup(group);
+   fleet = tsShip.ReturnGroup(group);
    group_leader = iShip.Cast(List.Head(fleet));
 
    undocked = false;
@@ -968,7 +968,7 @@ bool ScanSky(int group) {
    bool found, new_station;
 
 
-   fleet = tEpicFleet.ReturnGroup(group);
+   fleet = tsShip.ReturnGroup(group);
    group_leader = iShip.Cast(List.Head(fleet));
 
    if (none == group_leader) {
@@ -1038,7 +1038,7 @@ bool ScanSky(int group) {
 
 // Orders a group with a science vessel to scan for nearby stations and asteroids.
 bool MineAsteroid(int group) {
-   hfaction player_faction = tEFaction.PlayerFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
    hship player = iShip.FindPlayerShip();
    list fleet;
    int i, total;
@@ -1046,7 +1046,7 @@ bool MineAsteroid(int group) {
    hhabitat asteroid;
    bool miner_found;
 
-   fleet = tEpicFleet.ReturnGroup(group);
+   fleet = tsShip.ReturnGroup(group);
    group_leader = iShip.Cast(List.Head(fleet));
 
    asteroid = iHabitat.Nearest(iMapEntity.SystemHabitats(), player);
@@ -1074,7 +1074,7 @@ bool MineAsteroid(int group) {
    }
 
    // Only allow player ships within Global.Float("gt_distance_wakeup") to be given the mining command.
-   fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tEpicFleet.ReturnGroup(group)), 
+   fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tsShip.ReturnGroup(group)), 
                                                  player, Global.Float("gt_distance_wakeup"), TM_Ship));
 
    total = List.ItemCount(fleet);
@@ -1152,7 +1152,7 @@ task mining_task(hship miner, hhabitat target) {
 
 // Science vessels can dock to and claim mines for the player.
 bool ProspectAsteroid(int group) {
-   hfaction empty_faction = tEFaction.EmptyFaction();
+   hfaction empty_faction = tsFaction.EmptyFaction();
    hship player = iShip.FindPlayerShip();
    list fleet;
    int i, total;
@@ -1185,7 +1185,7 @@ bool ProspectAsteroid(int group) {
    }
 
    // Only allow player ships within Global.Float("gt_distance_wakeup") to be given the mining command.
-   fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tEpicFleet.ReturnGroup(group)), 
+   fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tsShip.ReturnGroup(group)), 
                                                  player, Global.Float("gt_distance_wakeup"), TM_Ship));
 
    total = List.ItemCount(fleet);
@@ -1276,14 +1276,14 @@ task prospecting_task(hship prospector, hhabitat target) {
 // Place the ship in a new control group.
 bool ShipToGroup(hship ship, int group) {
 
-   if (!tEpicFleet.IsPlayerFleetShip( ship)) {
+   if (!tsShip.IsPlayerFleetShip( ship)) {
       // Player tried to order around a non-player ship. Block this.
       // We might allow it someday, but not now.
       iComms.Shout(ship, "", "epo_not_wingman");
       return false;
    }
 
-   if (tEpicFleet.GroupMoveShip(ship, group)) {
+   if (tsShip.GroupMoveShip(ship, group)) {
       iComms.Shout(ship, "", "epo_move_group_ack");
       return true;
    }
@@ -1297,14 +1297,14 @@ bool ShipToGroup(hship ship, int group) {
 // Move the ship to group zero.
 bool RemoveShip(hship ship) {
 
-   if (!tEpicFleet.IsPlayerFleetShip( ship)) {
+   if (!tsShip.IsPlayerFleetShip( ship)) {
       // Player tried to order around a non-player ship. Block this.
       // We might allow it someday, but not now.
       iComms.Shout(ship, "", "epo_not_wingman");
       return false;
    }
 
-   if (tEpicFleet.GroupMoveShip(ship, 0)) {
+   if (tsShip.GroupMoveShip(ship, 0)) {
       iComms.Shout(ship, "", "epo_leave_group_ack");
       return true;
    }
@@ -1345,8 +1345,8 @@ task capture_task(hship marines, hship target) {
 
             iComms.Shout(marines, "", "BoardingSuccessful");
 
-            tEpicFleet.FireShip(marines);
-            tEpicFleet.CaptureShip(target);
+            tsShip.FireShip(marines);
+            tsShip.CaptureShip(target);
             return;
          }
       } else if (OT_Dock != iAI.CurrentOrderType(marines)) {
@@ -1376,7 +1376,7 @@ bool CaptureShip(int group, hship target) {
                       T_Interceptor;
 
 
-   fleet = tEpicFleet.ReturnGroup(group);
+   fleet = tsShip.ReturnGroup(group);
    group_leader = iShip.Cast(List.Head(fleet));
 
    if (none == target) {
@@ -1404,7 +1404,7 @@ bool CaptureShip(int group, hship target) {
       return false;
    }
 
-   fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tEpicFleet.ReturnGroup(group)), 
+   fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tsShip.ReturnGroup(group)), 
                                                  player, Global.Float("gt_distance_wakeup"), TM_Ship));
 
 
@@ -1419,7 +1419,7 @@ bool CaptureShip(int group, hship target) {
    for (i=0;i<total;++i) {
       ship = iShip.Cast(List.GetNth(fleet,i));
 
-      if (tEpicFleet.Marines(ship) > 0) {
+      if (tsShip.Marines(ship) > 0) {
          iAI.PurgeOrders(ship);
          iAI.GiveDockOrder(ship, target);
 
@@ -1479,7 +1479,7 @@ bool DockPod(int group) {
 
    target = iShip.CurrentTarget(player);
 
-   fleet = tEpicFleet.ReturnGroup(group);
+   fleet = tsShip.ReturnGroup(group);
    group_leader = iShip.Cast(List.Head(fleet));
 
 
@@ -1525,7 +1525,7 @@ bool UndockAllPods(int group) {
    }
 
    // Get a list of freighters and utility ships.
-   freight_list = List.FromSet(iSim.SimsInRadiusFromSet( Set.FromList(tEpicFleet.ReturnGroup(group)),
+   freight_list = List.FromSet(iSim.SimsInRadiusFromSet( Set.FromList(tsShip.ReturnGroup(group)),
                                                          player,
                                                          Global.Float("gt_distance_wakeup"),
                                                          T_Freighter|T_Utility));
@@ -1640,7 +1640,7 @@ bool DockPodSet(int group, set pods) {
    }
 
    // Get a list of freighters and utility ships.
-   freight_list = List.FromSet(iSim.SimsInRadiusFromSet( Set.FromList(tEpicFleet.ReturnGroup(group)),
+   freight_list = List.FromSet(iSim.SimsInRadiusFromSet( Set.FromList(tsShip.ReturnGroup(group)),
                                                          player,
                                                          Global.Float("gt_distance_wakeup"),
                                                          T_Freighter|T_Utility));

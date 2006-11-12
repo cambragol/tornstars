@@ -34,11 +34,11 @@ uses    Sim,
         iConversation,
         iEscort,
         ABB_Common,
+
         tEpicComms,
-        tEpicFleet,
         tLRoot,
         tLTrade,
-        tEFaction,
+        tsFaction,
         tETradeSell,
         tEpicMoney,
         tShipName,
@@ -53,7 +53,8 @@ uses    Sim,
         tStationFilter,
         tDistance,
         tEJump,
-        tsCull;
+        tsCull,
+        tsShip;
 
 
 provides PogCreate,
@@ -247,7 +248,7 @@ setup_fence_ship(hisim marker)
    ship_template = tUnderOp.ShipTemplate(owner);
    ship_name = tUnderOp.Name(owner);
 
-   fence_ship = iShip.Create(ship_template, ship_name);
+   fence_ship = tsShip.Create(ship_template, ship_name);
 
    if (none == fence_ship) {
       debug {
@@ -517,7 +518,7 @@ task FenceComms()
     switch ( iConversation.Ask( ship, "", ask_string ) )
     {
     case 1 :
-       player_faction = tEFaction.PlayerFaction();
+       player_faction = tsFaction.PlayerFaction();
        source_faction = iSim.Faction(iSim.Cast(ship));
 
        if (FT_Hate == iFaction.FeelingType(iFaction.Feeling(source_faction, player_faction))) {
@@ -701,7 +702,7 @@ create_escorts(hisim operation, hship fence, hgroup cull_group)
    }
 
    for (i=0;i<total;++i) {
-      escort = iShip.Create(escort_template, tShipName.ShipName("underworld",10000));
+      escort = tsShip.Create(escort_template, tShipName.ShipName("underworld",10000));
 
       tsPilotSetup.SetupEscort(escort, 0.9, 0.5);
 

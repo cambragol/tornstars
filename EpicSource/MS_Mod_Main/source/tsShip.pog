@@ -1,0 +1,526 @@
+//*******************************************************************************************/
+//
+// tsShip.pog
+//
+// 
+//
+// Jan 2003, Jon Freise
+//
+
+// There are a few main entry points for player wingmen
+// HireShip is used when the player hires a wingman for service. 
+// CaptureShip is used when the player siezes a ship.
+// SetupPlayerWingman is used in the general case of purchasing a ship (not a standard feature).
+// and is used to restore the wingmen after load.
+//
+// There are a few main entry points for the player.
+// PlayerDeath is the death script that handles the players ship being destroyed.
+// SetupPlayer is used during restore to attach all proper items to the player ship.
+// NewPlayerShip is used when the player purchases a ship, via menu. It will 
+// setup that ship properly, and change the inventory to match the ship.
+//******************************************************************************************/
+
+package tsShip;
+
+uses    Sim,
+        iShip,
+        iSim,
+        iPilotSetup,
+        Debug,
+        Global,
+        GUI,
+        iDirector,
+        iGUI,
+        iHUD,
+        iHabitat,
+        iMapEntity,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        iUtilities,
+        iCargo,
+        iInventory,
+        iComms,
+        iAi,
+        iWingmen,
+        iRemotePilot,
+        iDeathScript,
+        iGame,
+        Math,
+        iInventory,
+        iConversation,
+        CargoTypes,
+   
+        tStationEnum,
+        tEconUtil,
+        tPodUtil,
+        tEpicComms,
+        tFormation,
+        tsFaction, 
+   tMegaTrucking;
+
+
+
+
+provides 
+        Fuel,
+        SetFuel,
+
+        FuelMax,
+        SetFuelMax,
+
+        FuelPerJump,
+        SetFuelPerJump,
+
+        DailyFuel,
+        SetDailyFuel,
+
+        DailyUpkeep,
+        SetDailyUpkeep,
+        
+        World,
+        SetWorld,
+        ShipPodList,
+
+        ReadIniFile,
+    
+        Create;
+
+
+ 
+
+         
+
+
+
+
+// Reading INI defaults
+prototype float default_max_fuel(int ship_type);
+prototype float default_daily_fuel(int ship_type);
+prototype float default_jump_fuel(int ship_type);
+prototype int default_daily_cost(int ship_type);
+
+prototype ReadIniFile(hship ship);
+
+
+int float2int(float number)
+{
+   return number;
+}
+
+float int2float(int number)
+{
+   return number;
+}
+
+
+
+
+// This is the maximum level of fuel that
+// can be loaded into the ship.
+SetFuelMax(hship ship, float fuel_maximum)
+{
+   if (Object.PropertyExists(ship, "max_fuel")) {
+      Object.SetFloatProperty(ship, "max_fuel", fuel_maximum);
+   }else{
+      Object.AddFloatProperty(ship, "max_fuel", fuel_maximum);
+   }
+}
+
+float FuelMax(hship ship)
+{
+   return Object.FloatProperty(ship, "max_fuel");
+}
+
+
+
+// This is the current level of fuel in the ship. Zero
+// is the lowest and max_fuel is the highest value.
+// When this number hits zero, the ship cannot move
+// or fight.
+SetFuel(hship ship, float fuel_used)
+{
+   // Clip current fuel supply to the ships limits.
+   if (fuel_used < 0.0)
+   {
+      fuel_used = 0.0;
+   }else if (fuel_used > FuelMax(ship))
+   {
+      fuel_used = FuelMax(ship);
+   }
+
+   if (Object.PropertyExists(ship, "fuel")) {
+      Object.SetFloatProperty(ship, "fuel", fuel_used);
+   }else{
+      Object.AddFloatProperty(ship, "fuel", fuel_used);
+   }
+}
+
+float Fuel(hship ship)
+{
+   return Object.FloatProperty(ship, "fuel");
+}
+
+
+
+
+// This is the amount of fuel the ship uses to make one capsule jump.
+SetFuelPerJump(hship ship, float fuel_per_jump)
+{
+   if (Object.PropertyExists(ship, "jump_fuel")) {
+      Object.SetFloatProperty(ship, "jump_fuel", fuel_per_jump);
+   }else{
+      Object.AddFloatProperty(ship, "jump_fuel", fuel_per_jump);
+   }
+}
+
+float FuelPerJump(hship ship)
+{
+   return Object.FloatProperty(ship, "jump_fuel");
+}
+
+
+
+// This is the amount of fuel a ship burns for reactor power and
+// using thrusters to move around.
+SetDailyFuel(hship ship, float fuel_amount)
+{
+   if (Object.PropertyExists(ship, "daily_fuel")) {
+      Object.SetFloatProperty(ship, "daily_fuel", fuel_amount);
+   }else{
+      Object.AddFloatProperty(ship, "daily_fuel", fuel_amount);
+   }
+}
+
+float DailyFuel(hship ship)
+{
+   return Object.FloatProperty(ship, "daily_fuel");
+}
+
+
+
+// This is the cost in credits of operating a ship for one day.
+// The credit cost pays for ship upkeep, standard expenses, and crew.
+// Fuel is not included.
+SetDailyUpkeep(hship ship, int daily_cost)
+{
+   if (Object.PropertyExists(ship, "daily_cost")) {
+      Object.SetIntProperty(ship, "daily_cost", daily_cost);
+   }else{
+      Object.AddIntProperty(ship, "daily_cost", daily_cost);
+   }
+}
+
+int DailyUpkeep(hship ship)
+{
+   return Object.IntProperty(ship, "daily_cost");
+}
+
+
+
+SetWorld(hship ship, string world)
+{
+   if (Object.PropertyExists(ship, "EpicFleetWorld")) {
+      Object.SetStringProperty(ship, "EpicFleetWorld", world);
+   }else{
+      Object.AddStringProperty(ship, "EpicFleetWorld", world);
+   }
+}
+
+string World(hship ship)
+{
+   return Object.StringProperty(ship, "EpicFleetWorld");
+}
+
+
+// Returns all cargo pods docked to a ship.
+list ShipPodList(hsim ship)
+{
+   set pods;
+   list docked_pods;
+   hsim child;
+
+   // Search all subsims for cargo pods.
+   
+   pods = Sim.Children(ship);
+
+   while (!Set.IsEmpty(pods)) {
+      child = Sim.Cast(Set.FirstElement(pods));
+      Set.Remove(pods, child);
+
+      if (T_CargoPod == iSim.Type(child)) {
+         List.AddTail(docked_pods, child);
+      }
+   }
+
+   return docked_pods;
+}
+
+// Creates a ship from it's template and attaches all the epic specific data 
+// that is needed.
+hship Create(string ini_file, string name)
+{
+   hship ship;
+
+   ship = iShip.Create(ini_file, name);
+
+   if (none != ship) {
+      ReadIniFile(ship);
+   }
+
+   return ship; 
+}
+
+// Read in the INI file, attach the properties to the ship.
+ReadIniFile(hship ship)
+{
+
+   hinifile ship_file;
+   float max_fuel;
+   float daily_fuel;
+   float jump_fuel;
+   int daily_cost;
+   int ship_type;
+   int tanker, miner, prospector, study_days, scan_range;
+   float mining_efficiency;
+   string template_name;
+
+   template_name = Sim.TemplateName(ship);
+
+   if (template_name == "") {
+      // The player ship has no template. So we pick a new one based on ships class.
+      switch (iSim.Type(ship)) {
+      case T_CommandSection:
+         template_name = "ini:/sims/ships/player/comsec";
+         break;
+      case T_Tug:
+         template_name = "ini:/sims/ships/player/tug";
+         break;
+      case T_Patcom:
+         template_name = "ini:/sims/ships/player/fast_attack";
+         break;
+      case T_Corvette:
+         template_name = "ini:/sims/ships/player/heavy_corvette";
+         break;
+      case T_Fighter:
+      case T_Interceptor:
+         template_name = "ini:/sims/ships/player/storm_petrel";
+         break;
+      default:
+         break;
+      }
+   }
+
+   ship_file = INIFile.Create(template_name);
+   ship_type = iSim.Type(ship);
+
+   max_fuel = INIFile.Float(ship_file,"Properties","max_fuel", default_max_fuel(ship_type));
+   daily_fuel = INIFile.Float(ship_file,"Properties","daily_fuel", default_daily_fuel(ship_type));
+   jump_fuel = INIFile.Float(ship_file,"Properties","jump_fuel", default_jump_fuel(ship_type));
+   daily_cost = INIFile.Int(ship_file,"Properties","daily_cost", default_daily_cost(ship_type));
+   tanker = INIFile.Int(ship_file,"Properties","tanker", 0);
+   miner = INIFile.Int(ship_file,"Properties","miner", 0);
+   mining_efficiency = INIFile.Float(ship_file,"Properties","mining_efficiency", 0);
+   prospector = INIFile.Int(ship_file,"Properties","prospector", 0);
+   study_days = INIFile.Int(ship_file,"Properties","study_days", 0);
+   scan_range = INIFile.Int(ship_file,"Properties","scan_range", 0);
+
+   INIFile.Destroy(ship_file);
+
+   // Attach the properties to the ship.
+   Object.AddFloatProperty(ship, "fuel", max_fuel);
+   Object.AddFloatProperty(ship, "max_fuel", max_fuel);
+   Object.AddFloatProperty(ship, "daily_fuel", daily_fuel);
+   Object.AddFloatProperty(ship, "jump_fuel", jump_fuel);
+   Object.AddIntProperty(ship, "daily_cost", daily_cost);
+
+   Object.AddIntProperty(ship, "tanker", tanker);
+   Object.AddIntProperty(ship, "miner", miner);
+   Object.AddFloatProperty(ship, "mining_efficiency", mining_efficiency);
+   Object.AddIntProperty(ship, "prospector", prospector);
+   Object.AddIntProperty(ship, "study_days", study_days);
+   Object.AddIntProperty(ship, "scan_range", scan_range);
+
+   Object.AddBoolProperty(ship, "fuel_locked", false);
+}
+
+
+float default_max_fuel(int ship_type)
+{
+
+    debug Debug.PrintString("tsShip.using default max fuel\n");
+
+   switch (ship_type)
+   {
+
+   case 	T_Drone	: return 500.0; 
+      break;
+   case 	T_Waldo	: return 500.0; 
+      break;
+   case 	T_CommandSection: return 500.0; 
+      break;
+   case 	T_Utility			: return 500.0; 
+      break;
+   case 	T_Passenger			: return 500.0; 
+      break;
+   case 	T_Fighter			: return 500.0; 
+      break;
+   case 	T_Tug				: return 500.0; 
+      break;
+   case 	T_Patcom			: return 500.0; 
+      break;
+   case 	T_Interceptor	: return 500.0; 
+      break;
+   case 	T_Corvette		: return 500.0; 
+      break;
+   case 	T_Freighter		: return 500.0; 
+      break;
+   case 	T_Destroyer		: return 500.0; 
+      break;
+   case 	T_Cruiser		: return 500.0; 
+      break;
+   case 	T_Carrier		: return 500.0; 
+      break;
+   default: 
+      break;
+   }
+
+   return 500.0;
+}
+
+
+float default_daily_fuel(int ship_type)
+{
+   
+   switch (ship_type)
+   {
+
+   case 	T_Drone	: return 10.0; 
+      break;
+   case 	T_Waldo	: return 10.0; 
+      break;
+   case 	T_CommandSection: return 10.0; 
+      break;
+   case 	T_Utility			: return 10.0; 
+      break;
+   case 	T_Passenger			: return 10.0; 
+      break;
+   case 	T_Fighter			: return 10.0; 
+      break;
+   case 	T_Tug				: return 10.0; 
+      break;
+   case 	T_Patcom			: return 10.0; 
+      break;
+   case 	T_Interceptor	: return 10.0; 
+      break;
+   case 	T_Corvette		: return 10.0; 
+      break;
+   case 	T_Freighter		: return 10.0; 
+      break;
+   case 	T_Destroyer		: return 10.0; 
+      break;
+   case 	T_Cruiser		: return 10.0; 
+      break;
+   case 	T_Carrier		: return 10.0; 
+      break;
+   default: 
+      break;
+   }
+
+   return 10.0;
+
+}
+
+
+float default_jump_fuel(int ship_type)
+{
+   switch (ship_type)
+   {
+
+   case 	T_Drone	: return 100.0; 
+      break;
+   case 	T_Waldo	: return 100.0; 
+      break;
+   case 	T_CommandSection: return 100.0; 
+      break;
+   case 	T_Utility			: return 100.0; 
+      break;
+   case 	T_Passenger			: return 100.0; 
+      break;
+   case 	T_Fighter			: return 100.0; 
+      break;
+   case 	T_Tug				: return 100.0; 
+      break;
+   case 	T_Patcom			: return 100.0; 
+      break;
+   case 	T_Interceptor	: return 100.0; 
+      break;
+   case 	T_Corvette		: return 100.0; 
+      break;
+   case 	T_Freighter		: return 100.0; 
+      break;
+   case 	T_Destroyer		: return 100.0; 
+      break;
+   case 	T_Cruiser		: return 100.0; 
+      break;
+   case 	T_Carrier		: return 100.0; 
+      break;
+   default: 
+      break;
+   }
+
+   return 100.0;
+}
+
+
+int default_daily_cost(int ship_type)
+{
+   switch (ship_type)
+   {
+
+   case 	T_Drone	: return 10; 
+      break;
+   case 	T_Waldo	: return 10; 
+      break;
+   case 	T_CommandSection: return 10; 
+      break;
+   case 	T_Utility			: return 10; 
+      break;
+   case 	T_Passenger			: return 10; 
+      break;
+   case 	T_Fighter			: return 10; 
+      break;
+   case 	T_Tug				: return 10; 
+      break;
+   case 	T_Patcom			: return 10; 
+      break;
+   case 	T_Interceptor	: return 10; 
+      break;
+   case 	T_Corvette		: return 10; 
+      break;
+   case 	T_Freighter		: return 10; 
+      break;
+   case 	T_Destroyer		: return 10; 
+      break;
+   case 	T_Cruiser		: return 10; 
+      break;
+   case 	T_Carrier		: return 10; 
+      break;
+   default: 
+      break;
+   }
+
+   return 10;
+}
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
