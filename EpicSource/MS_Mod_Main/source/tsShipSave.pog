@@ -156,8 +156,8 @@ int Save(hship ship)
    bool docked;
 
    if (none == ship) {
-      debug {
-         Debug.PrintString("tsShipSave.Save invalid ship handle\n");
+      atomic debug {
+         Debug.PrintString("Error tsShipSave.Save invalid ship handle\n");
       }
       return 0;
    }
@@ -174,6 +174,7 @@ int Save(hship ship)
       Global.CreateFloat(String.Join(save_key,"fuel"),GA_Write, tsShip.Fuel(ship));
    }
 
+   Global.CreateFloat(String.Join(save_key,"hits"),GA_Write, Object.FloatProperty(ship, "hit_points"));
 
 
    // Find the ships current location.
@@ -216,7 +217,7 @@ int Save(hship ship)
 
    // Save the damage state.
    // Save the loadout state.
-   save_subsims( ship);
+   //save_subsims( ship);
 
    // Save cargo pods.
    save_cargo_pods(ship);
@@ -231,7 +232,7 @@ hship Restore(int id)
    int ship_type;
    string save_key = String.Join("tsSS",String.FromInt(id));
 
-   float fuel_used;
+   float fuel_used, hit_points;
    string ship_template, ship_name, system, world, faction_name;
    float x, y, z;
 
@@ -257,6 +258,14 @@ hship Restore(int id)
 
    ship = tsShip.Create(ship_template, ship_name);
 
+   if (none == ship) {
+      atomic debug {
+         // There is no ship, bail out
+         Debug.PrintString("Error tsShipSave.Restore restore failed\n");
+      }
+      return none;
+   }
+
    iSim.SetFaction(ship,iFaction.Find(faction_name));
    Sim.SetCullable(ship, false);
 
@@ -277,9 +286,6 @@ hship Restore(int id)
       Object.AddIntProperty(ship, "cargo_faction", cargo_faction_id);
 
    } else {
-      // Restore all the ships properties that are read out of the
-      // INI Files.
-      tsShip.ReadIniFile(ship);
 
       fuel_used = Global.Float(String.Join(save_key,"fuel"));
       Global.Destroy(String.Join(save_key,"fuel"));
@@ -287,10 +293,14 @@ hship Restore(int id)
       tsShip.SetFuel(ship, fuel_used);
    }
 
+   hit_points = Global.Float(String.Join(save_key,"hits"));
+   Global.Destroy(String.Join(save_key,"hits"));
+
+   Object.SetFloatProperty(ship, "hit_points", hit_points);
+
+
 
    // Restore ship to proper location
-
-
    system = Global.String(String.Join(save_key,"system"));
 
    reference = iSim.FindByNameInSystem(Global.String(String.Join(save_key,"reference")), system);
@@ -299,13 +309,18 @@ hship Restore(int id)
    y = Global.Float(String.Join(save_key,"y"));
    z = Global.Float(String.Join(save_key,"z"));
 
-   debug {
+   atomic {
       if (none == reference) {
-         Debug.PrintString("Error tsSaveShip Reference missing");
-         Debug.PrintString(Global.String(String.Join(save_key,"reference")));
-         Debug.PrintString("\n");
-         Debug.PrintString(system);
-         Debug.PrintString("\n");
+         atomic debug {
+
+            Debug.PrintString("Error tsSaveShip Reference missing");
+            Debug.PrintString(Global.String(String.Join(save_key,"reference")));
+            Debug.PrintString("\n");
+            Debug.PrintString(system);
+            Debug.PrintString("\n");
+         }
+         // There is no restore location, we cannot restore this ship.
+         return none;
       }
    }
 

@@ -61,7 +61,9 @@ uses    Sim,
         tEpicComms,
         tFormation,
         tsFaction, 
-        tsShip;
+        tsShipEnum,
+        tsShip,
+        tsWingman;
 
  
 
@@ -315,9 +317,9 @@ NewPlayerShip(hship ship)
       iInventory.AddStormPetrel();
    }
 
-   iShip.InstallPlayerPilot(ship);
-
    SetupPlayer(ship);
+
+   iShip.InstallPlayerPilot(ship);
 }
 
 
@@ -326,7 +328,7 @@ NewPlayerShip(hship ship)
 // already be installed at this time.
 SetupPlayer(hship ship)
 {
-   hfaction player_faction = tsFaction.PlayerFaction();
+   hfaction player_faction = iFaction.Find("Player");
 
    if (iSim.Type(ship) != T_CommandSection) {
       // If the ship is larger than a command section, then it gets a command
@@ -379,6 +381,8 @@ release_wingman(hship ship)
 HireShip(hship ship)
 {
    SetupPlayerWingman(ship);
+
+   tsWingman.Start(ship, ePO_None, none);
 }
 
 

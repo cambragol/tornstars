@@ -4,20 +4,8 @@
 //
 // 
 //
-// Jan 2003, Jon Freise
+// Nov 2006, Jon Freise
 //
-
-// There are a few main entry points for player wingmen
-// HireShip is used when the player hires a wingman for service. 
-// CaptureShip is used when the player siezes a ship.
-// SetupPlayerWingman is used in the general case of purchasing a ship (not a standard feature).
-// and is used to restore the wingmen after load.
-//
-// There are a few main entry points for the player.
-// PlayerDeath is the death script that handles the players ship being destroyed.
-// SetupPlayer is used during restore to attach all proper items to the player ship.
-// NewPlayerShip is used when the player purchases a ship, via menu. It will 
-// setup that ship properly, and change the inventory to match the ship.
 //******************************************************************************************/
 
 package tsShip;
@@ -44,7 +32,7 @@ uses    Sim,
         iUtilities,
         iCargo,
         iInventory,
-        iComms,
+        iComms, 
         iAi,
         iWingmen,
         iRemotePilot,
@@ -105,6 +93,8 @@ prototype float default_jump_fuel(int ship_type);
 prototype int default_daily_cost(int ship_type);
 
 prototype ReadIniFile(hship ship);
+
+prototype tag_subsims(hship ship);
 
 
 int float2int(float number)
@@ -346,6 +336,8 @@ ReadIniFile(hship ship)
    Object.AddIntProperty(ship, "scan_range", scan_range);
 
    Object.AddBoolProperty(ship, "fuel_locked", false);
+
+   //tag_subsims(ship);
 }
 
 
@@ -516,6 +508,91 @@ int default_daily_cost(int ship_type)
 
    return 10;
 }
+
+
+// This function reads the ships INI file and tries to match the template objects 
+// against the found subsims. If it finds a match it tags the ships subsims with 
+// the subsim class and the subsim template for use by the damage mod and loadout.
+
+tag_subsims(hship ship)
+{
+   string template_name, subsim_template, subsim_name, subsim_class;
+   hinifile ship_file;
+   hinifile template_file;
+   hsubsim subsim;
+   int subsim_count, template_count;
+   bool not_found;
+
+   template_name = Sim.TemplateName(ship);
+
+   if (template_name == "") {
+      // No template, there is nothing we can do.
+      debug Debug.PrintString("tsShip.tag_subsims ship has no template file\n");
+      return;
+   }
+
+   debug {
+      Debug.PrintString(template_name);
+      Debug.PrintString(" ship type\n");
+   }
+
+   ship_file = INIFile.Create(template_name);   
+
+   if (ship_file == none) {
+      // Invalid ship template, there is nothing we can do
+      debug Debug.PrintString("tsShip.tag_subsims invalid ship template file\n");
+      return;
+   }
+
+   template_count = 0;
+   while (INIFile.NumberedExists(ship_file,"Subsims","template",template_count)) {
+      subsim_template = INIFile.NumberedString(ship_file,"Subsims","template",template_count,"");
+
+      if ("" != subsim_template) {
+         template_file = INIFile.Create(subsim_template);
+
+         if (template_file != none) {
+            subsim_class = INIFile.String(template_file,"Class","name","");
+            subsim_name = INIFile.String(template_file,"Properties","name","");
+            INIFile.Destroy(template_file);
+
+
+            // Decrement through the ships subsims, looking for one by this name.
+            subsim_count = Sim.SubsimCount(ship);
+            not_found = true;
+            do {
+               subsim = Sim.NthSubsim(ship,subsim_count);
+
+               if (subsim_name == Object.StringProperty(subsim,"name")) {
+                  // Check if we already tagged this one.
+
+                  debug {
+                     Debug.PrintHandle(subsim);
+                     Debug.PrintString(" ");
+                     Debug.PrintString(subsim_template);
+                     Debug.PrintString(" ");
+                     Debug.PrintInt(template_count);
+                     Debug.PrintString("\n");
+                  }
+
+                  if (!Object.PropertyExists(subsim,"gt_template_file")) {
+                     not_found = false;
+                     Object.AddStringProperty(subsim,"subsim_template", subsim_template);
+                     Object.AddStringProperty(subsim,"subsim_class", subsim_class);
+                  }
+               }
+
+               --subsim_count;
+            } while (not_found && (subsim_count > -1) );
+         }
+      }
+      ++template_count;
+   }
+
+
+   INIFile.Destroy(ship_file);
+}
+
 
 
 /*  

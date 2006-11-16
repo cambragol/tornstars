@@ -187,15 +187,11 @@ BaseExit()
 
 SpaceEnter()
 {
-//   jGiftCargo.AddInventory();
-
    UniGUIBase.EnterSpace();
 
    tEconSmall.EnterSpace();
 
    tEpicLFPlus.Initialise();
-
-
 }
 
 
@@ -213,6 +209,8 @@ FinalSetup()
    tsShipSave.Relink();
    tsWingComm.Setup();
    tEpicComms.Setup();
+
+   tsPlayerSave.RestoreOrders();
 
    tEconSmall.TestRun();
 

@@ -40,19 +40,24 @@ iAi,
 Math,
 CargoTypes,
    iGame,
+   tsFaction,
    tsShipEnum,
    tsShip,
    tsShipSave,
-   tsPlayerFleet;
+   tsPlayerFleet,
+   tsWingman;
 
 
 
 provides Save,
          Restore,
+         RestoreOrders,
          NewGame;
 
 
 prototype hship create_new_player();
+
+prototype set locate_free_pods();
 
 
 
@@ -73,13 +78,33 @@ NewGame()
 Save()
 {
    hship player = iShip.FindPlayerShip();
-   int id;
+   hship wingman;
+   int id, i, total;
+   list player_fleet;
+   list player_pods;
    
+   
+   // Remember that we are starting in this system.
+   iGame.SetStartSystem(iSim.ActiveWorld());
+
    id = tsShipSave.Save(player);
    Global.CreateInt("ts_player_save",GA_Write, id);
 
+   player_fleet = tsPlayerFleet.PlayerFleet();
+   List.Remove(player_fleet, player);
 
-   tsShipSave.SaveList(tsPlayerFleet.PlayerFleet(), "ts_pfleet");
+   tsShipSave.SaveList(player_fleet, "ts_pfleet");
+
+   total = List.ItemCount(player_fleet);
+   for (i=0;i<total;++i) {
+      wingman = iShip.Cast(List.GetNth(player_fleet,i));
+      tsPlayerFleet.SetupPlayerWingman(wingman);
+   }
+
+   // Find all loose cargo pods near the player ships.
+   // Save those pods.
+   player_pods = List.FromSet(locate_free_pods());
+   tsShipSave.SaveList(player_pods, "ts_ppods");
 }
  
 
@@ -91,15 +116,16 @@ Restore()
    int player_id = Global.Int("ts_player_save");
    hship restored_ship;
    hship wingman;
-   list fleet;
    int i, total;
 
    restored_ship = tsShipSave.Restore(player_id);
 
    if (none == player) {
+      debug Debug.PrintString("tsPlayerSave.Restore no loadout ship\n");
       // The player did not launch from base.
 
       if (none == restored_ship) {
+         debug Debug.PrintString("tsPlayerSave.Restore no saved player ship\n");
          // There is no prior stored ship.
          player = create_new_player();
       }else {
@@ -110,6 +136,9 @@ Restore()
    }else if (none != restored_ship){
       Sim.PlaceAt(player, restored_ship);
       Sim.Destroy(restored_ship);
+      iUtilities.RenameSim(player, Global.String("gt_player_ship_name"));
+      // Attach custom properties to the loadout created ship.
+      tsShip.ReadIniFile(player);
    }else {
       debug {
          Debug.PrintString("Error: tsPlayerSave.Restore There is no player starting ship\n");
@@ -126,7 +155,32 @@ Restore()
       wingman = iShip.Cast(List.GetNth(player_fleet,i));
       tsPlayerFleet.SetupPlayerWingman(wingman);
    }
+
+   tsShipSave.RestoreList("ts_ppods");
 } 
+
+// It is important not to turn the wingman watch code on until
+// the final set of links is done. And that is not done until
+// after all the wingman exist for a while.
+// So this function should be called after the final linking.
+
+RestoreOrders()
+{
+   hship wingman;
+   hship player = iShip.FindPlayerShip();
+   list player_fleet;
+   int i, total;
+
+   player_fleet = tsPlayerFleet.PlayerFleet();
+   List.Remove(player_fleet, player);
+
+   total = List.ItemCount(player_fleet);
+   for (i=0;i<total;++i) {
+      wingman = iShip.Cast(List.GetNth(player_fleet,i));
+      tsWingman.Restore(wingman);
+   }
+}
+
 
 
 // Open the starting position INI and read out the player start ship and position.
@@ -138,6 +192,7 @@ hship create_new_player()
    hisim start_location;
    string ship, system, station, name;
 
+   debug Debug.PrintString("tsPlayerSave.create_new_player\n");
 
    ship = INIFile.String(player_config, "Player","start_ship","ini:/sims/ships/player/fast_attack_prefitted");
    system = INIFile.String(player_config, "Player","start_system","map:/geog/middle/emerald_sys");
@@ -146,11 +201,57 @@ hship create_new_player()
 
    INIFile.Destroy(player_config);
 
-   player = tsShip.Create(ship, "player_ship_name");
+   player = tsShip.Create(ship, "gt_player_ship_name");
    Sim.SetCullable(player, false);
    start_location = iSim.FindByNameInSystem(station, system);
    Sim.PlaceNear(player, start_location, 20km);
    return player;
+}
+
+
+set locate_free_pods()
+{
+   list player_fleet, pod_list;
+   set pod_set, new_pods, final_set;
+   hship wingman;
+   hship pod;
+   int i, total_wingmen, total_pods;
+   hfaction player_faction = tsFaction.PlayerFaction();
+
+   // for each wingman, gather a list of pods that are nearby that
+   // belong to the player faction.
+
+   player_fleet = tsPlayerFleet.PlayerFleet();
+
+   // process the set of pods, and remove all the docked ones.
+   total_wingmen = List.ItemCount(player_fleet);
+   for (i=0;i<total_wingmen;++i) {
+      wingman = iShip.Cast(List.GetNth(player_fleet,i));
+
+      new_pods = iSim.SimsInRadiusFromSet(iSim.SimsInRadiusOfFaction( wingman,
+                                                                      Global.Float("gt_distance_wakeup"),
+                                                                      player_faction),
+                                          wingman,
+                                          Global.Float("gt_distance_wakeup"),
+                                          T_CargoPod);
+
+      Set.Union(pod_set, new_pods);
+   }
+
+   // Sift the pods removing the docked and destroyed ones.
+   pod_list = List.FromSet(pod_set);
+   total_pods = List.ItemCount(pod_list);
+   for (i=0;i<total_pods;++i) {
+      pod = iShip.Cast(List.GetNth(pod_list, i));
+
+      if (!Sim.IsDead(pod)){
+         if (!iSim.IsDocked(pod)) {
+            Set.Add(final_set, pod);
+         }
+      }
+   }
+
+   return final_set;
 }
 
 /*    

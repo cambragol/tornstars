@@ -570,6 +570,10 @@ NewSystem()
    string suite_name;
    hinifile music_file = INIFile.Create("ini:/epic_music");
 
+   if (!Global.Bool("gt_option_music_on")) {
+      // Options have turned off the music
+      return;
+   }
 
    if (none == music_file) {
 
@@ -845,9 +849,10 @@ near_body()
 
 SoundNear()
 {
-   near_body();
-
-   near_habitat();
+   if (Global.Bool("gt_option_music_on")) {
+      near_body();
+      near_habitat();
+   }
 }
 
 
