@@ -48,6 +48,7 @@ uses	Sim,
       tsShipEnum,
       tsShip,
       tsPlayerFleet,
+      tsWingComm,
       tEpicFleetUpkeep,
       tEconUtil,
       uString;
@@ -125,6 +126,7 @@ update_wingman_info(hship wingman)
    int upkeep, current_fuel, max_fuel, daily_fuel, jump_fuel;
    int scan_range, prospector, survey_days, mining_cost, percent_hits;
    float efficiency;
+   int group;
 
    upkeep = tsShip.DailyUpkeep(wingman);
    jump_fuel = float2int(tsShip.FuelPerJump(wingman));
@@ -157,8 +159,16 @@ update_wingman_info(hship wingman)
    text = String.Join(text,Text.Field(iSim.WorldName(wingman),FT_Text));
 
    text = String.Join(text," <br>");
-   text = String.Join(text,Text.Field("gt_efleetgui_group",FT_Text));
-   text = String.Join(text,String.FormatInt(" %d", 0));
+
+   group = tsWingComm.GroupNumber(wingman);
+
+   if (group < 1) {
+      text = String.Join(text,Text.Field("gt_efleetgui_group",FT_Text));
+      text = String.Join(text," none");
+   }else {
+      text = String.Join(text,Text.Field("gt_efleetgui_group",FT_Text));
+      text = String.Join(text,String.FormatInt(" %d", group));
+   }
 
    text = String.Join(text,"<p>");
 
