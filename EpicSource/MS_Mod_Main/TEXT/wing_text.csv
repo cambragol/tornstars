@@ -14,37 +14,71 @@ OrderGroupEightAck,"Group Eight Over"
 OrderGroupNineAck,"Group Nine Reporting"
 
 
+
 ; Wingmen responding
+
+
+epo_group_ack, "Here."
+epo_status_ack, "We are alive."
+epo_status_no_fuel, "We are out of fuel and immobile."
+
+
 
 epo_halt_order_ack, "Halting ships."
 epo_attack_target_ack, "Attacking your target."
-epo_formate_player_ack, "Forming up with you."
-epo_defend_target_ack, "Defending your target."
+epo_escort_player_ack, "Escorting you."
+epo_escort_target_ack, "Escorting your target."
 epo_dock_target_ack, "Docking with your target."
-epo_approach_target_ack, "Approaching your target."
+epo_undock_ack, "Undocking."
+epo_formate_target_ack, "Forming up with your target."
 epo_refuel_target_ack, "Refueling your target."
 epo_drain_fuel_ack, "Draining fuel from your target."
 epo_scan_sky_ack, "Scanning for asteroids and stations now."
 
+epo_load_cargo_pod_ack, "Loading target pod now."
+epo_load_cargo_pods_ack, "Collecting nearby cargo pods."
+
+epo_fuel_ship_ack, "Fueling your target."
+epo_fuel_fleet_ack, "Fueling nearby wingmen."
+epo_drain_fuel_ack, "Draining fuel pod."
+
+epo_invalid_order, "That order was not valid, issue bug report."
 
 epo_not_wingman, "We can only add wingmen to groups."
+
+epo_refuse_not_warship, "Negative. This is not a warship!"
 
 epo_refuse_no_target, "Your target is invalid."
 epo_refuse_target_far, "That target is out of range."
 epo_refuse_player_ship_target, "We cannot attack our own ships."
 epo_refuse_player_far, "You are too far from our group."
 
-epo_out_of_system, "Our group is out of system."
+epo_refuse_out_of_system, "Negative. Our ship is out of system."
+epo_refuse_ship_docked, "Negative. Our ship is docked."
+epo_refuse_loading_cargo, "Negative. We are loading cargo."
+epo_refuse_fueling, "Negative. We are pumping fuel."
+
 
 epo_refueling_finished, "Finished refueling "
 
-epo_no_tankers_in_group, "Our group has no tankers."
-epo_tankers_empty, "Our tankers are empty."
+epo_refuse_not_tanker, "Negative. We are not a fuel tanker."
+epo_tanker_empty, "Our tanker is empty."
 
 epo_fleet_fueling_complete, "Fueling all ships complete."
-epo_refuel_only_ships, "We can only fuel ships."
-epo_refuel_player_only, "We can only fuel your wingmen."
+epo_refuse_fuel_only_ships, "We can only fuel ships."
 
+epo_fuel_drain_complete, "Fuel draining complete."
+
+epo_refuse_not_fuel_pod, "Only your fuel pods can be drained."
+
+epo_refuse_drain_only_player, "Only your pods can be drained."
+
+epo_refuse_no_pods, "Negative. No unclaimed pods nearby."
+epo_refuse_no_empty_ports, "Negative. We are fully loaded."
+
+epo_cargo_load_done, "Cargo loading complete."
+
+epo_cargo_unload_done, "Cargo unloading complete."
 
 epo_not_cargo_pod, "That is not a cargo pod."
 epo_not_player_pod, "We can only control your cargo pods."
@@ -53,38 +87,37 @@ epo_detach_asteroid, "Releasing locks and detaching ship now."
 epo_none_attached, "None of our ships are attached."
 
 
-epo_fuel_drain_complete, "Fuel draining complete."
 
-epo_refuse_not_fuel_pod, "Only fuel pods can be drained."
+epo_scan_sky_ack, "Starting long range scan."
 
-epo_refuse_drain_only_player, "Only your pods can be drained."
+epo_scan_sky_hold_still, "Stopping motion for scan."
+epo_scan_sky_deploy, "Deploying scan array."
+epo_scan_sky_success, "Scan has detected new stations."
+epo_scan_sky_failed, "Scan shows nothing in range."
 
-epo_scan_sky_success, "Trace signals detected."
-epo_scan_sky_failed, "Nothing in range."
-
-epo_refuse_no_science_ship, "There is no scanning ship in our group."
+epo_refuse_not_scan_ship, "Negative. Our ship has no long range scan."
 
 epo_refuse_not_player_mine, "You must claim the mine before we can extract ore."
 
 epo_miner_docking_ack,"Going for Approach and Attachment now."
 
-epo_no_mining_ships, "Our group has no mining ships."
-
-epo_no_undocked_mining_ships, "Our group has no undocked mining ships."
+epo_refuse_not_mining_ship, "Negative. Our ship is not a mining rig."
 
 epo_mining_rig_docked, "Mining rig attached. Starting extraction."
 
 epo_mining_dock_cancelled, "Cancelling docking approach."
+
 epo_refuse_no_mine_near, "There is no mine nearby."
 
-epo_refuse_not_mine, "This habitat is not a mine."
-epo_refuse_claimed_mine, "This mine has not been claimed by us."
+epo_refuse_claimed_mine, "Negative. This mine has not been claimed by us."
 
 
-epo_refuse_claimed_asteroid, "This mine has already been claimed."
+epo_refuse_claimed_asteroid, "Negative. This mine has already been claimed."
 
 epo_prospector_ack, "Docking with survey asteroid."
-epo_refuse_no_prospector, "No prospecting ship in the group."
+
+epo_refuse_not_prospector, "We are not a prospecting ship."
+
 epo_prospector_attaching,"We are attached to the surface."
 
 epo_prospector_survey_delay,"The survey will take a few days."
@@ -97,9 +130,6 @@ epo_move_group_ack, "Joining new group."
 epo_refuse_group_change, "Cannot join group."
 epo_leave_group_ack,"Leaving group."
 
-
-epo_capture_ack, "Capturing your target."
-epo_refuse_no_marines, "No ships with marines in the group."
 
 
 ; Dialog with nav officer about setting a jump route.
