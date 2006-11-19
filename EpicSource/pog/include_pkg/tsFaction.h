@@ -20,6 +20,8 @@ prototype tsFaction.Init();
 
 prototype tsFaction.NewGame();
 
+prototype tsFaction.SessionStart();
+
 prototype tsFaction.SaveGame();
 
 prototype tsFaction.SetDescription( hfaction faction, string html_file );
@@ -30,7 +32,7 @@ prototype tsFaction.SetFleetStyle( hfaction faction, string fleet_style );
 
 prototype string tsFaction.FleetStyle( hfaction faction );
 
-prototype tsFaction.SetSpeechStyle( hfaction faction, string fleet_style );
+prototype tsFaction.SetSpeechStyle( hfaction faction, string speech_style );
 
 prototype string tsFaction.SpeechStyle( hfaction faction );
 
