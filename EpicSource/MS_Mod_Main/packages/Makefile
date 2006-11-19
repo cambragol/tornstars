@@ -173,7 +173,9 @@ PACKAGES = ECargoTypes.pkg \
 	zTestCode.pkg \
 	zTestExp.pkg \
 	zTestFacShip.pkg \
-	zTestObject.pkg 
+	zTestObject.pkg \
+	fsw_SystemDamage.pkg \
+	fsw_sdGUI.pkg
 
 
 
@@ -189,6 +191,11 @@ clean:
 # Dependency rules.
 # MUST BE UPDATED FOR NEW PACKAGES AND IMPORT CHANGES!
 #
+
+fsw_SystemDamage.pkg : fsw_SystemDamage.pog
+fsw_sdGUI.pkg : fsw_sdGUI.pog
+
+
 ECargoTypes.pkg : ECargoTypes.pog
 ExitCrashTest.pkg : ExitCrashTest.pog
 UniGUI.pkg : UniGUI.pog
