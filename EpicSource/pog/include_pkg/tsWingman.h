@@ -16,11 +16,17 @@
 
 // Functions ///////////////////////////////////////////////////////////////////
 
-prototype tsWingman.GiveOrder( hship wingman, ePlayerOrder order, hisim target );
+prototype tsWingman.GiveOrder( hship ship, ePlayerOrder order, hisim target );
 
-prototype tsWingman.Start( hship wingman, ePlayerOrder order );
+prototype tsWingman.Start( hship ship, ePlayerOrder order, hisim target );
 
 prototype hisim tsWingman.OrderTarget( hship ship );
+
+prototype tsWingman.CurrentOrder( hship ship );
+
+prototype tsWingman.Save( hship ship );
+
+prototype tsWingman.Restore( hship ship );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

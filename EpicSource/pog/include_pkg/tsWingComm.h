@@ -40,5 +40,17 @@ prototype tsWingComm.KeyZero();
 
 prototype tsWingComm.Setup();
 
+prototype int tsWingComm.GroupNumber( hship ship );
+
+prototype bool tsWingComm.HasGroup( hship ship );
+
+prototype bool tsWingComm.GroupRemoveShip( hship ship );
+
+prototype bool tsWingComm.GroupMoveShip( hship ship, int group );
+
+prototype tsWingComm.Save( hship ship );
+
+prototype tsWingComm.Restore( hship ship );
+
 // EOF /////////////////////////////////////////////////////////////////////////
 

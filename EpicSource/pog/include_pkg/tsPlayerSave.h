@@ -20,6 +20,8 @@ prototype tsPlayerSave.Save();
 
 prototype tsPlayerSave.Restore();
 
+prototype tsPlayerSave.RestoreOrders();
+
 prototype tsPlayerSave.NewGame();
 
 // EOF /////////////////////////////////////////////////////////////////////////

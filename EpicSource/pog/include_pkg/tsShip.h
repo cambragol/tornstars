@@ -46,5 +46,9 @@ prototype tsShip.ReadIniFile( hship ship );
 
 prototype hship tsShip.Create( string ini_file, string name );
 
+prototype tsShip.SetSaveId( hship ship, int id );
+
+prototype int tsShip.SaveId( hship ship );
+
 // EOF /////////////////////////////////////////////////////////////////////////
 

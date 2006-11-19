@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/tPodUtil.h,v 1.7 2006/04/08 22:43:59 Owner Exp $
+// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////
@@ -49,6 +49,12 @@ prototype tPodUtil.DropCargo( hship freighter );
 prototype tPodUtil.AutodockPod( hship pod, hsim ship, hdockport target );
 
 prototype set tPodUtil.DockPorts( hship ship );
+
+prototype set tPodUtil.ClaimPods( hship ship, set pods );
+
+prototype bool tPodUtil.LoadDone( set cargo_pods );
+
+prototype tPodUtil.FreePods( set cargo_pods );
 
 prototype int tPodUtil.HackLevel( hship pod );
 
