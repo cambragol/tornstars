@@ -76,7 +76,10 @@ provides
 
         ReadIniFile,
     
-        Create;
+        Create,
+
+        SetSaveId,
+        SaveId;
 
 
  
@@ -108,6 +111,15 @@ float int2float(int number)
 }
 
 
+SetSaveId(hship ship, int id)
+{
+   Object.AddIntProperty(ship, "tsss_save_id", id);
+}
+
+int SaveId(hship ship)
+{
+   return Object.IntProperty(ship, "tsss_save_id");
+}
 
 
 // This is the maximum level of fuel that

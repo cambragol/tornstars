@@ -71,6 +71,7 @@ enum eShipState {
    eSS_None,
    eSS_NoPlayer,
    eSS_Idle,
+   eSS_NoFuel,
 
    eSS_HaltStart,
    eSS_HaltWait,
@@ -114,6 +115,7 @@ enum eShipState {
    // Moves from ship to ship fueling.
    eSS_FuelShipStart,
    eSS_FuelShipWait,
+   eSS_FuelFleetWait,
    eSS_FuelFleetStart,
    eSS_FuelHalt,
 
@@ -140,7 +142,7 @@ enum eShipState {
 
 
 
-prototype task evaluate_order(hship ship, ePlayerOrder order, hisim target);
+prototype task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool prior_order);
 prototype task wingman_watch(hship ship);
 
 
@@ -161,7 +163,15 @@ prototype set_current_target(hship ship, hisim target);
 prototype hisim new_target(hship ship);
 prototype set_new_target(hship ship, hisim target);
 
+prototype set_ship_state(hship ship, eShipState status);
+prototype eShipState ship_state(hship ship);
 
+
+prototype bool tanker_fill_ship(hship tanker, hship target);
+prototype bool tanker_empty_ship(hship tanker, hship target);
+
+
+prototype set player_fleet();
 
 
 // These belong in tsShip.pog
@@ -207,6 +217,8 @@ prototype bool is_valid_destination(hisim target);
 
 prototype ePlayerOrder int2order(int order);
 
+prototype eShipState int2state (int state);
+
 
 // These functions signal to the reputation code that the
 // wingman is attacking a target intentionally. It is meant
@@ -226,10 +238,10 @@ SetOrderTarget(hship ship, hisim target) {
 
 }
 
-
-CurrentOrder(hship ship)
+// External interface to a ships current order.
+ePlayerOrder CurrentOrder(hship ship)
 {
-   Object.IntProperty(ship,"gtCurrentOrder");
+   return current_order(ship);
 }
 
 
@@ -237,7 +249,7 @@ CurrentOrder(hship ship)
 GiveOrder(hship ship, ePlayerOrder order, hisim target)
 {
 
-   Task.Detach(start evaluate_order(ship, order, target));
+   Task.Detach(start evaluate_order(ship, order, target, false));
 
 }
 
@@ -250,7 +262,7 @@ Start(hship ship, ePlayerOrder order, hisim target)
    set_new_order(ship, ePO_None);
    set_new_target(ship, none);
 
-   Task.Detach(start evaluate_order(ship, order, target));
+   Task.Detach(start evaluate_order(ship, order, target, true));
 
    Task.Detach(start wingman_watch(ship));
 
@@ -272,7 +284,7 @@ Save(hship ship)
 // Will restore the prior orders of the wing man. And try to restore the prior target.
 Restore(hship ship)
 {
-   int id = Object.IDModulus( ship, 2147483647);
+   int id = tsShip.SaveId(ship);
    string save_key = String.Join("tsWing",String.FromInt(id));
    hisim target;
    int order;
@@ -282,18 +294,17 @@ Restore(hship ship)
    name = Global.String(String.Join(save_key,"target"));
    system = Global.String(String.Join(save_key,"system"));
 
-//   target = iSim.FindByNameInSystem(name, system);
+   target = iSim.FindByNameInSystem(name, system);
 
-//   Start(ship, int2order(order), target);
-   Start(ship, int2order(order), none);
+   Start(ship, int2order(order), target);
 }
 
-task evaluate_order(hship ship, ePlayerOrder order, hisim target)
+
+task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool prior_order)
 {
    hfaction player_faction = tsFaction.PlayerFaction();
    hfaction empty_faction = tsFaction.EmptyFaction();
    ePlayerOrder porder_final;
-   ePlayerOrder porder_current;
    hisim parent;
    hisim final_target;
    hship player = iShip.FindPlayerShip();
@@ -306,27 +317,47 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target)
    }
 
 
+
+
    // Some orders just ask for responses.
    switch (order) {
+   case ePO_None:
+      // If we get a none, order, just return.
+      // This happens when ships are newly started.
+      return;
+      break;
    case ePO_Respond:
-      //iConversation.OneLiner( ship, "", "Group Here");
+      iConversation.OneLiner( ship, "", "epo_group_ack");
       return;
       break;
    case ePO_Status:
-      iConversation.OneLiner( ship, "", "Sounding off");
+      if (ship_state(ship) == eSS_NoFuel) {
+         iConversation.OneLiner(ship, "", "epo_status_no_fuel");
+      }else {
+         iConversation.OneLiner( ship, "", "epo_status_ack");
+      }
       return;
       break;
    default:
       break;
    }
 
-   // Test if we are out of system.
-   // Tell player, ship out of system.
-   if (iSim.ActiveWorld() != iSim.WorldName(ship)) {
-      iConversation.OneLiner( ship, "", "Negative. Our ship is out of system");
-      return;
+
+   // We block the player from giving new orders to ships out of the
+   // system where the player is located.
+   if (!prior_order) {
+      // Test if we are out of system.
+      // Tell player, ship out of system.
+      if (iSim.ActiveWorld() != iSim.WorldName(ship)) {
+         iConversation.OneLiner( ship, "", "epo_refuse_out_of_system");
+         return;
+      }
    }
 
+   // We block commands to ships that have no fuel supply. Tell the player.
+   if (ship_state(ship) == eSS_NoFuel) {
+      iConversation.OneLiner(ship, "", "epo_status_no_fuel");
+   }
 
    // Reject if target does not exist, or is out of system.
    switch (order) {
@@ -337,22 +368,20 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target)
    case ePO_FuelShip:
    case ePO_DrainFuel:
    case ePO_CollectPod:
-   case ePO_Prospect:
-   case ePO_Mine:
-   
       if (none == target) {
-         iConversation.OneLiner( ship, "", "Negative. No target");
+         iConversation.OneLiner( ship, "", "epo_refuse_no_target");
          return;
       }
 
-      if (iSim.ActiveWorld() != iSim.WorldName(target)) {
-         iConversation.OneLiner( ship, "", "Negative. Target out of system");
+      if (iSim.WorldName(ship) != iSim.WorldName(target)) {
+         iConversation.OneLiner( ship, "", "epo_refuse_target_far");
          return;
       }
       break;
    default:
       break;
    }
+
 
 
    // Reject if the ship is docked to a larger ship.
@@ -365,7 +394,7 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target)
    case ePO_FuelFleet:
    case ePO_DrainFuel:
       if (DockParent(ship) != none) {
-         iConversation.OneLiner( ship, "", "Negative. Our ship is docked");
+         iConversation.OneLiner( ship, "", "epo_refuse_ship_docked");
          return;
       }
       break;
@@ -376,7 +405,7 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target)
       parent = DockParent(ship);
       if (parent != none) {
          if (target != parent){
-            iConversation.OneLiner( ship, "", "Negative. Our ship is docked");
+            iConversation.OneLiner( ship, "", "epo_refuse_ship_docked");
             return;         
          }
       }
@@ -386,14 +415,83 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target)
    }
 
 
+   // Reject if the new order conflicts with the current order
+   // Some orders are persisant. 
+   switch (current_order(ship)) {
+   case ePO_CollectPods:
+      switch (order) {
+      case ePO_Halt:
+         break;
+      default:
+         iConversation.OneLiner(ship, "", "epo_refuse_loading_cargo");
+         return;
+         break;
+      }
+      break;
+   case ePO_CollectPod:
+      switch (order) {
+      case ePO_Halt:
+         break;
+      default:
+         iConversation.OneLiner(ship, "", "epo_refuse_loading_cargo");
+         return;
+         break;
+      }
+      break;
+   case ePO_FuelShip:
+      switch (order) {
+      case ePO_Halt:
+         break;
+      default:
+         iConversation.OneLiner(ship, "", "epo_refuse_fueling");
+         return;
+         break;
+      }
+      break;
+   case ePO_FuelFleet:
+      switch (order) {
+      case ePO_Halt:
+         break;
+      default:
+         iConversation.OneLiner(ship, "", "epo_refuse_fueling");
+         return;
+         break;
+      }
+      break;
+   case ePO_DrainFuel:
+      switch (order) {
+      case ePO_Halt:
+         break;
+      default:
+         iConversation.OneLiner(ship, "", "epo_refuse_fueling");
+         return;
+         break;
+      }
+      break;
+   default:
+      break;
+   }
 
 
-   // Now reject all special cases where the target needs to be evaluated in detail.
+   // This allows the type of ship to change the order slightly.
+   // This happens when transports are ordered to escort.
+   // Also allows some commands to pick the target. Such as mining.
+   final_target = target;
+   porder_final = order;
+
+   // Our command made it. Give the acknolegement.
    switch (order) {
-   
+   case ePO_Halt:
+      iConversation.OneLiner(ship, "", "epo_halt_order_ack");
+      break;
    case ePO_Attack:
+      if (!is_warship(ship)) {
+         iConversation.OneLiner(ship, "", "epo_refuse_not_warship");
+         return;
+      }
+
       if (!is_valid_target(target)) {
-         iConversation.OneLiner( ship, "", "Negative. We cannot attack that target");
+         iConversation.OneLiner( ship, "", "epo_refuse_no_target");
          return;
       }
 
@@ -402,35 +500,109 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target)
          return;
       }
 
-      // Do other ship checks here, like is the target the wrong faction etc.
-
+      iConversation.OneLiner(ship, "", "epo_attack_order_ack");
       break;
-   case ePO_Dock:
+   case ePO_DefendMe:
+         final_target = player;
 
-      if (!is_valid_target(target)) {
-         iConversation.OneLiner( ship, "", "Negative. Invalid target");
+      // Freighters just move to formation.
+      if (!is_warship(ship)) {
+         porder_final = ePO_Formate;
+         iConversation.OneLiner(ship, "", "epo_formate_player_ack");
+      }else {
+         iConversation.OneLiner(ship, "", "epo_escort_player_ack");
+      }
+      break;
+   case ePO_Escort:
+      // Allows Lpoints and waypoints.
+      if (!is_valid_destination(target)) {
+         iConversation.OneLiner( ship, "", "epo_refuse_no_target");
          return;
       }
 
+      // Freighters just move to formation.
+      if (!is_warship(ship)) {
+         porder_final = ePO_Formate;
+         iConversation.OneLiner(ship, "", "epo_formate_target_ack");
+      }else {
+         iConversation.OneLiner(ship, "", "epo_escort_target_ack");
+      }
       break;
-   case ePO_Escort:
    case ePO_Formate:
       // Allows Lpoints and waypoints.
       if (!is_valid_destination(target)) {
-         iConversation.OneLiner( ship, "", "Negative. Invalid destination");
+         iConversation.OneLiner( ship, "", "epo_refuse_no_target");
          return;
       }
 
+      iConversation.OneLiner(ship, "", "epo_formate_target_ack");
+      break;
+   case ePO_Dock:
+      if (!is_valid_target(target)) {
+         iConversation.OneLiner( ship, "", "epo_refuse_no_target");
+         return;
+      }
+
+      iConversation.OneLiner(ship, "", "epo_dock_target_ack");
+      break;
+   case ePO_Undock:
+      iConversation.OneLiner(ship, "", "epo_undock_ack");
+      break;
+   case ePO_CollectPods:
+      // Ack done in wingman watch
+      //iConversation.OneLiner(ship, "", "epo_load_cargo_pods_ack");
+      break;
+   case ePO_CollectPod:
+      // Only dock cargo pods.
+      if (T_CargoPod != iSim.Type(target)) {
+         iConversation.OneLiner(ship, "", "epo_not_cargo_pod");
+         return;
+      }
+
+      // Don't dock sold pods.
+      if (Object.BoolProperty(target, "md_epic_podsold"))
+      {
+         iConversation.OneLiner(ship, "", "epo_not_player_pod");
+         return;
+      }
+
+      // Only dock player controlled pods.
+      if (player_faction != iSim.Faction(target)) {
+         iConversation.OneLiner(ship, "", "epo_not_player_pod");
+         return;
+      }
+
+      iConversation.OneLiner(ship, "", "epo_load_cargo_pod_ack");
+      break;
+   case ePO_UndockPods:
+      iConversation.OneLiner(ship, "", "epo_unload_pods_ack");
       break;
    case ePO_FuelShip:
-      if (!(TM_Ship & iSim.Type(target))) {
-         iConversation.OneLiner( ship, "", "Negative. Target not a ship");
+      if (!is_tanker(ship)) {
+         iConversation.OneLiner(ship, "", "epo_refuse_not_tanker");
          return;
       }
 
+      if (!(TM_Ship & iSim.Type(target))) {
+         iConversation.OneLiner( ship, "", "epo_refuse_fuel_only_ship");
+         return;
+      }
+
+      iConversation.OneLiner(ship, "", "Fueling ship");
+      break;
+   case ePO_FuelFleet:
+      if (!is_tanker(ship)) {
+         iConversation.OneLiner(ship, "", "epo_refuse_not_tanker");
+         return;
+      }
+
+      iConversation.OneLiner(ship, "", "epo_fuel_fleet_ack");
       break;
    case ePO_DrainFuel:
-
+      if (!is_tanker(ship)) {
+         iConversation.OneLiner(ship, "", "epo_refuse_not_tanker");
+         return;
+      }
       // The target must be a player fuel cargo pod or a ship of faction empty.
       if (TM_Ship & iSim.Type(target)) {
          if (empty_faction != iSim.Faction(target)) {
@@ -456,240 +628,74 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target)
             return;
          }
       } else {
-         iConversation.OneLiner(ship, "", "Negative. Target cannot supply fuel");
+         iConversation.OneLiner(ship, "", "epo_refuse_not_fuel_pod");
          return;
       }
 
-
-      break;
-   case ePO_CollectPod:
-
-      // Only dock cargo pods.
-      if (T_CargoPod != iSim.Type(target)) {
-         iConversation.OneLiner(ship, "", "epo_not_cargo_pod");
-         return;
-      }
-
-      // Don't dock sold pods.
-      if (Object.BoolProperty(target, "md_epic_podsold"))
-      {
-         iConversation.OneLiner(ship, "", "epo_not_player_pod");
-         return;
-      }
-
-      // Only dock player controlled pods.
-      if (player_faction != iSim.Faction(target)) {
-         iConversation.OneLiner(ship, "", "epo_not_player_pod");
-         return;
-      }
-      break;
-
-   case ePO_Mine:
-      if (!is_mine(target)) {
-         iConversation.OneLiner(ship, "", "epo_refuse_not_mine");
-         return;
-      }
-
-
-      if (player_faction != iSim.Faction(target)) {
-         iConversation.OneLiner(ship, "", "epo_refuse_not_player_mine");
-         return;
-      }
-      break;
-
-   case ePO_Prospect:
-      if (!is_mine(target)) {
-         iConversation.OneLiner(ship, "", "epo_refuse_not_mine");
-         return;
-      }
-
-
-      if (empty_faction != iSim.Faction(target)) {
-         iConversation.OneLiner(ship, "", "epo_refuse_claimed_asteroid");
-         return;
-      }
-      break;
-
-   default:
-      break;
-   }
-
-
-   // Reject if the new order conflicts with the current order
-   // Some orders are persisant. 
-   switch (porder_current) {
-   case ePO_CollectPods:
-      switch (order) {
-      case ePO_Halt:
-         break;
-      default:
-         iConversation.OneLiner(ship, "", "Negative. Loading Cargo");
-         return;
-         break;
-      }
-      break;
-   case ePO_CollectPod:
-      switch (order) {
-      case ePO_Halt:
-         break;
-      default:
-         iConversation.OneLiner(ship, "", "Negative. Loading Cargo");
-         return;
-         break;
-      }
-      break;
-   case ePO_FuelShip:
-      switch (order) {
-      case ePO_Halt:
-         break;
-      default:
-         iConversation.OneLiner(ship, "", "Negative. Fueling Ship");
-         return;
-         break;
-      }
-      break;
-   case ePO_FuelFleet:
-      switch (order) {
-      case ePO_Halt:
-         break;
-      default:
-         iConversation.OneLiner(ship, "", "Negative. Fueling Fleet");
-         return;
-         break;
-      }
-      break;
-   case ePO_DrainFuel:
-      switch (order) {
-      case ePO_Halt:
-         break;
-      default:
-         iConversation.OneLiner(ship, "", "Negative. Draining Fuel");
-         return;
-         break;
-      }
-      break;
-   default:
-      break;
-   }
-
-   // The final check. See if the ship has the ability to execute the order.
-   // Transport ships modify escort and defense orders into formate orders.
-   porder_final = order;
-   final_target = target;
-
-   switch (order) {
-   case ePO_Attack:
-      if (!is_warship(ship)) {
-         iConversation.OneLiner(ship, "", "Negative. This is not a warship I am flying!");
-         return;
-      }
-      break;
-   case ePO_DefendMe:
-      if (!is_warship(ship)) {
-         // Freighters just move to formation.
-         porder_final = ePO_Formate;
-         final_target = player;
-      }else {
-      }
-      break;
-   case ePO_Escort:
-      // Freighters just move to formation.
-      if (!is_warship(ship)) {
-         porder_final = ePO_Formate;
-      }
-      break;
-   case ePO_Dock:
-      break;
-   case ePO_Undock:
-      break;
-   case ePO_CollectPods:
-      break;
-   case ePO_CollectPod:
-      break;
-   case ePO_UndockPods:
-      break;
-   case ePO_FuelShip:
-   case ePO_FuelFleet:
-   case ePO_DrainFuel:
-      if (!is_tanker(ship)) {
-         iConversation.OneLiner(ship, "", "Negative. I am not a tanker");
-         return;
-      }
+      iConversation.OneLiner(ship, "", "epo_drain_fuel_ack");
       break;
    case ePO_Prospect:
       if (!is_prospector(ship)) {
-         iConversation.OneLiner(ship, "", "Negative. I am not a science ship");
+         iConversation.OneLiner(ship, "", "epo_refuse_not_prospector");
          return;
       }
+
+      final_target = iHabitat.Nearest(iMapEntity.SystemHabitats(), ship);
+
+      if (none == final_target) {
+         iConversation.OneLiner(ship, "", "epo_refuse_no_target");
+         return;
+      }
+
+      if (!is_mine(final_target)) {
+         iConversation.OneLiner(ship, "", "epo_refuse_not_mine");
+         return;
+      }
+
+      if (empty_faction != iSim.Faction(final_target)) {
+         iConversation.OneLiner(ship, "", "epo_refuse_claimed_asteroid");
+         return;
+      }
+
+
+      iConversation.OneLiner(ship, "", "epo_prospector_ack");
       break;
    case ePO_ScanSky:
       if (!is_long_range_scan(ship)) {
-         iConversation.OneLiner(ship, "", "Negative. No long range sensors");
+         iConversation.OneLiner(ship, "", "epo_refuse_not_scan_ship");
          return;
       }
+
+      iConversation.OneLiner(ship, "", "epo_scan_sky_ack");
       break;
    case ePO_Mine:
       if (!is_miner(ship)) {
-         iConversation.OneLiner(ship, "", "Negative. I am not a mining rig");
+         iConversation.OneLiner(ship, "", "epo_refuse_not_mining_rig");
          return;
       }
+
+      final_target = iHabitat.Nearest(iMapEntity.SystemHabitats(), ship);
+
+      if (none == final_target) {
+         iConversation.OneLiner(ship, "", "epo_refuse_no_target");
+         return;
+      }
+
+      if (!is_mine(final_target)) {
+         iConversation.OneLiner(ship, "", "epo_refuse_not_mine");
+         return;
+      }
+
+      if (empty_faction != iSim.Faction(final_target)) {
+         iConversation.OneLiner(ship, "", "epo_refuse_claimed_asteroid");
+         return;
+      }
+
+      iConversation.OneLiner(ship, "", "epo_miner_docking_ack");
       break;
    default:
-      break;
-   }
-
-
-   // Our command made it. Give the acknolegement.
-   switch (porder_final) {
-   case ePO_Halt:
-      iConversation.OneLiner(ship, "", "Halting");
-      break;
-   case ePO_Attack:
-      iConversation.OneLiner(ship, "", "Attacking your target");
-      break;
-   case ePO_DefendMe:
-      iConversation.OneLiner(ship, "", "Defending you");
-      break;
-   case ePO_Escort:
-      iConversation.OneLiner(ship, "", "Moving to escort");
-      break;
-   case ePO_Formate:
-      iConversation.OneLiner(ship, "", "Moving into formation");
-      break;
-   case ePO_Dock:
-      iConversation.OneLiner(ship, "", "Docking");
-      break;
-   case ePO_Undock:
-      iConversation.OneLiner(ship, "", "Undocking");
-      break;
-   case ePO_CollectPods:
-      iConversation.OneLiner(ship, "", "Loading pods");
-      break;
-   case ePO_CollectPod:
-      iConversation.OneLiner(ship, "", "Loading target pod");
-      break;
-   case ePO_UndockPods:
-      iConversation.OneLiner(ship, "", "Unloading all pods");
-      break;
-   case ePO_FuelShip:
-      iConversation.OneLiner(ship, "", "Fueling ship");
-      break;
-   case ePO_FuelFleet:
-      iConversation.OneLiner(ship, "", "Fueling fleet");
-      break;
-   case ePO_DrainFuel:
-      iConversation.OneLiner(ship, "", "Draining fuel pod");
-      break;
-   case ePO_Prospect:
-      iConversation.OneLiner(ship, "", "Science ship going for asteroid");
-      break;
-   case ePO_ScanSky:
-      iConversation.OneLiner(ship, "", "Scanning for asteroids");
-      break;
-   case ePO_Mine:
-      iConversation.OneLiner(ship, "", "Mining rig going for asteroid");
-      break;
-   default:
+      iConversation.OneLiner(ship, "", "epo_invalid_order");
+      return;
       break;
    }
 
@@ -698,6 +704,13 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target)
    atomic {
       set_new_order(ship, porder_final);
       set_new_target(ship, final_target);
+   }
+
+
+   debug {
+      Debug.PrintString("tsWingman.evaluate_order done");
+      Debug.PrintString(Text.Field(Sim.Name(ship), FT_Text));
+      Debug.PrintString("\n");
    }
 }
 
@@ -709,10 +722,18 @@ task wingman_watch(hship ship)
    eShipState next_state;
    bool debug_on = true;
    hship player;
+   hship pod;
    hisim target;
+   hship target_ship;
    ePlayerOrder neworder;
    hisim waypoint;
-
+   int flee_timer;
+   bool locked = false;
+   bool filled = false;
+   string response;
+   list target_list, fuel_list, cargo_list;
+   set cargo_set;
+   int i, total;
 
    while (1) {
       Task.Sleep(Task.Current(), 1.0);
@@ -722,13 +743,45 @@ task wingman_watch(hship ship)
          return;
       }
 
+      player = iShip.FindPlayerShip();
+
       neworder = new_order(ship);
+      if (ePO_None != neworder) {
+         debug {
+            Debug.PrintString("tsWingman.wingman_watch new order");
+            Debug.PrintString(Text.Field(Sim.Name(ship), FT_Text));
+            Debug.PrintString("\n");
+         }
+      }
+
+      // If the player is more than half culling distance away, lock down the weapons systems.
+      if (Sim.DistanceBetween(player, ship) > Global.Float("gt_distance_wakeup")) {
+         if (false == locked) {
+            iShip.LockDownWeapons(ship);
+            locked = true;
+         }
+      }else{
+         if (true == locked) {
+            // if the wingmans weapons were locked down, unlock them.
+            iShip.WeaponTargetsFromContactList(ship);
+            locked = false;
+         }
+      }
 
       // Did we get attacked?
       // Have we told the player?
 
       // Have we started to flee?
-      player = iShip.FindPlayerShip();
+      if (OT_Flee == iAI.CurrentOrderType(ship)) {
+         if (eSS_Flee != wingman_state) {
+            wingman_state = change_state(ship, wingman_state, eSS_FleeStart, debug_on);
+         }
+      }
+
+      if ((tsShip.Fuel(ship) < 1 ) && (wingman_state != eSS_NoFuel)) {
+         iConversation.OneLiner(ship, "", "epo_status_no_fuel");
+         wingman_state = change_state(ship, wingman_state, eSS_NoFuel, debug_on);
+      }
 
       switch (wingman_state) {
       case eSS_None:
@@ -739,11 +792,18 @@ task wingman_watch(hship ship)
          wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
          break;
 
+      case eSS_NoFuel:
+         // Bring the ship to a stop. Halt it from executing any orders.
+         iAI.PurgeOrders(ship);
+         if (tsShip.Fuel(ship) > 1) {
+            wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+         }
+         break;
       case eSS_Idle:
          // If we are not docked, and we are near the player
-      // then
-      // if we are a warship, enter into escort.
-      // if we are a transport, enter into formate.
+         // then
+         // if we are a warship, enter into escort.
+         // if we are a transport, enter into formate.
 
          if (none == player) {
 
@@ -762,7 +822,6 @@ task wingman_watch(hship ship)
                   wingman_state = change_state(ship, wingman_state, eSS_FormateStart, debug_on);
                }
             }
-
          }
          break;
 
@@ -784,10 +843,10 @@ task wingman_watch(hship ship)
       case eSS_HaltWait:
          // Wait here for any other order.
         // We have a new order. Change.
-         if (neworder != ePO_None) {
+         if (new_order(ship) != ePO_None) {
 
             accept_order(ship, debug_on);
-            next_state = new_order_state(neworder);
+            next_state = new_order_state(current_order(ship));
             wingman_state = change_state(ship, wingman_state, next_state, debug_on);
 
             // Clean up the halt waypoint.
@@ -817,18 +876,6 @@ task wingman_watch(hship ship)
          }
          break;
 
-      case eSS_Escort:
-         // We have a new order. Change.
-         if (neworder != ePO_None) {
-
-            accept_order(ship, debug_on);
-            next_state = new_order_state(neworder);
-            wingman_state = change_state(ship, wingman_state, next_state, debug_on);
-
-         }
-
-         break;
-
       case eSS_FormateStart:
          target = current_target(ship);
 
@@ -848,26 +895,50 @@ task wingman_watch(hship ship)
             wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
          }
          break;
+
+      case eSS_Escort:
       case eSS_Formate:
         // We have a new order. Change.
-         if (neworder != ePO_None) {
+         if (new_order(ship) != ePO_None) {
 
             accept_order(ship, debug_on);
-            next_state = new_order_state(neworder);
+            next_state = new_order_state(current_order(ship));
             wingman_state = change_state(ship, wingman_state, next_state, debug_on);
 
          }
          break;
-      case eSS_Attack:
-         // If we get a new order, take it.
 
-         // Watch our target, if they flee and get too far
-         // pick a new target.
-         break;
 
       case eSS_AttackStart:
          // Go after the target. If that one no longer exists, 
          // pick another.
+         target = current_target(ship);
+         SetOrderTarget(ship, target);
+
+         iAI.PurgeOrders(ship);
+         iAI.GiveAttackOrder(ship, target);
+
+         wingman_state = change_state(ship, wingman_state, eSS_Attack, debug_on);
+         break;
+
+      case eSS_Attack:
+         // If we get a new order, take it.
+        // We have a new order. Change.
+         target = current_target(ship);
+
+         if (Sim.IsDead(target)) {
+            // Job accomplished, return to player.
+            wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+
+         }else if (OT_Flee == iAI.CurrentOrderType(iShip.Cast(target))) {
+            // Break away, reformate with the player.
+            wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+
+         }else if (new_order(ship) != ePO_None) {
+            accept_order(ship, debug_on);
+            next_state = new_order_state(current_order(ship));
+            wingman_state = change_state(ship, wingman_state, next_state, debug_on);
+         }
          break;
 
       case eSS_AttackNewTarget:
@@ -876,15 +947,21 @@ task wingman_watch(hship ship)
          break;
 
       case eSS_FleeStart:
-         // Ok, were damaged. Pick the closest neutral or better
+         // Ok, we are damaged. Pick the closest neutral or better
          // station that we can flee towards. Empty is fine.
+         flee_timer = 10 * 60;
          break;
 
       case eSS_Flee:
          // We just flee till we reach our destination. No looking back.
-         // When we get there, go to formate.
-         // If we time out (10 min or so) then go to formate.
+         // When we get there, go to idle.
+         // If we time out (10 min or so) then go to idle.
          // (possibly engine dead or something).
+         --flee_timer;
+
+         if ((OT_None == iAI.CurrentOrderType(ship)) || (flee_timer < 0)) {
+            wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+         }
          break;
 
       case eSS_DockStart:
@@ -909,6 +986,11 @@ task wingman_watch(hship ship)
             accept_order(ship, debug_on);
             next_state = new_order_state(neworder);
             wingman_state = change_state(ship, wingman_state, next_state, debug_on);
+         }else if (OT_None == iAI.CurrentOrderType(ship)) {
+            if (none == DockParent(ship)) {
+               // The order ended without docking the ship. Return to idle.
+               wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+            }
          }
          break;
 
@@ -924,33 +1006,287 @@ task wingman_watch(hship ship)
          // If they are done, then tell the player.
          // Formate to the player, remove the waypoint.
          // If we are told to halt, go to load pod stop.
+         if (tPodUtil.LoadDone(cargo_set)) {
+            iConversation.OneLiner(ship, "", "epo_load_cargo_done");
+            iAI.PurgeOrders(ship);
+            Task.Sleep(Task.Current(), 0.1);
+            Sim.Destroy(waypoint);
+            wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+         }else if (neworder == ePO_Halt) {
+            iAI.PurgeOrders(ship);
+            Task.Sleep(Task.Current(), 0.1);
+            Sim.Destroy(waypoint);
+            wingman_state = change_state(ship, wingman_state, eSS_LoadPodStop, debug_on);
+         }
          break;
 
       case eSS_LoadPodStart:
          // Drop a waypoint and formate on it.
          // Look for pods and grab up as many as we can.
+
+         next_state = eSS_Idle;
+   
+         if (!Object.PropertyExists(ship, "md_epic_shipinit")) { // No loading pods when on the spewer!
+
+            if (!tMegaTrucking.IsMegafreighter(ship)) { // Megafreighters use their own method
+
+               if (!Set.IsEmpty(tPodUtil.DockPorts(ship))){
+                  cargo_set = Set.FromList(tPodUtil.TaggedPodList(ship, Global.Float("gt_distance_wakeup")));
+
+                  // Reserve the pods we intend to load
+                  cargo_set = tPodUtil.ClaimPods(ship, cargo_set);
+
+                  if (!Set.IsEmpty(cargo_set)) {
+
+                     waypoint = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","load point"));
+                     Sim.PlaceAt(waypoint, ship);
+                     Task.Sleep(Task.Current(), 0.1);
+                     Sim.CopyOrientation(waypoint, ship);
+                     iAI.PurgeOrders(ship);
+                     iAI.GiveFormateOrder( ship, waypoint, 0.0, 0.0, 0.0 );
+
+                     next_state = eSS_LoadPodWait;
+
+                     iConversation.OneLiner(ship, "", "epo_load_cargo_pods_ack");
+                  }else{
+                     iConversation.OneLiner(ship, "", "epo_refuse_no_pods");
+                  }
+               }else {
+                  iConversation.OneLiner(ship, "", "epo_refuse_no_empty_ports");
+               }
+            }
+         }
+
+         wingman_state = change_state(ship, wingman_state, next_state, debug_on);
+
          break;
 
       case eSS_LoadPodStop:
          // Halt any remaining pods.
-         // Formate the player.
-         // Remove the waypoint. 
+         tPodUtil.FreePods(cargo_set);
+
+         accept_order(ship, debug_on);
+         next_state = new_order_state(neworder);
+         wingman_state = change_state(ship, wingman_state, next_state, debug_on);
+
+         break;
+
+      case eSS_UnloadPodStart:
+         if(!Object.PropertyExists(ship, "md_epic_shipinit"))	// No ditching on the spewer!
+         {
+            if(!tMegaTrucking.IsMegafreighter(ship))
+            {
+
+               cargo_list = List.FromSet(Sim.Children(ship));
+               total = List.ItemCount(cargo_list);
+
+               for (i=0;i<total;++i) {
+                  pod = iShip.Cast(List.GetNth(cargo_list,i));
+                  if (T_CargoPod == iSim.Type(pod)) {
+                     iSim.SetDockingLock(ship, pod, false);
+                     iShip.UndockSelf(pod);
+                  }
+               }	// end for(j...)
+            } // end if(!tMegaTrucking...)
+            else{
+               tMegaTrucking.DitchPods(ship);
+            }
+
+            iConversation.OneLiner(ship, "", "epo_cargo_unloading_done");
+         } else { // end if(!Object...)
+            // We had to skip this ship because it is loading/unloading pods
+            // so warn the player when this is all done.
+            iConversation.OneLiner(ship, "", "epo_refuse_ship_docked");
+         }
+
+         wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+
          break;
 
       case eSS_FuelShipStart:
          // If the target is a ship that is low on fuel
          // Do a move order to the ship, and go to fuel ship wait.
+         target = current_target(ship);
+         next_state = eSS_Idle;
+
+         if (TM_Ship & iSim.Type(target)) {
+            if (tsShip.Fuel(iShip.Cast(target)) < tsShip.FuelMax(iShip.Cast(target))) {
+               iAI.PurgeOrders(ship);
+
+               // Move up under the target ship.
+               iAI.GiveFormateOrder(ship, 
+                                    target,
+                                    0,
+                                    -1km,
+                                    0);
+               next_state = eSS_FuelShipWait;
+            }
+         }
+         wingman_state = change_state(ship, wingman_state, next_state, debug_on);
          break;
 
       case eSS_FuelShipWait:
-         // Once we move close to the ship, transfer fuel.
-         // If fuel fleet order, go to fuel fleet start.
-         // If given a halt order, go to formate player.
+      case eSS_FuelFleetWait:
+         target_ship = iShip.Cast(current_target(ship));
+         if (2km > Sim.DistanceBetween(ship, target_ship)) {
+            filled = tanker_fill_ship(ship, target_ship);
+
+            if (true == filled) {
+               iConversation.OneLiner(ship, "", String.Join("epo_refueling_finished+",Sim.Name(target_ship)));
+            }else {
+               iConversation.OneLiner(ship, "", "epo_tanker_empty");
+            }
+
+            if ((wingman_state == eSS_FuelFleetWait) && (true == filled)) {
+               // if we have any fuel, go back and fill another ship.
+               wingman_state = change_state(ship, wingman_state, eSS_FuelFleetStart, debug_on);
+            }else {
+               wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+            }
+         }
          break;
 
       case eSS_FuelFleetStart:
          // Pick the nearest player ship that is low on fuel.
          // Do a move order to the ship. go to fuel ship wait.
+         // Refuels all player ships in Global.Float("gt_distance_wakeup").
+         target_list = List.FromSet(iSim.SimsInRadiusFromSet(player_fleet(),
+                                                             player, Global.Float("gt_distance_wakeup"), TM_Ship));
+
+         List.AddHead(target_list, player);
+         List.RemoveAll(fuel_list);
+
+         // Get a list of non-tankers that need fuel.
+         total = List.ItemCount(target_list);
+         for (i=0;i<total;++i) {
+            target_ship = iShip.Cast(List.GetNth(target_list, i));
+
+            if (!is_tanker(target_ship)){
+               if (tsShip.Fuel(target_ship) < (tsShip.FuelMax(target_ship) - 1)) {
+                  List.AddTail(fuel_list, target_ship);
+               }
+            }
+         }
+
+         if (List.ItemCount(fuel_list)) {
+            target_ship = iShip.Cast(List.Head(fuel_list));
+
+            set_current_target(ship, target_ship);
+
+            iAI.PurgeOrders(ship);
+
+            // Move up under the target ship.
+            iAI.GiveFormateOrder(ship, 
+                                 target_ship,
+                                 0,
+                                 -1km,
+                                 0);
+
+            wingman_state = change_state(ship, wingman_state, eSS_FuelFleetWait, debug_on);
+         }else {
+
+            // Done. Tell the player.
+            iConversation.OneLiner(ship, "", "epo_fleet_fueling_complete");
+            wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+         }
+
+         break;
+
+         // Docks to nearest asteroid and begins science survey.
+      case eSS_ProspectStart:
+         target = current_target(ship);
+
+         if (none != target) {
+
+            iAI.PurgeOrders(ship);
+            iAI.GiveDockOrder(ship, target);
+            iConversation.OneLiner(ship,"", "prospector going for attachment");
+            wingman_state = change_state(ship, wingman_state, eSS_ProspectWait, debug_on);
+
+         }else {
+            iConversation.OneLiner(ship, "", "epo_prospector_docking_cancelled");
+            wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+
+         }
+         break;
+      case eSS_ProspectWait:
+         // Wait in this state for an undock order.
+         if (iSim.IsDockedTo(ship, target)) {
+
+            iConversation.Begin();
+            // epo_prospector_attaching, "We are attached to the surface."
+            iConversation.Say(ship,"", "epo_prospector_attaching");
+            // epo_prospector_survey_delay, "The survey will take a few days."
+            iConversation.Say(ship,"", "epo_prospector_survey_delay");
+            // epo_prospector_send_email, "We will notify you by email when we are done."
+            iConversation.Say(ship,"", "epo_prospector_send_email");
+            iConversation.End();
+
+            wingman_state = change_state(ship, wingman_state, eSS_Prospect, debug_on);
+         }else if (neworder == ePO_Undock) {
+            accept_order(ship, debug_on);
+            next_state = new_order_state(neworder);
+            wingman_state = change_state(ship, wingman_state, next_state, debug_on);
+         }else if (OT_None == iAI.CurrentOrderType(ship)) {
+            if (none == DockParent(ship)) {
+               // The order ended without docking the ship. Return to idle.
+               iConversation.OneLiner(ship, "", "epo_prospector_docking_cancelled");
+               wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+            }
+         }
+         break;
+      case eSS_Prospect:
+         if (neworder == ePO_Undock) {
+            iConversation.OneLiner(ship, "", "epo_prospector_undocking");
+            accept_order(ship, debug_on);
+            next_state = new_order_state(neworder);
+            wingman_state = change_state(ship, wingman_state, next_state, debug_on);
+         }
+         break;
+
+         // Docks to nearest asteroid and begins mining.
+      case eSS_MineStart:
+         target = new_target(ship);
+
+         if (none != target) {
+
+            iAI.PurgeOrders(ship);
+            iAI.GiveDockOrder(ship, target);
+            iConversation.OneLiner(ship,"", "mining rig going for attachment");
+            wingman_state = change_state(ship, wingman_state, eSS_MineWait, debug_on);
+
+         }else {
+            iConversation.OneLiner(ship, "", "epo_mining_dock_cancelled");
+            wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+
+         }         
+         break;
+      case eSS_MineWait:
+         if (iSim.IsDockedTo(ship, target)) {
+            iConversation.OneLiner(ship, "","epo_mining_rig_docked");
+            wingman_state = change_state(ship, wingman_state, eSS_Mine, debug_on);
+         }else if (neworder == ePO_Undock) {
+            iConversation.OneLiner(ship, "", "epo_mining_dock_cancelled");
+            accept_order(ship, debug_on);
+            next_state = new_order_state(neworder);
+            wingman_state = change_state(ship, wingman_state, next_state, debug_on);
+         }else if (OT_None == iAI.CurrentOrderType(ship)) {
+
+            if (none == DockParent(ship)) {
+               // The order ended without docking the ship. We could have been attacked,
+               // or some other change. Return to idle, that will let up pick up orders.
+               iConversation.OneLiner(ship, "", "epo_mining_dock_cancelled");
+               wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+            }
+         }
+         break;
+      case eSS_Mine:
+         if (neworder == ePO_Undock) {
+            iConversation.OneLiner(ship, "", "epo_mining_rig_undocking");
+            accept_order(ship, debug_on);
+            next_state = new_order_state(neworder);
+            wingman_state = change_state(ship, wingman_state, next_state, debug_on);
+         }
          break;
 
       default:
@@ -1071,7 +1407,16 @@ set_new_target(hship ship, hisim target)
 }
 
 
+set_ship_state(hship ship, eShipState status)
+{
+   Object.AddIntProperty(ship,"gtShipState", status);
+}
 
+
+eShipState ship_state(hship ship)
+{
+   return int2state(Object.IntProperty(ship,"gtShipState"));
+}
 
 accept_order(hship ship, bool debug_on)
 {
@@ -1100,8 +1445,103 @@ eShipState change_state(hship ship, eShipState state, eShipState new_state, bool
       }
    }
 
+   set_ship_state(ship, new_state);
+
    return new_state;
 }
+
+
+
+
+// Does the fuel move between tanker and target ship.
+// Returns true if the tanker still has more fuel.
+bool tanker_fill_ship(hship tanker, hship target) {
+   int timer;
+   bool full_tanker = true;
+   float min_fuel, max_fuel;
+   float fuel_left, fuel_needed, fuel_moved, fuel_target, fuel_tanker;
+   string response;
+
+   min_fuel = 2 * tsShip.FuelPerJump(tanker);
+   max_fuel = tsShip.FuelMax(target);
+
+   atomic {
+
+      // Calculate max that we can fit in target.
+      // This is the transfer amount.
+      fuel_target = tsShip.Fuel(target);
+      fuel_needed = max_fuel - fuel_target;
+
+      // Clip the transfer amount to the minimum the tanker
+      // has remaining.
+      fuel_tanker = tsShip.Fuel(tanker);
+      fuel_left = fuel_tanker - min_fuel;
+
+      if (fuel_left < fuel_needed) {
+         fuel_moved = fuel_left;
+         full_tanker = false;
+      } else {
+         fuel_moved = fuel_needed;
+      }
+
+      tsShip.SetFuel(tanker, fuel_tanker - fuel_moved);
+      tsShip.SetFuel(target, fuel_target + fuel_moved);
+   }
+
+
+
+   return full_tanker;
+}
+
+
+
+// Tanker pulls fuel from the target ship. If the target is
+// rendered empty, then return true. If a little fuel
+// remains, return false (to let player know they can 
+// fill more tankers.
+bool tanker_empty_ship(hship tanker, hship target) {
+   bool finished = false;
+   float max_fuel, fuel_left, fuel_needed, fuel_used;
+
+   max_fuel = tsShip.FuelMax(tanker);
+
+   atomic {
+      // Calc the amount of fuel to transfer in this time
+      fuel_used = tsShip.Fuel(tanker);
+      fuel_needed = max_fuel - fuel_used;
+
+      // Calculate fuel left in pod after we pump some out.
+      fuel_left = tsShip.Fuel(target);
+
+      if (fuel_left < fuel_needed) {
+         fuel_needed = fuel_left;
+         fuel_left = 0.0;
+         finished = true;
+      } else {
+         fuel_left = fuel_left - fuel_needed;
+      }
+
+      // Now that we have max transfer amount, move fuel.
+      fuel_used = fuel_used + fuel_needed;
+      tsShip.SetFuel(tanker, fuel_used);
+      tsShip.SetFuel(target, fuel_left);
+   }
+
+   if (T_CargoPod & iSim.Type(target)) {
+      if (fuel_left < 250.0) {
+         // Once the pod is half empty, mark it empty.
+         Object.SetIntProperty(target, "cargo", CT_Invalid);
+         iUtilities.RenameSim(target,"Cargo_Empty");
+      }
+   }
+
+   return finished;
+}
+
+
+
+
+
 
 
 
@@ -1112,8 +1552,15 @@ string state2string(eShipState state)
    case eSS_None:   
       return "eSS_None";
       break;
+   case eSS_NoPlayer:
+      return "eSS_NoPlayer";
+      break;
+
    case eSS_Idle:
       return "eSS_Idle";
+      break;
+   case eSS_NoFuel:
+      return "eSS_NoFuel";
       break;
 
    case eSS_HaltStart:   
@@ -1198,6 +1645,9 @@ string state2string(eShipState state)
    case eSS_FuelShipWait:   
       return "eSS_FuelShipWait";
       break;
+   case eSS_FuelFleetWait:   
+      return "eSS_FuelFleetWait";
+      break;
    case eSS_FuelFleetStart:   
       return "eSS_FuelFleetStart";
       break;
@@ -1262,18 +1712,19 @@ ePlayerOrder int2order(int order)
    return order;
 }
 
-
-
-
-int PriorOrder(hship ship)
+eShipState int2state (int state)
 {
-   return Object.IntProperty(ship,"gt_prior_order");
+   return state;
 }
 
-SetPriorOrder(hship ship, int order_type)
+
+// tsPlayerFleet.PlayerFleet()
+// We access this global directly because otherwise we lock up the linker.
+set player_fleet()
 {
-   Object.AddIntProperty(ship,"gt_prior_order", order_type);
+   return Global.Set("g_epic_fleet_player_list");
 }
+
 
 bool is_long_range_scan(hship ship)
 {

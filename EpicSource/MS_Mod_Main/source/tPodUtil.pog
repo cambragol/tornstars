@@ -79,6 +79,9 @@ provides CreateCargoPod,
 
          AutodockPod,
          DockPorts,
+         ClaimPods,
+         LoadDone,
+         FreePods,
     
          HackLevel,
          SetHackLevel,
@@ -97,6 +100,7 @@ prototype set PlayerPods(hisim center, float distance);
 prototype task autodock_task(hship pod, hsim ship);
 prototype set DockPorts(hship ship);
 
+prototype AutodockPod(hship pod, hsim ship, hdockport target);
 
 //******************************************************************************************/
 // 
@@ -490,6 +494,92 @@ SetHackLevel(hship pod, int level)
 }
 
 
+
+// Claims a set of pods and gives them docking orders to the ship.
+// Protects against multiple ships using this command
+// to load the same pod.
+set ClaimPods(hship ship, set pods)
+{
+   int i, pod_count, port_count;
+   hship pod;
+   hdockport dock;
+   set final_pods, return_set, dock_ports;
+
+
+   dock_ports = DockPorts(ship);
+
+   // We need to find and claim a number of pods equal to our port
+   // count; This has to happen atomically, because others are trying
+   // to also load these pods.
+   port_count = Set.ItemCount(dock_ports);
+
+   while (!Set.IsEmpty(pods) && (Set.ItemCount(final_pods) < port_count)) {
+      pod = iShip.Cast(Set.FirstElement(pods));
+      Set.Remove(pods, pod);
+
+      atomic {
+         if (!Object.PropertyExists(pod,"gt_load_flag")) {
+            Object.AddBoolProperty(pod, "gt_load_flag", true);
+            Set.Add(final_pods, pod);
+         }
+      }
+   }
+
+   while (!(Set.IsEmpty(dock_ports) || Set.IsEmpty(pods))) {
+      // Match up the pods and dockports one to one,
+      // and send the pods to dock with them.
+      dock = iDockport.Cast(Set.FirstElement(dock_ports));
+      Set.Remove(dock_ports, dock);
+      pod = iShip.Cast(Set.FirstElement(final_pods));
+      Set.Remove(final_pods, pod);
+      AutodockPod(pod, ship, dock);
+
+      Set.Add(return_set, pod);
+   }
+
+   return return_set;
+}
+
+FreePods(set cargo_pods)
+{
+   hship pod;
+   list pod_list = List.FromSet(cargo_pods);
+   int i, total;
+
+   total = List.ItemCount(pod_list);
+   for (i=0;i<total;++i) {
+      pod = iShip.Cast(List.GetNth(pod_list,i));
+      Set.Remove(cargo_pods, pod);
+      iAI.PurgeOrders(pod);
+   }
+}
+
+// Checks if the cargo pods have docked.
+// Also returns true if the cargo pods are no longer attempting to dock.
+bool LoadDone(set cargo_pods)
+{
+   hship pod;
+   list pod_list = List.FromSet(cargo_pods);
+   int i, total;
+   set final_set = Set.FromList(pod_list);
+
+   total = List.ItemCount(pod_list);
+   for (i=0;i<total;++i) {
+      pod = iShip.Cast(List.GetNth(pod_list,i));
+
+      if (Sim.IsDead(pod)) {
+         Set.Remove(final_set, pod);
+      }else if (iSim.IsDocked(pod)) {
+         Set.Remove(final_set, pod);
+      }else if (OT_None == iAI.CurrentOrderType(pod)) {
+         Set.Remove(final_set, pod);
+      }
+   }
+
+   return Set.IsEmpty(final_set);
+}
+ 
+
 // Tries to pilot a pod to a target ship.
 AutodockPod(hship pod, hsim ship, hdockport target)
 {
@@ -534,6 +624,8 @@ task autodock_task(hship pod, hsim ship)
          // We cannot ever dock.
          iAI.PurgeOrders(pod);
          iShip.RemovePilot(pod);
+
+         Object.RemoveProperty(pod, "gt_load_flag");
          return;
       }
 
@@ -545,12 +637,18 @@ task autodock_task(hship pod, hsim ship)
       // Wait for the pod to dock. 
       if (iSim.IsDocked(pod)) {
          iShip.RemovePilot(pod);
+
+         Object.RemoveProperty(pod, "gt_load_flag");
          iSim.SetDockingLock(pod, iSim.Cast(ship), true);
-         
          // Turn off the stolen cargo marker.
          iSim.SetMissionCritical(pod, false);
          // then exit the watch task.
          return;
+      }else if (OT_None == iAI.CurrentOrderType(pod)) {
+         // if our pod has halted before dock, then
+         // free the pod to allow another chance to pick it up.
+         iShip.RemovePilot(pod);
+         Object.RemoveProperty(pod, "gt_load_flag");
       }
    }
 }

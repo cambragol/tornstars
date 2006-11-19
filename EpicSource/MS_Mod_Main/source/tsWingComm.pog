@@ -66,7 +66,9 @@ provides ClearCommand,
          GroupNumber,
          HasGroup,
          GroupRemoveShip,
-         GroupMoveShip;
+         GroupMoveShip,
+         Save,
+         Restore;
 
 
 enum eWingCommState{
@@ -223,12 +225,10 @@ select_group(int group)
       level_one_prompt();
       Global.SetInt("gtWingCommDepth",WCS_Command);
 
-      leader = iShip.Cast(List.Head(fleet));
-      ask_response(leader);
+      issue_order(group, ePO_Respond, none);
    }else {
       empty_group_prompt();
       Global.SetInt("gtWingCommDepth",WCS_Empty);
-      no_group_response();
    }
 
    iHUD.Print(String.FormatInt("Group %d Selected", group));
@@ -471,12 +471,15 @@ remove_ship()
 {
    hship player = iShip.FindPlayerShip();
    hship target;
-
+   bool success;
    target = iShip.Cast(iShip.CurrentTarget(player));
 
-   GroupRemoveShip(target);
-
    clear_command();
+   success = GroupRemoveShip(target);
+
+   if (success) {
+      ask_response(target);
+   }
 }
 
 
@@ -486,11 +489,17 @@ add_ship()
    int group = Global.Int("gtWingCommGroup");
    hship player = iShip.FindPlayerShip();
    hship target;
+   bool success;
 
    target = iShip.Cast(iShip.CurrentTarget(player));
 
-   GroupMoveShip(target, group);
    clear_command();
+
+   success = GroupMoveShip(target, group);
+
+   if (success) {
+      ask_response(target);
+   }
 
    debug {
       Debug.PrintHandle(target);
@@ -1034,7 +1043,7 @@ ReportIn(int group, hsim speaker)
 
 task empty_task()
 {
-   iConversation.OneLiner(none, "name_jaffs", "That group is empty");
+   iConversation.OneLiner(none, "name_jafs", "That group is empty");
 }
 
 no_group_response()
@@ -1255,7 +1264,32 @@ string group_name(int group)
 {
    return String.FormatInt("g_epic_fleet_group_%d",group);
 }
+ 
 
+Save(hship ship)
+{
+   int id = Object.IDModulus( ship, 2147483647);
+   string save_key = String.Join("tsWingComm",String.FromInt(id));
+
+   Global.CreateInt(String.Join(save_key,"group"), GA_Write, GroupNumber(ship));
+
+}
+
+
+
+// Will restore the prior orders of the wing man. And try to restore the prior target.
+Restore(hship ship)
+{
+   int id = tsShip.SaveId(ship);
+   string save_key = String.Join("tsWingComm",String.FromInt(id));
+   hisim target;
+   int group;
+
+   group = Global.Int(String.Join(save_key,"group"));
+   Global.Destroy(String.Join(save_key,"group"));
+
+   group_add_ship(ship, group);
+}
 
 /*  
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES

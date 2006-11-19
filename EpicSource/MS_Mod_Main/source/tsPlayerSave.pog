@@ -45,6 +45,7 @@ CargoTypes,
    tsShip,
    tsShipSave,
    tsPlayerFleet,
+   tsWingComm,
    tsWingman;
 
 
@@ -98,7 +99,7 @@ Save()
    total = List.ItemCount(player_fleet);
    for (i=0;i<total;++i) {
       wingman = iShip.Cast(List.GetNth(player_fleet,i));
-      tsPlayerFleet.SetupPlayerWingman(wingman);
+      tsWingComm.Save(wingman);
    }
 
    // Find all loose cargo pods near the player ships.
@@ -154,6 +155,7 @@ Restore()
    for (i=0;i<total;++i) {
       wingman = iShip.Cast(List.GetNth(player_fleet,i));
       tsPlayerFleet.SetupPlayerWingman(wingman);
+
    }
 
    tsShipSave.RestoreList("ts_ppods");
@@ -177,6 +179,7 @@ RestoreOrders()
    total = List.ItemCount(player_fleet);
    for (i=0;i<total;++i) {
       wingman = iShip.Cast(List.GetNth(player_fleet,i));
+      tsWingComm.Restore(wingman);
       tsWingman.Restore(wingman);
    }
 }

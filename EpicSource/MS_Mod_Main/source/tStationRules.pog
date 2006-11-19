@@ -375,7 +375,7 @@ bool select_operation(hhabitat station, hinifile prod_data_file)
    int station_type, op_type, count, entries, max_ops;
    string station_type_string, op_type_string;
 
-   debug Debug.PrintString("tStationRules.select_operation\n");
+   //debug Debug.PrintString("tStationRules.select_operation\n");
 
    // Check we actually do have a position for an operation open.
    // operation count <= max_operation. if not, bail.
