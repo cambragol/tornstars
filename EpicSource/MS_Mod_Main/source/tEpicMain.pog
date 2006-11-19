@@ -92,7 +92,8 @@ provides
    PlayerUndocked;
 
   
-
+// Happens after a session start.
+// Does not force a new session (very confusing).
 GameEnter()
 {
    tsPlayerSave.NewGame();
@@ -111,6 +112,9 @@ GameEnter()
 }
 
 
+
+
+// Happens when the game is started, or loaded.
 SessionEnter()
 {
 
@@ -120,8 +124,7 @@ SessionEnter()
    tDistance.Init();
 
    iFactionScript.Initialise();
-   tsFaction.Init();
-
+   tsFaction.SessionStart();
 
    tTime.InitGlobals();
 
@@ -143,6 +146,7 @@ SessionEnter()
    tELpointFind.StartSession();
 }
 
+// Happens when the game is quit, or reloaded.
 SessionExit()
 {
    debug Debug.PrintString("ses\n");
@@ -187,6 +191,8 @@ BaseExit()
 
 SpaceEnter()
 {
+   tsFaction.Init();
+
    UniGUIBase.EnterSpace();
 
    tEconSmall.EnterSpace();

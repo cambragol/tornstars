@@ -23,6 +23,7 @@ iDirector, iEscort, iLagrangePoint, iMusic, iGame, Stream, iBackToBase, iDeathSc
 
 provides Init,
          NewGame,
+         SessionStart,
          SaveGame,
 
          SetDescription,
@@ -80,7 +81,7 @@ provides Init,
 
 
 prototype save_properties();
-prototype restore_properties();
+prototype restore_properties(bool read_file);
 prototype read_factions(string file_name);
 
 prototype string EName(hfaction faction);
@@ -207,13 +208,23 @@ float Type2LowerLevel(eFeelingType feeling_type)
    return 0.0;
 }
 
+
+// Call this on enter space. The first time, it will create the factions
+// and setup the parameters.
 Init()
 {
    list empty_list;
 
    debug Debug.PrintString("tsFaction.Init\n");
 
-   restore_properties();
+
+   if (!Global.Bool("tsfaction_restore_done") || !Global.Bool("tsfaction_new_game_done")) {
+
+      restore_properties(!Global.Bool("tsfaction_new_game_done"));
+
+      Global.CreateBool("tsfaction_restore_done",GA_Write|GA_NoSave, true);      
+      Global.CreateBool("tsfaction_new_game_done", GA_Write, true);
+   }
 
    // Create short cut to player faction handle.
    Global.CreateHandle("g_epic_faction_player_faction",GA_Write|GA_NoSave, 
@@ -223,7 +234,16 @@ Init()
    // as much as the player faction.
    Global.CreateHandle("g_epic_faction_empty_faction",GA_Write|GA_NoSave, 
                        iFaction.Find("Neutral"));
+}
 
+NewGame()
+{
+      Global.CreateBool("tsfaction_new_game", GA_Write, false);
+}
+
+SessionStart()
+{
+   Global.CreateBool("tsfaction_restore_done", GA_Write|GA_NoSave, false);
 }
  
 SaveGame()
@@ -648,23 +668,18 @@ save_properties()
 }
 
 
-NewGame()
-{
-      Global.CreateBool("gt_epic_fac_readini", GA_Write, false);
-}
 
  
-restore_properties()
+restore_properties(bool read_file)
 {
    int total, i;
    list faction_list;
    string start_string;
    hfaction faction, player_faction;
 
-   // If this is the first time after a new game, we read the ini file
-   // instead of a normal restore.
-   if (!Global.Bool("gt_epic_fac_readini")){
-      Global.SetBool("gt_epic_fac_readini", true);
+
+
+   if (read_file) {
 
       read_factions("ini:/faction_info");
 
