@@ -686,7 +686,7 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool prior_ord
          return;
       }
 
-      if (empty_faction != iSim.Faction(final_target)) {
+      if (player_faction != iSim.Faction(final_target)) {
          iConversation.OneLiner(ship, "", "epo_refuse_claimed_asteroid");
          return;
       }
