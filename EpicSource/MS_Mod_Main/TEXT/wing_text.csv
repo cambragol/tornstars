@@ -46,6 +46,7 @@ epo_escort_player_ack, "Escorting you"
 
 ; Formate Command
 epo_formate_target_ack, "Forming up with your target"
+epo_formate_player_ack, "Forming up with you"
 
 
 ; Dock Command
@@ -82,6 +83,7 @@ epo_refuse_drain_only_player, "Only your pods can be drained"
 
 epo_load_cargo_pod_ack, "Loading target pod now"
 epo_load_cargo_pods_ack, "Collecting nearby cargo pods"
+epo_load_cargo_stopping_ack, "Halting cargo collection"
 
 epo_refuse_no_pods, "Negative. No unclaimed pods nearby"
 epo_refuse_no_empty_ports, "Negative. We are fully loaded"
@@ -92,10 +94,6 @@ epo_cargo_unload_done, "Cargo unloading complete"
 
 epo_not_cargo_pod, "That is not a cargo pod"
 epo_not_player_pod, "We can only control your cargo pods"
-
-epo_detach_asteroid, "Releasing locks and detaching ship now"
-epo_none_attached, "None of our ships are attached"
-
 
 
 ; Long range scan commands
@@ -221,3 +219,7 @@ OrderGroupSixAck,"Group Six"," Rodger"
 OrderGroupSevenAck,"Group Seven Here"
 OrderGroupEightAck,"Group Eight Over"
 OrderGroupNineAck,"Group Nine Reporting"
+
+
+
+

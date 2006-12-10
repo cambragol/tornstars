@@ -552,7 +552,7 @@ collect_pods()
       return;
    }
 
-   issue_order(group, ePO_CollectPods, none);
+   issue_order(group, ePO_CollectAllPods, none);
 
 
 }
