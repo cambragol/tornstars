@@ -269,7 +269,7 @@ mining_rig_upkeep(hship rig)
             Debug.PrintString(" player faction\n");
          }
 
-         if (player_faction != iSim.Faction(iSim.Cast(station))) {
+         if (player_faction == iSim.Faction(iSim.Cast(station))) {
             debug Debug.PrintString("Rig station player\n");
 
             // We only work mining stations.
@@ -284,12 +284,9 @@ mining_rig_upkeep(hship rig)
                   // fee and produce some ore
                   mining_fee = Object.IntProperty(rig, "miner");
                   if (mining_fee < tEpicMoney.ShipAccount()) {
-
                      debug Debug.PrintString("Rig charging\n");
 
                      tEpicMoney.ChangeShipAccount(-1*mining_fee);
-
-
                      // Ok, we read the richness of this asteroid. We
                      // add cargo pods of stuff based on the richness.
 
@@ -324,11 +321,10 @@ mining_rig_upkeep(hship rig)
                      } else {
                         Global.CreateFloat(global_name, GA_Write, pods);
                      }
-
                   }// if player has funds to pay rig
 
                } else {// if rig has no fuel
-                  // Send the player an email, and let them know the asteroid is thiers.
+                  // Send the player an email, and let them know the rig has no fuel.
                   email_sender = Text.Field(Sim.Name(rig), FT_Text);
                   email_sender = String.Join("Mining Ship ", email_sender);
 
@@ -340,7 +336,7 @@ mining_rig_upkeep(hship rig)
 
                   email_body = "<html><body>Our mining rig ";
                   email_body = String.Join(email_body, Text.Field(Sim.Name(rig), FT_Text));
-                  email_body = String.Join(email_body, " is our of fuel and mining has stopped. We are located at ");
+                  email_body = String.Join(email_body, " is out of fuel and mining has stopped. We are located at ");
                   email_body = String.Join(email_body, Text.Field(Sim.Name(station), FT_Text));
                   email_body = String.Join(email_body, " in system ");
                   email_body = String.Join(email_body, Text.Field(iSim.WorldName(station), FT_Text));
