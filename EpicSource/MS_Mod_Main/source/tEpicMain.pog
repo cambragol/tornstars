@@ -69,7 +69,8 @@ uses
    tOptionsGui,
    tStartGui,
    tsShipSave,
-   tsPlayerSave;
+   tsPlayerSave,
+   tEReferenceGui;
 
 
 
@@ -117,9 +118,9 @@ GameEnter()
 // Happens when the game is started, or loaded.
 SessionEnter()
 {
-
    Text.Add("csv:/text/gt_station_types");
    Text.Add("csv:/text/gt_pc_objects");
+   Text.Add("csv:/text/player_ship_name");
 
    tDistance.Init();
 
@@ -144,14 +145,17 @@ SessionEnter()
    tLInventory.Init();
 
    tELpointFind.StartSession();
+
+   tEReferenceGui.SessionStart();
+
 }
 
 // Happens when the game is quit, or reloaded.
 SessionExit()
 {
-   debug Debug.PrintString("ses\n");
    Text.Remove("csv:/text/gt_station_types");
    Text.Remove("csv:/text/gt_pc_objects");
+   Text.Remove("csv:/text/player_ship_name");
 
    tETradeBuy.SessionEnd();
    tETradeSell.SessionEnd();
@@ -159,7 +163,7 @@ SessionExit()
    tExitGui.SessionEnd();
    tELpointFind.EndSession();
 
-   debug Debug.PrintString("see\n");
+   tEReferenceGui.SessionEnd();
 }
 
 BaseEnter()
@@ -300,12 +304,6 @@ PlayerUndocked()
 {
    tMultimod.PlayerUndocked();
 }
-
-
-
-
-
-
 
 
 /*  
