@@ -25,7 +25,7 @@ enum ePlayerOrder {
    ePO_Formate,
    ePO_Dock,
    ePO_Undock,
-   ePO_CollectPods,
+   ePO_CollectAllPods,
    ePO_CollectPod,
    ePO_UndockPods,
    ePO_FuelShip,
