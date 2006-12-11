@@ -51,7 +51,7 @@ epo_formate_player_ack, "Forming up with you"
 
 ; Dock Command
 epo_dock_target_ack, "Docking with your target"
-
+epo_docking_complete, "Docking complete"
 
 ; Undock Command
 epo_undock_ack, "Undocking"
@@ -98,12 +98,9 @@ epo_not_player_pod, "We can only control your cargo pods"
 
 ; Long range scan commands
 
-epo_scan_sky_ack, "Scanning for asteroids and stations now"
-
-epo_scan_sky_ack, "Starting long range scan"
-
-epo_scan_sky_hold_still, "Stopping motion for scan"
-epo_scan_sky_deploy, "Deploying scan array"
+epo_scan_order_ack, "Deploying long range sensors"
+epo_scan_started, "Sensors online. Sweep underway"
+epo_scan_packing, "Retracting long range sensors"
 epo_scan_sky_success, "Scan has detected new stations"
 epo_scan_sky_failed, "Scan shows nothing in range"
 

@@ -525,7 +525,7 @@ set ClaimPods(hship ship, set pods)
       }
    }
 
-   while (!(Set.IsEmpty(dock_ports) || Set.IsEmpty(pods))) {
+   while (!(Set.IsEmpty(dock_ports) || Set.IsEmpty(final_pods))) {
       // Match up the pods and dockports one to one,
       // and send the pods to dock with them.
       dock = iDockport.Cast(Set.FirstElement(dock_ports));

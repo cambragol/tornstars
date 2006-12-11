@@ -133,11 +133,10 @@ enum eShipState {
    eSS_Mine,
 
    // Stops ship, deploys arrays and searches for asteroids/stations.
-   eSS_LongScan,
+   eSS_LongScanStart,
    eSS_LongScanStop,
    eSS_LongScanDeploy,
-   eSS_LongScanWait,
-   eSS_LongScanHalt
+   eSS_LongScanWait
 };
 
 
@@ -700,7 +699,6 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool restored_
          iConversation.OneLiner(ship, "", "epo_refuse_not_scan_ship");
          return;
       }
-      iConversation.OneLiner(ship, "", "epo_scan_sky_ack");
 
       break;
    case ePO_Mine:
@@ -758,15 +756,18 @@ task wingman_watch(hship ship)
    hship player;
    hship pod;
    hisim target;
+   hisim dock_target;
    hship target_ship;
+   hhabitat station;
    ePlayerOrder neworder;
    hisim waypoint;
-   int flee_timer;
+   int flee_timer, scan_timer;
    bool locked = false;
    bool filled = false;
+   bool new_station = false;
    string response;
    list target_list, fuel_list, cargo_list;
-   set cargo_set;
+   set cargo_set, empty_set, stations;
    int i, total;
 
    while (1) {
@@ -1019,6 +1020,8 @@ task wingman_watch(hship ship)
 
             iAI.PurgeOrders(ship);
             iAI.GiveDockOrder(ship, target);
+            dock_target = target;
+
             wingman_state = change_state(ship, wingman_state, eSS_Dock, debug_on);
 
          }else {
@@ -1036,6 +1039,10 @@ task wingman_watch(hship ship)
             wingman_state = change_state(ship, wingman_state, next_state, debug_on);
          }else if (OT_None == iAI.CurrentOrderType(ship)) {
             // If the order completes, go to idle.
+
+            if (iSim.IsDockedTo(ship, dock_target)) {
+               iConversation.OneLiner(ship, "", "epo_docking_complete");
+            }
             wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
          }
          break;
@@ -1095,6 +1102,58 @@ task wingman_watch(hship ship)
                      next_state = eSS_LoadPodWait;
 
                      iConversation.OneLiner(ship, "", "epo_load_cargo_pods_ack");
+                  }else{
+                     iConversation.OneLiner(ship, "", "epo_refuse_no_pods");
+                  }
+               }else {
+                  iConversation.OneLiner(ship, "", "epo_refuse_no_empty_ports");
+               }
+            }
+         }
+
+         wingman_state = change_state(ship, wingman_state, next_state, debug_on);
+
+         break;
+      case eSS_LoadPodOne:
+         // Drop a waypoint and formate on it.
+         // Grab the target pod
+
+         next_state = eSS_Idle;
+   
+         if (!Object.PropertyExists(ship, "md_epic_shipinit")) { // No loading pods when on the spewer!
+
+            if (!tMegaTrucking.IsMegafreighter(ship)) { // Megafreighters use their own method
+
+               if (!Set.IsEmpty(tPodUtil.DockPorts(ship))){
+
+                  Set.Difference(cargo_set, cargo_set);
+
+                  target = current_target(ship);
+
+                  debug {
+                     Debug.PrintHandle(target);
+                     Debug.PrintString(" target pod\n");
+                  }
+
+                  if (T_CargoPod == iSim.Type(target)) {
+                     Set.Add(cargo_set, target);
+                  }
+
+                  // Reserve the pods we intend to load
+                  cargo_set = tPodUtil.ClaimPods(ship, cargo_set);
+
+                  if (!Set.IsEmpty(cargo_set)) {
+
+                     waypoint = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","load point"));
+                     Sim.PlaceAt(waypoint, ship);
+                     Task.Sleep(Task.Current(), 0.1);
+                     Sim.CopyOrientation(waypoint, ship);
+                     iAI.PurgeOrders(ship);
+                     iAI.GiveFormateOrder( ship, waypoint, 0.0, 0.0, 0.0 );
+
+                     next_state = eSS_LoadPodWait;
+
+                     iConversation.OneLiner(ship, "", "epo_load_cargo_pod_ack");
                   }else{
                      iConversation.OneLiner(ship, "", "epo_refuse_no_pods");
                   }
@@ -1347,6 +1406,98 @@ task wingman_watch(hship ship)
          }
          break;
 
+
+      case eSS_LongScanStart:
+         iConversation.OneLiner(ship, "", "epo_scan_order_ack");
+
+         waypoint = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","scan_point"));
+         Sim.PlaceAt(waypoint, ship);
+         Task.Sleep(Task.Current(), 0.1);
+         iAI.PurgeOrders(ship);
+         iAI.GiveFormateOrder(ship, 
+                              waypoint,
+                              0,
+                              0,
+                              0);
+
+         wingman_state = change_state(ship, wingman_state, eSS_LongScanDeploy, debug_on);
+         break;
+
+      case eSS_LongScanDeploy:
+         // Wait here until the ship has stopped moving and it at the waypoint.
+         if ((Sim.DistanceBetween(ship, waypoint) < 1km) && (Sim.Speed(ship) < 10)) {
+            iConversation.OneLiner(ship, "", "epo_scan_started");
+            wingman_state = change_state(ship, wingman_state, eSS_LongScanWait, debug_on);
+            scan_timer = 10;
+         }else if (neworder != ePO_None) {
+            // Accept any new order.
+            iAI.PurgeOrders(ship);
+            Task.Sleep(Task.Current(), 0.1);
+            Sim.Destroy(waypoint);
+            wingman_state = change_state(ship, wingman_state, eSS_LongScanStop, debug_on);
+         }
+
+         break;
+
+      case eSS_LongScanWait:
+         // Wait here for however long a long scan takes. A few seconds.
+         // Break if we get another order.
+         --scan_timer;
+
+         if (scan_timer < 0){
+            // Do the scan and report results. Pack up the sensors.
+
+            // Find all stations within 500,000km and make them visible.
+            stations = iSim.SimsInRadius( ship,
+                                       Object.IntProperty(ship, "scan_range"),
+                                       T_Station);
+            new_station = false;
+
+            while (!Set.IsEmpty(stations)) {
+               station = iHabitat.Cast(Set.FirstElement(stations));
+               Set.Remove(stations, station);
+
+               // Reveal the station if it exists, or has ever existed.
+               if (tStation.Status(station) != ESS_NeverBuilt) {
+
+                  // We used to not reveal pirate stations. Except there is no 
+                  // way to find pirate stations in the outback areas and the player
+                  // needs to be to hunt those hunting him, so now we reveal all stations.
+                  if (!iMapEntity.IsVisibleOnMap(station)) {
+                     // If the station is invisible to player, let them see it,
+                     // save a note, to tell the player when done.
+                     tStation.SetMapVisibility(station, true);
+                     new_station = true;
+                  }
+               }
+
+            }//while nearby stations
+
+            if (new_station) {
+               iConversation.OneLiner(ship, "", "epo_scan_sky_success");
+            }else {
+               iConversation.OneLiner(ship, "", "epo_scan_sky_failed");
+            }
+
+            wingman_state = change_state(ship, wingman_state, eSS_LongScanStop, debug_on);
+         }else if (neworder != ePO_None) {
+            // Accept any new order.
+            wingman_state = change_state(ship, wingman_state, eSS_LongScanStop, debug_on);
+         }
+         break;
+
+      case eSS_LongScanStop:
+         iConversation.OneLiner(ship, "", "epo_scan_packing");
+
+         iAI.PurgeOrders(ship);
+         Task.Sleep(Task.Current(), 0.1);
+         Sim.Destroy(waypoint);
+
+         // Pack up any sensors. For now, just go idle and let that sort out the 
+         // command.
+         wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+         break;
+
       default:
          // Should not be here, change state to eSS_None.
          wingman_state = change_state(ship, wingman_state, eSS_None, debug_on);
@@ -1405,7 +1556,7 @@ eShipState new_order_state(ePlayerOrder neworder)
       return eSS_ProspectStart;
       break;
    case ePO_ScanSky:
-      return eSS_LongScan;
+      return eSS_LongScanStart;
       break;
    case ePO_Mine:
       return eSS_MineStart;
@@ -1740,8 +1891,8 @@ string state2string(eShipState state)
       return "eSS_Mine";
       break;
 
-   case eSS_LongScan:
-      return "eSS_LongScan";
+   case eSS_LongScanStart:
+      return "eSS_LongScanStart";
       break;
    case eSS_LongScanStop:   
       return "eSS_LongScanStop";
@@ -1751,9 +1902,6 @@ string state2string(eShipState state)
       break;
    case eSS_LongScanWait:   
       return "eSS_LongScanWait";
-      break;
-  case eSS_LongScanHalt:   
-      return "eSS_LongScanHalt";
       break;
 
    default:
