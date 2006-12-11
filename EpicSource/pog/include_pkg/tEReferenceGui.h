@@ -7,10 +7,30 @@
 //
 // Revision control information:
 //
-// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/tEReferenceGui.h,v 1.1 2005/06/10 19:56:33 Owner Exp $
+// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////
 
 // Enumerated types ////////////////////////////////////////////////////////////
+
+// Functions ///////////////////////////////////////////////////////////////////
+
+prototype tEReferenceGui.ReferenceWindow();
+
+prototype tEReferenceGui.RunCheck();
+
+prototype tEReferenceGui.StartScreen();
+
+prototype tEReferenceGui.OnBackPress();
+
+prototype tEReferenceGui.OnContentPress();
+
+prototype tEReferenceGui.SessionStart();
+
+prototype tEReferenceGui.SessionEnd();
+
+prototype tEReferenceGui.ExitScreen();
+
+// EOF /////////////////////////////////////////////////////////////////////////
 
