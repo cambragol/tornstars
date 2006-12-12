@@ -339,7 +339,7 @@ tsFoRaider.pkg : tsFoRaider.pog tStation.h tsFaction.h tTime.h tUnderOp.h tLRoot
 tsFoThugs.pkg : tsFoThugs.pog tStation.h tsFaction.h tTime.h tUnderOp.h tLRoot.h tLCenter.h tLProduction.h tLFleet.h tStationFilter.h tEconUtil.h tShipName.h tEShipCreation.h tsFleetOpCombat.h tsDebug.h
 tsPilotSetup.pkg : tsPilotSetup.pog tEpicComms.h tsShip.h tLRoot.h tLTrade.h tsFaction.h tETradeSell.h tEpicMoney.h tShipName.h tPcOwner.h tLProduction.h tLFleet.h tUnderOp.h tPodUtil.h tRepWatch.h tsEvent.h
 
-tsWingman.pkg : tsWingman.pog tsShip.h tFormation.h tPodUtil.h tsFaction.h tStationEnum.h tStation.h tLProduction.h tMegaTrucking.h
+tsWingman.pkg : tsWingman.pog tsShip.h tFormation.h tPodUtil.h tsFaction.h tStationEnum.h tStation.h tLProduction.h tMegaTrucking.h tStationFilter.h
 
 #ts_StationEvent.pkg : ts_StationEvent.pog UniGUI.h tTime.h tsFaction.h tMail.h tShipMail.h tNewsNet.h tStation.h tEconUtil.h tUnderOp.h tLProduction.h
 

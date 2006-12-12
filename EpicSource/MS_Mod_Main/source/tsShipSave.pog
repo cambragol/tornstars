@@ -62,7 +62,13 @@ prototype string save_cargo_pods(hship ship);
 
 prototype list restore_cargo_pods(hship ship);
 
-prototype save_subsims(hship ship);
+prototype save_subsim_list(hship ship);
+
+prototype int save_subsim(hsubsim subsim);
+
+prototype restore_subsim_list(hship ship);
+
+prototype restore_subsim(hship ship, int id);
 
 prototype add_restore_list(hship ship);
 
@@ -452,10 +458,17 @@ list restore_cargo_pods(hship ship)
 }
 
 
-save_subsims(hship ship)
+save_subsim_list(hship ship)
 {
-   int i, total;
+   int i, total, id;
    hsubsim subsim;
+   string save_key;
+   int ship_id = Object.IDModulus( ship, 2147483647);
+
+   // subsim id numbers stored as a string like "tsSS#shipnum#pod#podcount#
+   save_key = String.Join("tsSS",String.FromInt(ship_id));
+   save_key = String.Join(save_key, "subsim");
+
 
    total = Sim.SubsimCount(ship);
    for (i=0;i<total;++i) {
@@ -465,17 +478,81 @@ save_subsims(hship ship)
          Debug.PrintHandle(subsim);
          Debug.PrintString(" subsim\n");
       }
+
+      id = save_subsim(subsim);
+
+      Global.CreateInt(String.Join(save_key,String.FromInt(i)), GA_Write, id);
    }
+
+   Global.CreateInt(String.Join(save_key,"count"), GA_Write, total);
 }
 
 
 
-save_subsim(hsubsim subsim)
+int save_subsim(hsubsim subsim)
 {
+   int id = Object.IDModulus(subsim, 2147483647);
+   string save_key = String.Join("tsSS",String.FromInt(id));
 
+   Global.CreateInt(String.Join(save_key,"template_number"),GA_Write, Object.IntProperty(subsim,"template_number"));
+   Global.CreateFloat(String.Join(save_key,"hit_points"),GA_Write, Object.FloatProperty(subsim,"hit_points"));
+   Global.CreateString(String.Join(save_key,"template"),GA_Write, Object.StringProperty(subsim,"subsim_template"));
+
+   return id;
 }
  
+restore_subsim(hship ship, int id)
+{
+   string save_key = String.Join("tsSS",String.FromInt(id));
+   int hardpoint_number, template_number;
+   float hitpoints;
+   string template_name;
+   hsubsim subsim;
 
+   template_number = Global.Int(String.Join(save_key,"template_number"));
+   hitpoints = Global.Float(String.Join(save_key,"hit_points"));
+   template_name = Global.String(String.Join(save_key,"template"));
+
+   Global.Destroy(String.Join(save_key,"template_number"));
+   Global.Destroy(String.Join(save_key,"hit_points"));
+   Global.Destroy(String.Join(save_key,"template"));
+
+   subsim = tsShip.FindSubsimByTemplateNumber(ship, template_number);
+
+   if (none != subsim) {
+      Object.SetFloatProperty(subsim, "hit_points", hitpoints);
+   }
+
+   // Find the subsim with this template_number
+   // If the hardpoint_number is not zero, 
+   // and the template_name has changed, the player
+   // modified the default ship. Create the new
+   // subsim and replace the old one.
+
+}
+
+restore_subsim_list(hship ship)
+{
+   int i, total, id;
+   hsubsim subsim;
+   string save_key;
+   int ship_id = Object.IDModulus( ship, 2147483647);
+
+   // subsim id numbers stored as a string like "tsSS#shipnum#pod#podcount#
+   save_key = String.Join("tsSS",String.FromInt(ship_id));
+   save_key = String.Join(save_key, "subsim");
+
+   total = Global.Int(String.Join(save_key,"count"));
+   Global.Destroy(String.Join(save_key,"count"));
+
+   for (i=0;i<total;++i) {
+      id = Global.Int(String.Join(save_key,String.FromInt(i)));
+      Global.Destroy(String.Join(save_key,String.FromInt(i)));
+
+      restore_subsim(ship, id);
+   }
+
+}
 
 add_restore_list(hship ship)
 {

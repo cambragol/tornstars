@@ -1561,6 +1561,7 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
       if (Sim.IsDead(player)) {
          // Player hit a wall, return based on distance travelled.
          debug Debug.PrintString("tEJump.player_watch player sim dead\n");
+         iHUD.SetPrompt("","Jump Failed Hit Object");
          return halfway;
       }
 
@@ -1571,7 +1572,8 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
          // Signal that the player had a good run.
          Global.SetBool("gt_ejump_passed", true);
 
-         iHUD.SetPrompt(String.FormatInt("%d Elapsed Seconds", float2int(elapsed_time)),"");
+         //iHUD.SetPrompt("","");
+         iHUD.SetPrompt(String.FormatInt("%d Elapsed Seconds", float2int(elapsed_time)),"Jump Success");
          return true;
       }
 
@@ -1584,6 +1586,9 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
       // Check if the player is low on hit points.
       if (Object.FloatProperty(player, "hit_points") < low_hit_points) {
          debug Debug.PrintString("tEJump.player_watch player damaged.\n");
+
+         //iHUD.SetPrompt("","");
+         iHUD.SetPrompt("","Jump Failed Hit Object");
          return halfway;
       }
 
@@ -1595,7 +1600,7 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
          debug Debug.PrintString("tEJump.player_watch player slow.\n");
          // Keep this commented out to leave record of how fast crossing jump.
          //iHUD.SetPrompt("","");
-         iHUD.SetPrompt(String.FormatInt("%d Elapsed Seconds", float2int(elapsed_time)),"");
+         iHUD.SetPrompt(String.FormatInt("%d Elapsed Seconds", float2int(elapsed_time)),"Jump Failed Time Up");
          return halfway;
       }
 

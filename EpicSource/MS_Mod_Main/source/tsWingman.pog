@@ -49,7 +49,8 @@ tsFaction,
 tStationEnum,
 tStation,
 tLProduction,
-tMegaTrucking;
+tMegaTrucking,
+   tStationFilter;
 
 
 
@@ -753,6 +754,7 @@ task wingman_watch(hship ship)
    eShipState wingman_state = eSS_None;
    eShipState next_state;
    bool debug_on = true;
+   hfaction player_faction = tsFaction.PlayerFaction();
    hship player;
    hship pod;
    hisim target;
@@ -767,7 +769,7 @@ task wingman_watch(hship ship)
    bool new_station = false;
    string response;
    list target_list, fuel_list, cargo_list;
-   set cargo_set, empty_set, stations;
+   set cargo_set, empty_set, stations, nearby_locations;
    int i, total;
 
    while (1) {
@@ -834,6 +836,7 @@ task wingman_watch(hship ship)
             wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
          }
          break;
+
       case eSS_Idle:
          // If we are not docked, and we are near the player
          // then
@@ -880,6 +883,7 @@ task wingman_watch(hship ship)
 
          wingman_state = change_state(ship, wingman_state, eSS_HaltWait, debug_on);
          break;
+
       case eSS_HaltWait:
          // Wait here for any other order.
         // We have a new order. Change.
@@ -894,7 +898,6 @@ task wingman_watch(hship ship)
 
          }
          break;
-
 
       case eSS_EscortStart:
          target = current_target(ship);
@@ -980,11 +983,11 @@ task wingman_watch(hship ship)
 
          if (Sim.IsDead(target)) {
             // Job accomplished, return to player.
-            wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+            wingman_state = change_state(ship, wingman_state, eSS_EscortStart, debug_on);
 
          }else if (OT_Flee == iAI.CurrentOrderType(iShip.Cast(target))) {
             // Break away, reformate with the player.
-            wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+            wingman_state = change_state(ship, wingman_state, eSS_EscortStart, debug_on);
 
          }else if (new_order(ship) != ePO_None) {
             accept_order(ship, debug_on);
@@ -997,6 +1000,43 @@ task wingman_watch(hship ship)
          // Ok, we are damaged. Pick the closest neutral or better
          // station that we can flee towards. Empty is fine.
          flee_timer = 10 * 60;
+
+         // Pick a non-hostile station that is near.
+         nearby_locations = iMapEntity.SystemHabitats();
+         station = iHabitat.Nearest(nearby_locations, ship);
+         Set.Remove(nearby_locations, station);
+
+         // Only go to stations the player knows about.
+         nearby_locations = tStationFilter.OnMapVisible(nearby_locations, true);
+
+         // And those that are player friendly.
+         station = iHabitat.Nearest(tStationFilter.OnGreaterFeeling(nearby_locations,
+                                                                        player_faction, 
+                                                                        -0.2), 
+                                        ship);
+
+         if (none == station) {
+            station = iHabitat.Cast(iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), ship));
+         }
+
+         debug {
+            Debug.PrintHandle(station);
+            Debug.PrintString(" flee station target\n");
+         }
+
+         iAI.PurgeOrders(ship);
+         iAI.GiveApproachOrderAdvanced( ship,
+                                        station,
+                                        75km,
+                                        80km,
+                                        true);
+
+
+
+
+
+
+
          wingman_state = change_state(ship, wingman_state, eSS_Flee, debug_on);
          break;
 
@@ -1114,6 +1154,7 @@ task wingman_watch(hship ship)
          wingman_state = change_state(ship, wingman_state, next_state, debug_on);
 
          break;
+
       case eSS_LoadPodOne:
          // Drop a waypoint and formate on it.
          // Grab the target pod
@@ -1178,9 +1219,6 @@ task wingman_watch(hship ship)
          wingman_state = change_state(ship, wingman_state, next_state, debug_on);
 
          break;
-
-
-
 
       case eSS_UnloadPodStart:
          if(!Object.PropertyExists(ship, "md_epic_shipinit"))	// No ditching on the spewer!
@@ -1326,6 +1364,7 @@ task wingman_watch(hship ship)
 
          }
          break;
+
       case eSS_ProspectWait:
          // Wait in this state for an undock order.
          if (iSim.IsDockedTo(ship, target)) {
@@ -1352,6 +1391,7 @@ task wingman_watch(hship ship)
             }
          }
          break;
+
       case eSS_Prospect:
          if (neworder == ePO_Undock) {
             iConversation.OneLiner(ship, "", "epo_prospector_undocking");
@@ -1378,6 +1418,7 @@ task wingman_watch(hship ship)
 
          }         
          break;
+
       case eSS_MineWait:
          if (iSim.IsDockedTo(ship, target)) {
             iConversation.OneLiner(ship, "","epo_mining_rig_docked");
@@ -1397,6 +1438,7 @@ task wingman_watch(hship ship)
             }
          }
          break;
+
       case eSS_Mine:
          if (neworder == ePO_Undock) {
             iConversation.OneLiner(ship, "", "epo_mining_rig_undocking");
@@ -1405,7 +1447,6 @@ task wingman_watch(hship ship)
             wingman_state = change_state(ship, wingman_state, next_state, debug_on);
          }
          break;
-
 
       case eSS_LongScanStart:
          iConversation.OneLiner(ship, "", "epo_scan_order_ack");
@@ -1502,7 +1543,6 @@ task wingman_watch(hship ship)
          // Should not be here, change state to eSS_None.
          wingman_state = change_state(ship, wingman_state, eSS_None, debug_on);
          break;
-
       }
    }
 }
@@ -2040,6 +2080,8 @@ bool is_mine(hisim station) {
 
    return false;
 }
+
+
 
 
 /*    

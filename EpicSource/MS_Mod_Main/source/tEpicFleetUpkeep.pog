@@ -236,6 +236,10 @@ mining_rig_upkeep(hship rig)
    string email_sender;
    string email_body;
    string email_subject;
+   int id = Object.IDModulus(rig, 2147483647);
+   string save_key = String.Join("tsSS",String.FromInt(id));
+
+   save_key = String.Join(save_key, "fuel");
 
    // is the ship docked to a station?
    // is the station player owned?
@@ -323,32 +327,44 @@ mining_rig_upkeep(hship rig)
                      }
                   }// if player has funds to pay rig
 
+                  // Since we now have fuel, if we alerted the player, 
+                  // let them know we have been fueled.
+                  if (Global.Exists(save_key)) {
+                     Global.Destroy(save_key);
+                  }
+
                } else {// if rig has no fuel
-                  // Send the player an email, and let them know the rig has no fuel.
-                  email_sender = Text.Field(Sim.Name(rig), FT_Text);
-                  email_sender = String.Join("Mining Ship ", email_sender);
 
-                  email_subject = Text.Field(Sim.Name(station), FT_Text);
-                  email_subject = String.Join("Out of Fuel ", email_subject);
+                  if (!Global.Exists(save_key)) {
+                     // Alert the player if we have not yet.
+                     Global.CreateBool(save_key,GA_NoSave|GA_Write, true);
 
-                  // Our mining rig "name" is out of fuel and mining has stopped. We are
-                  // located at "asteroid" in system "system". Please return ASAP.
+                     // Send the player an email, and let them know the rig has no fuel.
+                     email_sender = Text.Field(Sim.Name(rig), FT_Text);
+                     email_sender = String.Join("Mining Ship ", email_sender);
 
-                  email_body = "<html><body>Our mining rig ";
-                  email_body = String.Join(email_body, Text.Field(Sim.Name(rig), FT_Text));
-                  email_body = String.Join(email_body, " is out of fuel and mining has stopped. We are located at ");
-                  email_body = String.Join(email_body, Text.Field(Sim.Name(station), FT_Text));
-                  email_body = String.Join(email_body, " in system ");
-                  email_body = String.Join(email_body, Text.Field(iSim.WorldName(station), FT_Text));
-                  email_body = String.Join(email_body, ". Please return ASAP.");
-                  email_body = String.Join(email_body, "</body></html>");
+                     email_subject = Text.Field(Sim.Name(station), FT_Text);
+                     email_subject = String.Join("Out of Fuel ", email_subject);
 
-                  tShipMail.SendEmail(email_sender,
-                                      email_subject,
-                                      email_body,
-                                      "",
-                                      false,
-                                      false);  
+                     // Our mining rig "name" is out of fuel and mining has stopped. We are
+                     // located at "asteroid" in system "system". Please return ASAP.
+
+                     email_body = "<html><body>Our mining rig ";
+                     email_body = String.Join(email_body, Text.Field(Sim.Name(rig), FT_Text));
+                     email_body = String.Join(email_body, " is out of fuel and mining has stopped. We are located at ");
+                     email_body = String.Join(email_body, Text.Field(Sim.Name(station), FT_Text));
+                     email_body = String.Join(email_body, " in system ");
+                     email_body = String.Join(email_body, Text.Field(iSim.WorldName(station), FT_Text));
+                     email_body = String.Join(email_body, ". Please return ASAP.");
+                     email_body = String.Join(email_body, "</body></html>");
+
+                     tShipMail.SendEmail(email_sender,
+                                         email_subject,
+                                         email_body,
+                                         "",
+                                         false,
+                                         false);  
+                  }
                }// mining rig was out of fuel.
             }// if station is a mine
          } // if the mine belongs to the player
@@ -438,8 +454,6 @@ prospector_upkeep(hship explorer) {
             debug Debug.PrintString("Prospector station empty\n");
             // Only allow claiming of mine type stations.
 
-
-
             if (is_mine(station)) {
 
                debug Debug.PrintString("Prospector in position\n");
@@ -477,6 +491,9 @@ prospector_upkeep(hship explorer) {
 
                      //iSim.SetFaction(iSim.Cast(station), player_faction);
                      tsFaction.AddStation(station, player_faction);
+
+                     // Let the player see the station at any distance.
+                     iSim.SetSensorVisibility(station, true);
 
                      // Send the player an email, and let them know the asteroid is thiers.
                      email_sender = Text.Field(Sim.Name(explorer), FT_Text);

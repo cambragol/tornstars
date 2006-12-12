@@ -281,6 +281,7 @@ Create(hhabitat station,
        bool awake)
 {
    hfaction faction;
+   hfaction player_faction = tsFaction.PlayerFaction();
 
    Object.AddIntProperty(station,"gt_station_state", 0);
    Object.AddIntProperty(station,"gt_station_category", 0);
@@ -304,6 +305,10 @@ Create(hhabitat station,
 //   iSim.SetFaction(iSim.Cast(station), faction);
    tsFaction.AddStation(station, faction);
 
+   // Let the player see his own stations.
+   if (faction == player_faction) {
+      iSim.SetSensorVisibility(station, true);
+   }
    // Commented out until stations can be replaced.
    //iSim.SetIndestructable(station, false);
 }

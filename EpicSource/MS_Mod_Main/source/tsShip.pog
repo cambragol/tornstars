@@ -48,8 +48,8 @@ uses    Sim,
         tPodUtil,
         tEpicComms,
         tFormation,
-        tsFaction, 
-   tMegaTrucking;
+        tsFaction; 
+
 
 
 
@@ -79,14 +79,12 @@ provides
         Create,
 
         SetSaveId,
-        SaveId;
+        SaveId,
+        FindSubsimByTemplateNumber;
 
 
  
-
-         
-
-
+prototype hsubsim FindSubsimByTemplateNumber(hship ship, int template_number);
 
 
 // Reading INI defaults
@@ -349,7 +347,7 @@ ReadIniFile(hship ship)
 
    Object.AddBoolProperty(ship, "fuel_locked", false);
 
-   //tag_subsims(ship);
+   tag_subsims(ship);
 }
 
 
@@ -587,10 +585,12 @@ tag_subsims(hship ship)
                      Debug.PrintString("\n");
                   }
 
-                  if (!Object.PropertyExists(subsim,"gt_template_file")) {
+                  if (!Object.PropertyExists(subsim,"subsim_template")) {
                      not_found = false;
                      Object.AddStringProperty(subsim,"subsim_template", subsim_template);
                      Object.AddStringProperty(subsim,"subsim_class", subsim_class);
+                     Object.AddIntProperty(subsim,"template_number", template_count);
+                     Object.AddIntProperty(subsim,"hardpoint_number", 0);
                   }
                }
 
@@ -605,7 +605,23 @@ tag_subsims(hship ship)
    INIFile.Destroy(ship_file);
 }
 
+// returns the subsim matching this template number.
+hsubsim FindSubsimByTemplateNumber(hship ship, int template_number)
+{
+   int subsim_count = Sim.SubsimCount(ship);
+   int i;
+   hsubsim subsim;
 
+   for (i=0;i<subsim_count;++i) {
+      subsim = Sim.NthSubsim(ship,i);
+
+      if (Object.IntProperty(subsim,"template_number") == template_number) {
+         return subsim;
+      }
+   }
+
+   return none;
+}
 
 /*  
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
