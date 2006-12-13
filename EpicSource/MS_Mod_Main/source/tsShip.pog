@@ -97,6 +97,10 @@ prototype ReadIniFile(hship ship);
 
 prototype tag_subsims(hship ship);
 
+prototype add_hardpoints(hship ship, hinifile ship_file);
+
+
+
 
 int float2int(float number)
 {
@@ -329,7 +333,7 @@ ReadIniFile(hship ship)
    study_days = INIFile.Int(ship_file,"Properties","study_days", 0);
    scan_range = INIFile.Int(ship_file,"Properties","scan_range", 0);
 
-   INIFile.Destroy(ship_file);
+
 
    // Attach the properties to the ship.
    Object.AddFloatProperty(ship, "fuel", max_fuel);
@@ -347,7 +351,16 @@ ReadIniFile(hship ship)
 
    Object.AddBoolProperty(ship, "fuel_locked", false);
 
+
+   // Match up the template numbers to the created subsims.
    tag_subsims(ship);
+
+
+   // Add any subsystems in the ships hardpoint list.
+   add_hardpoints(ship, ship_file);
+
+
+   INIFile.Destroy(ship_file);
 }
 
 
@@ -590,7 +603,6 @@ tag_subsims(hship ship)
                      Object.AddStringProperty(subsim,"subsim_template", subsim_template);
                      Object.AddStringProperty(subsim,"subsim_class", subsim_class);
                      Object.AddIntProperty(subsim,"template_number", template_count);
-                     Object.AddIntProperty(subsim,"hardpoint_number", 0);
                   }
                }
 
@@ -605,6 +617,8 @@ tag_subsims(hship ship)
    INIFile.Destroy(ship_file);
 }
 
+
+
 // returns the subsim matching this template number.
 hsubsim FindSubsimByTemplateNumber(hship ship, int template_number)
 {
@@ -617,6 +631,136 @@ hsubsim FindSubsimByTemplateNumber(hship ship, int template_number)
 
       if (Object.IntProperty(subsim,"template_number") == template_number) {
          return subsim;
+      }
+   }
+
+   return none;
+}
+
+
+
+/*
+[Hardpoints]
+hardpoint_name[0]="left_wing_mount"
+template[0]="ini:/subsims/systems/player/heavy_pbc"
+template_number[0]=15
+hardpoint_type[0]=16
+position[0]=(15,30,75)
+orientation[0]=(0,90,0)
+
+hardpoint_name[1]="right_wing_mount"
+template[1]="ini:/subsims/systems/player/heavy_pbc"
+template_number[1]=16
+hardpoint_type[1]=16
+position[1]=(15,30,-75)
+orientation[1]=(0,90,0)
+*/
+
+
+add_hardpoints(hship ship, hinifile ship_file)
+{
+   string subsim_template, hardpoint_name, subsim_class;
+   int template_number, hardpoint_type, count;
+   float xpos, ypos, zpos, roll, pitch, yaw;
+   hsubsim subsim;
+   hinifile subsim_file;
+
+   count = 0;
+   while (INIFile.NumberedExists(ship_file,"Hardpoints","template",count)) {
+      subsim_template = INIFile.NumberedString(ship_file,"Hardpoints","template", count,"");
+
+      subsim_file = INIFile.Create(subsim_template);
+
+      if (none != subsim_file) {
+         subsim_class = INIFile.String(subsim_file,"Class","name","");
+         INIFile.Destroy(subsim_file);
+
+         subsim = Subsim.Create(subsim_template);
+
+         if (none != subsim) {
+            // Mark the ship as allowing loadout.
+            Object.AddBoolProperty(ship,"hardpoints", true);
+
+            hardpoint_name = INIFile.NumberedString(ship_file,"Hardpoints","hardpoint_name", count,"");
+            template_number = INIFile.NumberedInt(ship_file,"Hardpoints","template_number", count, 0);
+            hardpoint_type = INIFile.NumberedInt(ship_file,"Hardpoints","hardpoint_type", count, 0);
+            xpos = INIFile.NumberedVectorX(ship_file,"Hardpoints","position",count);
+            ypos = INIFile.NumberedVectorY(ship_file,"Hardpoints","position",count);
+            zpos = INIFile.NumberedVectorZ(ship_file,"Hardpoints","position",count);
+
+            yaw = INIFile.NumberedVectorX(ship_file,"Hardpoints","orientation",count);
+            pitch = INIFile.NumberedVectorY(ship_file,"Hardpoints","orientation",count);
+            roll = INIFile.NumberedVectorZ(ship_file,"Hardpoints","orientation",count);
+
+
+            Object.AddStringProperty(subsim,"subsim_template", subsim_template);
+            Object.AddStringProperty(subsim,"subsim_class", subsim_class);
+            Object.AddVectorProperty(subsim, "position", xpos, ypos, zpos);
+            Object.AddVectorProperty(subsim, "orientation", yaw, pitch, roll);
+            Object.AddIntProperty(subsim,"template_number", template_number);
+            Object.AddIntProperty(subsim,"hardpoint_type", hardpoint_type);
+            Object.AddStringProperty(subsim,"hardpoint_name", hardpoint_name);
+
+            Sim.AddSubsim(ship, subsim);
+            Subsim.Place(subsim, xpos, ypos, zpos);
+            Subsim.OrientateEuler(subsim, yaw, pitch, roll);
+         }
+      }
+      ++count;
+   }
+}
+
+// Replaces the passed in subsim with a new one created from template_name.
+hsubsim ReplaceSubsim(hship ship, hsubsim subsim, string template_name)
+{
+   string hardpoint_name, subsim_class;
+   int template_number, hardpoint_type;
+   float xpos, ypos, zpos, roll, pitch, yaw;
+   hsubsim new_subsim;
+   hinifile subsim_file;
+
+   if (Object.PropertyExists(subsim, "hardpoint_type")) {
+
+      subsim_file = INIFile.Create(template_name);
+
+      if (none != subsim_file) {
+         subsim_class = INIFile.String(subsim_file,"Class","name","");
+         INIFile.Destroy(subsim_file);
+
+         subsim = Subsim.Create(template_name);
+
+         if (none != subsim) {
+            hardpoint_name = Object.StringProperty(subsim,"hardpoint_name");
+            template_number = Object.IntProperty(subsim,"template_number");
+            hardpoint_type = Object.IntProperty(subsim,"hardpoint_type");
+
+            xpos = Object.VectorPropertyX(subsim,"position");
+            ypos = Object.VectorPropertyY(subsim,"position");
+            zpos = Object.VectorPropertyZ(subsim,"position");
+
+            yaw =   Object.VectorPropertyZ(subsim,"orientation");
+            pitch = Object.VectorPropertyZ(subsim,"orientation");
+            roll =  Object.VectorPropertyZ(subsim,"orientation");
+
+            Object.AddStringProperty(new_subsim,"subsim_template", template_name);
+            Object.AddStringProperty(new_subsim,"subsim_class", subsim_class);
+            Object.AddIntProperty(new_subsim,"template_number", template_number);
+
+            Object.AddVectorProperty(new_subsim, "position", xpos, ypos, zpos);
+            Object.AddVectorProperty(new_subsim, "orientation", yaw, pitch, roll);
+
+            Object.AddIntProperty(new_subsim,"hardpoint_type", hardpoint_type);
+            Object.AddStringProperty(new_subsim,"hardpoint_name", hardpoint_name);
+
+            Sim.AddSubsim(ship, new_subsim);
+            Subsim.Place(new_subsim, xpos, ypos, zpos);
+            Subsim.OrientateEuler(new_subsim, yaw, pitch, roll);
+
+            // Now remove the old subsim.
+            Subsim.Destroy(subsim);
+
+            return new_subsim;
+         }
       }
    }
 

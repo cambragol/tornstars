@@ -999,7 +999,7 @@ task wingman_watch(hship ship)
       case eSS_FleeStart:
          // Ok, we are damaged. Pick the closest neutral or better
          // station that we can flee towards. Empty is fine.
-         flee_timer = 10 * 60;
+         flee_timer = 2 * 60;
 
          // Pick a non-hostile station that is near.
          nearby_locations = iMapEntity.SystemHabitats();
@@ -1014,28 +1014,20 @@ task wingman_watch(hship ship)
                                                                         player_faction, 
                                                                         -0.2), 
                                         ship);
-
-         if (none == station) {
-            station = iHabitat.Cast(iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), ship));
-         }
-
          debug {
             Debug.PrintHandle(station);
             Debug.PrintString(" flee station target\n");
          }
 
-         iAI.PurgeOrders(ship);
-         iAI.GiveApproachOrderAdvanced( ship,
-                                        station,
-                                        75km,
-                                        80km,
-                                        true);
-
-
-
-
-
-
+         // If we could find a safe location, flee to it. Otherwise, just keep fleeing.
+         if (none != station) {
+            iAI.PurgeOrders(ship);
+            iAI.GiveApproachOrderAdvanced( ship,
+                                           station,
+                                           75km,
+                                           80km,
+                                           true);
+         }
 
          wingman_state = change_state(ship, wingman_state, eSS_Flee, debug_on);
          break;
@@ -1347,6 +1339,53 @@ task wingman_watch(hship ship)
 
          break;
 
+
+      case eSS_FuelDrainStart:
+         // If the target is a ship that is low on fuel
+         // Do a move order to the ship, and go to fuel ship wait.
+         target = current_target(ship);
+         next_state = eSS_Idle;
+
+         if (TM_Ship & iSim.Type(target)) {
+            if (tsShip.Fuel(iShip.Cast(target)) < tsShip.FuelMax(iShip.Cast(target))) {
+
+               iConversation.OneLiner(ship, "", "epo_drain_target_ack");
+
+               iAI.PurgeOrders(ship);
+
+               // Move up under the target ship.
+               iAI.GiveFormateOrder(ship, 
+                                    target,
+                                    0,
+                                    -1km,
+                                    0);
+               next_state = eSS_FuelShipWait;
+            } else {
+               iConversation.OneLiner(ship, "", String.Join("epo_refueling_finished+",Sim.Name(target)));
+            }
+         }
+         wingman_state = change_state(ship, wingman_state, next_state, debug_on);
+         break;
+
+      case eSS_FuelDrainWait:
+         target_ship = iShip.Cast(current_target(ship));
+         if (2km > Sim.DistanceBetween(ship, target_ship)) {
+            filled = tanker_fill_ship(ship, target_ship);
+
+            if (true == filled) {
+               iConversation.OneLiner(ship, "", String.Join("epo_refueling_finished+",Sim.Name(target_ship)));
+            }else {
+               iConversation.OneLiner(ship, "", "epo_tanker_empty");
+            }
+
+            if ((wingman_state == eSS_FuelFleetWait) && (true == filled)) {
+               // if we have any fuel, go back and fill another ship.
+               wingman_state = change_state(ship, wingman_state, eSS_FuelFleetStart, debug_on);
+            }else {
+               wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+            }
+         }
+         break;
          // Docks to nearest asteroid and begins science survey.
       case eSS_ProspectStart:
          target = current_target(ship);
