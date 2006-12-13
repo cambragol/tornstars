@@ -910,13 +910,20 @@ task wingman_watch(hship ship)
             }
 
             iAI.PurgeOrders(ship);
-         
+/*         
             iAI.GiveEscortOrder(ship, 
                                 target,
                                 tFormation.Xpos(ship),
                                 tFormation.Ypos(ship),
                                 tFormation.Zpos(ship),
                                 50km);
+*/
+
+            iAI.GiveFormateOrder(ship, 
+                                target,
+                                tFormation.Xpos(ship),
+                                tFormation.Ypos(ship),
+                                tFormation.Zpos(ship));
 
             wingman_state = change_state(ship, wingman_state, eSS_Escort, debug_on);
          }else {
@@ -1029,6 +1036,8 @@ task wingman_watch(hship ship)
                                            true);
          }
 
+         iConversation.OneLiner(ship, "", "epo_wingman_flees");
+
          wingman_state = change_state(ship, wingman_state, eSS_Flee, debug_on);
          break;
 
@@ -1040,6 +1049,9 @@ task wingman_watch(hship ship)
          --flee_timer;
 
          if ((OT_None == iAI.CurrentOrderType(ship)) || (flee_timer < 0)) {
+
+            iShip.Attacked(ship);
+            iAI.SetFleeFunction( ship, "" );
             wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
          }
          break;
