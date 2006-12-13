@@ -79,7 +79,8 @@ enum eWingCommState{
    WCS_CargoComm,
    WCS_CombatComm,
    WCS_MiningComm,
-   WCS_DockComm
+   WCS_DockComm, 
+   WCS_FollowComm
 };
 
 // External interface to the package
@@ -92,6 +93,7 @@ prototype clear_command();
 prototype   select_group(int group);
 prototype   halt();
 prototype   defend_me();
+prototype   follow_me();
 prototype   attack();
 prototype   defend();
 prototype   dock();
@@ -102,6 +104,7 @@ prototype   group_command();
 prototype   remove_ship();
 prototype   mining_command();
 prototype   dock_command();
+prototype   follow_command();
 prototype   add_ship();
 
 prototype   refuel();
@@ -117,6 +120,7 @@ prototype   group_prompt();
 prototype   combat_prompt();
 prototype   mining_prompt();
 prototype   dock_prompt();
+prototype   follow_prompt();
 prototype   empty_group_prompt();
 
 
@@ -275,11 +279,25 @@ defend_me()
    }
 
    issue_order(group, ePO_DefendMe, none);
-
-
-
-
 }
+
+
+follow_me()
+{
+   int group = Global.Int("gtWingCommGroup");
+   hship player = iShip.FindPlayerShip();
+
+   clear_command();   
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   issue_order(group, ePO_Formate, player);
+}
+
 
 attack()
 {
@@ -655,6 +673,12 @@ dock_command()
    dock_prompt();
 }
 
+follow_command()
+{
+   Global.SetInt("gtWingCommDepth",WCS_FollowComm);
+   follow_prompt();
+}
+
 // All terminating cases should clear command prompts.
 clear_prompt()
 {
@@ -708,6 +732,11 @@ dock_prompt()
    iHUD.SetPrompt("5 Dock To My Target, 6 Undock","");
 }
 
+follow_prompt()
+{
+   clear_prompt();
+   iHUD.SetPrompt("2 Follow Me, 3 Defend Me","");
+}
 
 KeyOne()
 {
@@ -753,7 +782,10 @@ KeyTwo()
       clear_command();
       break;
    case WCS_Command:
-      defend_me();
+      follow_command();
+      break;
+   case WCS_FollowComm:
+      follow_me();
       break;
    case WCS_CargoComm:
       refuel_player();
@@ -778,6 +810,9 @@ KeyThree()
       break;
    case WCS_Empty:
       clear_command();
+      break;
+   case WCS_FollowComm:
+      defend_me();
       break;
    case WCS_Command:
       attack();

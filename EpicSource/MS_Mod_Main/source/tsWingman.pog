@@ -910,20 +910,13 @@ task wingman_watch(hship ship)
             }
 
             iAI.PurgeOrders(ship);
-/*         
+
             iAI.GiveEscortOrder(ship, 
                                 target,
                                 tFormation.Xpos(ship),
                                 tFormation.Ypos(ship),
                                 tFormation.Zpos(ship),
-                                50km);
-*/
-
-            iAI.GiveFormateOrder(ship, 
-                                target,
-                                tFormation.Xpos(ship),
-                                tFormation.Ypos(ship),
-                                tFormation.Zpos(ship));
+                                20km);
 
             wingman_state = change_state(ship, wingman_state, eSS_Escort, debug_on);
          }else {
