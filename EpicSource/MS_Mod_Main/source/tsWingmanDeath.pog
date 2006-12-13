@@ -46,7 +46,8 @@ uses    Sim,
         tStationEnum,
         tsFaction,
         tsShip,
-        tsPlayerFleet;
+        tsPlayerFleet,
+        tsWingComm;
 
 
 
@@ -63,6 +64,8 @@ task wingman_announce()
 task Death(hship wingman)
 {
    tsPlayerFleet.RemoveFleetShip(wingman);
+
+   tsWingComm.GroupRemoveShip(wingman);
 
    Task.Detach(start wingman_announce());
 

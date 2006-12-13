@@ -236,7 +236,7 @@ tsPosition.pkg : tsPosition.pog
 tsShip.pkg : tsShip.pog tEconUtil.h tPodUtil.h tEpicComms.h tFormation.h tsFaction.h tMegaTrucking.h
 tsPlayerFleet.pkg : tsPlayerFleet.pog tsShip.h tEconUtil.h tPodUtil.h tEpicComms.h tFormation.h tsFaction.h tMegaTrucking.h
 tsPlayerDeath.pkg : tsPlayerDeath.pog tsShip.h tEconUtil.h tPodUtil.h tEpicComms.h tFormation.h tsFaction.h tMegaTrucking.h
-tsWingmanDeath.pkg : tsWingmanDeath.pog tsShip.h tEconUtil.h tPodUtil.h tEpicComms.h tFormation.h tsFaction.h tMegaTrucking.h
+tsWingmanDeath.pkg : tsWingmanDeath.pog tsShip.h tEconUtil.h tPodUtil.h tEpicComms.h tFormation.h tsFaction.h tMegaTrucking.h tsWingComm.h
 
 
 tsShipSave.pkg : tsShipSave.pog tsPosition.h tsShip.h
