@@ -667,7 +667,7 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool restored_
          iConversation.OneLiner(ship, "", "epo_refuse_not_fuel_pod");
          return;
       }
-      iConversation.OneLiner(ship, "", "epo_drain_fuel_ack");
+
 
       break;
    case ePO_Prospect:
@@ -1341,15 +1341,13 @@ task wingman_watch(hship ship)
 
 
       case eSS_FuelDrainStart:
-         // If the target is a ship that is low on fuel
-         // Do a move order to the ship, and go to fuel ship wait.
+         // Make sure the target is a pod we can drain, then move to the
+         // target. Complete check has already been done.
          target = current_target(ship);
          next_state = eSS_Idle;
 
-         if (TM_Ship & iSim.Type(target)) {
-            if (tsShip.Fuel(iShip.Cast(target)) < tsShip.FuelMax(iShip.Cast(target))) {
-
-               iConversation.OneLiner(ship, "", "epo_drain_target_ack");
+         if (T_CargoPod == iSim.Type(target)) {
+               iConversation.OneLiner(ship, "", "epo_drain_fuel_ack");
 
                iAI.PurgeOrders(ship);
 
@@ -1359,10 +1357,7 @@ task wingman_watch(hship ship)
                                     0,
                                     -1km,
                                     0);
-               next_state = eSS_FuelShipWait;
-            } else {
-               iConversation.OneLiner(ship, "", String.Join("epo_refueling_finished+",Sim.Name(target)));
-            }
+               next_state = eSS_FuelDrainWait;
          }
          wingman_state = change_state(ship, wingman_state, next_state, debug_on);
          break;
@@ -1370,20 +1365,10 @@ task wingman_watch(hship ship)
       case eSS_FuelDrainWait:
          target_ship = iShip.Cast(current_target(ship));
          if (2km > Sim.DistanceBetween(ship, target_ship)) {
-            filled = tanker_fill_ship(ship, target_ship);
+            tanker_empty_ship(ship, target_ship);
 
-            if (true == filled) {
-               iConversation.OneLiner(ship, "", String.Join("epo_refueling_finished+",Sim.Name(target_ship)));
-            }else {
-               iConversation.OneLiner(ship, "", "epo_tanker_empty");
-            }
-
-            if ((wingman_state == eSS_FuelFleetWait) && (true == filled)) {
-               // if we have any fuel, go back and fill another ship.
-               wingman_state = change_state(ship, wingman_state, eSS_FuelFleetStart, debug_on);
-            }else {
-               wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
-            }
+            iConversation.OneLiner(ship, "", "epo_fuel_drain_complete");
+            wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
          }
          break;
          // Docks to nearest asteroid and begins science survey.
