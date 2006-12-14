@@ -64,6 +64,7 @@ uses	Sim,
       tLFleet,
       tUnderOp,
       tUnderOpFilter,
+      tsFaction,
       tESysSetup,
       tEJump,
 		UniGUI;
@@ -193,6 +194,7 @@ prototype bool has_rumors(hmapentity location);
 prototype bool has_tanker(hmapentity location);
 prototype bool has_miner(hmapentity location);
 prototype bool has_science(hmapentity location);
+prototype bool is_player_owned(hmapentity location);
 
 // *********************************************
 // CODE BEGINS HERE
@@ -805,6 +807,13 @@ list create_location_list( string system )
            }
            break;
 
+        case 17:
+           // Player owned
+           if ( is_player_owned( current_location ) ) {
+				  List.AddTail( location_list, current_location );
+			  }
+
+			  break;
         }// End switch.
 
 			// Add the location to the location list.
@@ -2990,6 +2999,17 @@ bool has_tanker(hmapentity location)
       break;
    default:
       break;
+   }
+
+   return false;
+}
+
+bool is_player_owned(hmapentity location)
+{
+   hfaction player = tsFaction.PlayerFaction();
+
+   if (player == iSim.Faction(location)) {
+      return true;
    }
 
    return false;
