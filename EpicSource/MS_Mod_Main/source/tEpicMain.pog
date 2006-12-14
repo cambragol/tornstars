@@ -97,6 +97,8 @@ provides
 // Does not force a new session (very confusing).
 GameEnter()
 {
+   atomic debug Debug.PrintString("tEpicMain.GameEnter\n");
+
    tsPlayerSave.NewGame();
    
    tStationSave.ReadNewStations();
@@ -118,6 +120,8 @@ GameEnter()
 // Happens when the game is started, or loaded.
 SessionEnter()
 {
+   atomic debug Debug.PrintString("tEpicMain.SessionEnter\n");
+
    Text.Add("csv:/text/gt_station_types");
    Text.Add("csv:/text/gt_pc_objects");
    Text.Add("csv:/text/player_ship_name");
@@ -153,6 +157,8 @@ SessionEnter()
 // Happens when the game is quit, or reloaded.
 SessionExit()
 {
+   atomic debug Debug.PrintString("tEpicMain.SessionExit\n");
+
    Text.Remove("csv:/text/gt_station_types");
    Text.Remove("csv:/text/gt_pc_objects");
    Text.Remove("csv:/text/player_ship_name");
@@ -168,6 +174,8 @@ SessionExit()
 
 BaseEnter()
 {
+   atomic debug Debug.PrintString("tEpicMain.BaseEnter\n");
+
    tUnderOpSave.BaseEnter();
 
 
@@ -185,6 +193,8 @@ BaseEnter()
 
 BaseExit()
 {
+   atomic debug Debug.PrintString("tEpicMain.BaseExit\n");
+
    tStationSave.BaseExit();
    tUnderOpSave.BaseExit();
 
@@ -195,7 +205,7 @@ BaseExit()
 
 SpaceEnter()
 {
-   tsFaction.Init();
+   atomic debug Debug.PrintString("tEpicMain.SpaceEnter\n");
 
    UniGUIBase.EnterSpace();
 
@@ -207,12 +217,16 @@ SpaceEnter()
 
 SpaceExit()
 {
+   atomic debug Debug.PrintString("tEpicMain.SpaceExit\n");
+
    tEpicLFPlus.ExitSpace();
 }
 
 
 FinalSetup()
 {
+   atomic debug Debug.PrintString("tEpicMain.FinalSetup\n");
+
    tEPlayerWatch.PlayerWatch();
    tsPlayerSave.Restore();
 
@@ -237,10 +251,13 @@ FinalSetup()
 
 SystemEnter()
 {
+   atomic debug Debug.PrintString("tEpicMain.SystemEnter\n");
+
+   tsFaction.Init();
+
    tStationSave.RestoreAllStations();   
 
    tUnderOpSave.Restore();
-
 
    tESysSetup.UpdateSystem();
 
@@ -255,13 +272,15 @@ SystemEnter()
 
 SystemExit()
 {
-
+   atomic debug Debug.PrintString("tEpicMain.SystemExit\n");
 
 
 }
 
 SaveGame()
 {
+   atomic debug Debug.PrintString("tEpicMain.SaveGame\n");
+
    tTime.SaveTime();
 
    tStationSave.SaveAllStations();
@@ -281,6 +300,8 @@ SaveGame()
 
 DayUpdate()
 {
+   atomic debug Debug.PrintString("tEpicMain.DayUpdate\n");
+
    tStationRules.UpdateAllStations();
    tsFleetOpUpdate.UpdateAll();
 
@@ -295,6 +316,8 @@ DayUpdate()
 // Event called when the player docks to a station.
 PlayerDocked()
 {
+   atomic debug Debug.PrintString("tEpicMain.PlayerDocked\n");
+
    tViewDock.PlayerDock();
    tMultimod.PlayerDocked();
 }
@@ -302,6 +325,8 @@ PlayerDocked()
 
 PlayerUndocked()
 {
+   atomic debug Debug.PrintString("tEpicMain.PlayerUndocked\n");
+
    tMultimod.PlayerUndocked();
 }
 
