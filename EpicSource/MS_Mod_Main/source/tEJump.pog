@@ -1633,9 +1633,14 @@ set find_following_ships(hship ship) {
     for (i=0;i<total;++i) {
         follower = iShip.Cast(List.GetNth(player_ships, i));
 
+        debug {
+           Debug.PrintString(iAI.CurrentOrderName(follower));
+           Debug.PrintString("\n");
+        }
         // Add any ship following the current ship.
         // Then recurse on that ship to get nested order groups.
-        if ("ScriptedEscort" == iAI.CurrentOrderName(follower)) {
+        if (("ScriptedEscort" == iAI.CurrentOrderName(follower))
+            ||("ScriptedFormate" == iAI.CurrentOrderName(follower))) {
             if (ship == iShip.Cast(iAI.CurrentOrderTarget(follower))) {
 
                // Following ship must be close. Wingmen a system or two away cannot 
