@@ -118,6 +118,7 @@ Restore()
    hship restored_ship;
    hship wingman;
    int i, total;
+   hgroup combat_group = Group.Create();
 
    restored_ship = tsShipSave.Restore(player_id);
 
@@ -148,6 +149,9 @@ Restore()
    }
 
    tsPlayerFleet.NewPlayerShip(player);
+
+   // Player fleet goes in this combat group, when near the player.
+   Group.AddSim(combat_group, player);
 
    player_fleet = tsShipSave.RestoreList("ts_pfleet");
 
