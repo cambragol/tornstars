@@ -371,6 +371,9 @@ release_wingman(hship ship)
    // allow the ship to be removed.
    Sim.SetCullable(ship, true);
 
+   // Remove the ship from any combat group.
+   Group.RemoveSim(Sim.Group(ship), ship);
+
    // remove the comms function.
    tEpicComms.AddComms(ship, "");
 }
