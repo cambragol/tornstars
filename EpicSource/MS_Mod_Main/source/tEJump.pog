@@ -72,6 +72,8 @@ prototype string difficulty2key(int difficulty);
 
 prototype int float2int(float value);
 
+prototype add_flash(hship player);
+
 
 StartGame() 
 {
@@ -878,6 +880,8 @@ jump_ship(hship ship, hisim lpoint, int difficulty) {
             Object.SetFloatProperty(ship, "hit_points", hit_points);
         }
     }
+
+    add_flash(ship);
 }
 
 
