@@ -794,6 +794,8 @@ task wingman_watch(hship ship)
       // If the player is more than half culling distance away, lock down the weapons systems.
       if (Sim.DistanceBetween(player, ship) > Global.Float("gt_distance_wakeup")) {
          if (false == locked) {
+            // Pull ship out of the player combat group.
+            Group.RemoveSim(Sim.Group(ship), ship);
             iShip.LockDownWeapons(ship);
             locked = true;
          }
@@ -802,6 +804,7 @@ task wingman_watch(hship ship)
             // if the wingmans weapons were locked down, unlock them.
             iShip.WeaponTargetsFromContactList(ship);
             locked = false;
+            Group.AddSim(Sim.Group(player), ship);
          }
       }
 
