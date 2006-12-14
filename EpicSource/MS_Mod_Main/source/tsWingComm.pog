@@ -49,7 +49,8 @@ uses    Sim,
         tsShipEnum,
         tsShip,
         tsPlayerFleet,
-        tsWingman;
+        tsWingman,
+        tEJump;
 
 provides ClearCommand,
          KeyOne,
@@ -745,6 +746,10 @@ KeyOne()
 
   // iHUD.Print("Key One");
 
+   if (tEJump.IsCapsuleJumping()){
+      return;
+   }
+
    Global.SetInt("gtWingCommKey",1);
 
    switch (depth) {
@@ -771,6 +776,10 @@ KeyTwo()
    int group = Global.Int("gtWingCommGroup");
 
   // iHUD.Print("Key Two");
+
+   if (tEJump.IsCapsuleJumping()){
+      return;
+   }
 
    Global.SetInt("gtWingCommKey",2);
 
@@ -802,6 +811,10 @@ KeyThree()
 
  //  iHUD.Print("Key Three");
 
+   if (tEJump.IsCapsuleJumping()){
+      return;
+   }
+
    Global.SetInt("gtWingCommKey",3);
 
    switch (depth) {
@@ -832,6 +845,10 @@ KeyFour()
 
   // iHUD.Print("Key Four");
 
+   if (tEJump.IsCapsuleJumping()){
+      return;
+   }
+
    Global.SetInt("gtWingCommKey",4);
 
    switch (depth) {
@@ -858,6 +875,10 @@ KeyFive()
    int group = Global.Int("gtWingCommGroup");
 
 //   iHUD.Print("Key Five");
+
+   if (tEJump.IsCapsuleJumping()){
+      return;
+   }
 
    Global.SetInt("gtWingCommKey",5);
 
@@ -889,6 +910,10 @@ KeySix()
 
 //   iHUD.Print("Key Six");
 
+   if (tEJump.IsCapsuleJumping()){
+      return;
+   }
+
    Global.SetInt("gtWingCommKey",6);
 
    switch (depth) {
@@ -919,6 +944,10 @@ KeySeven()
 
 //   iHUD.Print("Key Seven");
 
+   if (tEJump.IsCapsuleJumping()){
+      return;
+   }
+
    Global.SetInt("gtWingCommKey",7);
 
    switch (depth) {
@@ -945,6 +974,10 @@ KeyEight()
    int group = Global.Int("gtWingCommGroup");
 
 //   iHUD.Print("Key Eight");
+
+   if (tEJump.IsCapsuleJumping()){
+      return;
+   }
 
    Global.SetInt("gtWingCommKey",8);
 
@@ -976,6 +1009,10 @@ KeyNine()
 
 //   iHUD.Print("Key Nine");
 
+   if (tEJump.IsCapsuleJumping()){
+      return;
+   }
+
    Global.SetInt("gtWingCommKey",9);
 
    switch (depth) {
@@ -1005,6 +1042,10 @@ KeyZero()
    int group = Global.Int("gtWingCommGroup");
 
    //iHUD.Print("Key Zero");
+
+   if (tEJump.IsCapsuleJumping()){
+      return;
+   }
 
    Global.SetInt("gtWingCommKey",0);
 
