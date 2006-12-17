@@ -42,6 +42,18 @@ prototype tsShip.SetWorld( hship ship, string world );
 
 prototype list tsShip.ShipPodList( hsim ship );
 
+prototype hisim tsShip.DockParent( hship ship );
+
+prototype bool tsShip.IsMiner( hship ship );
+
+prototype bool tsShip.IsProspector( hship ship );
+
+prototype bool tsShip.IsLongRangeScan( hship ship );
+
+prototype bool tsShip.IsTanker( hship ship );
+
+prototype bool tsShip.IsWarship( hship ship );
+
 prototype tsShip.ReadIniFile( hship ship );
 
 prototype hship tsShip.Create( string ini_file, string name );
@@ -49,6 +61,10 @@ prototype hship tsShip.Create( string ini_file, string name );
 prototype tsShip.SetSaveId( hship ship, int id );
 
 prototype int tsShip.SaveId( hship ship );
+
+prototype hsubsim tsShip.FindSubsimByTemplateNumber( hship ship, int template_number );
+
+prototype hsubsim tsShip.ReplaceSubsim( hship ship, hsubsim subsim, string template_name );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

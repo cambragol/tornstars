@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/tSpewerOps.h,v 1.2 2006/04/08 22:43:59 Owner Exp $
+// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////
@@ -26,7 +26,7 @@ prototype tSpewerOps.LoadShip( hship ship, hhabitat station, set pods );
 
 prototype tSpewerOps.UnloadShip( hship ship, hhabitat station, set pods );
 
-prototype list tSpewerOps.PodsOfTypeOnShip( hcargo cargo, hship ship, bool legit, int number );
+prototype list tSpewerOps.PodsOfTypeOnShip( int cargo_type, hship ship, bool legit, int number );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 
