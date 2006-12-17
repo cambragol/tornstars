@@ -174,21 +174,6 @@ prototype bool tanker_empty_ship(hship tanker, hship target);
 prototype set player_fleet();
 
 
-// These belong in tsShip.pog
-prototype bool is_warship(hship ship);
-
-prototype bool is_tanker(hship ship);
-
-prototype bool is_miner(hship ship);
-
-prototype bool is_prospector(hship ship);
-
-prototype bool is_long_range_scan(hship ship);
-
-prototype hisim DockParent(hship ship);
-
-
-
 
 // Debug tools.
 prototype string state2string(eShipState state);
@@ -395,7 +380,7 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool restored_
    case ePO_CollectAllPods:
    case ePO_UndockPods:
    case ePO_ScanSky:
-      if (DockParent(ship) != none) {
+      if (tsShip.DockParent(ship) != none) {
          iConversation.OneLiner( ship, "", "epo_refuse_ship_docked");
          return;
       }
@@ -404,7 +389,7 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool restored_
    case ePO_Prospect:
    case ePO_Mine:
       // Reject if docked, and ordered to dock to a different target.
-      parent = DockParent(ship);
+      parent = tsShip.DockParent(ship);
       if (parent != none) {
          if (target != parent){
             iConversation.OneLiner( ship, "", "epo_refuse_ship_docked");
@@ -493,7 +478,7 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool restored_
 
       break;
    case ePO_Attack:
-      if (!is_warship(ship)) {
+      if (!tsShip.IsWarship(ship)) {
          iConversation.OneLiner(ship, "", "epo_refuse_not_warship");
          return;
       }
@@ -519,7 +504,7 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool restored_
       final_target = player;
 
       // Freighters just move to formation.
-      if (!is_warship(ship)) {
+      if (!tsShip.IsWarship(ship)) {
          porder_final = ePO_Formate;
       }
       break;
@@ -538,7 +523,7 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool restored_
       }
 
       // Freighters just move to formation.
-      if (!is_warship(ship)) {
+      if (!tsShip.IsWarship(ship)) {
          porder_final = ePO_Formate;
       }
       break;
@@ -608,7 +593,7 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool restored_
       break;
 
    case ePO_FuelShip:
-      if (!is_tanker(ship)) {
+      if (!tsShip.IsTanker(ship)) {
          iConversation.OneLiner(ship, "", "epo_refuse_not_tanker");
          return;
       }
@@ -627,7 +612,7 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool restored_
       break;
 
    case ePO_FuelFleet:
-      if (!is_tanker(ship)) {
+      if (!tsShip.IsTanker(ship)) {
          iConversation.OneLiner(ship, "", "epo_refuse_not_tanker");
          return;
       }
@@ -635,7 +620,7 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool restored_
 
       break;
    case ePO_DrainFuel:
-      if (!is_tanker(ship)) {
+      if (!tsShip.IsTanker(ship)) {
          iConversation.OneLiner(ship, "", "epo_refuse_not_tanker");
          return;
       }
@@ -672,7 +657,7 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool restored_
       break;
    case ePO_Prospect:
 
-      if (!is_prospector(ship)) {
+      if (!tsShip.IsProspector(ship)) {
          iConversation.OneLiner(ship, "", "epo_refuse_not_prospector");
          return;
       }
@@ -696,14 +681,14 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool restored_
 
       break;
    case ePO_ScanSky:
-      if (!is_long_range_scan(ship)) {
+      if (!tsShip.IsLongRangeScan(ship)) {
          iConversation.OneLiner(ship, "", "epo_refuse_not_scan_ship");
          return;
       }
 
       break;
    case ePO_Mine:
-      if (!is_miner(ship)) {
+      if (!tsShip.IsMiner(ship)) {
          iConversation.OneLiner(ship, "", "epo_refuse_not_mining_ship");
          return;
       }
@@ -850,10 +835,10 @@ task wingman_watch(hship ship)
 
             wingman_state = change_state(ship, wingman_state, eSS_NoPlayer, debug_on);
 
-         }else if (none == DockParent(ship)) {
+         }else if (none == tsShip.DockParent(ship)) {
 
             if (Sim.DistanceBetween(player, ship) < 200km) {
-               if (is_warship(ship)) {
+               if (tsShip.IsWarship(ship)) {
                   set_current_order(ship, ePO_Escort);
                   set_current_target(ship, player);
                   wingman_state = change_state(ship, wingman_state, eSS_EscortStart, debug_on);
@@ -1315,7 +1300,7 @@ task wingman_watch(hship ship)
          for (i=0;i<total;++i) {
             target_ship = iShip.Cast(List.GetNth(target_list, i));
 
-            if (!is_tanker(target_ship)){
+            if (!tsShip.IsTanker(target_ship)){
                if (tsShip.Fuel(target_ship) < (tsShip.FuelMax(target_ship) - 1)) {
                   List.AddTail(fuel_list, target_ship);
                }
@@ -1416,7 +1401,7 @@ task wingman_watch(hship ship)
             next_state = new_order_state(neworder);
             wingman_state = change_state(ship, wingman_state, next_state, debug_on);
          }else if (OT_None == iAI.CurrentOrderType(ship)) {
-            if (none == DockParent(ship)) {
+            if (none == tsShip.DockParent(ship)) {
                // The order ended without docking the ship. Return to idle.
                iConversation.OneLiner(ship, "", "epo_prospector_docking_cancelled");
                wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
@@ -1462,7 +1447,7 @@ task wingman_watch(hship ship)
             wingman_state = change_state(ship, wingman_state, next_state, debug_on);
          }else if (OT_None == iAI.CurrentOrderType(ship)) {
 
-            if (none == DockParent(ship)) {
+            if (none == tsShip.DockParent(ship)) {
                // The order ended without docking the ship. We could have been attacked,
                // or some other change. Return to idle, that will let up pick up orders.
                iConversation.OneLiner(ship, "", "epo_mining_dock_cancelled");
@@ -2004,42 +1989,6 @@ set player_fleet()
 }
 
 
-bool is_long_range_scan(hship ship)
-{
-   return (Object.IntProperty(ship,"scan_range") >= 1);
-}
-
-bool is_prospector(hship ship)
-{
-   return (Object.IntProperty(ship,"prospector") >= 1);
-}
-
-bool is_miner(hship ship)
-{
-   return (Object.IntProperty(ship,"miner") >= 1);
-}
-
-bool is_tanker(hship ship)
-{
-   return (Object.IntProperty(ship,"tanker") >= 1);
-}
-
-// If this ship is docked to a larger ship, return that ship.
-// Move this code to tsShip.
-hisim DockParent(hship ship)
-{
-   return iSim.Cast(Sim.Parent(ship));
-}
-
-
-// Is this an armed ship? Transports and utility vessels are excluded.
-bool is_warship(hship ship)
-{
-   if (iSim.Type(ship) & (T_Fighter | T_Tug | T_Patcom | T_Interceptor | T_Corvette | T_Destroyer | T_Cruiser | T_Carrier)) {
-      return true;
-   }
-   return false;
-}
 
 
 // Don't allow attacks on planets, nebula or other non-ship or station type items.
@@ -2082,32 +2031,15 @@ bool station_known(int station_type) {
 
 
 
-//bool is_mine(hhabitat station) {
 bool is_mine(hisim station) {
    int station_type;
-
 
    if (T_Station != iSim.Type(station)) {
       return false;
    }
 
-   station_type = tLProduction.GetType(station);
-
-   switch (station_type) {
-   case HT_WaterMine:
-   case HT_OrganicsMine:
-   case HT_InorganicsMine:
-   case HT_BiomassMine:
-   case HT_CommonMetalsMine:
-   case HT_RareMetalsMine:
-   case HT_ExoticMetalsMine:
-   case HT_RadioactivesMine:
-   case HT_FusionableGasesMine:
-   case HT_NeutroniumMine:
+   if (ESC_Mine == tStation.Category(iHabitat.Cast(station))) {
       return true;
-      break;
-   default:
-      break;
    }
 
    return false;

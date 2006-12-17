@@ -50,14 +50,12 @@ uses    Sim,
         tsWingComm;
 
 
-
-
 provides Death;
 
 
-task wingman_announce()
+task wingman_announce(string wingman_name)
 {
-   iConversation.OneLiner(none,"name_jafs","We lost a wingman!");
+   iConversation.OneLiner(none,"name_jafs",String.Join("crew_wingman_lost+", wingman_name));
 }
 
 
@@ -67,7 +65,9 @@ task Death(hship wingman)
 
    tsWingComm.GroupRemoveShip(wingman);
 
-   Task.Detach(start wingman_announce());
+   Group.RemoveSim(Sim.Group(wingman), wingman);
+
+   Task.Detach(start wingman_announce(Sim.Name(wingman)));
 
    iSim.Kill(iSim.Cast(wingman));
 }

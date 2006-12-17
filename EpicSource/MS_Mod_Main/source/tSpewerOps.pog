@@ -433,7 +433,7 @@ task ai_pod_watch(hship pod, hhabitat station)
 	Object.SetIntProperty(station, "md_epic_spewerslotsfree", Object.IntProperty(station, "md_epic_spewerslotsfree") + 1);
 }
 
-list PodsOfTypeOnShip(hcargo cargo, hship ship, bool legit, int number)
+list PodsOfTypeOnShip(int cargo_type, hship ship, bool legit, int max_number)
 {
 	int i;
 	list all_pods;
@@ -470,7 +470,7 @@ list PodsOfTypeOnShip(hcargo cargo, hship ship, bool legit, int number)
 	for(i=0;i<docked_list_size;++i)	// Remove pods not of given type
 	{
 		current_pod = iSim.Cast(List.GetNth(docked_pods, i));
-		if(Object.IntProperty(current_pod, "cargo") != Object.IntProperty(cargo, "type"))
+		if(Object.IntProperty(current_pod, "cargo") != cargo_type)
 			List.Remove(right_pods, current_pod);
 	}
 
@@ -491,10 +491,10 @@ list PodsOfTypeOnShip(hcargo cargo, hship ship, bool legit, int number)
 		semifinal_pods = legal_pods;
 	}
 
-	if(number < 0)	// Return all
+	if(max_number < 0)	// Return all
 		return semifinal_pods;
 
-	while(final_count<number)	// Pick out number of pods to return
+	while(final_count<max_number)	// Pick out number of pods to return
 	{
 		if(List.IsEmpty(semifinal_pods))
 			break;

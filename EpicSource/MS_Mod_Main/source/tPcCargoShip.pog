@@ -37,7 +37,8 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    tPodUtil,
    tSpewerOps,
    tsPilotSetup,
-   tEShipCreation,
+   tsShipCreationEnum,
+   tsShipCreation,
    tShipName,
    uString,
    tsShip;
@@ -188,7 +189,7 @@ setup_ship(hisim marker)
    station = start_station;
 
    name = tShipName.ShipName( "general", Math.RandomInt(0, 343));
-   ship_template = tEShipCreation.GetShip(station_faction, EST_FreightAll);
+   ship_template = tsShipCreation.GetShip(station_faction, EST_FreightAll);
 
    ship = tsShip.Create("ini:/sims/ships/utility/freighter","CargoTest");
 
@@ -228,7 +229,7 @@ setup_ship(hisim marker)
 
    for (i=0;i<total_escort;++i) {
       name = tShipName.ShipName( "general", Math.RandomInt(0, 343));
-      ship_template = tEShipCreation.GetShip(station_faction, EST_CombatLight);
+      ship_template = tsShipCreation.GetShip(station_faction, EST_CombatLight);
 
       escort = tsShip.Create(ship_template, name);
 
@@ -287,6 +288,7 @@ task TradeWander(hgroup cargo_fleet, hhabitat start_station)
    }
 
    while (1) {
+      debug_on = Global.Bool("gt_debug_tpccargoship");
 
       player = iShip.FindPlayerShip();
       if (Sim.IsDead(cargo_ship)) {

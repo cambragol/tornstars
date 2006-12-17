@@ -1,6 +1,6 @@
 //*****************************************************************************/
 //
-// tEShipCreation.pog
+// tsShipCreation.pog
 //
 // This module looks up faction and fleet specific ships. 
 // 
@@ -11,7 +11,7 @@
 // Last Edit: 
 //****************************************************************************/
 
-package	tEShipCreation;
+package	tsShipCreation;
 
 
 uses
@@ -232,7 +232,7 @@ string ShipType2String(eShipType ship_type)
    case EST_Taxi: return "EST_Taxi";break;
    default:
       debug {
-         Debug.PrintString("tEShipCreation.ShipType2String Error invalid type\n");
+         Debug.PrintString("tsShipCreation.ShipType2String Error invalid type\n");
          Debug.PrintString(String.FormatInt("%d invalid type\n",ship_type));
       }
       break;
@@ -293,7 +293,7 @@ eShipType String2ShipType(string type_name)
    else if ("EST_Taxi"==type_name) { return EST_Taxi; }
 
    debug {
-       Debug.PrintString("tEShipCreation.String2ShipType Error invalid type :");
+       Debug.PrintString("tsShipCreation.String2ShipType Error invalid type :");
        Debug.PrintString(type_name);
        Debug.PrintString("\n");
     }
@@ -327,7 +327,7 @@ test_subsection(hinifile hini, string subsection, bool must_have)
             if (none == ship) {
                // This is not a valid entry. Print it.
                debug {
-                  Debug.PrintString("tEShipCreation.TestINIFile Error\n");
+                  Debug.PrintString("tsShipCreation.TestINIFile Error\n");
                   Debug.PrintString(subsection);
                   Debug.PrintString(" Subsection\n");
                   Debug.PrintString(ship_class);
@@ -342,7 +342,7 @@ test_subsection(hinifile hini, string subsection, bool must_have)
       }else {
          if (must_have) {
             debug {
-               Debug.PrintString("tEShipCreation.TestINIFile Error missing entry\n");
+               Debug.PrintString("tsShipCreation.TestINIFile Error missing entry\n");
                Debug.PrintString(subsection);
                Debug.PrintString(" Subsection\n");
                Debug.PrintString(ship_class);
@@ -365,10 +365,10 @@ TestINIFile()
    hship ship;
    hinifile hini = INIFile.Create("ini:/faction_ships");
 
-   debug Debug.PrintString("tEShipCreation.TestINIFile starts\n");
+   debug Debug.PrintString("tsShipCreation.TestINIFile starts\n");
 
    if (none == hini) {
-      debug Debug.PrintString("tEShipCreation.TestINIFile error no file\n");
+      debug Debug.PrintString("tsShipCreation.TestINIFile error no file\n");
       return;
    }
 
@@ -400,5 +400,5 @@ TestINIFile()
 
    INIFile.Destroy(hini);
 
-   debug Debug.PrintString("tEShipCreation.TestINIFile ends\n");
+   debug Debug.PrintString("tsShipCreation.TestINIFile ends\n");
 }

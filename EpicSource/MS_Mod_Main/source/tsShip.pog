@@ -73,6 +73,14 @@ provides
         World,
         SetWorld,
         ShipPodList,
+   
+        DockParent,
+
+        IsMiner,
+        IsProspector,
+        IsLongRangeScan,
+        IsTanker,
+        IsWarship,
 
         ReadIniFile,
     
@@ -80,7 +88,8 @@ provides
 
         SetSaveId,
         SaveId,
-        FindSubsimByTemplateNumber;
+        FindSubsimByTemplateNumber,
+        ReplaceSubsim;
 
 
  
@@ -364,6 +373,53 @@ ReadIniFile(hship ship)
 }
 
 
+// If this ship is docked to a larger ship, return that ship.
+// Move this code to tsShip.
+hisim DockParent(hship ship)
+{
+   return iSim.Cast(Sim.Parent(ship));
+}
+
+bool IsLongRangeScan(hship ship)
+{
+   return (Object.IntProperty(ship,"scan_range") >= 1);
+}
+
+bool IsProspector(hship ship)
+{
+   return (Object.IntProperty(ship,"prospector") >= 1);
+}
+
+bool IsMiner(hship ship)
+{
+   return (Object.IntProperty(ship,"miner") >= 1);
+}
+
+bool IsTanker(hship ship)
+{
+   return (Object.IntProperty(ship,"tanker") >= 1);
+}
+
+
+
+
+// Is this an armed ship? Transports and utility vessels are excluded.
+bool IsWarship(hship ship)
+{
+   if (iSim.Type(ship) & (T_Fighter | T_Tug | T_Patcom | T_Interceptor | T_Corvette | T_Destroyer | T_Cruiser | T_Carrier)) {
+      return true;
+   }
+   return false;
+}
+
+
+
+
+
+
+
+
+
 float default_max_fuel(int ship_type)
 {
 
@@ -589,6 +645,7 @@ tag_subsims(hship ship)
                if (subsim_name == Object.StringProperty(subsim,"name")) {
                   // Check if we already tagged this one.
 
+                  /*
                   debug {
                      Debug.PrintHandle(subsim);
                      Debug.PrintString(" ");
@@ -597,6 +654,7 @@ tag_subsims(hship ship)
                      Debug.PrintInt(template_count);
                      Debug.PrintString("\n");
                   }
+                  */
 
                   if (!Object.PropertyExists(subsim,"subsim_template")) {
                      not_found = false;

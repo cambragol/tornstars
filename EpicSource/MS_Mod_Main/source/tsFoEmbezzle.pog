@@ -43,7 +43,8 @@ iMapEntity,
    tLFleet,
    tStationFilter,
    tShipName,
-   tEShipCreation,
+   tsShipCreationEnum,
+tsShipCreation,
    tsFleetOpCombat,
    tsDebug;
 
@@ -82,7 +83,7 @@ New(hisim operation)
    ship_name = tShipName.ShipName("underworld", 10000);
 
    // Also pick a large freighter for collecting player sales.
-   ship_template = tEShipCreation.GetShip(faction, EST_FreightHeavy);
+   ship_template = tsShipCreation.GetShip(faction, EST_FreightHeavy);
 
    tUnderOp.SetName(operation, ship_name);
    tUnderOp.SetShipTemplate(operation, ship_template);

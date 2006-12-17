@@ -43,7 +43,8 @@ uses    Sim,
         tLProduction,
         tUnderOp,
         tDistance,
-        tEShipCreation,
+        tsShipCreationEnum,
+tsShipCreation,
         tLFleet,
         tsPilotSetup,
         tStationFilter,
@@ -626,7 +627,7 @@ create_escorts(hisim operation, hship fence, hgroup cull_group)
    int i, total;
    hship escort;
 
-   escort_template = tEShipCreation.GetShip(faction, EST_CombatLight);
+   escort_template = tsShipCreation.GetShip(faction, EST_CombatLight);
    escort_file = INIFile.Create(escort_template);
 
    if (none == escort_file) {

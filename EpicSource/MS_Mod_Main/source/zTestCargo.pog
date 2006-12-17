@@ -31,7 +31,8 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    tsShip,
    tsPlayerFleet,
    tPodUtil,
-   tEShipCreation,
+   tsShipCreationEnum,
+tsShipCreation,
    tPcOwner;
 
 

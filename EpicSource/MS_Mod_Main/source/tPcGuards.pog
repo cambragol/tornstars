@@ -47,7 +47,8 @@ uses    Sim,
         tShipName,
         tLCenter,
         tLFleet,
-        tEShipCreation,
+        tsShipCreationEnum,
+tsShipCreation,
         tsPilotSetup,
         tEJump,
         tDistance,
@@ -692,8 +693,8 @@ hship create_leader (hmapentity location, hisim operation, hgroup cull_group, st
       leader_template = tUnderOp.ShipTemplate(operation);
       leader_name = tUnderOp.Name(operation);
    }else {
-      leader_template = tEShipCreation.GetShip(faction, 
-                                               tEShipCreation.String2ShipType(ship_type));
+      leader_template = tsShipCreation.GetShip(faction, 
+                                               tsShipCreation.String2ShipType(ship_type));
       leader_name = tShipName.ShipName("govornment",10000);
    }
 
@@ -736,7 +737,7 @@ create_escorts(hisim operation, int fleets, hship leader, hgroup cull_group, str
    int i, total;
    hship escort;
 
-   escort_template = tEShipCreation.GetShip(faction, tEShipCreation.String2ShipType(ship_type));
+   escort_template = tsShipCreation.GetShip(faction, tsShipCreation.String2ShipType(ship_type));
    escort_file = INIFile.Create(escort_template);
 
    if (none == escort_file) {

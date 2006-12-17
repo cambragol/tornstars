@@ -83,6 +83,9 @@ prototype int index_from_name(list item_list, string property, string name);
 
 prototype task screen_refresh();
 
+prototype list player_pod_list();
+prototype int player_pod_count(int cargo_type);
+
 
 RunCheck()
 {
@@ -407,7 +410,7 @@ order_item(hcargo cargo, bool order_all)
    if(iHabitat.HasSpewer(trade_center))
    {
 	   docked_ship = tSpewerOps.ShipDocked(trade_center, false);
-	   docked_pods = tSpewerOps.PodsOfTypeOnShip(cargo, docked_ship, legal, -1);
+	   docked_pods = tSpewerOps.PodsOfTypeOnShip(Object.IntProperty(cargo,"type"), docked_ship, legal, -1);
    }
    else
 	   docked_ship = none;
@@ -608,7 +611,7 @@ OnSellPress()
    {
 	   cargo = iCargo.Cast(List.GetNth(player_order,i));
 	   pods = Object.IntProperty(cargo,"gt_etrade_amount");
-	   if(pods > List.ItemCount(tSpewerOps.PodsOfTypeOnShip(cargo, docked_ship, legal, -1)))	// Make sure we're not selling more of a type than are on the one ship
+	   if(pods > List.ItemCount(tSpewerOps.PodsOfTypeOnShip(Object.IntProperty(cargo,"type"), docked_ship, legal, -1)))	// Make sure we're not selling more of a type than are on the one ship
 	   {
 		   iHUD.Print("ALL OFFERED PODS MUST BE ON DOCKED SHIP");
 		   iHUD.PlayAudioCue(AC_InvalidInput);
@@ -635,8 +638,8 @@ OnSellPress()
 
          if(spewer)
          {
-            Set.Union(sold_pods, Set.FromList(tSpewerOps.PodsOfTypeOnShip(cargo, docked_ship, legal, pods)));
-            pods_removed = List.ItemCount(tSpewerOps.PodsOfTypeOnShip(cargo, docked_ship, legal, pods));
+            Set.Union(sold_pods, Set.FromList(tSpewerOps.PodsOfTypeOnShip(Object.IntProperty(cargo,"type"), docked_ship, legal, pods)));
+            pods_removed = List.ItemCount(tSpewerOps.PodsOfTypeOnShip(Object.IntProperty(cargo, "type"), docked_ship, legal, pods));
          }
          else
          {
@@ -864,7 +867,8 @@ create_player_pod_list()
 		Global.Float( "GUI_scrollbar_buttonratio" ),
 		"" );
 
-   cargo_list = List.FromSet(tPodUtil.PlayerPodCargoSet(player, 50km));
+   cargo_list = player_pod_list();
+   //cargo_list = List.FromSet(tPodUtil.PlayerPodCargoSet(player, 50km));
    //cargo_list = List.FromSet(Global.Set("gt_etradesell_station_set"));
 
    cargo_list = List.SortByStringProperty(cargo_list, "name");
@@ -881,7 +885,10 @@ create_player_pod_list()
       }else {
          cargo_type = Object.IntProperty(cargo,"type");
 
-         pod_count = tPodUtil.NumberOfCargoType(player, 50km, cargo_type, false);
+//         pod_count = tPodUtil.NumberOfCargoType(player, 50km, cargo_type, false);
+
+         pod_count = player_pod_count(cargo_type);
+
          // remove those pods that have already been offered.
          pod_count = pod_count - Object.IntProperty(cargo,"gt_etrade_amount");
          
@@ -926,6 +933,45 @@ create_player_pod_list()
    GUI.SelectListBoxEntry(list_box, index);
 
 }
+
+
+list player_pod_list()
+{
+   hisim trade_center = iSim.Cast(Global.Handle("g_epic_trade_start_object"));
+   list cargo_list;
+   hship player = iShip.FindPlayerShip();
+   hship docked_ship;
+
+   if (T_Station == iSim.Type(trade_center)) {
+      if (iHabitat.HasSpewer(iHabitat.Cast(trade_center))) {
+         // Return only those pods on a ship docked to the station.
+         docked_ship = tSpewerOps.ShipDocked(iHabitat.Cast(trade_center), false);
+         return List.FromSet(tPodUtil.PlayerPodCargoSet(docked_ship, 1km));
+      }
+   }
+
+   // Allow sale of any pods nearby.
+   return List.FromSet(tPodUtil.PlayerPodCargoSet(player, 50km));
+}
+
+int player_pod_count(int cargo_type) 
+{
+   hisim trade_center = iSim.Cast(Global.Handle("g_epic_trade_start_object"));
+   list cargo_list;
+   hship player = iShip.FindPlayerShip();
+   hship docked_ship;
+
+   if (T_Station == iSim.Type(trade_center)) {
+      if (iHabitat.HasSpewer(iHabitat.Cast(trade_center))) {
+         // Return only those pods on a ship docked to the station.
+         docked_ship = tSpewerOps.ShipDocked(iHabitat.Cast(trade_center), false);
+         return List.ItemCount(tSpewerOps.PodsOfTypeOnShip(cargo_type, docked_ship, false, -1));
+      }
+   }
+
+   return tPodUtil.NumberOfCargoType(player, 50km, cargo_type, false);
+}
+
 
 
 create_player_systems_list()

@@ -70,6 +70,8 @@ uses
    tStartGui,
    tsShipSave,
    tsPlayerSave,
+   tsShipCreationEnum,
+   tsShipCreation,
    tEReferenceGui;
 
 
@@ -254,6 +256,8 @@ SystemEnter()
    atomic debug Debug.PrintString("tEpicMain.SystemEnter\n");
 
    tsFaction.Init();
+
+   tsShipCreation.Init();
 
    tStationSave.RestoreAllStations();   
 

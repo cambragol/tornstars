@@ -36,7 +36,8 @@ uses    Sim,
         iPilotSetup,
         iShipCreation,
         iEscort,
-        tEShipCreation,
+        tsShipCreationEnum,
+tsShipCreation,
         tPodUtil,
         tEpicComms,
         tsShip,
@@ -844,7 +845,7 @@ create_patrol(hisim operation, hisim waypoint, hgroup cull_group, string ship_ty
    }
 
    // How many fleets does each of the patrol ships use?
-   escort_template = tEShipCreation.GetShip(faction, tEShipCreation.String2ShipType(ship_type));
+   escort_template = tsShipCreation.GetShip(faction, tsShipCreation.String2ShipType(ship_type));
    escort_file = INIFile.Create(escort_template);
 
    if (none == escort_file) {

@@ -30,7 +30,8 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    tsFaction,
    tsShip,
    tPodUtil,
-   tEShipCreation;
+   tsShipCreationEnum,
+   tsShipCreation;
 
 
 
@@ -67,7 +68,7 @@ TestTranslation()
 TestShipCreation()
 {
    // validate every entry is a valid ship template.
-   tEShipCreation.TestINIFile();
+   tsShipCreation.TestINIFile();
 }
 
 

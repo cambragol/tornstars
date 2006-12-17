@@ -55,7 +55,8 @@ iMapEntity,
    tStationFilter,
    tEconUtil,
    tShipName,
-   tEShipCreation,
+   tsShipCreationEnum,
+tsShipCreation,
    tsFleetOpCombat,
    tsDebug;
 
@@ -104,7 +105,7 @@ New(hisim operation)
    ship_name = tShipName.ShipName("military", 10000);
 
    // We pick a heavy warship for center vessel.
-   ship_template = tEShipCreation.GetShip(faction, tEShipCreation.String2ShipType(ship_class));
+   ship_template = tsShipCreation.GetShip(faction, tsShipCreation.String2ShipType(ship_class));
 
    tUnderOp.SetName(operation, ship_name);
    tUnderOp.SetShipTemplate(operation, ship_template);

@@ -501,6 +501,7 @@ int save_subsim(hsubsim subsim)
    return id;
 }
  
+
 restore_subsim(hship ship, int id)
 {
    string save_key = String.Join("tsSS",String.FromInt(id));
@@ -520,16 +521,18 @@ restore_subsim(hship ship, int id)
    subsim = tsShip.FindSubsimByTemplateNumber(ship, template_number);
 
    if (none != subsim) {
+      
+      // If the template_name has changed, the player
+      // modified the default ship. Create the new
+      // subsim and replace the old one.
+      if (template_name != Object.StringProperty(subsim,"subsim_template")) {
+         subsim = tsShip.ReplaceSubsim(ship, subsim, template_name);
+      }
+
       Object.SetFloatProperty(subsim, "hit_points", hitpoints);
    }
-
-   // Find the subsim with this template_number
-   // If the hardpoint_number is not zero, 
-   // and the template_name has changed, the player
-   // modified the default ship. Create the new
-   // subsim and replace the old one.
-
 }
+
 
 restore_subsim_list(hship ship)
 {
@@ -551,8 +554,8 @@ restore_subsim_list(hship ship)
 
       restore_subsim(ship, id);
    }
-
 }
+ 
 
 add_restore_list(hship ship)
 {
