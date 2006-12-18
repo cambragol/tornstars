@@ -839,12 +839,16 @@ task wingman_watch(hship ship)
 
             if (Sim.DistanceBetween(player, ship) < 200km) {
                if (tsShip.IsWarship(ship)) {
-                  set_current_order(ship, ePO_Escort);
-                  set_current_target(ship, player);
+                  atomic {
+                     set_current_order(ship, ePO_Escort);
+                     set_current_target(ship, player);
+                  }
                   wingman_state = change_state(ship, wingman_state, eSS_EscortStart, debug_on);
                }else {
-                  set_current_order(ship, ePO_Formate);
-                  set_current_target(ship, player);
+                  atomic {
+                     set_current_order(ship, ePO_Formate);
+                     set_current_target(ship, player);
+                  }
                   wingman_state = change_state(ship, wingman_state, eSS_FormateStart, debug_on);
                }
             }
@@ -956,12 +960,19 @@ task wingman_watch(hship ship)
          iConversation.OneLiner(ship, "", "epo_attack_target_ack");
 
          target = current_target(ship);
-         SetOrderTarget(ship, target);
 
-         iAI.PurgeOrders(ship);
-         iAI.GiveAttackOrder(ship, target);
+         if (player != iShip.Cast(target)){
 
-         wingman_state = change_state(ship, wingman_state, eSS_Attack, debug_on);
+            SetOrderTarget(ship, target);
+
+            iAI.PurgeOrders(ship);
+            iAI.GiveAttackOrder(ship, target);
+
+            wingman_state = change_state(ship, wingman_state, eSS_Attack, debug_on);
+         }else {
+            debug Debug.PrintString("tsWingman.wingman_watch illegal target in attack_start\n");
+            wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+         }
          break;
 
       case eSS_Attack:
@@ -971,12 +982,13 @@ task wingman_watch(hship ship)
 
          if (Sim.IsDead(target)) {
             // Job accomplished, return to player.
-            wingman_state = change_state(ship, wingman_state, eSS_EscortStart, debug_on);
-
-         }else if (OT_Flee == iAI.CurrentOrderType(iShip.Cast(target))) {
+            wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+            set_current_target(ship, none);
+         }else if (OT_Flee == iAI.CurrentOrderType(iShip.Cast(target))
+                   || (Sim.DistanceBetween(player, ship) > 400km)) {
             // Break away, reformate with the player.
-            wingman_state = change_state(ship, wingman_state, eSS_EscortStart, debug_on);
-
+            wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
+            set_current_target(ship, none);
          }else if (new_order(ship) != ePO_None) {
             accept_order(ship, debug_on);
             next_state = new_order_state(current_order(ship));
@@ -1688,12 +1700,12 @@ accept_order(hship ship, bool debug_on)
 {
    atomic {
       // Accept the new order as the ships current order.
-      set_current_target(ship, new_target(ship));
 
-      set_current_order(ship, new_order(ship));
+         set_current_target(ship, new_target(ship));
+         set_current_order(ship, new_order(ship));
 
-      // Clear the new order flag.
-      set_new_order(ship, ePO_None);
+         // Clear the new order flag.
+         set_new_order(ship, ePO_None);
    }
 }
 
