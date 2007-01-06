@@ -208,6 +208,31 @@ setup_toll_marker(hisim marker)
       return;
    }
 
+   location = nearby_location(marker);
+
+   // Find the operation owner of the toll.
+   // Setup the marker to know how the toll should charge the player.
+   owner = iSim.Cast(tPcOwner.Owner(marker));
+   toll_faction = iSim.Faction(owner);
+   level = iFaction.FeelingType(iFaction.Feeling(toll_faction, player_faction));
+
+   if (none == owner) {
+      debug Debug.PrintString("ERROR tPcPirateToll error no owning station or operation\n");
+      return;
+   }
+
+   /*
+   // Block the operation from spawning guards twice. Happens when player chases
+   // an operation from one location to another.
+   if (tUnderOp.IsOperation(owner)) {
+      if (tUnderOp.IsCreated(owner)){
+         debug Debug.PrintString("tPcPirateToll operation already physical.\n");
+         return;
+      }
+   }
+*/
+
+
    template_file_name = Object.StringProperty(marker, "gt_pog_object_template");
    control_file = INIFile.Create(template_file_name);
 
@@ -217,16 +242,6 @@ setup_toll_marker(hisim marker)
       debug Debug.PrintString("\n");
       return;
    }
-
-   location = nearby_location(marker);
-
-
-   // Find the operation owner of the toll.
-   // Setup the marker to know how the toll should charge the player.
-   owner = iSim.Cast(tPcOwner.Owner(marker));
-   toll_faction = iSim.Faction(owner);
-   level = iFaction.FeelingType(iFaction.Feeling(toll_faction, player_faction));
-
 
    // Read the toll setup properties. Basically, how much we should charge
    // the player.
@@ -249,6 +264,8 @@ setup_toll_marker(hisim marker)
    Object.AddIntProperty(patrol_ship,"gtTollMinValue", minimum_value);
    Object.AddFloatProperty(patrol_ship,"gtTollPercent", toll_percent);
    Object.AddIntProperty(patrol_ship,"gtTollPodValue", 0);
+
+   Object.AddHandleProperty(patrol_ship,"gtOwner", owner);
 
    Object.AddHandleProperty(location, "gtTollPatrolGroup", patrol_group);
 

@@ -256,6 +256,9 @@ setup_fence_ship(hisim marker)
          Debug.PrintString("tPcEmbezzleOp.PogCreate error operation ship template invalid\n");
       }
       Sim.Destroy(marker);
+
+      tUnderOp.SetCreated(owner, false);
+
       return;
    }
 

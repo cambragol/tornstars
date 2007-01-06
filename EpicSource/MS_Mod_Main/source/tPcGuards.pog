@@ -296,6 +296,10 @@ setup_guards(hisim marker)
       return;
    }
 
+   if (tUnderOp.IsOperation(owner)) {
+      tUnderOp.SetCreated(owner, true);
+   }
+
    patrol_ship = create_leader (location, owner, patrol_group, leader_type);
 
    // Subtract off the fleets that are needed for the patrol ship.
@@ -595,6 +599,8 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          iAI.PurgeOrders(patrol_group);
          ABB_Common.SetCullableGroup(patrol_group, true);
          Group.Destroy(patrol_group, false);
+
+
          debug atomic {
             Debug.PrintString("tPcGuards all ships culled, exit\n");
          }
