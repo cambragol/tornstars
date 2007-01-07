@@ -94,7 +94,8 @@ epo_refuse_no_empty_ports, "Negative. We are fully loaded"
 
 epo_cargo_load_done, "Cargo loading complete"
 
-epo_cargo_unload_done, "Cargo unloading complete"
+epo_unload_pods_ack, "Unloading cargo pods"
+epo_cargo_unloading_done, "Cargo unloading complete"
 
 epo_not_cargo_pod, "That is not a cargo pod"
 epo_not_player_pod, "We can only control your cargo pods"
