@@ -39,6 +39,7 @@ uses    Sim,
         tEpicMoney,
         tShipName,
         tPcOwner,
+        tsShip,
         tsCull;
 
 
@@ -65,7 +66,7 @@ hsim PogCreate(string template_name, string object_name)
    hinifile object_file;
    string name;
    string item_template, pog_class, start_function;
-   hsim item;
+   hship item;
 
    debug Debug.PrintString("tPcHiredShip.PogCreate\n");
 
@@ -94,14 +95,13 @@ hsim PogCreate(string template_name, string object_name)
    INIFile.Destroy(object_file);
 
 
-
    name = tShipName.ShipName( "general", Math.RandomInt(0, 343));
 
-   item = Sim.Create(item_template, name);
+   item = tsShip.Create(item_template, name);
 
    if (none == item) {
       debug {
-         Debug.PrintString("PogClass.PogCreate, bad object template\n");
+         Debug.PrintString("tPcHiredShip.PogCreate, bad object template\n");
       }
       return none;
    }
