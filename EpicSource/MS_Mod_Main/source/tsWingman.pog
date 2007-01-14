@@ -1789,7 +1789,11 @@ bool tanker_empty_ship(hship tanker, hship target) {
       fuel_needed = max_fuel - fuel_used;
 
       // Calculate fuel left in pod after we pump some out.
-      fuel_left = tsShip.Fuel(target);
+      if (T_CargoPod & iSim.Type(target)) {
+         fuel_left = 500;
+      }else {
+         fuel_left = tsShip.Fuel(target);
+      }
 
       if (fuel_left < fuel_needed) {
          fuel_needed = fuel_left;
