@@ -217,7 +217,7 @@ hship create_new_player()
 
    INIFile.Destroy(player_config);
 
-   player = tsShip.Create(ship, "gt_player_ship_name");
+   player = tsShip.Create(ship, Global.String("gt_player_ship_name"));
    Sim.SetCullable(player, false);
    start_location = iSim.FindByNameInSystem(station, system);
    Sim.PlaceNear(player, start_location, 20km);
