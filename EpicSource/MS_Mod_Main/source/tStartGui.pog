@@ -217,11 +217,12 @@ choose_position(hwindow button)
 
    entry_key = Object.StringProperty(button, "gt_startgui_entry");
 
-   Global.CreateString("gt_startgui_entry_key",GA_Write|GA_NoSave, entry_key);
+   if ("" != entry_key) {
+      Global.CreateString("gt_startgui_entry_key",GA_Write|GA_NoSave, entry_key);
 
-   // Update the help for the new selection.
-   GUI.SetTextWindowResource(text_window, Object.StringProperty(button,"gt_startgui_html"));
-   
+      // Update the help for the new selection.
+      GUI.SetTextWindowResource(text_window, Object.StringProperty(button,"gt_startgui_html"));
+   }
 }
 
 
@@ -262,7 +263,7 @@ DisplayWindow()
    // Stop the player from exiting this screen via UniGUI.
    Input.SuspendBindings();
 
-   Global.CreateString("gt_startgui_entry_key",GA_Write|GA_NoSave, "DefaultSetup");
+   Global.CreateString("gt_startgui_entry_key",GA_Write|GA_NoSave, "");
 
    // Set right hand shady bar width.
    shady_bar = iGUI.CreateWideShadyBar();
@@ -346,6 +347,10 @@ StartScreen()
 
 StartGame()
 {
+   // You cannot start until a start has been selected.
+   if ("" == Global.String("gt_startgui_entry_key")) {
+      return;
+   }
 
    Task.Detach(start setup_player());
 
