@@ -262,6 +262,7 @@ DisplayWindow()
    // Stop the player from exiting this screen via UniGUI.
    Input.SuspendBindings();
 
+   Global.CreateString("gt_startgui_entry_key",GA_Write|GA_NoSave, "DefaultSetup");
 
    // Set right hand shady bar width.
    shady_bar = iGUI.CreateWideShadyBar();
@@ -418,18 +419,23 @@ task setup_player()
 
    if ("none" != player_ship_prefit) {
       prefit = tsShip.Create(player_ship_prefit, "player_ship_name");
-      Sim.SetCullable(prefit, false);
 
       if (none != prefit) {
+         Sim.SetCullable(prefit, false);
          Sim.PlaceNear(prefit, player, 1km);
+
          // Drop the player into the prefit ship.
          tsPlayerFleet.NewPlayerShip(prefit);
-
-         // Give the player pilot a moment to move over.
-         Task.Sleep(Task.Current(), 0.1);
+            
+         while (prefit != iShip.FindPlayerShip()) {
+            // Give the player pilot a moment to move over.
+            Task.Sleep(Task.Current(), 0.1);
+         }
 
          // Remove the old player ship.
          Sim.Destroy(player);
+      }else {
+         debug Debug.PrintString("tStartGui.setup_player Error player ship missing\n");
       }
    }
 
