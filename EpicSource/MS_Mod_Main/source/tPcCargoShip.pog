@@ -276,7 +276,7 @@ task TradeWander(hgroup cargo_fleet, hhabitat start_station)
    float spacing;
    float delay_time = 3;
    bool debug_on = Global.Bool("gt_debug_tpccargoship");
-   int timer, ports;
+   int timer, ports, wait_count;
    hship player;
 
    // Search the Group for the cargo ship.
@@ -337,13 +337,18 @@ task TradeWander(hgroup cargo_fleet, hhabitat start_station)
             // Requesting docking clearance.
             iComms.Shout(cargo_ship, "", uString.CommsStringRandom("pccgo_cargoship_requesting_cargo_dock","",5));
             state = change_state(state, eCS_WaitQueue, debug_on);
+            wait_count = 0;
          }
          break;
 
       case eCS_WaitQueue:
-         iComms.Shout(station, "", uString.CommsStringRandom("pccgo_cargoship_docking_cleared","",5));
-         // Wait here for a chance to use the freight port.
-         state = change_state(state, eCS_ToDock, debug_on);
+         if (wait_count > 30) {
+
+            iComms.Shout(station, "", uString.CommsStringRandom("pccgo_cargoship_docking_cleared","",5));
+            // Wait here for a chance to use the freight port.
+            state = change_state(state, eCS_ToDock, debug_on);
+         }
+         ++wait_count;
          break;
 
       case eCS_ToDock:

@@ -81,7 +81,7 @@ Save()
    hship player = iShip.FindPlayerShip();
    hship wingman;
    int id, i, total;
-   list player_fleet;
+   list player_fleet, clean_fleet;
    list player_pods;
    
    
@@ -94,11 +94,20 @@ Save()
    player_fleet = tsPlayerFleet.PlayerFleet();
    List.Remove(player_fleet, player);
 
-   tsShipSave.SaveList(player_fleet, "ts_pfleet");
-
    total = List.ItemCount(player_fleet);
    for (i=0;i<total;++i) {
       wingman = iShip.Cast(List.GetNth(player_fleet,i));
+      
+      if (!Sim.IsDead(wingman)) {
+         List.AddTail(clean_fleet, wingman);
+      }
+   }
+
+   tsShipSave.SaveList(clean_fleet, "ts_pfleet");
+
+   total = List.ItemCount(clean_fleet);
+   for (i=0;i<total;++i) {
+      wingman = iShip.Cast(List.GetNth(clean_fleet,i));
       tsWingComm.Save(wingman);
    }
 

@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/tDistance.h,v 1.3 2006/03/28 13:28:58 Owner Exp $
+// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////
@@ -21,6 +21,10 @@ prototype tDistance.Init();
 prototype float tDistance.CullingDistance();
 
 prototype float tDistance.WakingDistance();
+
+prototype float tDistance.TradeDistance();
+
+prototype float tDistance.PodDistance();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

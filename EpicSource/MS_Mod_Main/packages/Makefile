@@ -214,7 +214,7 @@ tEAutoWatch.pkg : tEAutoWatch.pog tTime.h tLCenter.h tsFaction.h tsShip.h tForma
 
 tsFaction.pkg : tsFaction.pog tStation.h
 tEFleetGui.pkg : tEFleetGui.pog tEpicGui.h tLProduction.h tEpicMoney.h tsShip.h tEpicFleetUpkeep.h tEconUtil.h uString.h
-tEJump.pkg : tEJump.pog tEpicGui.h tsShip.h tTime.h tsPlayerFleet.h
+tEJump.pkg : tEJump.pog tEpicGui.h tsShip.h tTime.h tsPlayerFleet.h tDistance.h
 tELpointFind.pkg : tELpointFind.pog tEpicGui.h 
 tEPlayerOrders.pkg : tEPlayerOrders.pog tsShip.h tFormation.h tPodUtil.h tsFaction.h tStation.h tLProduction.h tMegaTrucking.h
 tEPlayerWatch.pkg : tEPlayerWatch.pog tTime.h tLCenter.h tsFaction.h tsShip.h tFormation.h tEpicFleetUpkeep.h tMusic.h tRepWatch.h tLocationInit.h tEJump.h

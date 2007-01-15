@@ -20,7 +20,9 @@ uses Global,
 
 provides Init,
          CullingDistance,
-         WakingDistance;
+         WakingDistance,
+         TradeDistance,
+         PodDistance;
 
 
 Init()
@@ -30,7 +32,7 @@ Init()
    float distance, cull;
 
 
-
+  
    debug atomic {
       if (none == flux_init) {
          Debug.PrintString("tDistance error cannot open flux file\n");
@@ -79,6 +81,22 @@ float WakingDistance()
 {
    return Global.Float("gt_distance_wakeup");
 }
+
+
+
+float TradeDistance()
+{
+   return Global.Float("gt_distance_trade");
+}
+
+
+
+float PodDistance()
+{
+   return Global.Float("gt_distance_trade_pods");
+}
+
+
 
 /* 
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES

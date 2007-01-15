@@ -423,7 +423,7 @@ bool IsWarship(hship ship)
 float default_max_fuel(int ship_type)
 {
 
-    debug Debug.PrintString("tsShip.using default max fuel\n");
+    //debug Debug.PrintString("tsShip.using default max fuel\n");
 
    switch (ship_type)
    {

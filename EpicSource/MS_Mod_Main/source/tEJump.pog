@@ -21,6 +21,7 @@ iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation,
 iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
 iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
 
+   tDistance,
    tEpicGuiEnum,
    tEpicGui,
    tsShipEnum,
@@ -355,9 +356,9 @@ task jump_watch() {
 
         // If the player is within jump distance of the point, 
         // and moving at the correct speed, jump.
-        if (Sim.DistanceBetween(player, jump_point) < 3km) {
+        if (Sim.DistanceBetween(player, jump_point) < 500) {
             velocity = Sim.Speed(player);
-            if ((velocity > 100) && (velocity < 1200) ) {
+            if (velocity > 100) {
                 debug Debug.PrintString("tEJump.Jumping Player\n");
 
                 // We pull this property only at the moment of jump. 
@@ -990,16 +991,16 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
         // If the player failed the jump, then drop them 1000km from the starting
         // lpoint. This is outside the cull position of any traffic. And makes it feel like 
         // the player did move somewhere, if not where he was expecting. 
-        Sim.PlaceNear(player, destination, Global.Float("gt_distance_wakeup") - 10km);
+        Sim.PlaceNear(player, destination, tDistance.WakingDistance() - 10km);
 
         if (jump_success) {
-           Sim.PlaceNear(player, target_lpoint, Global.Float("gt_distance_wakeup") - 10km);
+           Sim.PlaceNear(player, target_lpoint, tDistance.WakingDistance() - 10km);
            destination = target_lpoint;
         } else {
            destination = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","jump_destination"));
            Sim.SetCullable(destination, false);
            Sim.PlaceNear(destination, jump_point, 1000km);
-           Sim.PlaceNear(player, target_lpoint, Global.Float("gt_distance_wakeup") - 10km);
+           Sim.PlaceNear(player, target_lpoint, tDistance.WakingDistance() - 10km);
         }
 
         // Give the lpoint time to wake up and place all objects. And give the day update
@@ -1131,6 +1132,8 @@ hisim create_bubble(string section_template)
 
    bubble = iSim.Cast(Sim.Create(section_template, "bubble"));
    Sim.SetCullable(bubble, false);
+//   Sim.SetCollision(bubble, false);
+
    iSim.SetSensorVisibility(bubble, false);
    iSim.SetIndestructable(bubble, true);
    // Let the bubble bounce
@@ -1198,7 +1201,9 @@ add_lights(hisim jump_tube, hgroup cull_group)
       }
 
       Sim.PlaceRelativeToInside(light, jump_tube, xpos, ypos, zpos);
+
       // Send it wandering.
+
       Sim.SetVelocity(light, 
                       Math.Random(-1.0 * velocity, velocity),
                       Math.Random(-1.0 * velocity, velocity),
@@ -1273,6 +1278,23 @@ bool create_simulation(hmapentity center,
    hisim exit_mark, bubble;
 
    hdockport top, bottom;
+
+
+   // Create some global control properties.
+
+   Global.CreateFloat("tejump_light_damage", GA_Write|GA_NoSave,
+                      INIFile.Float(jump_file,"Properties","light_damage_per_second", 0));
+   Global.CreateFloat("tejump_light_radius", GA_Write|GA_NoSave,
+                      INIFile.Float(jump_file,"Properties","light_damage_radius", 0));
+
+   Global.CreateFloat("tejump_disruptor_radius", GA_Write|GA_NoSave,
+                      INIFile.Float(jump_file,"Properties","light_disruptor_radius", 0));
+
+   Global.CreateFloat("tejump_disruptor_time", GA_Write|GA_NoSave,
+                      INIFile.Float(jump_file,"Properties","light_disruptor_seconds", 0));
+
+   Global.CreateFloat("tejump_disruptor_damage", GA_Write|GA_NoSave,
+                      INIFile.Float(jump_file,"Properties","light_disruptor_damage_per_second", 0));
 
    //
    //  Create the player ship. The player must be the first object
@@ -1535,9 +1557,12 @@ bool jump_simulation(hship player, hisim target_lpoint, int difficulty)
 bool player_watch(hship player, hisim exit_mark, float route_time)
 {
    float start_distance, half_distance;
-   float low_hit_points;
+   float hit_points, low_hit_points;
    float start_time, elapsed_time;
+   float light_range, disruptor_range, light_damage, disruptor_damage, disruptor_time;
+
    bool halfway = false;
+   set nearby_sims;
 
    if (none == player) {
       debug Debug.PrintString("tEJump.player_watch error no player\n");
@@ -1549,6 +1574,16 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
       return false ;
    }
 
+
+   light_range = Global.Float("tejump_light_radius");
+   light_damage = Global.Float("tejump_light_damage");
+   light_damage = light_damage/2;
+
+   disruptor_range = Global.Float("tejump_disruptor_radius");
+   disruptor_time = Global.Float("tejump_disruptor_time");
+   disruptor_damage = Global.Float("tejump_disruptor_damage");
+   disruptor_damage = disruptor_damage/2;
+
    start_time = iGame.GameTime();
 
    // At half distance, the player will be tossed out the far
@@ -1558,7 +1593,7 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
    halfway = false;
 
    low_hit_points = Object.FloatProperty(player, "hit_points");
-   low_hit_points = low_hit_points * 0.5;
+   low_hit_points = low_hit_points * 0.21;
 
    while (1) {
 
@@ -1586,7 +1621,6 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
          halfway = true;
       }
 
-
       // Check if the player is low on hit points.
       if (Object.FloatProperty(player, "hit_points") < low_hit_points) {
          debug Debug.PrintString("tEJump.player_watch player damaged.\n");
@@ -1594,6 +1628,37 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
          //iHUD.SetPrompt("","");
          iHUD.SetPrompt("","Jump Failed Hit Object");
          return halfway;
+      }
+
+      // Check if the player has hit a light.
+      nearby_sims = iSim.SimsInRadius(player, light_range, T_Drone);
+      if (!Set.IsEmpty(nearby_sims)) {
+         atomic {
+            hit_points = Object.FloatProperty(player, "hit_points");
+            hit_points = hit_points - light_damage;
+            if (hit_points < 1) {
+               hit_points = 0;
+            }
+            Object.SetFloatProperty(player, "hit_points", hit_points);
+         }
+         
+         debug Debug.PrintString("light hit!\n");
+      }
+
+      // Check if the player has hit a disruptor
+      nearby_sims = iSim.SimsInRadius(player, disruptor_range, T_Waldo);
+      if (!Set.IsEmpty(nearby_sims)) {
+         atomic {
+            hit_points = Object.FloatProperty(player, "hit_points");
+            hit_points = hit_points - disruptor_damage;
+            if (hit_points < 1) {
+               hit_points = 0;
+            }
+            Object.SetFloatProperty(player, "hit_points", hit_points);
+         }
+         debug Debug.PrintString("disruptor hit!\n");
+         // These lights halt all player operation.
+         iShip.Disrupt(player, disruptor_time, false);
       }
 
 
@@ -1613,8 +1678,6 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
 
       Task.Sleep(Task.Current(), 0.5);
    }
-
-
 
    return false;
 }
@@ -1663,7 +1726,7 @@ set find_following_ships(hship ship) {
                // jump with the player.
                if (iSim.ActiveWorld() == iSim.WorldName(follower)) {
 
-                  if (Sim.DistanceBetween(ship, follower) < 400km) {
+                  if (Sim.DistanceBetween(ship, follower) < tDistance.WakingDistance()) {
                      Set.Add(following_ships, follower);
                      Set.Union(following_ships, find_following_ships(follower));
                   }
