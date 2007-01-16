@@ -54,7 +54,7 @@ prototype set find_following_ships(hship ship);
 
 prototype jump_ship(hship ship, hisim lpoint, int difficulty);
 
-prototype bool jump_simulation(hship player, hisim target_lpoint, int difficulty);
+prototype bool jump_simulation(hship player, list player_fleet, hisim target_lpoint, int difficulty);
 
 prototype bool player_watch(hship player, hisim exit_mark, float route_time);
 
@@ -857,6 +857,8 @@ jump_ship(hship ship, hisim lpoint, int difficulty) {
        Sim.PlaceNear(ship, lpoint, 1km);
     }
 
+    // Change the disrupt time to be very short
+    iShip.DisruptLDSDrive(ship, 1);
 
     // if jumping a hard route, take damage.
     if (difficulty > drive_rating) {
@@ -967,8 +969,10 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
 
         Global.SetBool("gt_ejump_player_jumping", true);
 
+
+
         //jump_ship(player, target_lpoint, difficulty);   
-        jump_success = jump_simulation(player, target_lpoint, difficulty);   
+        jump_success = jump_simulation(player, player_fleet, target_lpoint, difficulty);   
 
         
         // If the player makes the jump without hitting anything,
@@ -1132,7 +1136,7 @@ hisim create_bubble(string section_template)
 
    bubble = iSim.Cast(Sim.Create(section_template, "bubble"));
    Sim.SetCullable(bubble, false);
-//   Sim.SetCollision(bubble, false);
+   Sim.SetCollision(bubble, false);
 
    iSim.SetSensorVisibility(bubble, false);
    iSim.SetIndestructable(bubble, true);
@@ -1155,7 +1159,7 @@ add_lights(hisim jump_tube, hgroup cull_group)
    float xpos, ypos, zpos, velocity;
    
    if (jump_file == none) {
-      debug Debug.PrintString("tEJump.add_lights Errror template file missing\n");
+      debug Debug.PrintString("tEJump.add_lights Error template file missing\n");
       return;
    }
 
@@ -1421,16 +1425,18 @@ bool create_simulation(hmapentity center,
 // Run the player through the jump simulation.
 //
 
-bool jump_simulation(hship player, hisim target_lpoint, int difficulty)
+bool jump_simulation(hship player, list player_fleet,  hisim target_lpoint, int difficulty)
 {
    hinifile jump_file = INIFile.Create("ini:/jump_controls");
-   int count, i;
+   int count, total, i;
    float route_time;
    float velocity;
    string difficulty_key = difficulty2key(difficulty);
    string section_name;
    hisim exit_mark;
+   hisim wingman_mark;
    hship jump_sim;
+   hship wingman;
    hmapentity center;
    hgroup cull_group = Group.Create();
    bool result;
@@ -1472,6 +1478,31 @@ bool jump_simulation(hship player, hisim target_lpoint, int difficulty)
                               0.0,
                               0.0,
                               0.0);
+
+
+
+   // Put the wingmen in the capsule system where they are safe.
+   // Put them a long ways away so they cannot be seen.
+   // Disrupt the LDS drives so they don't chase down the player.
+
+   wingman_mark = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","wingman_mark"));
+   Sim.SetCullable(wingman_mark, false);
+   Sim.PlaceNear(wingman_mark, center, 1000000000km);
+
+   total = List.ItemCount(player_fleet);
+   for (i=0;i<total;++i) {
+      wingman = iShip.Cast(List.GetNth(player_fleet, i));
+
+      if (!Sim.IsDead(wingman)){
+         iShip.DisruptLDSDrive(wingman, 600);
+         Sim.PlaceNear(wingman, wingman_mark, 5km);
+      }
+   }
+
+   Sim.SetCullable(wingman_mark, true);
+
+
+
 
 
    result = create_simulation(center, difficulty, player, cull_group, jump_file);
@@ -1577,12 +1608,12 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
 
    light_range = Global.Float("tejump_light_radius");
    light_damage = Global.Float("tejump_light_damage");
-   light_damage = light_damage/2;
+   light_damage = light_damage/10;
 
    disruptor_range = Global.Float("tejump_disruptor_radius");
    disruptor_time = Global.Float("tejump_disruptor_time");
    disruptor_damage = Global.Float("tejump_disruptor_damage");
-   disruptor_damage = disruptor_damage/2;
+   disruptor_damage = disruptor_damage/10;
 
    start_time = iGame.GameTime();
 
@@ -1641,8 +1672,11 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
             }
             Object.SetFloatProperty(player, "hit_points", hit_points);
          }
-         
-         debug Debug.PrintString("light hit!\n");
+
+         iShip.Disrupt(player, 1, true);
+
+         debug Debug.PrintString("Light Hit\n");
+         iHUD.Print("Light Hit");
       }
 
       // Check if the player has hit a disruptor
@@ -1656,7 +1690,8 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
             }
             Object.SetFloatProperty(player, "hit_points", hit_points);
          }
-         debug Debug.PrintString("disruptor hit!\n");
+         iHUD.Print("Disruptor Hit");
+
          // These lights halt all player operation.
          iShip.Disrupt(player, disruptor_time, false);
       }
@@ -1676,7 +1711,7 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
       // Update the hud with the time remaining
       iHUD.SetPrompt(String.FormatInt("%d Remaining Seconds",  float2int(route_time - elapsed_time)),"");
 
-      Task.Sleep(Task.Current(), 0.5);
+      Task.Sleep(Task.Current(), 0.1);
    }
 
    return false;
