@@ -21,6 +21,7 @@ iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation,
 iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
 iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
 
+   tsDebug,
    tDistance,
    tEpicGuiEnum,
    tEpicGui,
@@ -166,7 +167,7 @@ init_lpoints() {
     string system_name, system_file_name;
     list empty_list;
 
-    debug Debug.PrintString("tEJump.init_lpoints\n");
+    debug tsDebug.PrintString("tsjump_debug","tEJump.init_lpoints\n");
 
 
     count = 0;
@@ -328,7 +329,7 @@ task jump_watch() {
     bool success;
     int rating;
 
-    debug Debug.PrintString("tEJump.jump_watch\n");
+    debug tsDebug.PrintString("tsjump_debug","tEJump.jump_watch\n");
 
     player = iShip.FindPlayerShip();
     jump_point = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), player);
@@ -359,7 +360,10 @@ task jump_watch() {
         if (Sim.DistanceBetween(player, jump_point) < 500) {
             velocity = Sim.Speed(player);
             if (velocity > 100) {
-                debug Debug.PrintString("tEJump.Jumping Player\n");
+                debug tsDebug.PrintString("tsjump_debug","tEJump.Jumping Player\n");
+
+                // End any dialog the player is in.
+                iComms.EndConversation();
 
                 // We pull this property only at the moment of jump. 
                 // This keeps the 
@@ -497,6 +501,11 @@ list gen_route_list(hlagrangepoint lpoint) {
     for (i=0;i<total;++i) {
         route = Sim.Cast(List.GetNth(route_list,i));
 
+        debug{
+            tsDebug.PrintHandle("tsjump_debug", route);
+            tsDebug.PrintString("tsjump_debug", " gen_route\n");
+        }
+
         difficulty = Object.IntProperty(route,"gtRouteDanger");
         lpoint_name = Object.StringProperty(route,"gtRoute");
         end_lpoint = Object.StringProperty(route,"gtRouteLpoint");
@@ -527,7 +536,6 @@ list gen_route_list(hlagrangepoint lpoint) {
     }
 
     return route_list;
-
 }
 
 
@@ -719,10 +727,10 @@ task select_dialog() {
 
 
     debug {
-        Debug.PrintHandle(lpoint);
-        Debug.PrintString(" start lpoint\n");
-        Debug.PrintHandle(target_lpoint);
-        Debug.PrintString(" ending lpoint\n");
+        tsDebug.PrintHandle("tsjump_debug",lpoint);
+        tsDebug.PrintString("tsjump_debug"," start lpoint\n");
+        tsDebug.PrintHandle("tsjump_debug",target_lpoint);
+        tsDebug.PrintString("tsjump_debug"," ending lpoint\n");
     }
 
 
@@ -745,7 +753,7 @@ task select_dialog() {
 
 SelectDialog() {
 
-   if (IsCapsuleSpace(iSim.ActiveWorld())) {
+   if (IsCapsuleJumping()) {
       iHUD.PlayAudioCue(AC_InvalidInput);
       return;
    }
@@ -931,8 +939,8 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
         if (jump_cost > fuel) {
            // ejump_low_fuel, "We don't have enough fuel to jump Sir"
            debug {
-              Debug.PrintString(Text.Field(Sim.Name(wingman),FT_Text));
-              Debug.PrintString(" cannot jump low fuel\n");
+              tsDebug.PrintString("tsjump_debug", Text.Field(Sim.Name(wingman),FT_Text));
+              tsDebug.PrintString("tsjump_debug"," cannot jump low fuel\n");
            }
 
            iComms.Shout(wingman, "", "ejump_low_fuel");
@@ -955,8 +963,8 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
     if (jump_cost < fuel) {
 
         debug {
-            Debug.PrintString(String.FormatInt("Player fuel %d\n", float2int(fuel)));
-            Debug.PrintString(String.FormatInt("Player jump cost %d\n", float2int(jump_cost)));
+            tsDebug.PrintString("tsjump_debug", String.FormatInt("Player fuel %d\n", float2int(fuel)));
+            tsDebug.PrintString("tsjump_debug", String.FormatInt("Player jump cost %d\n", float2int(jump_cost)));
         }
 
         atomic{
@@ -986,7 +994,7 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
 
 
         debug atomic {
-           Debug.PrintString("tEJump.player moving\n");
+           tsDebug.PrintString("tsjump_debug","tEJump.player moving\n");
         }
 
         // Put the player in the destination system, near the exit, but not at it yet.
@@ -1015,7 +1023,7 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
         jump_ship(player, destination, difficulty);   
 
         debug atomic {
-           Debug.PrintString("tEJump.player moved\n");
+           tsDebug.PrintString("tsjump_debug","tEJump.player moved\n");
         }
 
         add_flash(player);
@@ -1027,7 +1035,7 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
         Global.SetBool("gt_ejump_player_jumping", false);
 
         debug atomic {
-           Debug.PrintString("tEJump.starting wingmen\n");
+           tsDebug.PrintString("tsjump_debug","tEJump.starting wingmen\n");
         }
 
         // Move the player wingmen, with small time delays between.
@@ -1053,7 +1061,7 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
         }
 
         debug atomic {
-           Debug.PrintString("tEJump.wingmen complete\n");
+           tsDebug.PrintString("tsjump_debug","tEJump.wingmen complete\n");
         }
 
         // If we needed to create a waypoint for this jump destination, then 
@@ -1064,7 +1072,7 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
 
     } else {
         debug {
-           Debug.PrintString("tEJump.jump_player_fleet player fuel to low to jump\n");
+           tsDebug.PrintString("tsjump_debug","tEJump.jump_player_fleet player fuel to low to jump\n");
         }
         iComms.Shout(none, "name_az", "ejump_low_fuel");
     }
@@ -1550,12 +1558,12 @@ bool jump_simulation(hship player, list player_fleet,  hisim target_lpoint, int 
    iGame.EnableBlackout(true);
 
    debug atomic {
-      Debug.PrintString("tEJump.player_watch done\n");
+      tsDebug.PrintString("tsjump_debug","tEJump.player_watch done\n");
    }
 
    if (Sim.IsDead(player)) {
       debug atomic {
-         Debug.PrintString("tEJump.player sim dead\n");
+         tsDebug.PrintString("tsjump_debug","tEJump.player sim dead\n");
       }
    }
 
@@ -1569,7 +1577,7 @@ bool jump_simulation(hship player, list player_fleet,  hisim target_lpoint, int 
    iSim.SetStandardSensorVisibility(player, true);
 
    debug atomic {
-      Debug.PrintString("tEJump.player installed\n");
+      tsDebug.PrintString("tsjump_debug","tEJump.player installed\n");
    }
 
    // Put the exit mark back to normal.
@@ -1630,14 +1638,14 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
 
       if (Sim.IsDead(player)) {
          // Player hit a wall, return based on distance travelled.
-         debug Debug.PrintString("tEJump.player_watch player sim dead\n");
+         debug tsDebug.PrintString("tsjump_debug","tEJump.player_watch player sim dead\n");
          iHUD.SetPrompt("","Jump Failed Hit Object");
          return halfway;
       }
 
       if (Sim.DistanceBetween(player, exit_mark) < 5km) {
          // The player has reached the exit, return true.
-         debug Debug.PrintString("tEJump.player_watch player at exit.\n");
+         debug tsDebug.PrintString("tsjump_debug","tEJump.player_watch player at exit.\n");
 
          // Signal that the player had a good run.
          Global.SetBool("gt_ejump_passed", true);
@@ -1654,7 +1662,7 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
 
       // Check if the player is low on hit points.
       if (Object.FloatProperty(player, "hit_points") < low_hit_points) {
-         debug Debug.PrintString("tEJump.player_watch player damaged.\n");
+         debug tsDebug.PrintString("tsjump_debug","tEJump.player_watch player damaged.\n");
 
          //iHUD.SetPrompt("","");
          iHUD.SetPrompt("","Jump Failed Hit Object");
@@ -1675,7 +1683,7 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
 
          iShip.Disrupt(player, 1, true);
 
-         debug Debug.PrintString("Light Hit\n");
+         debug tsDebug.PrintString("tsjump_debug","Light Hit\n");
          iHUD.Print("Light Hit");
       }
 
@@ -1701,7 +1709,7 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
       // result based on distance traveled.
       elapsed_time = iGame.GameTime() - start_time;
       if (elapsed_time > route_time) {
-         debug Debug.PrintString("tEJump.player_watch player slow.\n");
+         debug tsDebug.PrintString("tsjump_debug","tEJump.player_watch player slow.\n");
          // Keep this commented out to leave record of how fast crossing jump.
          //iHUD.SetPrompt("","");
          iHUD.SetPrompt(String.FormatInt("%d Elapsed Seconds", float2int(elapsed_time)),"Jump Failed Time Up");
@@ -1737,8 +1745,8 @@ set find_following_ships(hship ship) {
 
         /*
         debug {
-           Debug.PrintString(iAI.CurrentOrderName(follower));
-           Debug.PrintString("\n");
+           tsDebug.PrintString("tsjump_debug",iAI.CurrentOrderName(follower));
+           tsDebug.PrintString("tsjump_debug","\n");
         }
         */
 
@@ -1749,12 +1757,12 @@ set find_following_ships(hship ship) {
             if (ship == iShip.Cast(iAI.CurrentOrderTarget(follower))) {
 
                debug {
-                  Debug.PrintHandle(follower);
-                  Debug.PrintString(" follows\n");
-                  Debug.PrintHandle(ship);
-                  Debug.PrintString(" in jump\n");
-                  Debug.PrintString(iAI.CurrentOrderName(follower));
-                  Debug.PrintString("\n");
+                  tsDebug.PrintHandle("tsjump_debug",follower);
+                  tsDebug.PrintString("tsjump_debug"," follows\n");
+                  tsDebug.PrintHandle("tsjump_debug",ship);
+                  tsDebug.PrintString("tsjump_debug"," in jump\n");
+                  tsDebug.PrintString("tsjump_debug",iAI.CurrentOrderName(follower));
+                  tsDebug.PrintString("tsjump_debug","\n");
                }
 
                // Following ship must be close. Wingmen a system or two away cannot 
