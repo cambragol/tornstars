@@ -61,6 +61,8 @@ task wingman_announce(string wingman_name)
 
 task Death(hship wingman)
 {
+   hisim waypoint;
+
    tsPlayerFleet.RemoveFleetShip(wingman);
 
    tsWingComm.GroupRemoveShip(wingman);
@@ -68,6 +70,11 @@ task Death(hship wingman)
    Group.RemoveSim(Sim.Group(wingman), wingman);
 
    Task.Detach(start wingman_announce(Sim.Name(wingman)));
+
+   waypoint = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint", String.Join("dead wingman ", Text.Field(Sim.Name(wingman), FT_Text))));
+   
+   Sim.SetCullable(waypoint, false);
+   Sim.PlaceRelativeToInside(waypoint, wingman, 0, 0, 0);
 
    iSim.Kill(iSim.Cast(wingman));
 }
