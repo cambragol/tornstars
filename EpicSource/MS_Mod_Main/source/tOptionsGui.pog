@@ -400,12 +400,6 @@ task list_box_monitor( hwindow system_list_box )
 
 StartScreen()
 {
-//   AddFlag("My Name","gt_my_name", true);
-//   AddFlag("Home Away","gt_home", false);
-//   AddFlag("Just Here","gt_just", true);
-
-//   SetFlag("gt_home",true);
-
    GUI.PopScreensTo("icSpaceFlightScreen");
    GUI.OverlayScreen("icPDAOverlayManager");
    iGUI.OverlayCustomScreen( "tOptionsGui.DisplayWindow" );

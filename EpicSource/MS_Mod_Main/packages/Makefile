@@ -145,6 +145,7 @@ PACKAGES = ECargoTypes.pkg \
 	tsCrewSpeak.pkg \
 	tsCull.pkg \
 	tsDebug.pkg \
+	tsDebugGui.pkg \
 	tsDistress.pkg \
 	tsEvent.pkg \
 	tsFleetOpCombat.pkg \
@@ -214,7 +215,7 @@ tEAutoWatch.pkg : tEAutoWatch.pog tTime.h tLCenter.h tsFaction.h tsShip.h tForma
 
 tsFaction.pkg : tsFaction.pog tStation.h
 tEFleetGui.pkg : tEFleetGui.pog tEpicGui.h tLProduction.h tEpicMoney.h tsShip.h tEpicFleetUpkeep.h tEconUtil.h uString.h
-tEJump.pkg : tEJump.pog tEpicGui.h tsShip.h tTime.h tsPlayerFleet.h tDistance.h
+tEJump.pkg : tEJump.pog tEpicGui.h tsShip.h tTime.h tsPlayerFleet.h tDistance.h tsDebug.h
 tELpointFind.pkg : tELpointFind.pog tEpicGui.h 
 tEPlayerOrders.pkg : tEPlayerOrders.pog tsShip.h tFormation.h tPodUtil.h tsFaction.h tStation.h tLProduction.h tMegaTrucking.h
 tEPlayerWatch.pkg : tEPlayerWatch.pog tTime.h tLCenter.h tsFaction.h tsShip.h tFormation.h tEpicFleetUpkeep.h tMusic.h tRepWatch.h tLocationInit.h tEJump.h
@@ -322,8 +323,9 @@ tsWingComm.pkg : tsWingComm.pog tsPlayerFleet.h tPodUtil.h tsShipEnum.h tsShip.h
 #tsCargoShip.pkg : tsCargoShip.pog tEconUtil.h tEconSmall.h tStation.h tStationFilter.h tETradeBuy.h tPogClass.h tLRoot.h tLTrade.h tLProduction.h tEpicMoney.h tTime.h tsFaction.h tsShip.h tPodUtil.h tSpewerOps.h tsPilotSetup.h tsShipCreation.h tShipName.h uString.h
 
 tsCrewSpeak.pkg : tsCrewSpeak.pog uString.h
-tsCull.pkg : tsCull.h tPogClass.pog tPcOwner.h
-tsDebug.pkg : tsDebug.h UniGUI.pog tEpicGui.h
+tsCull.pkg : tsCull.pog tPogClass.pog tPcOwner.h
+tsDebug.pkg : tsDebug.pog
+tsDebugGui.pkg : tsDebugGui.pog UniGUI.pog tEpicGui.h
 tsDistress.pkg : tsDistress.pog tsEvent.h
 tsEvent.pkg : tsEvent.pog
 tsFleetOpCombat.pkg : tsFleetOpCombat.pog tStation.h tsFaction.h tTime.h tUnderOp.h tLCenter.h tLFleet.h tLProduction.h

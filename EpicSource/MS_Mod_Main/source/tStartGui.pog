@@ -51,7 +51,7 @@ provides DisplayWindow,
          StartGame,
          NewGame,
          FinalSetup;
-
+ 
          
 
 prototype StartScreen();
@@ -180,6 +180,8 @@ hwindow CreateOptionList(hwindow parent, int x, int y, int width, int height, st
       Object.AddIntProperty(button, "gt_startgui_count", count);      
 
       GUI.AddListBoxEntry(list_box, button);
+
+      List.AddTail(button_list, button);
 
       ++count;      
    }

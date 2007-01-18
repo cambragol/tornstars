@@ -75,6 +75,7 @@ task Death(hship wingman)
    
    Sim.SetCullable(waypoint, false);
    Sim.PlaceRelativeToInside(waypoint, wingman, 0, 0, 0);
+   iSim.SetSensorVisibility(waypoint, true);
 
    iSim.Kill(iSim.Cast(wingman));
 }
