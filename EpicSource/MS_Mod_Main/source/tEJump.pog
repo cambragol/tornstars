@@ -581,7 +581,8 @@ task select_dialog() {
 
 
     // Only allow those jump routes that we can see.
-    route_list = filter_sensors(gen_route_list(lpoint), sensor_rating(player));
+    //    route_list = filter_sensors(gen_route_list(lpoint), sensor_rating(player));
+    route_list = gen_route_list(lpoint);
 
     if (List.IsEmpty(route_list)) {
        // ejump_no_routes, "Our sensors detect no viable jump routes, Sir"
@@ -628,9 +629,12 @@ task select_dialog() {
         route_name = Object.StringProperty(route,"gtRouteName");
         difficulty = Object.IntProperty(route,"gtRouteDanger");
         known = Object.BoolProperty(route,"gtRouteKnown");
-
-
-        if (difficulty > 3) {
+        
+        if (difficulty > sensor_rating(player) ) {
+           // ejump_poor_sensors, "Our active sensors are not good enough to plot that route."
+            iConversation.Say(none,"name_lori","ejump_poor_sensors");
+            halt = true;
+        }else if (difficulty > 3) {
            // ejump_risk,"Risk Death"
            // ejump_risk_say,"Yes, we are very desperate"
             iConversation.AddResponse(
@@ -649,7 +653,8 @@ task select_dialog() {
             if (1== response) {
                 halt = false;
             } else if (2 == response) {
-                halt = true;
+               iConversation.Say(none,"name_lori","ejump_order_cancel");
+               halt = true;
             }
 
         } else if (!known) {
@@ -674,7 +679,8 @@ task select_dialog() {
             if (1== response) {
                 halt = false;
             } else if (2 == response) {
-                halt = true;
+               iConversation.Say(none,"name_lori","ejump_order_cancel");
+               halt = true;
             }
 
         } else if (difficulty > 1) {
@@ -698,19 +704,16 @@ task select_dialog() {
             if (1== response) {
                 halt = false;
             } else if (2 == response) {
-                halt = true;
+               iConversation.Say(none,"name_lori","ejump_order_cancel");
+               halt = true;
             }
         }
 
         if (!halt) {
            // ejump_plotted, "Course plotted Sir"
             iConversation.Say(none,"name_lori","ejump_plotted");
-        } else {
-           // ejump_order_cancel, "Cancelling Sir"
-            iConversation.Say(none,"name_lori","ejump_order_cancel");
         }
     }
-
 
     // Finish the conversation.
     iConversation.End();
