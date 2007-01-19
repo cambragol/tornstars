@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/tsDebug.h,v 1.1 2006/04/08 22:43:59 Owner Exp $
+// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////
@@ -16,17 +16,11 @@
 
 // Functions ///////////////////////////////////////////////////////////////////
 
-prototype tsDebug.StartScreen();
-
-prototype tsDebug.ExitScreen();
-
-prototype tsDebug.DisplayWindow();
-
-prototype tsDebug.OnDebugPress();
-
 prototype tsDebug.PrintString( string flag, string info );
 
 prototype tsDebug.PrintHandle( string flag, hobject item );
+
+prototype tsDebug.NewGame();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 
