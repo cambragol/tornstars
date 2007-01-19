@@ -30,29 +30,49 @@ uses	Sim,
 		Task,
 		Text;
 
-
-
 provides PrintString,
-         PrintHandle;
+         PrintHandle,
+         NewGame;
          
 
+NewGame()
+{
+   int count, i, value;
+   string debug_name, flag_name;
+   hinifile debug_file = INIFile.Create("ini:/ms_mod_debug");
+
+   if (none == debug_file) {
+      debug Debug.PrintString("tsDebug error missing ms_mod_debug file\n");
+   }
+                                   
+   count = 0;
+   while (INIFile.NumberedExists(debug_file,"DebugFlags","flag_name", count)) {
+      flag_name = INIFile.NumberedString(debug_file,"DebugFlags","flag_name", count, "");
+      value = INIFile.NumberedInt(debug_file,"DebugFlags","value", count, 0);
+      ++count;
+
+      Global.CreateBool(flag_name,GA_Write, value);
+   }
+
+   INIFile.Destroy(debug_file);
+}
 
 PrintString(string flag, string info)
 {
    debug {
       if (Global.Bool(flag)) {
-         Debug.PrintString(info);
+         atomic Debug.PrintString(info);
       }
    }
 }
-
+ 
 
 
 PrintHandle(string flag, hobject item)
 {
    debug {
       if (Global.Bool(flag)) {
-         Debug.PrintHandle(item);
+         atomic Debug.PrintHandle(item);
       }
    }
 }
