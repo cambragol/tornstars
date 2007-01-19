@@ -4,26 +4,11 @@
 //
 // An UniGUI application that will allow the player to save and load the game.
 // 
-// 
-// Loading Design: Epic will have no Lucretias base. When the game loads, the enter base
-// event will be used to launch into spaceflight screen. The player will be placed at the last 
-// save location, either docked, or in free flight. (placing is done by tsShip.
-//
-// New Game: A new game will allow the player to be placed in any template ship, near
-// any MapEntity, in any world, and possibly docked. It will do this by setting up the 
-// global variables for the first load. Also done in tsShip.
-//
-// Save Design: The Save screen will be implemented as a UniGui application. When the 
-// Player presses the save button, a new MultiMod save event will be generated. This 
-// gives mods a chance to write values to globals before the save is done. Space will NOT
-// be shutdown. Saves might also be done automatically at key moments. It is important
-// that mods not assume the player will be docked or in a base when a save happens. 
-//
-// 
 //	
 // Original save code written by EricMan. Many thanks to him for working this out.
 //
 // Jon Freise Feb, 2003
+// Jan 2007, Jon Freise rewritten to allow save anywhere and save name edits.
 //******************************************************************************************/
 package tSaveGui;
 
@@ -342,6 +327,8 @@ bool is_enterable(hhabitat station)
 
 
 
+
+
 StartEdit()
 {
    hwindow edit_box = GUI.FocusedWindow();
@@ -395,7 +382,7 @@ EndEdit()
 
    // Flush all player data to global variables.
    atomic {
-      tEpicMain.SaveGame();
+      Task.Call("tEpicMain.SaveGame");
    }
 
    iGame.SaveGame( index, button_name );
@@ -482,7 +469,7 @@ SaveScreen()
 
 
 
-   for (i=0;i<total;++i) {
+   for (i=2;i<total;++i) {
 
       button_name = iGame.NameOfSaveInSlot(i);
 
