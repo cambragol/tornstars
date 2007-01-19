@@ -219,8 +219,10 @@ task location_watch(hmapentity location)
 {
    hship player;
    bool near = true;
+   string name;
 
    do {
+
       Task.Sleep(Task.Current(), 1.0);
 
       if (tEJump.IsCapsuleJumping()) {
@@ -231,13 +233,32 @@ task location_watch(hmapentity location)
             near = false;
          }
       }
+
    } while (near);
+
 
    debug{
       Debug.PrintString("PlayerWatch leaving ");
       Debug.PrintHandle(location);
       Debug.PrintString("\n");
    }
+
+
+   if (T_LagrangePoint != iSim.Type(location)) {
+      // Do an autosave when the player leaves a station.
+      name = tTime.TimeToString();
+      name = String.Join(name,"  ");
+      name = String.Join(name,Sim.Name(location));
+      name = String.Join(name,"  ");
+      name = String.Join(name,Text.Field(iSim.ActiveWorld(), FT_Text));
+
+      atomic {
+         Task.Call("tEpicMain.SaveGame");
+      }
+
+      iGame.SaveGame( 1, String.Join(name, " Last Station" ));   
+   }
+
 
    tLocationInit.Leaves(location);
 }
