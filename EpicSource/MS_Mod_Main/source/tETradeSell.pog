@@ -1181,9 +1181,9 @@ TradeWindow()
 
    int rwidth, rheight, rx, ry;
 
-   int lwidth, lheight;
+   int lwidth, lheight, mid_width;
 
-   int lshady_width = 400;
+   int lshady_width = 525;
 
    hfaction player_faction = iFaction.Find("Player");
    hfaction trade_faction = iSim.Faction(trade_center);
@@ -1246,9 +1246,9 @@ TradeWindow()
    lheight = lheight - Global.Int("EpicGui_content_drop");
    lheight = lheight - Global.Int("EpicGui_content_footer");
 
-   lwidth = lshady_width/2;
+   lwidth = lshady_width - 200;
 
-
+   mid_width = lshady_width - lwidth;
 
 
 
@@ -1258,7 +1258,7 @@ TradeWindow()
 
    splitter = GUI.CreateSplitterWindow( Global.Int("EpicGui_content_indent") + lwidth, 
                                         Global.Int("EpicGui_content_drop"),
-                                        lwidth - Global.Int("EpicGui_content_indent"), 
+                                        mid_width - Global.Int("EpicGui_content_indent"), 
                                         lheight,
                                         lh_shady,
                                         lheight/2,
