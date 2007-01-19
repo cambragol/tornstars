@@ -31,6 +31,7 @@ uses
 
    tTime,
    tDistance,
+   tsDebug,
    tMultimod,
    UniGUI,
    UniGUIBase,
@@ -100,6 +101,8 @@ provides
 GameEnter()
 {
    atomic debug Debug.PrintString("tEpicMain.GameEnter\n");
+
+   tsDebug.NewGame();
 
    tsPlayerSave.NewGame();
    
