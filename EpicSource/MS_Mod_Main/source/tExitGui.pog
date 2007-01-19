@@ -2,7 +2,7 @@
 //
 // tExitGui.pog
 //
-// This module is a library function that allows fast movement through a HTML reference.
+// This is a UniGUI quit button.
 // 
 // 
 //
@@ -23,6 +23,7 @@ uses	Sim,
 		iHUD,
 		iHabitat,
 		iMapEntity,
+      iLagrangePoint,
 		INIFile,
 		Input,
 		List,
@@ -39,6 +40,7 @@ uses	Sim,
       CargoTypes,
 
 		UniGUI,
+      tTime,
       tEpicGuiEnum,
       tEpicGui,
       tLProduction,
@@ -58,6 +60,9 @@ provides ExitWindow,
          SessionStart,
          SessionEnd,
          ExitScreen;
+
+
+prototype hmapentity nearby_location(hisim center);
 
 
 
@@ -99,6 +104,26 @@ ExitScreen()
 
 OnQuitPress()
 {
+   string name;
+   hship player = iShip.FindPlayerShip();
+   hmapentity location = nearby_location(player);
+
+
+   debug Debug.PrintString("Start Edit Pressed!\n");
+
+   name = tTime.TimeToString();
+   name = String.Join(name,"  ");
+   name = String.Join(name,Sim.Name(location));
+   name = String.Join(name,"  ");
+   name = String.Join(name,Text.Field(iSim.ActiveWorld(), FT_Text));
+
+   atomic {
+      Task.Call("tEpicMain.SaveGame");
+   }
+
+   iGame.SaveGame( 0, String.Join(name, " Last Quit" ));   
+
+
    GUI.PopScreensTo("icSPMainPDAScreen");
 }
 
@@ -215,6 +240,22 @@ ExitWindow()
 } //ExitWindow
 
 
+
+// Finds the closest location or station.
+hmapentity nearby_location(hisim center)
+{
+   hlagrangepoint lpoint;
+   hhabitat habitat;
+
+   lpoint = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), center);
+   habitat = iHabitat.Nearest(iMapEntity.SystemHabitats(), center);
+
+   if (Sim.DistanceBetween(habitat, center) < Sim.DistanceBetween(lpoint, center)) {
+      return habitat;
+   }
+
+   return lpoint;
+}
 
 
 /* 
