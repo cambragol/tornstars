@@ -66,5 +66,7 @@ prototype hsubsim tsShip.FindSubsimByTemplateNumber( hship ship, int template_nu
 
 prototype hsubsim tsShip.ReplaceSubsim( hship ship, hsubsim subsim, string template_name );
 
+prototype tsShip.PlaceSubsim( hship ship, hsubsim subsim );
+
 // EOF /////////////////////////////////////////////////////////////////////////
 
