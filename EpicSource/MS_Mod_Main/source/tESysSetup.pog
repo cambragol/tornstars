@@ -99,7 +99,7 @@ UpdateSystem()
       if (ESS_Normal == tStation.Status(station)) {
          if (ESC_Mine != tStation.Category(station)) {
 
-            region = iRegion.CreateTrafficControl(station, 20km, 250);
+            region = iRegion.CreateTrafficControl(station, 10km, 500);
          }
       }
    }

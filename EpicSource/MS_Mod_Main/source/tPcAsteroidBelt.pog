@@ -157,6 +157,11 @@ setup_asteroid_belt(hisim center)
 
    debug Debug.PrintString("PcAsteroidBelt.setup_asteroid_belt\n");
 
+   // If the player has turned off the asteroid fields, do no setup.
+   if (!Global.Bool("gt_option_asteroids_on")) {
+      return;
+   }
+
    template_file = Object.StringProperty(center, "gt_pog_object_template");
    control_file = INIFile.Create(template_file);
 

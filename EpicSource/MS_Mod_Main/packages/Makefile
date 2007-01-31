@@ -77,6 +77,7 @@ PACKAGES = ECargoTypes.pkg \
 	tESysSetup.pkg \
 	tETradeBuy.pkg \
 	tETradeSell.pkg \
+	tsLoadoutGui.pkg \
 	tEconSmall.pkg \
 	tEconUtil.pkg \
 	tEpicComms.pkg \
@@ -339,6 +340,7 @@ tsFoPatrol.pkg : tsFoPatrol.pog tStation.h tsFaction.h tTime.h tUnderOp.h tLRoot
 tsFoProtection.pkg : tsFoProtection.pog
 tsFoRaider.pkg : tsFoRaider.pog tStation.h tsFaction.h tTime.h tUnderOp.h tLRoot.h tLCenter.h tLProduction.h tLFleet.h tStationFilter.h tEconUtil.h tShipName.h tsShipCreation.h tsFleetOpCombat.h tsDebug.h
 tsFoThugs.pkg : tsFoThugs.pog tStation.h tsFaction.h tTime.h tUnderOp.h tLRoot.h tLCenter.h tLProduction.h tLFleet.h tStationFilter.h tEconUtil.h tShipName.h tsShipCreation.h tsFleetOpCombat.h tsDebug.h
+tsLoadoutGui.pkg : tsLoadoutGui.pog tStation.h tEpicGui.h tsFaction.h tLProduction.h tLInventory.h tLTrade.h tEconSmall.h tEconUtil.h tEpicMoney.h tPodUtil.h uString.h 
 tsPilotSetup.pkg : tsPilotSetup.pog tEpicComms.h tsShip.h tLRoot.h tLTrade.h tsFaction.h tETradeSell.h tEpicMoney.h tShipName.h tPcOwner.h tLProduction.h tLFleet.h tUnderOp.h tPodUtil.h tRepWatch.h tsEvent.h
 
 tsWingman.pkg : tsWingman.pog tsShip.h tFormation.h tPodUtil.h tsFaction.h tStationEnum.h tStation.h tLProduction.h tMegaTrucking.h tStationFilter.h

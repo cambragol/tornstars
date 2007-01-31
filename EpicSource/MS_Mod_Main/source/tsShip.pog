@@ -89,7 +89,8 @@ provides
         SetSaveId,
         SaveId,
         FindSubsimByTemplateNumber,
-        ReplaceSubsim;
+        ReplaceSubsim,
+        PlaceSubsim;
 
 
  
@@ -103,6 +104,8 @@ prototype float default_jump_fuel(int ship_type);
 prototype int default_daily_cost(int ship_type);
 
 prototype ReadIniFile(hship ship);
+
+prototype PlaceSubsim(hship ship, hsubsim subsim);
 
 prototype tag_subsims(hship ship);
 
@@ -666,6 +669,13 @@ tag_subsims(hship ship)
 
                --subsim_count;
             } while (not_found && (subsim_count > -1) );
+
+            if (not_found) {
+                  debug {
+                     Debug.PrintString(subsim_template);
+                     Debug.PrintString(" tsShip.tag_subsims no match\n");
+                  }
+            }
          }
       }
       ++template_count;
@@ -702,14 +712,14 @@ hsubsim FindSubsimByTemplateNumber(hship ship, int template_number)
 hardpoint_name[0]="left_wing_mount"
 template[0]="ini:/subsims/systems/player/heavy_pbc"
 template_number[0]=15
-hardpoint_type[0]=16
+hardpoint_type[0]=weapon_medium
 position[0]=(15,30,75)
 orientation[0]=(0,90,0)
 
 hardpoint_name[1]="right_wing_mount"
 template[1]="ini:/subsims/systems/player/heavy_pbc"
 template_number[1]=16
-hardpoint_type[1]=16
+hardpoint_type[1]=weapon_medium
 position[1]=(15,30,-75)
 orientation[1]=(0,90,0)
 */
@@ -717,8 +727,8 @@ orientation[1]=(0,90,0)
 
 add_hardpoints(hship ship, hinifile ship_file)
 {
-   string subsim_template, hardpoint_name, subsim_class;
-   int template_number, hardpoint_type, count;
+   string subsim_template, hardpoint_name, subsim_class, hardpoint_type;
+   int template_number, count;
    float xpos, ypos, zpos, roll, pitch, yaw;
    hsubsim subsim;
    hinifile subsim_file;
@@ -741,7 +751,7 @@ add_hardpoints(hship ship, hinifile ship_file)
 
             hardpoint_name = INIFile.NumberedString(ship_file,"Hardpoints","hardpoint_name", count,"");
             template_number = INIFile.NumberedInt(ship_file,"Hardpoints","template_number", count, 0);
-            hardpoint_type = INIFile.NumberedInt(ship_file,"Hardpoints","hardpoint_type", count, 0);
+            hardpoint_type = INIFile.NumberedString(ship_file,"Hardpoints","hardpoint_type", count, "");
             xpos = INIFile.NumberedVectorX(ship_file,"Hardpoints","position",count);
             ypos = INIFile.NumberedVectorY(ship_file,"Hardpoints","position",count);
             zpos = INIFile.NumberedVectorZ(ship_file,"Hardpoints","position",count);
@@ -750,18 +760,21 @@ add_hardpoints(hship ship, hinifile ship_file)
             pitch = INIFile.NumberedVectorY(ship_file,"Hardpoints","orientation",count);
             roll = INIFile.NumberedVectorZ(ship_file,"Hardpoints","orientation",count);
 
-
             Object.AddStringProperty(subsim,"subsim_template", subsim_template);
             Object.AddStringProperty(subsim,"subsim_class", subsim_class);
             Object.AddVectorProperty(subsim, "position", xpos, ypos, zpos);
             Object.AddVectorProperty(subsim, "orientation", yaw, pitch, roll);
             Object.AddIntProperty(subsim,"template_number", template_number);
-            Object.AddIntProperty(subsim,"hardpoint_type", hardpoint_type);
+            Object.AddStringProperty(subsim,"hardpoint_type", hardpoint_type);
             Object.AddStringProperty(subsim,"hardpoint_name", hardpoint_name);
 
+            PlaceSubsim(ship, subsim);
+
+            /*
             Sim.AddSubsim(ship, subsim);
             Subsim.Place(subsim, xpos, ypos, zpos);
             Subsim.OrientateEuler(subsim, yaw, pitch, roll);
+            */
          }
       }
       ++count;
@@ -771,8 +784,8 @@ add_hardpoints(hship ship, hinifile ship_file)
 // Replaces the passed in subsim with a new one created from template_name.
 hsubsim ReplaceSubsim(hship ship, hsubsim subsim, string template_name)
 {
-   string hardpoint_name, subsim_class;
-   int template_number, hardpoint_type;
+   string hardpoint_name, subsim_class, hardpoint_type;
+   int template_number;
    float xpos, ypos, zpos, roll, pitch, yaw;
    hsubsim new_subsim;
    hinifile subsim_file;
@@ -785,19 +798,19 @@ hsubsim ReplaceSubsim(hship ship, hsubsim subsim, string template_name)
          subsim_class = INIFile.String(subsim_file,"Class","name","");
          INIFile.Destroy(subsim_file);
 
-         subsim = Subsim.Create(template_name);
+         new_subsim = Subsim.Create(template_name);
 
          if (none != subsim) {
             hardpoint_name = Object.StringProperty(subsim,"hardpoint_name");
             template_number = Object.IntProperty(subsim,"template_number");
-            hardpoint_type = Object.IntProperty(subsim,"hardpoint_type");
+            hardpoint_type = Object.StringProperty(subsim,"hardpoint_type");
 
             xpos = Object.VectorPropertyX(subsim,"position");
             ypos = Object.VectorPropertyY(subsim,"position");
             zpos = Object.VectorPropertyZ(subsim,"position");
 
-            yaw =   Object.VectorPropertyZ(subsim,"orientation");
-            pitch = Object.VectorPropertyZ(subsim,"orientation");
+            yaw =   Object.VectorPropertyX(subsim,"orientation");
+            pitch = Object.VectorPropertyY(subsim,"orientation");
             roll =  Object.VectorPropertyZ(subsim,"orientation");
 
             Object.AddStringProperty(new_subsim,"subsim_template", template_name);
@@ -807,7 +820,7 @@ hsubsim ReplaceSubsim(hship ship, hsubsim subsim, string template_name)
             Object.AddVectorProperty(new_subsim, "position", xpos, ypos, zpos);
             Object.AddVectorProperty(new_subsim, "orientation", yaw, pitch, roll);
 
-            Object.AddIntProperty(new_subsim,"hardpoint_type", hardpoint_type);
+            Object.AddStringProperty(new_subsim,"hardpoint_type", hardpoint_type);
             Object.AddStringProperty(new_subsim,"hardpoint_name", hardpoint_name);
 
             Sim.AddSubsim(ship, new_subsim);
@@ -818,12 +831,37 @@ hsubsim ReplaceSubsim(hship ship, hsubsim subsim, string template_name)
             Subsim.Destroy(subsim);
 
             return new_subsim;
+         }else{
+            debug Debug.PrintString("tsShip.ReplaceSubsim create subsim failed");
          }
+      }else {
+         debug Debug.PrintString("tsShip.ReplaceSubsim template file invalid");
       }
+   }else {
+      debug Debug.PrintString("tsShip.ReplaceSubsim not a hardpoint");
    }
 
    return none;
 }
+
+// Used to place a subsim that has all the required location properties already attached.
+PlaceSubsim(hship ship, hsubsim subsim)
+{
+   float xpos, ypos, zpos, roll, pitch, yaw;
+
+   xpos = Object.VectorPropertyX(subsim,"position");
+   ypos = Object.VectorPropertyY(subsim,"position");
+   zpos = Object.VectorPropertyZ(subsim,"position");
+
+   yaw =   Object.VectorPropertyX(subsim,"orientation");
+   pitch = Object.VectorPropertyY(subsim,"orientation");
+   roll =  Object.VectorPropertyZ(subsim,"orientation");
+
+   Sim.AddSubsim(ship, subsim);
+   Subsim.Place(subsim, xpos, ypos, zpos);
+   Subsim.OrientateEuler(subsim, yaw, pitch, roll);
+}
+
 
 /*  
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES

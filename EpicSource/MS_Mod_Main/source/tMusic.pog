@@ -450,9 +450,16 @@ hsim find_suite(string key_name)
 
 Init()
 {
-   hinifile music_file = INIFile.Create("ini:/epic_music");
+   hinifile music_file;
    int count;
    string suite_name;
+
+
+   if (!Global.Bool("gt_option_music_on")) {
+      return;
+   }
+
+   music_file = INIFile.Create("ini:/epic_music");
 
    if (none == music_file) {
       debug {
@@ -568,12 +575,14 @@ NewSystem()
 {
    string system_name = iSim.ActiveWorld();
    string suite_name;
-   hinifile music_file = INIFile.Create("ini:/epic_music");
+   hinifile music_file;
 
    if (!Global.Bool("gt_option_music_on")) {
       // Options have turned off the music
       return;
    }
+
+   music_file = INIFile.Create("ini:/epic_music");
 
    if (none == music_file) {
 

@@ -858,7 +858,7 @@ create_patrol(hisim operation, hisim waypoint, hgroup cull_group, string ship_ty
       tsPilotSetup.SetupEscort(escort, 0.9, 0.5);
 
       iSim.SetFaction(escort, faction);
-      Sim.SetCullable(escort, false);
+      Sim.SetCullable(escort, true);
 
       Sim.PlaceRelativeTo(escort, waypoint, 2km, 0, 0);
 

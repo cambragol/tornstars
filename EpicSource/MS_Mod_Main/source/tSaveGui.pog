@@ -126,34 +126,10 @@ DockSaveDebug()
 }
 
 
-// Check that the player is out in deep space and there are no hostile ships
-// nearby. Then allow a save to happen.
-
-bool space_valid()
-{
-   hship player = iShip.FindPlayerShip();
-   hmapentity location;
-
-   location = nearby_location(player);
-
-   // If the player is farther than twice culling distance, allow save.
-   if (Sim.DistanceBetween(location, player) > (Global.Float("gt_distance_culling") * 2.0)) {
-      // If there are no ships hostile to the player within the culling range.
-      if (Set.IsEmpty(iSim.PlayerHostilesInRadius( Global.Float("gt_distance_culling"), TM_Ship))){
-         return true;
-      }
-   }
-
-   return false;
-}
-
 SpaceSave()
 {
-   if (space_valid()) {
-      Global.SetBool("g_zz_ug_passme",true);
-      return;
-   }
-   Global.SetBool("g_zz_ug_passme",false);
+   Global.SetBool("g_zz_ug_passme",true);
+
 }
 
 // Allow saving at any time for debug purposes.

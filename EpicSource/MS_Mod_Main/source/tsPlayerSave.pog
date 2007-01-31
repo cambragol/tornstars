@@ -132,7 +132,7 @@ Restore()
    restored_ship = tsShipSave.Restore(player_id);
 
    if (none == player) {
-      debug Debug.PrintString("tsPlayerSave.Restore no loadout ship\n");
+      debug Debug.PrintString("tsPlayerSave.Restore no base launched ship\n");
       // The player did not launch from base.
 
       if (none == restored_ship) {
@@ -140,11 +140,13 @@ Restore()
          // There is no prior stored ship.
          player = create_new_player();
       }else {
+         debug Debug.PrintString("tsPlayerSave.Restore using saved ship\n");
          // standard restore, player is saved ship.
          player = restored_ship;
       }
 
    }else if (none != restored_ship){
+      debug Debug.PrintString("tsPlayerSave.Restore using base launched ship\n");
       Sim.PlaceAt(player, restored_ship);
       Sim.Destroy(restored_ship);
       iUtilities.RenameSim(player, Global.String("gt_player_ship_name"));
@@ -220,7 +222,9 @@ hship create_new_player()
    player = tsShip.Create(ship, Global.String("gt_player_ship_name"));
    Sim.SetCullable(player, false);
    start_location = iSim.FindByNameInSystem(station, system);
-   Sim.PlaceNear(player, start_location, 20km);
+
+   // Put the player outside of culling range
+   Sim.PlaceNear(player, start_location, 2* Global.Float("gt_distance_wakeup"));
    return player;
 }
 

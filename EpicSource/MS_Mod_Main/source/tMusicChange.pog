@@ -166,6 +166,10 @@ SoundNear()
    }
    */
 
+   if (!Global.Bool("gt_option_music_on")) {
+      return;
+   }
+
    bodies = iMapEntity.SystemBodies();
    body = iBody.Nearest(bodies, player);
    prior_body = iBody.Cast(Global.Handle("gt_musicchange_entity"));

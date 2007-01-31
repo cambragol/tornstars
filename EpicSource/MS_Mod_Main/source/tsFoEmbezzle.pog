@@ -87,6 +87,7 @@ New(hisim operation)
 
    tUnderOp.SetName(operation, ship_name);
    tUnderOp.SetShipTemplate(operation, ship_template);
+   tUnderOp.SetKnown(operation, true);
 
    // This is an embezzle op, so we set enough fleets for the 
    // freighter and 2 tugs escort. Fleets use threat value for points.

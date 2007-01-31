@@ -440,7 +440,12 @@ task guard_controller(hmapentity location, hgroup patrol_group)
             // Pick the first one, attack.
             target_ship = iShip.Cast(Set.FirstElement(dislike_set));
             iAI.PurgeOrders(patrol_leader);
-            iAI.GiveAttackOrder(patrol_leader, target_ship);
+
+            if (none != Sim.Group(target_ship)) {
+               iAI.GiveSpecificAttackOrder(patrol_group, Sim.Group(target_ship), AS_Strafe);
+            }else {
+               iAI.GiveSpecificAttackOrder(patrol_group, target_ship, AS_Strafe);
+            }
 
             state = change_state(state, eCS_Fight, debug_on);
 
@@ -486,9 +491,9 @@ task guard_controller(hmapentity location, hgroup patrol_group)
 
             // We order the patrol group to attack the targets group.
             if (none != Sim.Group(target)) {
-               iAI.GiveAttackOrder(Sim.Group(patrol_leader), Sim.Group(target));
+               iAI.GiveSpecificAttackOrder(Sim.Group(patrol_leader), Sim.Group(target), AS_Strafe);
             }else {
-               iAI.GiveAttackOrder(Sim.Group(patrol_leader), target);
+               iAI.GiveSpecificAttackOrder(Sim.Group(patrol_leader), target, AS_Strafe);
             }
 
             //iAI.GiveAttackOrder(patrol_leader, target);
@@ -513,8 +518,8 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          break;
       case eCS_Fight:
          // A battle has broken out. We wait here.
-         if ( (Sim.DistanceBetween(patrol_leader, location) > 100km) 
-             && (OT_Escort != iAI.CurrentOrderType(patrol_leader))) {
+         if ( (Sim.DistanceBetween(patrol_leader, location) > 100km)){ 
+//             && (OT_Escort != iAI.CurrentOrderType(patrol_leader))) {
             // Station guards do not chase down targets. Instead,
             // if the patrol leader is chasing, give an escort order.
             // This will bring the patrol group back to the station.
@@ -581,13 +586,14 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          // patrol leader is dead. Select another. No more
          // waypoint chasing, we let the escorts fight without
          // giving more orders.
-
-         // If all the escorts are dead, we cull.
          Group.RemoveSim(patrol_group, patrol_leader);
          patrol_leader = iShip.Cast(Group.Leader(patrol_group));
          if (none == patrol_leader) {
+            // If all the escorts are dead, we cull.
             state = change_state(state, eCS_Cull, debug_on);
          }else {
+            // Give another escort order, on the new leader.
+            iEscort.Wedge( patrol_group, spacing, 50km, true );
             state = change_state(state, eCS_Fight, debug_on);
          }
 

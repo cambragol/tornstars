@@ -80,7 +80,7 @@ prototype task location_watch(hmapentity location);
 prototype ldsi_drop(hship player);
 prototype task ldsi_watch(hisim waypoint);
 
-
+prototype arrive_save(hmapentity location);
 
 
 task watch_task()
@@ -104,6 +104,8 @@ task watch_task()
 
    bool docked = false;
    bool jumping = false;
+   int save_count = 0;
+
    hsim nearest_station, station;
    hfaction faction;
 
@@ -159,6 +161,13 @@ task watch_task()
             }
 
             tLocationInit.Arrives(location);
+
+            // Save if we have approached at least one station. 
+            // This protects from saving directly after a restore.
+            if (save_count > 0 ){
+               arrive_save(location);
+            }
+            ++save_count;
 
             Task.Detach(start location_watch(location));
          }
@@ -244,20 +253,7 @@ task location_watch(hmapentity location)
    }
 
 
-   if (T_LagrangePoint != iSim.Type(location)) {
-      // Do an autosave when the player leaves a station.
-      name = tTime.TimeToString();
-      name = String.Join(name,"  ");
-      name = String.Join(name,Sim.Name(location));
-      name = String.Join(name,"  ");
-      name = String.Join(name,Text.Field(iSim.ActiveWorld(), FT_Text));
 
-      atomic {
-         Task.Call("tEpicMain.SaveGame");
-      }
-
-      iGame.SaveGame( 1, String.Join(name, " Last Station" ));   
-   }
 
 
    tLocationInit.Leaves(location);
@@ -365,6 +361,33 @@ task ldsi_watch(hisim waypoint)
    }
 }
 
+arrive_save(hmapentity location)
+{
+   string name;
+
+   if (T_LagrangePoint != iSim.Type(location)) {
+      // Do an autosave when the player leaves a station.
+
+      if (Global.Bool("gt_option_autosave_on")) {
+
+         iHUD.SetPrompt("SAVING GAME", "APPROACH STATION SAVE");
+
+         name = tTime.TimeToString();
+         name = String.Join(name,"  ");
+         name = String.Join(name,Sim.Name(location));
+         name = String.Join(name,"  ");
+         name = String.Join(name,Text.Field(iSim.ActiveWorld(), FT_Text));
+
+         atomic {
+            Task.Call("tEpicMain.SaveGame");
+         }
+
+         iGame.SaveGame( 1, String.Join(name, " Arrive Station" ));   
+
+         iHUD.SetPrompt("", "");
+      }
+   }
+}
 
 /*  
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES

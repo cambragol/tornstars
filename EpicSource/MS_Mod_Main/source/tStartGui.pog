@@ -71,11 +71,6 @@ prototype add_cargo_pods(string entry_key, hinifile start_file);
 prototype adjust_player_standing(string entry_key, hinifile start_file);
 
 
-prototype PurchaseShip(string entry_key);
-
-prototype ShipLost();
-
-
 NewGame()
 {
    Global.CreateBool("gt_start_gui_new", GA_Write, false);
@@ -414,7 +409,7 @@ task setup_player()
    tEpicMoney.ChangeShipAccount(funds);
 
 
-   player_name = INIFile.String(start_file, entry_key, "player_name","player_name");
+   player_name = INIFile.String(start_file, entry_key, "player_name","player_ship_name");
 
    Global.CreateString("gt_player_ship_name", GA_Write, player_name);
 
@@ -445,8 +440,6 @@ task setup_player()
          debug Debug.PrintString("tStartGui.setup_player Error player ship missing\n");
       }
    }
-
-   PurchaseShip(player_ship);
 
    add_player_cargo(entry_key, start_file);
 
@@ -528,6 +521,8 @@ add_player_wingmen(string entry_key, hinifile start_file)
    }
 }
 
+
+
 add_cargo_pods(string entry_key, hinifile start_file)
 {
    int item_count, cargo_type, cargo_number, pods;
@@ -561,8 +556,8 @@ add_cargo_pods(string entry_key, hinifile start_file)
          Debug.PrintString(" pods added\n");
       }
    }
-
 }
+
 
 
 adjust_player_standing(string entry_key, hinifile start_file)
@@ -605,68 +600,6 @@ adjust_player_standing(string entry_key, hinifile start_file)
 }
 
 
-// Handle the ship systems change a purchased ship.
-PurchaseShip(string entry_key)
-{
-   string prior_ship_entry = Global.String("jc_current_player_ship_entry");
-   hinifile player_ships;
-   string cargo_name;
-   int item_count, cargo_type;
-
-   ShipLost();
-   // Run through the new entries equipment and add it.
-
-   player_ships = INIFile.Create("ini:/player_ship");
-
-   item_count=0;
-   while (INIFile.NumberedExists(player_ships,entry_key,"add_equipment",item_count)) {
-      cargo_name = INIFile.NumberedString(player_ships,entry_key,"add_equipment", item_count, "CT_Invalid");
-      ++item_count;
-      
-      cargo_type = tEconUtil.String2CargoType(cargo_name);
-
-      if (CT_Invalid != cargo_type) {
-         iInventory.AddWithoutMarkingNew(cargo_type, 1);
-      }
-   }
-
-   INIFile.Destroy(player_ships);
-
-
-   // update the current entry global.
-   Global.CreateString("jc_current_player_ship_entry", GA_Write, entry_key);
-}
-
-
-// Call this function if a ship is shot down or sold.
-ShipLost()
-{
-   string entry_key = Global.String("jc_current_player_ship_entry");
-   hinifile player_ships;
-   int item_count, cargo_type;
-   string cargo_name;
-
-   if (entry_key != "") {
-      player_ships = INIFile.Create("ini:/player_ship");
-
-      item_count=0;
-      while (INIFile.NumberedExists(player_ships,entry_key,"add_equipment",item_count)) {
-         cargo_name = INIFile.NumberedString(player_ships,entry_key,"add_equipment", item_count, "CT_Invalid");
-         ++item_count;
-
-         cargo_type = tEconUtil.String2CargoType(cargo_name);
-
-         if (CT_Invalid != cargo_type) {
-            iInventory.Remove(cargo_type, 1);
-         }
-      }
-
-      INIFile.Destroy(player_ships);      
-   }
-
-   // Zero the prior ship entry to avoid any chance of double deduction.
-   Global.CreateString("jc_current_player_ship_entry", GA_Write, "");
-}
 
 /*  
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
