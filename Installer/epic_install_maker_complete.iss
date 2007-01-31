@@ -1,11 +1,11 @@
 [Setup]
 UseSetupLdr=true
-OutputBaseFilename=unstable_space_11_3
+OutputBaseFilename=unstable_space_11_4
 ;OutputDir=D:\Epic\EpicRelease\USpace10_19
 OutputDir=.
 AppCopyright=Epic Team
 AppName=Unstable Space
-AppVerName=Unstable Space 11.3
+AppVerName=Unstable Space 11.4
 DisableProgramGroupPage=true
 UsePreviousGroup=false
 AlwaysShowDirOnReadyPage=true
@@ -20,8 +20,8 @@ Uninstallable=false
 DisableStartupPrompt=true
 DirExistsWarning=no
 SolidCompression=true
-VersionInfoVersion=11.3
-VersionInfoTextVersion=Epic 11.3
+VersionInfoVersion=11.4
+VersionInfoTextVersion=Epic 11.4
 UsePreviousAppDir=false
 WizardImageFile=.\Left_Install.bmp
 WizardSmallImageFile=.\install_small.bmp
@@ -188,39 +188,39 @@ Source: .\..\EpicSource\MS_Mod_Reference\html\encyclopedia\images\maps\*; DestDi
 Source: .\..\EpicSource\MS_Mod_Reference\TEXT\*; DestDir: {app}\mods\MS_Mod_Main\TEXT; Flags: skipifsourcedoesntexist
 
 ; ships
-Source: .\..\EpicSource\MS_Mod_Ships\*; DestDir: {app}\mods\MS_Mod_Main;
-Source: .\..\EpicSource\MS_Mod_Ships\collisionhulls\*; DestDir: {app}\mods\MS_Mod_Main\collisionhulls;
-Source: .\..\EpicSource\MS_Mod_Ships\audio\sfx\*; DestDir: {app}\mods\MS_Mod_Main\audio\sfx;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\beam\*; DestDir: {app}\mods\MS_Mod_Main\avatars\beam;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\capital_beam_bolt\*; DestDir: {app}\mods\MS_Mod_Main\avatars\capital_beam_bolt;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\cutting_beam_bolt\*; DestDir: {app}\mods\MS_Mod_Main\avatars\cutting_beam_bolt;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\eamp\*; DestDir: {app}\mods\MS_Mod_Main\avatars\eamp;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\edrone\*; DestDir: {app}\mods\MS_Mod_Main\avatars\edrone;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\pulsar\*; DestDir: {app}\mods\MS_Mod_Main\avatars\pulsar;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\tug_hull\*; DestDir: {app}\mods\MS_Mod_Main\avatars\tug_hull;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\us_capital_beam_turret\*; DestDir: {app}\mods\MS_Mod_Main\avatars\us_capital_beam_turret;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\us_mining_beam_turret\*; DestDir: {app}\mods\MS_Mod_Main\avatars\us_mining_beam_turret;
+Source: .\..\EpicSource\MS_Mod_Ships\*; DestDir: {app}\mods\MS_Mod_Ships;
+Source: .\..\EpicSource\MS_Mod_Ships\collisionhulls\*; DestDir: {app}\mods\MS_Mod_Ships\collisionhulls;
+Source: .\..\EpicSource\MS_Mod_Ships\audio\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\audio\sfx;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\beam\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\beam;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\capital_beam_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\capital_beam_bolt;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\cutting_beam_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\cutting_beam_bolt;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\eamp\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\eamp;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\edrone\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\edrone;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\pulsar\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\pulsar;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\tug_hull\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\tug_hull;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\us_capital_beam_turret\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\us_capital_beam_turret;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\us_mining_beam_turret\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\us_mining_beam_turret;
 
 
-Source: .\..\EpicSource\MS_Mod_Ships\images\sfx\*; DestDir: {app}\mods\MS_Mod_Main\images\sfx; Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\MS_Mod_Ships\sfx\*; DestDir: {app}\mods\MS_Mod_Main\sfx; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\images\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\images\sfx; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\sfx; Flags: skipifsourcedoesntexist
 
-Source: .\..\EpicSource\MS_Mod_Ships\sims\*; DestDir: {app}\mods\MS_Mod_Main\sims; Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\MS_Mod_Ships\sims\explosions\*; DestDir: {app}\mods\MS_Mod_Main\sims\explosions; Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\*; DestDir: {app}\mods\MS_Mod_Main\sims\ships; Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\default\*; DestDir: {app}\mods\MS_Mod_Main\sims\ships\default; Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\player\*; DestDir: {app}\mods\MS_Mod_Main\sims\ships\player; Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\utility\*; DestDir: {app}\mods\MS_Mod_Main\sims\ships\utility; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sims\*; DestDir: {app}\mods\MS_Mod_Ships\sims; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sims\explosions\*; DestDir: {app}\mods\MS_Mod_Ships\sims\explosions; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\default\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\default; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\player\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\player; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\utility\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\utility; Flags: skipifsourcedoesntexist
 
-Source: .\..\EpicSource\MS_Mod_Ships\sims\weapons\*; DestDir: {app}\mods\MS_Mod_Main\sims\weapons; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sims\weapons\*; DestDir: {app}\mods\MS_Mod_Ships\sims\weapons; Flags: skipifsourcedoesntexist
 
-Source: .\..\EpicSource\MS_Mod_Ships\subsims\*; DestDir: {app}\mods\MS_Mod_Main\subsims; Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\MS_Mod_Ships\subsims\systems\*; DestDir: {app}\mods\MS_Mod_Main\subsims\systems; Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\MS_Mod_Ships\subsims\systems\nonplayer\*; DestDir: {app}\mods\MS_Mod_Main\subsims\systems\nonplayer; Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\MS_Mod_Ships\subsims\systems\nonplayer\external\*; DestDir: {app}\mods\MS_Mod_Main\subsims\systems\nonplayer\external; Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\MS_Mod_Ships\subsims\systems\player\*; DestDir: {app}\mods\MS_Mod_Main\subsims\systems\player; Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\MS_Mod_Ships\subsims\systems\player\programs\*; DestDir: {app}\mods\MS_Mod_Main\subsims\systems\player\programs; Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\MS_Mod_Ships\subsims\systems\player\subsystems\*; DestDir: {app}\mods\MS_Mod_Main\subsims\systems\player\subsystems; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\subsims\*; DestDir: {app}\mods\MS_Mod_Ships\subsims; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\subsims\systems\*; DestDir: {app}\mods\MS_Mod_Ships\subsims\systems; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\subsims\systems\nonplayer\*; DestDir: {app}\mods\MS_Mod_Ships\subsims\systems\nonplayer; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\subsims\systems\nonplayer\external\*; DestDir: {app}\mods\MS_Mod_Ships\subsims\systems\nonplayer\external; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\subsims\systems\player\*; DestDir: {app}\mods\MS_Mod_Ships\subsims\systems\player; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\subsims\systems\player\programs\*; DestDir: {app}\mods\MS_Mod_Ships\subsims\systems\player\programs; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\subsims\systems\player\subsystems\*; DestDir: {app}\mods\MS_Mod_Ships\subsims\systems\player\subsystems; Flags: skipifsourcedoesntexist
 
 
 ; station test
@@ -284,7 +284,7 @@ Filename: {app}\flux.ini; Section: Mods; Key: MS_Mod_Main; String: 1
 ;Filename: {app}\flux.ini; Section: Mods; Key: MS_Mod_Planets; String: 1
 ;Filename: {app}\flux.ini; Section: Mods; Key: MS_Mod_Pog; String: 1
 ;Filename: {app}\flux.ini; Section: Mods; Key: MS_Mod_Reference; String: 1
-;Filename: {app}\flux.ini; Section: Mods; Key: MS_Mod_Ships; String: 1
+Filename: {app}\flux.ini; Section: Mods; Key: MS_Mod_Ships; String: 1
 ;Filename: {app}\flux.ini; Section: Mods; Key: MS_Mod_Test; String: 1
 Filename: {app}\flux.ini; Section: Mods; Key: no_launch_sequence; String: 1
 ;Filename: {app}\flux.ini; Section: Mods; Key: US_Mod_JumpTube; String: 1
