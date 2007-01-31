@@ -84,8 +84,11 @@ double cplanet_orbit_increment = 1.5;
 
 double cgiant_radii_min = 2.0e7;
 double cgiant_radii_max = 9.0e7;
+double cplanet_rot_increment = 140;
 
 double cstation_orbit_mult = 2.0;
+
+
 
 //Default texture values from EoC standard code.
 int crocky1_texture_count = 4;
@@ -235,9 +238,9 @@ int main(int argc, char* argv[])
 
 			// increment planet distance and rotation
 			planet_orbit *= cplanet_orbit_increment;
-			planet_rot += 30.0;
+			planet_rot += cplanet_rot_increment;
 			if (planet_rot >= 360)
-				planet_rot = 0;
+				planet_rot = planet_rot - 360;
 
 			fprintf(fouttext,"%s,\"%s\"\n",name,name);
 
@@ -408,8 +411,10 @@ int main(int argc, char* argv[])
 
 			// increment planet distance and rotation
 			planet_orbit *=cplanet_orbit_increment;
-			planet_rot += 30.0;
-			planet_rot = fmod(planet_rot, 360.0);
+			planet_rot += cplanet_rot_increment;
+			if (planet_rot >= 360) {
+				planet_rot = planet_rot - 360;
+			}
 
 			fprintf(fouttext,"%s,\"%s\"\n",name,name);
 		
@@ -452,9 +457,10 @@ int main(int argc, char* argv[])
 
 			// increment planet distance and rotation
 			planet_orbit *=cplanet_orbit_increment;
-			planet_rot += 30.0;
-			planet_rot = fmod(planet_rot, 360.0);
-
+			planet_rot += cplanet_rot_increment;
+			if (planet_rot >= 360) {
+				planet_rot = planet_rot - 360;
+			}
 			fprintf(fouttext,"%s,\"%s\"\n",name,name);
 
 		}else if (0 == strcmp("Belt", ptoken)){ 
@@ -480,9 +486,9 @@ int main(int argc, char* argv[])
 
 			// increment planet distance and rotation
 			planet_orbit *= cplanet_orbit_increment;
-			planet_rot += 30.0;
+			planet_rot += cplanet_rot_increment;
 			if (planet_rot >= 360)
-				planet_rot = 0;
+				planet_rot = planet_rot - 360;
 
 			fprintf(fouttext,"%s,\"%s\"\n",name,name);
 		}else if (0 == strcmp("Ring", ptoken)){ 
@@ -501,9 +507,9 @@ int main(int argc, char* argv[])
 
 			// increment planet distance and rotation
 			moon_orbit *=cmoon_orbit_increment;
-			moon_rot += 30.0;
+			moon_rot += 150.0;
 			if (moon_rot>= 360)
-				moon_rot = 0;
+				moon_rot = moon_rot - 360;
 
 			fprintf(fouttext,"%s,\"%s\"\n",name,name);
 		}else if (0 == strcmp("Nebula", ptoken)){ 
@@ -529,9 +535,9 @@ int main(int argc, char* argv[])
 
 			// increment planet distance and rotation
 			planet_orbit *=cplanet_orbit_increment;
-			planet_rot += 30.0;
+			planet_rot += cplanet_rot_increment;
 			if (planet_rot >= 360)
-				planet_rot = 0;
+				planet_rot = planet_rot - 360;
 
 			fprintf(fouttext,"%s,\"%s\"\n",name,name);
 
@@ -629,9 +635,9 @@ int main(int argc, char* argv[])
 
 			// increment planet distance and rotation
 			moon_orbit *=cmoon_orbit_increment;
-			moon_rot += 30.0;
+			moon_rot += 150.0;
 			if (moon_rot>= 360)
-				moon_rot = 0;
+				moon_rot = moon_rot - 360;
 
 			fprintf(fouttext,"%s,\"%s\"\n",name,name);
 
@@ -1053,7 +1059,7 @@ void PrintSpecialPlanet(FILE * out, char *name, char *parent, double orbit, doub
 	fprintf(finiout,"template[%d]=%d\n", count, model);
 	fprintf(finiout,"orbital_distance[%d]=%f\n",count,orbit);
 	fprintf(finiout,"orbital_angle_around[%d]=%f\n",count,rot);
-	fprintf(finiout,"orbital_angle_above[%d]=%f\n",count,0);
+	fprintf(finiout,"orbital_angle_above[%d]=%f\n",count,0.0);
 	fprintf(finiout,"type[%d]=%d\n", count, HT_Disused);
 	fprintf(finiout,"faction[%d]=\"F_Empty\"\n", count);
 
@@ -1115,7 +1121,7 @@ void PrintStation(FILE * out, char *name, char *parent,
 	fprintf(finiout,"template[%d]=%d\n", count, model);
 	fprintf(finiout,"orbital_distance[%d]=%f\n",count,orbit);
 	fprintf(finiout,"orbital_angle_around[%d]=%f\n",count,rot);
-	fprintf(finiout,"orbital_angle_above[%d]=%f\n",count,0);
+	fprintf(finiout,"orbital_angle_above[%d]=%f\n",count,0.0);
 	fprintf(finiout,"type[%d]=%d\n", count, type);
 	fprintf(finiout,"richness[%d]=%d\n", count, richness);
 
