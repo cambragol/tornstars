@@ -1,0 +1,4179 @@
+/*  Script Name:      System Damage
+ *  Package Version:  0.003 (alpha)
+ *  Last Edit:        2002-07-11 22:00:49 (4495L/134003C)
+ *  Disclaimer:       This mod is not made, distributed or supported by
+ *                    Infogrames or Particle Systems Ltd.  Elements TM & (C)
+ *                    Infogrames and Particle Systems Ltd.
+ *  Maintainer:       flamineo@btinternet.com
+ *
+ *  Monitor ship system and hull status and semi-randomly destroy badly
+ *  damaged systems permanently.  Intended for use with mods that make player
+ *  system damage more likely (Elite 0.4+ or Dark Elite 1.1+); otherwise, it's
+ *  just giving you one more outrageous advantage over NP ships.
+ *
+ *
+ *  Todo:
+ *
+ *  Disrupt effect from trasher() looks and sounds pretty good, and (tested)
+ *  doesn't interfere with "real" disruption.  Still, better options?  I'd
+ *  still like to know how to trigger a one-shot sound effect, if only to
+ *  replace the weedy sonar ping I'm using for the critical failure warning.
+ *  Launcher effect for player jettison task would be pleasant, too, though
+ *  I'd have to match it to missile type, which could be hairy.
+ *
+ *  In certain situations (Unleashed mod does a lot of this) subsims may be
+ *  added and removed on the fly.  As KS has established, this causes ENG
+ *  crashes, but that ain't my problem for the moment.  Try to detect this as
+ *  accurately as possible myself, as well as putting a note in developer.txt
+ *  about removing "fsw_sdVulnSystems" to trigger re-init, or attaching an
+ *  empty one for invulnerability.  For proper flexibility, will probably have
+ *  to add yet another bool property check ("fsw_sdVulnListLocked" or
+ *  something).
+ *
+ *  Turret fighters are a PITA.  Have to remove ammo and identify cannon, but
+ *  leave other subsims alone, since they don't come from inventory.
+ *  Inventory-stripping if they survive is reasonably simple to do as for
+ *  player ship: try to remove a spare, temporarily setting loadout to empty
+ *  if that fails.  Try to preserve desired number of T-fighters when
+ *  recalculating loadout.  The problem arises if they die: AFAICT, the
+ *  default T-Fighter death script doesn't immediately put the subsims for
+ *  destroyed T-Fighters back in inventory, so they can't be removed straight
+ *  away.  The hsubsim set principle, since it's specifically intended to
+ *  avoid re-stripping inventory for destroyed ships, won't work.  Best I can
+ *  come up with is serialising cannon from destroyed T-Fighters into a global
+ *  string list of subsim names, and removing them from inventory as a special
+ *  case in the exit space function.  The biggest problem is that the NPS
+ *  light PBC on the T-Fighters is damned hard to distinguish from a "real"
+ *  one -- I'm using repair rate, but if that's changed in the ini, I could
+ *  incorrectly take player light PBCs away if the NPS one is destroyed.
+ *
+ *  Feedback extension: (optionally) always do HUD feedback (using ship name
+ *  if neither player ship nor current target) for system failure and
+ *  recovery?
+ *
+ *  Unmodded AI autorepair speeds are much, much too slow -- they can easily
+ *  get multiple consecutive failures of the same subsim just because their
+ *  repair rates are so crap.  Addressing this is really outside my scope,
+ *  since it's covered perfectly well by other mods, but should at least note
+ *  it in html/readme.  Maybe do a separate version with minimal set of
+ *  replaced AI files to give the poor buggers at least half a chance.  One
+ *  thing that may need to be done from script is bumping repair_rate on AI
+ *  thrusters, because it's far too low, and the thrusters seem to be
+ *  integrated into the sims somehow, rather than added from subsim ini files.
+ *
+ *  Rebuild/containment modelling now mostly done.  Need to decide firmly what
+ *  dictates value of "fsw_sdLives" -- hull max hp is probably a good
+ *  choice.  A few player subsims have absurdly high hp in relation to hull
+ *  hp, which makes them hard to recover in the unlikely event they do suffer
+ *  critical failure, but that's an ini-balancing issue.  Maybe add a
+ *  permanent int max hp property to reduce float2int() calls.  Would be nice
+ *  to make AI damage response handler more sophisticated (priority-aware),
+ *  but that's a fairly low priority compared to just getting everything else
+ *  to work at all.
+ *
+ *  Add a distress signal handler.  Let the player send distress signal to
+ *  nearest friendly base at will.  Should code up some kind of penalty for
+ *  "crying wolf", though.  Make AI freighters send distress signal if
+ *  attacked at all(?), and combat craft if they lose a "fsw_sdRecover" system
+ *  and have no remaining lives.  Or something like that.  Perhaps make
+ *  sending a distress signal depend on having a working sensor subsim: this
+ *  could make for interesting mission parameters.
+ *
+ *  There is a general "one-more-shot" problem affecting all energy-storing
+ *  subsims.  This can reliably be overcome on the player ship by hiking
+ *  "shot_energy_cost" and similar properties above "capacity", but the lack
+ *  of proper power modelling on NP ships seems to make it insurmountable.
+ *  Consider using Subsim.Destroy for NP ships on irreparable failure.
+ *
+ *  I haven't come up with a way to overcome the one-more-shot issue for
+ *  capsule drives, so for now they're in "exempt" along with player missile
+ *  launcher subsims.
+ *
+ *  Don't understand Stream.Play at all.  It works only on unzipped resource
+ *  files, and I don't know how to tell how many channels exist, or what the
+ *  distinction is between them, if any.
+ *
+ *  See if I can't get a couple of scaled-down debris sims to fly off damaged
+ *  ships on irreparable failures.
+ *
+ *  Add exported functions to allow other mods to trash and fix subsims
+ *  directly if necesary (for mission script use, and possibly specialised
+ *  weapons such as a weapon disruptor) -- this will require a queue processor
+ *  analogous to the rebuilder task to prevent concurrency problems.  This is
+ *  what the "may_recover" trasher parameter is for (along with making
+ *  debugging easier).  Will probably have to go back to storing recover
+ *  min/max/unit settings as globals to make this workable.
+ *
+ *  Build up ENG GUI from Mehrunes' code.  Should make it usable for any ship
+ *  for easy extensibility to pog loadout use.  Give player the ability
+ *  selectively to shut down systems, and make offline systems invulnerable to
+ *  critical failure.  If possible, give player ability to re-order repair
+ *  priorities; probably want priority to apply simultaneously to autorepair
+ *  and recovery queue, since separating them would likely be confusing to no
+ *  particular gain.  Provide at least some filters (weapons, vital
+ *  systems...), and allow saving of preset configurations to saved global
+ *  or flux.ini.  Preset configurations may be better done at meta-level
+ *  (weapons, manoeuvring -- perhaps along same lines as loadout groups for
+ *  familiarity) since they'd then be more portable across different loadouts.
+ *  Shite, this is getting out of hand.  If a pog ENG GUI can do enough,
+ *  consider permanently disabling the original game's buggy and largely
+ *  useless ENG overlay.
+ *
+ *  It's not possible reliably to detect subsim upgrades without making dodgy
+ *  assumptions about their bonuses and/or doing an awful lot of inifile
+ *  opening, so I can't inventory-strip them.  Reconsider doing this on
+ *  availability of a pog loadout system.
+ *    
+ *  A lot of subsims don't break that well just by having 0hp.  Details below
+ *  (indented).
+ *
+ *    Individual missile magazines can be disabled.  Launchers can't, because
+ *    I can't tell to which magazines they're supposed to correspond.  Can
+ *    this be dealt with?  For the moment, I've got magazines jettisoning and
+ *    launchers exempt.  Setting ammo to 0 hopefully removes it from inventory
+ *    correctly -- I never have quite mastered the connection between missile
+ *    packs in inventory and number of missiles in a magazine, but simply
+ *    removing a pack from inventory is certainly wrong.  Need to check this
+ *    properly.  Jettison launch logic is probably about as good as it's going
+ *    to get now (copies parent's world velocity to sim, then retrieves speed
+ *    property from missile to accelerate it forward at "launch_speed").
+ *
+ *    Fixing CPU hp to 0 does nowt obvious; what should it do?  Taking
+ *    programs off doesn't make much difference - anything else?  Maybe get
+ *    really nasty and add all programs, but invert modifier settings?
+ *    
+ *    Passive sensors become near-useless, but don't go offline, at 0hp.
+ *    Probably leave this as it is, since you can't do much with no sensors at
+ *    all, and you can barely fight with broken sensors.
+ *
+ *    Overriding active sensor properties doesn't do a lot, but they always
+ *    were useless, so that's ok.  Should integrate this mod with Sensor
+ *    Overhaul, though: as well as making it check for active sensors'
+ *    presence before allowing use of active modes, have it check what state
+ *    the active sensors are in (just hp should do).
+ */
+
+package
+tsSystemDamage
+;
+
+uses
+Debug,
+Global,
+INIFile,
+Input,
+List,
+Math, 
+Object,
+Sim,
+Subsim,
+State,
+Stream,
+String,
+Task,
+Text,
+
+iCargo,
+CargoTypes,
+iHUD,
+iInventory,
+iLoadout,
+iShip,
+iWingmen
+;
+
+provides
+Initialise,             // Multimod
+Shutdown,
+
+ContainDamage,          // Keybind (standard)
+DamageDbgShip,          // Keybind (debug)
+DamageDbgSubsim,
+DebugPlayer,
+FFixDbgShip,
+FFixSubsim,
+FixSubsim,
+NextSubsim,
+PrevSubsim,
+RestoreAmmo,
+RestoreLives,
+TrashSubsim,
+TestMisc,
+
+TFighterDeathWrapper,  // "death_script"
+
+Float2Int,
+HPRatio,
+Int2Float
+;
+
+/*  Globals:
+ *
+ *  fsw_sdMonitor         handle    (task) scan for system damage
+ *  fsw_sdStripCargo      set       trashed subsims (regardless of ship) to
+ *                                  remove from inventory; Note: this is kept
+ *                                  as a subsim set in an attempt to avoid
+ *                                  interfering with Comsec mod
+ *  fsw_sdTFCannon        string    Comma-delimited list of cannon subsim
+ *                                  names from destroyed T-Fighters.  Although
+ *                                  I'm otherwise trying to leave destroyed
+ *                                  ships alone, the default game behaviour of
+ *                                  giving back cannon from destroyed
+ *                                  T-Fighters is just evil, so I'm handling
+ *                                  their removal myself as a special case.
+ *
+ *  ts_sdDebugNoisy      bool      (ini-set) more detailed debug stream
+ *
+ *
+ *  Custom Properties:
+ *
+ *  Standard:
+ *
+ *  Ship:
+ *  fsw_sdLDSInhibitor    htask     keeps a ship (with broken LDS drive)
+ *                                  permanently LDS-inhibited
+ *  fsw_sdLives           int       hp still available for critical failure
+ *                                  recovery (max hp of recovered systems is
+ *                                  deducted)
+ *  fsw_sdPlayerShip      bool      identifies player ship(s) for inventory
+ *                                  mangling - note that any script can set
+ *                                  this, and it should still work
+ *  fsw_sdPlayerTFighter  bool      identifies player T-Fighters, which
+ *                                  require different inventory-strip handling
+ *                                  from player ship
+ *  fsw_sdRebuilder       htask     running rebuild queue processor
+ *  fsw_sdRebuildQueue    list      subsims to be rebuilt
+ *  fsw_sdSubsimCount     int       track number of subsims, re-init on change
+ *  fsw_sdTrasherState    hstate    state (eTrashState) of running trasher task
+ *  fsw_sdVulnSystems     list      trashable subsims (set empty to ignore
+ *                                  ship, remove to re-initialise)
+ *
+ *  Subsim:
+ *  fsw_sd<real_prop_name>          stored "true" value of various ini-set
+ *                                  properties (see trasher task for details)
+ *
+ *  Debug Mode:
+ *
+ *  Ship:
+ *  fsw_sdDebugIdx        int       index to current debug subsim target
+ *  fsw_sdDebugPlayer     bool      debug player's ship or instead of target
+ */
+
+// Enumerators:
+enum eTrashState {
+   TS_Invalid,
+   TS_Trashing,
+   TS_AskingRecover,
+   TS_Recovering
+};
+
+// Prototypes:
+
+// Exported:
+// Multimod
+prototype         Initialise();
+prototype         Shutdown();
+// Keybind (standard)
+prototype         ContainDamage();
+// Keybind (debug)
+prototype         DamageDbgShip();
+prototype         DamageDbgSubsim();
+prototype         DebugPlayer();
+prototype         FFixDbgShip();
+prototype         FFixSubsim();
+prototype         FixSubsim();
+prototype         NextSubsim();
+prototype         PrevSubsim();
+prototype         RestoreAmmo();
+prototype         RestoreLives();
+prototype         TrashSubsim();
+prototype         TestMisc();
+prototype task    TFighterDeathWrapper
+( hship           tfighter
+);
+// Local:
+// Task
+prototype task    damage_monitor
+( float           crit_prob,
+  string          exempt,
+  string          recover,
+  float           recover_unit,
+  int             recover_max,
+  int             recover_min
+);
+prototype task    fixer
+( hsubsim         subsim,
+  bool            fix_hp
+);
+prototype task    initialise_ship
+( hsim            ship,
+  string          exempt
+);
+prototype task    jettison_ammo
+( hsubsim         magazine
+);
+prototype task    lds_inhibitor
+( hship           ship
+);
+prototype task    rebuilder
+( hship           ship,
+  float           recover_unit,
+  int             recover_min,
+  int             recover_max
+);
+prototype task    trasher
+( hsubsim         subsim,
+  string          recover,
+  float           recover_unit,
+  int             recover_min,
+  int             recover_max,
+  bool            may_recover
+);
+// Standard
+prototype hsubsim get_debug_target
+( hsim            ship
+);
+prototype hsim    get_player_target();
+prototype int     getset_ss_idx
+( hsim            ship
+);
+prototype float   HPRatio
+( hobject         obj
+);
+prototype bool    is_breakable
+( hobject         obj,
+  string          exempt
+);
+prototype         reset_idx
+( hsim            ship,
+  int             new_idx
+);
+// Utility
+prototype         addset_bool
+( hobject         obj,
+  string          prop,
+  bool            val
+);
+prototype         addset_float
+( hobject         obj,
+  string          prop,
+  float           val
+);
+prototype         addset_handle
+( hobject         obj,
+  string          prop,
+  hobject         val
+);
+prototype         addset_int
+( hobject         obj,
+  string          prop,
+  int             val
+);
+prototype         addset_string
+( hobject         obj,
+  string          prop,
+  string          val
+);
+prototype int     charidx
+( string          haystack,
+  string          needle,
+  int             startidx
+);
+prototype         csv_load
+( string          url_base
+);
+prototype string  csv_locale();
+prototype         csv_unload
+( string          url_base
+);
+prototype int     Float2Int
+( float           fl
+);
+prototype eCargoType
+int2cargotype
+( int             to_cast
+);
+prototype float   Int2Float
+( int             i
+);
+prototype bool    isvalid_ini
+( string          url
+);
+prototype bool    isvalid_prop
+( hobject         obj,
+  string          prop,
+  bool            to_hud
+);
+prototype int     multiple_of
+( int             divisor,
+  int             to_bump
+);
+prototype         override_float
+( hobject         obj,
+  string          true_prop,
+  float           override_val
+);
+prototype         override_int
+( hobject         obj,
+  string          true_prop,
+  int             override_val
+);
+prototype         restore_float
+( hobject         obj,
+  string          true_prop
+);
+prototype         restore_int
+( hobject         obj,
+  string          true_prop
+);
+prototype int     stridx
+( string          haystack,
+  string          needle,
+  int             startidx
+);
+
+
+// Function Definitions:
+
+// Exported:
+
+// Multimod
+Initialise() {
+   hinifile        mod_ini     = INIFile.Create("ini:/SystemDamage");
+   hsim            player      = iShip.FindPlayerShip();
+   hobject         tfighter;
+   float           crit_prob;
+   string          exempt;
+   string          recover;
+   float           recover_unit;
+   int             recover_min;
+   int             recover_max;
+   set             strip_cargo;
+
+   if ( !mod_ini ) {
+      debug Debug.PrintString
+      ( "[fsw_sd] FATAL: Cannot find \"ini:/tsSystemDamage\"\n"
+      );
+      INIFile.Destroy(mod_ini);
+      return;
+   }
+   if ( Global.Exists("fsw_sdMonitor") ) {
+      debug Debug.PrintString
+      ( "[fsw_sd] FATAL: Global handle \"fsw_sdMonitor\" already exists\n"
+      );
+      INIFile.Destroy(mod_ini);
+      return;
+   }
+
+   // Maximum probability of badly damaged subsim failing permanently
+   crit_prob = INIFile.Float(mod_ini, "Options", "critical_probability", 0.5);
+   // Text lists of subsim names that are exempt/semi-exempt from trashing
+   exempt = INIFile.String(mod_ini, "Lists", "exempt", "");
+   // Subsims NP ships always want to recover
+   recover = INIFile.String(mod_ini, "Lists", "recover", "");
+   // Rules for subsim recovery timer
+   recover_unit = INIFile.Float(mod_ini, "Options", "recover_unit", 0.2);
+   recover_min = INIFile.Int(mod_ini, "Options", "recover_min", 20);
+   // Convert to multiple of 5
+   recover_min = multiple_of(5, recover_min);
+   // Disallow outright silly values
+   if ( recover_min < 6 ) {
+      recover_min = 5;
+   } else if ( recover_min > 60 ) {
+      recover_min = 60;
+   }
+   recover_max = INIFile.Int(mod_ini, "Options", "recover_max", 120);
+   recover_max = multiple_of(5, recover_max);
+   if ( recover_max < 21 ) {
+      recover_max = 20;
+   } else if ( recover_max > 600 ) {
+      recover_max = 600;
+   }
+   if ( INIFile.Int(mod_ini, "Options", "debug_noisy", 0) ) {
+      Global.CreateBool("ts_sdDebugNoisy", GA_Read | GA_NoSave, true);
+   }
+
+   // All variables in - drop ini object
+   INIFile.Destroy(mod_ini);
+
+   // Load (semi-)localised HUD text values
+   csv_load("csv:/text/SystemDamage");
+
+   // Identify player ship as needing trashed subsims removed from inventory
+   if ( player ) {
+      addset_bool(player, "fsw_sdPlayerShip", true);
+      // Identify T-Fighters (hawk, spit) as player T-Fighters.
+      tfighter = Object.HandleProperty(player, "name_az");
+      if ( tfighter ) {
+         addset_bool(tfighter, "fsw_sdPlayerTFighter", true);
+         addset_string(tfighter, "death_script", "fsw_sd.TFighterDeathWrapper");
+         debug
+         {
+            if ( Global.Bool("ts_sdDebugNoisy") ) {
+               atomic
+               {
+                  Debug.PrintString("[fsw_sd] ");
+                  Debug.PrintHandle(tfighter);
+                  Debug.PrintString("\n");
+                  Debug.PrintString("[fsw_sd] identified as player T-Fighter\n");
+               }
+            }
+         }
+      }
+      tfighter = Object.HandleProperty(player, "name_lori");
+      if ( tfighter ) {
+         addset_bool(tfighter, "fsw_sdPlayerTFighter", true);
+         addset_string(tfighter, "death_script", "fsw_sd.TFighterDeathWrapper");
+         debug
+         {
+            if ( Global.Bool("ts_sdDebugNoisy") ) {
+               atomic
+               {
+                  Debug.PrintString("[fsw_sd] ");
+                  Debug.PrintHandle(tfighter);
+                  Debug.PrintString("\n");
+                  Debug.PrintString("[fsw_sd] identified as player T-Fighter\n");
+               }
+            }
+         }
+      }
+   }
+
+   // Create empty global set to hold trashed subsims for inventory removal
+   Global.CreateSet("fsw_sdStripCargo", GA_Write | GA_NoSave, strip_cargo);
+
+   // Spawn main monitor task to watch all nearby ships for damage
+   Global.CreateHandle
+   ( "fsw_sdMonitor",
+     GA_Write | GA_NoSave,
+     start damage_monitor
+     ( crit_prob,
+       exempt,
+       recover,
+       recover_unit,
+       recover_max,
+       recover_min
+     )
+   );
+   Task.Detach(Task.Cast(Global.Handle("fsw_sdMonitor")));
+
+   // Bind standard keys
+   Input.BindKey("fsw_sd.ContainDamage", "tsSystemDamage.ContainDamage");
+
+   // Bind debug-mode keys whether in debug mode or not (in case it's turned
+   // on after launch) - debug functions do nothing if not in debug mode
+   Input.BindKey("fsw_sd.DamageDbgShip", "tsSystemDamage.DamageDbgShip");
+   Input.BindKey("fsw_sd.DamageDbgSubsim", "tsSystemDamage.DamageDbgSubsim");
+   Input.BindKey("fsw_sd.DebugPlayer", "tsSystemDamage.DebugPlayer");
+   Input.BindKey("fsw_sd.FFixDbgShip", "tsSystemDamage.FFixDbgShip");
+   Input.BindKey("fsw_sd.FFixSubsim", "tsSystemDamage.FFixSubsim");
+   Input.BindKey("fsw_sd.FixSubsim", "tsSystemDamage.FixSubsim");
+   Input.BindKey("fsw_sd.NextSubsim", "tsSystemDamage.NextSubsim");
+   Input.BindKey("fsw_sd.PlayerAI", "tsSystemDamage.PlayerAI");
+   Input.BindKey("fsw_sd.PrevSubsim", "tsSystemDamage.PrevSubsim");
+   Input.BindKey("fsw_sd.RestoreAmmo", "tsSystemDamage.RestoreAmmo");
+   Input.BindKey("fsw_sd.RestoreLives", "tsSystemDamage.RestoreLives");
+   Input.BindKey("fsw_sd.TrashSubsim", "tsSystemDamage.TrashSubsim");
+   Input.BindKey("fsw_sd.TestMisc", "tsSystemDamage.TestMisc");
+}
+
+Shutdown() {
+   set             ships;
+   set             trashers;
+   hobject         check_ship;
+
+   htask           monitor       = Task.Cast(Global.Handle("fsw_sdMonitor"));
+   set             strip_cargo   = Global.Set("fsw_sdStripCargo");
+   hsubsim         dead_subsim;
+   string          cargo_name;
+   int             cargo_id;
+   bool            gone;
+   hship           ship;
+
+   eLoadout        cur_loadout   = L_Empty;
+   int             num_tfighters;
+
+   string          tf_cannon;
+   int             comma_idx;
+
+   debug Debug.PrintString("[fsw_sd] Closing down system damage tracking\n");
+
+   Task.Halt(monitor);
+
+   // Trashers running at exit space may be left with states, in which
+   // case their tasks will restart on next enter space.  This attempts to
+   // kill off any such states on ships near the player for tidiness.  Better
+   // accuracy is feasible, but requires maintaining a global set with some
+   // atomic code, which might cause slowdowns if a lot of them are running at
+   // once.  Since the first thing a trasher task does is commit suicide if
+   // it finds it's initialised with an invalid state, the potential
+   // performance penalty probably isn't worth risking.
+   ships = iSim.ShipsInRadius(iShip.FindPlayerShip(), 500km);
+   Set.Add(ships, iShip.FindPlayerShip());
+   while ( !Set.IsEmpty(ships) ) {
+      check_ship = Set.FirstElement(ships);
+      Set.Remove(ships, check_ship);
+      if ( Object.PropertyExists(check_ship, "fsw_sdTrasherState") ) {
+         State.Destroy
+         ( State.Task
+           ( State.Cast
+             ( Object.HandleProperty(check_ship, "fsw_sdTrasherState")
+             )
+           )
+         );
+         Object.RemoveProperty(check_ship, "fsw_sdTrasherState");
+         debug
+         {
+            Debug.PrintString("[fsw_sd] Removed running trasher state from\n");
+            Debug.PrintString("[fsw_sd] ");
+            Debug.PrintHandle(check_ship);
+            Debug.PrintString("\n");
+         }
+      }
+   }
+
+   // Remove trashed cargo from player inventory, taking it from the current
+   // loadout to do so if necessary.  Fixme: This is a mess due to extension
+   // during testing -- break out repeated remove/strip/remove/scrap logic into
+   // a separate function for tidiness.
+   while ( !Set.IsEmpty(strip_cargo) ) {
+      dead_subsim = Subsim.Cast(Set.FirstElement(strip_cargo));
+      Set.Remove(strip_cargo, dead_subsim);
+      if ( dead_subsim == none ) {
+         debug Debug.PrintString
+         ( "[fsw_sd] Inventory strip skipping bad subsim handle\n"
+         );
+      } else {
+         cargo_name =
+         Text.Field(Object.StringProperty(dead_subsim, "name"), FT_Text);
+         ship = iShip.Cast(Subsim.Sim(dead_subsim));
+         if ( Sim.IsDead(ship) ) { // If parent ship is dead, assume inventory stripping is already
+                                   // being handled somewhere else
+            debug Debug.PrintString
+            ( String.FormatStrStr
+              ( "[fsw_sd] ...parent of \"%s\" was destroyed - skipping%s",
+                cargo_name,
+                "\n"
+              )
+            );
+         } else {
+            cargo_id = iInventory.CargoTypeFromName(cargo_name);
+            if ( cargo_id == CT_Invalid ) {
+               debug atomic
+               {
+                  Debug.PrintString("[fsw_sd] No matching cargo type found for\n");
+                  Debug.PrintString
+                  ( String.FormatStrStr
+                    ( "[fsw_sd] trashed subsim \"%s\" - skipping%s",
+                      cargo_name,
+                      "\n"
+                    )
+                  );
+               }
+            } // if cargo name not found
+            else {
+               gone = iInventory.Remove(cargo_id, 1);
+               if ( gone ) {
+                  iInventory.Add(CT_BattleScrap, 1); // hehe
+                  debug
+                  {
+                     Debug.PrintString
+                     ( String.FormatStrStr
+                       ( "[fsw_sd] Successfully removed \"%s\" (%s) from inventory\n",
+                         cargo_name,
+                         String.FromInt(cargo_id)
+                       )
+                     );
+                  }
+               } // if cargo successfully removed
+               else {
+                  debug atomic
+                  {
+                     Debug.PrintString
+                     ( String.FormatStrStr
+                       ( "[fsw_sd] Failed to remove \"%s\" (%s)...\n",
+                         cargo_name,
+                         String.FromInt(cargo_id)
+                       )
+                     );
+                  }
+                  // Cargo for trashed subsim could not be removed from inventory
+                  if
+                      ( Object.BoolProperty(ship, "fsw_sdPlayerShip")
+                        && cur_loadout == L_Empty // loadout's not yet been stripped
+                      ) {
+                     debug Debug.PrintString
+                     ( "[fsw_sd] ...parent is player ship - stripping...\n"
+                     );
+                     cur_loadout = iLoadout.CurrentLoadout();
+                     num_tfighters = iLoadout.TurretFightersInLoadout();
+                     // Get all subsims off ship and back to inventory
+                     iLoadout.CalculateLoadout(L_Empty);
+                     gone = iInventory.Remove(cargo_id, 1);
+                     if ( !gone ) {
+                        debug Debug.PrintString
+                        ( "[fsw_sd] ...inventory strip still failed - giving up\n"
+                        );
+                     } else {
+                        iInventory.Add(CT_BattleScrap, 1);
+                        debug Debug.PrintString
+                        ( "[fsw_sd] ...loadout emptied, inventory removal successful\n"
+                        );
+                     }
+                  } // (else if) parent is player ship -- attempt loadout strip
+                  else if
+                      ( Object.BoolProperty(ship, "fsw_sdPlayerTFighter")
+                        && cur_loadout == L_Empty
+                      ) {
+                     debug Debug.PrintString
+                     ( "[fsw_sd] ...parent is player T-Fighter - stripping loadout\n"
+                     );
+                     cur_loadout = iLoadout.CurrentLoadout();
+                     num_tfighters = iLoadout.TurretFightersInLoadout();
+                     iLoadout.CalculateLoadout(L_Empty);
+                     gone = iInventory.Remove(cargo_id, 1);
+                     if ( !gone ) {
+                        debug Debug.PrintString
+                        ( "[fsw_sd] ...inventory strip still failed - giving up\n"
+                        );
+                     } else {
+                        iInventory.Add(CT_BattleScrap, 1);
+                        debug Debug.PrintString
+                        ( "[fsw_sd] ...T-Fighter stripped, removal successful\n"
+                        );
+                     }
+                  } // (else if) player T-Fighter -- attempt T-Fighter loadout strip
+               } // (else) fallback block if first strip attempt fails
+            } // (else) cargo name found
+         } // subsim/cargo status if block
+      } // (else) parent ship still exists
+   } // end cargo strip while loop
+
+   // Exceptional case: cannon from destroyed T-Fighters
+   // This is a place-holder pending the arrival of a pog loadout package,
+   // which will hopefully handle inventory-stripping of ships loaded out from
+   // player inventory without the need for this sort of fiddling.
+   if ( Global.Exists("fsw_sdTFCannon") ) {
+      debug Debug.PrintString
+      ( "[fsw_sd] Attempting inventory removal of destroyed T-Fighter cannon\n"
+      );
+      tf_cannon = Global.String("fsw_sdTFCannon");
+      Global.Destroy("fsw_sdTFCannon");
+      comma_idx = charidx(tf_cannon, ",", 0);
+      while ( comma_idx != -1 ) {
+         cargo_name = Text.Field(String.Left(tf_cannon, comma_idx), FT_Text);
+         cargo_id = iInventory.CargoTypeFromName(cargo_name);
+         if ( cargo_id == CT_Invalid ) {
+            debug Debug.PrintString
+            ( String.FormatStrStr
+              ( "[fsw_sd] ERROR: no cargo id found for \"%s\"%s",
+                cargo_name,
+                "\n"
+              )
+            );
+         } else {
+            gone = iInventory.Remove(cargo_id, 1);
+            if ( !gone && cur_loadout == L_Empty ) {
+               cur_loadout = iLoadout.CurrentLoadout();
+               num_tfighters = iLoadout.TurretFightersInLoadout();
+               iLoadout.CalculateLoadout(L_Empty);
+               gone = iInventory.Remove(cargo_id, 1);
+            } else {
+               // Note: no battle scrap - parent craft was destroyed in space
+               debug Debug.PrintString
+               ( String.FormatStrStr
+                 ( "[fsw_sd] Successfully stripped \"%s\" (%s)\n",
+                   cargo_name,
+                   String.FromInt(cargo_id)
+                 )
+               );
+            }
+         }
+         tf_cannon = String.TrimLeft(tf_cannon, comma_idx + 1);
+         comma_idx = charidx(tf_cannon, ",", 0);
+      }
+      cargo_name = Text.Field(tf_cannon, FT_Text);
+      cargo_id = iInventory.CargoTypeFromName(cargo_name);
+      if ( cargo_id == CT_Invalid ) {
+         debug Debug.PrintString
+         ( String.FormatStrStr
+           ( "[fsw_sd] ERROR: no cargo id found for \"%s\"%s",
+             cargo_name,
+             "\n"
+           )
+         );
+      } else {
+         gone = iInventory.Remove(cargo_id, 1);
+         if ( !gone && cur_loadout == L_Empty ) {
+            cur_loadout = iLoadout.CurrentLoadout();
+            num_tfighters = iLoadout.TurretFightersInLoadout();
+            iLoadout.CalculateLoadout(L_Empty);
+            gone = iInventory.Remove(cargo_id, 1);
+         } else {
+            // Note: no battle scrap - parent craft was destroyed in space
+            debug Debug.PrintString
+            ( String.FormatStrStr
+              ( "[fsw_sd] Successfully stripped \"%s\" (%s)\n",
+                cargo_name,
+                String.FromInt(cargo_id)
+              )
+            );
+         }
+      }
+   }
+
+   if ( cur_loadout != L_Empty ) {
+      debug Debug.PrintString
+      ( "[fsw_sd] Player ship was stripped - recalculating loadout\n"
+      );
+
+      // At least keep the same number of T-Fighters if possible
+      iLoadout.SetDesiredNumberOfTurretFighters(num_tfighters);
+
+      if ( cur_loadout < 5 ) { // Non-custom modes can be re-applied
+         iLoadout.CalculateLoadout(cur_loadout);
+         debug Debug.PrintString
+         ( String.FormatInt("[fsw_sd] Resetting to loadout %d\n", cur_loadout)
+         );
+      } else {
+         // Can't (?) recover custom loadout - default back to standard and leave
+         // player to correct any half-arsed decisions
+         iLoadout.CalculateLoadout(L_Standard);
+         debug Debug.PrintString
+         ( String.FormatInt
+           ( "[fsw_sd] Cannot recover custom loadout %d - using L_Standard\n",
+             cur_loadout
+           )
+         );
+      }
+   }
+
+   // Clean up, it's polite
+   csv_unload("ini:/text/SystemDamage");
+
+   Global.Destroy("fsw_sdMonitor");
+   Global.Destroy("fsw_sdStripCargo");
+   Global.Destroy("ts_sdDebugNoisy");
+}
+
+
+// Keybind
+
+ContainDamage() {
+   // Emergency containment -- available only during critical system failure
+
+   hobject         ship        = iShip.FindPlayerShip();
+   hstate          st_handle   =
+   State.Cast(Object.HandleProperty(ship, "fsw_sdTrasherState"));
+
+   if ( State.Progress(st_handle) == TS_AskingRecover ) {
+      // Player ship's trasher task sets its state to TS_AskingRecover while HUD
+      // critical failure feedback is displayed.  Task will detect this state
+      // reset and contain the damage, spawning a recovery queue processor.
+      State.SetProgress(st_handle, TS_Recovering);
+      iHUD.Print("fsw_sdContaining");
+      iHUD.PlayAudioCue(AC_ValidInput);
+   } else {
+      // If player ship doesn't have a trasher task in TS_AskingRecover state,
+      // calling containment function makes no sense.
+      iHUD.Print("fsw_sdENoContainable");
+      iHUD.PlayAudioCue(AC_InvalidInput);
+   }
+}
+
+DamageDbgShip() {
+   hobject         ship        = get_player_target();
+
+   // Set debug ship (player, or current target) to 1% hull for a laugh
+
+   debug
+   {
+      if ( ship ) {
+         Object.SetFloatProperty
+         ( ship,
+           "hit_points",
+           Object.FloatProperty(ship, "hit_points") * 0.01
+         );
+      }
+   }
+}
+
+DamageDbgSubsim() {
+   hsim            ship        = get_player_target();
+   hobject         subsim      = get_debug_target(ship);
+
+   // Set current debug target subsim to 1% hit points
+
+   debug
+   {
+      if ( subsim ) {
+         Object.SetFloatProperty
+         ( subsim,
+           "hit_points",
+           Object.FloatProperty(subsim, "hit_points") * 0.01
+         );
+      }
+   }
+}
+
+DebugPlayer() {
+   hobject         player      = iShip.FindPlayerShip();
+
+   debug
+   {
+      if ( !player ) {
+         debug Debug.PrintString
+         ( "[fsw_sd] ERROR: DebugPlayer() cannot find player\n"
+         );
+         return;
+      }
+      addset_bool
+      ( player,
+        "fsw_sdDebugPlayer",
+        !Object.BoolProperty(player, "fsw_sdDebugPlayer")
+      );
+      if ( Object.BoolProperty(player, "fsw_sdDebugPlayer") ) {
+         iHUD.Print("System damage debugger: targeting player subsims");
+      } else {
+         iHUD.Print("System damage debugger: targeting current target's subsims");
+      }
+      iHUD.PlayAudioCue(AC_ValidInput);
+   }
+}
+
+FFixDbgShip() {
+   hsim            ship      = get_player_target();
+
+   debug
+   {
+      if ( ship ) {
+         Object.SetFloatProperty
+         ( ship,
+           "hit_points",
+           Object.FloatProperty(ship, "max_hit_points")
+         );
+         iHUD.Print("System damage debugger: fully repaired debug target's hull");
+         iHUD.PlayAudioCue(AC_ValidInput);
+      }
+   }
+}
+
+FFixSubsim() {
+   hsim            ship      = get_player_target();
+   hsubsim         subsim;
+   string          feedback;
+
+   debug
+   {
+      if ( !ship ) {
+         iHUD.Print("System damage debugger: NO CURRENT TARGET");
+         iHUD.PlayAudioCue(AC_InvalidInput);
+         return;
+      }
+      subsim = get_debug_target(ship);
+      if ( subsim ) {
+         feedback = String.FormatStrStr
+                    ( "%s%s passed to fixer() function with hp flag",
+                      "System damage debugger: ",
+                      Text.Field(Object.StringProperty(subsim, "name"), FT_Text)
+                    );
+         iHUD.Print(feedback);
+         iHUD.PlayAudioCue(AC_ValidInput);
+         Task.Detach(start fixer(subsim, true));
+      }
+   }
+}
+
+FixSubsim() {
+   hsim            ship      = get_player_target();
+   hsubsim         subsim;
+   string          feedback;
+
+   debug
+   {
+      if ( !ship ) {
+         iHUD.Print("System damage debugger: NO CURRENT TARGET");
+         iHUD.PlayAudioCue(AC_InvalidInput);
+         return;
+      }
+      subsim = get_debug_target(ship);
+      if ( subsim ) {
+         feedback = String.FormatStrStr
+                    ( "%s%s passed to fixer() function without hp flag",
+                      "System damage debugger: ",
+                      Text.Field(Object.StringProperty(subsim, "name"), FT_Text)
+                    );
+         iHUD.Print(feedback);
+         iHUD.PlayAudioCue(AC_ValidInput);
+         Task.Detach(start fixer(subsim, false));
+      }
+   }
+}
+
+NextSubsim() {
+   hsim            ship        = get_player_target();
+   int             subsim_idx;
+   int             subsim_max;
+
+   debug
+   {
+      if ( !ship ) {
+         iHUD.Print("System damage debugger: NO CURRENT TARGET");
+         iHUD.PlayAudioCue(AC_InvalidInput);
+         return;
+      }
+      subsim_idx = getset_ss_idx(ship);
+      if ( subsim_idx == -1 ) {
+         iHUD.Print("System damage debugger: NO SUBSIMS ON TARGET");
+         iHUD.PlayAudioCue(AC_InvalidInput);
+         return;
+      }
+      subsim_max = List.ItemCount(Object.ListProperty(ship, "fsw_sdVulnSystems"));
+      if ( ++subsim_idx == subsim_max ) {
+         subsim_idx = 0;
+      }
+      reset_idx(ship, subsim_idx);
+   }
+}
+
+PrevSubsim() {
+   hsim            ship        = get_player_target();
+   int             subsim_idx;
+   int             subsim_max;
+
+   debug
+   {
+      if ( !ship ) {
+         iHUD.Print("System damage debugger: NO CURRENT TARGET");
+         iHUD.PlayAudioCue(AC_InvalidInput);
+         return;
+      }
+      subsim_idx = getset_ss_idx(ship);
+      if ( subsim_idx == -1 ) {
+         iHUD.Print("System damage debugger: NO SUBSIMS ON TARGET");
+         iHUD.PlayAudioCue(AC_InvalidInput);
+         return;
+      }
+      subsim_max = List.ItemCount(Object.ListProperty(ship, "fsw_sdVulnSystems"));
+      if ( --subsim_idx == -1 ) {
+         subsim_idx = subsim_max - 1;
+      }
+      reset_idx(ship, subsim_idx);
+   }
+}
+
+RestoreAmmo() {
+   hsim            ship      = get_player_target();
+   hobject         subsim    = get_debug_target(ship);
+   string          ss_name   =
+   Text.Field(Object.StringProperty(subsim, "name"), FT_Text);
+   int             cur;
+
+   debug
+   {
+      if ( !ship || !subsim ) {
+         return;
+      }
+      if ( !Object.PropertyExists(subsim, "ammo_count") ) {
+         iHUD.Print
+         ( String.FormatStrStr
+           ( "System damage debugger: no \"%s\" on \"%s\"",
+             "ammo_count",
+             ss_name
+           )
+         );
+         iHUD.PlayAudioCue(AC_InvalidInput);
+         return;
+      }
+      if ( !Object.PropertyExists(subsim, "max_ammo_count") ) {
+         iHUD.Print
+         ( String.FormatStrStr
+           ( "System damage debugger: no \"%s\" on \"%s\"",
+             "max_ammo_count",
+             ss_name
+           )
+         );
+         iHUD.PlayAudioCue(AC_InvalidInput);
+         return;
+      }
+      cur = Object.IntProperty(subsim, "ammo_count");
+      Object.SetIntProperty
+      ( subsim,
+        "ammo_count",
+        Object.IntProperty(subsim, "max_ammo_count")
+      );
+      iHUD.Print
+      ( String.Join
+        ( String.FormatStrStr
+          ( "System damage debugger: \"%s\" ammo restored from %s to ",
+            ss_name,
+            String.FromInt(cur)
+          ),
+          String.FromInt(Object.IntProperty(subsim, "ammo_count"))
+        )
+      );
+   }
+}
+
+RestoreLives() {
+   hobject         ship      = get_player_target();
+
+   if ( !ship ) {
+      iHUD.Print("System damage debugger: ERROR - no target");
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   addset_int
+   ( ship,
+     "fsw_sdLives",
+     Float2Int(Object.FloatProperty(ship, "max_hit_points"))
+   );
+   iHUD.Print
+   ( String.FormatStrStr
+     ( "System damage debugger: %s restored to %s",
+       "\"fsw_sdLives\"",
+       String.FromInt(Object.IntProperty(ship, "fsw_sdLives"))
+     )
+   );
+   iHUD.PlayAudioCue(AC_ValidInput);
+}
+
+TrashSubsim() {
+   hsim            ship      = get_player_target();
+   hsubsim         subsim;
+   string          feedback;
+   hinifile        mod_ini;
+   string          recover;
+   float           recover_unit;
+   int             recover_min;
+   int             recover_max;
+
+   debug 
+   {
+      // This is a debug function, so we can't pass in the rebuild calc info in
+      // the usual fashion - get it from ini again to avoid more globals
+      mod_ini = INIFile.Create("ini:/SystemDamage");
+      if ( !mod_ini ) {
+         iHUD.Print("System damage debugger: NO \"ini:/tsSystemDamage\" found");
+         iHUD.PlayAudioCue(AC_InvalidInput);
+         INIFile.Destroy(mod_ini);
+         return;
+      }
+      recover = INIFile.String(mod_ini, "Options", "recover", "");
+      recover_unit = INIFile.Float(mod_ini, "Options", "recover_unit", 0.1);
+      recover_min = INIFile.Int(mod_ini, "Options", "recover_min", 20);
+      recover_min = multiple_of(5, recover_min);
+      recover_max = INIFile.Int(mod_ini, "Options", "recover_max", 120);
+      recover_max = multiple_of(5, recover_max);
+      INIFile.Destroy(mod_ini);
+
+      if ( !ship ) {
+         iHUD.Print("System damage debugger: NO CURRENT TARGET");
+         iHUD.PlayAudioCue(AC_InvalidInput);
+         return;
+      }
+      subsim = get_debug_target(ship);
+      if ( subsim ) {
+         feedback = String.FormatStrStr
+                    ( "%s%s passed to trasher() task",
+                      "System damage debugger: ",
+                      Text.Field(Object.StringProperty(subsim, "name"), FT_Text)
+                    );
+         iHUD.Print(feedback);
+         iHUD.PlayAudioCue(AC_ValidInput);
+         Task.Detach
+         ( start trasher
+           ( subsim,
+             recover,
+             recover_unit,
+             recover_min,
+             recover_max,
+             false
+           )
+         );
+      }
+   }
+}
+
+TestMisc() {
+   hship         player    = iShip.FindPlayerShip();
+   hsim          sim;
+   int           i;
+
+   // Have you seen these properties
+   // "elements" (HUD bitmask)
+   // Capacitor current energy (on energy weapons, LDAs, cap drive, etc)
+
+   debug
+   {
+   }
+}
+
+task              TFighterDeathWrapper
+( hship           tfighter
+) {
+   // I don't know for certain everything the real death script does, so I can't
+   // easily replace it.  This is a wrapper for the original script that tries
+   // also to remove the ship's missiles and cannon from the player inventory.
+   set             subsims =
+   Set.FromList(Object.ListProperty(tfighter, "fsw_sdVulnSystems"));
+   hobject         cur_subsim;
+   string          cannon_name;
+   htask           real_death_script;
+   int             panic   = 0;
+   int             cargo_id;
+   bool            cannon_gone;
+   list            strip_tfighters;
+
+   // Lord, I hate these things.  Special case handling for player T-Fighter
+   // destruction: attempt to remove ammo and cannon from player inventory
+   // while leaving the subsims that are part of the manufactured ship alone.
+   // Completely hard-coded to the unmodded ini setup, so may behave
+   // erratically if, for example, using a modded T-Fighter that has anything
+   // other than the "nps_light_pbc" as it's welded-on cannon.  Ideally, this
+   // should be ditched altogether in favour of a 100% pog loadout solution for
+   // all player ships, iFleet fleet and T-Fighters alike.
+
+   while ( !Set.IsEmpty(subsims) ) {
+      cur_subsim = Set.FirstElement(subsims);
+      Set.Remove(subsims, cur_subsim);
+      if ( Object.IntProperty(cur_subsim, "ammo_count") ) {
+         Object.SetIntProperty(cur_subsim, "ammo_count", 0);
+      }
+      if
+          ( ( Object.PropertyExists(cur_subsim, "shot_energy_cost")
+              ||
+              ( Object.PropertyExists(cur_subsim, "ammo_count")
+                && stridx(Object.StringProperty(cur_subsim, "name"), "annon", 0) != -1
+              )
+            )
+            &&
+            !
+            ( Object.StringProperty(cur_subsim, "name") == "Cargo_LightPBC"
+              && Object.FloatProperty(cur_subsim, "repair_rate") == 2.0
+            ) // Try not to strip the NPS light PBC (it didn't come from inventory)
+          ) {
+         cannon_name = Object.StringProperty(cur_subsim, "name");
+         // Store cannon name into a comma-delimited list of subsims for removal
+         // on return to base (default death_script appears not to put the cannon
+         // back in inventory until return to base, and I can't very well set an
+         // empty loadout while the player's still flying about).
+         if ( Global.Exists("fsw_sdTFCannon") ) {
+            Global.SetString
+            ( "fsw_sdTFCannon",
+              String.FormatStrStr
+              ( "%s,%s",
+                Global.String("fsw_sdTFCannon"),
+                cannon_name
+              )
+            );
+         } else {
+            Global.CreateString
+            ( "fsw_sdTFCannon",
+              GA_Write | GA_NoSave,
+              cannon_name
+            );
+         }
+      }
+   }
+
+   // Ammo removed and cannon (hopefully) indentified - run true death script
+   real_death_script = start iWingmen.TFighterDeathScript(tfighter);
+   Task.Detach(real_death_script);
+}
+
+// Local:
+
+// Task
+
+task              damage_monitor
+( float           crit_prob,
+  string          exempt,
+  string          recover,
+  float           recover_unit,
+  int             recover_max,
+  int             recover_min
+) {
+   hisim           player;
+   hship           cur_ship;
+   set             near_ships;
+   set             vuln_subsims;
+   set             empty;
+   hsubsim         cur_subsim;
+   float           subsim_integrity;
+   float           trash_chance;
+   float           trash_rnd;
+
+   debug Debug.PrintString("[fsw_sd] Damage monitor task started\n");
+
+   schedule
+   {
+      every 5:
+      {
+         player = iShip.FindPlayerShip();
+         near_ships = iSim.ShipsInRadius(player, 400km);
+         Set.Add(near_ships, player);
+         while ( !Set.IsEmpty(near_ships) ) {
+            cur_ship = iShip.Cast(Set.FirstElement(near_ships));
+            Set.Remove(near_ships, cur_ship);
+            if ( !Object.PropertyExists(cur_ship, "fsw_sdVulnSystems") ) {
+               // Don't wait for initialisation -- we'll catch it next pass
+               Task.Detach(start initialise_ship(cur_ship, exempt));
+            } else {
+               // Is hull damaged enough to require critical failure checks?
+               trash_chance = crit_prob - HPRatio(cur_ship);
+               if ( trash_chance > 0.0 ) {
+                  // Get set of subsims for checking
+                  vuln_subsims =
+                  Set.FromList(Object.ListProperty(cur_ship, "fsw_sdVulnSystems"));
+                  // Trigger a (re-)init if subsim count has changed since last
+                  // initialisation (proceed with check of current set anyway, and
+                  // ignore any bad handles).  Do this only if
+                  if
+                      ( Sim.SubsimCount(cur_ship)
+                        != Object.IntProperty(cur_ship, "fsw_sdSubsimCount")
+                      ) {
+                     Object.RemoveProperty(cur_ship, "fsw_sdVulnSystems");
+                     debug atomic
+                     {
+                        Debug.PrintString
+                        ( "[fsw_sd] WARNING: Subsim count has changed on\n"
+                        );
+                        Debug.PrintString("[fsw_sd] ");
+                        Debug.PrintHandle(cur_ship);
+                        Debug.PrintString("\n");
+                     }
+                  }
+                  while ( !Set.IsEmpty(vuln_subsims) ) {
+                     cur_subsim = Subsim.Cast(Set.FirstElement(vuln_subsims));
+                     Set.Remove(vuln_subsims, cur_subsim);
+                     if
+                         ( !cur_subsim
+                           && Object.PropertyExists(cur_ship, "fsw_sdVulnSystems")
+                         ) {
+                        // Bad handle in list: someone's been buggering with our
+                        // subsims since last initialisation.  Force re-initialisation.
+                        Object.RemoveProperty(cur_ship, "fsw_sdVulnSystems");
+                        debug atomic
+                        {
+                           Debug.PrintString
+                           ( "[fsw_sd] WARNING: bad handle found in subsim list for\n"
+                           );
+                           Debug.PrintString("[fsw_sd] ");
+                           Debug.PrintHandle(cur_ship);
+                           Debug.PrintString("\n");
+                        }
+                     } else if ( !Object.PropertyExists(cur_subsim, "fsw_sdrepair_rate") )
+                     // Vulnerable subsim is not trashed yet
+                     {
+                        subsim_integrity = HPRatio(cur_subsim);
+                        if ( subsim_integrity < 0.05 ) {
+                           trash_rnd = Math.Random(0.0, 1.0);
+                           if ( trash_chance > trash_rnd ) {
+                              // Spawn task to break it and keep going
+                              Task.Detach
+                              ( start trasher
+                                ( cur_subsim,
+                                  recover,
+                                  recover_unit,
+                                  recover_min,
+                                  recover_max,
+                                  true
+                                )
+                              );
+                              // Trash no more than one system per pass, as any more
+                              // sent to trasher() would bail out anyway
+                              vuln_subsims = empty;
+                           } // if dice roll requires breakage
+                        } // if subsim is badly damaged
+                     } // if subsim is not already broken
+                  } // while vulnerable subsims remain
+               } // if hull integrity requires subsim breakage check
+            } // (else) ship has vulnerable systems
+         } // while nearby ships remain
+      } // every
+   } // schedule
+}
+
+task              fixer
+( hsubsim         subsim,
+  bool            fix_hp
+) {
+   hship           ship    = iShip.Cast(Subsim.Sim(subsim));
+   set             strip_cargo;
+
+   if ( !Object.PropertyExists(subsim, "fsw_sdrepair_rate") ) {
+      debug atomic
+      {
+         if ( Global.Bool("ts_sdDebugNoisy") ) {
+            Debug.PrintString("[fsw_sd] ERROR: Cannot fix subsim ");
+            Debug.PrintHandle(subsim);
+            Debug.PrintString("\n");
+            Debug.PrintString("[fsw_sd] which has no \"fsw_sdrepair_rate\"\n");
+         }
+      }
+      return;
+   }
+
+   debug
+   {
+      if ( Global.Bool("ts_sdDebugNoisy") ) {
+         atomic
+         {
+            Debug.PrintString("[fsw_sd] Fixing ");
+            Debug.PrintHandle(subsim);
+            Debug.PrintString("\n");
+         }
+      }
+   }
+
+   // Standard properties for all subsims
+   restore_float(subsim, "power");
+   restore_float(subsim, "heat_rate");
+   restore_float(subsim, "repair_rate");
+   // Additional class-specific properties (attempting restore will do
+   // nothing if they haven't been overridden)
+   restore_float(subsim, "capacity");
+   restore_float(subsim, "heat_loss_rate");
+   restore_float(subsim, "shot_energy_cost");
+   restore_float(subsim, "min_fire_energy");
+   restore_float(subsim, "shield_energy_cost");
+   restore_int(subsim, "ammo_count");
+   restore_float(subsim, "brightness_mod");
+   restore_int(subsim, "programs");
+   restore_float(subsim, "id_range_increase");
+
+   if
+       ( Object.PropertyExists(ship, "fsw_sdLDSInhibitor")
+         && Object.PropertyExists(subsim, "ramp_up_time")
+         && Object.PropertyExists(subsim, "max_speed")
+       ) { // Cancel LDS inhibitor task
+      debug
+      {
+         if ( Global.Bool("ts_sdDebugNoisy") ) {
+            atomic
+            {
+               Debug.PrintString("[fsw_sd] lds_inhibitor releasing ");
+               Debug.PrintHandle(ship);
+               Debug.PrintString("\n");
+            }
+         }
+      }
+      Task.Halt(Task.Cast(Object.HandleProperty(ship, "fsw_sdLDSInhibitor")));
+      Object.RemoveProperty(ship, "fsw_sdLSDInhibitor");
+      iShip.DisruptLDSDrive(ship, 0.001);  // overrides existing longer disrupt
+   }
+
+   if ( fix_hp ) {
+      Object.SetFloatProperty
+      ( subsim,
+        "hit_points",
+        Object.FloatProperty(subsim, "max_hit_points")
+      );
+   }
+
+   atomic
+   {
+      // This should currently happen only from debug fixing, but leave it
+      // open to allow for recovery of even irreparable subsims should it be
+      // needed
+      strip_cargo = Global.Set("fsw_sdStripCargo");
+      if ( Set.Contains(strip_cargo, subsim) ) {
+         Set.Remove(strip_cargo, subsim);
+         Global.SetSet("fsw_sdStripCargo", strip_cargo);
+      }
+   }
+}
+
+task              initialise_ship
+( hsim            ship,
+  string          exempt
+) // Set ship up for monitoring 
+{
+   int             subsim_loop;
+   int             subsim_count;
+   hobject         cur_subsim;
+   list            vuln_subsims;
+
+   debug atomic
+   {
+      if ( Global.Bool("ts_sdDebugNoisy") ) {
+         Debug.PrintString("[fsw_sd] Initialising ");
+         Debug.PrintHandle(ship);
+         Debug.PrintString("\n");
+      }
+   }
+
+   if ( !ship ) {
+      debug Debug.PrintString
+      ( "[fsw_sd] ERROR: initialise_ship() received bad handle\n"
+      );
+      return;
+   }
+   if ( Object.PropertyExists(ship, "fsw_sdVulnSystems") ) {
+      debug atomic
+      { Debug.PrintString("[fsw_sd] ERROR: ");
+         Debug.PrintHandle(ship);
+         Debug.PrintString("\n");
+         Debug.PrintString("[fsw_sd] already has \"fsw_sdVulnSystems\"\n");
+      }
+      return;
+   }
+
+   // Add empty list now to prevent monitor attempting to spawn second
+   // initialisation task if this takes a long time for some reaason
+   Object.AddListProperty(ship, "fsw_sdVulnSystems", vuln_subsims);
+
+   // Add rebuild units and queue on first initialisation
+   if ( !Object.PropertyExists(ship, "fsw_sdLives") ) {
+      Object.AddIntProperty
+      ( ship,
+        "fsw_sdLives",
+        Float2Int(Object.FloatProperty(ship, "max_hit_points"))
+      );
+      if ( Global.Bool("ts_sdDebugNoisy") ) {
+         debug atomic
+         {
+            Debug.PrintString
+            ( String.FormatStrStr
+              ( "[fsw_sd] Added \"fsw_sdLives\" property (%s) to%s",
+                String.FromInt(Object.IntProperty(ship, "fsw_sdLives")),
+                "\n"
+              )
+            );
+            Debug.PrintString("[fsw_sd] ");
+            Debug.PrintHandle(ship);
+            Debug.PrintString("\n");
+         }
+      }
+   }
+   if ( !Object.PropertyExists(ship, "fsw_sdRebuildQueue") ) {
+      // Note: it just needs to be an empty list for now, so re-use this one
+      Object.AddListProperty(ship, "fsw_sdRebuildQueue", vuln_subsims);
+   }
+
+   subsim_count = Sim.SubsimCount(ship);
+   // Need to keep an eye on this in case it's changed by other scripts
+   addset_int(ship, "fsw_sdSubsimCount", subsim_count);
+
+   // Build list of subsims that should be monitored
+   for ( subsim_loop = 0; subsim_loop < subsim_count; ++subsim_loop ) {
+      cur_subsim = Sim.NthSubsim(ship, subsim_loop);
+
+      if ( is_breakable(cur_subsim, exempt) ) {
+         List.AddTail(vuln_subsims, cur_subsim);
+      }
+   }
+
+   // Attach list of breakable subsims
+   Object.SetListProperty(ship, "fsw_sdVulnSystems", vuln_subsims);
+
+   debug atomic
+   {
+      Debug.PrintString("[fsw_sd] Updated \"fsw_sdVulnSystems\" list for\n");
+      Debug.PrintString("[fsw_sd] ");
+      Debug.PrintHandle(ship);
+      Debug.PrintString("\n");
+      if ( List.IsEmpty(Object.ListProperty(ship, "fsw_sdVulnSystems")) ) {
+         Debug.PrintString
+         ( "[fsw_sd] WARNING: List is empty; no subsim damage will occur\n"
+         );
+      }
+   }
+}
+
+task              jettison_ammo
+( hsubsim         magazine
+) {
+   int             ammo            = Object.IntProperty(magazine, "ammo_count");
+   string          projectile_url;
+   hship           parent;
+   hfaction        faction;
+   hisim           missile; // or mine
+   float           launch_speed    =
+   Object.FloatProperty(magazine, "launch_speed");
+   float           lr;
+   float           radius;
+   string          wav_url;
+   string          mag_name;
+
+   if ( !ammo ) {
+      debug atomic
+      {
+         Debug.PrintString("[fsw_sd] \"ammo_count\" 0 - cannot jettison from\n");
+         Debug.PrintString("[fsw_sd] ");
+         Debug.PrintHandle(magazine);
+         Debug.PrintString("\n");
+      }
+      return;
+   }
+   projectile_url = Object.StringProperty(magazine, "projectile_template");
+   parent = iShip.Cast(Subsim.Sim(magazine));
+   if ( parent == iShip.FindPlayerShip() ) {
+      mag_name = Object.StringProperty(magazine, "name");
+      if
+          ( stridx(mag_name, "easure", 0) != -1
+            || stridx(mag_name, "ecoy", 0) != -1
+            || stridx(mag_name, "lare", 0) != -1
+          ) {
+         wav_url = "sound:/audio/sfx/cm_launch";
+      } else {
+         wav_url = "sound:/audio/sfx/missile_us";
+      }
+   }
+   faction = iSim.Faction(parent);
+   radius = Object.FloatProperty(parent, "radius");
+   while ( ammo != 0 && !Sim.IsDead(parent) ) {
+      // Thank you once again, Stephen Robertson
+      Object.SetIntProperty(magazine, "ammo_count", --ammo);
+      missile = iSim.Cast(Sim.Create(projectile_url, ""));
+      // copy parent's faction to missile
+      iSim.SetFaction(missile, faction);
+      // Can't tell where it should really come from, so randomise a bit
+      if ( Math.Random(0.0, 1.0) > 0.5 ) {
+         lr = 0.5 * radius;
+      } else {
+         lr = -0.5 * radius;
+      }
+      if ( wav_url != "" ) {
+         // I have absolutely no idea what the distinction between stream
+         // channels is - hopefully this won't break anything. It won't play if
+         // channel 3 is already playing, but it's not very important, so that's
+         // ok.
+         Stream.Play(3, wav_url, false, false);
+      }
+      atomic
+      {
+         Sim.PlaceRelativeToInside(missile, parent, lr, 0.0, radius);
+         Sim.PointAway(missile, parent);
+         // parent's "velocity" property refers (I think) to world velocity,
+         // which isn't much use for making missiles come forward out of the
+         // front of the ship, so I think this is about the best I'm going to
+         // get
+         Sim.SetVelocity
+         ( missile,
+           Object.VectorPropertyX(parent, "velocity"),
+           Object.VectorPropertyY(parent, "velocity"),
+           Object.VectorPropertyZ(parent, "velocity")
+         );
+         Sim.SetVelocityLocalToSim
+         ( missile,
+           Math.Random(launch_speed * 0.2, launch_speed * 0.3),
+           Math.Random(launch_speed * 0.2, launch_speed * 0.3),
+           launch_speed + Sim.Speed(missile)
+         );
+      }
+      Task.Sleep(Task.Current(), Object.FloatProperty(magazine, "refire_delay"));
+   }
+}
+
+task              lds_inhibitor
+( hship           ship
+) {
+   if
+       ( Task.Cast(Object.HandleProperty(ship, "fsw_sdLDSInhibitor"))
+         != Task.Current()
+       ) // Should be adequate to prevent these going rogue: calling function uses
+   // AddHandleProperty to attach handle to this task to ship.  Cancelling
+   // function uses handle to halt task.  AddHandleProperty fails if another
+   // inhibitor is already running, so exit immediately if this task doesn't
+   // match the handle.
+   {
+      debug atomic
+      {
+         Debug.PrintString("[fsw_sd] ERROR: ");
+         Debug.PrintHandle(ship);
+         Debug.PrintString("\n");
+         Debug.PrintString("[fsw_sd] has a running lds_inhibitor - bailing\n");
+      }
+      return;
+   }
+
+   debug
+   {
+      if ( Global.Bool("ts_sdDebugNoisy") ) {
+         atomic
+         {
+            Debug.PrintString("[fsw_sd] lds_inhibitor task attached to\n");
+            Debug.PrintString("[fsw_sd] ");
+            Debug.PrintHandle(ship);
+            Debug.PrintString("\n");
+         }
+      }
+   }
+
+   schedule
+   {
+      // Disrupt LDS indefinitely, exiting on ship death (may also be halted
+      // using handle by fixer task)
+
+      // Should keep this vaguely frequent, as direct LDSi hits flip the
+      // same switch.  Should be at least 10s from LDSi hit to the point where
+      // they'll try to use the drive again?
+      every 10:
+      {
+         if ( !Sim.IsDead(ship) ) {
+            iShip.DisruptLDSDrive(ship, 3.0e8);
+         } else {
+            debug
+            {
+               if ( Global.Bool("ts_sdDebugNoisy") ) {
+                  Debug.PrintString
+                  ( "[fsw_sd] lds_inhibitor exiting with dead parent ship\n"
+                  );
+               }
+            }
+            return;
+         }
+      }
+   }
+}
+
+task              rebuilder
+( hship           ship,
+  float           recover_unit,
+  int             recover_min,
+  int             recover_max
+) // process a ship's subsim rebuild queue 
+{
+   hsubsim         subsim;
+   int             recover_time;
+   string          fb_template   = Text.Field("fsw_sdRepairCounter", FT_Text);
+   string          subsim_name;
+   string          ship_name =
+   Text.Field(Object.StringProperty(ship, "name"), FT_Text);
+   list            rebuildq;
+   int             remainder;
+
+   // Fixme: should investigate how "priority" works and sort queue by it if
+   // appropriate.  GUI should ideally give player ability to reset priority.
+
+   debug atomic
+   {
+      if ( Global.Bool("ts_sdDebugNoisy") ) {
+         Debug.PrintString("[fsw_sd] Rebuild queue processor task called for\n");
+         Debug.PrintString("[fsw_sd] ");
+         Debug.PrintHandle(ship);
+         Debug.PrintString("\n");
+      }
+   }
+
+   // Process subsim rebuild queue
+   while ( !List.IsEmpty(Object.ListProperty(ship, "fsw_sdRebuildQueue")) ) {
+      atomic
+      {
+         rebuildq = Object.ListProperty(ship, "fsw_sdRebuildQueue");
+         subsim = Subsim.Cast(List.Head(rebuildq));
+         List.Remove(rebuildq, subsim);
+         Object.SetListProperty(ship, "fsw_sdRebuildQueue", rebuildq);
+      }
+      recover_time = Float2Int
+                     ( recover_unit * Object.FloatProperty(subsim, "max_hit_points")
+                     );
+      // We want a multiple of 5
+      recover_time = multiple_of(5, recover_time);
+      if ( recover_time > recover_max ) {
+         recover_time = recover_max;
+      } else if ( recover_time < recover_min ) {
+         recover_time = recover_min;
+      }
+      subsim_name = Text.Field(Object.StringProperty(subsim, "name"), FT_Text);
+      debug atomic
+      {
+         if ( Global.Bool("ts_sdDebugNoisy") ) {
+            Debug.PrintString
+            ( String.FormatStrStr
+              ( "[fsw_sd] Starting rebuild countdown for %s (%ss)\n",
+                subsim_name,
+                String.FromInt(recover_time)
+              )
+            );
+         }
+      }
+      // Schedule starts immediately: sleep for first 5s
+      Task.Sleep(Task.Current(), 5.0);
+      schedule
+      {
+         every 5:
+         {
+            if ( Sim.IsDead(ship) ) { // Destroyed or culled
+               debug
+               {
+                  if ( Global.Bool("ts_sdDebugNoisy") ) {
+                     Debug.PrintString
+                     ( "[fsw_sd] Queue processor for dead ship bailing\n"
+                     );
+                  }
+               }
+               return;
+            }
+
+            // Ship still exists - decrement repair timer
+
+            recover_time -= 5;
+
+            if ( recover_time <= 0 ) {
+               // Put subsim back in working order
+               Task.Detach(start fixer(subsim, false));
+
+               if ( ship == iShip.FindPlayerShip() ) {
+                  iHUD.Print
+                  ( String.Join
+                    ( Text.Field("fsw_sdRepairComplete", FT_Text),
+                      subsim_name
+                    )
+                  );
+                  iHUD.PlayAudioCue(AC_ValidInput);
+               } else if ( ship == iShip.CurrentTarget(iShip.FindPlayerShip()) ) {
+                  iHUD.Print
+                  ( String.Join
+                    ( Text.Field("fsw_sdTargetRepairComplete", FT_Text),
+                      subsim_name
+                    )
+                  );
+                  // Audio cue player repairs only
+               }
+               break;  // Continue loop to check queue for more subsims
+            }
+
+            // Track rebuild progress on HUD for player
+            if
+                ( recover_time % 10 == 0
+                  && ship == iShip.FindPlayerShip()
+                ) {
+               iHUD.Print
+               ( String.FormatStrStr
+                 ( fb_template,
+                   subsim_name,
+                   String.FromInt(recover_time)
+                 )
+               );
+            }
+         } // countdown/feedback (every 5)
+      } // repair counter schedule
+   } // while queue still contains subsims
+
+   debug atomic
+   {
+      if ( Global.Bool("ts_sdDebugNoisy") ) {
+         Debug.PrintString("[fsw_sd] Queue empty - rebuilder exiting for\n");
+         Debug.PrintString("[fsw_sd] ");
+         Debug.PrintHandle(ship);
+         Debug.PrintString("\n");
+      }
+   }
+   Object.RemoveProperty(ship, "fsw_sdRebuilder");
+}
+
+task              trasher
+( hsubsim         subsim,
+  string          recover,
+  float           recover_unit,
+  int             recover_min,
+  int             recover_max,
+  bool            may_recover
+) {
+   hship           ship          = iShip.Cast(Subsim.Sim(subsim));
+   string          feedback;
+   string          feedback2;
+   string          ss_name_key;
+   int             flash;
+   hstate          state         = State.Find(Task.Current());
+   list            rebuildq;
+   set             strip_cargo;
+   eCargoType      cargo_id;
+   int             cargo_count;
+   string          cargo_feedback;
+   float           rp;   // repair point ratio
+   float           rnd;  // random check (used for AI rebuild decision)
+
+   // Handler for critical failure of subsystems
+
+   // Shouldn't happen, but may if exit_space event fails to destroy
+   // states of running trashers
+   if ( state ) {
+      debug atomic
+      {
+         Debug.PrintString
+         ( "[fsw_sd] ERROR: destroying invalid startup trasher task state:\n"
+         );
+         Debug.PrintHandle(state);
+         Debug.PrintString
+         ( String.FormatInt
+           ( "[fsw_sd] (progress value %d)\n",
+             State.Progress(state)
+           )
+         );
+      }
+      State.Destroy(Task.Current());
+   }
+
+   if ( !subsim ) {
+      debug Debug.PrintString
+      ( "[fsw_sd] ERROR: trasher received bad subsim handle\n"
+      );
+      return;
+   }
+
+   if ( !ship ) {
+      debug atomic
+      {
+         Debug.PrintString
+         ( "[fsw_sd] ERROR: trasher could not get parent ship handle from\n"
+         );
+         Debug.PrintString("[fsw_sd] ");
+         Debug.PrintHandle(subsim);
+         Debug.PrintString("\n");
+      }
+      return;
+   }
+
+   if ( Sim.IsDead(ship) ) {
+      debug Debug.PrintString
+      ( "[fsw_sd] Dead ship passed to trasher - ignoring\n"
+      );
+      return;
+   }
+
+   // Is another trasher task already running for this ship?
+   if ( Object.PropertyExists(ship, "fsw_sdTrasherState") ) {
+      debug atomic
+      {
+         Debug.PrintString("[fsw_sd] ");
+         Debug.PrintHandle(ship);
+         Debug.PrintString("\n");
+         Debug.PrintString
+         ( "[fsw_sd] already has a trasher state handle - let's not overdo it\n"
+         );
+      }
+      return;
+   }
+
+   // Is subsim already broken?
+   if ( Object.PropertyExists(subsim, "fsw_sdrepair_rate") ) {
+      debug atomic
+      {
+         Debug.PrintString("[fsw_sd] ERROR: cannot trash() ");
+         Debug.PrintHandle(subsim);
+         Debug.PrintString("\n");
+         Debug.PrintString("[fsw_sd] which already has \"fsw_sdrepair_rate\"\n");
+      }
+      return;
+   }
+
+   // Initialise task state and make it visible as handle property
+   state = State.Create(Task.Current(), TS_Trashing);
+   addset_handle(ship, "fsw_sdTrasherState", state);
+
+   debug atomic
+   {
+      if ( Global.Bool("ts_sdDebugNoisy") ) {
+         Debug.PrintString("[fsw_sd] Trashing ");
+         Debug.PrintHandle(subsim);
+         Debug.PrintString("\n");
+         Debug.PrintString("[fsw_sd] on ");
+         Debug.PrintHandle(ship);
+         Debug.PrintString("\n");
+      }
+   }
+
+   // This'll do until/less I can work out something preferable
+   iShip.Disrupt(ship, 0.05, true);
+
+   // Reset various properties to simulate off-line behaviour as best we can
+   override_float(subsim, "heat_rate", 0.0);
+   if ( Object.FloatProperty(subsim, "power") != 0.0 ) { // Leave 0.0 alone
+      // Overriding "power" to 0.0 isn't advisable, as it makes subsims with
+      // capacitors misbehave somewhat
+      override_float(subsim, "power", 5.0);
+   }
+   override_float(subsim, "repair_rate", 0.0);
+
+   // override mechanism wouldn't work here: "max_hit_points" covers recovery
+   Object.SetFloatProperty(subsim, "hit_points", 0.0);
+
+   // Resetting hp to 0 doesn't make all subsims unusable; class-specific
+   // additional overrides follow
+   ss_name_key = Object.StringProperty(subsim, "name");
+
+   // There're quite a few sims that use internal capacitors (energy weapons,
+   // capsule drive, LDAs...).  This is somewhat counterintuitive, but setting
+   // their capacity much higher is the best way to disable them (and provides
+   // the most useful HUD feedback) -- I can't work out how to get at their
+   // stored energy, if it's even possible, but at 0hp they can't recharge.
+   // Setting their capacity much higher therefore leaves them unable to charge
+   // to usable levels.  This still doesn't prevent the one-more-shot effect on
+   // capsule drives.
+   if ( Object.FloatProperty(subsim, "capacity") != 0.0 ) {
+      override_float
+      ( subsim,
+        "capacity",
+        Object.FloatProperty(subsim, "capacity") * 1.0e3
+      );
+   }
+
+   // Note that NP ships have no heat or power modelling, so they'll tend to
+   // get annoying things like one last shot out of a trashed cannon.  Unless
+   // there's an identifiable way to get at the capacitor of energy weapons, I
+   // can't do much about this.  For the player ship, setting energy cost
+   // higher than capacity does the trick.  A possible alternative solution for
+   // NP ships would be Subsim.Destroy (since ENG is not such an issue) on
+   // irreparable failures.
+
+   // Is it a heat-sink? try to balance this so shutting down non-vital
+   // systems will keep a ship barely usable
+   if ( stridx(ss_name_key, "HeatSink", 0) != -1 ) {
+      override_float
+      ( subsim,
+        "heat_loss_rate",
+        Object.FloatProperty(subsim, "heat_loss_rate") * 0.5
+      );
+   }
+
+   // Is it an energy cannon? don't let it fire
+   if ( Object.PropertyExists(subsim, "shot_energy_cost") ) {
+      override_float
+      ( subsim,
+        "shot_energy_cost",
+        Object.FloatProperty(subsim, "capacity") * 1.1
+      );
+   }
+   // Is it a beam weapon? as above
+   else if ( Object.PropertyExists(subsim, "min_fire_energy") ) {
+      override_float
+      ( subsim,
+        "min_fire_energy",
+        Object.FloatProperty(subsim, "capacity") * 1.1
+      );
+   }
+   // And again, for LDAs
+   else if ( Object.PropertyExists(subsim, "shield_energy_cost") ) {
+      override_float
+      ( subsim,
+        "shield_energy_cost",
+        Object.FloatProperty(subsim, "capacity") * 1.1
+      );
+   }
+   // Slug thrower/missile/mine magazine - reset ammo to 0
+   else if ( Object.PropertyExists(subsim, "ammo_count") ) {
+      override_int(subsim, "ammo_count", 0);
+   }
+   // CPU
+   else if ( Object.PropertyExists(subsim, "programs") ) {
+      // This doesn't really do a lot.  Anything else nasty we could add?
+      // It's one of the few cases where upgrades are semi-easy to detect
+      // without replacing iLoadout, but unfortunately it's also the one
+      // case where inventory stripping upgrades would make very little sense.
+      override_int(subsim, "programs", 0);
+   }
+   // active sensors
+   else if ( Object.PropertyExists(subsim, "id_range_increase") ) {
+      override_float(subsim, "id_range_increase", 0.0);
+   }
+   // LDS drive
+   else if
+       ( Object.PropertyExists(subsim, "ramp_up_time")
+         && Object.PropertyExists(subsim, "max_speed")
+       ) {
+      // Breaking LDS drive doesn't stop it working entirely - this does
+      Object.AddHandleProperty
+      ( ship,
+        "fsw_sdLDSInhibitor",
+        start lds_inhibitor(ship)
+      );
+      Task.Detach
+      ( Task.Cast(Object.HandleProperty(ship, "fsw_sdLDSInhibitor"))
+      );
+   }
+
+   // this is on a few things (signal mask, heat-sinks...)
+   if ( Object.PropertyExists(subsim, "brightness_mod") ) {
+      override_float(subsim, "brightness_mod", 0.0);
+   }
+
+
+   // Subsim is offline.  Will it be contained and recovered?
+
+   // Provide HUD feedback for player critical failures...
+   if ( ship == iShip.FindPlayerShip() ) {
+      // Attempt to identify associated cargo type and number of spares, UNLESS
+      // it's a missile magazine, in which case don't (at least, not without
+      // first translating number of packs in inventory to number of ammo units)
+      if
+          ( !
+            ( Object.PropertyExists(subsim, "ammo_count")
+              && stridx(ss_name_key, "annon", 0) == -1
+            )
+          ) {
+         cargo_id = int2cargotype
+                    ( iInventory.CargoTypeFromName(Text.Field(ss_name_key, FT_Text))
+                    );
+         if ( cargo_id != CT_Invalid ) {
+            cargo_count = iInventory.NumberOfCargoType(cargo_id);
+            if ( cargo_count ) {
+               cargo_feedback = String.FormatInt
+                                ( Text.Field("fsw_sdInvSpares", FT_Text),
+                                  cargo_count
+                                );
+            } else {
+               cargo_feedback = Text.Field("fsw_sdNoInvSpares", FT_Text);
+            }
+         }
+      }
+      if
+          ( may_recover
+            &&
+            Object.IntProperty(ship, "fsw_sdLives")
+            >= Float2Int(Object.FloatProperty(subsim, "max_hit_points"))
+          ) {
+         // Player may interrupt system failure with containment function
+         State.SetProgress(state, TS_AskingRecover);
+         feedback = String.Join
+                    ( Text.Field("fsw_sdTempFail", FT_Text),
+                      Text.Field(Object.StringProperty(subsim, "name"), FT_Text)
+                    );
+         feedback2 =
+         String.FormatStrStr
+         ( Text.Field("fsw_sdContainAsk", FT_Text),
+           String.FromInt
+           ( Float2Int(Object.FloatProperty(subsim, "max_hit_points"))
+           ),
+           String.FromInt
+           ( Object.IntProperty(ship, "fsw_sdLives")
+           )
+         );
+         if ( cargo_id != CT_Invalid ) {
+            feedback2 = String.FormatStrStr("%s - %s", feedback2, cargo_feedback);
+         }
+      } else {
+         // Subsystem failure can't be contained
+         feedback = String.Join
+                    ( Text.Field("fsw_sdCritFail", FT_Text),
+                      Text.Field(ss_name_key, FT_Text)
+                    );
+         if ( cargo_id != CT_Invalid ) {
+            feedback2 = cargo_feedback;
+         } else {
+            feedback2 = "";
+         }
+      }
+
+      for ( flash = 0; flash < 5; ++flash ) {
+         iHUD.SetPrompt(feedback, feedback2);
+         if ( Stream.IsPlaying(3) ) {
+            // This is important - force it to play if there's already something
+            // on channel 3; hopefully we can get away without resorting to atomic
+            Stream.Stop(3, false);
+         }
+         Stream.Play(3, "sound:/audio/hud/klaxon", false, false);
+         Task.Sleep(Task.Current(), 0.85);
+         iHUD.SetPrompt("", "");
+         Task.Sleep(Task.Current(), 0.15);
+         if ( State.Progress(state) == TS_Recovering ) {
+            feedback = String.FormatStrStr
+                       ( Text.Field("fsw_sdContained", FT_Text),
+                         Text.Field(ss_name_key, FT_Text),
+                         String.FromInt
+                         ( Object.IntProperty(ship, "fsw_sdLives")
+                           - Float2Int(Object.FloatProperty(subsim, "max_hit_points"))
+                         )
+                       );
+            iHUD.Print(feedback);
+            iHUD.PlayAudioCue(AC_ValidInput);
+            // Player has called containment function
+            break;
+         }
+      }
+   } else
+   // it ain't the player: make an AI rebuild decision
+   {
+      if
+          ( may_recover
+            &&
+            Object.IntProperty(ship, "fsw_sdLives")
+            >= Float2Int(Object.FloatProperty(subsim, "max_hit_points"))
+          ) {
+         if ( stridx(recover, ss_name_key, 0) != -1 ) {
+            // It's in the always recover list
+            State.SetProgress(state, TS_Recovering);
+         } else {
+            // This is too basic -- try to make it a bit more intelligent by
+            // taking note of priority if possible
+            rp =
+            Int2Float(Object.IntProperty(ship, "fsw_sdLives"))
+            / Object.FloatProperty(ship, "max_hit_points");
+            rnd = Math.Random(0.0, 1.0);
+            if ( rp > rnd ) {
+               State.SetProgress(state, TS_Recovering);
+            }
+         }
+      }
+   }
+
+   if ( State.Progress(state) == TS_AskingRecover ) {
+      // Player didn't activate containment - too late now
+      State.SetProgress(state, TS_Trashing);
+   }
+
+   // Let player know what's going on if we're the current target
+   if ( iSim.Cast(ship) == iShip.CurrentTarget(iShip.FindPlayerShip()) ) {
+      if ( State.Progress(state) == TS_Recovering ) {
+         feedback = String.Join
+                    ( Text.Field("fsw_sdTempHit", FT_Text),
+                      Text.Field(Object.StringProperty(subsim, "name"), FT_Text)
+                    );
+         debug
+         {
+            feedback = String.Join
+                       ( feedback,
+                         String.FormatStrStr
+                         ( " - COST: %s OF %s",
+                           String.FromFloat(Object.FloatProperty(subsim, "max_hit_points")),
+                           String.FromInt(Object.IntProperty(ship, "fsw_sdLives"))
+                         )
+                       );
+         }
+      } else {
+         feedback = String.Join
+                    ( Text.Field("fsw_sdCritHit", FT_Text),
+                      Text.Field(Object.StringProperty(subsim, "name"), FT_Text)
+                    );
+      }
+      iHUD.Print(feedback);
+      // Don't play an audio cue: the disruptor effect should do
+   }
+
+   // Will we be rebuilding today?
+   if ( State.Progress(state) == TS_Recovering ) {
+      Object.SetIntProperty
+      ( ship,
+        "fsw_sdLives",
+        Object.IntProperty(ship, "fsw_sdLives")
+        - Float2Int(Object.FloatProperty(subsim, "max_hit_points"))
+      );
+      if ( Object.IntProperty(ship, "fsw_sdLives") < 0 ) {
+         Object.SetIntProperty(ship, "fsw_sdLives", 0);
+      }
+      atomic
+      {
+         // List.AddTail(Object.ListProperty... don't work -- seems it's
+         // necessary to pull the list from the property into a local variable,
+         // change it, then put it back
+         rebuildq = Object.ListProperty(ship, "fsw_sdRebuildQueue");
+         List.AddTail(rebuildq, subsim);
+         Object.SetListProperty(ship, "fsw_sdRebuildQueue", rebuildq);
+      }
+      // Start a queue handler if one isn't running
+      if ( !Object.HandleProperty(ship, "fsw_sdRebuilder") ) {
+         addset_handle
+         ( ship,
+           "fsw_sdRebuilder",
+           start rebuilder(ship, recover_unit, recover_min, recover_max)
+         );
+         Task.Detach(Task.Cast(Object.HandleProperty(ship, "fsw_sdRebuilder")));
+      }
+   } else {
+      // Permanently buggered.  Do any additional handling to reflect this.
+      if
+          ( Object.PropertyExists(subsim, "ammo_count") // has ammo
+            && stridx(ss_name_key, "annon", 0) == -1    // isn't a gun
+          ) {
+         // Uh, "ordnance" (?)  magazine - jettison missiles/mines; I have to
+         // do /something/ to offset the fact I can't do anything interesting
+         // with the actual launchers without completely new loadout code
+         restore_int(subsim, "ammo_count");
+         Task.Detach(start jettison_ammo(subsim));
+      }
+      // Add non-ammo-based subsims to global set of subsims to have their
+      // corresponding cargo removed from inventory
+      else if ( Object.BoolProperty(ship, "fsw_sdPlayerShip") ) {
+         atomic
+         {
+            strip_cargo = Global.Set("fsw_sdStripCargo");
+            Set.Add(strip_cargo, subsim);
+            Global.SetSet("fsw_sdStripCargo", strip_cargo);
+         }
+      } else if ( Object.BoolProperty(ship, "fsw_sdPlayerTFighter") ) {
+         // Problem: T-Fighter loadout is partly inventory-based, partly not.
+         // Missile depletion is handled differently; here, try to identify the
+         // cannon that came from the player's inventory.
+         if
+             ( ( Object.PropertyExists(subsim, "shot_energy_cost")
+                 ||
+                 ( Object.PropertyExists(subsim, "ammo_count")
+                   && stridx(ss_name_key, "annon", 0) != -1
+                 )
+               )
+               &&
+               !
+               ( Object.StringProperty(subsim, "name") == "Cargo_LightPBC"
+                 && Object.FloatProperty(subsim, "repair_rate") == 2.0
+               ) // Try not to strip the NPS light PBC (it didn't come from inventory)
+             ) {
+            atomic
+            {
+               strip_cargo = Global.Set("fsw_sdStripCargo");
+               Set.Add(strip_cargo, subsim);
+               Global.SetSet("fsw_sdStripCargo", strip_cargo);
+            }
+         }
+      } else {
+         // NP ships should really consider sending a distress signal at this
+         // point
+      }
+   }
+
+   // If this is skipped, the task will be restored, which is a bad thing.
+   // Ensure exit space doesn't allow running trashers to be killed without
+   // destroyed states, if possible.  If not, the error checks at the start of
+   // the task should at least ensure they'll die immediately on the next
+   // enter space.
+   State.Destroy(Task.Current());
+
+   // Remove state handle
+   Object.RemoveProperty(ship, "fsw_sdTrasherState");
+}
+
+
+// Standard
+
+hsubsim           get_debug_target
+( hsim            ship
+) {
+   int             debug_idx;
+   hsubsim         subsim;
+   string          ss_name;
+
+   if ( !ship ) {
+      debug Debug.PrintString
+      ( "[fsw_sd] ERROR: get_debug_target received bad handle\n"
+      );
+      return none;
+   }
+   debug_idx = getset_ss_idx(ship);
+   if ( debug_idx == -1 ) {
+      debug atomic
+      {
+         Debug.PrintString("[fsw_sd] ERROR: no subsims found on ");
+         Debug.PrintHandle(ship);
+         Debug.PrintString("\n");
+      }
+      return none;
+   }
+   subsim = Subsim.Cast(List.GetNth(Object.ListProperty(ship, "fsw_sdVulnSystems"), debug_idx));
+   if ( !subsim ) {
+      iHUD.Print
+      ( String.FormatInt
+        ( "System damage debugger: INVALID SUBSIM INDEX %d",
+          debug_idx
+        )
+      );
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return none;
+   }
+   ss_name = Text.Field(Object.StringProperty(subsim, "name"), FT_Text);
+   if
+       ( !
+         ( isvalid_prop(subsim, "hit_points", true)
+           && isvalid_prop(subsim, "max_hit_points", true)
+           && isvalid_prop(subsim, "repair_rate", true)
+         )
+       ) {
+      return none;
+   }
+   return subsim;
+}
+
+hsim              get_player_target() {
+   // Note: for debugging only; returns player ship if fsw_sdDebugPlayer
+   // is true or non-existent, otherwise tries to return player's target
+
+   hship           player   = iShip.FindPlayerShip();
+   hsim            target;
+
+   if ( !player ) {
+      debug Debug.PrintString
+      ( "[fsw_sd] ERROR: get_player_target() cannot find player\n"
+      );
+      return none;
+   }
+   if ( !Object.PropertyExists(player, "fsw_sdDebugPlayer") ) {
+      Object.AddBoolProperty(player, "fsw_sdDebugPlayer", true);
+   }
+   if ( Object.BoolProperty(player, "fsw_sdDebugPlayer") ) {
+      target = player;
+   } else {
+      target = iShip.CurrentTarget(player);
+   }
+   if ( target ) {
+      return target;
+   }
+   debug
+   {
+      iHUD.Print
+      ( "System damage debugger: NO CURRENT TARGET - defaulting to player"
+      );
+   }
+   return player;
+}
+
+int               getset_ss_idx
+( hsim            ship
+) {
+   if ( !ship ) {
+      debug Debug.PrintString
+      ( "[fsw_sd] ERROR: getset_ss_idx received bad handle\n"
+      );
+      return -1;
+   }
+   if ( !Object.PropertyExists(ship, "fsw_sdDebugIdx") ) {
+      if ( !List.ItemCount(Object.ListProperty(ship, "fsw_sdVulnSystems")) ) {
+         debug atomic
+         {
+            Debug.PrintString("[fsw_sd] ERROR: ");
+            Debug.PrintHandle(ship);
+            Debug.PrintString(" has no subsims\n");
+         }
+         return -1;
+      } else {
+         Object.AddIntProperty(ship, "fsw_sdDebugIdx", 0);
+      }
+   }
+   return Object.IntProperty(ship, "fsw_sdDebugIdx");
+}
+
+float             HPRatio
+( hobject         obj
+) {
+   float           hp;
+   float           max;
+   float           ratio;
+
+   // Note: this is very basic because it has to be quick.  Error checking
+   // should already have been handled by is_breakable() from
+   // initialise_ship().
+   max = Object.FloatProperty(obj, "max_hit_points");
+   hp = Object.FloatProperty(obj, "hit_points");
+   // Allow for precision errors
+   if ( hp == 0.0 ) {
+      return 0.0;
+   }
+   ratio = hp / max;
+   // Just in case properties are gibberish (hp > max, that kind of thing)
+   if ( ratio < 0.0 ) {
+      return 0.0;
+   } else if ( ratio > 1.0 ) {
+      return 1.0;
+   }
+   return ratio;
+}
+
+bool              is_breakable
+( hobject         obj,
+  string          exempt
+) {
+   string          obj_name;
+
+   if ( !isvalid_prop(obj, "hit_points", false) ) {
+      return false;
+   }
+   if ( Object.FloatProperty(obj, "repair_rate") == 0.0 ) {
+      // Treat subsims with 0.0 repair rate as untouchable, since they won't
+      // repair themselves anyway
+      debug atomic
+      {
+         if ( Global.Bool("ts_sdDebugNoisy") ) {
+            Debug.PrintString("[fsw_sd] ");
+            Debug.PrintHandle(obj);
+            Debug.PrintString("\n");
+            Debug.PrintString
+            ( "[fsw_sd] has 0.0 or no \"repair_rate\" - ignoring\n"
+            );
+         }
+      }
+      return false;
+   }
+   if ( Object.FloatProperty(obj, "max_hit_points") == 0.0 ) {
+      // Treat subsims with 0.0 max hp (autorepair, wep link...) as untouchable
+      debug atomic
+      {
+         if ( Global.Bool("ts_sdDebugNoisy") ) {
+            Debug.PrintString("[fsw_sd] ");
+            Debug.PrintHandle(obj);
+            Debug.PrintString("\n");
+            Debug.PrintString
+            ( "[fsw_sd] has 0.0 or no \"max_hit_points\" - ignoring\n"
+            );
+         }
+      }
+      return false;
+   }
+   obj_name = Object.StringProperty(obj, "name");
+   if ( stridx(exempt, obj_name, 0) != -1 ) {
+      // ini-exempt
+      debug
+      {
+         if ( Global.Bool("ts_sdDebugNoisy") ) {
+            Debug.PrintString
+            ( String.FormatStrStr
+              ( "[fsw_sd] ini-exempt: \"%s\"%s",
+                obj_name,
+                "\n"
+              )
+            );
+         }
+      }
+      return false;
+   }
+   if
+       ( Object.FloatProperty(obj, "max_hit_points")
+         < Object.FloatProperty(obj, "hit_points")
+       ) { // this is just wrong
+      Object.SetFloatProperty
+      ( obj,
+        "max_hit_points",
+        Object.FloatProperty(obj, "hit_points")
+      );
+   }
+   return true;
+}
+
+reset_idx
+( hsim            ship,
+  int             new_idx
+) {
+   string          feedback;
+   hobject         cur_subsim;
+
+   Object.SetIntProperty(ship, "fsw_sdDebugIdx", new_idx);
+   feedback = String.FormatInt
+              ( "System damage debugger: target index reset to %d (",
+                new_idx
+              );
+   cur_subsim = List.GetNth(Object.ListProperty(ship, "fsw_sdVulnSystems"), new_idx);
+   if ( !cur_subsim ) {
+      feedback = String.FormatStrStr("%s%s)", feedback, "BAD HANDLE");
+   } else {
+      feedback = String.FormatStrStr
+                 ( "%s%s)",
+                   feedback,
+                   String.FormatStrStr
+                   ( "%s - %s",
+                     Object.StringProperty(cur_subsim, "name"),
+                     Text.Field(Object.StringProperty(cur_subsim, "name"), FT_Text)
+                   )
+                 );
+   }
+   iHUD.Print(feedback);
+   iHUD.PlayAudioCue(AC_ValidInput);
+}
+
+
+// Utility
+
+addset_bool
+( hobject         obj,
+  string          prop,
+  bool            val
+) {
+   if ( Object.PropertyExists(obj, prop) ) {
+      Object.SetBoolProperty(obj, prop, val);
+   } else {
+      Object.AddBoolProperty(obj, prop, val);
+   }
+}
+
+addset_float
+( hobject         obj,
+  string          prop,
+  float           val
+) {
+   if ( Object.PropertyExists(obj, prop) ) {
+      Object.SetFloatProperty(obj, prop, val);
+   } else {
+      Object.AddFloatProperty(obj, prop, val);
+   }
+}
+
+addset_handle
+( hobject         obj,
+  string          prop,
+  hobject         val
+) {
+   if ( Object.PropertyExists(obj, prop) ) {
+      Object.SetHandleProperty(obj, prop, val);
+   } else {
+      Object.AddHandleProperty(obj, prop, val);
+   }
+}
+
+addset_int
+( hobject         obj,
+  string          prop,
+  int             val
+) {
+   if ( Object.PropertyExists(obj, prop) ) {
+      Object.SetIntProperty(obj, prop, val);
+   } else {
+      Object.AddIntProperty(obj, prop, val);
+   }
+}
+
+addset_string
+( hobject         obj,
+  string          prop,
+  string          val
+) {
+   if ( Object.PropertyExists(obj, prop) ) {
+      Object.SetStringProperty(obj, prop, val);
+   } else {
+      Object.AddStringProperty(obj, prop, val);
+   }
+}
+
+int               charidx
+( string          haystack,
+  string          needle,
+  int             startidx
+) {
+   int             strlen_h  = String.Length(haystack);
+   int             strlen_n  = String.Length(needle);
+   int             loop      = startidx;
+
+   if ( !(startidx < strlen_h && (strlen_n)) )
+      return -1;
+
+   if ( strlen_n > 1 )
+      needle = String.Left(needle, 1);
+
+   do {
+      if ( String.Mid(haystack, loop, 1) == needle )
+         return loop;
+   }
+   while ( ++loop < strlen_h );
+
+   return -1;
+}
+
+csv_load
+( string          url_base
+) {
+   string          url_full  =
+   String.FormatStrStr("%s_%s", url_base, csv_locale());
+
+   Text.Add(url_full);
+}
+
+string            csv_locale() {
+   string          new_game_value  = Text.Field("pda_start_new_game", FT_Text);
+
+   if ( new_game_value == "*pda_start_new_game*" ) {
+      debug Debug.PrintString
+      ( "[fsw_sd] WARNING: gui.csv not loaded? attempting load/unload fallback\n"
+      );
+      Text.Add("csv:/text/gui");
+      new_game_value = Text.Field("pda_start_new_game", FT_Text);
+      Text.Remove("csv:/text/gui");
+      if ( new_game_value == "*pda_start_new_game*" ) {
+         debug
+         {
+            Debug.PrintString
+            ( "[fsw_sd] ERROR: gui.csv fallback failed - giving up\n"
+            );
+            Debug.PrintString("[fsw_sd] and defaulting locale to \"english\"\n");
+         }
+         return "english";
+      }
+   }
+   if ( new_game_value == "START NEW GAME" ) {
+      return "english";
+   } else if ( new_game_value == "NEUES SPIEL" ) {
+      return "german";
+   } else if ( new_game_value == "NOUVELLE PARTIE" ) {
+      return "french";
+   }
+   debug
+   {
+      Debug.PrintString
+      ( "[fsw_sd] ERROR: unrecognised \"pda_start_new_game\" value -\n"
+      );
+      Debug.PrintString("[fsw_sd] (\"");
+      Debug.PrintString(new_game_value);
+      Debug.PrintString("\")\n");
+      Debug.PrintString("[fsw_sd] defaulting locale to \"english\"\n");
+   }
+   return "english";
+}
+
+csv_unload
+( string          url_base
+) {
+   string          url_full  =
+   String.FormatStrStr("%s_%s", url_base, csv_locale());
+
+   Text.Remove(url_full);
+}
+
+int               Float2Int
+( float           fl
+) {
+   // Convert float to int explicitly if necessary (keeps us down to one
+   // compiler warning if it needs to be done multiple times) - note that the
+   // function passing the float in is responsible for knowing that the return
+   // value will make sense.  Better avoided if possible.
+   return fl;
+}
+
+eCargoType        int2cargotype
+( int             to_cast
+) {
+   switch ( to_cast ) {
+   case CT_Invalid:
+      return CT_Invalid;
+   case CT_WasteBlocks:
+      return CT_WasteBlocks;
+   case CT_PlasticWaste:
+      return CT_PlasticWaste;
+   case CT_OrganicPulp:
+      return CT_OrganicPulp;
+   case CT_WastePaper:
+      return CT_WastePaper;
+   case CT_DiseasedSewage:
+      return CT_DiseasedSewage;
+   case CT_FrozenSewage:
+      return CT_FrozenSewage;
+   case CT_RawSewage:
+      return CT_RawSewage;
+   case CT_SugarCane:
+      return CT_SugarCane;
+   case CT_Fish:
+      return CT_Fish;
+   case CT_Fruit:
+      return CT_Fruit;
+   case CT_Grain:
+      return CT_Grain;
+   case CT_Meat:
+      return CT_Meat;
+   case CT_Potatoes:
+      return CT_Potatoes;
+   case CT_Rice:
+      return CT_Rice;
+   case CT_Soya:
+      return CT_Soya;
+   case CT_Vegetables:
+      return CT_Vegetables;
+   case CT_EdibleFungi:
+      return CT_EdibleFungi;
+   case CT_FoodBlocks:
+      return CT_FoodBlocks;
+   case CT_FoodPills:
+      return CT_FoodPills;
+   case CT_MealInABar:
+      return CT_MealInABar;
+   case CT_PseudoShake:
+      return CT_PseudoShake;
+   case CT_RecoveredMeat:
+      return CT_RecoveredMeat;
+   case CT_SyntheticCheese:
+      return CT_SyntheticCheese;
+   case CT_SyntheticProtein:
+      return CT_SyntheticProtein;
+   case CT_SurvivalRations:
+      return CT_SurvivalRations;
+   case CT_DrinkingWater:
+      return CT_DrinkingWater;
+   case CT_Apes:
+      return CT_Apes;
+   case CT_Birds:
+      return CT_Birds;
+   case CT_DonorPigs:
+      return CT_DonorPigs;
+   case CT_DrugLeeches:
+      return CT_DrugLeeches;
+   case CT_Giraffes:
+      return CT_Giraffes;
+   case CT_Horses:
+      return CT_Horses;
+   case CT_Lions:
+      return CT_Lions;
+   case CT_Weasels:
+      return CT_Weasels;
+   case CT_Yaks:
+      return CT_Yaks;
+   case CT_Zebras:
+      return CT_Zebras;
+   case CT_AttackDogs:
+      return CT_AttackDogs;
+   case CT_BiomassProcessingWorms:
+      return CT_BiomassProcessingWorms;
+   case CT_Camels:
+      return CT_Camels;
+   case CT_CancerMice:
+      return CT_CancerMice;
+   case CT_Chickens:
+      return CT_Chickens;
+   case CT_Cows:
+      return CT_Cows;
+   case CT_Dogs:
+      return CT_Dogs;
+   case CT_EngineeredInsects:
+      return CT_EngineeredInsects;
+   case CT_Goats:
+      return CT_Goats;
+   case CT_Insects:
+      return CT_Insects;
+   case CT_Pigs:
+      return CT_Pigs;
+   case CT_Rodents:
+      return CT_Rodents;
+   case CT_Primates:
+      return CT_Primates;
+   case CT_HYL:
+      return CT_HYL;
+   case CT_Foetuses:
+      return CT_Foetuses;
+   case CT_CloneBoneTissue:
+      return CT_CloneBoneTissue;
+   case CT_CloneEyes:
+      return CT_CloneEyes;
+   case CT_CloneGlands:
+      return CT_CloneGlands;
+   case CT_CloneHearts:
+      return CT_CloneHearts;
+   case CT_CloneIntestines:
+      return CT_CloneIntestines;
+   case CT_CloneKidneys:
+      return CT_CloneKidneys;
+   case CT_CloneLimbs:
+      return CT_CloneLimbs;
+   case CT_CloneLivers:
+      return CT_CloneLivers;
+   case CT_CloneLungs:
+      return CT_CloneLungs;
+   case CT_CloneSkin:
+      return CT_CloneSkin;
+   case CT_VatGrownMuscle:
+      return CT_VatGrownMuscle; 
+   case CT_BlankTissueCulture:
+      return CT_BlankTissueCulture;
+   case CT_CommonStrandMaterial:
+      return CT_CommonStrandMaterial;
+   case CT_DNAChangers:
+      return CT_DNAChangers;
+   case CT_DNASequencers:
+      return CT_DNASequencers;
+   case CT_DNATattoos:
+      return CT_DNATattoos;
+   case CT_GeneticMarkerAgents:
+      return CT_GeneticMarkerAgents;
+   case CT_GeneticRejuvinations:
+      return CT_GeneticRejuvinations;
+   case CT_TransplantEyes:
+      return CT_TransplantEyes;
+   case CT_TransplantGlands:
+      return CT_TransplantGlands;
+   case CT_TransplantHearts:
+      return CT_TransplantHearts;
+   case CT_TransplantIntestine:
+      return CT_TransplantIntestine;
+   case CT_TransplantKidneys:
+      return CT_TransplantKidneys;
+   case CT_TransplantLivers:
+      return CT_TransplantLivers;
+   case CT_TransplantLungs:
+      return CT_TransplantLungs;
+   case CT_TransplantSkin:
+      return CT_TransplantSkin;
+   case CT_Houseplants:
+      return CT_Houseplants;
+   case CT_PotPlants:
+      return CT_PotPlants;
+   case CT_Seedlings:
+      return CT_Seedlings;
+   case CT_Seeds:
+      return CT_Seeds;
+   case CT_Algae:
+      return CT_Algae;
+   case CT_PlantPulp:
+      return CT_PlantPulp;
+   case CT_Woodpulp:
+      return CT_Woodpulp;
+   case CT_Trees:
+      return CT_Trees;
+   case CT_SlimeMould:
+      return CT_SlimeMould;
+   case CT_Yeast:
+      return CT_Yeast;
+   case CT_NitroBacteria:
+      return CT_NitroBacteria;
+   case CT_SoilBacteria:
+      return CT_SoilBacteria;
+   case CT_TerraformingBacteria:
+      return CT_TerraformingBacteria;
+   case CT_RecyclingBacteria:
+      return CT_RecyclingBacteria;
+   case CT_AnimalFeed:
+      return CT_AnimalFeed;
+   case CT_Compost:
+      return CT_Compost;
+   case CT_Fertiliser:
+      return CT_Fertiliser;
+   case CT_Soil:
+      return CT_Soil;
+   case CT_SportingBodyArmour:
+      return CT_SportingBodyArmour;
+   case CT_Footballs:
+      return CT_Footballs;
+   case CT_GolfSupplies:
+      return CT_GolfSupplies;
+   case CT_NullBox:
+      return CT_NullBox;
+   case CT_PaintGuns:
+      return CT_PaintGuns;
+   case CT_Scuba:
+      return CT_Scuba;
+   case CT_TennisEquipment:
+      return CT_TennisEquipment;
+   case CT_SportsClothes:
+      return CT_SportsClothes;
+   case CT_ZeroGGymnasia:
+      return CT_ZeroGGymnasia;
+   case CT_SportingWeapons:
+      return CT_SportingWeapons;
+   case CT_Antiques:
+      return CT_Antiques;
+   case CT_Paintings:
+      return CT_Paintings;
+   case CT_Sculpture:
+      return CT_Sculpture;
+   case CT_Caviar:
+      return CT_Caviar;
+   case CT_Chocolate:
+      return CT_Chocolate;
+   case CT_Lobster:
+      return CT_Lobster;
+   case CT_RealCoffee:
+      return CT_RealCoffee;
+   case CT_RealMeat:
+      return CT_RealMeat;
+   case CT_RealTea:
+      return CT_RealTea;
+   case CT_Shellfish:
+      return CT_Shellfish;
+   case CT_Milk:
+      return CT_Milk;
+   case CT_Spices:
+      return CT_Spices;
+   case CT_Game:
+      return CT_Game;
+   case CT_Cigarettes:
+      return CT_Cigarettes;
+   case CT_Cigars:
+      return CT_Cigars;
+   case CT_LeafTobacco:
+      return CT_LeafTobacco;
+   case CT_Aphrodisiacs:
+      return CT_Aphrodisiacs;
+   case CT_Caffeine:
+      return CT_Caffeine;
+   case CT_PhysicalEnhancers:
+      return CT_PhysicalEnhancers;
+   case CT_ErzatzCoffee:
+      return CT_ErzatzCoffee;
+   case CT_Euphorics:
+      return CT_Euphorics;
+   case CT_Halluciogenics:
+      return CT_Halluciogenics;
+   case CT_MemoryEnhancers:
+      return CT_MemoryEnhancers;
+   case CT_MoodEnhancers:
+      return CT_MoodEnhancers;
+   case CT_MoodStabilsers:
+      return CT_MoodStabilsers;
+   case CT_Stimulants:
+      return CT_Stimulants;
+   case CT_Tranquilisers:
+      return CT_Tranquilisers;
+   case CT_Spirits:
+      return CT_Spirits;
+   case CT_Wine:
+      return CT_Wine;
+   case CT_Champagne:
+      return CT_Champagne;
+   case CT_Scotch:
+      return CT_Scotch;
+   case CT_RealBeer:
+      return CT_RealBeer;
+   case CT_ZeroBrew:
+      return CT_ZeroBrew;
+   case CT_Fur:
+      return CT_Fur;
+   case CT_FurCoats:
+      return CT_FurCoats;
+   case CT_Vatfur:
+      return CT_Vatfur;
+   case CT_GoldJewellery:
+      return CT_GoldJewellery;
+   case CT_ValuableJewellery:
+      return CT_ValuableJewellery;
+   case CT_SmartJewels:
+      return CT_SmartJewels;
+   case CT_Watches:
+      return CT_Watches;
+   case CT_Books:
+      return CT_Books;
+   case CT_Cosmetics:
+      return CT_Cosmetics;
+   case CT_DesignerClothes:
+      return CT_DesignerClothes;
+   case CT_MusicalInstruments:
+      return CT_MusicalInstruments;
+   case CT_Perfume:
+      return CT_Perfume;
+   case CT_Toys:
+      return CT_Toys;
+   case CT_NaturalFibreClothing:
+      return CT_NaturalFibreClothing;
+   case CT_LuxuryFurniture:
+      return CT_LuxuryFurniture;
+   case CT_CorporateData:
+      return CT_CorporateData;
+   case CT_XenoData:
+      return CT_XenoData;
+   case CT_ResearchData:
+      return CT_ResearchData;
+   case CT_PersonalData:
+      return CT_PersonalData;
+   case CT_Mail:
+      return CT_Mail;
+   case CT_ConfidentialData:
+      return CT_ConfidentialData;
+   case CT_GovernmentData:
+      return CT_GovernmentData;
+   case CT_PoliceData:
+      return CT_PoliceData;
+   case CT_MilitaryIntelligence:
+      return CT_MilitaryIntelligence;
+   case CT_SecretData:
+      return CT_SecretData;
+   case CT_SeekerMineBlueprints:
+      return CT_SeekerMineBlueprints;
+   case CT_GnatBlueprint:
+      return CT_GnatBlueprint;
+   case CT_HarrowerBlueprint:
+      return CT_HarrowerBlueprint;
+   case CT_HammerBlueprint:
+      return CT_HammerBlueprint;
+   case CT_SeekerBlueprint:
+      return CT_SeekerBlueprint;
+   case CT_LDSiShortBlueprints:
+      return CT_LDSiShortBlueprints;
+   case CT_AssaultCannonAmmoBlueprints:
+      return CT_AssaultCannonAmmoBlueprints;
+   case CT_TurretFighterBlueprints:
+      return CT_TurretFighterBlueprints;
+   case CT_RemoteFighterBlueprints:
+      return CT_RemoteFighterBlueprints;
+   case CT_FlareBlueprints:
+      return CT_FlareBlueprints;
+   case CT_AchillesBlueprints:
+      return CT_AchillesBlueprints;
+   case CT_AntimatterMineBlueprints:
+      return CT_AntimatterMineBlueprints;
+   case CT_AntimatterMissileBlueprints:
+      return CT_AntimatterMissileBlueprints;
+   case CT_BlizzardMissileBlueprints:
+      return CT_BlizzardMissileBlueprints;
+   case CT_DeadshotBlueprints:
+      return CT_DeadshotBlueprints;
+   case CT_DeathblowBlueprints:
+      return CT_DeathblowBlueprints;
+   case CT_DecoyBlueprints:
+      return CT_DecoyBlueprints;
+   case CT_DisruptorBlueprints:
+      return CT_DisruptorBlueprints;
+   case CT_LDSi3000Blueprints:
+      return CT_LDSi3000Blueprints;
+   case CT_LDSiMineBlueprints:
+      return CT_LDSiMineBlueprints;
+   case CT_LDSiMissileBlueprints:
+      return CT_LDSiMissileBlueprints;
+   case CT_SniperCannonAmmoBlueprints:
+      return CT_SniperCannonAmmoBlueprints;
+   case CT_MiningChargeBlueprints:
+      return CT_MiningChargeBlueprints;
+   case CT_ProximityMineBlueprints:
+      return CT_ProximityMineBlueprints;
+   case CT_PulsarBlueprints:
+      return CT_PulsarBlueprints;
+   case CT_RemoteMissileBlueprints:
+      return CT_RemoteMissileBlueprints;
+   case CT_RemoteProbeBlueprints:
+      return CT_RemoteProbeBlueprints;
+   case CT_SmartDecoyBlueprints:
+      return CT_SmartDecoyBlueprints;
+   case CT_Autopilots:
+      return CT_Autopilots;
+   case CT_MatchVelocityAutopilot:
+      return CT_MatchVelocityAutopilot;
+   case CT_StealthProgram:
+      return CT_StealthProgram;
+   case CT_SelfDefenceSoftware:
+      return CT_SelfDefenceSoftware;
+   case CT_EngineManagementProgram:
+      return CT_EngineManagementProgram;
+   case CT_OcclusionMonitoringSoftware:
+      return CT_OcclusionMonitoringSoftware;
+   case CT_MilitaryTrackingProgram:
+      return CT_MilitaryTrackingProgram;
+   case CT_MissileAI:
+      return CT_MissileAI;
+   case CT_UtilitySoftware:
+      return CT_UtilitySoftware;
+   case CT_ComputerGames:
+      return CT_ComputerGames;
+   case CT_NewsVids:
+      return CT_NewsVids;
+   case CT_EntertainmentVids:
+      return CT_EntertainmentVids;
+   case CT_InteractiveText:
+      return CT_InteractiveText;
+   case CT_MusicRecordings:
+      return CT_MusicRecordings;
+   case CT_CorporatePropaganda:
+      return CT_CorporatePropaganda;
+   case CT_CapsuleDriveGenerators:
+      return CT_CapsuleDriveGenerators;
+   case CT_LDSClass1Drive:
+      return CT_LDSClass1Drive;
+   case CT_PowerPlant:
+      return CT_PowerPlant;
+   case CT_ShipsDrive:
+      return CT_ShipsDrive;
+   case CT_ManoeuvreThrusters:
+      return CT_ManoeuvreThrusters;
+   case CT_AlphaHeatSink:
+      return CT_AlphaHeatSink;
+   case CT_BetaHeatSink:
+      return CT_BetaHeatSink;
+   case CT_ColdGasThrusters:
+      return CT_ColdGasThrusters;
+   case CT_MilitaryJumpCapacitor:
+      return CT_MilitaryJumpCapacitor;
+   case CT_LDSClass2Drive:
+      return CT_LDSClass2Drive;
+   case CT_LDSClass3Drive:
+      return CT_LDSClass3Drive;
+   case CT_SealedHeatSink:
+      return CT_SealedHeatSink;
+   case CT_CapsuleDrive:
+      return CT_CapsuleDrive;
+   case CT_ImprovedManoeuverThrusters:
+      return CT_ImprovedManoeuverThrusters;
+   case CT_PursuitDrivers:
+      return CT_PursuitDrivers;
+   case CT_InterceptorDrivers:
+      return CT_InterceptorDrivers;
+   case CT_GammaHeatSink:
+      return CT_GammaHeatSink;
+   case CT_DeltaHeatSink:
+      return CT_DeltaHeatSink;
+   case CT_AdvancedHeatSink:
+      return CT_AdvancedHeatSink;
+   case CT_OmegaHeatSink:
+      return CT_OmegaHeatSink;
+   case CT_HeatSinkSupercooler:
+      return CT_HeatSinkSupercooler;
+   case CT_ActiveCooler:
+      return CT_ActiveCooler;
+   case CT_EmergencyCoolingPod:
+      return CT_EmergencyCoolingPod;
+   case CT_AntimatterPowerPod:
+      return CT_AntimatterPowerPod;
+   case CT_HighYieldFusionInjector:
+      return CT_HighYieldFusionInjector;
+   case CT_SNRVReloadPod:
+      return CT_SNRVReloadPod;
+   case CT_Thrusterpods:
+      return CT_Thrusterpods;
+   case CT_DockOnAutoTurret:
+      return CT_DockOnAutoTurret;
+   case CT_SecondaryRing:
+      return CT_SecondaryRing;
+   case CT_CapsuleDriveParts:
+      return CT_CapsuleDriveParts;
+   case CT_LDSCarrierFields:
+      return CT_LDSCarrierFields;
+   case CT_LDSFieldGenerators:
+      return CT_LDSFieldGenerators;
+   case CT_LDSFieldNodes:
+      return CT_LDSFieldNodes;
+   case CT_LDSGeneratorParts:
+      return CT_LDSGeneratorParts;
+   case CT_ShipInstruments:
+      return CT_ShipInstruments;
+   case CT_ShipSystems:
+      return CT_ShipSystems;
+   case CT_AISystems:
+      return CT_AISystems;
+   case CT_CompParts:
+      return CT_CompParts;
+   case CT_ShipCPUGradeI:
+      return CT_ShipCPUGradeI;
+   case CT_ShipCPUGradeII:
+      return CT_ShipCPUGradeII;
+   case CT_ShipCPUGradeIII:
+      return CT_ShipCPUGradeIII;
+   case CT_ShipCPUGradeIV:
+      return CT_ShipCPUGradeIV;
+   case CT_ShipCPUGradeV:
+      return CT_ShipCPUGradeV;
+   case CT_CompactShipAI:
+      return CT_CompactShipAI;
+   case CT_ShipMemoryModule:
+      return CT_ShipMemoryModule;
+   case CT_CPUCores:
+      return CT_CPUCores;
+   case CT_CPUParts:
+      return CT_CPUParts;
+   case CT_AudioEquipment:
+      return CT_AudioEquipment;
+   case CT_AudioVisualEquipment:
+      return CT_AudioVisualEquipment;
+   case CT_DataConsoles:
+      return CT_DataConsoles;
+   case CT_DataScreens:
+      return CT_DataScreens;
+   case CT_PersonalCommunicators:
+      return CT_PersonalCommunicators;
+   case CT_BodyComps:
+      return CT_BodyComps;
+   case CT_HandheldScientificInstruments:
+      return CT_HandheldScientificInstruments;
+   case CT_DataCards:
+      return CT_DataCards;
+   case CT_DataChips:
+      return CT_DataChips;
+   case CT_DataModules:
+      return CT_DataModules;
+   case CT_MemoryModules:
+      return CT_MemoryModules;
+   case CT_NanoAssemblers:
+      return CT_NanoAssemblers;
+   case CT_NanoFactories:
+      return CT_NanoFactories;
+   case CT_NanoProgrammers:
+      return CT_NanoProgrammers;
+   case CT_NanoSurgeons:
+      return CT_NanoSurgeons;
+   case CT_NeuroConnectors:
+      return CT_NeuroConnectors;
+   case CT_PreprogrammedNanotech:
+      return CT_PreprogrammedNanotech;
+   case CT_TerraformingNanotech:
+      return CT_TerraformingNanotech;
+   case CT_GeneWriters:
+      return CT_GeneWriters;
+   case CT_CryogenicTanks:
+      return CT_CryogenicTanks;
+   case CT_Medkits:
+      return CT_Medkits;
+   case CT_OrganMatrices:
+      return CT_OrganMatrices;
+   case CT_RemoteTables:
+      return CT_RemoteTables;
+   case CT_Autodocs:
+      return CT_Autodocs;
+   case CT_Autosurgs:
+      return CT_Autosurgs;
+   case CT_HKCounters:
+      return CT_HKCounters;
+   case CT_MolecularImagers:
+      return CT_MolecularImagers;
+   case CT_NanosurgeryEquipment:
+      return CT_NanosurgeryEquipment;
+   case CT_NMRs:
+      return CT_NMRs;
+   case CT_SurgeryKits:
+      return CT_SurgeryKits;
+   case CT_CyberEyes:
+      return CT_CyberEyes;
+   case CT_CyberLimbs:
+      return CT_CyberLimbs;
+   case CT_CyberneticJackPlugs:
+      return CT_CyberneticJackPlugs;
+   case CT_CyberneticOrgans:
+      return CT_CyberneticOrgans;
+   case CT_RoboticArms:
+      return CT_RoboticArms;
+   case CT_RoboticChassis:
+      return CT_RoboticChassis;
+   case CT_RoboticCPUs:
+      return CT_RoboticCPUs;
+   case CT_RoboticSensors:
+      return CT_RoboticSensors;
+   case CT_DomesticRobots:
+      return CT_DomesticRobots;
+   case CT_ConstructionRobots:
+      return CT_ConstructionRobots;
+   case CT_SecurityRobots:
+      return CT_SecurityRobots;
+   case CT_AstronomicalInstruments:
+      return CT_AstronomicalInstruments;
+   case CT_ShortRangeActiveSensors:
+      return CT_ShortRangeActiveSensors;
+   case CT_ShortrangePassiveSensors:
+      return CT_ShortrangePassiveSensors;
+   case CT_UCPScanner:
+      return CT_UCPScanner;
+   case CT_PassiveSensorPackage:
+      return CT_PassiveSensorPackage;
+   case CT_IFFBeacon:
+      return CT_IFFBeacon;
+   case CT_ActiveSensorPackage:
+      return CT_ActiveSensorPackage;
+   case CT_AdvancedActiveSensors:
+      return CT_AdvancedActiveSensors;
+   case CT_AdvancedPassiveSensors:
+      return CT_AdvancedPassiveSensors;
+   case CT_MilitaryGradeActiveSensors:
+      return CT_MilitaryGradeActiveSensors;
+   case CT_MilitaryGradePassiveSensors:
+      return CT_MilitaryGradePassiveSensors;
+   case CT_LongRangePassiveSensors:
+      return CT_LongRangePassiveSensors;
+   case CT_LongRangeActiveSensors:
+      return CT_LongRangeActiveSensors;
+   case CT_SensorDisruptor:
+      return CT_SensorDisruptor;
+   case CT_HighPowerSensorDisruptor:
+      return CT_HighPowerSensorDisruptor;
+   case CT_AdvancedSensorDisruptor:
+      return CT_AdvancedSensorDisruptor;
+   case CT_MarauderCommsScrambler:
+      return CT_MarauderCommsScrambler;
+   case CT_HyperspaceTracker:
+      return CT_HyperspaceTracker;
+   case CT_LaserDetectors:
+      return CT_LaserDetectors;
+   case CT_MonitoringDevices:
+      return CT_MonitoringDevices;
+   case CT_BricABrac:
+      return CT_BricABrac;
+   case CT_OfficeSupplies:
+      return CT_OfficeSupplies;
+   case CT_ReligiousMaterial:
+      return CT_ReligiousMaterial;
+   case CT_Clothing:
+      return CT_Clothing;
+   case CT_DisposableClothing:
+      return CT_DisposableClothing;
+   case CT_HandTools:
+      return CT_HandTools;
+   case CT_Uniforms:
+      return CT_Uniforms;
+   case CT_Furniture:
+      return CT_Furniture;
+   case CT_CleaningProducts:
+      return CT_CleaningProducts;
+   case CT_HygieneGoods:
+      return CT_HygieneGoods;
+   case CT_HumanitarianAid:
+      return CT_HumanitarianAid;
+   case CT_WoundDressings:
+      return CT_WoundDressings;
+   case CT_Anaesthetics:
+      return CT_Anaesthetics;
+   case CT_Antibiotics:
+      return CT_Antibiotics;
+   case CT_Antiseptics:
+      return CT_Antiseptics;
+   case CT_Immunosuppressives:
+      return CT_Immunosuppressives;
+   case CT_MedicalDrugs:
+      return CT_MedicalDrugs;
+   case CT_Vaccines:
+      return CT_Vaccines;
+   case CT_AntiAgingTreatments:
+      return CT_AntiAgingTreatments;
+   case CT_RejuvenationTratments:
+      return CT_RejuvenationTratments;
+   case CT_PainKillers:
+      return CT_PainKillers;
+   case CT_EmergencySpaceSuits:
+      return CT_EmergencySpaceSuits;
+   case CT_PersonalGasJets:
+      return CT_PersonalGasJets;
+   case CT_SpaceSuits:
+      return CT_SpaceSuits;
+   case CT_SuitPatches:
+      return CT_SuitPatches;
+   case CT_SurvivalBubbles:
+      return CT_SurvivalBubbles;
+   case CT_SurvivalPacks:
+      return CT_SurvivalPacks;
+   case CT_SurvivalCloaks:
+      return CT_SurvivalCloaks;
+   case CT_EmergencyHeaters:
+      return CT_EmergencyHeaters;
+   case CT_FieldGenerators:
+      return CT_FieldGenerators;
+   case CT_ReactorParts:
+      return CT_ReactorParts;
+   case CT_ReactorSpares:
+      return CT_ReactorSpares;
+   case CT_ReactorTargets:
+      return CT_ReactorTargets;
+   case CT_FissionGenerators:
+      return CT_FissionGenerators;
+   case CT_FusionGenerators:
+      return CT_FusionGenerators;
+   case CT_Batteries:
+      return CT_Batteries;
+   case CT_SolarPanels:
+      return CT_SolarPanels;
+   case CT_Solettas:
+      return CT_Solettas;
+   case CT_AtmosphericScrubbers:
+      return CT_AtmosphericScrubbers;
+   case CT_PlanetHeaters:
+      return CT_PlanetHeaters;
+   case CT_CFCGenerators:
+      return CT_CFCGenerators;
+   case CT_HydroponicsEquipment:
+      return CT_HydroponicsEquipment;
+   case CT_Biovators:
+      return CT_Biovators;
+   case CT_AgriHarvestors:
+      return CT_AgriHarvestors;
+   case CT_Tractors:
+      return CT_Tractors;
+   case CT_TractorParts:
+      return CT_TractorParts;
+   case CT_Aerodynes:
+      return CT_Aerodynes;
+   case CT_Aircars:
+      return CT_Aircars;
+   case CT_Dirigibles:
+      return CT_Dirigibles;
+   case CT_GroundCars:
+      return CT_GroundCars;
+   case CT_ConstructionVehicles:
+      return CT_ConstructionVehicles;
+   case CT_Hovercars:
+      return CT_Hovercars;
+   case CT_Hovercraft:
+      return CT_Hovercraft;
+   case CT_Rotorcraft:
+      return CT_Rotorcraft;
+   case CT_Trucks:
+      return CT_Trucks;
+   case CT_LasTanks:
+      return CT_LasTanks;
+   case CT_Lathes:
+      return CT_Lathes;
+   case CT_MicroengineeringTools:
+      return CT_MicroengineeringTools;
+   case CT_Drillers:
+      return CT_Drillers;
+   case CT_HabitationPods:
+      return CT_HabitationPods;
+   case CT_HousingModules:
+      return CT_HousingModules;
+   case CT_LifeSupportSystems:
+      return CT_LifeSupportSystems;
+   case CT_StationComponents:
+      return CT_StationComponents;
+   case CT_PrefabricatedStationModules:
+      return CT_PrefabricatedStationModules;
+   case CT_StationConnectors:
+      return CT_StationConnectors;
+   case CT_PrefabricatedHousing:
+      return CT_PrefabricatedHousing;
+   case CT_Recyclers:
+      return CT_Recyclers;
+   case CT_VaccumeDomes:
+      return CT_VaccumeDomes;
+   case CT_ArmourPatches:
+      return CT_ArmourPatches;
+   case CT_ArmourPlates:
+      return CT_ArmourPlates;
+   case CT_Hullplates:
+      return CT_Hullplates;
+   case CT_HullRepairKits:
+      return CT_HullRepairKits;
+   case CT_Conduits:
+      return CT_Conduits;
+   case CT_FloorGrids:
+      return CT_FloorGrids;
+   case CT_GravGrids:
+      return CT_GravGrids;
+   case CT_Wiring:
+      return CT_Wiring;
+   case CT_EarthMovers:
+      return CT_EarthMovers;
+   case CT_HandDrills:
+      return CT_HandDrills;
+   case CT_LaserDrills:
+      return CT_LaserDrills;
+   case CT_MiningDisplacers:
+      return CT_MiningDisplacers;
+   case CT_MiningDrones:
+      return CT_MiningDrones;
+   case CT_VehicleDrills:
+      return CT_VehicleDrills;
+   case CT_Rubble:
+      return CT_Rubble;
+   case CT_Aggregates:
+      return CT_Aggregates;
+   case CT_RockDust:
+      return CT_RockDust;
+   case CT_Sand:
+      return CT_Sand;
+   case CT_NeutroniumOre:
+      return CT_NeutroniumOre;
+   case CT_GoldOre:
+      return CT_GoldOre;
+   case CT_CommonOre:
+      return CT_CommonOre;
+   case CT_SilverOre:
+      return CT_SilverOre;
+   case CT_PlatinumOre:
+      return CT_PlatinumOre;
+   case CT_RadioactiveOre:
+      return CT_RadioactiveOre;
+   case CT_UnprocessedGas:
+      return CT_UnprocessedGas;
+   case CT_Air:
+      return CT_Air;
+   case CT_Helium3:
+      return CT_Helium3;
+   case CT_BlockIce:
+      return CT_BlockIce;
+   case CT_CrushedIce:
+      return CT_CrushedIce;
+   case CT_DirtyIce:
+      return CT_DirtyIce;
+   case CT_DeionisedWater:
+      return CT_DeionisedWater;
+   case CT_Carbon:
+      return CT_Carbon;
+   case CT_Nitrates:
+      return CT_Nitrates;
+   case CT_Oxygen:
+      return CT_Oxygen;
+   case CT_Phosphates:
+      return CT_Phosphates;
+   case CT_Sulphur:
+      return CT_Sulphur;
+   case CT_Alkalines:
+      return CT_Alkalines;
+   case CT_Sodium:
+      return CT_Sodium;
+   case CT_Phosphides:
+      return CT_Phosphides;
+   case CT_Sulfides:
+      return CT_Sulfides;
+   case CT_Tellurides:
+      return CT_Tellurides;
+   case CT_InorganicAcids:
+      return CT_InorganicAcids;
+   case CT_Intermetallics:
+      return CT_Intermetallics;
+   case CT_BattleScrap:
+      return CT_BattleScrap;
+   case CT_CompactedScrapMetal:
+      return CT_CompactedScrapMetal;
+   case CT_MisCasts:
+      return CT_MisCasts;
+   case CT_ScrapMetal:
+      return CT_ScrapMetal;
+   case CT_Gold:
+      return CT_Gold;
+   case CT_Platinum:
+      return CT_Platinum;
+   case CT_Silver:
+      return CT_Silver;
+   case CT_MetalBars:
+      return CT_MetalBars;
+   case CT_MetalBillets:
+      return CT_MetalBillets;
+   case CT_MetalRods:
+      return CT_MetalRods;
+   case CT_Wire:
+      return CT_Wire;
+   case CT_Rivets:
+      return CT_Rivets;
+   case CT_RadioactiveWaste:
+      return CT_RadioactiveWaste;
+   case CT_Uranium:
+      return CT_Uranium;
+   case CT_Plutonium:
+      return CT_Plutonium;
+   case CT_FissionInitiators:
+      return CT_FissionInitiators;
+   case CT_Neutronium:
+      return CT_Neutronium;
+   case CT_ExoticMetals:
+      return CT_ExoticMetals;
+   case CT_RareMetals:
+      return CT_RareMetals;
+   case CT_FeedStock:
+      return CT_FeedStock;
+   case CT_PressurisedHydrocarbonGas:
+      return CT_PressurisedHydrocarbonGas;
+   case CT_Oil:
+      return CT_Oil;
+   case CT_Petroleum:
+      return CT_Petroleum;
+   case CT_PlasticBars:
+      return CT_PlasticBars;
+   case CT_PlasticBlocks:
+      return CT_PlasticBlocks;
+   case CT_PlasticCables:
+      return CT_PlasticCables;
+   case CT_PlasticGel:
+      return CT_PlasticGel;
+   case CT_PlasticPellets:
+      return CT_PlasticPellets;
+   case CT_LiquifiedFuel:
+      return CT_LiquifiedFuel;
+   case CT_LiquifiedFusionPremix:
+      return CT_LiquifiedFusionPremix;
+   case CT_BoosterAgent:
+      return CT_BoosterAgent;
+   case CT_FuelPellets:
+      return CT_FuelPellets;
+   case CT_FuelRods:
+      return CT_FuelRods;
+   case CT_FloorPlates:
+      return CT_FloorPlates;
+   case CT_Girders:
+      return CT_Girders;
+   case CT_WallPlates:
+      return CT_WallPlates;
+   case CT_BeanstalkWire:
+      return CT_BeanstalkWire;
+   case CT_FoamMetal:
+      return CT_FoamMetal;
+   case CT_MacroCrystallineMetals:
+      return CT_MacroCrystallineMetals;
+   case CT_Monowire:
+      return CT_Monowire;
+   case CT_HeavyGirders:
+      return CT_HeavyGirders;
+   case CT_CutGemstones:
+      return CT_CutGemstones;
+   case CT_IndustrialGemstones:
+      return CT_IndustrialGemstones;
+   case CT_UncutGemstones:
+      return CT_UncutGemstones;
+   case CT_AntimatterContainers:
+      return CT_AntimatterContainers;
+   case CT_Antimatter:
+      return CT_Antimatter;
+   case CT_AntimatterPods:
+      return CT_AntimatterPods;
+   case CT_APCs:
+      return CT_APCs;
+   case CT_TurretFighter:
+      return CT_TurretFighter;
+   case CT_RemoteFighter:
+      return CT_RemoteFighter;
+   case CT_ArtilleryFVs:
+      return CT_ArtilleryFVs;
+   case CT_FireSupportFVs:
+      return CT_FireSupportFVs;
+   case CT_GravTanks:
+      return CT_GravTanks;
+   case CT_HoverTanks:
+      return CT_HoverTanks;
+   case CT_Tanks:
+      return CT_Tanks;
+   case CT_TankParts:
+      return CT_TankParts;
+   case CT_AntimatterFuses:
+      return CT_AntimatterFuses;
+   case CT_TwinPackMissileLauncher:
+      return CT_TwinPackMissileLauncher;
+   case CT_LDSiShortMissiles:
+      return CT_LDSiShortMissiles;
+   case CT_LDSiShortMissile:
+      return CT_LDSiShortMissile;
+   case CT_Flares:
+      return CT_Flares;
+   case CT_Flare:
+      return CT_Flare;
+   case CT_SeekerMissiles:
+      return CT_SeekerMissiles;
+   case CT_SeekerMissile:
+      return CT_SeekerMissile;
+   case CT_HarrowerMissiles:
+      return CT_HarrowerMissiles;
+   case CT_HarrowerMissile:
+      return CT_HarrowerMissile;
+   case CT_GnatRockets:
+      return CT_GnatRockets;
+   case CT_GnatRocket:
+      return CT_GnatRocket;
+   case CT_HammerRockets:
+      return CT_HammerRockets;
+   case CT_HammerRocket:
+      return CT_HammerRocket;
+   case CT_LDSiMissiles:
+      return CT_LDSiMissiles;
+   case CT_LDSiMissile:
+      return CT_LDSiMissile;
+   case CT_MiningCharges:
+      return CT_MiningCharges;
+   case CT_MiningCharge:
+      return CT_MiningCharge;
+   case CT_TripackMissileLauncher:
+      return CT_TripackMissileLauncher;
+   case CT_BlizzardRocketPod:
+      return CT_BlizzardRocketPod;
+   case CT_BlizzardRocket:
+      return CT_BlizzardRocket;
+   case CT_RemoteProbes:
+      return CT_RemoteProbes;
+   case CT_RemoteProbe:
+      return CT_RemoteProbe;
+   case CT_RemoteMissiles:
+      return CT_RemoteMissiles;
+   case CT_RemoteMissile:
+      return CT_RemoteMissile;
+   case CT_DeadshotMissiles:
+      return CT_DeadshotMissiles;
+   case CT_DeadshotMissile:
+      return CT_DeadshotMissile;
+   case CT_LDSi3000Missiles:
+      return CT_LDSi3000Missiles;
+   case CT_LDSi3000Missile:
+      return CT_LDSi3000Missile;
+   case CT_QuadpackMissileLauncher:
+      return CT_QuadpackMissileLauncher;
+   case CT_DeathblowRemote:
+      return CT_DeathblowRemote;
+   case CT_DeathblowRemoteMissile:
+      return CT_DeathblowRemoteMissile;
+   case CT_AntimatterRemote:
+      return CT_AntimatterRemote;
+   case CT_AntimatterRemoteMissile:
+      return CT_AntimatterRemoteMissile;
+   case CT_InternalMissileMagazine:
+      return CT_InternalMissileMagazine;
+   case CT_DisruptorMissiles:
+      return CT_DisruptorMissiles;
+   case CT_DisruptorMissile:
+      return CT_DisruptorMissile;
+   case CT_SmartDecoy:
+      return CT_SmartDecoy;
+   case CT_SmartDecoyCountermeasure:
+      return CT_SmartDecoyCountermeasure;
+   case CT_Decoys:
+      return CT_Decoys;
+   case CT_Decoy:
+      return CT_Decoy;
+   case CT_PulsarDisruptors:
+      return CT_PulsarDisruptors;
+   case CT_PulsarDisruptor:
+      return CT_PulsarDisruptor;
+   case CT_HullMissileHardPoint:
+      return CT_HullMissileHardPoint;
+   case CT_AchillesShieldDisruptors:
+      return CT_AchillesShieldDisruptors;
+   case CT_AchillesShieldDisruptor:
+      return CT_AchillesShieldDisruptor;
+   case CT_ProximityMines:
+      return CT_ProximityMines;
+   case CT_ProximityMine:
+      return CT_ProximityMine;
+   case CT_AntimatterMines:
+      return CT_AntimatterMines;
+   case CT_AntimatterMine:
+      return CT_AntimatterMine;
+   case CT_LDSIMines:
+      return CT_LDSIMines;
+   case CT_LDSIMine:
+      return CT_LDSIMine;
+   case CT_SeekerMines:
+      return CT_SeekerMines;
+   case CT_SeekerMine:
+      return CT_SeekerMine;
+   case CT_LDSIWarheads:
+      return CT_LDSIWarheads;
+   case CT_MissileParts:
+      return CT_MissileParts;
+   case CT_MissileThrusters:
+      return CT_MissileThrusters;
+   case CT_MissileWarheads:
+      return CT_MissileWarheads;
+   case CT_CombatPowersuits:
+      return CT_CombatPowersuits;
+   case CT_SidearmClips:
+      return CT_SidearmClips;
+   case CT_BattlePacks:
+      return CT_BattlePacks;
+   case CT_Explosives:
+      return CT_Explosives;
+   case CT_Grenades:
+      return CT_Grenades;
+   case CT_HandWeapons:
+      return CT_HandWeapons;
+   case CT_ManpackMissiles:
+      return CT_ManpackMissiles;
+   case CT_BiologicalWeaponsAgents:
+      return CT_BiologicalWeaponsAgents;
+   case CT_ChemicalWeaponsAgents:
+      return CT_ChemicalWeaponsAgents;
+   case CT_NeutronWarheads:
+      return CT_NeutronWarheads;
+   case CT_DirtyFissionWarheads:
+      return CT_DirtyFissionWarheads;
+   case CT_HostileTerraformingAgents:
+      return CT_HostileTerraformingAgents;
+   case CT_NanotechWeapons:
+      return CT_NanotechWeapons;
+   case CT_AcceleratorRings:
+      return CT_AcceleratorRings;
+   case CT_NeutronBeamCannon:
+      return CT_NeutronBeamCannon;
+   case CT_WeaponLinkHardware:
+      return CT_WeaponLinkHardware;
+   case CT_CommunicationsLaser:
+      return CT_CommunicationsLaser;
+   case CT_TrackingComputer:
+      return CT_TrackingComputer;
+   case CT_ParticleBeamCannon:
+      return CT_ParticleBeamCannon;
+   case CT_MiningLasers:
+      return CT_MiningLasers;
+   case CT_AssaultCannon:
+      return CT_AssaultCannon;
+   case CT_AssaultCannonAmmo:
+      return CT_AssaultCannonAmmo;
+   case CT_AssaultCannonAmmoRound:
+      return CT_AssaultCannonAmmoRound;
+   case CT_LightPBC:
+      return CT_LightPBC;
+   case CT_CooledPBC:
+      return CT_CooledPBC;
+   case CT_RapidFirePBC:
+      return CT_RapidFirePBC;
+   case CT_LongRangeCannon:
+      return CT_LongRangeCannon;
+   case CT_CuttingBeam:
+      return CT_CuttingBeam;
+   case CT_WideanglePBC:
+      return CT_WideanglePBC;
+   case CT_EnhancedAimPBC:
+      return CT_EnhancedAimPBC;
+   case CT_QuadLightPBC:
+      return CT_QuadLightPBC;
+   case CT_HeavyBeamCannon:
+      return CT_HeavyBeamCannon;
+   case CT_LongRangeCannonAmmo:
+      return CT_LongRangeCannonAmmo;
+   case CT_LongRangeCannonAmmoRound:
+      return CT_LongRangeCannonAmmoRound;
+   case CT_TargetedPBC:
+      return CT_TargetedPBC;
+   case CT_AssaultCannonRingModel:
+      return CT_AssaultCannonRingModel;
+   case CT_PulseAcceleratedPBC:
+      return CT_PulseAcceleratedPBC;
+   case CT_AntimatterParticleBeam:
+      return CT_AntimatterParticleBeam;
+   case CT_AntimatterStreamer:
+      return CT_AntimatterStreamer;
+   case CT_Accumulators:
+      return CT_Accumulators;
+   case CT_PointDefenceTurret:
+      return CT_PointDefenceTurret;
+   case CT_FireControlSensors:
+      return CT_FireControlSensors;
+   case CT_PBCAccelerators:
+      return CT_PBCAccelerators;
+   case CT_PlasmaStorageRings:
+      return CT_PlasmaStorageRings;
+   case CT_GatlingPBCs:
+      return CT_GatlingPBCs;
+   case CT_HeavyPBCs:
+      return CT_HeavyPBCs;
+   case CT_LightPBCs:
+      return CT_LightPBCs;
+   case CT_PBCs:
+      return CT_PBCs;
+   case CT_MeteorShield:
+      return CT_MeteorShield;
+   case CT_Level1AutorepairSystem:
+      return CT_Level1AutorepairSystem;
+   case CT_DefenceShield:
+      return CT_DefenceShield;
+   case CT_Level2AutorepairSystem:
+      return CT_Level2AutorepairSystem;
+   case CT_RepairControlProgram:
+      return CT_RepairControlProgram;
+   case CT_LightDefenceShield:
+      return CT_LightDefenceShield;
+   case CT_InstantShieldControl:
+      return CT_InstantShieldControl;
+   case CT_ReactorHardening:
+      return CT_ReactorHardening;
+   case CT_ArmouredHullPlates:
+      return CT_ArmouredHullPlates;
+   case CT_Level3Autorepairsystem:
+      return CT_Level3Autorepairsystem;
+   case CT_LowSignatureHullplates:
+      return CT_LowSignatureHullplates;
+   case CT_MilitaryShields:
+      return CT_MilitaryShields;
+   case CT_ShieldSynchroniser:
+      return CT_ShieldSynchroniser;
+   case CT_Level4Autorepairsystem:
+      return CT_Level4Autorepairsystem;
+   case CT_CombatShields:
+      return CT_CombatShields;
+   case CT_MilitaryAggressorShields:
+      return CT_MilitaryAggressorShields;
+   case CT_AggressorShieldUpgrade:
+      return CT_AggressorShieldUpgrade;
+   case CT_MinersShield:
+      return CT_MinersShield;
+   case CT_Level5Autorepairsystem:
+      return CT_Level5Autorepairsystem;
+   case CT_ParticleScreenShieldUpgrade:
+      return CT_ParticleScreenShieldUpgrade;
+   case CT_AssaultShield:
+      return CT_AssaultShield;
+   case CT_PowerPlantAutorepair:
+      return CT_PowerPlantAutorepair;
+   case CT_ShieldBooster:
+      return CT_ShieldBooster;
+   case CT_AdvancedHullMaterialRefit:
+      return CT_AdvancedHullMaterialRefit;
+   }
+
+   debug Debug.PrintString
+   ( String.FormatInt
+     ( "[fsw_sd] ERROR: int2cargotype defaulting %d to CT_Invalid\n",
+       to_cast
+     )
+   );
+   return CT_Invalid;
+}
+
+float             Int2Float
+( int             i
+) {
+   // Avoid where possible
+   return i;
+}
+
+bool              isvalid_ini
+( string          url
+) {
+   hinifile        test_ini      = INIFile.Create(url);
+
+   if ( test_ini ) {
+      INIFile.Destroy(test_ini);
+      return true;
+   }
+
+   return false;
+}
+
+bool              isvalid_prop
+( hobject         obj,
+  string          prop,
+  bool            to_hud
+)
+// Object.PropertyExists plus feedback -- to flux.log if to_hud == false 
+{
+   if ( Object.PropertyExists(obj, prop) ) {
+      return true;
+   }
+   if ( to_hud ) {
+      iHUD.Print
+      ( String.FormatStrStr
+        ( "System damage debugger: NO \"%s\" PROPERTY ON SUBSIM %s",
+          prop,
+          Text.Field(Object.StringProperty(obj, prop), FT_Text)
+        )
+      );
+      iHUD.PlayAudioCue(AC_InvalidInput);
+   } else {
+      debug atomic
+      {
+         Debug.PrintString
+         ( String.FormatStrStr
+           ( "[fsw_sd] No \"%s\" property on%s",
+             prop,
+             "\n"
+           )
+         );
+         Debug.PrintString("[fsw_sd] ");
+         Debug.PrintHandle(obj);
+         Debug.PrintString("\n");
+      }
+   }
+   return false;
+}
+
+int               multiple_of
+( int             divisor,
+  int             to_bump
+) {
+   int             remainder     = to_bump % divisor;
+
+   if ( remainder * 2 < divisor ) {
+      return to_bump - remainder;
+   }
+
+   divisor -= remainder;
+   return to_bump + divisor;
+}
+
+override_float
+( hobject         obj,
+  string          true_prop,
+  float           override_val
+) {
+   string          store_prop  = String.Join("fsw_sd", true_prop);
+   float           true_val;
+
+   if ( Object.PropertyExists(obj, true_prop) ) {
+      true_val = Object.FloatProperty(obj, true_prop);
+      if ( true_val != override_val ) {
+         addset_float(obj, store_prop, true_val);
+         Object.SetFloatProperty(obj, true_prop, override_val);
+         debug atomic
+         {
+            if ( Global.Bool("ts_sdDebugNoisy") ) {
+               Debug.PrintString("[fsw_sd] \"");
+               Debug.PrintString(true_prop);
+               Debug.PrintString("\" overridden from ");
+               Debug.PrintString
+               ( String.FromFloat(Object.FloatProperty(obj, store_prop))
+               );
+               Debug.PrintString(" to ");
+               Debug.PrintString
+               ( String.FromFloat(Object.FloatProperty(obj, true_prop))
+               );
+               Debug.PrintString("\n");
+            }
+         }
+      }
+   }
+}
+
+override_int
+( hobject         obj,
+  string          true_prop,
+  int             override_val
+) {
+   string          store_prop  = String.Join("fsw_sd", true_prop);
+   int             true_val;
+
+   if ( Object.PropertyExists(obj, true_prop) ) {
+      true_val = Object.IntProperty(obj, true_prop);
+      if ( true_val != override_val ) {
+         addset_int(obj, store_prop, true_val);
+         Object.SetIntProperty(obj, true_prop, override_val);
+         debug atomic
+         {
+            if ( Global.Bool("ts_sdDebugNoisy") ) {
+               Debug.PrintString("[fsw_sd] \"");
+               Debug.PrintString(true_prop);
+               Debug.PrintString("\" overridden from ");
+               Debug.PrintString(String.FromInt(Object.IntProperty(obj, store_prop)));
+               Debug.PrintString(" to ");
+               Debug.PrintString(String.FromInt(Object.IntProperty(obj, true_prop)));
+               Debug.PrintString("\n");
+            }
+         }
+      }
+   }
+}
+
+restore_float
+( hobject         obj,
+  string          true_prop
+) {
+   string          store_prop  = String.Join("fsw_sd", true_prop);
+   float           true_val;
+
+   if ( Object.PropertyExists(obj, store_prop) ) {
+      true_val = Object.FloatProperty(obj, store_prop);
+      Object.RemoveProperty(obj, store_prop);
+      Object.SetFloatProperty(obj, true_prop, true_val);
+      debug atomic
+      {
+         if ( Global.Bool("ts_sdDebugNoisy") ) {
+            Debug.PrintString("[fsw_sd] ");
+            Debug.PrintHandle(obj);
+            Debug.PrintString(":\n");
+            Debug.PrintString("[fsw_sd] \"");
+            Debug.PrintString(true_prop);
+            Debug.PrintString("\" restored to ");
+            Debug.PrintString
+            ( String.FromFloat(Object.FloatProperty(obj, true_prop))
+            );
+            Debug.PrintString("\n");
+         }
+      }
+   }
+}
+
+restore_int
+( hobject         obj,
+  string          true_prop
+) {
+   string          store_prop  = String.Join("fsw_sd", true_prop);
+   int             true_val;
+
+   if ( Object.PropertyExists(obj, store_prop) ) {
+      true_val = Object.IntProperty(obj, store_prop);
+      Object.RemoveProperty(obj, store_prop);
+      Object.SetIntProperty(obj, true_prop, true_val);
+      debug atomic
+      {
+         if ( Global.Bool("ts_sdDebugNoisy") ) {
+            Debug.PrintString("[fsw_sd] ");
+            Debug.PrintHandle(obj);
+            Debug.PrintString(":\n");
+            Debug.PrintString("[fsw_sd] \"");
+            Debug.PrintString(true_prop);
+            Debug.PrintString("\" restored to ");
+            Debug.PrintString(String.FromInt(Object.IntProperty(obj, true_prop)));
+            Debug.PrintString("\n");
+         }
+      }
+   }
+}
+
+int               stridx
+( string          haystack,
+  string          needle,
+  int             startidx
+) {
+   int             strlen_h  = String.Length(haystack);
+   int             strlen_n  = String.Length(needle);
+   int             loop;
+   string          first_ch;
+   int             tryidx;
+
+   first_ch = String.Left(needle, 1);
+
+   tryidx = charidx(haystack, first_ch, startidx);
+   while ( tryidx != -1 ) {
+      if ( String.Mid(haystack, tryidx, strlen_n) == needle )
+         return tryidx;
+
+      tryidx = charidx(haystack, first_ch, ++tryidx);
+   }
+
+   return -1;
+}
+

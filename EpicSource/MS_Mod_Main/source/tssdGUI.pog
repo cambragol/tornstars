@@ -1,0 +1,1003 @@
+/* 
+ *
+ *
+ *
+ * gui palette notes:
+ *
+ * palette cycles:
+ *
+ * red: -30
+ * green: +90
+ * blue: -140
+ */
+
+package
+  tssdGUI
+;
+
+uses
+  Debug,
+  Global,
+  GUI,
+  Input,
+  List,
+  Object,
+  Set,
+  Sim,
+  Subsim,
+  String,
+  Task,
+  Text,
+
+  iFaction,
+  iGUI,
+  iHUD,
+  iShip,
+
+  tsSystemDamage,
+  UniGUI
+;
+
+provides
+  ENGInit,
+  UGCheck,
+  UGExit,
+  UGStart,
+
+  OnSpinnerHold,
+  OnSpinnerPress,
+  OnSpinnerRelease
+;
+
+prototype         ENGInit();
+prototype         UGCheck();
+prototype         UGExit();
+prototype         UGStart();
+
+prototype         OnSpinnerHold();
+prototype         OnSpinnerPress();
+prototype         OnSpinnerRelease();
+
+
+prototype task    while_spinner_held
+( hwindow         spinner
+);
+
+prototype task    show_ship
+( hship           cur_ship
+);
+prototype task    subsim_monitor
+( list            subsim_windows,
+  hship           ship
+);
+
+prototype list    subsim_list
+( list            subsims,
+  int             item_width
+);
+
+
+
+prototype string  htmlise
+( string          to_tag
+);
+prototype eSimType
+                  int2simtype
+( int             to_cast
+);
+prototype string  repeat
+( string          str,
+  int             times
+);
+prototype string  simtype2hudfield
+( eSimType        to_cast
+);
+prototype string  zero_pad
+( int             val,
+  int             digits
+);
+
+                  ENGInit()
+{
+  hship           player    = iShip.FindPlayerShip();
+  hisim           target;
+
+  // Initialise showing player ship
+  // change that to showing player target
+
+  target = iShip.CurrentTarget(player);
+
+  if (TM_Ship & iSim.Type(target)) {
+     Task.Detach(start show_ship(iShip.Cast(target)));
+  }else {
+     Task.Detach(start show_ship(player));
+  }
+
+}
+
+                  UGCheck()
+{
+  hship           player    = iShip.FindPlayerShip();
+
+  Global.SetBool("g_zz_ug_passme", false);
+
+  // Reasons not to load
+  if(!player)
+  {
+    debug Debug.PrintString
+    ( "[tssdGUI] ERROR: FindPlayerShip() returned bad handle\n"
+    );
+    return;
+  }
+  if(!Object.PropertyExists(player, "fsw_sdVulnSystems"))
+  {
+    debug Debug.PrintString
+    ( "[tssdGUI] ERROR: player has no \"fsw_sdVulnSystems\" list\n"
+    );
+    return;
+  }
+  if(List.IsEmpty(Object.ListProperty(player, "fsw_sdVulnSystems")))
+  {
+    debug Debug.PrintString
+    ( "[tssdGUI] ERROR: player has empty \"fsw_sdVulnSystems\" list\n"
+    );
+    return;
+  }
+
+  Global.SetBool("g_zz_ug_passme", true);
+}
+
+                  UGExit()
+{
+  UniGUI.UniGUIRemoveScreen();
+}
+
+                  UGStart()
+{
+  UniGUI.UniGUIAddScreen("tssdGUI.ENGInit");
+}
+
+
+
+                  OnSpinnerHold()
+{
+  hwindow         spinner = GUI.FocusedWindow();
+
+  if(!Object.PropertyExists(spinner, "fsw_sdWhileSpinnerHeld"))
+  {
+    Object.AddHandleProperty(spinner, "fsw_sdWhileSpinnerHeld", start while_spinner_held(spinner));
+    Task.Detach(Task.Cast(Object.HandleProperty(spinner, "fsw_sdWhileSpinnerHeld")));
+  }
+}
+
+                  OnSpinnerPress()
+{
+  hwindow         spinner = GUI.FocusedWindow();
+  bool            up      = Object.BoolProperty(spinner, "fsw_sdSpinnerUp");
+  hwindow         list_e  =
+    GUI.Cast(Object.HandleProperty(spinner, "fsw_sdParentWin"));
+  hsubsim         subsim  =
+    Subsim.Cast(Object.HandleProperty(list_e, "fsw_sdW2Subsim"));
+  int             priority = Object.IntProperty(subsim, "priority");
+  hwindow         display =
+    GUI.Cast(Object.HandleProperty(spinner, "fsw_sdSpinDisplay"));
+
+  if((priority == 0 && !up) || (priority == 99 && up))
+  {
+    return;
+  }
+
+  if(up)
+  {
+    Object.SetIntProperty(subsim, "priority", ++priority);
+  }
+  else
+  {
+    Object.SetIntProperty(subsim, "priority", --priority);
+  }
+
+  GUI.SetWindowTitle(display, zero_pad(Object.IntProperty(subsim, "priority"), 2));
+}
+
+
+                  OnSpinnerRelease()
+{
+  hwindow         spinner = GUI.FocusedWindow();
+  htask           held    =
+    Task.Cast(Object.HandleProperty(spinner, "fsw_sdWhileSpinnerHeld"));
+  hwindow         list_e  =
+    GUI.Cast(Object.HandleProperty(spinner, "fsw_sdParentWin"));
+  hsubsim         subsim  =
+    Subsim.Cast(Object.HandleProperty(list_e, "fsw_sdW2Subsim"));
+  hwindow         display =
+    GUI.Cast(Object.HandleProperty(spinner, "fsw_sdSpinDisplay"));
+
+  if(!Task.IsHalted(held))
+  {
+    Task.Halt(held);
+  }
+  Object.RemoveProperty(spinner, "fsw_sdWhileSpinnerHeld");
+
+  // Make sure this is correct
+  GUI.SetWindowTitle(display, zero_pad(Object.IntProperty(subsim, "priority"), 2));
+
+  // Re-sort list automatically?
+}
+
+
+
+
+
+
+task              while_spinner_held
+( hwindow         spinner
+)
+{
+  bool            up      = Object.BoolProperty(spinner, "fsw_sdSpinnerUp");
+  hwindow         list_e  =
+    GUI.Cast(Object.HandleProperty(spinner, "fsw_sdParentWin"));
+  hsubsim         subsim  =
+    Subsim.Cast(Object.HandleProperty(list_e, "fsw_sdW2Subsim"));
+  hwindow         display =
+    GUI.Cast(Object.HandleProperty(spinner, "fsw_sdSpinDisplay"));
+
+  int             priority = Object.IntProperty(subsim, "priority");
+  float           interval = 0.7;
+  int             count;
+  int             max      = 1;
+
+  while
+  ( GUI.FocusedWindow() == spinner
+    && !
+    ( up && priority == 99
+      || !up && priority == 0
+    )
+  )
+  {
+    Task.Sleep(Task.Current(), interval); // pause after on click event
+    ++count;
+
+    if(up)
+    {
+      Object.SetIntProperty(subsim, "priority", ++priority);
+    }
+    else
+    {
+      Object.SetIntProperty(subsim, "priority", --priority);
+    }
+    GUI.SetWindowTitle(display, zero_pad(priority, 2));
+
+    if(count == max)
+    {
+      count = 0;
+      interval *= 0.5;
+      ++max;
+    }
+  }
+  Object.RemoveProperty(spinner, "fsw_sdWhileSpinnerHeld");
+}
+
+
+
+
+task              show_ship
+( hship           cur_ship
+)
+{
+  hwindow         shady     = iGUI.CreateWideShadyBar();
+  hwindow         shady_r   = iGUI.CreateShadyBarRight();
+
+  list            back_pair;
+
+  int             width_l   = 380;  // Shady bar override widths
+  int             width_r   = 0;
+  int             x;        // Keep track of offset and canvas size
+  int             y;
+  int             w;
+  int             h;
+
+  hwindow         pane;   // Main l pane
+  hwindow         shader_title;
+  hwindow         pane_title;
+
+  hwindow         subsim_listbox; // using iGUI shortcut to work on this for now
+  hwindow         subsim_listbox_border;
+  hwindow         subsim_scroller;
+  list            subsim_buttons;
+
+  int             i;    // loops
+  int             c;
+
+  // Ship info
+  string          ship_name     =
+    Text.Field(Object.StringProperty(cur_ship, "name"), FT_Text);
+  string          ship_type     =
+    simtype2hudfield(iSim.Type(cur_ship));
+  string          ship_faction  =
+    Text.Field(Object.StringProperty(iSim.Faction(cur_ship), "name"), FT_Text);
+  list            subsims       =
+    Object.ListProperty(cur_ship, "fsw_sdVulnSystems");
+
+
+  GUI.SetShadyBarWidth(width_l);
+  GUI.SetRHSShadyBarWidth(width_r);
+
+  back_pair = iGUI.AddBackButtons
+  ( shady,
+    "UniGUI.UniGUIRemoveScreen",
+    "UniGUI.UniGUIClose"
+  );
+
+  // Main pane dimensions: inside global offset at overridden shady bar width
+  x = Global.Int("GUI_alignment_offset");
+  y = 0;
+  w = width_l - Global.Int("GUI_alignment_offset") * 2;
+  // Height also cropped to keep bottom above back buttons
+  h = GUI.WindowCanvasHeight(shady) - (Global.Int("GUI_backbutton_rise") + 3);
+
+  pane = GUI.CreateWindow
+  ( x, y,
+    w, h,
+    shady
+  );
+
+  // Now relative to pane
+  x = 0;
+  w = GUI.WindowCanvasWidth(pane);
+  h = Global.Int("GUI_main_title_height") + 4; // still doesn't fit!
+  shader_title = GUI.CreateTextWindow(x, y, w, h, pane);
+  GUI.SetWindowFont(shader_title, Global.String("GUI_main_title_font"));
+  GUI.SetTextWindowString(shader_title, htmlise(String.UpperCase(ship_name)));
+
+  y = Global.Int("GUI_title_yoffset") + 5; // shuffle down
+  h = 16; // for title_font height
+  pane_title = GUI.CreateTextWindow
+  ( x, y,
+    w, h,
+    pane
+  );
+  GUI.SetWindowFont(pane_title, Global.String("GUI_title_font"));
+  GUI.SetTextWindowString
+  ( pane_title,
+    htmlise(String.Join(String.Join(ship_type, " - "), ship_faction))
+  );
+
+  y +=
+  ( h + Global.Int("GUI_tab_height")
+    + Global.Int("GUI_fancyborder_width") + 4
+  );
+
+  x += Global.Int("GUI_fancyborder_width");
+  h =
+    GUI.WindowCanvasHeight(pane)
+    - (y + Global.Int("GUI_fancyborder_width") + 5);
+  w -= Global.Int("GUI_fancyborder_width") * 2;
+  subsim_listbox = GUI.CreateListBox(x, y, w, h, pane, false, false);
+  subsim_listbox_border = GUI.CreateBorder(subsim_listbox);
+  GUI.SetListBoxGap(subsim_listbox, 3);
+  subsim_scroller = GUI.CreateVerticalScrollbar
+  ( GUI.WindowCanvasWidth(subsim_listbox) - Global.Int("GUI_scrollbar_width"),
+    0,
+    Global.Int("GUI_scrollbar_width"),
+    GUI.WindowCanvasHeight(subsim_listbox),
+    subsim_listbox_border,
+    subsim_listbox,
+    Global.Float("GUI_scrollbar_buttonratio"),
+    "" // wtf is an avatar hint!?
+  );
+  // Disable standard listbox behaviour: nothing here should be selectable,
+  // individual windows within the list entry panes are doing the work
+  GUI.DisableHighlight(subsim_listbox);
+
+  subsim_buttons = subsim_list
+  ( subsims,
+    GUI.WindowCanvasWidth(subsim_listbox)
+  );
+
+  Object.AddHandleProperty
+  ( subsim_listbox,
+    "fsw_sdSubsimMonitor",
+    start subsim_monitor(subsim_buttons, cur_ship)
+  );
+  Task.Detach
+  ( Task.Cast(Object.HandleProperty(subsim_listbox, "fsw_sdSubsimMonitor"))
+  );
+
+  c = List.ItemCount(subsim_buttons);
+  for(i = 0; i < c; ++i)
+  {
+    GUI.AddListBoxEntry
+    ( subsim_listbox,
+      GUI.Cast(List.GetNth(subsim_buttons, i))
+    );
+  }
+}
+
+
+task              subsim_monitor
+( list            subsim_windows,
+  hship           ship
+) // Monitor and update integriy shaders for a list of subsim windows
+{
+  int             c         = List.ItemCount(subsim_windows);
+  int             l;
+
+  int             t_top;
+  int             t_bottom;
+  int             y_red     = 64;
+  int             y_green   = 128;
+  int             y_blue    = 192;
+
+  hwindow         list_item;
+  hwindow         child;
+  hwindow         integ_bar;
+  hwindow         name_button;
+  int             max_w;
+  int             w;
+  int             h;
+  int             min_draw_w = 18;
+
+  hsubsim         subsim;
+  float           integrity;
+  float           min_eff;
+
+  schedule
+  {
+    every 0.1: // this has to be something of a resource hog
+    {
+      for(l = 0; l < c; ++l)
+      {
+        list_item = GUI.Cast(List.GetNth(subsim_windows, l));
+        if(!list_item)
+        {
+          return; // overlay is gone
+        }
+        integ_bar =
+          GUI.Cast(Object.HandleProperty(list_item, "fsw_sdIntegBar"));
+        name_button =
+          GUI.Cast(Object.HandleProperty(list_item, "fsw_sdNameButton"));
+        max_w = GUI.WindowCanvasWidth(name_button);
+        subsim =
+          Subsim.Cast(Object.HandleProperty(list_item, "fsw_sdW2Subsim"));
+        integrity = tsSystemDamage.HPRatio(subsim);
+        w = tsSystemDamage.Float2Int(tsSystemDamage.Int2Float(max_w) * integrity);
+
+        if(w < min_draw_w)
+        {
+          w = min_draw_w;
+        }
+        if(w != GUI.WindowCanvasWidth(integ_bar) && w > min_draw_w)
+        {
+          min_eff = Object.FloatProperty(subsim, "minimum_efficiency");
+          t_top = 24;
+          t_bottom = 38;
+          h = GUI.WindowCanvasHeight(name_button); // integ_bar could be bad h
+          if(integrity < min_eff)
+          {
+            t_top += y_blue;
+            t_bottom += y_blue;
+          }
+          else if(1.0 - integrity > (1.0 - min_eff) / 2)
+          {
+            t_top += y_red;
+            t_bottom += y_red;
+          }
+          GUI.DeleteWindow(integ_bar);
+          integ_bar = GUI.CreateStaticWindow(0, 0, w, h, list_item);
+          GUI.SetWindowStateTextures
+          ( integ_bar, "texture:/images/gui/fsw_sdStdGUI_RGB",
+            126, t_top, 134, t_bottom,
+            135, t_top, 139, t_bottom,
+            140, t_top, 147, t_bottom,
+            126, t_top, 134, t_bottom,
+            135, t_top, 139, t_bottom,
+            140, t_top, 147, t_bottom,
+            126, t_top, 134, t_bottom,
+            135, t_top, 139, t_bottom,
+            140, t_top, 147, t_bottom
+          );
+          Object.SetHandleProperty(list_item, "fsw_sdIntegBar", integ_bar);
+        }
+      }
+    }
+  }
+}
+
+
+
+
+list              subsim_list
+( list            subsims,
+  int             item_width
+)
+{
+  set             subsim_pp     = Set.FromList(subsims);
+  hsubsim         cur_subsim;
+  string          subsim_name;
+  int             subsim_priority;
+  string          ammo_count;
+  float           subsim_integrity;
+  float           subsim_min_eff;
+
+  int             inner_height = Global.Int("GUI_listbox_entryheight");
+  int             entry_height  = inner_height + 8;
+  int             inner_y_offset = 4;
+  int             x_shift       = 6;
+  int             x, y, w, h;
+  int             cw;
+  int             min_draw_w    = 18;
+  float           sc_red, sc_green, sc_blue;
+  int             y_red         = 64;   // y offsets into gui palette to
+  int             y_green       = 128;  // shift from yellow
+  int             y_blue        = 192;
+  int             t_top;
+  int             t_bottom;
+  string          font_detail   = "font:/fonts/handelgothic bt_7pt";
+  string          font_small    = "font:/fonts/square721 bdex bt_6pt";
+
+  string          gui_palette   = "texture:/images/gui/fsw_sdStdGUI_RGB";
+
+  list            buttons;
+  hwindow         list_entry;
+  hwindow         le_name;
+  hwindow         le_button;
+  hwindow         le_integrity;
+  hwindow         le_priority;
+  hwindow         le_pri_down;
+  hwindow         le_pri_up;
+  hwindow         le_pri_top;
+  hwindow         le_pri_bot;
+  hwindow         le_auto_contain;
+
+  // Generate a list of subsim entries from a set of subsims
+  // item_width is entire width of list entry: create a pane and divide
+  // it up between whatever info is displayed
+
+  while(!Set.IsEmpty(subsim_pp))
+  {
+    cur_subsim = Subsim.Cast(Set.FirstElement(subsim_pp));
+    Set.Remove(subsim_pp, cur_subsim);
+    subsim_name =
+      Text.Field(Object.StringProperty(cur_subsim, "name"), FT_Text);
+    subsim_integrity =
+      Object.FloatProperty(cur_subsim, "hit_points")
+      / Object.FloatProperty(cur_subsim, "max_hit_points");
+    subsim_priority =
+      Object.IntProperty(cur_subsim, "priority");
+    subsim_min_eff =
+      Object.FloatProperty(cur_subsim, "minimum_efficiency");
+    if(Object.PropertyExists(cur_subsim, "ammo_count"))
+    {
+      ammo_count =
+      String.FormatStrStr
+      ( "%s/%s",
+        String.FromInt(Object.IntProperty(cur_subsim, "ammo_count")),
+        String.FromInt(Object.IntProperty(cur_subsim, "max_ammo_count"))
+      );
+      subsim_name = String.FormatStrStr("%s (%s)", subsim_name, ammo_count);
+    }
+    else
+    {
+      ammo_count = "";
+    }
+
+    if(Object.PropertyExists(cur_subsim, "fsw_sdrepair_rate")) // Fixme: states
+    {
+      sc_red = Global.Float("GUI_neutral_red");
+      sc_green = Global.Float("GUI_neutral_green");
+      sc_blue = Global.Float("GUI_neutral_blue");
+    }
+    else // insert 'if under containment' here (use selected colours?)
+    {
+      sc_red = Global.Float("GUI_focused_red");
+      sc_green = Global.Float("GUI_focused_green");
+      sc_blue = Global.Float("GUI_focused_blue");
+    }
+
+    // create empty pane to hold list info elements
+    list_entry = GUI.CreateWindow(0, 0, item_width, entry_height, none);
+
+    // subsim name text (with ammo count)
+    x = 3; y = inner_y_offset;
+    w = 174; h = inner_height;
+    le_name = GUI.CreateStaticWindow(x, y, w, h, list_entry);
+    GUI.SetWindowFont(le_name, font_detail);
+    GUI.SetWindowTextFormatting(le_name, false, 8);
+    GUI.SetWindowStateColours
+    ( le_name,
+      Global.Float("GUI_neutral_red"),
+      Global.Float("GUI_neutral_green"),
+      Global.Float("GUI_neutral_blue"),
+      Global.Float("GUI_focused_red"),
+      Global.Float("GUI_focused_green"),
+      Global.Float("GUI_focused_blue"),
+      sc_red, sc_green, sc_blue
+    );
+    GUI.SetWindowTitle(le_name, subsim_name);
+    // subsim name button
+    x = 0; y = 0;
+    w = 180; h = entry_height;
+    le_button = GUI.CreateButton(x, y, w, h, list_entry);
+    GUI.SetWindowStateTextures
+    ( le_button, gui_palette,
+      6, 42, 18, 62,
+      19, 42, 21, 62,
+      22, 42, 34, 62,
+      46, 42, 58, 62,
+      59, 42, 62, 62,
+      63, 42, 75, 62,
+      87, 42, 98, 62,
+      99, 42, 102, 62,
+      103, 42, 115, 62
+    );
+    Object.AddHandleProperty(list_entry, "fsw_sdNameButton", le_button);
+    // integrity shader
+    cw = tsSystemDamage.Float2Int(tsSystemDamage.Int2Float(w) * subsim_integrity);
+    if(cw < min_draw_w)
+    {
+      cw = min_draw_w;
+    }
+    x = 0; y = 0;
+    h = entry_height;
+    t_top = 24;
+    t_bottom = 38;
+    if(subsim_integrity < subsim_min_eff)
+    {
+      // It's offline (in theory, at least)
+      t_top += y_blue;
+      t_bottom += y_blue;
+    }
+    else if((1.0 - subsim_integrity) > (1.0 - subsim_min_eff) / 2)
+    {
+      // It's more than half-way to being off-line
+      t_top += y_red;
+      t_bottom += y_red;
+    }
+    le_integrity = GUI.CreateStaticWindow(x, y, cw, h, list_entry);
+    GUI.SetWindowStateTextures
+    ( le_integrity, gui_palette,
+      126, t_top, 134, t_bottom,
+      135, t_top, 139, t_bottom,
+      140, t_top, 147, t_bottom,
+      126, t_top, 134, t_bottom,
+      135, t_top, 139, t_bottom,
+      140, t_top, 147, t_bottom,
+      126, t_top, 134, t_bottom,
+      135, t_top, 139, t_bottom,
+      140, t_top, 147, t_bottom
+    );
+    Object.AddHandleProperty(list_entry, "fsw_sdIntegBar", le_integrity);
+
+    // Auto-containment selector
+    x += (w + x_shift); y = 0;
+    h = entry_height; w = inner_height;
+    le_auto_contain = GUI.CreateButton(x, y, w, h, list_entry);
+    GUI.SetWindowStateTextures
+    ( le_auto_contain, gui_palette,
+      0, 0, 0, 0,
+      110, 16, 122, 29,
+      0, 0, 0, 0,
+      0, 0, 0, 0,
+      110, 16, 122, 29,
+      0, 0, 0, 0,
+      0, 0, 0, 0,
+      110, 16, 122, 29,
+      0, 0, 0, 0
+    );
+    GUI.SetWindowStateIcons
+    ( le_auto_contain, I_CircleOff, I_CircleOff, I_CircleOn
+    );
+    // recovery priority
+    x += w; y = inner_y_offset;
+    w = 20; h = inner_height;
+    le_priority = GUI.CreateStaticWindow(x, y, w, h, list_entry);
+    GUI.SetWindowFont(le_priority, font_small);
+    GUI.SetWindowTextFormatting(le_priority, true, 0); // centre text
+    GUI.SetWindowStateColours
+    ( le_priority,
+      sc_red, sc_green, sc_blue,
+      sc_red, sc_green, sc_blue,
+      sc_red, sc_green, sc_blue
+    );
+    GUI.SetWindowTitle(le_priority, zero_pad(subsim_priority, 2));
+    // Priority spinner buttons
+    x += w; y = 0;
+    w = 13; h = tsSystemDamage.Float2Int(tsSystemDamage.Int2Float(entry_height) / 2);
+    le_pri_up = GUI.CreateButton(x, y, w, h, list_entry);
+    GUI.SetWindowStateTextures
+    ( le_pri_up, gui_palette,
+       0,   0,    0,    0,
+      52,  16,   65,   33,
+       0,   0,    0,    0,
+       0,   0,    0,    0,
+      65,  16,   78,   33,
+       0,   0,    0,    0,
+       0,   0,    0,    0,
+      78,  16,   91,   33,
+       0,   0,    0,    0
+    );
+    Object.AddBoolProperty(le_pri_up, "fsw_sdSpinnerUp", true);
+    Object.AddHandleProperty(le_pri_up, "fsw_sdParentWin", list_entry);
+    Object.AddHandleProperty(le_pri_up, "fsw_sdSpinDisplay", le_priority);
+    GUI.SetInputOverrideFunctions
+    ( le_pri_up,
+      "", "", "", "",
+      "", "",
+      "tssdGUI.OnSpinnerPress",
+      "tssdGUI.OnSpinnerRelease",
+      "tssdGUI.OnSpinnerHold"
+    );
+    le_pri_down = GUI.CreateButton(x, y + h + 1, w, h, list_entry);
+    GUI.SetWindowStateTextures
+    ( le_pri_down, gui_palette,
+       0,   0,    0,    0,
+      52,  33,   65,   16,
+       0,   0,    0,    0,
+       0,   0,    0,    0,
+      65,  33,   78,   16,
+       0,   0,    0,    0,
+       0,   0,    0,    0,
+      78,  33,   91,   16,
+       0,   0,    0,    0
+    );
+    Object.AddBoolProperty(le_pri_down, "fsw_sdSpinnerUp", false);
+    Object.AddHandleProperty(le_pri_down, "fsw_sdParentWin", list_entry);
+    Object.AddHandleProperty(le_pri_down, "fsw_sdSpinDisplay", le_priority);
+    GUI.SetInputOverrideFunctions
+    ( le_pri_down,
+      "", "", "", "",
+      "", "",
+      "tssdGUI.OnSpinnerPress",
+      "tssdGUI.OnSpinnerRelease",
+      "tssdGUI.OnSpinnerHold"
+    );
+    // jumpers
+    x += w; y = 0;
+    w = 13; h = tsSystemDamage.Float2Int(tsSystemDamage.Int2Float(entry_height) / 2);
+    le_pri_top = GUI.CreateButton(x, y, w, h, list_entry);
+    GUI.SetWindowStateTextures
+    ( le_pri_top, gui_palette,
+       0,   0,    0,    0,
+      138,  0,   151,   17,
+       0,   0,    0,    0,
+       0,   0,    0,    0,
+      151,  0,   164,   17,
+       0,   0,    0,    0,
+       0,   0,    0,    0,
+      164,  0,   177,   17,
+       0,   0,    0,    0
+    );
+    le_pri_bot = GUI.CreateButton(x, y + h + 1, w, h, list_entry);
+    GUI.SetWindowStateTextures
+    ( le_pri_bot, gui_palette,
+       0,   0,    0,    0,
+      138,  17,   151,   0,
+       0,   0,    0,    0,
+       0,   0,    0,    0,
+      151,  17,   164,   0,
+       0,   0,    0,    0,
+       0,   0,    0,    0,
+      164,  17,   177,   0,
+       0,   0,    0,    0
+    );
+
+    // ok to use name? - it doesn't seem to be used for anything else
+    Object.SetStringProperty
+    ( list_entry,
+      "name",
+      String.Join(zero_pad(100 - subsim_priority, 3), subsim_name)
+    );
+
+    Object.AddHandleProperty
+    ( list_entry,
+      "fsw_sdW2Subsim",
+      cur_subsim
+    );
+
+    List.AddTail(buttons, list_entry);
+  }
+
+  return List.SortByStringProperty(buttons, "name");
+}
+
+
+
+
+
+// Util
+
+string        htmlise
+( string      to_tag
+)
+{
+  return String.Join(String.Join("<html><body>", to_tag), "</body></html>");
+}
+
+eSimType    int2simtype
+( int       to_cast
+)
+{
+  if(to_cast == T_None)
+    return T_None;
+  if(to_cast == T_Star)
+    return T_Star;
+  else if(to_cast == T_Planet)
+    return T_Planet;
+  else if(to_cast == T_Nebula)
+    return T_Nebula;
+  else if(to_cast == T_Waypoint)
+    return T_Waypoint;
+  else if(to_cast == T_LagrangePoint)
+    return T_LagrangePoint;
+  else if(to_cast == T_Probe)
+    return T_Probe;
+  else if(to_cast == T_Weapon)
+    return T_Weapon;
+  else if(to_cast == T_Missile)
+    return T_Missile;
+  else if(to_cast == T_Mine)
+    return T_Mine;
+  else if(to_cast == T_Dolly)
+    return T_Dolly;
+  else if(to_cast == T_Asteroid)
+    return T_Asteroid;
+  else if(to_cast == T_CargoPod)
+    return T_CargoPod;
+  else if(to_cast == T_Gunstar)
+    return T_Gunstar;
+  else if(to_cast == T_Station)
+    return T_Station;
+  else if(to_cast == T_BioBomber)
+    return T_BioBomber;
+  else if(to_cast == T_Drone)
+    return T_Drone;
+  else if(to_cast == T_Waldo)
+    return T_Waldo;
+  else if(to_cast == T_CommandSection)
+    return T_CommandSection;
+  else if(to_cast == T_Utility)
+    return T_Utility;
+  else if(to_cast == T_Passenger)
+    return T_Passenger;
+  else if(to_cast == T_Fighter)
+    return T_Fighter;
+  else if(to_cast == T_Tug)
+    return T_Tug;
+  else if(to_cast == T_Patcom)
+    return T_Patcom;
+  else if(to_cast == T_Interceptor)
+    return T_Interceptor;
+  else if(to_cast == T_Corvette)
+    return T_Corvette;
+  else if(to_cast == T_Freighter)
+    return T_Freighter;
+  else if(to_cast == T_Destroyer)
+    return T_Destroyer;
+  else if(to_cast == T_Cruiser)
+    return T_Cruiser;
+  else if(to_cast == T_Carrier)
+    return T_Carrier;
+  else if(to_cast == T_Alien)
+    return T_Alien;
+  else if(to_cast == T_PowerUp)
+    return T_PowerUp;
+  else if(to_cast == TM_CelestialBody)
+    return TM_CelestialBody;
+  else if(to_cast == TM_Ship)
+    return TM_Ship;
+
+  debug Debug.PrintString(String.FormatInt("[fsw_cf] ERROR: simtype_int2enum received invalid eSimType value %d\n", to_cast));
+  return T_None;
+}
+
+string        repeat
+( string      str,
+  int         times
+)
+{
+  string      concat  = "";
+  int         i       = -1;
+
+  while(++i < times)
+  {
+    concat = String.Join(concat, str);
+  }
+  return concat;
+}
+
+string        simtype2hudfield
+( eSimType    to_cast
+)
+{
+  switch(to_cast)
+  {
+    case T_None:
+      return Text.Field("hud_type_unknown", FT_Text);
+    case T_Star:
+      return Text.Field("hud_type_star", FT_Text);
+    case T_Planet:
+      return Text.Field("hud_type_body", FT_Text);
+    case T_Nebula:
+      return Text.Field("hud_type_nebula", FT_Text);
+    case T_Waypoint:
+      return Text.Field("hud_type_waypoint", FT_Text);
+    case T_LagrangePoint:
+      return Text.Field("hud_type_lpoint", FT_Text);
+    case T_Probe:
+      return Text.Field("hud_type_probe", FT_Text);
+    case T_Weapon:
+      return Text.Field("hud_type_weapon", FT_Text);
+    case T_Missile:
+      return Text.Field("hud_type_missile", FT_Text);
+    case T_Mine:
+      return Text.Field("hud_type_mine", FT_Text);
+    case T_Dolly:
+      return "Dolly";
+    case T_Asteroid:
+      return Text.Field("hud_type_asteroid", FT_Text);
+    case T_CargoPod:
+      return Text.Field("hud_type_cargo_pod", FT_Text);
+    case T_Gunstar:
+      return Text.Field("hud_type_gunstar", FT_Text);
+    case T_Station:
+      return Text.Field("hud_type_station", FT_Text);
+    case T_BioBomber:
+      return Text.Field("hud_type_biobomber", FT_Text);
+    case T_Drone:
+      return Text.Field("hud_type_drone", FT_Text);
+    case T_Waldo:
+      return Text.Field("hud_type_waldo", FT_Text);
+    case T_CommandSection:
+      return Text.Field("hud_type_command_section", FT_Text);
+    case T_Utility:
+      return Text.Field("hud_type_utility", FT_Text);
+    case T_Passenger:
+      return Text.Field("hud_type_passenger", FT_Text);
+    case T_Fighter:
+      return Text.Field("hud_type_fighter", FT_Text);
+    case T_Tug:
+      return Text.Field("hud_type_tug", FT_Text);
+    case T_Patcom:
+      return Text.Field("hud_type_patcom", FT_Text);
+    case T_Interceptor:
+      return Text.Field("hud_type_interceptor", FT_Text);
+    case T_Corvette:
+      return Text.Field("hud_type_corvette", FT_Text);
+    case T_Freighter:
+      return Text.Field("hud_type_freighter", FT_Text);
+    case T_Destroyer:
+      return Text.Field("hud_type_destroyer", FT_Text);
+    case T_Cruiser:
+      return Text.Field("hud_type_cruiser", FT_Text);
+    case T_Carrier:
+      return Text.Field("hud_type_carrier", FT_Text);
+    case T_Alien:
+      return Text.Field("hud_type_alien", FT_Text);
+    case T_PowerUp:
+      return Text.Field("hud_type_power_up", FT_Text);
+    case TM_CelestialBody:
+      return Text.Field("hud_type_planet", FT_Text);
+    case TM_Ship:
+      return "Ship";
+  }
+
+  debug Debug.PrintString
+  ( String.FormatInt
+    ( "[tssdGUI] ERROR: invalid type %d passed to simtype2hudfield\n",
+      to_cast
+    )
+  );
+  return Text.Field("hud_type_unknown", FT_Text);
+}
+
+string        zero_pad
+( int         val,
+  int         digits
+)
+{
+  string      converted   = String.FromInt(val);
+  int         to_add      = digits - String.Length(converted);
+
+  return String.Join(repeat("0", to_add), converted);
+}
+
