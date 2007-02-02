@@ -1662,22 +1662,22 @@ Station,Last Stop Cove,HT_PirateCove,MT_NewAsteroid01,Lindevaal,ok,
 Mine,Doran Exotic Metals Mine,HT_ExoticMetalsMine,MT_LargeExoticMetalsMine,DAMN,ok,2
 ;Operation,Protection,Lindevaal,,ok,,
 Mine,Reinberg Asteroid Base,HT_ExoticMetalsMine,MT_SmallExoticMetalsMine,Chavez,ok,3
-;Operation,Protection,Lindevaal,,ok,,,,,,,,,,
-Mine,Kuniper Exotics Mine,HT_ExoticMetalsMine,MT_SmallExoticMetalsMine,Junkers,ok,1,,,,,,,,
-Station,Golligers Stopover,HT_MercenaryBase,MT_ShipYardStation,Golligers,ok,,,,,,,,,
+;Operation,Protection,Lindevaal,,ok,,,,,,,,,,,,,,,
+Mine,Kuniper Exotics Mine,HT_ExoticMetalsMine,MT_SmallExoticMetalsMine,Junkers,ok,1,,,,,,,,,,,,,
+Station,Golligers Stopover,HT_MercenaryBase,MT_ShipYardStation,Golligers,ok,,,,,,,,,,,,,,
 
-Lpoint,Hoel Lpoint,Geisebrecht,Hoel,2,bedalov,Calbault Lpoint,1,0,0,bumpys_star,Jennys Lpoint,1,0,0
-Lpoint,Vaden Lpoint,Toffelmeyer,Vaden,1,x788,MoonD Mutian Lpoint,3,0,0,,,,,
+Lpoint,Hoel Lpoint,Geisebrecht,Hoel,3,bedalov,Calbault Lpoint,1,0,0,bumpys_star,Jennys Lpoint,1,0,0,alcuin,Vaden Lpoint,1,0,0
+Lpoint,Vaden Lpoint,Toffelmeyer,Vaden,2,x788,MoonD Mutian Lpoint,3,0,0,alcuin,Hoel Lpoint,1,0,0,,,,,
 
-Center,bedalov,unknown,,,,,,,,,,,,
+Center,bedalov,unknown,,,,,,,,,,,,,,,,,
 
-Star,Bedalov Alpha,7,,,,,,,,,,,,
+Star,Bedalov Alpha,7,,,,,,,,,,,,,,,,,
 
-Planet,Pallava,,,,,,,,,,,,,
-Moon,Seelye,,,,,,,,,,,,,
-Mine,Seelye Mine,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,EtCom,ok,2,,,,,,,,
-;Operation,Protection,Lindevaal,,ok,,,,,,,,,,
-Moon,Harman,,,,,,,,,,,,,
+Planet,Pallava,,,,,,,,,,,,,,,,,,
+Moon,Seelye,,,,,,,,,,,,,,,,,,
+Mine,Seelye Mine,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,EtCom,ok,2,,,,,,,,,,,,,
+;Operation,Protection,Lindevaal,,ok,,,,,,,,,,,,,,,
+Moon,Harman,,,,,,,,,,,,,,,,,,
 Mine,Harman Metals Mine,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,EtCom,ok,3
 ;Operation,Protection,Lindevaal,,ok,,
 Moon,Julich,,,,,
