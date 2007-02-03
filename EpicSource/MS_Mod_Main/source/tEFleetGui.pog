@@ -210,7 +210,7 @@ update_wingman_info(hship wingman)
    if (mining_cost) {
       text = String.Join(text,"<p>Mining Rig");
       text = String.Join(text,String.FormatInt("<br>Mining Cost %d", mining_cost));
-      text = String.Join(text,"<br>Efficency ");
+      text = String.Join(text,"<br>Efficiency ");
       text = String.Join(text,String.FromFloat(efficiency));
       text = String.Join(text," ppd");
    }

@@ -185,6 +185,7 @@ AttachCargoHardpoint()
    string cargo_name, hardpoint_type, template_name;
    int count, cargo_type, price, ammo_price;
    hcargo cargo;
+   hinifile subsim_file;
 
    count = 0;
    while (INIFile.NumberedExists(hardpoint_file, "Cargo", "cargo_type", count)) {
@@ -197,6 +198,17 @@ AttachCargoHardpoint()
 
       cargo_type = tEconUtil.String2CargoType(cargo_name);
 
+      // Validate there are no typo errors.
+      subsim_file = INIFile.Create(template_name);
+      if (none == subsim_file) {
+         debug {
+            Debug.PrintString(cargo_name);
+            Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Error invalid template entry\n");
+         }
+      }
+      INIFile.Destroy(subsim_file);
+
+
       if (CT_Invalid != cargo_type) {
          cargo = iCargo.Find(cargo_type);
 
@@ -207,18 +219,22 @@ AttachCargoHardpoint()
                Object.AddStringProperty(cargo, "template_name", template_name);
                Object.AddIntProperty(cargo, "equip_price", price);
                Object.AddIntProperty(cargo, "ammo_price", ammo_price);
-
+            }else{
                debug {
-                  Debug.PrintHandle(cargo);
-                  Debug.PrintString(" hardpoint ");
-                  Debug.PrintString(hardpoint_type);
-                  Debug.PrintString("\n");                  
-
-                  Debug.PrintString("template ");
-                  Debug.PrintString(template_name);
-                  Debug.PrintString("\n");                  
+                  Debug.PrintString(cargo_name);
+                  Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Error invalid cargo type\n");
                }
             }
+         }else{
+            debug {
+               Debug.PrintString(cargo_name);
+               Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Error invalid cargo type\n");
+            }
+         }
+      }else {
+         debug {
+            Debug.PrintString(cargo_name);
+            Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Error invalid cargo type\n");
          }
       }
    }
