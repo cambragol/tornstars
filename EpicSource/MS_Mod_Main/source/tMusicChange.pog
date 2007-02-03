@@ -97,6 +97,10 @@ NewSystem()
    hinifile music_file = INIFile.Create("ini:/epic_music");
 
 
+   if (!Global.Bool("gt_option_music_on")) {
+      return;
+   }
+
    if (none == music_file) {
 
       debug Debug.PrintString("ERROR tMusicChange epic_music.ini missing");

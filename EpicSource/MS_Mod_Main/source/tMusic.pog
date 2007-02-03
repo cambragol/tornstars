@@ -365,7 +365,7 @@ task queuing_task()
    string suite_key, mood, stream;
    hsim suite;
    int selection, next_choice, total_choice;
-   bool paused;
+   bool music_on;
    hinifile suite_file;
 
    debug Debug.PrintString("Music: que task running\n");
@@ -374,9 +374,10 @@ task queuing_task()
 
    while (1) {
       Task.Sleep(Task.Current(), 1.0);
-         paused = Global.Bool("gt_music_pause");
 
-         if (!paused && !Stream.IsPlaying(0)) {
+         music_on = Global.Bool("gt_option_music_on");
+
+         if (music_on && !Stream.IsPlaying(0)) {
 
             debug Debug.PrintString("tMusic: Change tune\n");
 
@@ -455,9 +456,6 @@ Init()
    string suite_name;
 
 
-   if (!Global.Bool("gt_option_music_on")) {
-      return;
-   }
 
    music_file = INIFile.Create("ini:/epic_music");
 
