@@ -28,6 +28,8 @@ prototype tsLoadoutGui.SessionStart();
 
 prototype tsLoadoutGui.SessionEnd();
 
+prototype tsLoadoutGui.RemoveEquipment( hship ship );
+
 prototype tsLoadoutGui.OnShipPress();
 
 prototype tsLoadoutGui.OnSystemPress();
@@ -36,13 +38,13 @@ prototype tsLoadoutGui.OnEquipmentPress();
 
 prototype tsLoadoutGui.OnInventoryItemPress();
 
-prototype tsLoadoutGui.OnReplacePress();
-
 prototype tsLoadoutGui.OnRepairPress();
 
 prototype tsLoadoutGui.OnRearmPress();
 
 prototype tsLoadoutGui.OnRefuelPress();
+
+prototype tsLoadoutGui.OnReplacePress();
 
 prototype tsLoadoutGui.OnRemovePress();
 
