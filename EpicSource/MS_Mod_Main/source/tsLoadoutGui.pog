@@ -60,6 +60,9 @@ provides MainWindow,
          SessionStart,
          SessionEnd,
 
+         RemoveEquipment,
+
+
          OnShipPress,
          OnSystemPress,
          OnEquipmentPress,
@@ -69,8 +72,8 @@ provides MainWindow,
          OnRearmPress,
          OnRefuelPress,
 
-         OnPurchasePress,
-         OnSellPress,
+         OnReplacePress,
+         OnRemovePress,
    
          AttachCargoHardpoint;
 
@@ -93,11 +96,7 @@ prototype create_equipment_list();
 prototype bool allow_run();
 
 
-prototype select_ship();
-
-prototype select_system();
-
-prototype select_item();
+prototype select_ship(hship ship);
 
 prototype list hardpoint_list(hship ship);
 
@@ -113,9 +112,11 @@ prototype hide_window( hwindow win );
 
 prototype show_window( hwindow win );
 
+prototype tag_equipment(hship ship);
 
+prototype int rearm_cost(hship ship);
 
-
+prototype rearm_ship(hship ship);
 
 
 bool allow_run()
@@ -311,18 +312,18 @@ OnSystemPress()
 {
    hwindow button = GUI.FocusedWindow();
    hsubsim subsim;
-   hwindow sell_button = GUI.Cast(Global.Handle("gt_loadoutgui_sell_button"));
+   hwindow remove_button = GUI.Cast(Global.Handle("gt_loadoutgui_remove_button"));
 
    subsim = Subsim.Cast(Object.HandleProperty(button,"gt_loadoutgui_subsim"));
 
 
    Global.SetHandle("gt_loadoutgui_subsim_select", subsim);
 
-   // Don't let the player sell a mountpoint.
+   // Don't let the player remove a mountpoint.
    if ("ini:/subsims/mountpoints/pylon_mount" == Object.StringProperty(subsim,"subsim_template")) {
-      hide_window(sell_button);
+      hide_window(remove_button);
    }else {
-      show_window(sell_button);
+      show_window(remove_button);
    }
 
    // Find matching equipment for the newly selected ship system.
@@ -376,6 +377,16 @@ task replace_task()
       return;
    }
 
+   // remove one items worth.
+   iInventory.Add(Object.IntProperty(cargo,"type"), -1);
+
+   // put back the removed system, if that system is not a mountpoint.
+   return_cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
+
+   if (none != return_cargo) {
+      iInventory.Add(Object.IntProperty(return_cargo,"type"), 1);
+   }
+
    template_name = Object.StringProperty(cargo,"template_name");
 
    if ("" == template_name) {
@@ -395,7 +406,7 @@ task replace_task()
 }
 
 
-OnPurchasePress()
+OnReplacePress()
 {
    if (Global.Bool("gt_loadoutgui_allow_replace")) {
       Global.SetBool("gt_loadoutgui_allow_replace", false);
@@ -415,8 +426,17 @@ OnRepairPress()
 
 OnRearmPress()
 {
+   hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
+   hwindow rearm_button = GUI.Cast(Global.Handle("gt_loadoutgui_rearm_button"));
+   int cost;
 
+   cost = Object.IntProperty(ship, "rearm_cost");
+   tEpicMoney.ChangeShipAccount(-1*cost);
 
+   rearm_ship(ship);
+
+   // The ship status has changed, force an update.
+   select_ship(ship);
 }
 
 
@@ -427,13 +447,13 @@ OnRefuelPress()
 }
 
 
-OnSellPress()
+OnRemovePress()
 {
    hsubsim subsim = Subsim.Cast(Global.Handle("gt_loadoutgui_subsim_select"));
    hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
    hcargo return_cargo;
 
-   debug Debug.PrintString("tsLoadoutGui.OnSellPress\n");
+   debug Debug.PrintString("tsLoadoutGui.OnRemovePress\n");
 
    if (none == ship) {
       debug Debug.PrintString("tsLoadoutGui.OnReplacePress error ship\n");
@@ -446,8 +466,15 @@ OnSellPress()
    }
 
    if ("ini:/subsims/mountpoints/pylon_mount" == Object.StringProperty(subsim,"subsim_template")) {
-      debug Debug.PrintString("tsLoadoutGui.OnReplacePress cannot sell mountpoint\n");
+      debug Debug.PrintString("tsLoadoutGui.OnReplacePress cannot remove mountpoint\n");
       return;
+   }
+
+   // put back the removed system, if that system is not a mountpoint.
+   return_cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
+
+   if (none != return_cargo) {
+      iInventory.Add(Object.IntProperty(return_cargo,"type"), 1);
    }
 
    // We replace the ship system with a mountpoint. 
@@ -461,6 +488,35 @@ OnSellPress()
 }
 
 
+
+select_ship(hship ship)
+{
+   int cost;
+   hwindow rearm_button = GUI.Cast(Global.Handle("gt_loadoutgui_rearm_button"));
+
+
+   Global.SetHandle("gt_loadoutgui_ship_select", ship);
+
+   cost = rearm_cost(ship);  
+
+   if (cost > 0) {
+      show_window(rearm_button);
+   }else {
+      hide_window(rearm_button);
+   }
+
+   Object.AddIntProperty(ship, "rearm_cost", cost);
+
+   update_ship_info();
+
+   create_ship_systems_list();
+
+   create_equipment_list();
+
+}
+
+
+
 OnShipPress()
 {
    hwindow button = GUI.FocusedWindow();
@@ -468,14 +524,9 @@ OnShipPress()
 
    ship = iShip.Cast(Object.HandleProperty(button,"gt_loadoutgui_ship"));
 
-   Global.SetHandle("gt_loadoutgui_ship_select", ship);
-
-   update_ship_info();
-
-   create_ship_systems_list();
-
-   create_equipment_list();
+   select_ship(ship);
 }
+
 
 
 OnInventoryItemPress()
@@ -497,9 +548,17 @@ update_ship_info()
    hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
    hwindow ship_info = GUI.Cast(Global.Handle("gt_loadoutgui_ship_info"));
    string text;
+   int cost;
+
+   cost = Object.IntProperty(ship, "rearm_cost");
 
    text = String.Join(text,"Ship Info ");
    text = String.Join(text,Text.Field(Sim.Name(ship), FT_Text));
+   if (cost > 0) {
+      text = String.Join(text,"<br>Rearm Cost ");
+      text = String.Join(text,String.FromInt(cost));
+   }
+
    text = uString.Htmlize(text);
 
    GUI.SetTextWindowString( ship_info, text);
@@ -536,7 +595,12 @@ hcargo subsim2cargo(string subsim_template)
       return none;
    }
 
-   for (i=CT_WasteBlocks;i<=CT_AdvancedHullMaterialRefit;++i)
+   // No cargo, if the subsystem is a mountpoint.
+   if ("ini:/subsims/mountpoints/pylon_mount" == subsim_template) {
+      return none;
+   }
+
+   for (i=CT_SecretData;i<=CT_AdvancedHullMaterialRefit;++i)
    {
       cargo = iCargo.Find(i);
       if (none != cargo) {
@@ -592,7 +656,7 @@ create_equipment_list()
 {
    hwindow list_parent = GUI.Cast(Global.Handle("gt_loadoutgui_equipment_parent"));
    hwindow list_base = GUI.Cast(Global.Handle("gt_loadoutgui_equipment_base"));
-   hwindow purchase_button = GUI.Cast(Global.Handle("gt_loadoutgui_purchase_button"));
+   hwindow replace_button = GUI.Cast(Global.Handle("gt_loadoutgui_replace_button"));
    hwindow list_box;
    hwindow button;
 
@@ -625,11 +689,11 @@ create_equipment_list()
 
    count = List.ItemCount(equipment_list);
    if (count < 1) {
-      hide_window(purchase_button);
+      hide_window(replace_button);
       return;
    }
 
-   show_window(purchase_button);
+   show_window(replace_button);
    
    list_base = GUI.CreateWindow(0, 
                                 0,
@@ -705,7 +769,7 @@ create_ship_systems_list()
 {
    hwindow list_parent = GUI.Cast(Global.Handle("gt_loadoutgui_systems_parent"));
    hwindow list_base = GUI.Cast(Global.Handle("gt_loadoutgui_systems_base"));
-   hwindow sell_button = GUI.Cast(Global.Handle("gt_loadoutgui_sell_button"));
+   hwindow remove_button = GUI.Cast(Global.Handle("gt_loadoutgui_remove_button"));
    hwindow list_box;
    hwindow button;
 
@@ -731,12 +795,12 @@ create_ship_systems_list()
    if (count == 0) {
       // There are no hardpoints on this ship. Exit.
 
-      hide_window(sell_button);
+      hide_window(remove_button);
 
       return;
    }
 
-   show_window(sell_button);
+   show_window(remove_button);
 
 
    list_base = GUI.CreateWindow(0, 
@@ -892,11 +956,16 @@ create_player_fleet_list()
 											"" );
 
       GUI.AddListBoxEntry(list_box, button);
+
+      // attach the cargo index to each replacable ship system. Do this for the whole fleet.
+//      tag_equipment(ship);
    }   
 
    index = 0;
    ship = iShip.Cast(List.Head(fleet_list));
    Global.CreateHandle("gt_loadoutgui_ship_select", GA_Write|GA_NoSave, ship);
+
+   select_ship(ship);
 
    GUI.SelectListBoxEntry(list_box, index);
 }
@@ -1266,10 +1335,10 @@ MainWindow()
                                  GUI.WindowCanvasWidth( bottom_splitter),
                                  30,
                                  bottom_splitter, 
-                                 Text.Field("gt_loadoutgui_purchase",FT_Text), 
-                                 "tsLoadoutGui.OnPurchasePress");
+                                 Text.Field("gt_loadoutgui_replace",FT_Text), 
+                                 "tsLoadoutGui.OnReplacePress");
 
-   Global.CreateHandle("gt_loadoutgui_purchase_button",GA_Write|GA_NoSave, button);
+   Global.CreateHandle("gt_loadoutgui_replace_button",GA_Write|GA_NoSave, button);
 
    hide_window(button);
 
@@ -1278,10 +1347,10 @@ MainWindow()
                                  GUI.WindowCanvasWidth( bottom_splitter),
                                  30,
                                  bottom_splitter, 
-                                 Text.Field("gt_loadoutgui_sell",FT_Text), 
-                                 "tsLoadoutGui.OnSellPress");
+                                 Text.Field("gt_loadoutgui_remove",FT_Text), 
+                                 "tsLoadoutGui.OnRemovePress");
 
-   Global.CreateHandle("gt_loadoutgui_sell_button",GA_Write|GA_NoSave, button);
+   Global.CreateHandle("gt_loadoutgui_remove_button",GA_Write|GA_NoSave, button);
 
    hide_window(button);
 
@@ -1332,10 +1401,7 @@ MainWindow()
 
    
 
-
-   // This section is for the player owned cargo pods near the current station.
-   // This area is unused for purchase, but is very important for the sales screen
-   // later.
+   // 
    bottom_splitter = GUI.SplitterWindowBottomWindow(splitter);
 
    // Create the text window for the inventory item description.
@@ -1353,7 +1419,6 @@ MainWindow()
 
 
    // Now that all the GUI elements exist, fill them in with the correct information.
-
    create_player_fleet_list();
 
    create_ship_systems_list();
@@ -1362,10 +1427,15 @@ MainWindow()
 
    create_player_systems_list();
 
-   update_ship_info();
+
 
    // display information about the selected item.
    update_item_info();
+
+
+   // check if we should display the rearm or refuel buttons.
+
+
 }
 
 
@@ -1407,16 +1477,7 @@ list remove_beams(hship ship)
          // put a mountpoint here while the weapons are linked.
          tsShip.ReplaceSubsim(ship, subsim, "ini:/subsims/mountpoints/pylon_mount");
 
-         atomic debug {
-            Debug.PrintHandle(subsim);
-            Debug.PrintString(" removed beam\n");
-         }
-
       }else {
-         atomic debug {
-            Debug.PrintHandle(subsim);
-            Debug.PrintString(" non-beam\n");
-         }
          ++i;
       }
    }
@@ -1449,16 +1510,6 @@ attach_beams(hship ship, list beams)
          Debug.PrintString(" replacing-beam\n");
       }
 
-   }
-
-   total = Sim.SubsimCount(ship);
-   for (i=0;i<total;++i) {
-      subsim = Sim.NthSubsim(ship, i);
-
-      debug {
-         Debug.PrintHandle(subsim);
-         Debug.PrintString(" subsim-list\n");
-      }
    }
 }
 
@@ -1505,14 +1556,112 @@ int repair_cost(hship ship)
 
 
 
-// Cost to purchase more ammo and missiles.
+// Cost to replace more ammo and missiles.
 int rearm_cost(hship ship)
 {
 
+   int subsim_count = Sim.SubsimCount(ship);
+   int i, ammo_count, ammo_cost, total_cost, max_ammo;
+   hsubsim subsim;
+   hcargo cargo;
 
-   return 0;
+   total_cost = 0;
+
+   for (i=0;i<subsim_count;++i) {
+      subsim = Sim.NthSubsim(ship,i);
+
+      if (Object.PropertyExists(subsim, "ammo_count")) {
+         ammo_count = Object.IntProperty(subsim, "ammo_count");
+         max_ammo = Object.IntProperty(subsim, "max_ammo_count");
+
+         if (ammo_count < max_ammo) {
+            // Find the cost of the ammo, add that to the total cost.
+
+            cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
+
+            if (none != cargo) {
+               ammo_cost = max_ammo - ammo_count;
+               ammo_cost = ammo_cost * Object.IntProperty(cargo, "ammo_price");
+               total_cost = total_cost + ammo_cost;
+            }
+         }
+      }
+   }
+
+   debug {
+      Debug.PrintString("Ammo Cost ");
+      Debug.PrintInt(total_cost);
+      Debug.PrintString("\n");
+   }
+
+   return total_cost;
 }
 
+rearm_ship(hship ship)
+{
+   int subsim_count = Sim.SubsimCount(ship);
+   int i, max_ammo;
+   hsubsim subsim;
+
+   atomic {
+      for (i=0;i<subsim_count;++i) {
+         subsim = Sim.NthSubsim(ship,i);
+
+         if (Object.PropertyExists(subsim, "ammo_count")) {
+            max_ammo = Object.IntProperty(subsim, "max_ammo_count");
+            Object.SetIntProperty(subsim, "ammo_count", max_ammo);
+         }
+      }
+   }
+} 
+
+// Pull the ships equipment and place it into inventory.
+RemoveEquipment(hship ship)
+{
+   list ship_systems;
+   hsubsim subsim;
+   int i, total;
+   hcargo return_cargo;
+
+   ship_systems = hardpoint_list(ship);
+
+   total = List.ItemCount(ship_systems);
+   for (i=0;i<total;++i) {
+      subsim = Subsim.Cast(List.GetNth(ship_systems, i));
+
+      // Put the subsim back into the inventory.
+      return_cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
+
+      if (none != return_cargo) {
+         iInventory.Add(Object.IntProperty(return_cargo,"type"), 1);
+      }
+
+      // Remove it from the ship.
+      tsShip.ReplaceSubsim(ship, subsim, "ini:/subsims/mountpoints/pylon_mount");
+   }
+}
+
+// Attach the cargo index property to the subsims.
+tag_equipment(hship ship)
+{
+   list ship_systems;
+   hsubsim subsim;
+   int i, total;
+   hcargo cargo;
+
+   ship_systems = hardpoint_list(ship);
+
+   total = List.ItemCount(ship_systems);
+   for (i=0;i<total;++i) {
+      subsim = Subsim.Cast(List.GetNth(ship_systems, i));
+
+      cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
+
+      if (none != cargo) {
+         Object.AddIntProperty(subsim, "cargo_index", Object.IntProperty(cargo,"type"));
+      }
+   }
+}
 
 //
 // Fn: hide_window
