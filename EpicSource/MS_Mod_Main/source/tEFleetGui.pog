@@ -226,8 +226,6 @@ update_wingman_info(hship wingman)
    text = uString.Htmlize(text);
 
    GUI.SetTextWindowString( wingman_info, text);
-
-
 }
 
 update_wingman_description(hship wingman)
@@ -281,7 +279,7 @@ create_wingman_list()
 
    string name;
    list wingman_list = tsPlayerFleet.PlayerFleet();
-
+   list filtered_wingmen;
 
 
    // Remove the prior inventory list.
@@ -330,6 +328,8 @@ create_wingman_list()
 
       if (!Sim.IsDead(wingman)) {
 
+         List.AddTail(filtered_wingmen, wingman);
+
          name = Sim.Name(wingman);
 
          name = Text.Field(name, FT_Text);
@@ -358,8 +358,7 @@ create_wingman_list()
 
    GUI.SelectListBoxEntry(list_box, 0);
 
-   select_wingman(iShip.Cast(List.Head(wingman_list)));
-
+   select_wingman(iShip.Cast(List.Head(filtered_wingmen)));
 }
 
 
