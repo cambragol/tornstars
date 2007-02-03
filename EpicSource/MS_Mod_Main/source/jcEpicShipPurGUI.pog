@@ -70,7 +70,8 @@ uses
    tStationEnum,
    tStation,
    tsShip,
-   tsPlayerFleet;
+   tsPlayerFleet,
+   tsLoadoutGui;
 
 
 	
@@ -720,6 +721,8 @@ task change_ship(string template_name)
       tsPlayerFleet.NewPlayerShip(new_ship);
 
       Sim.PlaceNear(new_ship, player_ship, 1km);
+
+      tsLoadoutGui.RemoveEquipment(player_ship);
 
       Task.Sleep(Task.Current(), 0.1);
 
