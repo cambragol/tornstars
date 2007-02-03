@@ -165,7 +165,7 @@ int main(int argc, char* argv[])
 	int station_count = 0;
 	int operation_count = 0;
 
-	int period;
+	int cost;
 	int difficulty;
 	int offset;
 
@@ -780,9 +780,9 @@ int main(int argc, char* argv[])
 				ptoken = strtok(NULL," \t,");
 				sscanf(ptoken,"%d",&difficulty);
 				
-				// Parse the period
+				// Parse the percent of max cost to take jump.
 				ptoken = strtok(NULL," \t,");
-				sscanf(ptoken,"%d",&period);
+				sscanf(ptoken,"%d",&cost);
 				
 				// Parse the offset 
 				ptoken = strtok(NULL," \t,");
@@ -790,8 +790,8 @@ int main(int argc, char* argv[])
 			
 				fprintf(foutini,"\nstart_lpoint[%d]=\"%s\"\n", gLpointRoutes, name);
 				fprintf(foutini,"difficulty[%d]=%d\n", gLpointRoutes, difficulty);
-				fprintf(foutini,"period[%d]=%d\n", gLpointRoutes, period);
-				fprintf(foutini,"offset[%d]=%d\n", gLpointRoutes, offset);
+				fprintf(foutini,"percent_cost[%d]=%d\n", gLpointRoutes, cost);
+				//fprintf(foutini,"offset[%d]=%d\n", gLpointRoutes, offset);
 				fprintf(foutini,"end_system[%d]=\"%s\"\n", gLpointRoutes, system);
 				fprintf(foutini,"end_lpoint[%d]=\"%s\"\n\n", gLpointRoutes, lpoint);
 				gLpointRoutes++;
