@@ -27,8 +27,8 @@ iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
    tEpicGui,
    tsShipEnum,
    tsShip,
-   tsPlayerFleet,
-   tTime;
+   tsPlayerFleet;
+
 
 
 
@@ -49,7 +49,7 @@ prototype set_known(string start_lpoint, string end_lpoint);
 
 prototype bool is_known(string start_lpoint, string end_lpoint);
 
-prototype bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty);
+prototype bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty, float route_cost);
 
 prototype set find_following_ships(hship ship);
 
@@ -73,6 +73,8 @@ prototype string difficulty2name(int difficulty);
 prototype string difficulty2key(int difficulty);
 
 prototype int float2int(float value);
+
+prototype float int2float(int value);
 
 prototype add_flash(hship player);
 
@@ -190,7 +192,7 @@ init_system(string system_name) {
     string global_name;
     string start_lpoint, end_lpoint, end_system;
 
-    int i, total, count, difficulty;
+    int i, total, count, difficulty, cost;
     hlagrangepoint lpoint, target_lpoint;
 
     list lpoints;
@@ -229,6 +231,7 @@ init_system(string system_name) {
         end_lpoint = INIFile.NumberedString(system_file,"starting_stations","end_lpoint",count,"Invalid");
         end_system = INIFile.NumberedString(system_file,"starting_stations","end_system",count,"Invalid");
         difficulty = INIFile.NumberedInt(system_file,"starting_stations","difficulty",count,0);
+        cost = INIFile.NumberedInt(system_file,"starting_stations","percent_cost",count,1000);
 
         lpoint = iLagrangePoint.Cast(iSim.FindByNameInSystem(start_lpoint, system_name));
 
@@ -256,6 +259,7 @@ init_system(string system_name) {
             Object.AddStringProperty(route,"gtRoute", start_lpoint);
             Object.AddStringProperty(route,"gtRouteLpoint", end_lpoint);
             Object.AddIntProperty(route,"gtRouteDanger", difficulty);
+            Object.AddIntProperty(route,"gtRouteCost", cost);
             Object.AddStringProperty(route,"gtRouteSystem", end_system);
             Object.AddStringProperty(route,"gtRouteName", "");
             Object.AddBoolProperty(route,"gtRouteKnown", false);
@@ -320,7 +324,7 @@ init_system(string system_name) {
 task jump_watch() {
     hlagrangepoint jump_point;
     hisim target_lpoint;
-    int difficulty;
+    int difficulty, route_cost;
     int count = 10;
     string system, location_name;
     hsim  end_location;
@@ -342,6 +346,7 @@ task jump_watch() {
         if (rating < 1){
             Object.RemoveProperty(jump_point,"tEJumpDest");
             Object.RemoveProperty(jump_point,"tEJumpDiff");
+            Object.RemoveProperty(jump_point,"tEJumpCost");
             Object.RemoveProperty(jump_point,"tEJumpName");
             return;
         }
@@ -351,6 +356,7 @@ task jump_watch() {
             // Remove this handle so another task can be started later.
             Object.RemoveProperty(jump_point,"tEJumpDest");
             Object.RemoveProperty(jump_point,"tEJumpDiff");
+            Object.RemoveProperty(jump_point,"tEJumpCost");
             Object.RemoveProperty(jump_point,"tEJumpName");
             return;
         }
@@ -369,8 +375,10 @@ task jump_watch() {
                 // This keeps the 
                 target_lpoint = iLagrangePoint.Cast(Object.HandleProperty(jump_point,"tEJumpDest"));
                 difficulty = Object.IntProperty(jump_point,"tEJumpDiff");
+                route_cost = Object.IntProperty(jump_point,"tEJumpCost");
 
-                success = jump_player_fleet(jump_point, target_lpoint, difficulty);
+
+                success = jump_player_fleet(jump_point, target_lpoint, difficulty, int2float(route_cost)/100.0);
 
                 if (true == success) {
                    set_known(Sim.Name(jump_point), Sim.Name(Sim.Cast(target_lpoint)));
@@ -378,6 +386,7 @@ task jump_watch() {
 
                 Object.RemoveProperty(jump_point,"tEJumpDest");
                 Object.RemoveProperty(jump_point,"tEJumpDiff");
+                Object.RemoveProperty(jump_point,"tEJumpCost");
                 Object.RemoveProperty(jump_point,"tEJumpName");
 
                 return;
@@ -548,7 +557,7 @@ list KnownList(hlagrangepoint lpoint) {
 
 
 task select_dialog() {
-    int i, total, selection, response, difficulty, rating;
+    int i, total, selection, response, difficulty, rating, cost;
     list route_list;
     hsim route;
     string system_name, target_name, route_name;
@@ -628,6 +637,7 @@ task select_dialog() {
         target_name = Object.StringProperty(route,"gtRouteLpoint");
         route_name = Object.StringProperty(route,"gtRouteName");
         difficulty = Object.IntProperty(route,"gtRouteDanger");
+        cost = Object.IntProperty(route,"gtRouteCost");
         known = Object.BoolProperty(route,"gtRouteKnown");
         
         if (difficulty > sensor_rating(player) ) {
@@ -740,10 +750,12 @@ task select_dialog() {
     if (Object.PropertyExists(lpoint,"tEJumpDest")) {
         Object.SetHandleProperty(lpoint,"tEJumpDest", target_lpoint);
         Object.SetIntProperty(lpoint,"tEJumpDiff", difficulty);
+        Object.SetIntProperty(lpoint,"tEJumpCost", cost);        
         Object.SetStringProperty(lpoint,"tEJumpName", route_name);
     } else {
         Object.AddHandleProperty(lpoint,"tEJumpDest", target_lpoint);
         Object.AddIntProperty(lpoint,"tEJumpDiff", difficulty);
+        Object.AddIntProperty(lpoint,"tEJumpCost", cost);        
         Object.AddStringProperty(lpoint,"tEJumpName", route_name);
 
         Task.Detach( start jump_watch());
@@ -864,7 +876,7 @@ jump_ship(hship ship, hisim lpoint, int difficulty) {
     // Place the arriving ship within 1km of the lpoint, facing the correct way.
     atomic {
        Sim.CopyOrientation(ship, lpoint);
-       Sim.SetVelocityLocalToSim(ship, 0, 0, 1000);
+       Sim.SetVelocityLocalToSim(ship, 0, 0, 500);
        Sim.PlaceNear(ship, lpoint, 1km);
     }
 
@@ -908,7 +920,7 @@ add_flash(hship player)
 }
 
 
-bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
+bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty, float route_cost) {
     hship player = iShip.FindPlayerShip();
     hship wingman;
     list player_fleet;
@@ -937,7 +949,7 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
         wingman = iShip.Cast(List.GetNth(player_fleet,i));
 
         fuel = tsShip.Fuel(wingman);
-        jump_cost = tsShip.FuelPerJump(wingman);
+        jump_cost = tsShip.FuelPerJump(wingman) * route_cost;
 
         if (jump_cost > fuel) {
            // ejump_low_fuel, "We don't have enough fuel to jump Sir"
@@ -961,7 +973,7 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty) {
 
     // The player is now clear to jump.
     fuel = tsShip.Fuel(player);
-    jump_cost = tsShip.FuelPerJump(player);
+    jump_cost = tsShip.FuelPerJump(player) * route_cost;
 
     if (jump_cost < fuel) {
 
@@ -1890,6 +1902,11 @@ DebugJump()
 }
 
 int float2int(float value)
+{
+   return value;
+}
+
+float int2float(int value)
 {
    return value;
 }
