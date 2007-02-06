@@ -26,7 +26,6 @@ UsePreviousAppDir=false
 WizardImageFile=.\Left_Install.bmp
 WizardSmallImageFile=.\install_small.bmp
 
-; I edit this file to see if update wrecks it.
 
 [_ISTool]
 Use7zip=true
