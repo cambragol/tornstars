@@ -131,17 +131,28 @@ RemoveFleetShip(hship ship)
 
 list PlayerFleet()
 {
-   return List.FromSet(Global.Set("g_epic_fleet_player_list"));
+   list fleet;
+   hship player = iShip.FindPlayerShip();
+
+   fleet = List.FromSet(Global.Set("g_epic_fleet_player_list"));
+
+   List.AddHead(fleet, player);
+
+   return fleet;
 }
 
 
 bool IsPlayerFleetShip(hsim ship)
 {
    set fleet = Global.Set("g_epic_fleet_player_list");
+   hship player = iShip.FindPlayerShip();
+
+   Set.Add(fleet, player);
 
    if (Set.Contains(fleet, ship)) {
       return true;
    }
+
    return false;
 }
 
@@ -297,6 +308,7 @@ NewPlayerShip(hship ship)
 {
    // We need to remove the players current ship from the hanger.
    // Just get rid of all the ships.
+/*
    iInventory.RemoveCommandSection();
    iInventory.RemoveTug();
    iInventory.RemoveFastAttackShip();
@@ -316,7 +328,7 @@ NewPlayerShip(hship ship)
    }else if (iSim.Type(ship) == T_Fighter) {
       iInventory.AddStormPetrel();
    }
-
+*/
    SetupPlayer(ship);
 
    iShip.InstallPlayerPilot(ship);
@@ -338,7 +350,7 @@ SetupPlayer(hship ship)
       Object.SetStringProperty(ship, "death_script", "iDeathScript.PlayerDeathScript");
    }
 
-   add_ship_to_list(ship);
+//   add_ship_to_list(ship);
 
    iSim.SetFaction(ship, player_faction);
 

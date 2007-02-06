@@ -85,7 +85,7 @@ prototype update_item_info();
 
 
 
-prototype create_player_systems_list();
+prototype create_player_inventory_list();
 
 prototype create_player_fleet_list();
 
@@ -117,6 +117,12 @@ prototype tag_equipment(hship ship);
 prototype int rearm_cost(hship ship);
 
 prototype rearm_ship(hship ship);
+
+
+prototype string get_mountpoint_template(string hardpoint_type);
+
+prototype string get_mountpoint_type(hsubsim subsim);
+
 
 
 bool allow_run()
@@ -176,9 +182,7 @@ SessionEnd()
 }
 
 
-// Called at final setup, this function reads an INI file and attaches hardpoints
-// to the listed cargo items. This will eventually be moved to a new cargo script
-// function.
+// Call when loadout GUI is started.
 AttachCargoHardpoint()
 {
    hinifile hardpoint_file = INIFile.Create("ini:/cargo_hardpoints");
@@ -186,6 +190,8 @@ AttachCargoHardpoint()
    int count, cargo_type, price, ammo_price;
    hcargo cargo;
    hinifile subsim_file;
+   list mountpoint_list;
+   hsim mountpoint;
 
    count = 0;
    while (INIFile.NumberedExists(hardpoint_file, "Cargo", "cargo_type", count)) {
@@ -213,18 +219,10 @@ AttachCargoHardpoint()
          cargo = iCargo.Find(cargo_type);
 
          if (none != cargo) {
-            // Only attach hardpoints to cargo representing player systems.
-            if (iCargo.PlayerSystem(cargo)) {
-               Object.AddStringProperty(cargo, "hardpoint_type", hardpoint_type);
-               Object.AddStringProperty(cargo, "template_name", template_name);
-               Object.AddIntProperty(cargo, "equip_price", price);
-               Object.AddIntProperty(cargo, "ammo_price", ammo_price);
-            }else{
-               debug {
-                  Debug.PrintString(cargo_name);
-                  Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Error invalid cargo type\n");
-               }
-            }
+            Object.AddStringProperty(cargo, "hardpoint_type", hardpoint_type);
+            Object.AddStringProperty(cargo, "template_name", template_name);
+            Object.AddIntProperty(cargo, "equip_price", price);
+            Object.AddIntProperty(cargo, "ammo_price", ammo_price);
          }else{
             debug {
                Debug.PrintString(cargo_name);
@@ -239,8 +237,30 @@ AttachCargoHardpoint()
       }
    }
 
-   INIFile.Destroy(hardpoint_file);
+   count = 0;
+   while (INIFile.NumberedExists(hardpoint_file, "Mountpoints", "hardpoint_type", count)) {
+      hardpoint_type = INIFile.NumberedString(hardpoint_file, "Mountpoints", "hardpoint_type", count, "");
+      template_name = INIFile.NumberedString(hardpoint_file, "Mountpoints", "template", count, "");
+      ++count;
 
+      // Validate there are no typo errors.
+      subsim_file = INIFile.Create(template_name);
+      if (none == subsim_file) {
+         debug {
+            Debug.PrintString(template_name);
+            Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Error invalid mountpoint entry\n");
+         }
+      }
+      INIFile.Destroy(subsim_file);
+
+      mountpoint = Sim.Create("ini:/sims/nav/waypoint", hardpoint_type);
+      Object.AddStringProperty(mountpoint,"mountpoint_name", template_name);
+      List.AddTail(mountpoint_list, mountpoint);
+   }
+
+   Global.CreateList("gt_loadoutgui_mountpoint_list", GA_Write|GA_NoSave, mountpoint_list);
+
+   INIFile.Destroy(hardpoint_file);
 }
 
 //*******************************************************************************
@@ -320,7 +340,25 @@ ExitScreen()
 
 
 
+select_system(hsubsim subsim)
+{
+   hwindow remove_button = GUI.Cast(Global.Handle("gt_loadoutgui_remove_button"));
+   hcargo return_cargo;
 
+   Global.SetHandle("gt_loadoutgui_subsim_select", subsim);
+
+   return_cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
+
+   if (none != return_cargo) {
+      // Allow remove if subsim exists in inventory (not mountpoint).
+      show_window(remove_button);
+   }else {
+      hide_window(remove_button);
+   }
+
+   // Find matching equipment for the newly selected ship system.
+   create_equipment_list();
+}
 
 
 
@@ -328,22 +366,10 @@ OnSystemPress()
 {
    hwindow button = GUI.FocusedWindow();
    hsubsim subsim;
-   hwindow remove_button = GUI.Cast(Global.Handle("gt_loadoutgui_remove_button"));
 
    subsim = Subsim.Cast(Object.HandleProperty(button,"gt_loadoutgui_subsim"));
 
-
-   Global.SetHandle("gt_loadoutgui_subsim_select", subsim);
-
-   // Don't let the player remove a mountpoint.
-   if ("ini:/subsims/mountpoints/pylon_mount" == Object.StringProperty(subsim,"subsim_template")) {
-      hide_window(remove_button);
-   }else {
-      show_window(remove_button);
-   }
-
-   // Find matching equipment for the newly selected ship system.
-   create_equipment_list();
+   select_system(subsim);
 }
 
 
@@ -373,8 +399,9 @@ task replace_task()
    hsubsim subsim = Subsim.Cast(Global.Handle("gt_loadoutgui_subsim_select"));
    hcargo cargo = iCargo.Cast(Global.Handle("gt_loadoutgui_equipment_select"));
    hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
-   string template_name;
+   string template_name, hardpoint_type;
    hcargo return_cargo;
+   hsubsim new_subsim;
 
    debug Debug.PrintString("tsLoadoutGui.OnReplacePress\n");
 
@@ -396,7 +423,7 @@ task replace_task()
    // remove one items worth.
    iInventory.Add(Object.IntProperty(cargo,"type"), -1);
 
-   // put back the removed system, if that system is not a mountpoint.
+   // Credit the player if the subsystem removed was a real system (not mountpoint).
    return_cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
 
    if (none != return_cargo) {
@@ -410,7 +437,10 @@ task replace_task()
       return;
    }
 
-   tsShip.ReplaceSubsim(ship, subsim, template_name);
+   new_subsim = tsShip.ReplaceSubsim(ship, subsim, template_name);
+
+   // Attach the hardpoint type to the new subsim to allow it to be changed again.
+   Object.AddStringProperty(new_subsim, "hardpoint_type", Object.StringProperty(cargo, "hardpoint_type"));
 
    link_player_weapons(ship);
 
@@ -468,6 +498,8 @@ OnRemovePress()
    hsubsim subsim = Subsim.Cast(Global.Handle("gt_loadoutgui_subsim_select"));
    hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
    hcargo return_cargo;
+   string mountpoint_template, hardpoint_type;
+   hsubsim new_subsim;
 
    debug Debug.PrintString("tsLoadoutGui.OnRemovePress\n");
 
@@ -481,20 +513,24 @@ OnRemovePress()
       return;
    }
 
-   if ("ini:/subsims/mountpoints/pylon_mount" == Object.StringProperty(subsim,"subsim_template")) {
-      debug Debug.PrintString("tsLoadoutGui.OnReplacePress cannot remove mountpoint\n");
+   return_cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
+
+   if (none == return_cargo) {
+      // If the item to be removed is not a loadout supported subsim, exit.
+      // We should not ever be here, but this is a safety check.
       return;
    }
 
-   // put back the removed system, if that system is not a mountpoint.
-   return_cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
+   iInventory.Add(Object.IntProperty(return_cargo,"type"), 1);
 
-   if (none != return_cargo) {
-      iInventory.Add(Object.IntProperty(return_cargo,"type"), 1);
-   }
+   hardpoint_type = Object.StringProperty(subsim, "hardpoint_type");
+
+   mountpoint_template = get_mountpoint_template(hardpoint_type);
 
    // We replace the ship system with a mountpoint. 
-   tsShip.ReplaceSubsim(ship, subsim, "ini:/subsims/mountpoints/pylon_mount");
+   new_subsim = tsShip.ReplaceSubsim(ship, subsim, mountpoint_template);
+
+   Object.AddStringProperty(new_subsim, "hardpoint_type", hardpoint_type);
 
    link_player_weapons(ship);
 
@@ -513,6 +549,8 @@ select_ship(hship ship)
 
    Global.SetHandle("gt_loadoutgui_ship_select", ship);
 
+   tag_equipment(ship);
+
    cost = rearm_cost(ship);  
 
    if (cost > 0) {
@@ -528,7 +566,6 @@ select_ship(hship ship)
    create_ship_systems_list();
 
    create_equipment_list();
-
 }
 
 
@@ -608,11 +645,6 @@ hcargo subsim2cargo(string subsim_template)
    int i;
 
    if ("" == subsim_template) {
-      return none;
-   }
-
-   // No cargo, if the subsystem is a mountpoint.
-   if ("ini:/subsims/mountpoints/pylon_mount" == subsim_template) {
       return none;
    }
 
@@ -743,12 +775,11 @@ create_equipment_list()
 		Global.Float( "GUI_scrollbar_buttonratio" ),
 		"" );
 
-  
    count = List.ItemCount(equipment_list);
    for (i=0;i<count;++i) {
       cargo = iCargo.Cast(List.GetNth(equipment_list,i));
 
-      name = Text.Field(iCargo.Name(cargo), FT_Text);
+      name = iCargo.Name(cargo);
 
       button = iGUI.CreateAndInitialiseRectangularInverseRadioButton( none, 0, 0, 
                                                                       button_width, 
@@ -774,6 +805,7 @@ create_equipment_list()
    cargo = iCargo.Cast(List.Head(equipment_list));
    Global.CreateHandle("gt_loadoutgui_equipment_select",GA_Write|GA_NoSave, cargo);
    GUI.SelectListBoxEntry(list_box, 0);
+
 }
 
 
@@ -882,6 +914,8 @@ create_ship_systems_list()
    subsim = Subsim.Cast(List.Head(subsim_list));
    Global.CreateHandle("gt_loadoutgui_subsim_select", GA_Write|GA_NoSave, subsim);
    GUI.SelectListBoxEntry(list_box, index);
+
+   select_system(subsim);
 }
 
 
@@ -973,8 +1007,6 @@ create_player_fleet_list()
 
       GUI.AddListBoxEntry(list_box, button);
 
-      // attach the cargo index to each replacable ship system. Do this for the whole fleet.
-//      tag_equipment(ship);
    }   
 
    index = 0;
@@ -990,12 +1022,8 @@ create_player_fleet_list()
 
 
 
-
-
-
-
 // This function builds a list of all the cargo items in the player
-// inventory that are ship systems.
+// inventory that are loadout supported systems.
 set systems_inventory()
 {
    int total = CT_AdvancedHullMaterialRefit;
@@ -1008,7 +1036,7 @@ set systems_inventory()
       number = iInventory.NumberOfCargoType(i);
 
       if (number > 0) {
-         if (iCargo.PlayerSystem(cargo)) {
+         if (Object.PropertyExists(cargo, "hardpoint_type")){
             Set.Add(all_cargo, cargo);
          }
       }
@@ -1018,7 +1046,7 @@ set systems_inventory()
 
 
 
-create_player_systems_list()
+create_player_inventory_list()
 {
    hwindow list_parent = GUI.Cast(Global.Handle("gt_loadoutgui_psystems_inv_parent"));
    hwindow list_base = GUI.Cast(Global.Handle("gt_loadoutgui_psystems_inv_base"));
@@ -1144,6 +1172,7 @@ MainWindow()
    // Non GUI interfacing and preperation here.
 
    Global.CreateBool("gt_loadoutgui_allow_replace", GA_Write|GA_NoSave, true);
+
 
    ///***********************************
    // GUI setup here.
@@ -1441,7 +1470,7 @@ MainWindow()
 
    create_equipment_list();
 
-   create_player_systems_list();
+   create_player_inventory_list();
 
 
 
@@ -1450,8 +1479,6 @@ MainWindow()
 
 
    // check if we should display the rearm or refuel buttons.
-
-
 }
 
 
@@ -1474,80 +1501,7 @@ list hardpoint_list(hship ship)
    return hardpoints;
 }
 
-list remove_beams(hship ship)
-{
-   hsubsim subsim;
-   list beams;
-   int i = 0;
-   hsim beam_object;
 
-   while (i<Sim.SubsimCount(ship)) {
-      subsim = Sim.NthSubsim(ship, i);
-      if ("icBeamProjector" == Object.StringProperty(subsim, "subsim_class")) {
-         beam_object = Sim.Create("ini:/sims/nav/waypoint", "beam");
-         Object.AddIntProperty(beam_object,"template_number", Object.IntProperty(subsim, "template_number"));
-         Object.AddStringProperty(beam_object,"subsim_template", Object.StringProperty(subsim, "subsim_template"));
-
-         List.AddTail(beams, beam_object);
-
-         // put a mountpoint here while the weapons are linked.
-         tsShip.ReplaceSubsim(ship, subsim, "ini:/subsims/mountpoints/pylon_mount");
-
-      }else {
-         ++i;
-      }
-   }
-
-   return beams;
-}
-
-attach_beams(hship ship, list beams)
-{
-   int i, total, position;
-   hsubsim mountpoint, subsim;
-   hsim beam_object;
-   string subsim_template;
-
-   
-
-   total = List.ItemCount(beams);
-   for (i=0;i<total;++i) {
-      beam_object = Sim.Cast(List.GetNth(beams, i));
-
-      position = Object.IntProperty(beam_object,"template_number");
-      subsim_template = Object.StringProperty(beam_object,"subsim_template");
-
-      mountpoint = tsShip.FindSubsimByTemplateNumber(ship, position);
-
-      subsim = tsShip.ReplaceSubsim(ship, mountpoint, subsim_template);
-
-      atomic debug {
-         Debug.PrintHandle(subsim);
-         Debug.PrintString(" replacing-beam\n");
-      }
-
-   }
-}
-
-
-
-// Tries to link the player weapons.
-// Beams are removed before the link to prevent crashes.
-link_player_weapons(hship ship)
-{
-   list beams;
-   hship player = iShip.FindPlayerShip();
-
-   if (player == ship) {
-      beams = remove_beams(ship);
-
-      iMultiplay.UnlinkShipWeapons(ship);
-
-      iMultiplay.LinkShipWeapons(ship);
-
-      attach_beams(ship, beams);
-   }
-}
 
 
 
@@ -1572,7 +1526,7 @@ int repair_cost(hship ship)
 
 
 
-// Cost to replace more ammo and missiles.
+// Cost to replace ammo and missiles.
 int rearm_cost(hship ship)
 {
 
@@ -1631,13 +1585,54 @@ rearm_ship(hship ship)
    }
 } 
 
+
+string get_mountpoint_template(string hardpoint_type)
+{
+   list mountpoints = Global.List("gt_loadoutgui_mountpoint_list");
+   int total, i;
+   hsim mountpoint;
+
+   total = List.ItemCount(mountpoints);
+   for (i=0;i<total;++i) {
+      mountpoint = Sim.Cast(List.GetNth(mountpoints, i));
+
+      if (Sim.Name(mountpoint) == hardpoint_type) {
+         return Object.StringProperty(mountpoint, "mountpoint_name");
+      }
+   }
+
+   return "";
+}
+
+string get_mountpoint_type(hsubsim subsim)
+{
+   list mountpoints = Global.List("gt_loadoutgui_mountpoint_list");
+   string template_name;
+   int total, i;
+   hsim mountpoint;
+
+   template_name = Object.StringProperty(subsim, "subsim_template");
+
+   total = List.ItemCount(mountpoints);
+   for (i=0;i<total;++i) {
+      mountpoint = Sim.Cast(List.GetNth(mountpoints, i));
+      if (template_name == Object.StringProperty(mountpoint, "mountpoint_name")){
+         return Sim.Name(mountpoint);
+      }
+   }
+
+   return "";
+}
+
 // Pull the ships equipment and place it into inventory.
 RemoveEquipment(hship ship)
 {
    list ship_systems;
-   hsubsim subsim;
+   hsubsim subsim, new_subsim;
+
    int i, total;
    hcargo return_cargo;
+   string mountpoint_template, hardpoint_type;
 
    ship_systems = hardpoint_list(ship);
 
@@ -1651,9 +1646,15 @@ RemoveEquipment(hship ship)
       if (none != return_cargo) {
          iInventory.Add(Object.IntProperty(return_cargo,"type"), 1);
       }
+      hardpoint_type = Object.StringProperty(subsim, "hardpoint_type");      
+
+      // Lookup the replacement mountpoint type.
+      mountpoint_template = get_mountpoint_template(hardpoint_type);
 
       // Remove it from the ship.
-      tsShip.ReplaceSubsim(ship, subsim, "ini:/subsims/mountpoints/pylon_mount");
+      new_subsim = tsShip.ReplaceSubsim(ship, subsim, mountpoint_template);
+
+      Object.AddStringProperty(new_subsim, "hardpoint_type", hardpoint_type);
    }
 }
 
@@ -1664,17 +1665,29 @@ tag_equipment(hship ship)
    hsubsim subsim;
    int i, total;
    hcargo cargo;
+   string hardpoint_type;
 
-   ship_systems = hardpoint_list(ship);
 
-   total = List.ItemCount(ship_systems);
-   for (i=0;i<total;++i) {
-      subsim = Subsim.Cast(List.GetNth(ship_systems, i));
+   for (i=0;i<Sim.SubsimCount(ship);++i) {
+      subsim = Sim.NthSubsim(ship,i);
 
-      cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
+      // If the subsim is a mountpoint, attach the hardpoint type for future reference.
+      hardpoint_type = get_mountpoint_type(subsim);
+      if ("" != hardpoint_type) {
+         Object.AddStringProperty(subsim,"hardpoint_type", hardpoint_type);
+      }else {
+         // If not a mountpoint, then we want to check if loadout supports 
+         // changing this kind of subsim.
 
-      if (none != cargo) {
-         Object.AddIntProperty(subsim, "cargo_index", Object.IntProperty(cargo,"type"));
+         cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
+
+         if (none != cargo) {
+            // There is cargo for this subsim, attach the needed hardpoint type property.
+            Object.AddStringProperty(subsim, "hardpoint_type", Object.StringProperty(cargo,"hardpoint_type"));
+            Object.AddIntProperty(subsim, "cargo_index", Object.IntProperty(cargo,"type"));
+         }
+         // else, not a supported subsim, so don't attach anything and it won't show to the player
+         // for removal or replacement.
       }
    }
 }

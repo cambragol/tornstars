@@ -90,7 +90,8 @@ provides
         SaveId,
         FindSubsimByTemplateNumber,
         ReplaceSubsim,
-        PlaceSubsim;
+        PlaceSubsim,
+        LinkPlayerWeapons;
 
 
  
@@ -112,6 +113,8 @@ prototype tag_subsims(hship ship);
 prototype add_hardpoints(hship ship, hinifile ship_file);
 
 
+prototype null_subsims(hship ship);
+
 
 
 int float2int(float number)
@@ -129,6 +132,7 @@ SetSaveId(hship ship, int id)
 {
    Object.AddIntProperty(ship, "tsss_save_id", id);
 }
+
 
 int SaveId(hship ship)
 {
@@ -151,7 +155,6 @@ float FuelMax(hship ship)
 {
    return Object.FloatProperty(ship, "max_fuel");
 }
-
 
 
 // This is the current level of fuel in the ship. Zero
@@ -346,7 +349,6 @@ ReadIniFile(hship ship)
    scan_range = INIFile.Int(ship_file,"Properties","scan_range", 0);
 
 
-
    // Attach the properties to the ship.
    Object.AddFloatProperty(ship, "fuel", max_fuel);
    Object.AddFloatProperty(ship, "max_fuel", max_fuel);
@@ -364,13 +366,15 @@ ReadIniFile(hship ship)
    Object.AddBoolProperty(ship, "fuel_locked", false);
 
 
-   // Match up the template numbers to the created subsims.
-   tag_subsims(ship);
+   // Attach the template numbers and location properties to the subsims
+   // for saving and loadout.
+   null_subsims(ship);
 
+   // Match up the template numbers to the created subsims.
+   // tag_subsims(ship);
 
    // Add any subsystems in the ships hardpoint list.
-   add_hardpoints(ship, ship_file);
-
+   //add_hardpoints(ship, ship_file);
 
    INIFile.Destroy(ship_file);
 }
@@ -687,6 +691,129 @@ tag_subsims(hship ship)
 
 
 
+// This function attaches the template number and the null position information to
+// each subsim.
+null_subsims(hship ship)
+{
+   string template_name, subsim_template, subsim_name, subsim_class;
+   hinifile ship_file;
+   hinifile template_file;
+   hsubsim subsim;
+   int subsim_count, template_count;
+   bool not_found;
+
+   float xpos, ypos, zpos;
+   float yaw, pitch, roll;
+
+   template_name = Sim.TemplateName(ship);
+
+   if (template_name == "") {
+      // No template, there is nothing we can do.
+      debug Debug.PrintString("tsShip.tag_subsims ship has no template file\n");
+      return;
+   }
+
+   debug {
+      Debug.PrintString(template_name);
+      Debug.PrintString(" ship type\n");
+   }
+
+   ship_file = INIFile.Create(template_name);   
+
+   if (ship_file == none) {
+      // Invalid ship template, there is nothing we can do
+      debug Debug.PrintString("tsShip.tag_subsims Error invalid ship template file\n");
+      return;
+   }
+   
+   // Find the highest numbered template entry.
+   template_count = 0;
+   while (INIFile.NumberedExists(ship_file,"Subsims","template",template_count)) {
+      ++template_count;
+   } 
+   --template_count;
+
+   // Now, walk backwards down the template entries. 
+   xpos = 0;
+   ypos = 0;
+   zpos = 0;
+
+   yaw = 0;
+   pitch = 0;
+   roll = 0;
+
+   while (template_count >=0){
+      subsim_template = INIFile.NumberedString(ship_file,"Subsims","template",template_count,"");
+
+      if ("" != subsim_template) {
+         template_file = INIFile.Create(subsim_template);
+
+         // Check if this template entry has a matching null entry. Then attach the nulls position
+         // data to the subsim.
+         if (INIFile.NumberedExists(ship_file, "Subsims", "null", template_count)) {
+            xpos = INIFile.NumberedVectorX(ship_file,"Subsims","null_position",template_count);
+            ypos = INIFile.NumberedVectorY(ship_file,"Subsims","null_position",template_count);
+            zpos = INIFile.NumberedVectorZ(ship_file,"Subsims","null_position",template_count);
+
+            yaw = INIFile.NumberedVectorX(ship_file,"Subsims","null_orientation",template_count);
+            pitch = INIFile.NumberedVectorY(ship_file,"Subsims","null_orientation",template_count);
+            roll = INIFile.NumberedVectorZ(ship_file,"Subsims","null_orientation",template_count);            
+         }
+
+         if (template_file != none) {
+            subsim_class = INIFile.String(template_file,"Class","name","");
+            subsim_name = INIFile.String(template_file,"Properties","name","");
+            INIFile.Destroy(template_file);
+
+
+            // Decrement through the ships subsims, looking for one by this name.
+            subsim_count = Sim.SubsimCount(ship);
+            not_found = true;
+            do {
+               subsim = Sim.NthSubsim(ship, subsim_count);
+
+               if (subsim_name == Object.StringProperty(subsim,"name")) {
+
+                  // Check if we already tagged this one.
+                  if (!Object.PropertyExists(subsim,"subsim_template")) {
+                     debug {
+                        Debug.PrintHandle(subsim);
+                        Debug.PrintString(" ");
+                        Debug.PrintString(subsim_template);
+                        Debug.PrintString(" ");
+                        Debug.PrintInt(template_count);
+                        Debug.PrintString("\n");
+                     }
+
+                     not_found = false;
+                     Object.AddStringProperty(subsim,"subsim_template", subsim_template);
+                     Object.AddStringProperty(subsim,"subsim_class", subsim_class);
+                     Object.AddIntProperty(subsim,"template_number", template_count);
+                     Object.AddVectorProperty(subsim, "position", xpos, ypos, zpos);
+                     Object.AddVectorProperty(subsim, "orientation", yaw, pitch, roll);
+                  }
+               }
+
+               --subsim_count;
+            } while (not_found && (subsim_count > -1) );
+
+            if (not_found) {
+                  debug {
+                     Debug.PrintString(subsim_template);
+                     Debug.PrintString(" tsShip.tag_subsims Error no match\n");
+                  }
+            }
+         }
+      }
+      --template_count;
+   }
+
+
+   INIFile.Destroy(ship_file);
+}
+
+
+
 // returns the subsim matching this template number.
 hsubsim FindSubsimByTemplateNumber(hship ship, int template_number)
 {
@@ -768,6 +895,8 @@ add_hardpoints(hship ship, hinifile ship_file)
             Object.AddStringProperty(subsim,"hardpoint_type", hardpoint_type);
             Object.AddStringProperty(subsim,"hardpoint_name", hardpoint_name);
 
+            Sim.AddSubsim(ship, subsim);
+
             PlaceSubsim(ship, subsim);
 
             /*
@@ -790,7 +919,7 @@ hsubsim ReplaceSubsim(hship ship, hsubsim subsim, string template_name)
    hsubsim new_subsim;
    hinifile subsim_file;
 
-   if (Object.PropertyExists(subsim, "hardpoint_type")) {
+   if (Object.PropertyExists(subsim, "template_number")) {
 
       subsim_file = INIFile.Create(template_name);
 
@@ -801,9 +930,7 @@ hsubsim ReplaceSubsim(hship ship, hsubsim subsim, string template_name)
          new_subsim = Subsim.Create(template_name);
 
          if (none != subsim) {
-            hardpoint_name = Object.StringProperty(subsim,"hardpoint_name");
             template_number = Object.IntProperty(subsim,"template_number");
-            hardpoint_type = Object.StringProperty(subsim,"hardpoint_type");
 
             xpos = Object.VectorPropertyX(subsim,"position");
             ypos = Object.VectorPropertyY(subsim,"position");
@@ -820,12 +947,9 @@ hsubsim ReplaceSubsim(hship ship, hsubsim subsim, string template_name)
             Object.AddVectorProperty(new_subsim, "position", xpos, ypos, zpos);
             Object.AddVectorProperty(new_subsim, "orientation", yaw, pitch, roll);
 
-            Object.AddStringProperty(new_subsim,"hardpoint_type", hardpoint_type);
-            Object.AddStringProperty(new_subsim,"hardpoint_name", hardpoint_name);
-
             Sim.AddSubsim(ship, new_subsim);
-            Subsim.Place(new_subsim, xpos, ypos, zpos);
-            Subsim.OrientateEuler(new_subsim, yaw, pitch, roll);
+
+            PlaceSubsim(ship, new_subsim);
 
             // Now remove the old subsim.
             Subsim.Destroy(subsim);
@@ -838,13 +962,14 @@ hsubsim ReplaceSubsim(hship ship, hsubsim subsim, string template_name)
          debug Debug.PrintString("tsShip.ReplaceSubsim template file invalid");
       }
    }else {
-      debug Debug.PrintString("tsShip.ReplaceSubsim not a hardpoint");
+      debug Debug.PrintString("tsShip.ReplaceSubsim subsim has no template number");
    }
 
    return none;
 }
 
 // Used to place a subsim that has all the required location properties already attached.
+// It must be added to the ship first. 
 PlaceSubsim(hship ship, hsubsim subsim)
 {
    float xpos, ypos, zpos, roll, pitch, yaw;
@@ -857,9 +982,88 @@ PlaceSubsim(hship ship, hsubsim subsim)
    pitch = Object.VectorPropertyY(subsim,"orientation");
    roll =  Object.VectorPropertyZ(subsim,"orientation");
 
-   Sim.AddSubsim(ship, subsim);
    Subsim.Place(subsim, xpos, ypos, zpos);
    Subsim.OrientateEuler(subsim, yaw, pitch, roll);
+}
+
+
+
+
+
+
+list remove_beams(hship ship)
+{
+   hsubsim subsim;
+   list beams;
+   int i = 0;
+   hsim beam_object;
+
+   while (i<Sim.SubsimCount(ship)) {
+      subsim = Sim.NthSubsim(ship, i);
+      if ("icBeamProjector" == Object.StringProperty(subsim, "subsim_class")) {
+         beam_object = Sim.Create("ini:/sims/nav/waypoint", "beam");
+         Object.AddIntProperty(beam_object,"template_number", Object.IntProperty(subsim, "template_number"));
+         Object.AddStringProperty(beam_object,"subsim_template", Object.StringProperty(subsim, "subsim_template"));
+
+         List.AddTail(beams, beam_object);
+
+         // put a mountpoint here while the weapons are linked.
+         ReplaceSubsim(ship, subsim, "ini:/subsims/mountpoints/pylon_mount");
+
+      }else {
+         ++i;
+      }
+   }
+
+   return beams;
+}
+
+attach_beams(hship ship, list beams)
+{
+   int i, total, position;
+   hsubsim mountpoint, subsim;
+   hsim beam_object;
+   string subsim_template;
+
+   
+
+   total = List.ItemCount(beams);
+   for (i=0;i<total;++i) {
+      beam_object = Sim.Cast(List.GetNth(beams, i));
+
+      position = Object.IntProperty(beam_object,"template_number");
+      subsim_template = Object.StringProperty(beam_object,"subsim_template");
+
+      mountpoint = FindSubsimByTemplateNumber(ship, position);
+
+      subsim = ReplaceSubsim(ship, mountpoint, subsim_template);
+
+      atomic debug {
+         Debug.PrintHandle(subsim);
+         Debug.PrintString(" replacing-beam\n");
+      }
+
+   }
+}
+
+
+
+// Tries to link the player weapons.
+// Beams are removed before the link to prevent crashes.
+LinkPlayerWeapons(hship ship)
+{
+   list beams;
+   hship player = iShip.FindPlayerShip();
+
+   if (player == ship) {
+      beams = remove_beams(ship);
+
+      iMultiplay.UnlinkShipWeapons(ship);
+
+      iMultiplay.LinkShipWeapons(ship);
+
+      attach_beams(ship, beams);
+   }
 }
 
 

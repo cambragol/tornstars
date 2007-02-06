@@ -224,7 +224,7 @@ hship create_new_player()
    start_location = iSim.FindByNameInSystem(station, system);
 
    // Put the player outside of culling range
-   Sim.PlaceNear(player, start_location, 2* Global.Float("gt_distance_wakeup"));
+   Sim.PlaceNear(player, start_location, 10000km);
    return player;
 }
 
