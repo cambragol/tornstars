@@ -42,6 +42,7 @@ uses    Sim,
         iInventory,
         iConversation,
         CargoTypes,
+        iMultiplay,
    
         tStationEnum,
         tEconUtil,
@@ -51,7 +52,7 @@ uses    Sim,
         tsFaction; 
 
 
-
+ 
 
 
 provides 
@@ -1045,7 +1046,7 @@ attach_beams(hship ship, list beams)
 
    }
 }
-
+ 
 
 
 // Tries to link the player weapons.
@@ -1053,17 +1054,14 @@ attach_beams(hship ship, list beams)
 LinkPlayerWeapons(hship ship)
 {
    list beams;
-   hship player = iShip.FindPlayerShip();
 
-   if (player == ship) {
-      beams = remove_beams(ship);
+   beams = remove_beams(ship);
 
-      iMultiplay.UnlinkShipWeapons(ship);
+   iMultiplay.UnlinkShipWeapons(ship);
 
-      iMultiplay.LinkShipWeapons(ship);
+   iMultiplay.LinkShipWeapons(ship);
 
-      attach_beams(ship, beams);
-   }
+   attach_beams(ship, beams);
 }
 
 

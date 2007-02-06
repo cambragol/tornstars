@@ -329,9 +329,10 @@ NewPlayerShip(hship ship)
       iInventory.AddStormPetrel();
    }
 */
-   SetupPlayer(ship);
 
    iShip.InstallPlayerPilot(ship);
+
+   SetupPlayer(ship);
 }
 
 
@@ -358,6 +359,9 @@ SetupPlayer(hship ship)
    // been moved away to a life pod or something.
 
    Sim.SetCullable(ship, false);
+
+   // Links the player weapons, while protecting beams from crashing game.
+   tsShip.LinkPlayerWeapons(ship);
 
 }
 

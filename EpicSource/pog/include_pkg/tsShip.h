@@ -68,5 +68,7 @@ prototype hsubsim tsShip.ReplaceSubsim( hship ship, hsubsim subsim, string templ
 
 prototype tsShip.PlaceSubsim( hship ship, hsubsim subsim );
 
+prototype tsShip.LinkPlayerWeapons( hship ship );
+
 // EOF /////////////////////////////////////////////////////////////////////////
 

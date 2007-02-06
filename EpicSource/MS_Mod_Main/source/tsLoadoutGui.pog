@@ -104,8 +104,6 @@ prototype list find_equipment(string hardpoint_type);
 
 prototype hcargo subsim2cargo(string subsim_template);
 
-prototype link_player_weapons(hship ship);
-
 
 
 prototype hide_window( hwindow win );
@@ -442,7 +440,7 @@ task replace_task()
    // Attach the hardpoint type to the new subsim to allow it to be changed again.
    Object.AddStringProperty(new_subsim, "hardpoint_type", Object.StringProperty(cargo, "hardpoint_type"));
 
-   link_player_weapons(ship);
+   tsShip.LinkPlayerWeapons(ship);
 
    create_ship_systems_list();
 
@@ -532,7 +530,7 @@ OnRemovePress()
 
    Object.AddStringProperty(new_subsim, "hardpoint_type", hardpoint_type);
 
-   link_player_weapons(ship);
+   tsShip.LinkPlayerWeapons(ship);
 
    create_ship_systems_list();
 
