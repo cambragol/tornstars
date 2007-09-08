@@ -1142,12 +1142,14 @@ set_culling(hgroup group)
 hisim create_tube(string section_template, string section_name)
 {
    hisim tube;
+   hfaction faction = iFaction.Find("Micoria Communications");
 
    tube = iSim.Cast(Sim.Create(section_template, section_name));
    Sim.SetCullable(tube, false);
    iSim.SetSensorVisibility(tube, false);
    iSim.SetIndestructable(tube, true);
-   
+   iSim.SetFaction(tube, faction);
+
    return tube;
 }
 
@@ -1156,13 +1158,17 @@ hisim create_tube(string section_template, string section_name)
 hisim create_bubble(string section_template)
 {
    hisim bubble;
+   // Use the machine faction to make the bubble hostile to the player.
+   hfaction faction = iFaction.Find("Micoria Communications");
 
    bubble = iSim.Cast(Sim.Create(section_template, "bubble"));
    Sim.SetCullable(bubble, false);
-   Sim.SetCollision(bubble, false);
+//   Sim.SetCollision(bubble, false);
 
+   iSim.SetFaction(bubble, faction);
    iSim.SetSensorVisibility(bubble, false);
-   iSim.SetIndestructable(bubble, true);
+//   iSim.SetIndestructable(bubble, true);
+
    // Let the bubble bounce
    iShip.SetFreeWithoutPilot( iShip.Cast(bubble), true );
    return bubble;
