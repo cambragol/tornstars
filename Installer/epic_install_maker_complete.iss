@@ -1,11 +1,11 @@
 [Setup]
 UseSetupLdr=true
-OutputBaseFilename=unstable_space_11_4
+OutputBaseFilename=unstable_space_11_5
 ;OutputDir=D:\Epic\EpicRelease\USpace10_19
 OutputDir=.
 AppCopyright=Epic Team
 AppName=Unstable Space
-AppVerName=Unstable Space 11.4
+AppVerName=Unstable Space 11.5
 DisableProgramGroupPage=true
 UsePreviousGroup=false
 AlwaysShowDirOnReadyPage=true
@@ -20,8 +20,8 @@ Uninstallable=false
 DisableStartupPrompt=true
 DirExistsWarning=no
 SolidCompression=true
-VersionInfoVersion=11.4
-VersionInfoTextVersion=Epic 11.4
+VersionInfoVersion=11.5
+VersionInfoTextVersion=Epic 11.5
 UsePreviousAppDir=false
 WizardImageFile=.\Left_Install.bmp
 WizardSmallImageFile=.\install_small.bmp
@@ -267,6 +267,10 @@ Filename: {app}\flux.ini; Section: Debug; Key: developer_mode; String: 1
 Filename: {app}\flux.ini; Section: Debug; Key: trace_level; String: 3
 Filename: {app}\flux.ini; Section: Debug; Key: trace_to_console; String: 1
 Filename: {app}\flux.ini; Section: Debug; Key: trace_to_log; String: 1
+Filename: {app}\flux.ini; Section: FcGame; Key: full_screen; String: 0
+Filename: {app}\flux.ini; Section: FcGame; Key: width; String: 1024
+Filename: {app}\flux.ini; Section: FcGame; Key: height; String: 768
+
 
 ;pre set up the mods
 ;Filename: {app}\flux.ini; Section: Mods; Key: MS_Mod_ClusterModels; String: 1
@@ -330,8 +334,8 @@ begin
 		FileCopy(ExpandConstant('{app}\flux.ini'), ExpandConstant('{app}\flux_') + GetDateTimeString('yyyy/mm/dd_hh:nn:ss', '-', '-')+'.ini', False);
 		// Delete all files and directories inside mods\
 		// but leave the directory itself
-		DelTree(ExpandConstant('{app}\mods\*'), False, True, True);
-		end;
+		DelTree(ExpandConstant('{app}\mods\*'), False, True, True);	
+    end;	
 end;
 
 function InitializeSetup(): Boolean;
@@ -354,21 +358,5 @@ begin
 	if not FileExists(ini_path+'\flux.ini') then Result:= false;
 	if not FileExists(ini_path+'\EdgeOfChaos.exe') then	Result:= false;
 	if not FileExists(ini_path+'\bin\release\loader.exe') then Result:= false;
-	
-	
-	// Clean out the old versions of files we plan to replace, just in case a few files move
-	// to prevent double copies from lying around.
-	DelTree(ini_path+'\mods\MS_Mod_Debug', True, True, True);
-	DelTree(ini_path+'\mods\MS_Mod_Econ', True, True, True);	
-	DelTree(ini_path+'\mods\MS_Mod_Eviron', True, True, True);
-	DelTree(ini_path+'\mods\MS_Mod_EnvPog', True, True, True);
-	DelTree(ini_path+'\mods\MS_Mod_Main', True, True, True);
-	DelTree(ini_path+'\mods\MS_Mod_Pog', True, True, True);
-	DelTree(ini_path+'\mods\MS_Mod_Reference', True, True, True);
-	DelTree(ini_path+'\mods\MS_Mod_Ships', True, True, True);	
-	DelTree(ini_path+'\mods\MS_Mod_StationTest', True, True, True);
-	DelTree(ini_path+'\mods\MS_Mod_Test', True, True, True);
-	DelTree(ini_path+'\mods\US_Mod_Geog', True, True, True);
-	DelTree(ini_path+'\mods\US_Mod_JumpTube', True, True, True);
 	
 end;
