@@ -14,63 +14,62 @@
 
 package tUnderOp;
 
-
+// Imports
 uses  Sim,
-iSim,
-Debug,
-Global,
-iGame,
-iFaction,
-INIFile,
-Input,
-List,
-Object,
-String,
-Task,
-State,
-Text,
-Math,
-iShip,
-iHabitat,
-iMapEntity,
-tUnderOpEnum,
-   tsFaction,
-   tStationEnum,
-   tStation,
-
-   tLRoot,
-   tLProduction,
-   tLCenter,
-   tLFleet;
-
-
+	iSim,
+	Debug,
+	Global,
+	iGame,
+	iFaction,
+	INIFile,
+	Input,
+	List,
+	Object,
+	String,
+	Task,
+	State,
+	Text,
+	Math,
+	iShip,
+	iHabitat,
+	iMapEntity,
+	tUnderOpEnum,
+	tsFaction,
+	tStationEnum,
+	tStation,
+	
+	tLRoot,
+	tLProduction,
+	tLCenter,
+	tLFleet;
 
 
+// Exports
 provides 
-   NewOp,
-   Create,
-   DestroyOp,
-   IsOperation,
-   Find,
-   SetKnown,
-   IsKnown,
-   EventTimer,
-   SetEventTimer,
-   WakeTimer,
-   SetWakeTimer,
-   IsCreated,
-   SetCreated,
-   Name,
-   SetName,
-   ShipTemplate,
-   SetShipTemplate,
-   OperationList,
-   StationOperations,
-   StationOperationsOfType,
-   SupportedOperations,
-   SetSupporter,
-   Supporter,
-DisplayOps;
+	NewOp,
+	Create,
+	DestroyOp,
+	IsOperation,
+	Find,
+	SetKnown,
+	IsKnown,
+	EventTimer,
+	SetEventTimer,
+	WakeTimer,
+	SetWakeTimer,
+	IsCreated,
+	SetCreated,
+	Name,
+	SetName,
+	ShipTemplate,
+	SetShipTemplate,
+	OperationList,
+	StationOperations,
+	StationOperationsOfType,
+	SupportedOperations,
+	SetSupporter,
+	Supporter,
+	DisplayOps;
 
 
 
@@ -88,22 +87,17 @@ DisplayOps;
 
 prototype bool IsKnown(hisim operation);
 
-
 prototype list OperationList();
 
 prototype hisim Create(int op_id, hfaction faction, bool known, int wake_day);
-
 
 prototype DisplayOps();
 
 prototype bool IsOperation(hisim operation);
 
-
 prototype string Name(hisim operation);
 
-
 prototype add_list(hisim operation);
-
 
 prototype hhabitat Supporter(hisim operation);
 
@@ -118,22 +112,22 @@ present.
 
 Operations are state objects. They have these properties.
 
-Station Name
-Hide Value - how hidden is the operation. Determined by type.
-Operation Type
-Owning Faction
-Parent Boss (might be none)
-Boss Name
-Relation State
+* Station Name
+* Hide Value - how hidden is the operation. Determined by type.
+* Operation Type
+* Owning Faction
+* Parent Boss (might be none)
+* Boss Name
+* Relation State
     Independent (top level)
     Joined (has parent)
-Relation Level - hate if forced to join, love if started by faction.
-Boss Decision Level - determines the kind of missions started here.
+* Relation Level - hate if forced to join, love if started by faction.
+* Boss Decision Level - determines the kind of missions started here.
     Trade and Operation only
     Create new Suboperations
     Alliance and Diplomacy 
-Security Level - how expensive protections, hard to get informers inside.
-Alarm Value - how much public alarm does this operation raise.
+* Security Level - how expensive protections, hard to get informers inside.
+* Alarm Value - how much public alarm does this operation raise.
 
 
 Stations are allowed only one outlaw operation. Each station has an 

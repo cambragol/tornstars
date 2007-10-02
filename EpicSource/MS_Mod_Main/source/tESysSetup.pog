@@ -11,7 +11,7 @@
 
 package tESysSetup;
 
-
+// Imports
 uses  Sim,
       iShip,
       iSim,
@@ -52,7 +52,7 @@ uses  Sim,
 
 
 
-
+// Exports
 provides Government,
          SetGovernment,
          FindGovernment,
@@ -62,6 +62,7 @@ provides Government,
          DebugInfo;
 
 
+// Prototypes
 prototype FindGovernment();
 
 prototype bool IsKnown(string system);
@@ -71,6 +72,7 @@ prototype SetKnown(string system, bool known);
 
 // Update system is called when the player enters a system.
 // It sets up any information that is needed for system operation.
+//[of]:UpdateSystem()
 UpdateSystem()
 {
    list station_list;
@@ -104,15 +106,20 @@ UpdateSystem()
       }
    }
 }
+//[cf]
+
 
 // Returns the government of the active system.
+//[of]:hfaction Government()
 hfaction Government()
 {
    return iFaction.Cast(Global.Handle("gt_esyssetup_system_gov"));
 }
+//[cf]
 
 
 //Sets the government of the active system.
+//[of]:SetGovernment(hfaction government_faction)
 SetGovernment(hfaction government_faction)
 {
    if (Global.Exists("gt_esyssetup_system_gov")) {
@@ -121,11 +128,12 @@ SetGovernment(hfaction government_faction)
       Global.CreateHandle("gt_esyssetup_system_gov",GA_Write|GA_NoSave, government_faction);
    }
 }
-
+//[cf]
 
 
 // Find government looks through the system and finds the government stations.
 // The first government station found wins.
+//[of]:FindGovernment()
 FindGovernment()
 {
    list station_list;
@@ -159,12 +167,20 @@ FindGovernment()
 
    SetGovernment(tsFaction.EmptyFaction());
 }
+//[cf]
 
+
+// Returns a boolean of if the system is known
+//[of]:bool IsKnown(string system)
 bool IsKnown(string system)
 {
    return Global.Bool(String.Join("gt_eknown",system));
 }
+//[cf]
 
+
+// Sets a system as known
+//[of]:SetKnown(string system, bool known)
 SetKnown(string system, bool known)
 {
    string name = String.Join("gt_eknown",system);
@@ -175,6 +191,7 @@ SetKnown(string system, bool known)
       Global.CreateBool(name,GA_Write,known);
    }
 }
+//[cf]
 
 
 DebugInfo()
@@ -187,6 +204,7 @@ DebugInfo()
 
    }
 }
+
 /*  
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
 OR PARTICLE SYSTEMS LTD. 

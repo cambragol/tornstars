@@ -11,6 +11,7 @@
 
 package tStationEnv;
 
+// Imports
 uses    Sim,
         iShip,
         iSim,
@@ -33,7 +34,7 @@ uses    Sim,
         tsCull;
 
 
-
+// Exports
 provides CallMods,
          ReadFile,
          SetupEnv,
@@ -47,7 +48,7 @@ provides CallMods,
 
 
 
-
+// Prototypes
 prototype CallMods();
 prototype ReadFile(hisim station, string filename);
 prototype SetupEnv(hisim station);
@@ -103,12 +104,10 @@ file[0]=
 */
 
 /*
-
    Hard work done here. Read the environment file. Create all the sims 
    requested and place them. Start any effect tasks requested.
-   
 */
-
+//[of]:SetupObjects(hmapentity station, hisim owner, string filename, float center_x, float center_y, float center_z)
 SetupObjects(hmapentity station, hisim owner, string filename, float center_x, float center_y, float center_z)
 {
    hinifile env_file = INIFile.Create(filename);
@@ -297,13 +296,15 @@ SetupObjects(hmapentity station, hisim owner, string filename, float center_x, f
 
    INIFile.Destroy(env_file);
 }
+//[cf]
+
 
 /*
    Called at system startup to establish fields and nebula
    around the stations. Fields and Nebula are permanant while the
    player is in the system. So we only want to create them once on entry.
-   
 */
+//[of]:SetupNebulaAndFields(hisim station, string filename, float center_x, float center_y, float center_z)
 SetupNebulaAndFields(hisim station, string filename, float center_x, float center_y, float center_z)
 {
    hinifile env_file = INIFile.Create(filename);
@@ -407,13 +408,11 @@ SetupNebulaAndFields(hisim station, string filename, float center_x, float cente
 
    INIFile.Destroy(env_file);
 }
-
-
-
-
+//[cf]
 
 
 // Called by player watch task once the player is close to the station.
+//[of]:SetupEnv(hisim station)
 SetupEnv(hisim station)
 {
    list file_list = GetFileList(station);
@@ -439,11 +438,11 @@ SetupEnv(hisim station)
       }
    }
 }
-
-
+//[cf]
 
 
 // Pull the player
+//[of]:list GetFileList(hisim station)
 list GetFileList(hisim station)
 {
    list empty_list;
@@ -453,9 +452,10 @@ list GetFileList(hisim station)
    }
    return empty_list;
 }
+//[cf]
 
 
-
+//[of]:AttachFile(string station_name, string system, string filename)
 AttachFile(string station_name, string system, string filename)
 {
    hisim station;
@@ -488,10 +488,12 @@ AttachFile(string station_name, string system, string filename)
    }
 
 }
+//[cf]
 
 
 
 // Starts fields and nebula when a player jumps into a new system.
+//[of]:SystemSetup()
 SystemSetup()
 {
    list stations = List.FromSet(iMapEntity.SystemHabitats());
@@ -526,13 +528,18 @@ SystemSetup()
       }
    }
 }
+//[cf]
 
+
+//[of]:EnterBase()
 EnterBase()
 {
    // Clear the active world string to make sure we recreate the nebula.
    Global.CreateString("t_station_env_sys",GA_Write|GA_NoSave,"");
    Global.CreateBool("t_station_env_mods_checked",GA_Write|GA_NoSave,false);
 }
+//[cf]
+
 
 //*******************************************************************************************/
 //
@@ -541,7 +548,7 @@ EnterBase()
 //
 // Call this function after all stations are created on enter space.
 //******************************************************************************************/
-
+//[of]:CallMods()
 CallMods()
 {
    int i,j, mod_count, station_count;
@@ -583,9 +590,10 @@ CallMods()
       INIFile.Destroy(modini);
    }
 }
+//[cf]
 
 
-
+//[of]:LeaveStation(hisim station)
 LeaveStation(hisim station)
 {
    hgroup station_objects;
@@ -599,6 +607,7 @@ LeaveStation(hisim station)
    // Mark all objects cullable.
    tsCull.CullAll(station);
 }
+//[cf]
 
 
 /*  

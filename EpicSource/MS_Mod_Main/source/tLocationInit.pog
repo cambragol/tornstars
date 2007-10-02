@@ -14,6 +14,7 @@
 
 package tLocationInit;
 
+// Imports
 uses    Sim,
         iShip,
         iSim,
@@ -43,18 +44,18 @@ uses    Sim,
         tEpicFleetUpkeep;
 
 
-
+// Exports
 provides Arrives,
          Leaves;
 
-
+// Prototypes
 prototype status_setup(hisim producer);
 prototype operations_setup(hmapentity center);
 
 
 // Wakes all items that depend on the player arriving near the station.
 // It only runs once, using the cull marker to prevent double starts.
-
+//[of]:Arrives(hmapentity location)
 Arrives(hmapentity location)
 {
 
@@ -93,22 +94,20 @@ Arrives(hmapentity location)
       operations_setup(location);
    }
 }
+//[cf]
 
 
+//[of]:Leaves(hmapentity location)
 Leaves(hmapentity location)
 {
    tLCenter.SetCullMarker(location, false);
    tStationEnv.LeaveStation(location);
 }
+//[cf]
 
 
-
-
-setup_section_name(hmapentity center, 
-                   hisim producer, 
-                   hinifile stations_file, 
-                   string section, 
-                   string key_name)
+//[of]:setup_section_name(hmapentity center, hisim producer, hinifile stations_file, string section, string key_name)
+setup_section_name(hmapentity center, hisim producer, hinifile stations_file, string section, string key_name)
 {
    int count;
    string env_file;
@@ -123,10 +122,11 @@ setup_section_name(hmapentity center,
       }
    }
 }
-
+//[cf]
 
 
 // Setup a production center based on the type. 
+//[of]:status_setup(hisim producer)
 status_setup(hisim producer)
 {
    hmapentity center;
@@ -182,11 +182,11 @@ status_setup(hisim producer)
 
    INIFile.Destroy(stations_file);
 }
+//[cf]
 
 
 
-
-
+//[of]:operations_setup(hmapentity center)
 operations_setup(hmapentity center)
 {
    hinifile stations_file = INIFile.Create("ini:/station_status_env");
@@ -230,6 +230,7 @@ operations_setup(hmapentity center)
 
    INIFile.Destroy(stations_file);
 }
+//[cf]
 
 
 /*  

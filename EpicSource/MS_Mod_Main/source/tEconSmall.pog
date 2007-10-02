@@ -12,26 +12,63 @@
 package tEconSmall;
 
 
-uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, 
-   iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
-   iConversation, iFormation, Group, Text, iEmail, State, 
-   iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker, 
-   iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
-   iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
-   iEscort, iLagrangePoint, iMusic, iGame, Stream, 
-   iInventory,
-   tEconCargoTypes,
-   tEconUtil,
-   tLProduction,
-   tLTrade,
-   tsFaction,
-   ECargoTypes,
-   uString,
-   tStationEnum,
-   tStation;
+// Imports
+uses iShip,
+	 Global,
+	 Object,
+	 Sim,
+	 Input,
+	 iMapEntity,
+	 Math,
+	 iAI,
+	 Task,
+	 Debug,
+	 iFaction,
+	 iSim,
+	 iFactionScript,
+	 iComms,
+	 INIFile,
+	 iUtilities,
+	 iPilotSetup,
+	 iConversation,
+	 iFormation,
+	 Group,
+	 Text,
+	 iEmail,
+	 State,
+	 iTrafficCreation,
+	 iRangeCheck,
+	 iRemotePilot,
+	 iRegion,
+	 iMissionTracker,
+	 iWingmen,
+	 iCargoScript,
+	 iShipCreation,
+	 iHUD,
+	 iScriptedOrders,
+	 iStation,
+	 iStartSystem,
+	 iObjectives,
+	 iMultiplay,
+	 iCutsceneUtilities,
+	 iDirector,
+	 iEscort,
+	 iLagrangePoint,
+	 iMusic,
+	 iGame,
+	 Stream,
+	 iInventory,
+	 tEconCargoTypes,
+	 tEconUtil,
+	 tLProduction,
+	 tLTrade,
+	 tsFaction,
+	 ECargoTypes,
+	 uString,
+	 tStationEnum,
+	 tStation;
 
-
-
+// Exports
 provides CargoList,
          StationProducedCargo,
          StationSupplyCargo,
@@ -56,8 +93,7 @@ provides CargoList,
          DebugNotPlayerCargo;
 
 
-
-
+// Pototypes
 prototype CreateSystems();
 
 prototype TabulateSupply();
@@ -87,16 +123,21 @@ prototype int find_volume(int station_type, int station_value, int mine_value);
 
 
 
+//[of]:RunCheck()
 RunCheck()
 {
    Global.SetBool("g_zz_ug_passme",true);
 }
+//[cf]
 
+//[of]:TestRun()
 TestRun()
 {
    Task.Detach(start test_run());
 }
+//[cf]
 
+//[of]:task test_run()
 task test_run()
 {
    CreateCategories();
@@ -111,14 +152,20 @@ task test_run()
 
    debug Debug.PrintString("Econ setup completed\n");
 }
+//[cf]
 
 // You cannot enter the game without a base exit. Except at new game.
 // Which works fine for this.
+//[of]:ExitBase()
 ExitBase()
 {
    Global.Destroy("gt_econ_small_init");
 }
+//[cf]
 
+// Calls a series of functions to create Categories, Systems, Tabulate-Supply,
+// set pricing, copy pricing.
+//[of]:EnterSpace()
 EnterSpace()
 {
    // We only need to do this once until the systems or categories
@@ -137,11 +184,15 @@ EnterSpace()
       CopyPricing();
    }
 }
+//[cf]
 
+
+//[of]:StartSystem()
 StartSystem()
 {
    CopyPricing();
 }
+//[cf]
 
 
 /* 
@@ -149,7 +200,7 @@ StartSystem()
    Creates a global list of systems with attached economic properties.
 
 */
-
+//[of]:CreateSystems()
 CreateSystems()
 {
    int system_num = 0; 
@@ -235,6 +286,7 @@ CreateSystems()
 
    INIFile.Destroy(distance_file);
 }
+//[cf]
 
 
 
@@ -245,6 +297,7 @@ CreateSystems()
 
    After this function runs, the economy can calculate final pricing.
 */
+//[of]:TabulateSupply()
 TabulateSupply()
 {
    list system_list = Global.List("gt_econ_system_list");
@@ -438,18 +491,22 @@ TabulateSupply()
 
    INIFile.Destroy(formula_file);
 }
+//[cf]
  
 /*
 The test INI files function spills INI file data to the debug port. It helps
 modders test that they have properly edited the cargo_category.ini and station_cargo.ini files.
 
 */
-
+//[of]:TestINIFiles()
 TestINIFiles()
 {
    Task.Detach(start test_ini());
 }
+//[cf]
 
+
+//[of]:task test_ini()
 task test_ini()
 {
    int station_int, category_int, count;
@@ -542,6 +599,7 @@ task test_ini()
 
    INIFile.Destroy(formula_file);   
 }
+//[cf]
 
 
 
@@ -582,7 +640,7 @@ task test_ini()
 
 */
 
-
+//[of]:CreateCategories()
 CreateCategories()
 {
    hinifile category_file = INIFile.Create("ini:/cargo_category");
@@ -720,9 +778,12 @@ CreateCategories()
 
    debug Debug.PrintString("tEconSmall.CreateCategories Complete\n");
 }
+//[cf]
 
 // 
 
+
+//[of]:SetPricing()
 SetPricing()
 {
    hinifile price_file = INIFile.Create("ini:/trade_data");
@@ -795,9 +856,12 @@ SetPricing()
 
    INIFile.Destroy(price_file);
 }
+//[cf]
+
 
 // This function will copy the pricing from the current system to the
 // category objects. Call when the player has moved to a new system.
+//[of]:CopyPricing()
 CopyPricing()
 {
    list systems = Global.List("gt_econ_system_list");
@@ -827,9 +891,11 @@ CopyPricing()
       Object.SetIntProperty(category, "gtCurrentPrice", price);
    }
 }
+//[cf]
 
 
-
+// Find a sim in a list by name
+//[of]:hsim find(list items, string name)
 hsim find(list items, string name)
 {
    int i, total;
@@ -852,37 +918,52 @@ hsim find(list items, string name)
 
    return none;
 }
+//[cf]
 
+
+// Returns an int property from a sim.
+//[of]:int distance_to_system(hsim system, string name)
 int distance_to_system(hsim system, string name)
 {
    return Object.IntProperty(system, name);
 }
+//[cf]
 
+
+//[of]:float price_from_distance(hinifile price_file, int distance)
 float price_from_distance(hinifile price_file, int distance)
 {
    return INIFile.NumberedFloat(price_file,"Pricing","jump",distance, 0.01);
 }
+//[cf]
 
 
-
+//[of]:list CargoList(hsim category)
 list CargoList(hsim category)
 {
    return Object.ListProperty(category,"gtEconCargoList");
 }
+//[cf]
 
 
 // Return the category, give a cargo object.
+//[of]:hsim CategoryFromCargo(hcargo cargo)
 hsim CategoryFromCargo(hcargo cargo)
 {
    return Sim.Cast(Object.HandleProperty(cargo,"gt_cargo_category"));
 }
+//[cf]
 
+
+//[of]:string CategoryName(hcargo cargo)
 string CategoryName(hcargo cargo)
 {
    return  Sim.Name(Sim.Cast(Object.HandleProperty(cargo,"gt_cargo_category")));
 }
+//[cf]
 
 
+//[of]:set StationSupplyCargo(hisim trade_center)
 set StationSupplyCargo(hisim trade_center)
 {
    string key_string, trade_file;
@@ -892,7 +973,10 @@ set StationSupplyCargo(hisim trade_center)
 
    return station_cargo(trade_file, key_string, "supply_category");
 }
+//[cf]
 
+
+//[of]:set StationProducedCargo(hisim trade_center)
 set StationProducedCargo(hisim trade_center)
 {
    string key_string, trade_file;
@@ -902,7 +986,10 @@ set StationProducedCargo(hisim trade_center)
 
    return station_cargo(trade_file, key_string, "output_category");
 }
+//[cf]
 
+
+//[of]:set StationUsedCargo(hisim trade_center)
 set StationUsedCargo(hisim trade_center)
 {
    string key_string, trade_file;
@@ -912,11 +999,13 @@ set StationUsedCargo(hisim trade_center)
 
    return station_cargo(trade_file, key_string, "input_category");
 }
+//[cf]
 
 
 /*
    Returns a set of cargo used, produced, or needed in supply for a station.
 */
+//[of]:set station_cargo(string trade_file, string key_string,  string category_string)
 set station_cargo(string trade_file, string key_string,  string category_string)
 {
    string category_name;
@@ -955,9 +1044,12 @@ set station_cargo(string trade_file, string key_string,  string category_string)
 
    return cargo_set;
 }
+//[cf]
+
 
 // The INI file supports a price adjusting feature that
 // allows discounted prices, elevated prices, or cut rate sales from fences.
+//[of]:float PurchaseAdjustment(hisim trade_center)
 float PurchaseAdjustment(hisim trade_center)
 {
    hinifile formula_file;
@@ -983,8 +1075,10 @@ float PurchaseAdjustment(hisim trade_center)
 
    return adjustment;
 }
+//[cf]
 
 
+//[of]:float SellAdjustment(hisim trade_center)
 float SellAdjustment(hisim trade_center)
 {
    hinifile formula_file;
@@ -1010,24 +1104,34 @@ float SellAdjustment(hisim trade_center)
 
    return adjustment;
 }
+//[cf]
 
 
+//[of]:int CategoryPrice(hsim category)
 int CategoryPrice(hsim category)
 {
    return Object.IntProperty(category,"gtBasePrice");
 }
+//[cf]
 
+
+//[of]:int CategoryCurrentPrice(hsim category)
 int CategoryCurrentPrice(hsim category)
 {
    return Object.IntProperty(category,"gtCurrentPrice");
 }
+//[cf]
 
+
+//[of]:int CategoryHaulFee(hsim category)
 int CategoryHaulFee(hsim category)
 {
    return Object.IntProperty(category,"gtHaulFee");
 }
+//[cf]
 
 
+//[of]:int CargoPrice(hcargo cargo)
 int CargoPrice(hcargo cargo)
 {
    hsim category;
@@ -1043,7 +1147,10 @@ int CargoPrice(hcargo cargo)
 
    return price;
 }
+//[cf]
 
+
+//[of]:float CargoMinStanding(hcargo cargo)
 float CargoMinStanding(hcargo cargo)
 {
    hsim category;
@@ -1056,7 +1163,10 @@ float CargoMinStanding(hcargo cargo)
 
    return Object.FloatProperty(category,"gtStanding");
 }
+//[cf]
 
+
+//[of]:int CargoStanding(hcargo cargo)
 int CargoStanding(hcargo cargo)
 {
    hsim category;
@@ -1069,7 +1179,10 @@ int CargoStanding(hcargo cargo)
 
    return Object.IntProperty(category,"gtStandingType");
 }
+//[cf]
 
+
+//[of]:bool TradedItem(hcargo cargo)
 bool TradedItem(hcargo cargo)
 {
    hsim category;
@@ -1079,9 +1192,12 @@ bool TradedItem(hcargo cargo)
 
    return Object.BoolProperty(category,"gtTradedItem");
 }
+//[cf]
+
 
 // Looks up the purchase fee attached to the category object.
 // This value sets the amount paid to local shippers.
+//[of]:int HaulFee(hcargo cargo)
 int HaulFee(hcargo cargo)
 {
    hsim category;
@@ -1090,8 +1206,10 @@ int HaulFee(hcargo cargo)
 
    return CategoryHaulFee(category);
 }
+//[cf]
 
 
+//[of]:DebugNotPlayerCargo()
 DebugNotPlayerCargo()
 {
    hcargo cargo;
@@ -1110,9 +1228,11 @@ DebugNotPlayerCargo()
    }
 
 }
+//[cf]
 
 
 
+//[of]:int find_volume(int station_type, int station_value, int mine_value)
 int find_volume(int station_type, int station_value, int mine_value)
 {
    switch (station_type) {
@@ -1134,6 +1254,7 @@ int find_volume(int station_type, int station_value, int mine_value)
 
    return station_value;
 }
+//[cf]
 
 
 

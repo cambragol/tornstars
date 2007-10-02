@@ -16,7 +16,7 @@
 
 package tEPlayerWatch;
 
-
+// Imports
 uses  Sim,
 iShip,
 iSim,
@@ -70,19 +70,21 @@ tLocationInit,
 */
 
 
-
+// Exports
 provides PlayerWatch,
-SystemEnter;
+	SystemEnter;
 
+
+// Prototypes
 prototype task location_watch(hmapentity location);
-
-
 prototype ldsi_drop(hship player);
 prototype task ldsi_watch(hisim waypoint);
-
 prototype arrive_save(hmapentity location);
 
 
+// The actual task that gets detached to watch the player with a 1 second test cycle.
+// This task runs 'forever' unless it is killed by an external action.
+//[of]:task watch_task()
 task watch_task()
 {
    hship player = iShip.FindPlayerShip();
@@ -160,6 +162,8 @@ task watch_task()
                Debug.PrintString(" \n");               
             }
 
+			// activates all the appropriate activity for the location
+			// the player is arriving at.
             tLocationInit.Arrives(location);
 
             // Save if we have approached at least one station. 
@@ -219,11 +223,14 @@ task watch_task()
       Task.Sleep(Task.Current(), 1.0);
    }// While forever
 }
-
+//[cf]
 
 
 // This task watches the player and takes action when the player has traveled
-// more than the culling distance away.
+// more than the culling distance away from the identified location. When the
+// player is no longer near to 'location' then tLocationInit.Leaves is called
+// and the task exits.
+//[of]:task location_watch(hmapentity location)
 task location_watch(hmapentity location)
 {
    hship player;
@@ -258,18 +265,20 @@ task location_watch(hmapentity location)
 
    tLocationInit.Leaves(location);
 }
+//[cf]
 
 
-
-
-// Call at final setup.
+// Call at final setup. Starts the 'watch_task' task
+//[of]:PlayerWatch()
 PlayerWatch()
 {
    Task.Detach(start watch_task());
 }
+//[cf]
 
 
 // Used to track when the player has jumped to a new system.
+//[of]:SystemEnter()
 SystemEnter()
 {
    string prior_world, current_world;
@@ -302,11 +311,11 @@ SystemEnter()
       }
    }
 }
-
-
+//[cf]
 
 
 // Search around the player for LDSI weapon effects.
+//[of]:ldsi_drop(hship player)
 ldsi_drop(hship player)
 {
    list waypoints;
@@ -334,8 +343,10 @@ ldsi_drop(hship player)
       }
    }
 }
+//[cf]
 
 
+//[of]:task ldsi_watch(hisim waypoint)
 task ldsi_watch(hisim waypoint)
 {
    int timer = 100;
@@ -360,7 +371,10 @@ task ldsi_watch(hisim waypoint)
       }
    }
 }
+//[cf]
 
+
+//[of]:arrive_save(hmapentity location)
 arrive_save(hmapentity location)
 {
    string name;
@@ -388,6 +402,7 @@ arrive_save(hmapentity location)
       }
    }
 }
+//[cf]
 
 /*  
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES

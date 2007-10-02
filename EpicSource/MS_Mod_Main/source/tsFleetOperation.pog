@@ -12,45 +12,45 @@
 package tsFleetOperation;
 
 
+// Imports
 uses  Sim,
-iSim,
-Debug,
-Global,
-iGame,
-iFaction,
-INIFile,
-Input,
-List,
-Object,
-String,
-Task,
-State,
-Text,
-Math,
-iShip,
-iHabitat,
-iMapEntity,
-iHUD,
-iComms,
-   tStationEnum,
-   tStation,
-   tsFaction,
-   tTime,
-   tUnderOp,
-   tLCenter,
-   tLProduction,
-   tsFoEmbezzle,
-   tsFoFleetAttack,
-   tsFoFleetDefense,
-   tsFoProtection,
-   tsFoThugs,
-   tsFoRaider,
-   tsFoCustoms,
-   tsFoPatrol;
+	iSim,
+	Debug,
+	Global,
+	iGame,
+	iFaction,
+	INIFile,
+	Input,
+	List,
+	Object,
+	String,
+	Task,
+	State,
+	Text,
+	Math,
+	iShip,
+	iHabitat,
+	iMapEntity,
+	iHUD,
+	iComms,
+	tStationEnum,
+	tStation,
+	tsFaction,
+	tTime,
+	tUnderOp,
+	tLCenter,
+	tLProduction,
+	tsFoEmbezzle,
+	tsFoFleetAttack,
+	tsFoFleetDefense,
+	tsFoProtection,
+	tsFoThugs,
+	tsFoRaider,
+	tsFoCustoms,
+	tsFoPatrol;
 
 
-
-
+// Exports
 provides New,
          Save,
          Restore,
@@ -68,9 +68,8 @@ provides New,
 // Sets up the information that is needed by each type of operation.
 // This is done once at creation time.
 // After this, all information should be recovered in save and restore.
-hisim New(int operation_type,
-          hfaction faction,
-          hmapentity center)
+//[of]:hisim New(int operation_type, hfaction faction, hmapentity center)
+hisim New(int operation_type, hfaction faction, hmapentity center)
 {
    hisim operation;
 
@@ -99,7 +98,10 @@ hisim New(int operation_type,
 
    return operation;
 }
+//[cf]
 
+
+//[of]:Save(hisim operation)
 Save(hisim operation)
 {
    int operation_type = tLProduction.GetType(operation);
@@ -125,9 +127,11 @@ Save(hisim operation)
       break;
    }
 }
+//[cf]
 
 
 
+//[of]:Restore(hisim operation)
 Restore(hisim operation)
 {
    int operation_type = tLProduction.GetType(operation);
@@ -151,9 +155,11 @@ Restore(hisim operation)
       break;
    }
 }
+//[cf]
 
 
 
+//[of]:Update(hisim operation)
 Update(hisim operation)
 {
    int operation_type = tLProduction.GetType(operation);
@@ -178,6 +184,7 @@ Update(hisim operation)
       break;
    }
 }
+//[cf]
 
 
 

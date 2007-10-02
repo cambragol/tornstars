@@ -6,7 +6,7 @@
 //
 // Jan 2003, Jon Freise
 //
-
+//
 // There are a few main entry points for player wingmen
 // HireShip is used when the player hires a wingman for service. 
 // CaptureShip is used when the player siezes a ship.
@@ -22,113 +22,113 @@
 
 package tEpicFleet;
 
-uses    Sim,
-        iShip,
-        iSim,
-        iPilotSetup,
-        Debug,
-        Global,
-        GUI,
-        iDirector,
-        iGUI,
-        iHUD,
-        iHabitat,
-        iMapEntity,
-        INIFile,
-        Input,
-        List,
-        Object,
-        String,
-        Task,
-        Text,
-        iUtilities,
-        iCargo,
-        iInventory,
-        iComms,
-        iAi,
-        iWingmen,
-        iRemotePilot,
-        iDeathScript,
-        iGame,
-        Math,
-        iInventory,
-        iConversation,
-        CargoTypes,
-   
-        tStationEnum,
-        tEconUtil,
-        tPodUtil,
-        tEpicComms,
-        tFormation,
-        tsFaction, 
-   tMegaTrucking;
+// Import
+uses	Sim,
+		iShip,
+		iSim,
+		iPilotSetup,
+		Debug,
+		Global,
+		GUI,
+		iDirector,
+		iGUI,
+		iHUD,
+		iHabitat,
+		iMapEntity,
+		INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+		iUtilities,
+		iCargo,
+		iInventory,
+		iComms,
+		iAi,
+		iWingmen,
+		iRemotePilot,
+		iDeathScript,
+		iGame,
+		Math,
+		iInventory,
+		iConversation,
+		CargoTypes,
+		
+		tStationEnum,
+		tEconUtil,
+		tPodUtil,
+		tEpicComms,
+		tFormation,
+		tsFaction, 
+		tMegaTrucking;
 
 
 
-
+// Exports
 provides NewGame,
-        NewGameTest,
-        StartSession,
-        IsPlayerFleetShip,
-        IdNumber,
-
-        Marines,
-        SetMarines,
-
-        Fuel,
-        SetFuel,
-
-        FuelMax,
-        SetFuelMax,
-
-        FuelPerJump,
-        SetFuelPerJump,
-
-        DailyFuel,
-        SetDailyFuel,
-
-        DailyUpkeep,
-        SetDailyUpkeep,
-        
-        World,
-        SetWorld,
-
-        PlayerFleet,
-        IsCaptured,
-        ShipPodList,
-
-        ReadIniFile,
-        SaveFleet,
-        RestoreFleet,
-
-        RemoveShip,
-        SetupPlayerWingman,
-        NewPlayerShip,
-
-        GroupRemoveShip,
-        GroupMoveShip,
-        ReturnGroup,
-        GroupNumber,
-        SetGroupNumber,
-
-        PlayerDeath,
-        WingmanDeath,
-        WingmanComms,
-
-        HireShip,
-        CaptureShip,
-        FireShip,
-
-        IsDockedToLarger,
-
-        RunCheck,
-        CreateTestShip,
-        CreateTargets,
-        DisruptShip;
+		NewGameTest,
+		StartSession,
+		IsPlayerFleetShip,
+		IdNumber,
+		
+		Marines,
+		SetMarines,
+		
+		Fuel,
+		SetFuel,
+		
+		FuelMax,
+		SetFuelMax,
+		
+		FuelPerJump,
+		SetFuelPerJump,
+		
+		DailyFuel,
+		SetDailyFuel,
+		
+		DailyUpkeep,
+		SetDailyUpkeep,
+		
+		World,
+		SetWorld,
+		
+		PlayerFleet,
+		IsCaptured,
+		ShipPodList,
+		
+		ReadIniFile,
+		SaveFleet,
+		RestoreFleet,
+		
+		RemoveShip,
+		SetupPlayerWingman,
+		NewPlayerShip,
+		
+		GroupRemoveShip,
+		GroupMoveShip,
+		ReturnGroup,
+		GroupNumber,
+		SetGroupNumber,
+		
+		PlayerDeath,
+		WingmanDeath,
+		WingmanComms,
+		
+		HireShip,
+		CaptureShip,
+		FireShip,
+		
+		IsDockedToLarger,
+		
+		RunCheck,
+		CreateTestShip,
+		CreateTargets,
+		DisruptShip;
 
  
-
-        
+// Enumerations
 enum eefOwnership {
    efoOwned,
    efoHired,
@@ -136,11 +136,10 @@ enum eefOwnership {
 };
 
 
-
+// Prototypes
 prototype NewGame(string player_ship_template, string system, string location, string name);
 
 prototype NewGameTest();
-
 
 prototype SaveFleet();
 
@@ -162,14 +161,11 @@ prototype save_cargo_pods(hship ship, int ship_id);
 
 prototype restore_cargo_pods(hship ship, int ship_id);
 
-
 prototype hship find_ship(int id_number);
 
 prototype int docked_ship(hship wingman);
 
 prototype restore_docks();
-
-
 
 prototype SetupPlayerWingman(hship ship, int id, int group, eefOwnership owner, string world, eOrderType prior_order);
 
@@ -178,7 +174,6 @@ prototype SetupPlayer(hship ship, int id);
 
 
 // Player order group related prototypes
-
 prototype bool GroupRemoveShip(hsim ship);
 
 prototype bool GroupMoveShip(hsim ship, int group);
@@ -193,7 +188,6 @@ prototype group_remove_ship(hsim ship, int group);
 
 
 // Helper functions
-
 prototype task delayed_sim_destroy(hisim ship);
 
 prototype release_wingman(hship ship);
@@ -201,7 +195,6 @@ prototype release_wingman(hship ship);
 prototype task wingman_watch(hship wingman);
 
 prototype read_ship_upkeep(hship ship);
-
 
 prototype reset_position();
 
@@ -227,27 +220,36 @@ prototype int default_daily_cost(int ship_type);
 prototype ReadIniFile(hship ship);
 
 
+//[of]:int float2int(float number)
 int float2int(float number)
 {
    return number;
 }
+//[cf]
 
+
+//[of]:float int2float(int number)
 float int2float(int number)
 {
    return number;
 }
+//[cf]
 
 
+//[of]:RunCheck()
 RunCheck()
 {
    Global.SetBool("g_zz_ug_passme",true);
 }
+//[cf]
+
 
 //******************************************************************************************/
 
 // Initialize the EpicFleet package. Setup the unique number counter.
 
 //******************************************************************************************/
+//[of]:NewGame(string player_ship_template, string system, string location, string name)
 NewGame(string player_ship_template, string system, string location, string name)
 {
    list empty_list;
@@ -301,7 +303,10 @@ NewGame(string player_ship_template, string system, string location, string name
 
 
 }
+//[cf]
 
+
+//[of]:NewGameTest()
 NewGameTest()
 {
 
@@ -319,8 +324,10 @@ NewGameTest()
 
    NewGame(ship, system,station, name);
 }
+//[cf]
 
 
+//[of]:StartSession()
 StartSession()
 {
 	Input.BindKey( "tEpicFleet.CreateTestShip", "AnySection.CallShiftFun" );  
@@ -329,8 +336,11 @@ StartSession()
    Input.BindKey( "tPodUtil.TogglePodTag", "icPlayerPilot.SubTarget" );  
 
 }
+//[cf]
+
 
 // Hands out the next unique ship id.
+//[of]:int next_id_number()
 int next_id_number()
 {
    int id;
@@ -342,18 +352,26 @@ int next_id_number()
    }
    return id;
 }
+//[cf]
 
+
+//[of]:int IdNumber(hship ship)
 int IdNumber(hship ship)
 {
    return Object.IntProperty(ship,"EpicFleetIdNum");
 }
+//[cf]
 
+
+//[of]:set_id_number(hship ship, int id)
 set_id_number(hship ship, int id)
 {
    Object.AddIntProperty(ship,"EpicFleetIdNum",id);
 }
+//[cf]
 
 
+//[of]:SetMarines(hship ship, int marines)
 SetMarines(hship ship, int marines)
 {
    if (Object.PropertyExists(ship, "EpicFleetMarines")) {
@@ -362,16 +380,21 @@ SetMarines(hship ship, int marines)
       Object.AddIntProperty(ship, "EpicFleetMarines",marines);
    }
 }
+//[cf]
 
+
+//[of]:int Marines(hship ship)
 int Marines(hship ship)
 {
    return Object.IntProperty(ship,"EpicFleetMarines");
 }
+//[cf]
 
 
 
 // This is the maximum level of fuel that
 // can be loaded into the ship.
+//[of]:SetFuelMax(hship ship, float fuel_maximum)
 SetFuelMax(hship ship, float fuel_maximum)
 {
    if (Object.PropertyExists(ship, "max_fuel")) {
@@ -380,11 +403,15 @@ SetFuelMax(hship ship, float fuel_maximum)
       Object.AddFloatProperty(ship, "max_fuel", fuel_maximum);
    }
 }
+//[cf]
 
+
+//[of]:float FuelMax(hship ship)
 float FuelMax(hship ship)
 {
    return Object.FloatProperty(ship, "max_fuel");
 }
+//[cf]
 
 
 
@@ -392,6 +419,7 @@ float FuelMax(hship ship)
 // is the lowest and max_fuel is the highest value.
 // When this number hits zero, the ship cannot move
 // or fight.
+//[of]:SetFuel(hship ship, float fuel_used)
 SetFuel(hship ship, float fuel_used)
 {
    // Clip current fuel supply to the ships limits.
@@ -409,16 +437,20 @@ SetFuel(hship ship, float fuel_used)
       Object.AddFloatProperty(ship, "fuel", fuel_used);
    }
 }
+//[cf]
 
+
+//[of]:float Fuel(hship ship)
 float Fuel(hship ship)
 {
    return Object.FloatProperty(ship, "fuel");
 }
-
+//[cf]
 
 
 
 // This is the amount of fuel the ship uses to make one capsule jump.
+//[of]:SetFuelPerJump(hship ship, float fuel_per_jump)
 SetFuelPerJump(hship ship, float fuel_per_jump)
 {
    if (Object.PropertyExists(ship, "jump_fuel")) {
@@ -427,16 +459,21 @@ SetFuelPerJump(hship ship, float fuel_per_jump)
       Object.AddFloatProperty(ship, "jump_fuel", fuel_per_jump);
    }
 }
+//[cf]
 
+
+//[of]:float FuelPerJump(hship ship)
 float FuelPerJump(hship ship)
 {
    return Object.FloatProperty(ship, "jump_fuel");
 }
+//[cf]
 
 
 
 // This is the amount of fuel a ship burns for reactor power and
 // using thrusters to move around.
+//[of]:SetDailyFuel(hship ship, float fuel_amount)
 SetDailyFuel(hship ship, float fuel_amount)
 {
    if (Object.PropertyExists(ship, "daily_fuel")) {
@@ -445,17 +482,22 @@ SetDailyFuel(hship ship, float fuel_amount)
       Object.AddFloatProperty(ship, "daily_fuel", fuel_amount);
    }
 }
+//[cf]
 
+
+//[of]:float DailyFuel(hship ship)
 float DailyFuel(hship ship)
 {
    return Object.FloatProperty(ship, "daily_fuel");
 }
+//[cf]
 
 
 
 // This is the cost in credits of operating a ship for one day.
 // The credit cost pays for ship upkeep, standard expenses, and crew.
 // Fuel is not included.
+//[of]:SetDailyUpkeep(hship ship, int daily_cost)
 SetDailyUpkeep(hship ship, int daily_cost)
 {
    if (Object.PropertyExists(ship, "daily_cost")) {
@@ -464,13 +506,18 @@ SetDailyUpkeep(hship ship, int daily_cost)
       Object.AddIntProperty(ship, "daily_cost", daily_cost);
    }
 }
+//[cf]
 
+
+//[of]:int DailyUpkeep(hship ship)
 int DailyUpkeep(hship ship)
 {
    return Object.IntProperty(ship, "daily_cost");
 }
+//[cf]
 
 
+//[of]:SetWorld(hship ship, string world)
 SetWorld(hship ship, string world)
 {
    if (Object.PropertyExists(ship, "EpicFleetWorld")) {
@@ -479,11 +526,15 @@ SetWorld(hship ship, string world)
       Object.AddStringProperty(ship, "EpicFleetWorld", world);
    }
 }
+//[cf]
 
+
+//[of]:string World(hship ship)
 string World(hship ship)
 {
    return Object.StringProperty(ship, "EpicFleetWorld");
 }
+//[cf]
 
 
 //******************************************************************************************/
@@ -491,7 +542,7 @@ string World(hship ship)
 // Create new id.
 // Add to fleet list for save.
 //******************************************************************************************/
-
+//[of]:int AddNewShip(hship ship)
 int AddNewShip(hship ship)
 {
    int id = next_id_number();
@@ -506,8 +557,9 @@ int AddNewShip(hship ship)
 
    return id;
 }
+//[cf]
 
-
+//[of]:add_ship_to_list(hship ship)
 add_ship_to_list(hship ship)
 {
    list fleet;
@@ -523,7 +575,9 @@ add_ship_to_list(hship ship)
       }
    }
 }
+//[cf]
 
+//[of]:remove_ship_from_list(hship ship)
 remove_ship_from_list(hship ship)
 {
    list fleet;
@@ -537,20 +591,28 @@ remove_ship_from_list(hship ship)
       }
    }   
 }
+//[cf]
 
 
 // Use to signal that the last save will not need to recreate the player ship.
 // Instead, the player ship will be available.
+//[of]:SetBaseSave(bool entered_base)
 SetBaseSave(bool entered_base)
 {
    Global.CreateBool("gt_epic_fleet_player_base_save", GA_Write, entered_base);
 }
+//[cf]
 
+
+//[of]:eefOwnership Ownership(hship ship)
 eefOwnership Ownership(hship ship)
 {
    return Object.IntProperty(ship,"gt_epic_fleet_ownership");
 }
+//[cf]
 
+
+//[of]:SetOwnership(hship ship, eefOwnership owner)
 SetOwnership(hship ship, eefOwnership owner)
 {
    if (Object.PropertyExists(ship,"gt_epic_fleet_ownership")) {
@@ -559,25 +621,30 @@ SetOwnership(hship ship, eefOwnership owner)
       Object.AddIntProperty(ship,"gt_epic_fleet_ownership",owner);
    }
 }
+//[cf]
 
+
+//[of]:list PlayerFleet()
 list PlayerFleet()
 {
    return Global.List("g_epic_fleet_player_list");
 }
+//[cf]
 
 
 // Reset the formation positions. Done when the fleet is restored.
-
+//[of]:reset_position()
 reset_position()
 {
    Global.CreateInt("gt_efleet_pos_counter",GA_Write|GA_NoSave, 0);
 }
+//[cf]
 
 
 // Place the ship at the proper formation position. 
 // All wingman commands will use this position to keep
 // the wingmen from collision.
-
+//[of]:set_position(hship ship)
 set_position(hship ship)
 {
    int counter, spacing; 
@@ -645,6 +712,7 @@ set_position(hship ship)
 
    tFormation.SetPos(ship, x, y, z);
 }
+//[cf]
 
 
 //******************************************************************************************/
@@ -653,7 +721,7 @@ set_position(hship ship)
 // Weed out all null ship entries.
    
 //******************************************************************************************/
-
+//[of]:SaveFleet()
 SaveFleet()
 {
    list fleet;
@@ -765,15 +833,14 @@ SaveFleet()
    // Save the loose cargo pods that are near player wingmen.
    save_pod_list(List.FromSet(locate_free_pods()));
 }
-
-
+//[cf]
 
 
 //******************************************************************************************/
 //   Restores the player fleet from global array. Then erase the global array.
 
 //******************************************************************************************/
-
+//[of]:RestoreFleet()
 RestoreFleet()
 {
    list fleet, empty_list;
@@ -982,9 +1049,12 @@ RestoreFleet()
 
    restore_pod_list();
 }
+//[cf]
+
 
 // Returns the id number of the wingman to which this ship
 // is docked, if this ship is docked.
+//[of]:int docked_ship(hship wingman)
 int docked_ship(hship wingman)
 {
    list fleet = PlayerFleet();
@@ -1004,9 +1074,12 @@ int docked_ship(hship wingman)
 
    return 0;
 }
+//[cf]
+
 
 // Runs through the list of player wingmen and relinks together those
 // that were docked.
+//[of]:restore_docks()
 restore_docks()
 {
    list fleet = PlayerFleet();
@@ -1030,9 +1103,10 @@ restore_docks()
       }
    }
 }
+//[cf]
 
 
-
+//[of]:hship find_ship(int id_number)
 hship find_ship(int id_number)
 {
    list fleet = PlayerFleet();
@@ -1051,6 +1125,7 @@ hship find_ship(int id_number)
 
    return none;
 }
+//[cf]
 
 
 
@@ -1083,6 +1158,7 @@ read_ship_upkeep(hship ship)
 
 //******************************************************************************************/
 
+//[of]:RemoveShip(hship ship)
 RemoveShip(hship ship)
 {
    hgroup combat_group;
@@ -1094,8 +1170,10 @@ RemoveShip(hship ship)
 
    remove_ship_from_list(ship);
 }
+//[cf]
 
 
+//[of]:bool IsPlayerFleetShip(hsim ship)
 bool IsPlayerFleetShip(hsim ship)
 {
    list fleet = Global.List("g_epic_fleet_player_list");
@@ -1105,6 +1183,8 @@ bool IsPlayerFleetShip(hsim ship)
    }
    return false;
 }
+//[cf]
+
 
 //******************************************************************************************/
 // Remove the ship. Only use this command when removing a ship forever, such
@@ -1112,7 +1192,7 @@ bool IsPlayerFleetShip(hsim ship)
 // group 0 using the move ship function.
 
 //******************************************************************************************/
-
+//[of]:bool GroupRemoveShip(hsim ship)
 bool GroupRemoveShip(hsim ship)
 {
    int group = GroupNumber(ship);
@@ -1127,10 +1207,12 @@ bool GroupRemoveShip(hsim ship)
 
    return true;
 }
+//[cf]
+
 
 // Use this function to 'remove a ship' from a group. This is the 
 // default ship location. All player ships must be in a group.
-
+//[of]:bool GroupMoveShip(hsim ship, int group)
 bool GroupMoveShip(hsim ship, int group)
 {
    int old_group = GroupNumber(ship);
@@ -1153,7 +1235,10 @@ bool GroupMoveShip(hsim ship, int group)
 
    return true;
 }
+//[cf]
 
+
+//[of]:int GroupNumber(hsim ship)
 int GroupNumber(hsim ship)
 {
    if (Object.PropertyExists(ship, "EpicFleetOGroup")) {
@@ -1162,7 +1247,10 @@ int GroupNumber(hsim ship)
 
    return 11;
 }
+//[cf]
 
+
+//[of]:SetGroupNumber(hsim ship, int group)
 SetGroupNumber(hsim ship, int group)
 {
    if ((group > 9) || (group<0)) {
@@ -1176,7 +1264,10 @@ SetGroupNumber(hsim ship, int group)
       Object.AddIntProperty(ship,"EpicFleetOGroup", group);
    }
 }
+//[cf]
 
+
+//[of]:group_remove_ship(hsim ship, int group)
 group_remove_ship(hsim ship, int group)
 {
    list fleet;
@@ -1206,7 +1297,10 @@ group_remove_ship(hsim ship, int group)
       Global.SetList(name,fleet);
    }
 }
+//[cf]
 
+
+//[of]:group_add_ship(hsim ship, int group)
 group_add_ship(hsim ship, int group)
 {
    list fleet;
@@ -1236,7 +1330,10 @@ group_add_ship(hsim ship, int group)
       Global.SetList(name,fleet);
    }
 }
+//[cf]
 
+
+//[of]:list ReturnGroup(int group)
 list ReturnGroup(int group)
 {
    list fleet;
@@ -1258,12 +1355,14 @@ list ReturnGroup(int group)
    }
    return fleet;
 }
+//[cf]
 
 
 //******************************************************************************************/
 // sim = sim to find coords of,  relsim = find coords reletive to;
 
 //******************************************************************************************/
+//[of]:location_by_sim(hsim sim, hsim relsim)   
 location_by_sim(hsim sim, hsim relsim)   
 {
   hsim Pnt1 = Sim.Create("ini:/sims/nav/waypoint", "Triangulation Point 1");
@@ -1322,6 +1421,7 @@ location_by_sim(hsim sim, hsim relsim)
 
   Object.AddVectorProperty(sim, "EpicFleetLoc", simx, simy, simz);
 }
+//[cf]
 
 
 //******************************************************************************************/
@@ -1333,6 +1433,7 @@ Takes a list of sims, it returns the sim that is
 nearest to the location provided.
 
 */
+//[of]:hsim Nearest(hsim location, list items)
 hsim Nearest(hsim location, list items)
 {
    float dist;
@@ -1352,8 +1453,11 @@ hsim Nearest(hsim location, list items)
    }
    return found;
 }
+//[cf]
+
 
 // Returns all cargo pods docked to a ship.
+//[of]:list ShipPodList(hsim ship)
 list ShipPodList(hsim ship)
 {
    set pods;
@@ -1375,8 +1479,10 @@ list ShipPodList(hsim ship)
 
    return docked_pods;
 }
+//[cf]
 
 
+//[of]:save_cargo_pods(hship ship, int ship_id)
 save_cargo_pods(hship ship, int ship_id)
 {
    string faction, name;
@@ -1409,8 +1515,10 @@ save_cargo_pods(hship ship, int ship_id)
 
    Global.CreateInt(String.FormatInt("g_epic_fleet_%d_podtotal",ship_id),GA_Write, pod_count);
 }
+//[cf]
 
 
+//[of]:restore_cargo_pods(hship ship, int ship_id)
 restore_cargo_pods(hship ship, int ship_id)
 {
 
@@ -1451,12 +1559,10 @@ restore_cargo_pods(hship ship, int ship_id)
       iRemotePilot.EnableRemoteConnection(iShip.Cast(pod), true);
    }
 }
+//[cf]
 
 
-
-
-
-
+//[of]:SetupPlayerWingman(hship ship, int id, int group, eefOwnership owner, string world, eOrderType prior_order)
 SetupPlayerWingman(hship ship, int id, int group, eefOwnership owner, string world, eOrderType prior_order)
 {
    hfaction player_faction = iFaction.Find("Player");
@@ -1495,9 +1601,12 @@ SetupPlayerWingman(hship ship, int id, int group, eefOwnership owner, string wor
    // Start the watch task to track this ship.
    Task.Detach(start wingman_watch(ship));
 }
+//[cf]
+
 
 // Used to purchase a new player ship. Properly sets the inventory and
 // any needed fleet values.
+//[of]:NewPlayerShip(hship ship)
 NewPlayerShip(hship ship)
 {
    int id = next_id_number();
@@ -1528,9 +1637,12 @@ NewPlayerShip(hship ship)
 
    SetupPlayer(ship, id);
 }
+//[cf]
+
 
 // Attaches any needed properties to the players current ship. The pilot should
 // already be installed at this time.
+//[of]:SetupPlayer(hship ship, int id)
 SetupPlayer(hship ship, int id)
 {
    hfaction player_faction = iFaction.Find("Player");
@@ -1566,7 +1678,10 @@ SetupPlayer(hship ship, int id)
        Debug.PrintString(": player ship template\n");
    }
 }
+//[cf]
 
+
+//[of]:task final_view(hship escape_pod, hship ex_player)
 task final_view(hship escape_pod, hship ex_player)
 {
    eCamera camera;
@@ -1586,9 +1701,11 @@ task final_view(hship escape_pod, hship ex_player)
 
    iSim.SetIndestructable(escape_pod, false);
 }
+//[cf]
+
 
 // Our player has botched the job. Toss him in an escape pod.
-
+//[of]:task PlayerDeath( hship sim )
 task PlayerDeath( hship sim )
 {
    hship escape_pod;
@@ -1611,18 +1728,21 @@ task PlayerDeath( hship sim )
    Task.Detach( start final_view(escape_pod, sim));
    //Task.Detach( start delayed_sim_destroy(iSim.Cast(sim)));
 }
+//[cf]
 
 
-
-
+//[of]:task delayed_sim_destroy(hisim ship)
 task delayed_sim_destroy(hisim ship)
 {
    Task.Sleep(Task.Current(), 2.0);
 
    Sim.Destroy(ship);
 }
+//[cf]
+
 
 // used to remove a ship from the player service.
+//[of]:release_wingman(hship ship)
 release_wingman(hship ship)
 {
    hfaction independent_faction = iFaction.Find("Independent");
@@ -1648,28 +1768,34 @@ release_wingman(hship ship)
    // remove the comms function.
    tEpicComms.AddComms(ship, "");
 }
-
+//[cf]
 
 
 // Add this ship to the player fleet. Mark it as a hired ship.
+//[of]:HireShip(hship ship)
 HireShip(hship ship)
 {
    int id = next_id_number();
 
    SetupPlayerWingman(ship, id, 0, efoHired, iSim.ActiveWorld(), OT_None);
 }
+//[cf]
+
 
 // Add this ship to the player fleet as a captured vessel.
+//[of]:CaptureShip(hship ship)
 CaptureShip(hship ship)
 {
    int id = next_id_number();
 
    SetupPlayerWingman(ship, id, 0, efoCaptured, iSim.ActiveWorld(), OT_None);
 }
+//[cf]
+
 
 // Player releases a wingman from service. Send the ship toward the nearest lpoint.
 // Also used when the player cannot pay the upkeep of a ship.
-
+//[of]:FireShip(hship ship)
 FireShip(hship ship)
 {
    hlagrangepoint lpoint;
@@ -1684,9 +1810,12 @@ FireShip(hship ship)
    iAI.GiveApproachOrder( ship, lpoint );   
 
 }
+//[cf]
+
 
 // Checks if a ship is owned by the player and if that ship
 // was captured. Only captured ships may be sold to ship breakers.
+//[of]:bool IsCaptured(hship ship)
 bool IsCaptured(hship ship)
 {
    if (efoCaptured == Ownership(ship)) {
@@ -1695,11 +1824,12 @@ bool IsCaptured(hship ship)
 
    return false;
 }
+//[cf]
+
 
 //******************************************************************************************/
 // Communication Routines
-
-
+//[of]:task WingmanComms()
 task WingmanComms()
 {
    hship ship;
@@ -1745,8 +1875,10 @@ task WingmanComms()
     // Finish the conversation.
     iConversation.End();
 }
+//[cf]
 
 
+//[of]:task WingmanDeath(hsim wingman)
 task WingmanDeath(hsim wingman)
 {
    GroupRemoveShip(iSim.Cast(wingman));
@@ -1756,9 +1888,12 @@ task WingmanDeath(hsim wingman)
 
    iSim.Kill(iSim.Cast(wingman));
 }
+//[cf]
+
 
 // Wingman watch handles all polling operations that need to be done 
 // to wingmen
+//[of]:task wingman_watch(hship wingman)
 task wingman_watch(hship wingman)
 {
    hship player;
@@ -1955,10 +2090,10 @@ task wingman_watch(hship wingman)
          */
    }
 }
+//[cf]
 
 
-
-
+//[of]:int save_cargo_pod(hship cargo_pod)
 int save_cargo_pod(hship cargo_pod)
 {
    string name, system;
@@ -2001,8 +2136,10 @@ int save_cargo_pod(hship cargo_pod)
 
    return pod_id;
 }
+//[cf]
 
 
+//[of]:save_pod_list(list cargo_pods)
 save_pod_list(list cargo_pods)
 {
    int i, total, id;
@@ -2022,8 +2159,10 @@ save_pod_list(list cargo_pods)
 
    Global.CreateInt("ts_podtotal", GA_Write, total);
 }
+//[cf]
 
 
+//[of]:hship restore_cargo_pod(int pod_id)
 hship restore_cargo_pod(int pod_id)
 {
    string name, system, ref_name;
@@ -2075,8 +2214,10 @@ hship restore_cargo_pod(int pod_id)
 
    return pod;
 }
+//[cf]
 
 
+//[of]:restore_pod_list()
 restore_pod_list()
 {
    int i, total, id;
@@ -2092,12 +2233,10 @@ restore_pod_list()
       restore_cargo_pod(id);
    }
 }
+//[cf]
 
 
-
-
-
-
+//[of]:set locate_free_pods()
 set locate_free_pods()
 {
    list player_fleet, pod_list;
@@ -2142,9 +2281,11 @@ set locate_free_pods()
 
    return final_set;
 }
+//[cf]
 
 
 // Read in the INI file, attach the properties to the ship.
+//[of]:ReadIniFile(hship ship)
 ReadIniFile(hship ship)
 {
 
@@ -2216,8 +2357,10 @@ ReadIniFile(hship ship)
 
    Object.AddBoolProperty(ship, "fuel_locked", false);
 }
+//[cf]
 
 
+//[of]:float default_max_fuel(int ship_type)
 float default_max_fuel(int ship_type)
 {
 
@@ -2260,8 +2403,10 @@ float default_max_fuel(int ship_type)
 
    return 500.0;
 }
+//[cf]
 
 
+//[of]:float default_daily_fuel(int ship_type)
 float default_daily_fuel(int ship_type)
 {
    
@@ -2303,8 +2448,10 @@ float default_daily_fuel(int ship_type)
    return 10.0;
 
 }
+//[cf]
 
 
+//[of]:float default_jump_fuel(int ship_type)
 float default_jump_fuel(int ship_type)
 {
    switch (ship_type)
@@ -2344,8 +2491,10 @@ float default_jump_fuel(int ship_type)
 
    return 100.0;
 }
+//[cf]
 
 
+//[of]:int default_daily_cost(int ship_type)
 int default_daily_cost(int ship_type)
 {
    switch (ship_type)
@@ -2385,6 +2534,7 @@ int default_daily_cost(int ship_type)
 
    return 10;
 }
+//[cf]
 
 
 //******************************************************************************************/
@@ -2393,6 +2543,7 @@ int default_daily_cost(int ship_type)
 
 //******************************************************************************************/
 
+//[of]:CreateTestShip()
 CreateTestShip()
 {
    hship ship, player;
@@ -2445,9 +2596,10 @@ CreateTestShip()
    HireShip(ship);
    Sim.PlaceRelativeTo(ship, player, 1km, 5km, 5km);
 }
+//[cf]
 
 
-
+//[of]:CreateTargets()
 CreateTargets()
 {
    hship ship, player;
@@ -2479,9 +2631,11 @@ CreateTargets()
    Sim.PlaceRelativeTo(ship, player, 5km, 2km, 5km);
 
 }
+//[cf]
 
 
 // Shuts down targeted ship for 60 seconds. Good for testing capture or docking items.
+//[of]:DisruptShip()
 DisruptShip()
 {
    hship player = iShip.FindPlayerShip();
@@ -2491,9 +2645,11 @@ DisruptShip()
 
    iShip.Disrupt(target, 60, false);
 }
+//[cf]
 
 
 // This function returns a parent ship if this ship is docked to a larger vessel.
+//[of]:hisim IsDockedToLarger(hship ship)
 hisim IsDockedToLarger(hship ship)
 {
    list nearby_ships;
@@ -2523,6 +2679,8 @@ hisim IsDockedToLarger(hship ship)
   
    return none;
 }
+//[cf]
+
 
 /*  
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
