@@ -2,43 +2,211 @@ IMPORTANT - KEEP THIS FILE UP TO DATE. WHEN ADDING NEW SOURCE FILES ADD THEM TO 
 
 This is the master index page for the MS_MOD_MAIN/sourcce directory.  We should use this page to provide an overall structure to code held in the system.
 
+To add in a file put the cursor where you want to insert it, Ctrl+Shift+L to create the link. just use the name and path as the filename.
+
+
+--- Replacement Capsule Jump ---
+	- Navigation Tab Menu -
+	??? <-- what file?
+
+	- Jump Simulation -
+#[l]:	MS_Mod_Main/jump_controls.ini:../jump_controls.ini
+
+
+	- Geography and File Changes -
+	??? <-- where are file and what ones?
+
+	- Lpoint Finder -
+#[l]:	tELpointFind.pog:tELpointFind.pog
+
+	- Jump Menu -
+#[l]:	tEJump.pog:tEJump.pog
+
+--- Fuel Handling ---
+???
+
+--- News Periodicals ---
+#[l]:tNewsNet.pog:tNewsNet.pog
+
+--- Asteroid Mining ---
+???
+
+--- Wingmen AI ---
+#[l]:tsWingman.pog:tsWingman.pog
+
+--- Wingman Commands ---
+#[l]:tsWingComm.pog:tsWingComm.pog
+
+--- Loadout GUI ---
+#[l]:tsLoadoutGui.pog:tsLoadoutGui.pog
+
+	- Loadout Save -
+#[l]:	tsShipSave.pog:tsShipSave.pog
+	
+--- Player Sart GUI ---
+#[l]:tStartGui.pog:tStartGui.pog
+
+--- Library GUI ---
+#[l]:tEReferenceGui.pog:tEReferenceGui.pog
+
+--- Email & News GUI ---
+#[l]:tShipMail.pog:tShipMail.pog
+#[l]:tNewsNet.pog:tNewsNet.pog
+
+--- Fleet Status GUI ---
+#[l]:tEFleetGui.pog:tEFleetGui.pog
+
+--- Navigation GUI ---
+#[l]:tEpicLFPlus.pog:tEpicLFPlus.pog
+
+--- Lpoint Scanner GUI ---
+#[l]:tELpointFind.pog:tELpointFind.pog
+
+--- Reputation GUI ---
+#[l]:tEpicFacGui.pog:tEpicFacGui.pog
+
+--- Rest Day GUI ---
+???
+
+--- Quit Game GUI ---
+#[l]:tExitGui.pog:tExitGui.pog
+
+--- Game Options GUI ---
+#[l]:tOptionsGui.pog:tOptionsGui.pog
+
+--- Cargo Purchase GUI ---
+#[l]:tETradeBuy.pog:tETradeBuy.pog
+
+--- Cargo Sell GUI ---
+#[l]:tETradeSell.pog:tETradeSell.pog
+
+--- Mining Claim Sell GUI ---
+#[l]:tClaimGui.pog:tClaimGui.pog
+
+--- Autosave ---
+#[l]:tEPlayerWatch.pog:tEPlayerWatch.pog
+
+--- Crew Speaking ---
+???
+
+--- Cargo Ships ---
+#[l]:tPcCargoShip.pog:tPcCargoShip.pog
+
+
+--- Fleet Operations ---
+	- Fleet Movement -
+#[l]:	tLCenter.pog:tLCenter.pog
+	- Customs Patrol -
+#[l]:	tsFoCustoms.pog:tsFoCustoms.pog
+#[l]:	tPcCustomsToll.pog:tPcCustomsToll.pog
+	- Attack Fleet -
+#[l]:	tsFoFleetAttack.pog:tsFoFleetAttack.pog
+	- Defence Fleet -
+#[l]:	tsFoFleetDefense.pog:tsFoFleetDefense.pog
+	- Patrol Fleet -	
+#[l]:	tsFoPatrol.pog:tsFoPatrol.pog
+	- Pirate Protection Racket -
+#[l]:	tsFoProtection.pog:tsFoProtection.pog
+	- Pirate Embezeler -
+#[l]:	tsFoEmbezzle.pog:tsFoEmbezzle.pog
+	- Pirate Raider -
+#[l]:	tsFoRaider.pog:tsFoRaider.pog
+	- Pirate Thugs -
+#[l]:	tsFoThugs.pog:tsFoThugs.pog
+--- Fleet Movement and Combat ---
+	- Day Update -
+#[l]:	tEPlayerWatch.pog:tEPlayerWatch.pog
+#[l]:	tEpicMain.pog:tEpicMain.pog
+	- Station Update -
+#[l]:	tStationRules.pog:tStationRules.pog
+#[l]:	MS_Mod_Main/metagame_production.ini:../metagame_production.ini
+	- Fleet Update -
+	Fleet updates trigger specific fleet operations. These are pog files for the form tsFo<operation>.pog
+#[l]:	tsFleetOpUpdate.pog:tsFleetOpUpdate.pog
+#[l]:	tsFleetOperation.pog:tsFleetOperation.pog
+	- Fleet Combat -
+#[l]:	tsFleetOpCombat.pog:tsFleetOpCombat.pog
+
+
+--- Pog Classes --
+Pog object classes are a way of createing iSim.pog object constructions when the native POG language does not support defining new classes. These objects are typically used to create objects around stations that the player will see during the game, such as pirates, asteroid belts, rumor sellers, etc.
+When a new object is created, an INI file is handed into the create function. This allows customizing the object. And it allows non-programmers a technique for modifying the game (such as placing unique asteroid belts etc.)
+
+	- Asteroid Belt -
+#[l]:	tPcAsteroidBelt.pog:tPcAsteroidBelt.pog
+	- Cargo Ship -
+#[l]:	tPcCargoShip.pog:tPcCargoShip.pog
+	- Customs Tolls -
+#[l]:	tPcCustomsToll.pog:tPcCustomsToll.pog
+	- Embezzle Op -
+#[l]:	tPcEmbezzleOp.pog:tPcEmbezzleOp.pog
+	- Guards -
+	* Guards are used to represent many of the attack and defense fleets. They have complex behavior.
+	* Guards are created based on the number of fleet points in the fleet operation or station. Destroying guard ships subtracts the ships points from the station or operation. The player can hit and run destroy guards.
+	* Guards fly a waypoint route around the station. If they see a dislike or hostile ship, they will attack.
+	* Guards respond to nearby distress calls. Most ships will drop a distress event when attacked. Guards listen for these events. If the sender is close (200km) and is non-dislike then the guards will go after the attacker.
+	* If a guard ship is attacked, they will all go after the attacker.
+	* If the leader is killed, they keep fighting, but don't patrol. Guards don't attack friendly factions (to avoid stay shots starting wars).
+#[l]:	tPcGuards.pog:tPcGuards.pog
+	- Hired Ship -
+#[l]:	tPcHiredShip.pog:tPcHiredShip.pog
+	- Pirate Toll -
+	* The pirate toll is created when the player moved near a pirate protection operation. Once the player is nearby it will charge the player a fee based on the amount of cargo carried. If they player refuses to pay, the pirates will attack. The pirates will also attack if the player is dislike or hostile standing.
+	* The pirates will only charge the player once, but if the player does a save/restore, they will be charged again. If the player flees, the pirates will chase, but they will not jump to another system.
+	* The number of pirates is determined by the number of fleet points in the operation. If ships are destroyed, they are deducted from the operations fleet points. If the number of fleet points goes to zero, the operation will be destroyed. The player can thus hit and run destroy a pirate toll over time.
+#[l]:	tPcPirateToll.pog:tPcPirateToll.pog
+	- Pod Scrapper -
+#[l]:	tPcPodScrapper.pog:tPcPodScrapper.pog
+	- Rumour Seller -
+#[l]:	tPcRumorSeller.pog:tPcRumorSeller.pog
+	- Fuel Tanker -
+#[l]:	tPcTankerShip.pog:tPcTankerShip.pog
+	- Weapon Seller -
+#[l]:	tPcWeaponSeller.pog:tPcWeaponSeller.pog
+	-  TBD -
+#[l]:	tPcConstructionShip.pog:tPcConstructionShip.pog
+#[l]:	tPcFenceShip.pog:tPcFenceShip.pog
+#[l]:	tPcOwner.pog:tPcOwner.pog
+#[l]:	tPcWreckBelt.pog:tPcWreckBelt.pog
+
+--- Player Interaction ---
+A large set of utility routines has been coded to handle distress calls, events, reputation changes, and setting up ships. These routines allow the player to interact with the meta-game. When the player destroys ships, they will be subtracted from the owning station or operation. If all the ships in an operation are destroyed, the operation will be destroyed.
+#[l]:	tsPilotSetup.pog:tsPilotSetup.pog
+#[l]:	tsEvent.pog:tsEvent.pog
+#[l]:	tsDistress.pog:tsDistress.pog
+
+
+--- Environment System ---
+
+
+
+
+
+--- To be allocated into logical groups of function/purpose ---
 #[l]:ECargoTypes.pog:ECargoTypes.pog
 #[l]:UniGUI.pog:UniGUI.pog
 #[l]:UniGUIBase.pog:UniGUIBase.pog
 #[l]:UniGUIMisc.pog:UniGUIMisc.pog
 #[l]:jcEChangeIdGui.pog:jcEChangeIdGui.pog
 #[l]:jcEpicShipPurGUI.pog:jcEpicShipPurGUI.pog
-#[l]:tClaimGui.pog:tClaimGui.pog
 #[l]:tDistance.pog:tDistance.pog
 #[l]:tECommEvent.pog:tECommEvent.pog
-#[l]:tEFleetGui.pog:tEFleetGui.pog
 #[l]:tEJump.pog:tEJump.pog
-#[l]:tELpointFind.pog:tELpointFind.pog
 #[l]:tEPlayerOrders.pog:tEPlayerOrders.pog
-#[l]:tEPlayerWatch.pog:tEPlayerWatch.pog
-#[l]:tEReferenceGui.pog:tEReferenceGui.pog
 #[l]:tEShipCreation.pog:tEShipCreation.pog
 #[l]:tESysSetup.pog:tESysSetup.pog
-#[l]:tETradeBuy.pog:tETradeBuy.pog
-#[l]:tETradeSell.pog:tETradeSell.pog
 #[l]:tEconSmall.pog:tEconSmall.pog
 #[l]:tEconUtil.pog:tEconUtil.pog
 #[l]:tEpicComms.pog:tEpicComms.pog
-#[l]:tEpicFacGui.pog:tEpicFacGui.pog
 #[l]:tEpicFleet.pog:tEpicFleet.pog
 #[l]:tEpicFleetUpkeep.pog:tEpicFleetUpkeep.pog
 #[l]:tEpicGui.pog:tEpicGui.pog
-#[l]:tEpicLFPlus.pog:tEpicLFPlus.pog
 
-Main entry point
-#[l]:tEpicMain.pog:tEpicMain.pog
 
 
 #[l]:tEpicMoney.pog:tEpicMoney.pog
 #[l]:tEpicTrade.pog:tEpicTrade.pog
-#[l]:tExitGui.pog:tExitGui.pog
 #[l]:tFormation.pog:tFormation.pog
-#[l]:tLCenter.pog:tLCenter.pog
 #[l]:tLFleet.pog:tLFleet.pog
 #[l]:tLInventory.pog:tLInventory.pog
 #[l]:tLProduction.pog:tLProduction.pog
@@ -52,36 +220,16 @@ Main entry point
 #[l]:tMusic.pog:tMusic.pog
 #[l]:tMusicChange.pog:tMusicChange.pog
 #[l]:tMusicGui.pog:tMusicGui.pog
-#[l]:tNewsNet.pog:tNewsNet.pog
-#[l]:tOptionsGui.pog:tOptionsGui.pog
-#[l]:tPcAsteroidBelt.pog:tPcAsteroidBelt.pog
-#[l]:tPcCargoShip.pog:tPcCargoShip.pog
-#[l]:tPcConstructionShip.pog:tPcConstructionShip.pog
-#[l]:tPcCustomsToll.pog:tPcCustomsToll.pog
-#[l]:tPcEmbezzleOp.pog:tPcEmbezzleOp.pog
-#[l]:tPcFenceShip.pog:tPcFenceShip.pog
-#[l]:tPcGuards.pog:tPcGuards.pog
-#[l]:tPcHiredShip.pog:tPcHiredShip.pog
-#[l]:tPcOwner.pog:tPcOwner.pog
-#[l]:tPcPirateToll.pog:tPcPirateToll.pog
-#[l]:tPcPodScrapper.pog:tPcPodScrapper.pog
-#[l]:tPcRumorSeller.pog:tPcRumorSeller.pog
-#[l]:tPcTankerShip.pog:tPcTankerShip.pog
-#[l]:tPcWeaponSeller.pog:tPcWeaponSeller.pog
-#[l]:tPcWreckBelt.pog:tPcWreckBelt.pog
 #[l]:tPodUtil.pog:tPodUtil.pog
 #[l]:tPogClass.pog:tPogClass.pog
 #[l]:tRepUpdate.pog:tRepUpdate.pog
 #[l]:tRepWatch.pog:tRepWatch.pog
 #[l]:tSaveGui.pog:tSaveGui.pog
-#[l]:tShipMail.pog:tShipMail.pog
 #[l]:tShipName.pog:tShipName.pog
 #[l]:tSpewerOps.pog:tSpewerOps.pog
-#[l]:tStartGui.pog:tStartGui.pog
 #[l]:tStation.pog:tStation.pog
 #[l]:tStationEnv.pog:tStationEnv.pog
 #[l]:tStationFilter.pog:tStationFilter.pog
-#[l]:tStationRules.pog:tStationRules.pog
 #[l]:tStationSave.pog:tStationSave.pog
 #[l]:tStation_t.pog:tStation_t.pog
 #[l]:tTime.pog:tTime.pog
@@ -95,22 +243,7 @@ Main entry point
 #[l]:tsCull.pog:tsCull.pog
 #[l]:tsDebug.pog:tsDebug.pog
 #[l]:tsDebugGui.pog:tsDebugGui.pog
-#[l]:tsDistress.pog:tsDistress.pog
-#[l]:tsEvent.pog:tsEvent.pog
 #[l]:tsFaction.pog:tsFaction.pog
-#[l]:tsFleetOpCombat.pog:tsFleetOpCombat.pog
-#[l]:tsFleetOpUpdate.pog:tsFleetOpUpdate.pog
-#[l]:tsFleetOperation.pog:tsFleetOperation.pog
-#[l]:tsFoCustoms.pog:tsFoCustoms.pog
-#[l]:tsFoEmbezzle.pog:tsFoEmbezzle.pog
-#[l]:tsFoFleetAttack.pog:tsFoFleetAttack.pog
-#[l]:tsFoFleetDefense.pog:tsFoFleetDefense.pog
-#[l]:tsFoPatrol.pog:tsFoPatrol.pog
-#[l]:tsFoProtection.pog:tsFoProtection.pog
-#[l]:tsFoRaider.pog:tsFoRaider.pog
-#[l]:tsFoThugs.pog:tsFoThugs.pog
-#[l]:tsLoadoutGui.pog:tsLoadoutGui.pog
-#[l]:tsPilotSetup.pog:tsPilotSetup.pog
 #[l]:tsPlayerDeath.pog:tsPlayerDeath.pog
 #[l]:tsPlayerFleet.pog:tsPlayerFleet.pog
 #[l]:tsPlayerSave.pog:tsPlayerSave.pog
@@ -119,8 +252,6 @@ Main entry point
 #[l]:tsShipCreation.pog:tsShipCreation.pog
 #[l]:tsShipSave.pog:tsShipSave.pog
 #[l]:tsSystemDamage.pog:tsSystemDamage.pog
-#[l]:tsWingComm.pog:tsWingComm.pog
-#[l]:tsWingman.pog:tsWingman.pog
 #[l]:tsWingmanDeath.pog:tsWingmanDeath.pog
 #[l]:ts_StationEvent.pog:ts_StationEvent.pog
 #[l]:tssdGUI.pog:tssdGUI.pog
