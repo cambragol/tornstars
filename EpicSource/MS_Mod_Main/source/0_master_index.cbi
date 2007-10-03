@@ -8,91 +8,61 @@ To add in a file put the cursor where you want to insert it, Ctrl+Shift+L to cre
 --- Replacement Capsule Jump ---
 	- Navigation Tab Menu -
 	??? <-- what file?
-
 	- Jump Simulation -
 #[l]:	MS_Mod_Main/jump_controls.ini:../jump_controls.ini
-
-
 	- Geography and File Changes -
 	??? <-- where are file and what ones?
-
 	- Lpoint Finder -
 #[l]:	tELpointFind.pog:tELpointFind.pog
-
 	- Jump Menu -
 #[l]:	tEJump.pog:tEJump.pog
-
 --- Fuel Handling ---
 ???
-
 --- News Periodicals ---
 #[l]:tNewsNet.pog:tNewsNet.pog
-
 --- Asteroid Mining ---
 ???
-
 --- Wingmen AI ---
 #[l]:tsWingman.pog:tsWingman.pog
-
 --- Wingman Commands ---
 #[l]:tsWingComm.pog:tsWingComm.pog
-
 --- Loadout GUI ---
 #[l]:tsLoadoutGui.pog:tsLoadoutGui.pog
-
 	- Loadout Save -
 #[l]:	tsShipSave.pog:tsShipSave.pog
-	
 --- Player Sart GUI ---
 #[l]:tStartGui.pog:tStartGui.pog
-
 --- Library GUI ---
 #[l]:tEReferenceGui.pog:tEReferenceGui.pog
-
 --- Email & News GUI ---
 #[l]:tShipMail.pog:tShipMail.pog
 #[l]:tNewsNet.pog:tNewsNet.pog
-
 --- Fleet Status GUI ---
 #[l]:tEFleetGui.pog:tEFleetGui.pog
-
 --- Navigation GUI ---
 #[l]:tEpicLFPlus.pog:tEpicLFPlus.pog
-
 --- Lpoint Scanner GUI ---
 #[l]:tELpointFind.pog:tELpointFind.pog
-
 --- Reputation GUI ---
 #[l]:tEpicFacGui.pog:tEpicFacGui.pog
-
 --- Rest Day GUI ---
 ???
-
 --- Quit Game GUI ---
 #[l]:tExitGui.pog:tExitGui.pog
-
 --- Game Options GUI ---
 #[l]:tOptionsGui.pog:tOptionsGui.pog
-
 --- Cargo Purchase GUI ---
 #[l]:tETradeBuy.pog:tETradeBuy.pog
-
 --- Cargo Sell GUI ---
 #[l]:tETradeSell.pog:tETradeSell.pog
-
 --- Mining Claim Sell GUI ---
 #[l]:tClaimGui.pog:tClaimGui.pog
-
 --- Autosave ---
 #[l]:tEPlayerWatch.pog:tEPlayerWatch.pog
-
 --- Crew Speaking ---
 ???
-
 --- Cargo Ships ---
 #[l]:tPcCargoShip.pog:tPcCargoShip.pog
-
-
 --- Fleet Operations ---
 	- Fleet Movement -
 #[l]:	tLCenter.pog:tLCenter.pog
@@ -126,12 +96,9 @@ To add in a file put the cursor where you want to insert it, Ctrl+Shift+L to cre
 #[l]:	tsFleetOperation.pog:tsFleetOperation.pog
 	- Fleet Combat -
 #[l]:	tsFleetOpCombat.pog:tsFleetOpCombat.pog
-
-
 --- Pog Classes --
 Pog object classes are a way of createing iSim.pog object constructions when the native POG language does not support defining new classes. These objects are typically used to create objects around stations that the player will see during the game, such as pirates, asteroid belts, rumor sellers, etc.
 When a new object is created, an INI file is handed into the create function. This allows customizing the object. And it allows non-programmers a technique for modifying the game (such as placing unique asteroid belts etc.)
-
 	- Asteroid Belt -
 #[l]:	tPcAsteroidBelt.pog:tPcAsteroidBelt.pog
 	- Cargo Ship -
@@ -168,25 +135,58 @@ When a new object is created, an INI file is handed into the create function. Th
 #[l]:	tPcFenceShip.pog:tPcFenceShip.pog
 #[l]:	tPcOwner.pog:tPcOwner.pog
 #[l]:	tPcWreckBelt.pog:tPcWreckBelt.pog
-
 --- Player Interaction ---
 A large set of utility routines has been coded to handle distress calls, events, reputation changes, and setting up ships. These routines allow the player to interact with the meta-game. When the player destroys ships, they will be subtracted from the owning station or operation. If all the ships in an operation are destroyed, the operation will be destroyed.
 #[l]:	tsPilotSetup.pog:tsPilotSetup.pog
 #[l]:	tsEvent.pog:tsEvent.pog
 #[l]:	tsDistress.pog:tsDistress.pog
-
-
 --- Environment System ---
-
-
+The environment system is a large and complex part of Torn Stars. Almost everything the player sees in the game has been placed by the environment system. The system has a few major purposes
+    * It allows non programmers to place objects around stations
+    * It allows object placement based on the status of the station (destroyed can be different from normal).
+    * It places objects when the player arrives at a station.
+    * It facilitates removing objects when the player leaves a station.
+#[l]:tEPlayerWatch.pog :tEPlayerWatch.pog 
+#[l]:tLocationInit.pog:tLocationInit.pog
+#[l]:MS_Mod_Main/station_status_env.ini:../station_status_env.ini
+--- Pog Layers ---
+Pog has no way to define classes, so it does not support inheritance. It also does not support serializing classes. Pog Layers were created to work around these limitations by defining common methods and properties that can be attached to any game object.
+	- Center Layer -
+	Objects in the Meta game can only be placed at stations. The stations form a chess board, and the objects move from station to station. (Some stations are just asteroids or empty points in space).
+	The center layer is a common way of recording where an object is located (which station it is currently orbiting). This location is called a “center”. Stations have themselves as their center.
+#[l]:	tLCenter.pog:tLCenter.pog
+	- Fleet Layer -
+	The fleet layer tracks the number of fleet points that a station or fleet object currently has. Abstract combat between fleets and stations deducts fleet points. Repairs and recruitement increase fleet points.
+	A ships “threat” level is the cost of that ship in fleet points. Bigger ships have higher threat levels and cost more fleet points.
+#[l]:	tLFleet.pog:tLFleet.pog
+	- Inventory Layer -
+#[l]:	tLInventory.pog:tLInventory.pog
+	- Prduction Layer -
+#[l]:	tLProduction.pog:tLProduction.pog
+	-Root Layer -
+#[l]:	tLRoot.pog:tLRoot.pog
+	-Trade Layer -
+#[l]:	tLTrade.pog:tLTrade.pog
+--- General Utility Modules ---
+#[l]:uString.pog:uString.pog
+--- Generic GUI Modules ---
+#[l]:UniGUI.pog:UniGUI.pog
+#[l]:UniGUIBase.pog:UniGUIBase.pog
+#[l]:UniGUIMisc.pog:UniGUIMisc.pog
+--- Test and Debug Modules ---
+#[l]:tsDebug.pog:tsDebug.pog
+#[l]:tsDebugGui.pog:tsDebugGui.pog
+#[l]:zTestCapsule.pog:zTestCapsule.pog
+#[l]:zTestCargo.pog:zTestCargo.pog
+#[l]:zTestCode.pog:zTestCode.pog
+#[l]:zTestExp.pog:zTestExp.pog
+#[l]:zTestFacShip.pog:zTestFacShip.pog
+#[l]:zTestObject.pog:zTestObject.pog
 
 
 
 --- To be allocated into logical groups of function/purpose ---
 #[l]:ECargoTypes.pog:ECargoTypes.pog
-#[l]:UniGUI.pog:UniGUI.pog
-#[l]:UniGUIBase.pog:UniGUIBase.pog
-#[l]:UniGUIMisc.pog:UniGUIMisc.pog
 #[l]:jcEChangeIdGui.pog:jcEChangeIdGui.pog
 #[l]:jcEpicShipPurGUI.pog:jcEpicShipPurGUI.pog
 #[l]:tDistance.pog:tDistance.pog
@@ -201,18 +201,9 @@ A large set of utility routines has been coded to handle distress calls, events,
 #[l]:tEpicFleet.pog:tEpicFleet.pog
 #[l]:tEpicFleetUpkeep.pog:tEpicFleetUpkeep.pog
 #[l]:tEpicGui.pog:tEpicGui.pog
-
-
-
 #[l]:tEpicMoney.pog:tEpicMoney.pog
 #[l]:tEpicTrade.pog:tEpicTrade.pog
 #[l]:tFormation.pog:tFormation.pog
-#[l]:tLFleet.pog:tLFleet.pog
-#[l]:tLInventory.pog:tLInventory.pog
-#[l]:tLProduction.pog:tLProduction.pog
-#[l]:tLRoot.pog:tLRoot.pog
-#[l]:tLTrade.pog:tLTrade.pog
-#[l]:tLocationInit.pog:tLocationInit.pog
 #[l]:tLock.pog:tLock.pog
 #[l]:tMail.pog:tMail.pog
 #[l]:tMegaTrucking.pog:tMegaTrucking.pog
@@ -241,8 +232,6 @@ A large set of utility routines has been coded to handle distress calls, events,
 #[l]:tViewDock.pog:tViewDock.pog
 #[l]:tsCrewSpeak.pog:tsCrewSpeak.pog
 #[l]:tsCull.pog:tsCull.pog
-#[l]:tsDebug.pog:tsDebug.pog
-#[l]:tsDebugGui.pog:tsDebugGui.pog
 #[l]:tsFaction.pog:tsFaction.pog
 #[l]:tsPlayerDeath.pog:tsPlayerDeath.pog
 #[l]:tsPlayerFleet.pog:tsPlayerFleet.pog
@@ -255,11 +244,4 @@ A large set of utility routines has been coded to handle distress calls, events,
 #[l]:tsWingmanDeath.pog:tsWingmanDeath.pog
 #[l]:ts_StationEvent.pog:ts_StationEvent.pog
 #[l]:tssdGUI.pog:tssdGUI.pog
-#[l]:uString.pog:uString.pog
-#[l]:zTestCapsule.pog:zTestCapsule.pog
-#[l]:zTestCargo.pog:zTestCargo.pog
-#[l]:zTestCode.pog:zTestCode.pog
-#[l]:zTestExp.pog:zTestExp.pog
-#[l]:zTestFacShip.pog:zTestFacShip.pog
-#[l]:zTestObject.pog:zTestObject.pog
 
