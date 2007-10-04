@@ -13,57 +13,54 @@
 
 package tsWingman;
 
-uses    Sim,
-iShip,
-iSim,
-iPilotSetup,
-Debug,
-Global,
-GUI,
-iDirector,
-iGUI,
-iHUD,
-iHabitat,
-iMapEntity,
-INIFile,
-Input,
-List,
-Object,
-String,
-Task,
-Text,
-iUtilities,
-iCargo,
-iInventory,
-iComms,
-iConversation,
-iAi,
-Math,
-CargoTypes,
+// Imports
+uses	Sim,
+		iShip,
+		iSim,
+		iPilotSetup,
+		Debug,
+		Global,
+		GUI,
+		iDirector,
+		iGUI,
+		iHUD,
+		iHabitat,
+		iMapEntity,
+		INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+		iUtilities,
+		iCargo,
+		iInventory,
+		iComms,
+		iConversation,
+		iAi,
+		Math,
+		CargoTypes,
+		
+		tsShipEnum,
+		tsShip,
+		tFormation,
+		tPodUtil,
+		tsFaction,
+		tStationEnum,
+		tStation,
+		tLProduction,
+		tMegaTrucking,
+		tStationFilter;
 
-   tsShipEnum,
-tsShip,
-tFormation,
-tPodUtil,
-tsFaction,
-tStationEnum,
-tStation,
-tLProduction,
-tMegaTrucking,
-   tStationFilter;
 
-
-
+// Exports
 provides GiveOrder,
          Start,
          OrderTarget,
          CurrentOrder,
          Save,
          Restore;
-
-   
-
-
 
 
 
@@ -141,7 +138,7 @@ enum eShipState {
 };
 
 
-
+// Prototypes
 prototype task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool restored_order);
 prototype task wingman_watch(hship ship);
 
@@ -184,61 +181,61 @@ prototype eShipState change_state(hship ship, eShipState state, eShipState new_s
 
 
 
-
-
 prototype bool DockPodSet(int group, set pods);
-
 prototype bool station_known(int station_type);
-
 prototype bool is_mine(hisim station);
-
 prototype task mining_task(hship miner, hhabitat target);
-
 prototype task prospecting_task(hship prospector, hhabitat target);
-
 prototype bool is_valid_target(hisim target);
-
 prototype bool is_valid_destination(hisim target);
-
 prototype ePlayerOrder int2order(int order);
-
 prototype eShipState int2state (int state);
 
 
 // These functions signal to the reputation code that the
 // wingman is attacking a target intentionally. It is meant
 // to keep from charging the player in unintentional attacks.
-
-hisim OrderTarget(hship ship) {
+//[of]:hisim OrderTarget(hship ship)
+hisim OrderTarget(hship ship)
+{
 
    return iSim.Cast(Object.HandleProperty(ship,"gtCurrentTarget"));
 
 }
+//[cf]
 
 
-
-SetOrderTarget(hship ship, hisim target) {
+//[of]:SetOrderTarget(hship ship, hisim target)
+SetOrderTarget(hship ship, hisim target)
+{
 
    Object.AddHandleProperty(ship,"gtCurrentTarget", target);
 
 }
+//[cf]
+
 
 // External interface to a ships current order.
+//[of]:ePlayerOrder CurrentOrder(hship ship)
 ePlayerOrder CurrentOrder(hship ship)
 {
    return current_order(ship);
 }
+//[cf]
 
 
-
+//[of]:GiveOrder(hship ship, ePlayerOrder order, hisim target)
 GiveOrder(hship ship, ePlayerOrder order, hisim target)
 {
 
    Task.Detach(start evaluate_order(ship, order, target, false));
 
 }
+//[cf]
+
 
 // Begin the wingman task. If this is a restore, pass in old orders and target.
+//[of]:Start(hship ship, ePlayerOrder order, hisim target)
 Start(hship ship, ePlayerOrder order, hisim target)
 {
    set_current_order(ship, ePO_None);
@@ -252,7 +249,9 @@ Start(hship ship, ePlayerOrder order, hisim target)
    Task.Detach(start wingman_watch(ship));
 
 }
+//[cf]
 
+//[of]:Save(hship ship)
 Save(hship ship)
 {
    int id = Object.IDModulus( ship, 2147483647);
@@ -265,8 +264,11 @@ Save(hship ship)
    Global.CreateString(String.Join(save_key,"target"), GA_Write, Sim.Name(target));
    Global.CreateString(String.Join(save_key,"system"), GA_Write, iSim.WorldName(target));
 }
+//[cf]
+
 
 // Will restore the saved orders of the wing man. And try to restore the saved target.
+//[of]:Restore(hship ship)
 Restore(hship ship)
 {
    int id = tsShip.SaveId(ship);
@@ -283,7 +285,10 @@ Restore(hship ship)
 
    Start(ship, int2order(order), target);
 }
+//[cf]
 
+
+//[of]:task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool restored_order)
 task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool restored_order)
 {
    hfaction player_faction = tsFaction.PlayerFaction();
@@ -731,9 +736,10 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool restored_
       Debug.PrintString("\n");
    }
 }
+//[cf]
 
 
-
+//[of]:task wingman_watch(hship ship)
 task wingman_watch(hship ship)
 {
    eShipState wingman_state = eSS_None;
@@ -1575,9 +1581,11 @@ task wingman_watch(hship ship)
       }
    }
 }
+//[cf]
 
 
 // Converts player orders into starting states.
+//[of]:eShipState new_order_state(ePlayerOrder neworder)
 eShipState new_order_state(ePlayerOrder neworder)
 {
 
@@ -1637,8 +1645,10 @@ eShipState new_order_state(ePlayerOrder neworder)
    // Missed one. Restart the ship. 
    return eSS_None;
 }
+//[cf]
 
 
+//[of]:new_order
 
 ePlayerOrder new_order(hship ship)
 {
@@ -1649,8 +1659,10 @@ set_new_order(hship ship, ePlayerOrder order)
 {
    Object.AddIntProperty(ship,"gtNewOrder", order);
 }
+//[cf]
 
 
+//[of]:current_order
 
 ePlayerOrder current_order(hship ship)
 {
@@ -1661,7 +1673,10 @@ set_current_order(hship ship, ePlayerOrder order)
 {
    Object.AddIntProperty(ship,"gtCurrentOrder", order);
 }
+//[cf]
 
+
+//[of]:current_target
 
 hisim current_target(hship ship)
 {
@@ -1672,7 +1687,10 @@ set_current_target(hship ship, hisim target)
 {
    Object.AddHandleProperty(ship,"gtCurrentTarget", target);
 }
+//[cf]
 
+
+//[of]:new_target
 
 hisim new_target(hship ship)
 {
@@ -1683,7 +1701,10 @@ set_new_target(hship ship, hisim target)
 {
    Object.AddHandleProperty(ship,"gtNewTarget", target);
 }
+//[cf]
 
+
+//[of]:ship_state
 
 set_ship_state(hship ship, eShipState status)
 {
@@ -1695,7 +1716,10 @@ eShipState ship_state(hship ship)
 {
    return int2state(Object.IntProperty(ship,"gtShipState"));
 }
+//[cf]
 
+
+//[of]:accept_order(hship ship, bool debug_on)
 accept_order(hship ship, bool debug_on)
 {
    atomic {
@@ -1708,7 +1732,10 @@ accept_order(hship ship, bool debug_on)
          set_new_order(ship, ePO_None);
    }
 }
+//[cf]
 
+
+//[of]:eShipState change_state(hship ship, eShipState state, eShipState new_state, bool debug_on)
 eShipState change_state(hship ship, eShipState state, eShipState new_state, bool debug_on)
 {
    debug {
@@ -1727,13 +1754,16 @@ eShipState change_state(hship ship, eShipState state, eShipState new_state, bool
 
    return new_state;
 }
+//[cf]
 
 
 
 
 // Does the fuel move between tanker and target ship.
 // Returns true if the tanker still has more fuel.
-bool tanker_fill_ship(hship tanker, hship target) {
+//[of]:bool tanker_fill_ship(hship tanker, hship target)
+bool tanker_fill_ship(hship tanker, hship target)
+{
    int timer;
    bool full_tanker = true;
    float min_fuel, max_fuel;
@@ -1770,6 +1800,7 @@ bool tanker_fill_ship(hship tanker, hship target) {
 
    return full_tanker;
 }
+//[cf]
 
 
 
@@ -1777,7 +1808,9 @@ bool tanker_fill_ship(hship tanker, hship target) {
 // rendered empty, then return true. If a little fuel
 // remains, return false (to let player know they can 
 // fill more tankers.
-bool tanker_empty_ship(hship tanker, hship target) {
+//[of]:bool tanker_empty_ship(hship tanker, hship target)
+bool tanker_empty_ship(hship tanker, hship target)
+{
    bool finished = false;
    float max_fuel, fuel_left, fuel_needed, fuel_used;
 
@@ -1819,15 +1852,11 @@ bool tanker_empty_ship(hship tanker, hship target) {
 
    return finished;
 }
+//[cf]
 
 
 
-
-
-
-
-
-
+//[of]:string state2string(eShipState state)
 string state2string(eShipState state)
 {
    switch (state) {
@@ -1984,30 +2013,37 @@ string state2string(eShipState state)
    return "eSS_Invalid";
 
 }
+//[cf]
 
 
+//[of]:ePlayerOrder int2order(int order)
 ePlayerOrder int2order(int order)
 {
    return order;
 }
+//[cf]
 
+
+//[of]:eShipState int2state (int state)
 eShipState int2state (int state)
 {
    return state;
 }
+//[cf]
 
 
 // tsPlayerFleet.PlayerFleet()
 // We access this global directly because otherwise we lock up the linker.
+//[of]:set player_fleet()
 set player_fleet()
 {
    return Global.Set("g_epic_fleet_player_list");
 }
-
-
+//[cf]
 
 
 // Don't allow attacks on planets, nebula or other non-ship or station type items.
+//[of]:bool is_valid_target(hisim target)
 bool is_valid_target(hisim target)
 {
    if (iSim.Type(target) & (TM_Ship | T_Asteroid | T_CargoPod | T_Gunstar | T_Station | T_BioBomber)) {
@@ -2016,8 +2052,11 @@ bool is_valid_target(hisim target)
 
    return false;
 }
+//[cf]
+
 
 // Don't allow approch orders to stars or planets or missiles or other odd items.
+//[of]:bool is_valid_destination(hisim target)
 bool is_valid_destination(hisim target)
 {
    if (iSim.Type(target) & (TM_Ship | T_Waypoint | T_LagrangePoint | T_Asteroid | T_CargoPod
@@ -2027,9 +2066,12 @@ bool is_valid_destination(hisim target)
 
    return false;
 }
+//[cf]
 
 
-bool station_known(int station_type) {
+//[of]:bool station_known(int station_type)
+bool station_known(int station_type)
+{
 
    switch (station_type) {
    case ept_PirateBase :
@@ -2044,10 +2086,12 @@ bool station_known(int station_type) {
 
    return true;
 } 
+//[cf]
 
 
-
-bool is_mine(hisim station) {
+//[of]:bool is_mine(hisim station)
+bool is_mine(hisim station)
+{
    int station_type;
 
    if (T_Station != iSim.Type(station)) {
@@ -2060,6 +2104,7 @@ bool is_mine(hisim station) {
 
    return false;
 }
+//[cf]
 
 
 

@@ -19,6 +19,7 @@
 
 package tNewsNet;
 
+// Imports
 uses	Sim,
 		Debug,
 		Global,
@@ -30,33 +31,27 @@ uses	Sim,
 		String,
 		Task,
 		Text,
-  		Math,
+		Math,
 		iSim,
-      iMod,
+		iMod,
 		UniGUI,
-      tTime,
+		tTime,
 		tMail;
 
+// Exports
 provides StartNewsNet,
          SendNews,
          NewsAr,
          DayUpdate;
 
-
-
 prototype StartNewsNet();
-
 prototype ReadNewsMods();
-
 prototype task NewsUpdate();
-
 prototype hsim NewsAr();
-
 prototype SendNews(string sender,
                    string subject,
                    string body,
                    bool html_body);
-
 prototype DayUpdate();
 
 //*******************************************************************************************/
@@ -76,10 +71,8 @@ prototype DayUpdate();
 // player has looked at them, they are discarded.
 //
 //******************************************************************************************/
-SendNews(string sender,
-         string subject,
-         string body,
-         bool html_body)
+//[of]:SendNews(string sender, string subject, string body, bool html_body)
+SendNews(string sender, string subject, string body, bool html_body)
 {
    hsim archive = tMail.FindArchive("Network54");
    int id;
@@ -94,6 +87,8 @@ SendNews(string sender,
                   false,   //not critical
                   html_body);
 }
+//[cf]
+
 
 //*******************************************************************************************/
 //
@@ -101,10 +96,12 @@ SendNews(string sender,
 // 
 // 
 //******************************************************************************************/
+//[of]:hsim NewsAr()
 hsim NewsAr()
 {
    return tMail.FindArchive("Network54");
 }
+//[cf]
 
 
 //*******************************************************************************************/
@@ -120,7 +117,9 @@ hsim NewsAr()
 // the archives for the first time, looks for new material, and launches the update task.
 // 
 //******************************************************************************************/
-StartNewsNet(){
+//[of]:StartNewsNet()
+StartNewsNet()
+{
    hsim archive;
 
    // Create the archives.
@@ -158,6 +157,8 @@ StartNewsNet(){
 
 
 }
+//[cf]
+
 
 //*******************************************************************************************/
 //
@@ -178,6 +179,7 @@ StartNewsNet(){
 //
 //
 //******************************************************************************************/
+//[of]:ReadNewsMods()
 ReadNewsMods()
 {
    int cmod, cmessage, count;
@@ -246,7 +248,7 @@ ReadNewsMods()
       }//we have not read this mod
    }// each mod
 }//ReadNewsMods
-
+//[cf]
 
 
 //*******************************************************************************************/
@@ -255,7 +257,7 @@ ReadNewsMods()
 // read queue. 
 // 
 //******************************************************************************************/
-
+//[of]:task NewsUpdate()
 task NewsUpdate()
 {
    hsim read, submit;
@@ -292,26 +294,25 @@ task NewsUpdate()
       }
    }
 }
+//[cf]
+
 
 //******************************************************************************************/
 //  Called once per day, this checks the news_day.ini file for any news items that should
 // be shipped out today.
-
-//******************************************************************************************/
-
+//
 // File structure
-
 // [News]
 // item[0]="NameOfNewsItem"
-
+//
 // name must not have spaces
 // [NameOfNewsItem]
 // send_day=1
 // subject="subject line text in quote"
 // sender="sender line text"
 // html_file="html:/html/news/news1"
-
-
+//******************************************************************************************/
+//[of]:DayUpdate()
 DayUpdate()
 {
    hinifile news_data = INIFile.Create("ini:/html/news/news_day");
@@ -389,4 +390,5 @@ DayUpdate()
 
    INIFile.Destroy(news_data);
 }
+//[cf]
 
