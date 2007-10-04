@@ -10,6 +10,7 @@
 
 package tsLoadoutGui;
 
+//[of]:Imports
 uses	Sim,
 		iShip,
 		iSim,
@@ -34,25 +35,24 @@ uses	Sim,
 		iInventory,
 		iComms,
 		Math,
-      iDockPort, 
-      iMultiplay,
-      CargoTypes,
-      tEconUtil,
+		iDockPort, 
+		iMultiplay,
+		CargoTypes,
+		tEconUtil,
 		UniGUI,
-      tStationEnum,
-      tStation,
-      tEpicGuiEnum,
-      tEpicGui,
-      tsFaction,
-      tEpicMoney,
-      tsShip,
-      tsPlayerFleet,
-      uString;
+		tStationEnum,
+		tStation,
+		tEpicGuiEnum,
+		tEpicGui,
+		tsFaction,
+		tEpicMoney,
+		tsShip,
+		tsPlayerFleet,
+		uString;
+//[cf]
 
 
-
-
-
+//[of]:Exports
 provides MainWindow,
          RunCheck,
          StartScreen,
@@ -76,53 +76,35 @@ provides MainWindow,
          OnRemovePress,
    
          AttachCargoHardpoint;
+//[cf]
 
 
 
 prototype update_ship_info();
-
 prototype update_item_info();
 
-
-
 prototype create_player_inventory_list();
-
 prototype create_player_fleet_list();
-
 prototype create_ship_systems_list();
-
 prototype create_equipment_list();
-
 prototype bool allow_run();
 
-
 prototype select_ship(hship ship);
-
 prototype list hardpoint_list(hship ship);
-
 prototype list find_equipment(string hardpoint_type);
-
 prototype hcargo subsim2cargo(string subsim_template);
 
-
-
 prototype hide_window( hwindow win );
-
 prototype show_window( hwindow win );
-
 prototype tag_equipment(hship ship);
-
 prototype int rearm_cost(hship ship);
-
 prototype rearm_ship(hship ship);
 
-
 prototype string get_mountpoint_template(string hardpoint_type);
-
 prototype string get_mountpoint_type(hsubsim subsim);
 
 
-
+//[of]:bool allow_run()
 bool allow_run()
 {
    hmapentity station;
@@ -159,28 +141,37 @@ bool allow_run()
 
    return allow_trade;
 }
+//[cf]
 
 
+//[of]:RunCheck()
 RunCheck()
 {
    Global.SetBool("g_zz_ug_passme", allow_run());
 }
+//[cf]
+
 
 // Load the text files
+//[of]:SessionStart()
 SessionStart()
 {
    Text.Add("csv:/text/gt_loadout_gui");
 }
+//[cf]
 
 
 // Unload any text files.
+//[of]:SessionEnd()
 SessionEnd()
 {
    Text.Remove("csv:/text/gt_loadout_gui");
 }
+//[cf]
 
 
 // Call when loadout GUI is started.
+//[of]:AttachCargoHardpoint()
 AttachCargoHardpoint()
 {
    hinifile hardpoint_file = INIFile.Create("ini:/cargo_hardpoints");
@@ -260,6 +251,8 @@ AttachCargoHardpoint()
 
    INIFile.Destroy(hardpoint_file);
 }
+//[cf]
+
 
 //*******************************************************************************
 // 
@@ -267,22 +260,24 @@ AttachCargoHardpoint()
 //*******************************************************************************
 
 
+//[of]:float int2float(int value)
 float int2float(int value)
 {
    return value;
 }
+//[cf]
 
 
+//[of]:int float2int(float value)
 int float2int(float value)
 {
    return value;
 }
+//[cf]
 
 
 
-
-
-
+//[of]:hwindow create_border_button(int x, int y, int width, int height, hwindow parent, string name, string function)
 hwindow create_border_button(int x, int y, int width, int height, hwindow parent, string name, string function)
 {
    hwindow button, border;
@@ -320,24 +315,29 @@ hwindow create_border_button(int x, int y, int width, int height, hwindow parent
 
    return button;
 }
+//[cf]
 
 
 
+//[of]:StartScreen()
 StartScreen()
 {
     GUI.PopScreensTo("icSpaceFlightScreen");
     GUI.OverlayScreen("icPDAOverlayManager");
     iGUI.OverlayCustomScreen( "tsLoadoutGui.MainWindow" );
 }
+//[cf]
 
 
+//[of]:ExitScreen()
 ExitScreen()
 {
    UniGUI.UniGUIRemoveScreen();
 }
+//[cf]
 
 
-
+//[of]:select_system(hsubsim subsim)
 select_system(hsubsim subsim)
 {
    hwindow remove_button = GUI.Cast(Global.Handle("gt_loadoutgui_remove_button"));
@@ -357,9 +357,10 @@ select_system(hsubsim subsim)
    // Find matching equipment for the newly selected ship system.
    create_equipment_list();
 }
+//[cf]
 
 
-
+//[of]:OnSystemPress()
 OnSystemPress()
 {
    hwindow button = GUI.FocusedWindow();
@@ -369,8 +370,10 @@ OnSystemPress()
 
    select_system(subsim);
 }
+//[cf]
 
 
+//[of]:OnEquipmentPress()
 OnEquipmentPress()
 {
    hwindow button = GUI.FocusedWindow();
@@ -390,8 +393,10 @@ OnEquipmentPress()
 
    update_item_info();
 }
+//[cf]
 
 
+//[of]:task replace_task()
 task replace_task()
 {
    hsubsim subsim = Subsim.Cast(Global.Handle("gt_loadoutgui_subsim_select"));
@@ -448,8 +453,10 @@ task replace_task()
 
    Global.SetBool("gt_loadoutgui_allow_replace", true);
 }
+//[cf]
 
 
+//[of]:OnReplacePress()
 OnReplacePress()
 {
    if (Global.Bool("gt_loadoutgui_allow_replace")) {
@@ -457,17 +464,19 @@ OnReplacePress()
       Task.Detach(start replace_task());
    }
 }
+//[cf]
 
 
-
-
+//[of]:OnRepairPress()
 OnRepairPress()
 {
 
 
 }
+//[cf]
 
 
+//[of]:OnRearmPress()
 OnRearmPress()
 {
    hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
@@ -482,15 +491,19 @@ OnRearmPress()
    // The ship status has changed, force an update.
    select_ship(ship);
 }
+//[cf]
 
 
+//[of]:OnRefuelPress()
 OnRefuelPress()
 {
 
 
 }
+//[cf]
 
 
+//[of]:OnRemovePress()
 OnRemovePress()
 {
    hsubsim subsim = Subsim.Cast(Global.Handle("gt_loadoutgui_subsim_select"));
@@ -536,8 +549,30 @@ OnRemovePress()
 
    create_equipment_list();
 }
+//[cf]
 
 
+//[of]:OnShipPress()
+update_ship_info()
+{
+   hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
+   hwindow ship_info = GUI.Cast(Global.Handle("gt_loadoutgui_ship_info"));
+   string text;
+   int cost;
+
+   cost = Object.IntProperty(ship, "rearm_cost");
+
+   text = String.Join(text,"Ship Info ");
+   text = String.Join(text,Text.Field(Sim.Name(ship), FT_Text));
+   if (cost > 0) {
+      text = String.Join(text,"<br>Rearm Cost ");
+      text = String.Join(text,String.FromInt(cost));
+   }
+
+   text = uString.Htmlize(text);
+
+   GUI.SetTextWindowString( ship_info, text);
+}
 
 select_ship(hship ship)
 {
@@ -566,8 +601,6 @@ select_ship(hship ship)
    create_equipment_list();
 }
 
-
-
 OnShipPress()
 {
    hwindow button = GUI.FocusedWindow();
@@ -577,46 +610,10 @@ OnShipPress()
 
    select_ship(ship);
 }
+//[cf]
 
 
-
-OnInventoryItemPress()
-{
-   hwindow button = GUI.FocusedWindow();
-   hcargo cargo;
-
-   cargo = iCargo.Cast(Object.HandleProperty(button,"gt_loadoutgui_inventory"));
-
-   Global.SetHandle("gt_loadoutgui_inventory_select", cargo);
-
-   update_item_info();
-}
-
-
-
-update_ship_info()
-{
-   hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
-   hwindow ship_info = GUI.Cast(Global.Handle("gt_loadoutgui_ship_info"));
-   string text;
-   int cost;
-
-   cost = Object.IntProperty(ship, "rearm_cost");
-
-   text = String.Join(text,"Ship Info ");
-   text = String.Join(text,Text.Field(Sim.Name(ship), FT_Text));
-   if (cost > 0) {
-      text = String.Join(text,"<br>Rearm Cost ");
-      text = String.Join(text,String.FromInt(cost));
-   }
-
-   text = uString.Htmlize(text);
-
-   GUI.SetTextWindowString( ship_info, text);
-}
-
-
-
+//[of]:OnInventoryItemPress()
 update_item_info()
 {
    hcargo cargo = iCargo.Cast(Global.Handle("gt_loadoutgui_inventory_select"));
@@ -633,10 +630,23 @@ update_item_info()
    GUI.SetTextWindowString( item_info, text);
 }
 
+OnInventoryItemPress()
+{
+   hwindow button = GUI.FocusedWindow();
+   hcargo cargo;
+
+   cargo = iCargo.Cast(Object.HandleProperty(button,"gt_loadoutgui_inventory"));
+
+   Global.SetHandle("gt_loadoutgui_inventory_select", cargo);
+
+   update_item_info();
+}
+//[cf]
 
 
 // Search the cargo for the cargo type that creates
 // this kind of subsystem. Then return that cargo.
+//[of]:hcargo subsim2cargo(string subsim_template)
 hcargo subsim2cargo(string subsim_template)
 {
    hcargo cargo;
@@ -658,14 +668,13 @@ hcargo subsim2cargo(string subsim_template)
 
    return none;
 }
-
-
+//[cf]
 
 
 // Search all cargo types for those that have a matching
 // hardpoint type property.
 // An empty string for a hardpoint returns no equipment.
-
+//[of]:list find_equipment(string hardpoint_type)
 list find_equipment(string hardpoint_type)
 {
    list matching_equipment;
@@ -691,13 +700,10 @@ list find_equipment(string hardpoint_type)
 
    return matching_equipment;
 }
+//[cf]
 
 
-
-
-
-
-
+//[of]:create_equipment_list()
 create_equipment_list()
 {
    hwindow list_parent = GUI.Cast(Global.Handle("gt_loadoutgui_equipment_parent"));
@@ -805,12 +811,10 @@ create_equipment_list()
    GUI.SelectListBoxEntry(list_box, 0);
 
 }
+//[cf]
 
 
-
-
-
-
+//[of]:create_ship_systems_list()
 create_ship_systems_list()
 {
    hwindow list_parent = GUI.Cast(Global.Handle("gt_loadoutgui_systems_parent"));
@@ -915,9 +919,10 @@ create_ship_systems_list()
 
    select_system(subsim);
 }
+//[cf]
 
 
-
+//[of]:create_player_fleet_list()
 create_player_fleet_list()
 {
    hwindow list_parent = GUI.Cast(Global.Handle("gt_loadoutgui_player_fleet_parent"));
@@ -1015,13 +1020,12 @@ create_player_fleet_list()
 
    GUI.SelectListBoxEntry(list_box, index);
 }
-
-
-
+//[cf]
 
 
 // This function builds a list of all the cargo items in the player
 // inventory that are loadout supported systems.
+//[of]:set systems_inventory()
 set systems_inventory()
 {
    int total = CT_AdvancedHullMaterialRefit;
@@ -1041,9 +1045,10 @@ set systems_inventory()
    }
    return all_cargo;
 }
+//[cf]
 
 
-
+//[of]:create_player_inventory_list()
 create_player_inventory_list()
 {
    hwindow list_parent = GUI.Cast(Global.Handle("gt_loadoutgui_psystems_inv_parent"));
@@ -1136,10 +1141,10 @@ create_player_inventory_list()
    Global.CreateHandle("gt_loadoutgui_inventory_select", GA_Write|GA_NoSave, cargo);
    GUI.SelectListBoxEntry(list_box, 0);
 }
+//[cf]
  
 
-
-
+//[of]:MainWindow()
 MainWindow()
 {
    hwindow lh_shady, rh_shady;
@@ -1478,9 +1483,11 @@ MainWindow()
 
    // check if we should display the rearm or refuel buttons.
 }
+//[cf]
 
 
 // Returns a list of subsims that can be replaced
+//[of]:list hardpoint_list(hship ship)
 list hardpoint_list(hship ship)
 {
    int subsim_count = Sim.SubsimCount(ship);
@@ -1498,33 +1505,33 @@ list hardpoint_list(hship ship)
 
    return hardpoints;
 }
-
-
-
-
+//[cf]
 
 
 // Returns the price of the refuel job of the currently selected ship.
+//[of]:int refuel_cost(hship ship)
 int refuel_cost(hship ship)
 {
 
 
    return 0;
 }
-
+//[cf]
 
 
 // Cost to repair the player ship.
+//[of]:int repair_cost(hship ship)
 int repair_cost(hship ship)
 {
 
 
    return 0;
 }
-
+//[cf]
 
 
 // Cost to replace ammo and missiles.
+//[of]:int rearm_cost(hship ship)
 int rearm_cost(hship ship)
 {
 
@@ -1564,7 +1571,10 @@ int rearm_cost(hship ship)
 
    return total_cost;
 }
+//[cf]
 
+
+//[of]:rearm_ship(hship ship)
 rearm_ship(hship ship)
 {
    int subsim_count = Sim.SubsimCount(ship);
@@ -1582,8 +1592,10 @@ rearm_ship(hship ship)
       }
    }
 } 
+//[cf]
 
 
+//[of]:string get_mountpoint_template(string hardpoint_type)
 string get_mountpoint_template(string hardpoint_type)
 {
    list mountpoints = Global.List("gt_loadoutgui_mountpoint_list");
@@ -1601,7 +1613,10 @@ string get_mountpoint_template(string hardpoint_type)
 
    return "";
 }
+//[cf]
 
+
+//[of]:string get_mountpoint_type(hsubsim subsim)
 string get_mountpoint_type(hsubsim subsim)
 {
    list mountpoints = Global.List("gt_loadoutgui_mountpoint_list");
@@ -1621,8 +1636,11 @@ string get_mountpoint_type(hsubsim subsim)
 
    return "";
 }
+//[cf]
+
 
 // Pull the ships equipment and place it into inventory.
+//[of]:RemoveEquipment(hship ship)
 RemoveEquipment(hship ship)
 {
    list ship_systems;
@@ -1655,8 +1673,11 @@ RemoveEquipment(hship ship)
       Object.AddStringProperty(new_subsim, "hardpoint_type", hardpoint_type);
    }
 }
+//[cf]
+
 
 // Attach the cargo index property to the subsims.
+//[of]:tag_equipment(hship ship)
 tag_equipment(hship ship)
 {
    list ship_systems;
@@ -1689,27 +1710,33 @@ tag_equipment(hship ship)
       }
    }
 }
+//[cf]
+
 
 //
 // Fn: hide_window
 // Desc: Make window invisible and prevent it getting focus
 //
+//[of]:hide_window( hwindow win )
 hide_window( hwindow win )
 {
 	GUI.SetVisible( win, false );
 	GUI.SetWindowAcceptFocus( win, false );
 }
+//[cf]
 
 
 //
 // Fn: show_window
 // Desc: Make window visible and allow focus
 //
+//[of]:show_window( hwindow win )
 show_window( hwindow win )
 {
 	GUI.SetVisible( win, true );
 	GUI.SetWindowAcceptFocus( win, true );
 }
+//[cf]
 
 
 

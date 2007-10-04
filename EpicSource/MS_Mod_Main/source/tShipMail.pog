@@ -12,6 +12,7 @@
 
 package tShipMail;
 
+//[of]:Imports
 uses	Sim,
 		Debug,
 		Global,
@@ -23,10 +24,10 @@ uses	Sim,
 		String,
 		Task,
 		Text,
-  		Math,
+			Math,
 		iShip,
 		iSim,
-   	iGame,
+		iGame,
 		iGUI,
 		iHUD,
 		iHabitat,
@@ -35,15 +36,17 @@ uses	Sim,
 		iCargo,
 		iInventory,
 		iComms,
-      iMod,
+		iMod,
 		UniGUI,
-      tEpicGuiEnum,
-      tEpicGui,
+		tEpicGuiEnum,
+		tEpicGui,
 		tMail,
-//		tBaseNet,
+		//tBaseNet,
 		tNewsNet;
+//[cf]
 
 
+//[of]:Exports
 provides StartScreen,
          RunCheck,
          SendEmail,
@@ -57,29 +60,18 @@ provides StartScreen,
          ArchiveButtonPress,
          DeleteButtonPress,
          Register;
-
+//[cf]
 
 
 prototype CreateGlobals();
-
 prototype CreateArchiveView();
-
 prototype CreateMailView();
-
 prototype CreateMessageView();
-
-
 prototype ListMailButtonPress();
-
 prototype ListCancelButtonPress();
-
-
 prototype MailCancelButtonPressed();
-
 prototype MailAcceptButtonPressed();
-
 prototype DeleteButtonPress();
-
 prototype bool player_docked();
 
 
@@ -101,12 +93,8 @@ prototype bool player_docked();
 // It returns the email id number. This number is needed to test if an email has been 
 //     read by the player.
 //******************************************************************************************/
-int SendEmail(string sender,
-              string subject,
-              string body,
-              string reply_function,
-              bool critical,
-              bool html_body)
+//[of]:int SendEmail(string sender, string subject, string body, string reply_function, bool critical, bool html_body)
+int SendEmail(string sender, string subject, string body, string reply_function, bool critical, bool html_body)
 {
    hsim archive = tMail.FindArchive("ShipMail");
    int id;
@@ -125,6 +113,7 @@ int SendEmail(string sender,
 
    return id;
 }
+//[cf]
 
 
 //*******************************************************************************************/
@@ -135,12 +124,14 @@ int SendEmail(string sender,
 //
 // returns true if the mail has been read. returns false if mail unread or deleted.
 //******************************************************************************************/
+//[of]:bool Read(int mail_id)
 bool Read(int mail_id)
 {
    hsim archive = tMail.FindArchive("ShipMail");
 
    return tMail.isRead(archive, mail_id);
 }
+//[cf]
 
 
 //*******************************************************************************************/
@@ -156,6 +147,7 @@ bool Read(int mail_id)
 // 
 //******************************************************************************************/
 
+//[of]:CreateGlobals()
 CreateGlobals()
 {
    hsim empty_sim;
@@ -191,9 +183,7 @@ CreateGlobals()
 
    Global.CreateInt("g_trout_shipmail_message_test_count",GA_Write|GA_NoSave, 1);
 }
-
-
-
+//[cf]
 
 
 //*******************************************************************************************/
@@ -202,7 +192,7 @@ CreateGlobals()
 // if the mail has an accept task attached, it will display an accept button.
 // It is redrawn when the user selects a new mail item.
 //******************************************************************************************/
-
+//[of]:CreateMessageView()
 CreateMessageView()
 {
 
@@ -298,9 +288,12 @@ CreateMessageView()
    }
    debug Debug.PrintString("End Create Message View\n");
 }
+//[cf]
+
 
 // runs when the user presses delete mail. Toggles the mail state.
 // changes the name to save, to allow them to save the mail again.
+//[of]:DeleteButtonPress()
 DeleteButtonPress()
 {
    hwindow button;
@@ -323,9 +316,12 @@ DeleteButtonPress()
    debug Debug.PrintHandle(mail);
    debug Debug.PrintString("  End Delete\n");
 }
+//[cf]
+
 
 // If the user presses the Accept button, the function that was 
 // sent with the mail is run.
+//[of]:MailAcceptButtonPressed()
 MailAcceptButtonPressed()
 {  
    hsim mail = Sim.Cast(Global.Handle("g_trout_shipmail_current_mail"));
@@ -337,6 +333,8 @@ MailAcceptButtonPressed()
 
    tMail.RunReply(mail);
 }
+//[cf]
+
 
 //*******************************************************************************************/
 //
@@ -344,6 +342,7 @@ MailAcceptButtonPressed()
 // The bottom half has two message lists, new mail and old mail. When the user presses a 
 // mail button, the mail is selected, and the message window is redrawn.
 //******************************************************************************************/
+//[of]:CreateMailView()
 CreateMailView()
 {
    hwindow main_split;
@@ -571,8 +570,11 @@ CreateMailView()
    Global.SetHandle("g_trout_shipmail_back_button",back_button);
 
 }
+//[cf]
+
 
 // User selected a new mail item to view. Set current, redraw message window.
+//[of]:MailViewListPress()
 MailViewListPress()
 {
    hsim mail;
@@ -588,8 +590,11 @@ MailViewListPress()
 
    CreateMessageView();
 }
+//[cf]
+
 
 // This takes the user back to the list of archives.
+//[of]:MailViewBackPress()
 MailViewBackPress()
 {
    hwindow main;
@@ -606,6 +611,8 @@ MailViewBackPress()
    CreateArchiveView();
 
 }
+//[cf]
+
 
 //*******************************************************************************************/
 //
@@ -613,7 +620,7 @@ MailViewBackPress()
 // for further viewing. It also has a text box with a description of each archive.
 // 
 //******************************************************************************************/
-
+//[of]:CreateArchiveView()
 CreateArchiveView()
 {
    hwindow shady_bar;
@@ -771,9 +778,11 @@ CreateArchiveView()
    Global.SetHandle("g_trout_shipmail_archive_view",main_split);
    Global.SetHandle("g_trout_shipmail_back_button",back_button);
 }
+//[cf]
 
 
 // Started when the user selects an archive they want to view.
+//[of]:ArchiveButtonPress()
 ArchiveButtonPress()
 {
    hwindow view;
@@ -808,8 +817,7 @@ ArchiveButtonPress()
    // Create the mail view for the selected archive.
    CreateMailView();
 }
-
-
+//[cf]
 
 
 //*******************************************************************************************/
@@ -817,8 +825,7 @@ ArchiveButtonPress()
 // Sets up the main Shipmail window. 
 //
 //******************************************************************************************/
-
-
+//[of]:ShipMailScreen()
 ShipMailScreen()
 {
 
@@ -855,12 +862,15 @@ ShipMailScreen()
    // Create the window to display the archive choices.
    CreateArchiveView();
 }
+//[cf]
+
 
 //*******************************************************************************************/
 //
 // Called by UniGUI to begin ShipMail.
 //
 //******************************************************************************************/
+//[of]:StartScreen()
 StartScreen()
 {
 
@@ -869,20 +879,26 @@ StartScreen()
    iGUI.OverlayCustomScreen("tShipMail.ShipMailScreen");
 
 }
+//[cf]
+
 
 //*******************************************************************************************/
 //
 // Called by UniGUI to ask if we want to run, which is ALWAYS!
 //
 //******************************************************************************************/
+//[of]:RunCheck()
 RunCheck()
 {
    Global.SetBool("g_zz_ug_passme",true);
 }
+//[cf]
+
 
 // Checks if the player is really docked to the nearby station.
 // Used for archives like BaseNet that should only work when a player
 // is docked.
+//[of]:bool player_docked()
 bool player_docked()
 {
    hship pship;
@@ -894,13 +910,14 @@ bool player_docked()
    return iSim.IsDockedToStructure(pship, here);
 
 }
+//[cf]
 
 
 //*******************************************************************************************/
 // This task looks for unread mail and flashes the hud.
 // Let the player know the inbox has unread mail. Quietly.
 //******************************************************************************************/
-
+//[of]:task ShipMailWatch()
 task ShipMailWatch()
 {
    hsim archive;
@@ -921,6 +938,8 @@ task ShipMailWatch()
       }//every 
    }//schedule
 }
+//[cf]
+
 
 //*******************************************************************************************/
 //
@@ -929,6 +948,7 @@ task ShipMailWatch()
 // It sets up the email archive the very first time, and it begins the other archive services
 // 
 //******************************************************************************************/
+//[of]:StartMyMod()
 StartMyMod()
 {
    hsim archive;
@@ -970,9 +990,12 @@ StartMyMod()
    // unit test code.
    // Task.Call("tShipTest.StartTest");
 }
+//[cf]
+
 
 // Sends a response to the Welcome message
 // registration accept button press.
+//[of]:Register()
 Register()
 {
    
@@ -983,13 +1006,14 @@ Register()
                false, //critical    
                true);//html 
 }
-
+//[cf]
 
 
 //*******************************************************************************************/
 // Ends the shipmail app.
 //
 //******************************************************************************************/
+//[of]:OnQuit()
 OnQuit()
 {
 
@@ -999,4 +1023,6 @@ OnQuit()
    UniGUI.UniGUIRemoveScreen();
 
 }
+//[cf]
+
 

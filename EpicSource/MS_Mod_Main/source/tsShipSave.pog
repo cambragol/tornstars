@@ -12,68 +12,63 @@
  
 package tsShipSave;
 
-uses    Sim,
-iShip,
-iSim,
-iPilotSetup,
-Debug,
-Global,
-GUI,
-iDirector,
-iGUI,
-iHUD,
-iHabitat,
-iMapEntity,
-INIFile,
-Input,
-List,
-Object,
-String,
-Task,
-Text,
-iUtilities,
-iCargo,
-iInventory,
-iComms,
-iConversation,
-iAi,
-Math,
-CargoTypes,
+//[of]:Imports
+uses	Sim,
+		iShip,
+		iSim,
+		iPilotSetup,
+		Debug,
+		Global,
+		GUI,
+		iDirector,
+		iGUI,
+		iHUD,
+		iHabitat,
+		iMapEntity,
+		INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+		iUtilities,
+		iCargo,
+		iInventory,
+		iComms,
+		iConversation,
+		iAi,
+		Math,
+		CargoTypes,
+		
+		tsDebug,
+		tsPosition,
+		tsShip;
+//[cf]
 
-   tsDebug,
-   tsPosition,
-   tsShip;
 
-
-
+//[of]:Exports
 provides Save,
          Restore,
          SaveList,
          RestoreList,
          Relink;
+//[cf]
 
 
 
 
 prototype int Save(hship ship);
-
 prototype hship Restore(int id);
-
 prototype string save_cargo_pods(hship ship);
-
 prototype list restore_cargo_pods(hship ship);
-
 prototype save_subsim_list(hship ship);
-
 prototype int save_subsim(hsubsim subsim);
-
 prototype restore_subsim_list(hship ship);
-
 prototype restore_subsim(hship ship, int id);
-
 prototype add_restore_list(hship ship);
-
 prototype hship find(list ship_list, int id);
+
 
 /*
    Saves the ship and any cargo pods docked to the ship.
@@ -81,9 +76,7 @@ prototype hship find(list ship_list, int id);
    Returns the id used to save.
    
 */
-
-
-
+//[of]:int SaveList(list ship_list, string save_key)
 int SaveList(list ship_list, string save_key)
 {
    int id, i, total, count;
@@ -114,9 +107,11 @@ int SaveList(list ship_list, string save_key)
 
    return total;
 }
+//[cf]
 
 
 // Uses the save key to search for saved ships.
+//[of]:list RestoreList(string save_key)
 list RestoreList(string save_key)
 {
    list ship_list;
@@ -151,9 +146,10 @@ list RestoreList(string save_key)
 
    return ship_list;
 }
+//[cf]
 
 
-
+//[of]:int Save(hship ship)
 int Save(hship ship)
 {
    int id = Object.IDModulus( ship, 2147483647);
@@ -233,9 +229,10 @@ int Save(hship ship)
 
    return id;
 }
+//[cf]
 
 
-
+//[of]:hship Restore(int id)
 hship Restore(int id)
 {
    int ship_type;
@@ -382,10 +379,12 @@ hship Restore(int id)
 
    return ship;
 }
+//[cf]
 
 
 // Call this function after all restore operations are done.
 // It will relink between all restored groups.
+//[of]:Relink()
 Relink()
 {
    list ship_list, empty_list;
@@ -407,9 +406,10 @@ Relink()
 
    Global.Destroy("tsss_restore_list");
 }
+//[cf]
 
 
-
+//[of]:hship find(list ship_list, int id)
 hship find(list ship_list, int id)
 {
    int total, i;
@@ -426,11 +426,10 @@ hship find(list ship_list, int id)
 
    return none;
 }
+//[cf]
 
 
-
-
-
+//[of]:string save_cargo_pods(hship ship)
 string save_cargo_pods(hship ship)
 {
    string save_key;
@@ -444,8 +443,10 @@ string save_cargo_pods(hship ship)
    SaveList(pod_list, save_key);
    return save_key;
 }
+//[cf]
 
 
+//[of]:list restore_cargo_pods(hship ship)
 list restore_cargo_pods(hship ship)
 {
    list pod_list;
@@ -459,8 +460,10 @@ list restore_cargo_pods(hship ship)
    pod_list = RestoreList(save_key);
    return pod_list;
 }
+//[cf]
 
 
+//[of]:save_subsim_list(hship ship)
 save_subsim_list(hship ship)
 {
    int i, total, id;
@@ -496,8 +499,10 @@ save_subsim_list(hship ship)
       Debug.PrintString(" subsim save count");
    }
 }
+//[cf]
 
 
+//[of]:restore_subsim_list(hship ship)
 restore_subsim_list(hship ship)
 {
    int i, total, id;
@@ -520,9 +525,10 @@ restore_subsim_list(hship ship)
       restore_subsim(ship, id);
    }
 }
+//[cf]
 
 
-
+//[of]:int save_subsim(hsubsim subsim)
 int save_subsim(hsubsim subsim)
 {
    int id = Object.IDModulus(subsim, 2147483647);
@@ -535,8 +541,10 @@ int save_subsim(hsubsim subsim)
 
    return id;
 }
+//[cf]
  
 
+//[of]:restore_subsim(hship ship, int id)
 restore_subsim(hship ship, int id)
 {
    string save_key = String.Join("tsSub",String.FromInt(id));
@@ -581,11 +589,10 @@ restore_subsim(hship ship, int id)
       Debug.PrintString(" restore subsim\n");
    }
 }
-
-
-
+//[cf]
  
 
+//[of]:add_restore_list(hship ship)
 add_restore_list(hship ship)
 {
    list ship_list;
@@ -601,6 +608,7 @@ add_restore_list(hship ship)
       }
    }
 }
+//[cf]
 
 
 /*    

@@ -13,7 +13,7 @@
 
 package tsWingman;
 
-// Imports
+//[of]:Imports
 uses	Sim,
 		iShip,
 		iSim,
@@ -52,15 +52,17 @@ uses	Sim,
 		tLProduction,
 		tMegaTrucking,
 		tStationFilter;
+//[cf]
 
 
-// Exports
+//[of]:Exports
 provides GiveOrder,
          Start,
          OrderTarget,
          CurrentOrder,
          Save,
          Restore;
+//[cf]
 
 
 

@@ -19,7 +19,7 @@
 
 package tNewsNet;
 
-// Imports
+//[of]:Imports
 uses	Sim,
 		Debug,
 		Global,
@@ -37,12 +37,16 @@ uses	Sim,
 		UniGUI,
 		tTime,
 		tMail;
+//[cf]
 
-// Exports
+
+//[of]:Exports
 provides StartNewsNet,
          SendNews,
          NewsAr,
          DayUpdate;
+//[cf]
+
 
 prototype StartNewsNet();
 prototype ReadNewsMods();

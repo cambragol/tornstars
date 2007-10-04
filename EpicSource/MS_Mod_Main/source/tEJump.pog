@@ -13,6 +13,7 @@
 
 package tEJump;
 
+//[of]:Imports
 uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, 
 iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
 iConversation, iFormation, Group, Text, iEmail, State, 
@@ -28,10 +29,10 @@ iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
    tsShipEnum,
    tsShip,
    tsPlayerFleet;
+//[cf]
 
 
-
-
+//[of]:Exports
 provides StartGame,
          Init,
          SelectDialog,
@@ -39,52 +40,37 @@ provides StartGame,
          DebugJump,
          IsCapsuleSpace,
          IsCapsuleJumping;
+//[cf]
    
 
-
 prototype task jump_watch();
-
-
 prototype set_known(string start_lpoint, string end_lpoint);
-
 prototype bool is_known(string start_lpoint, string end_lpoint);
-
 prototype bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty, float route_cost);
-
 prototype set find_following_ships(hship ship);
-
 prototype jump_ship(hship ship, hisim lpoint, int difficulty);
-
 prototype bool jump_simulation(hship player, list player_fleet, hisim target_lpoint, int difficulty);
-
 prototype bool player_watch(hship player, hisim exit_mark, float route_time);
-
-
 prototype int sensor_rating(hship ship);
-
 prototype int jump_rating(hship ship);
-
 prototype init_system(string system_name);
-
 prototype init_lpoints();
-
 prototype string difficulty2name(int difficulty);
-
 prototype string difficulty2key(int difficulty);
-
 prototype int float2int(float value);
-
 prototype float int2float(int value);
-
 prototype add_flash(hship player);
 
 
+//[of]:StartGame() 
 StartGame() 
 {
     Global.CreateBool("tEJumpRunOnce",GA_Write, false);
 }
+//[cf]
 
 // Call during final setup.
+//[of]:Init() 
 Init() 
 {
     float min_damage, max_damage;
@@ -119,10 +105,11 @@ Init()
 
     Input.BindKey( "tEJump.SelectDialog","Multiplayer.Score");
 }
+//[cf]
 
 
 // Checks if the requested system is really the capsule space simulation.
-
+//[of]:bool IsCapsuleSpace(string system)
 bool IsCapsuleSpace(string system)
 {
    if ("map:/geog/middle/capsule_space" == system) {
@@ -131,14 +118,18 @@ bool IsCapsuleSpace(string system)
 
    return false;
 }
+//[cf]
 
 
 // Returns true when the player ship is capsule jumping 
 // between systems.
+//[of]:bool IsCapsuleJumping()
 bool IsCapsuleJumping()
 {
    return Global.Bool("gt_ejump_player_jumping");
 }
+//[cf]
+
 
 /*
 
@@ -162,7 +153,9 @@ bool IsCapsuleJumping()
 // This routine is called when the player enters space. It will
 // hide all the lpoints the player has not already found or
 // that have no level 1 routes leaving them.
-init_lpoints() {
+//[of]:init_lpoints()
+init_lpoints()
+{
     hinifile geog = INIFile.Create("ini:/geog/clusters");
     hsim station;
     int count;
@@ -183,10 +176,12 @@ init_lpoints() {
 
     INIFile.Destroy(geog);
 }
+//[cf]
 
 
-
-init_system(string system_name) {
+//[of]:init_system(string system_name)
+init_system(string system_name)
+{
     hinifile system_file;
     string system_file_name = String.Join("ini", String.TrimLeft(system_name,3));
     string global_name;
@@ -315,13 +310,15 @@ init_system(string system_name) {
     }
     */
 }
+//[cf]
 
 
 // This task is spawned when the player has activated a jump point with jump sensors.
 // If the player gets close to the point, it will jump the player to the points destination
 // system and location.
-
-task jump_watch() {
+//[of]:task jump_watch()
+task jump_watch()
+{
     hlagrangepoint jump_point;
     hisim target_lpoint;
     int difficulty, route_cost;
@@ -409,6 +406,7 @@ task jump_watch() {
         Task.Sleep(Task.Current(), 1.0);
     }
 }
+//[cf]
 
 
 
@@ -432,7 +430,9 @@ end_lpoint[0]=
 
 // This function tracks if a player knows about a specific route between
 // two systems.
-set_known(string start_lpoint, string end_lpoint) {
+//[of]:set_known(string start_lpoint, string end_lpoint)
+set_known(string start_lpoint, string end_lpoint)
+{
     string global_name;
 
     global_name = String.Join("tejump", start_lpoint);
@@ -440,9 +440,12 @@ set_known(string start_lpoint, string end_lpoint) {
 
     Global.CreateBool(global_name, GA_Write, true);
 }
+//[cf]
 
 
-bool is_known(string start_lpoint, string end_lpoint) {
+//[of]:bool is_known(string start_lpoint, string end_lpoint)
+bool is_known(string start_lpoint, string end_lpoint)
+{
     string global_name;
 
     global_name = String.Join("tejump", start_lpoint);
@@ -450,12 +453,15 @@ bool is_known(string start_lpoint, string end_lpoint) {
 
     return Global.Exists(global_name);
 }
+//[cf]
 
 
 
 // Returns only those routes the player has taken
 // or are standard jump routes.
-list filter_known(list route_list) {
+//[of]:list filter_known(list route_list)
+list filter_known(list route_list)
+{
     int total,i;
     hsim route;
     list final_list;
@@ -471,10 +477,13 @@ list filter_known(list route_list) {
 
     return final_list;
 }
+//[cf]
 
 // Returns only those routes that are equal or lower
 // than the players current sensor level.
-list filter_sensors(list route_list, int sensor_level) {
+//[of]:list filter_sensors(list route_list, int sensor_level)
+list filter_sensors(list route_list, int sensor_level)
+{
     int total,i;
     hsim route;
     list final_list;
@@ -490,13 +499,16 @@ list filter_sensors(list route_list, int sensor_level) {
 
     return final_list;
 }
+//[cf]
 
 
 
 // This returns the list of routes attached to an
 // lpoint with names updated to match the players
 // current travels.
-list gen_route_list(hlagrangepoint lpoint) {
+//[of]:list gen_route_list(hlagrangepoint lpoint)
+list gen_route_list(hlagrangepoint lpoint)
+{
     int difficulty, i, total;
 
     string end_system, lpoint_name, end_lpoint, name;
@@ -546,17 +558,22 @@ list gen_route_list(hlagrangepoint lpoint) {
 
     return route_list;
 }
+//[cf]
 
 
 // Return the list of jump routes that the player has flown
 // or are stable that leave from this lpoint.
-list KnownList(hlagrangepoint lpoint) {
+//[of]:list KnownList(hlagrangepoint lpoint)
+list KnownList(hlagrangepoint lpoint)
+{
     return filter_known(gen_route_list(lpoint));
 }
+//[cf]
 
 
-
-task select_dialog() {
+//[of]:SelectDialog()
+task select_dialog()
+{
     int i, total, selection, response, difficulty, rating, cost;
     list route_list;
     hsim route;
@@ -766,7 +783,8 @@ task select_dialog() {
 }
 
 
-SelectDialog() {
+SelectDialog()
+{
 
    if (IsCapsuleJumping()) {
       iHUD.PlayAudioCue(AC_InvalidInput);
@@ -777,12 +795,15 @@ SelectDialog() {
       Task.Detach(start select_dialog());
    }
 }
+//[cf]
 
 
 
 // Returns the capsule drives efficiency.
 // If the drive is missing or disabled, it will return 0.0.
-int jump_rating(hship ship) {
+//[of]:int jump_rating(hship ship)
+int jump_rating(hship ship)
+{
     int i, subsim_count;
     hsubsim subsim;
     float effect;
@@ -803,11 +824,14 @@ int jump_rating(hship ship) {
 
     return 0;
 }
+//[cf]
 
 
 // Looks over the player ship looking for sensors.
 // If the player ship has no sensors, it returns 0 (cannot see anything).
-int sensor_rating(hship ship) {
+//[of]:int sensor_rating(hship ship)
+int sensor_rating(hship ship)
+{
     int i, subsim_count;
     hsubsim subsim;
     float effect;
@@ -836,6 +860,8 @@ int sensor_rating(hship ship) {
 
     return 0;
 }
+//[cf]
+
 
 // Read the ships jump drive rating
 // Compare to the route difficulty
@@ -847,7 +873,9 @@ int sensor_rating(hship ship) {
 // Put the ship near the exit point, with the proper orientation,
 // and scattered around a little.
 // Set velocity to be capsule jump exit speed.
-jump_ship(hship ship, hisim lpoint, int difficulty) {
+//[of]:jump_ship(hship ship, hisim lpoint, int difficulty)
+jump_ship(hship ship, hisim lpoint, int difficulty)
+{
     int drive_rating;
     float difference;
     float damage;
@@ -909,8 +937,10 @@ jump_ship(hship ship, hisim lpoint, int difficulty) {
 
     add_flash(ship);
 }
+//[cf]
 
 
+//[of]:add_flash(hship player)
 add_flash(hship player)
 {
    hsim flash;
@@ -918,9 +948,12 @@ add_flash(hship player)
    flash = Sim.Create("ini:/sims/ships/flash","jumpflash");
    Sim.PlaceAt(flash, player);
 }
+//[cf]
 
 
-bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty, float route_cost) {
+//[of]:bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty, float route_cost)
+bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty, float route_cost)
+{
     hship player = iShip.FindPlayerShip();
     hship wingman;
     list player_fleet;
@@ -1094,12 +1127,14 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty, fl
 
     return jump_success;
 }
+//[cf]
 
 
 
 // Cull the jump simulation and all objects
 // after some time has past to allow the player
 // to get free.
+//[of]:task cull_task(hgroup group, hisim end_mark, hship player)
 task cull_task(hgroup group, hisim end_mark, hship player)
 {
    hlagrangepoint lpoint;
@@ -1120,7 +1155,10 @@ task cull_task(hgroup group, hisim end_mark, hship player)
       */
    }
 }
+//[cf]
 
+
+//[of]:set_culling(hgroup group)
 set_culling(hgroup group)
 {  
    int i, total;
@@ -1135,10 +1173,12 @@ set_culling(hgroup group)
       Sim.SetCullable(jump_sim, true);
    }
 }
+//[cf]
 
 
 
 // Creates a tube section and reads any needed INI file properties.
+//[of]:hisim create_tube(string section_template, string section_name)
 hisim create_tube(string section_template, string section_name)
 {
    hisim tube;
@@ -1152,9 +1192,10 @@ hisim create_tube(string section_template, string section_name)
 
    return tube;
 }
+//[cf]
 
 
-
+//[of]:hisim create_bubble(string section_template)
 hisim create_bubble(string section_template)
 {
    hisim bubble;
@@ -1173,11 +1214,12 @@ hisim create_bubble(string section_template)
    iShip.SetFreeWithoutPilot( iShip.Cast(bubble), true );
    return bubble;
 }
-
+//[cf]
 
 
 // Call once the tubes are connected to place unmoving and moving lights
 // inside the tube.
+//[of]:add_lights(hisim jump_tube, hgroup cull_group)
 add_lights(hisim jump_tube, hgroup cull_group)
 {
    string jump_template = Sim.TemplateName(jump_tube);
@@ -1249,7 +1291,10 @@ add_lights(hisim jump_tube, hgroup cull_group)
 
    INIFile.Destroy(jump_file);
 }
+//[cf]
 
+
+//[of]:hship create_player(hship player, hinifile jump_file)
 hship create_player(hship player, hinifile jump_file)
 {
    string jump_ship_name;
@@ -1292,13 +1337,11 @@ hship create_player(hship player, hinifile jump_file)
 
    return jump_sim;
 }
+//[cf]
 
 
-bool create_simulation(hmapentity center, 
-                       int difficulty, 
-                       hship player,
-                       hgroup cull_group, 
-                       hinifile jump_file)
+//[of]:bool create_simulation(hmapentity center, int difficulty, hship player, hgroup cull_group, hinifile jump_file)
+bool create_simulation(hmapentity center, int difficulty, hship player, hgroup cull_group, hinifile jump_file)
 {
    int count, i;
    string difficulty_key = difficulty2key(difficulty);
@@ -1448,12 +1491,13 @@ bool create_simulation(hmapentity center,
 
    return true;
 }
+//[cf]
 
 
 // 
 // Run the player through the jump simulation.
 //
-
+//[of]:bool jump_simulation(hship player, list player_fleet,  hisim target_lpoint, int difficulty)
 bool jump_simulation(hship player, list player_fleet,  hisim target_lpoint, int difficulty)
 {
    hinifile jump_file = INIFile.Create("ini:/jump_controls");
@@ -1612,8 +1656,10 @@ bool jump_simulation(hship player, list player_fleet,  hisim target_lpoint, int 
 
    return result;
 }
+//[cf]
 
 
+//[of]:bool player_watch(hship player, hisim exit_mark, float route_time)
 bool player_watch(hship player, hisim exit_mark, float route_time)
 {
    float start_distance, half_distance;
@@ -1745,12 +1791,15 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
 
    return false;
 }
+//[cf]
 
 
 // Recurse from the player ship,
 // finding all those ships that are following the player, or 
 // following a wingman following the player.
-set find_following_ships(hship ship) {
+//[of]:set find_following_ships(hship ship)
+set find_following_ships(hship ship)
+{
     list player_ships;
     set following_ships;
     int i, total;
@@ -1801,10 +1850,13 @@ set find_following_ships(hship ship) {
 
     return following_ships;
 }
+//[cf]
 
 
 
-string difficulty2name(int difficulty) {
+//[of]:string difficulty2name(int difficulty)
+string difficulty2name(int difficulty)
+{
 
     switch (difficulty) {
     case 1:
@@ -1828,8 +1880,12 @@ string difficulty2name(int difficulty) {
 
     return String.FormatInt(" %d ", difficulty);
 }
+//[cf]
 
-string difficulty2key(int difficulty) {
+
+//[of]:string difficulty2key(int difficulty)
+string difficulty2key(int difficulty)
+{
 
     switch (difficulty) {
     case 1:
@@ -1857,8 +1913,10 @@ string difficulty2key(int difficulty) {
 
     return String.FormatInt(" %d ", difficulty);
 }
+//[cf]
 
 
+//[of]:DebugJump()
 DebugJump()
 {
     hship player = iShip.FindPlayerShip();
@@ -1906,16 +1964,24 @@ DebugJump()
        jump_ship(wingman, target_lpoint, 1);
     }
 }
+//[cf]
 
+
+//[of]:int float2int(float value)
 int float2int(float value)
 {
    return value;
 }
+//[cf]
 
+
+//[of]:float int2float(int value)
 float int2float(int value)
 {
    return value;
 }
+//[cf]
+
 
 /* 
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES

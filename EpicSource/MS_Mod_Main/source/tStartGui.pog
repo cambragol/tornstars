@@ -12,6 +12,7 @@
 
 package tStartGui;
 
+//[of]:Imports
 uses	Sim,  
 		iShip,
 		iSim,
@@ -23,54 +24,50 @@ uses	Sim,
 		iHUD,
 		iHabitat,
 		iMapEntity,
-      INIFile,
+		INIFile,
 		Input,
 		List,
 		Object,
 		String,
 		Task,
 		Text,
-      iAI,
-      iCargo,
-      iInventory,
-      CargoTypes,
-      tEconUtil,
-      tPodUtil,
-      tsFaction,
+		iAI,
+		iCargo,
+		iInventory,
+		CargoTypes,
+		tEconUtil,
+		tPodUtil,
+		tsFaction,
 		UniGUI,
-      tEpicGuiEnum,
-      tEpicGui,
-      tsShip,
-      tsPlayerFleet,
-      tEpicMoney;
+		tEpicGuiEnum,
+		tEpicGui,
+		tsShip,
+		tsPlayerFleet,
+		tEpicMoney;
+//[cf]
 
 
-
+//[of]:Exports
 provides DisplayWindow,
          OnButtonPress,
          StartGame,
          NewGame,
          FinalSetup;
+//[cf]
  
          
 
 prototype StartScreen();
-
 prototype task start_gui();
-
 prototype task setup_player();
-
 prototype choose_position(hwindow button);
-
 prototype add_player_cargo(string entry_key, hinifile start_file);
-
 prototype add_player_wingmen(string entry_key, hinifile start_file);
-
 prototype add_cargo_pods(string entry_key, hinifile start_file);
-
 prototype adjust_player_standing(string entry_key, hinifile start_file);
 
 
+//[of]:NewGame()
 NewGame()
 {
    Global.CreateBool("gt_start_gui_new", GA_Write, false);
@@ -78,6 +75,16 @@ NewGame()
    // Set the default player ship name early.
    Global.CreateString("gt_player_ship_name", GA_Write, "player_ship_name");
 
+}
+//[cf]
+
+
+//[of]:FinalSetup()
+task start_gui()
+{
+   Task.Sleep(Task.Current(), 1.0);
+
+   StartScreen();
 }
 
 
@@ -87,15 +94,10 @@ FinalSetup()
       Task.Detach(start start_gui());
    }
 }
-
-task start_gui()
-{
-   Task.Sleep(Task.Current(), 1.0);
-
-   StartScreen();
-}
+//[cf]
 
 
+//[of]:SetStandardGuiColors(hwindow window)
 SetStandardGuiColors(hwindow window)
 {
 
@@ -112,6 +114,8 @@ SetStandardGuiColors(hwindow window)
                               Global.Float( "GUI_selected_blue"));
 
 }
+//[cf]
+
 
 string button_text(string name, bool value)
 {
@@ -124,6 +128,7 @@ string button_text(string name, bool value)
 
 
 
+//[of]:hwindow CreateOptionList(hwindow parent, int x, int y, int width, int height, string function)
 hwindow CreateOptionList(hwindow parent, int x, int y, int width, int height, string function)
 {
    hwindow list_box;
@@ -204,9 +209,10 @@ hwindow CreateOptionList(hwindow parent, int x, int y, int width, int height, st
 
    return list_box;
 }
+//[cf]
 
 
-
+//[of]:choose_position(hwindow button)
 choose_position(hwindow button)
 {
    string entry_key;
@@ -221,9 +227,10 @@ choose_position(hwindow button)
       GUI.SetTextWindowResource(text_window, Object.StringProperty(button,"gt_startgui_html"));
    }
 }
+//[cf]
 
 
-
+//[of]:OnButtonPress()
 OnButtonPress()
 {
 	// Get the currently focused window - it must be the correct system button.
@@ -235,11 +242,10 @@ OnButtonPress()
 
    choose_position(button);
 }
+//[cf]
 
 
-
-
-
+//[of]:DisplayWindow()
 DisplayWindow()
 {
    hwindow shady_bar;
@@ -332,31 +338,155 @@ DisplayWindow()
    Global.CreateHandle("gt_startgui_list_box", GA_Write|GA_NoSave, debug_list_box);
 
 }
+//[cf]
 
 
-
+//[of]:StartScreen()
 StartScreen()
 {
    GUI.PopScreensTo("icSpaceFlightScreen");
    GUI.OverlayScreen("icPDAOverlayManager");
    iGUI.OverlayCustomScreen( "tStartGui.DisplayWindow" );
 }
+//[cf]
 
-StartGame()
+
+//[of]:StartGame()
+add_player_cargo(string entry_key, hinifile start_file)
 {
-   // You cannot start until a start has been selected.
-   if ("" == Global.String("gt_startgui_entry_key")) {
-      return;
+   int item_count, cargo_type, cargo_number;
+   string cargo_name;
+
+   item_count=0;
+   while (INIFile.NumberedExists(start_file,entry_key,"cargo",item_count)) {
+      cargo_name = INIFile.NumberedString(start_file,entry_key,"cargo", item_count, "CT_Invalid");
+      cargo_number = INIFile.NumberedInt(start_file,entry_key,"quantity",item_count,0);
+      ++item_count;
+
+      cargo_type = tEconUtil.String2CargoType(cargo_name);
+
+      if (CT_Invalid != cargo_type) {
+   
+         iInventory.AddWithoutMarkingNew(cargo_type, cargo_number);
+      
+      }
+
+      debug {
+         Debug.PrintString(iCargo.Name(iCargo.Find(cargo_type)));
+         Debug.PrintString(" ");
+         Debug.PrintInt(cargo_number);
+         Debug.PrintString(" added\n");
+      }
    }
 
-   Task.Detach(start setup_player());
+}
 
-   Global.SetBool("gt_start_gui_new", true);
 
-   // Ok, player can now type keys normally.
-   Input.ResumeBindings();
+add_player_wingmen(string entry_key, hinifile start_file)
+{
+   int item_count, cargo_type, cargo_number;
+   string cargo_name;
+   hship player = iShip.FindPlayerShip();
+   hship wingman;
+   string wingman_name, wingman_ini;
 
-	UniGUI.UniGUIRemoveScreen();
+   item_count=0;
+   while (INIFile.NumberedExists(start_file,entry_key,"wingman_name",item_count)) {
+      wingman_name = INIFile.NumberedString(start_file,entry_key,"wingman_name", item_count, "");
+      wingman_ini = INIFile.NumberedString(start_file,entry_key,"wingman_ini",item_count,"");
+      ++item_count;
+      
+      wingman = tsShip.Create(wingman_ini, wingman_name);
+
+      if (none != wingman) {
+         Sim.PlaceNear(wingman, player, 5km);
+
+         tsPlayerFleet.HireShip(wingman);
+      }
+
+      debug {
+         Debug.PrintString(wingman_name);
+         Debug.PrintString(" ");
+         Debug.PrintString(wingman_ini);
+         Debug.PrintString("\n");
+      }
+   }
+}
+
+
+add_cargo_pods(string entry_key, hinifile start_file)
+{
+   int item_count, cargo_type, cargo_number, pods;
+   string cargo_name;
+   hship player = iShip.FindPlayerShip();
+   hship cargo_pod;
+
+   item_count=0;
+   while (INIFile.NumberedExists(start_file,entry_key,"cargo_pod",item_count)) {
+      cargo_name = INIFile.NumberedString(start_file,entry_key,"cargo_pod", item_count, "CT_Invalid");
+      cargo_number = INIFile.NumberedInt(start_file,entry_key,"quantity_pod",item_count,0);
+      ++item_count;
+
+      cargo_type = tEconUtil.String2CargoType(cargo_name);
+
+      if (CT_Invalid != cargo_type) {
+         for (pods = 0; pods < cargo_number;++pods) {
+
+            cargo_pod = iShip.Cast(tPodUtil.CreateCargoPod(cargo_type, "Player", "Player"));
+
+            if (none != cargo_pod) {
+               Sim.PlaceNear(cargo_pod, player, 5km);
+            }
+         }
+      }
+
+      debug {
+         Debug.PrintString(iCargo.Name(iCargo.Find(cargo_type)));
+         Debug.PrintString(" ");
+         Debug.PrintInt(cargo_number);
+         Debug.PrintString(" pods added\n");
+      }
+   }
+}
+
+
+adjust_player_standing(string entry_key, hinifile start_file)
+{
+   int adjust_count, adjust_known;
+   string adjust_name, adjust_string;
+   hfaction player_faction = tsFaction.PlayerFaction();
+   hfaction target;
+   float adjust_level;
+
+   adjust_count =0;
+   while (INIFile.NumberedExists(start_file, entry_key,"adjust_name",adjust_count)) {
+      adjust_name = INIFile.NumberedString(start_file,entry_key,"adjust_name",adjust_count,"none");
+      adjust_string = INIFile.NumberedString(start_file,entry_key,"adjust_level",adjust_count,"FT_Neutral");
+      adjust_known = INIFile.NumberedInt(start_file,entry_key,"adjust_known",adjust_count,0);
+
+      // Lookup the faction
+      target = tsFaction.EFind(adjust_name);
+      adjust_level = tsFaction.String2Level(adjust_string);
+
+      // Change the feeling
+      iFaction.SetFeeling(player_faction, target, adjust_level);
+      iFaction.SetFeeling(target, player_faction, adjust_level);
+
+      // The player may begin the game knowing some otherwise hidden factions.
+      if (adjust_known > 0) {
+         tsFaction.SetKnown(target, true);
+      }
+
+      debug {
+         Debug.PrintHandle(player_faction);
+         Debug.PrintString(" to ");
+         Debug.PrintHandle(target);
+         Debug.PrintString(" adjusted ");
+         Debug.PrintFloat(adjust_level);
+         Debug.PrintString("\n");
+      }
+      ++adjust_count;
+   }
 }
 
 
@@ -460,145 +590,24 @@ task setup_player()
    }
 }
 
- 
-add_player_cargo(string entry_key, hinifile start_file)
+
+StartGame()
 {
-   int item_count, cargo_type, cargo_number;
-   string cargo_name;
-
-   item_count=0;
-   while (INIFile.NumberedExists(start_file,entry_key,"cargo",item_count)) {
-      cargo_name = INIFile.NumberedString(start_file,entry_key,"cargo", item_count, "CT_Invalid");
-      cargo_number = INIFile.NumberedInt(start_file,entry_key,"quantity",item_count,0);
-      ++item_count;
-
-      cargo_type = tEconUtil.String2CargoType(cargo_name);
-
-      if (CT_Invalid != cargo_type) {
-   
-         iInventory.AddWithoutMarkingNew(cargo_type, cargo_number);
-      
-      }
-
-      debug {
-         Debug.PrintString(iCargo.Name(iCargo.Find(cargo_type)));
-         Debug.PrintString(" ");
-         Debug.PrintInt(cargo_number);
-         Debug.PrintString(" added\n");
-      }
+   // You cannot start until a start has been selected.
+   if ("" == Global.String("gt_startgui_entry_key")) {
+      return;
    }
 
+   Task.Detach(start setup_player());
+
+   Global.SetBool("gt_start_gui_new", true);
+
+   // Ok, player can now type keys normally.
+   Input.ResumeBindings();
+
+	UniGUI.UniGUIRemoveScreen();
 }
-
-add_player_wingmen(string entry_key, hinifile start_file)
-{
-   int item_count, cargo_type, cargo_number;
-   string cargo_name;
-   hship player = iShip.FindPlayerShip();
-   hship wingman;
-   string wingman_name, wingman_ini;
-
-   item_count=0;
-   while (INIFile.NumberedExists(start_file,entry_key,"wingman_name",item_count)) {
-      wingman_name = INIFile.NumberedString(start_file,entry_key,"wingman_name", item_count, "");
-      wingman_ini = INIFile.NumberedString(start_file,entry_key,"wingman_ini",item_count,"");
-      ++item_count;
-      
-      wingman = tsShip.Create(wingman_ini, wingman_name);
-
-      if (none != wingman) {
-         Sim.PlaceNear(wingman, player, 5km);
-
-         tsPlayerFleet.HireShip(wingman);
-      }
-
-      debug {
-         Debug.PrintString(wingman_name);
-         Debug.PrintString(" ");
-         Debug.PrintString(wingman_ini);
-         Debug.PrintString("\n");
-      }
-   }
-}
-
-
-
-add_cargo_pods(string entry_key, hinifile start_file)
-{
-   int item_count, cargo_type, cargo_number, pods;
-   string cargo_name;
-   hship player = iShip.FindPlayerShip();
-   hship cargo_pod;
-
-   item_count=0;
-   while (INIFile.NumberedExists(start_file,entry_key,"cargo_pod",item_count)) {
-      cargo_name = INIFile.NumberedString(start_file,entry_key,"cargo_pod", item_count, "CT_Invalid");
-      cargo_number = INIFile.NumberedInt(start_file,entry_key,"quantity_pod",item_count,0);
-      ++item_count;
-
-      cargo_type = tEconUtil.String2CargoType(cargo_name);
-
-      if (CT_Invalid != cargo_type) {
-         for (pods = 0; pods < cargo_number;++pods) {
-
-            cargo_pod = iShip.Cast(tPodUtil.CreateCargoPod(cargo_type, "Player", "Player"));
-
-            if (none != cargo_pod) {
-               Sim.PlaceNear(cargo_pod, player, 5km);
-            }
-         }
-      }
-
-      debug {
-         Debug.PrintString(iCargo.Name(iCargo.Find(cargo_type)));
-         Debug.PrintString(" ");
-         Debug.PrintInt(cargo_number);
-         Debug.PrintString(" pods added\n");
-      }
-   }
-}
-
-
-
-adjust_player_standing(string entry_key, hinifile start_file)
-{
-   int adjust_count, adjust_known;
-   string adjust_name, adjust_string;
-   hfaction player_faction = tsFaction.PlayerFaction();
-   hfaction target;
-   float adjust_level;
-
-   adjust_count =0;
-   while (INIFile.NumberedExists(start_file, entry_key,"adjust_name",adjust_count)) {
-      adjust_name = INIFile.NumberedString(start_file,entry_key,"adjust_name",adjust_count,"none");
-      adjust_string = INIFile.NumberedString(start_file,entry_key,"adjust_level",adjust_count,"FT_Neutral");
-      adjust_known = INIFile.NumberedInt(start_file,entry_key,"adjust_known",adjust_count,0);
-
-      // Lookup the faction
-      target = tsFaction.EFind(adjust_name);
-      adjust_level = tsFaction.String2Level(adjust_string);
-
-      // Change the feeling
-      iFaction.SetFeeling(player_faction, target, adjust_level);
-      iFaction.SetFeeling(target, player_faction, adjust_level);
-
-      // The player may begin the game knowing some otherwise hidden factions.
-      if (adjust_known > 0) {
-         tsFaction.SetKnown(target, true);
-      }
-
-      debug {
-         Debug.PrintHandle(player_faction);
-         Debug.PrintString(" to ");
-         Debug.PrintHandle(target);
-         Debug.PrintString(" adjusted ");
-         Debug.PrintFloat(adjust_level);
-         Debug.PrintString("\n");
-      }
-      ++adjust_count;
-   }
-}
-
+//[cf]
 
 
 /*  

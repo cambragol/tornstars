@@ -12,7 +12,8 @@
 
 package tOptionsGui;
 
-uses	Sim,  
+//[of]:Imports
+uses	Sim,
 		iShip,
 		iSim,
 		Debug,
@@ -23,7 +24,7 @@ uses	Sim,
 		iHUD,
 		iHabitat,
 		iMapEntity,
-      INIFile,
+		INIFile,
 		Input,
 		List,
 		Object,
@@ -31,21 +32,25 @@ uses	Sim,
 		Task,
 		Text,
 		UniGUI,
-      tEpicGuiEnum,
-      tEpicGui;
+		tEpicGuiEnum,
+		tEpicGui;
+//[cf]
 
 
+//[of]:Exports
 provides StartScreen,
          ExitScreen,
          DisplayWindow,
          OnOptionPress,
          NewGame;
+//[cf]
 
          
 
 prototype task list_box_monitor( hwindow system_list_box );
 
 
+//[of]:NewGame()
 NewGame()
 {
    hinifile debug_file = INIFile.Create("ini:/ms_mod_main");
@@ -65,8 +70,10 @@ NewGame()
       Global.CreateBool(flag_name, GA_Write, start_value);
    }
 }
+//[cf]
 
 
+//[of]:SetStandardGuiColors(hwindow window)
 SetStandardGuiColors(hwindow window)
 {
 
@@ -83,7 +90,10 @@ SetStandardGuiColors(hwindow window)
                               Global.Float( "GUI_selected_blue"));
 
 }
+//[cf]
 
+
+//[of]:string button_text(string name, bool value)
 string button_text(string name, bool value)
 {
    if (value) {
@@ -92,9 +102,10 @@ string button_text(string name, bool value)
 
    return String.Join(name, " Off");
 }
+//[cf]
 
 
-
+//[of]:hwindow CreateOptionList(hwindow parent, int x, int y, int width, int height, string function)
 hwindow CreateOptionList(hwindow parent, int x, int y, int width, int height, string function)
 {
    hwindow list_box;
@@ -178,11 +189,10 @@ hwindow CreateOptionList(hwindow parent, int x, int y, int width, int height, st
 
    return list_box;
 }
+//[cf]
 
 
-
-
-
+//[of]:OnOptionPress()
 OnOptionPress()
 {
 	// Get the currently focused window - it must be the correct system button.
@@ -210,13 +220,10 @@ OnOptionPress()
 
    debug Debug.PrintString("Option Press\n");
 }
+//[cf]
 
 
-
-
-
-
-
+//[of]:DisplayWindow()
 DisplayWindow()
 {
    hwindow shady_bar;
@@ -308,10 +315,11 @@ DisplayWindow()
    Task.Detach(start list_box_monitor(debug_list_box));
 
 }
-
+//[cf]
 
 
 // From location finder by Steve Robertson.
+//[of]:task list_box_monitor( hwindow system_list_box )
 task list_box_monitor( hwindow system_list_box )
 {
 	// Track the currently selected list box entry
@@ -392,31 +400,27 @@ task list_box_monitor( hwindow system_list_box )
 	} // End while
 
 } // list_box_monitor
+//[cf]
 
 
-
-
-
-
+//[of]:StartScreen()
 StartScreen()
 {
    GUI.PopScreensTo("icSpaceFlightScreen");
    GUI.OverlayScreen("icPDAOverlayManager");
    iGUI.OverlayCustomScreen( "tOptionsGui.DisplayWindow" );
 }
+//[cf]
 
+
+//[of]:ExitScreen()
 ExitScreen()
 {
 	Task.Halt( Task.Cast( Global.Handle( "gt_og_list_task" ) ) );
 
 	UniGUI.UniGUIRemoveScreen();
 }
-
-
-
-
-
-
+//[cf]
 
 
 /*  

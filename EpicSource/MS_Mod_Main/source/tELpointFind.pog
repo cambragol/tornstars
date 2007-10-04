@@ -12,6 +12,7 @@
 
 package tELpointFind;
 
+//[of]:Imports
 uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, 
    iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
    iConversation, iFormation, Group, Text, iEmail, State, 
@@ -22,7 +23,10 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    tEpicGuiEnum,
    tEpicGui,
    UniGUI;
+//[cf]
 
+
+//[of]:Exports
 provides RunCheck,
          MoonPress,
          StartScreen,
@@ -30,16 +34,13 @@ provides RunCheck,
          StartSession,
          EndSession,
          DisplayWindow;
+//[cf]
 
 
 prototype test_body();
-
 prototype refresh_moon_list();
-
 prototype hwindow create_button(hwindow parent, int x, int y, string name, string function);
-
 prototype set_known(hsim point);
-
 prototype bool is_known(hsim point);
 
 /*
@@ -52,16 +53,21 @@ prototype bool is_known(hsim point);
    
 */
 
+//[of]:StartSession()
 StartSession()
 {
    debug Debug.PrintString("tELpointFind.Init\n");
    Text.Add("csv:/TEXT/gt_jump_text");
 }
+//[cf]
 
+
+//[of]:EndSession()
 EndSession()
 {
     Text.Remove("csv:/TEXT/gt_jump_text");
 }
+//[cf]
 
 
 /*
@@ -85,6 +91,7 @@ jump via this point.
 
 
 
+//[of]:RunCheck()
 RunCheck()
 {
    Global.SetBool("g_zz_ug_passme",true);
@@ -94,12 +101,11 @@ RunCheck()
    // navigate jump points.
 
 }
+//[cf]
 
 
-hwindow create_moon_list(hwindow parent, 
-                         int x, int y, 
-                         int width, int height, 
-                         string function)
+//[of]:hwindow create_moon_list(hwindow parent, int x, int y, int width, int height, string function)
+hwindow create_moon_list(hwindow parent, int x, int y, int width, int height, string function)
 {
    hwindow list_box;
    hwindow base_win;
@@ -157,7 +163,10 @@ hwindow create_moon_list(hwindow parent,
 
    return base_win;
 }
+//[cf]
 
+
+//[of]:task hud_select(hsim waypoint)
 task hud_select(hsim waypoint)
 {
    Task.Sleep(Task.Current(), 0.1);
@@ -165,7 +174,10 @@ task hud_select(hsim waypoint)
 
    UniGUI.UniGUIClose();
 }
+//[cf]
 
+
+//[of]:MoonPress()
 MoonPress()
 {
    // A moon was selected, drop a waypoint at the halfway mark between the 
@@ -200,7 +212,47 @@ MoonPress()
 
 
 }
+//[cf]
 
+
+//[of]:DisplayWindow()
+refresh_moon_list()
+{
+   hwindow list_box = GUI.Cast(Global.Handle("gt_lpointfind_gui_trans_list_box"));
+   hwindow base_win = GUI.Cast(Global.Handle("gt_lpointfind_gui_shady"));
+   int height, width;
+   list cargo_list = Global.List("gt_lpointfind_gui_trans_list");
+
+   if (none != list_box) {
+      GUI.DeleteWindow(list_box);
+   }
+
+   height = GUI.WindowCanvasHeight( base_win);
+   height = height - Global.Int("EpicGui_content_drop");
+   height = height - Global.Int("EpicGui_content_footer");
+   height = height - Global.Int("EpicGui_content_footer");
+   // mark out room for the text fields
+   height = height - 120;
+
+   debug Debug.PrintString(String.FormatInt("HackGui Window height %d\n",height));
+
+   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   width = width/2;
+   width = width - Global.Int("EpicGui_content_indent");
+   width = width - Global.Int("EpicGui_content_indent");
+
+
+   list_box = create_moon_list(base_win, 
+                               Global.Int("EpicGui_content_indent"),
+                               Global.Int("EpicGui_content_drop")+120,
+                               width,
+                               height,
+                               "tELpointFind.MoonPress"); 
+
+
+
+   Global.SetHandle("gt_lpointfind_gui_trans_list_box",list_box);
+}
 
 
 DisplayWindow()
@@ -301,69 +353,26 @@ DisplayWindow()
                                 Global.Float( "GUI_scrollbar_buttonratio"), 
                                 "");
 }
+//[cf]
 
 
-refresh_moon_list()
-{
-   hwindow list_box = GUI.Cast(Global.Handle("gt_lpointfind_gui_trans_list_box"));
-   hwindow base_win = GUI.Cast(Global.Handle("gt_lpointfind_gui_shady"));
-   int height, width;
-   list cargo_list = Global.List("gt_lpointfind_gui_trans_list");
-
-   if (none != list_box) {
-      GUI.DeleteWindow(list_box);
-   }
-
-   height = GUI.WindowCanvasHeight( base_win);
-   height = height - Global.Int("EpicGui_content_drop");
-   height = height - Global.Int("EpicGui_content_footer");
-   height = height - Global.Int("EpicGui_content_footer");
-   // mark out room for the text fields
-   height = height - 120;
-
-   debug Debug.PrintString(String.FormatInt("HackGui Window height %d\n",height));
-
-   width = 500; //GUI.WindowCanvasWidth( shady_bar);
-   width = width/2;
-   width = width - Global.Int("EpicGui_content_indent");
-   width = width - Global.Int("EpicGui_content_indent");
-
-
-   list_box = create_moon_list(base_win, 
-                               Global.Int("EpicGui_content_indent"),
-                               Global.Int("EpicGui_content_drop")+120,
-                               width,
-                               height,
-                               "tELpointFind.MoonPress"); 
-
-
-
-   Global.SetHandle("gt_lpointfind_gui_trans_list_box",list_box);
-}
-
-
-
+//[of]:StartScreen()
 StartScreen()
 {
    GUI.PopScreensTo("icSpaceFlightScreen");
    GUI.OverlayScreen("icPDAOverlayManager");
    iGUI.OverlayCustomScreen( "tELpointFind.DisplayWindow" );
 }
+//[cf]
 
 
-
+//[of]:ExitScreen()
 ExitScreen()
 {
 
 	UniGUI.UniGUIRemoveScreen();
 }
-
-
-
-
-
-
-
+//[cf]
 
 
 /* 
