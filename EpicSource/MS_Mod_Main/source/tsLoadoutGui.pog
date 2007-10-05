@@ -103,8 +103,10 @@ prototype rearm_ship(hship ship);
 prototype string get_mountpoint_template(string hardpoint_type);
 prototype string get_mountpoint_type(hsubsim subsim);
 
-
-//[of]:bool allow_run()
+//
+// Determine if the gui can be run or not.
+//
+//[of]:RunCheck()
 bool allow_run()
 {
    hmapentity station;
@@ -137,14 +139,12 @@ bool allow_run()
    }
 
    // If the player is not neutral or better, do not allow trade.
-
+   // TBD?
 
    return allow_trade;
 }
-//[cf]
 
 
-//[of]:RunCheck()
 RunCheck()
 {
    Global.SetBool("g_zz_ug_passme", allow_run());
@@ -152,7 +152,9 @@ RunCheck()
 //[cf]
 
 
+//
 // Load the text files
+//
 //[of]:SessionStart()
 SessionStart()
 {
@@ -161,7 +163,9 @@ SessionStart()
 //[cf]
 
 
+//
 // Unload any text files.
+//
 //[of]:SessionEnd()
 SessionEnd()
 {
@@ -170,7 +174,11 @@ SessionEnd()
 //[cf]
 
 
-// Call when loadout GUI is started.
+//
+// Called when loadout GUI is started.
+// 1. Builds up the price and hardpoint data aginst the iCargo cargo types
+// 2. Builds up a list of mountpoints in a list and saves globally
+//
 //[of]:AttachCargoHardpoint()
 AttachCargoHardpoint()
 {
@@ -182,6 +190,9 @@ AttachCargoHardpoint()
    list mountpoint_list;
    hsim mountpoint;
 
+   debug Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Start\n");
+   
+   // process the cargo types in the cargo_hardpoints.ini file
    count = 0;
    while (INIFile.NumberedExists(hardpoint_file, "Cargo", "cargo_type", count)) {
       cargo_name = INIFile.NumberedString(hardpoint_file, "Cargo", "cargo_type", count, "CT_Invalid");
@@ -224,8 +235,9 @@ AttachCargoHardpoint()
             Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Error invalid cargo type\n");
          }
       }
-   }
+   }  // while end
 
+   // process the hard point types in the cargo_hardpoints.ini file
    count = 0;
    while (INIFile.NumberedExists(hardpoint_file, "Mountpoints", "hardpoint_type", count)) {
       hardpoint_type = INIFile.NumberedString(hardpoint_file, "Mountpoints", "hardpoint_type", count, "");
@@ -245,11 +257,12 @@ AttachCargoHardpoint()
       mountpoint = Sim.Create("ini:/sims/nav/waypoint", hardpoint_type);
       Object.AddStringProperty(mountpoint,"mountpoint_name", template_name);
       List.AddTail(mountpoint_list, mountpoint);
-   }
+   }  // while end
 
    Global.CreateList("gt_loadoutgui_mountpoint_list", GA_Write|GA_NoSave, mountpoint_list);
 
    INIFile.Destroy(hardpoint_file);
+   debug Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint End\n");
 }
 //[cf]
 
@@ -276,9 +289,11 @@ int float2int(float value)
 //[cf]
 
 
-
 //[of]:hwindow create_border_button(int x, int y, int width, int height, hwindow parent, string name, string function)
-hwindow create_border_button(int x, int y, int width, int height, hwindow parent, string name, string function)
+hwindow create_border_button(int x, int y, int width, int height,
+                             hwindow parent,
+                             string name,
+                             string function)
 {
    hwindow button, border;
    int button_x, button_y, button_width, button_height;
@@ -316,7 +331,6 @@ hwindow create_border_button(int x, int y, int width, int height, hwindow parent
    return button;
 }
 //[cf]
-
 
 
 //[of]:StartScreen()

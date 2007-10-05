@@ -10,44 +10,46 @@
 
 package tsPilotSetup;
 
-uses    Sim,
-        iShip,
-        iSim,
-        Debug,
-        Global,
-        GUI,
-        iGUI,
-        iHUD,
-        INIFile,
-        Input,
-        List,
-        Object,
-        String,
-        Task,
-        Text,
-        Math,
-        iAI,
-        iShipCreation,
-        iComms,
-        iConversation,
-        tEpicComms,
-        tLRoot,
-        tLTrade,
-        tsFaction,
-        tETradeSell,
-        tEpicMoney,
-        tShipName,
-        tPcOwner,
-        tLProduction,
-        tLFleet,
-        tUnderOp,
-        tPodUtil,
-        tRepWatch,
-        tEpicEventEnum,
-        tsEvent;
+//[of]:Imports
+uses	Sim,
+		iShip,
+		iSim,
+		Debug,
+		Global,
+		GUI,
+		iGUI,
+		iHUD,
+		INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+		Math,
+		iAI,
+		iShipCreation,
+		iComms,
+		iConversation,
+		tEpicComms,
+		tLRoot,
+		tLTrade,
+		tsFaction,
+		tETradeSell,
+		tEpicMoney,
+		tShipName,
+		tPcOwner,
+		tLProduction,
+		tLFleet,
+		tUnderOp,
+		tPodUtil,
+		tRepWatch,
+		tEpicEventEnum,
+		tsEvent;
+//[cf]
 
 
-
+//[of]:Exports
 provides SetupOperation,
          OperationDeath,
          SetupCargo,
@@ -56,6 +58,7 @@ provides SetupOperation,
          SetupEscort,
          EscortSelfPreserve,
          EscortDeath;
+//[cf]
 
 
 
@@ -64,7 +67,7 @@ prototype drop_cargo(hship freighter);
 // This task is launched when an escort ship 
 // has been attacked. It watches the ship and tells it when
 // to stop fighting and flee.
-
+//[of]:task escort_task(hship escort)
 task escort_task(hship escort)
 {
    float hit_points, flee_points;
@@ -107,8 +110,13 @@ task escort_task(hship escort)
       }
    }
 }
+//[cf]
 
 
+// This task is launched when a cargo ship has
+// been attacked.
+// ToDo - actually used? Jon?
+//[of]:task cargo_task(hship cargo_ship)
 task cargo_task(hship cargo_ship)
 {
    float hit_points, flee_points;
@@ -155,8 +163,10 @@ task cargo_task(hship cargo_ship)
       }
    }
 }
+//[cf]
 
 
+//[of]:SetupEscort(hship escort, float notice_level, float flee_level)
 SetupEscort(hship escort, float notice_level, float flee_level)
 {
    
@@ -174,9 +184,11 @@ SetupEscort(hship escort, float notice_level, float flee_level)
 
    Object.SetStringProperty(escort,"death_script", "tsPilotSetup.EscortDeath");
 }
+//[cf]
 
 
 // Someone is attacking the escort.
+//[of]:task EscortSelfPreserve(hship escort)
 task EscortSelfPreserve(hship escort)
 {
    hisim last_attacker;
@@ -225,9 +237,12 @@ task EscortSelfPreserve(hship escort)
    iAI.GiveAttackOrder(escort, last_attacker);   
 
 }
+//[cf]
+
  
 // Some ships belong to an owner with fleets. Charge the owner for the loss
 // of this ship.
+//[of]:fleet_loss(hship ship)
 fleet_loss(hship ship)
 {
    hisim operation = iSim.Cast(tPcOwner.Owner(ship));
@@ -243,9 +258,12 @@ fleet_loss(hship ship)
       }
    }
 }
+//[cf]
+
 
 // An escort death script just needs to remove 
 // its value from the owners fleets.
+//[of]:task EscortDeath(hship escort)
 task EscortDeath(hship escort)
 {
    hfaction empty_faction = tsFaction.EmptyFaction();
@@ -260,8 +278,10 @@ task EscortDeath(hship escort)
    // Utter death threats..
    iSim.Kill(escort);
 }
+//[cf]
 
 
+//[of]:SetupCargo(hship cargo_ship, float notice_level, float flee_level)
 SetupCargo(hship cargo_ship, float notice_level, float flee_level)
 {
    
@@ -279,10 +299,12 @@ SetupCargo(hship cargo_ship, float notice_level, float flee_level)
 
    Object.SetStringProperty(cargo_ship,"death_script", "tsPilotSetup.CargoDeath");
 }
+//[cf]
 
 
 // Some one is attacking the ship. 
 // Because this is an cargo_ship, don't worry about it too much.
+//[of]:task CargoSelfPreserve(hship cargo_ship)
 task CargoSelfPreserve(hship cargo_ship)
 {
    hisim last_attacker;
@@ -297,11 +319,12 @@ task CargoSelfPreserve(hship cargo_ship)
    tRepWatch.ShipAttacked(cargo_ship, -2.0);
 
 }
- 
+//[cf]
 
 
 // An cargo_ship death script just needs to remove 
 // its value from the owners fleets.
+//[of]:task CargoDeath(hship cargo_ship)
 task CargoDeath(hship cargo_ship)
 {
    hfaction empty_faction = tsFaction.EmptyFaction();
@@ -319,11 +342,12 @@ task CargoDeath(hship cargo_ship)
    // Utter death threats..
    iSim.Kill(cargo_ship);
 }
+//[cf]
 
 
 // The operation pilot is just like a cargo ship
 // But it also destroys the owning operation when it dies.
-
+//[of]:SetupOperation(hship ship, float notice_level, float flee_level)
 SetupOperation(hship ship, float notice_level, float flee_level)
 {
    // Setup the pilot so that it turns hostile very quickly.
@@ -340,9 +364,12 @@ SetupOperation(hship ship, float notice_level, float flee_level)
 
    Object.SetStringProperty(ship,"death_script", "tsPilotSetup.OperationDeath");
 }
+//[cf]
+
 
 // Used for when a ship is representing an operation.
 // This function kills the represented operation.
+//[of]:task OperationDeath(hship ship)
 task OperationDeath(hship ship)
 {
    hisim operation;
@@ -370,6 +397,7 @@ task OperationDeath(hship ship)
 
    iSim.Kill(ship);
 }
+//[cf]
 
 
 /*   

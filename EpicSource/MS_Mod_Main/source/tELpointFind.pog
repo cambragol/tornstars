@@ -66,6 +66,7 @@ StartSession()
 EndSession()
 {
     Text.Remove("csv:/TEXT/gt_jump_text");
+    debug Debug.PrintString("tELpointFind.End\n");
 }
 //[cf]
 
@@ -90,16 +91,14 @@ jump via this point.
 */
 
 
-
+// RunCheck needs to check that a Jump Point Sensor is docked as a cargo
+// pod to the players ship. Only ships carrying this (huge) sensor can 
+// navigate jump points.
+// TBD - still do this feature?
 //[of]:RunCheck()
 RunCheck()
 {
    Global.SetBool("g_zz_ug_passme",true);
-
-   // This function needs to check that a Jump Point Sensor is docked as a cargo
-   // pod to the players ship. Only ships carrying this (huge) sensor can 
-   // navigate jump points.
-
 }
 //[cf]
 
