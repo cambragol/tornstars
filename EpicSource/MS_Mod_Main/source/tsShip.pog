@@ -10,51 +10,51 @@
 
 package tsShip;
 
-uses    Sim,
-        iShip,
-        iSim,
-        iPilotSetup,
-        Debug,
-        Global,
-        GUI,
-        iDirector,
-        iGUI,
-        iHUD,
-        iHabitat,
-        iMapEntity,
-        INIFile,
-        Input,
-        List,
-        Object,
-        String,
-        Task,
-        Text,
-        iUtilities,
-        iCargo,
-        iInventory,
-        iComms, 
-        iAi,
-        iWingmen,
-        iRemotePilot,
-        iDeathScript,
-        iGame,
-        Math,
-        iInventory,
-        iConversation,
-        CargoTypes,
-        iMultiplay,
-   
-        tStationEnum,
-        tEconUtil,
-        tPodUtil,
-        tEpicComms,
-        tFormation,
-        tsFaction; 
+//[of]:Import
+uses	 Sim,
+		iShip,
+		iSim,
+		iPilotSetup,
+		Debug,
+		Global,
+		GUI,
+		iDirector,
+		iGUI,
+		iHUD,
+		iHabitat,
+		iMapEntity,
+		INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+		iUtilities,
+		iCargo,
+		iInventory,
+		iComms, 
+		iAi,
+		iWingmen,
+		iRemotePilot,
+		iDeathScript,
+		iGame,
+		Math,
+		iInventory,
+		iConversation,
+		CargoTypes,
+		iMultiplay,
+		
+		tStationEnum,
+		tEconUtil,
+		tPodUtil,
+		tEpicComms,
+		tFormation,
+		tsFaction; 
+//[cf]
 
 
- 
-
-
+//[of]:Export
 provides 
         Fuel,
         SetFuel,
@@ -93,6 +93,7 @@ provides
         ReplaceSubsim,
         PlaceSubsim,
         LinkPlayerWeapons;
+//[cf]
 
 
  
