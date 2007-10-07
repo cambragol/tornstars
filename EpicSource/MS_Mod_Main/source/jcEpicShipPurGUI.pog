@@ -9,13 +9,14 @@
 //
 // May 2004, James Walker
 //
-// Last Edit: 
+// Last Edit: 7-Oct-2007 - James - Updated for code folding.
 //****************************************************************************/
 
 
 package		jcEpicShipPurGUI;
 
  
+//[of]:Import
 uses
 	Debug,
 	String,
@@ -67,14 +68,15 @@ uses
 	tEpicMoney,
 
 	tsFaction,
-   tStationEnum,
-   tStation,
-   tsShip,
-   tsPlayerFleet,
-   tsLoadoutGui;
-
+	tStationEnum,
+	tStation,
+	tsShip,
+	tsPlayerFleet,
+	tsLoadoutGui;
+//[cf]
 
 	
+//[of]:Export
 provides
 	DisplayWindow,
 	RunCheck,
@@ -85,6 +87,7 @@ provides
 	SellBtn,
 	ConfirmBtn,
 	CancelBtn;
+//[cf]
 
 
 enum ePurState
@@ -118,19 +121,21 @@ prototype task change_ship(string template_name);
 // Fn: RunCheck
 // Desc: Tell UniGUI when this screen should be available
 //
+//[of]:RunCheck()
 RunCheck()
 {
 	hship player = iShip.FindPlayerShip();
 	
-   Global.SetBool("g_zz_ug_passme",false);
-
-   if ( iSim.IsDockedToStructure(iSim.Cast(player), iSim.Cast(docked_to_station())) )
-   {
-      if (ESS_Normal == tStation.Status(iHabitat.Cast(docked_to_station()))) {
-         Global.SetBool("g_zz_ug_passme",true);
-      }
-   }
+	Global.SetBool("g_zz_ug_passme",false);
+	if ( iSim.IsDockedToStructure(iSim.Cast(player), iSim.Cast(docked_to_station())) )
+	{
+		// we must be both docked to the correct station type.
+		if (ESS_Normal == tStation.Status(iHabitat.Cast(docked_to_station()))) {
+			 Global.SetBool("g_zz_ug_passme",true);
+		}
+	}
 }
+//[cf]
 
 
 //
@@ -138,6 +143,7 @@ RunCheck()
 // Desc: Called by UniGUI to start this screen. This fn is what is referenced
 //       in the UniGUI .ini setup.
 //
+//[of]:StartScreen()
 StartScreen()
 {
    // start a background movie as a tester
@@ -147,24 +153,28 @@ StartScreen()
    GUI.OverlayScreen("icPDAOverlayManager");
    iGUI.OverlayCustomScreen( "jcEpicShipPurGUI.DisplayWindow" );
 }
+//[cf]
 
 
 //
 // Fn: ExitScreen
 // Desc: Call when exiting this screen and returning code back to UniGUI
 //
+//[of]:ExitScreen()
 ExitScreen()
 {
 	// remove global handle
 	Global.Destroy( "gjc_epic_purship_gui_shady" );
 	UniGUI.UniGUIRemoveScreen();
 }
+//[cf]
 
 
 //
 // Fn: DisplayWindow
 // Desc: Start ship purchasing gui system for player
 //
+//[of]:DisplayWindow()
 DisplayWindow()
 {
 	hwindow shady_bar;
@@ -289,7 +299,6 @@ DisplayWindow()
 	debug Debug.PrintString("jcEpicShipPurGUI.DisplayWindow END\n");
 }
 
-
 hwindow create_shady_box( hwindow shady_bar )
 {
    hwindow border_box;
@@ -311,13 +320,14 @@ hwindow create_shady_box( hwindow shady_bar )
 
    return text_box;
 }
-
+//[cf]
 
 
 //
 // Fn: BuyBtn
 // Desc: Respond to BuyBtn push event
 //
+//[of]:BuyBtn()
 BuyBtn()
 {
 	hwindow button = GUI.FocusedWindow();
@@ -325,6 +335,9 @@ BuyBtn()
 	hwindow cabtn = GUI.Cast( Object.HandleProperty( get_top_container(), "cancel_btn" ) );
 	hwindow sbtn = 	GUI.Cast( Object.HandleProperty( get_top_container(), "sell_btn" ) );
 	hwindow list_box = GUI.Cast( Object.HandleProperty( get_top_container(), "ship_list" ) );
+	hwindow info_area = GUI.Cast( Object.HandleProperty( get_top_container(), "info_area" ) );
+	string info_html_template = "<html><body>Trade in your current craft for approximately %d.</body></html>";
+	string info_html;
 	
 	debug Debug.PrintString("jcEpicShipPurGUI.BuyBtn: START\n");
 	// only do the buy button if have a selection in the list
@@ -337,15 +350,21 @@ BuyBtn()
 		
 		// set correct state on confirm button
 		Object.SetIntProperty( get_top_container(), "state", SE_Buy );
+
+		// determine how much money player will get for his current ship and display it.
+		info_html = String.FormatInt(info_html_template, Object.IntProperty(get_top_container(), "player_ship_resale"));
+		GUI.SetTextWindowString( info_area, info_html );
 	}
 	debug Debug.PrintString("jcEpicShipPurGUI.BuyBtn: End\n");
 }
+//[cf]
 
 
 //
 // Fn: SellBtn
 // Desc: Respond to SellBtn push event
 //
+//[of]:SellBtn()
 SellBtn()
 {
 	hwindow button = GUI.FocusedWindow();
@@ -369,12 +388,14 @@ SellBtn()
 	GUI.SetTextWindowString( info_area, info_html );
 	debug Debug.PrintString("jcEpicShipPurGUI.SellBtn: End\n");
 }
+//[cf]
 
 
 //
 // Fn: ConfirmBtn
 // Desc: Respond to the ConfirmBtn push event
 //
+//[of]:ConfirmBtn()
 ConfirmBtn()
 {
 	hwindow button = GUI.FocusedWindow();
@@ -412,10 +433,17 @@ ConfirmBtn()
 	{
 		// clean out inventory
 		
+		// when we buy something we must deal correctly with the existing ship. This can be a simple comspec
+		// as the player has already sold their ship, or it might be a full ship in which case this needs
+		// to behave like a combined sale/buy. ala a "trade-in"
+		player_resale = Object.IntProperty(get_top_container(), "player_ship_resale") * (100+Math.RandomInt(0, 15));
+		player_resale /= 100;
+		tEpicMoney.ChangeShipAccount( player_resale );
+
 		// determine what has been purchased, and do the add inventory call.
 		selected = GUI.ListBoxValue( list_box );
 
-      ship_template = Object.StringProperty( selected, "ship_template");
+		ship_template = Object.StringProperty( selected, "ship_template");
 
 		// take off the $$ for the purchase
 		price = Object.IntProperty( selected, "price" );
@@ -426,18 +454,53 @@ ConfirmBtn()
 		hide_window( sbtn );		// sell visible
 		hide_window( bbtn );		// buy visible
 
-      Task.Detach(start change_ship(ship_template));
+		Task.Detach(start change_ship(ship_template));
 	}
 	Object.SetIntProperty( get_top_container(), "state", SE_NoAction );
 
 	debug Debug.PrintString("jcEpicShipPurGUI.ConfirmBtn: End\n");
 }
 
+task change_ship(string template_name)
+{
+   hship player_ship = iShip.FindPlayerShip();
+   hship new_ship;
+
+   // create a new playership from the template provided
+   new_ship = tsShip.Create(template_name, Global.String("gt_player_ship_name"));
+
+   if (none != new_ship) {
+      // Take the player ship out of the player fleet.
+      tsPlayerFleet.RemoveFleetShip(player_ship);
+
+      // put the new ship in the players fleet
+      tsPlayerFleet.NewPlayerShip(new_ship);
+
+      Sim.PlaceNear(new_ship, player_ship, 1km);
+
+      // remove the players equipment from the original ship
+      // and at the same time put it back into the players
+      // inventory.
+      tsLoadoutGui.RemoveEquipment(player_ship);
+
+      // pause briefly to let things settle
+      Task.Sleep(Task.Current(), 0.1);
+
+      // destroy the original playership
+      Sim.Destroy(player_ship);
+   }else {
+      debug Debug.PrintString("jcEpicShipPurGUI.change_ship Error\n");
+   }
+}
+
+//[cf]
+
 
 //
 // Fn: CancelBtn
 // Desc: Respond to the CancelBtn push event
 //
+//[of]:CancelBtn()
 CancelBtn()
 {
 	hwindow button = GUI.FocusedWindow();
@@ -446,19 +509,21 @@ CancelBtn()
 	hwindow cbtn = 	GUI.Cast( Object.HandleProperty( get_top_container(), "confirm_btn" ) );
 
 	debug Debug.PrintString("jcEpicShipPurGUI.CancelBtn: START\n");
-	hide_window( button );	// cancel hidden
+	hide_window( button );		// cancel hidden
 	hide_window( cbtn );		// confirm hidden
 	show_window( sbtn );		// sell visible
 	show_window( bbtn );		// buy visible
 	Object.SetIntProperty( get_top_container(), "state", SE_NoAction );
 	debug Debug.PrintString("jcEpicShipPurGUI.CancelBtn: End\n");
 }
+//[cf]
 
 
 //
 // Fn: ShipListSelect
 // Desc: Respond to a ship being selected in the ship list box
 //
+//[of]:ShipSelected()
 ShipSelected()
 {
 	hwindow button = GUI.FocusedWindow();
@@ -498,12 +563,14 @@ ShipSelected()
 	
 	debug Debug.PrintString("jcEpicShipPurGUI.ShipListSelect: End\n");
 }
+//[cf]
 
 
 //
 // Fn: create_ship_list
 // Desc: Build up the list of buyable ships from the ini file
 //
+//[of]:hwindow create_ship_list(hwindow parent, int x, int y, int width, int height, string btn_fn)
 hwindow create_ship_list(hwindow parent, int x, int y, int width, int height, string btn_fn)
 {
 	hwindow		list_box;
@@ -543,10 +610,12 @@ hwindow create_ship_list(hwindow parent, int x, int y, int width, int height, st
 	shipyard_ini = INIFile.Create( "ini:/player_ship" );
 	if( shipyard_ini != none)
 	{
-		debug Debug.PrintString( "jcEpicShipPurGUI: Loading player_ship.ini\n" );
-		debug Debug.PrintString( "Station Docked at: " );
-		debug Debug.PrintString( tEconUtil.StationIntToString( iHabitat.Type( iHabitat.Cast(docked_to_station())) ) );
-		debug Debug.PrintString( "\n" );
+		debug {
+			Debug.PrintString( "jcEpicShipPurGUI: Loading player_ship.ini\n" );
+			Debug.PrintString( "Station Docked at: " );
+			Debug.PrintString( tEconUtil.StationIntToString( iHabitat.Type( iHabitat.Cast(docked_to_station())) ) );
+			Debug.PrintString( "\n" );
+		}
 		
 		ship_i = 0;
 		while( INIFile.NumberedExists( shipyard_ini, "Entries", "ship", ship_i ) )
@@ -652,38 +721,45 @@ hwindow create_ship_list(hwindow parent, int x, int y, int width, int height, st
 
 	return list_box;
 }
+//[cf]
 
 
 //
 // Fn: get_top_container
 // Desc: return the toplevel window container for the screen set
 //
+//[of]:hwindow get_top_container()
 hwindow get_top_container()
 {
 	return (GUI.Cast( Global.Handle("gjc_epic_purship_gui_shady") ));
 }
+//[cf]
 
 
 //
 // Fn: hide_window
 // Desc: Make window invisible and prevent it getting focus
 //
+//[of]:hide_window( hwindow win )
 hide_window( hwindow win )
 {
 	GUI.SetVisible( win, false );
 	GUI.SetWindowAcceptFocus( win, false );
 }
+//[cf]
 
 
 //
 // Fn: show_window
 // Desc: Make window visible and allow focus
 //
+//[of]:show_window( hwindow win )
 show_window( hwindow win )
 {
 	GUI.SetVisible( win, true );
 	GUI.SetWindowAcceptFocus( win, true );
 }
+//[cf]
 
 
 //
@@ -691,6 +767,7 @@ show_window( hwindow win )
 // Desc: Returns the handle to the station the player is docked to
 //       else returns a none handle.
 //
+//[of]:hsim docked_to_station()
 hsim docked_to_station()
 {
 	hship player = iShip.FindPlayerShip();
@@ -703,34 +780,11 @@ hsim docked_to_station()
     
     return none;
 }
+//[cf]
 
 
 
 
-task change_ship(string template_name)
-{
-   hship player_ship = iShip.FindPlayerShip();
-   hship new_ship;
-
-   new_ship = tsShip.Create(template_name, Global.String("gt_player_ship_name"));
-
-   if (none != new_ship) {
-      // Take the player ship out of the player fleet.
-      tsPlayerFleet.RemoveFleetShip(player_ship);
-
-      tsPlayerFleet.NewPlayerShip(new_ship);
-
-      Sim.PlaceNear(new_ship, player_ship, 1km);
-
-      tsLoadoutGui.RemoveEquipment(player_ship);
-
-      Task.Sleep(Task.Current(), 0.1);
-
-      Sim.Destroy(player_ship);
-   }else {
-      debug Debug.PrintString("jcEpicShipPurGUI.change_ship Error\n");
-   }
-}
 
 
 
