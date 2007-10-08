@@ -190,6 +190,7 @@ DisplayWindow()
 	hwindow cancel_btn;
 	hwindow info_area;
 	hwindow ship_desc_area;
+	hwindow ship_image_area;
 	
 	int width, height, accum_y_offset;
 	
@@ -238,11 +239,19 @@ DisplayWindow()
 	ship_list = create_ship_list(shady_bar,
 					Global.Int("EpicGui_content_indent"),
 					accum_y_offset,
-					width/2, height/3, "jcEpicShipPurGUI.ShipSelected");
+					180+Global.Int("GUI_scrollbar_width")+5,
+					height/3,
+					"jcEpicShipPurGUI.ShipSelected");
 	
 	Object.AddHandleProperty(get_top_container(), "ship_list", ship_list);
 
 	GUI.CreateBorder( ship_list );
+	
+	// 1a. make the ship image area
+	ship_image_area = GUI.CreateTextWindow( Global.Int("EpicGui_content_indent")+ (width/2), accum_y_offset-5,
+									    256, 256, shady_bar );
+    // save the ship_image_area to a global for later access from the buttons and list box
+	Object.AddHandleProperty(get_top_container(), "ship_image_area", ship_image_area);
 
 	
 	// 2. put buttons at bottom of ship list
@@ -529,6 +538,7 @@ ShipSelected()
 	hwindow button = GUI.FocusedWindow();
 	hwindow info_area = GUI.Cast( Object.HandleProperty( get_top_container(), "info_area" ) );
 	hwindow ship_desc_area = GUI.Cast( Object.HandleProperty(get_top_container(), "ship_desc_area" ) );
+	hwindow ship_image_area = GUI.Cast( Object.HandleProperty(get_top_container(), "ship_image_area" ) );
 	hwindow bbtn = 	GUI.Cast( Object.HandleProperty( get_top_container(), "buy_btn" ) );
 	string info_html_template = "<html><body><hr>Ship: %s<br><br>%s</body></html>";
 	string price, funds, tmp1, tmp2;
@@ -542,11 +552,19 @@ ShipSelected()
 	{
 		price = String.Join( price, " (insufficient funds)" );
 	}
+	
 	funds = String.FromInt( tEpicMoney.ShipAccount() );
 	tmp1 = String.FormatStrStr( "Cost: %s<br><br>Available funds: %s", price, funds );
 	info_html = String.FormatStrStr( info_html_template, GUI.WindowTitle( button ), tmp1 );
+	
+	// set the info on ship costs and player available funds.
 	GUI.SetTextWindowString( info_area, info_html );
+	
+	// set the description on the ship.
 	GUI.SetTextWindowResource( ship_desc_area, Object.StringProperty(button, "html_description") );
+
+	// set the image for the ship.
+	GUI.SetTextWindowResource( ship_image_area, Object.StringProperty(button, "html_image") );
 	
 	// select the chosen entry
 	GUI.CancelListBoxSelection( list_box );
@@ -660,12 +678,19 @@ hwindow create_ship_list(hwindow parent, int x, int y, int width, int height, st
 					// make a button with that name and hook to btn function
 					button = iGUI.CreateAndInitialiseRectangularInverseButton(none, 0, 0, 180, ship_name, btn_fn);
 					
-               // add in ship specific attributes as needed, from ini file
-               Object.AddStringProperty( button, "ship_key", ship_key);
-               Object.AddIntProperty( button, "price", INIFile.Int( shipyard_ini, ship_key, "price", 0) );
-               Object.AddStringProperty( button, "html_description", INIFile.String( shipyard_ini, ship_key, "html_description", "") );
-               Object.AddStringProperty( button, "ship_template", INIFile.String( shipyard_ini, ship_key, "ship_template", "") );
-		            
+					// add in ship specific attributes as needed, from ini file
+					Object.AddStringProperty( button, "ship_key", ship_key);
+					Object.AddIntProperty( button, "price", INIFile.Int( shipyard_ini, ship_key, "price", 0) );
+					Object.AddStringProperty( button, "html_description", INIFile.String( shipyard_ini, ship_key, "html_description", "") );
+					Object.AddStringProperty( button, "html_image", INIFile.String( shipyard_ini, ship_key, "html_image", "") );
+					Object.AddStringProperty( button, "ship_template", INIFile.String( shipyard_ini, ship_key, "ship_template", "") );
+					debug {
+						Debug.PrintString("jcEpicShipPurGUI.create_ship_list: list entry properties\n");
+						Debug.PrintString(INIFile.String( shipyard_ini, ship_key, "html_description", ""));
+						Debug.PrintString("\n");
+						Debug.PrintString(INIFile.String( shipyard_ini, ship_key, "html_image", ""));
+						Debug.PrintString("\n");
+					}
 		            // add button to list box
 					GUI.AddListBoxEntry(list_box, button);
 				}
