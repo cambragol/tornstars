@@ -69,7 +69,8 @@ pcrs_dropped_nav, "Check your contact list for the Nav Location"
 ; PcPirateToll
 pcpt_enemy_sighted, "Enemies sighted! Attack"
 pcpt_player_fled_attack, "Scum! I warned you not to leave! Attack!"
-pcpt_player_poor, "You don't have anything worth stealing. Leave! Now!" 
+pcpt_player_poor, "You don't have anything worth stealing. Leave! Now!"
+pcpt_player_poor_1, "What a load of crap.  Consider yourself lucky on that count!  Hahaha... now get the hell outta here!"  
 pcpt_halt_warning, "Halt Your Ship! You must pay to cross this system." 
 pcpt_announce_inspection, "Wait here while we inspect your cargo."
 pcpt_distance_warning, "Do not move more than 10km from this location or we will attack." 
@@ -154,26 +155,50 @@ pcct_second_refusal_response, "They don't pay us enough. Look, you pay, or you d
 
 pcgs_guard_sweep_finished,"Control, our sweep shows a clear scope"
 pcgs_guard_sweep_finished_1,"Sweep complete, plotting next vector"
+pcgs_guard_sweep_finished_2,"Sweep finished, heading out on next vector"
+pcgs_guard_sweep_finished_3,"Sweep all clear, moving on next vector"
+pcgs_guard_sweep_finished_4,"Sweep's done, moving on to next vector.  It's pretty quiet out here"
+pcgs_guard_sweep_finished_5,"Sweep's all wrapped, continuing on along new course"
 
 pcgs_guard_hostile_spotted,"Hostile ships spotted, moving to attack"
 pcgs_guard_hostile_spotted_1,"Control, are you seeing these hostiles? Attacking"
+pcgs_guard_hostile_spotted_2,"Moving to intercept hostiles"
+pcgs_guard_hostile_spotted_3,"Scope is picking up possible hostiles, moving to intercept"
+pcgs_guard_hostile_spotted_4,"We see hostiles, moving to attack vector"
+pcgs_guard_hostile_spotted_5,"Arming and moving to intercept the hostiles"
+
 
 pcgs_answering_distress_call,"Distress call recieved, vectoring to intercept"
 pcgs_answering_distress_call_1,"Control, we are moving to assist mayday"
 pcgs_answering_distress_call_2,"Distress ship, help is on the way"
+pcgs_answering_distress_call_3,"Distress call acknowledged, we are on the way"
+pcgs_answering_distress_call_4,"Distressed Ship, we are moving to assist"
+pcgs_answering_distress_call_5,"We are receiving distress call and moving to intercept"
 
 
 
 pcgs_guard_sweep_finished_machine,"Now moving to new scan location"
 pcgs_guard_sweep_finished_machine_1,"Scanning. No visitors detected"
+pcgs_guard_sweep_finished_machine_2,"Scanning. No visitors detected"
+pcgs_guard_sweep_finished_machine_3,"Scanning. No visitors detected"
+pcgs_guard_sweep_finished_machine_4,"Scanning. No visitors detected"
+pcgs_guard_sweep_finished_machine_5,"Scanning. No visitors detected"
+
 
 pcgs_guard_hostile_spotted_machine,"Visitors at last. Please wait here for your free gift!"
 pcgs_guard_hostile_spotted_machine_1,"We welcome all tourists to Omyadd. Hold still for photo!"
 pcgs_guard_hostile_spotted_machine_2,"The first law of robotics is do no harm."
+pcgs_guard_hostile_spotted_machine_3,"Please do not move.  Prepare for inspection."
+pcgs_guard_hostile_spotted_machine_4,"We request visiting ship to halt for examination."
+pcgs_guard_hostile_spotted_machine_5,"We bring peace to all touring parties"
+
 
 pcgs_answering_distress_call_machine,"Distress call recieved. Starting assistance subroutines"
 pcgs_answering_distress_call_machine_1,"Our programming requires us to prevent harm. Assisting."
 pcgs_answering_distress_call_machine_2,"We must assist this ship in distress"
+pcgs_answering_distress_call_machine_3,"Must render assistance"
+pcgs_answering_distress_call_machine_4,"Assitance required, begin assitance subroutines"
+pcgs_answering_distress_call_machine_5,"Acknowledge distress, aid will be rendered"
 
 
 
@@ -182,31 +207,65 @@ pcgs_guard_sweep_finished_thug_1,"Come out, come out where ever you are"
 pcgs_guard_sweep_finished_thug_2,"Here piggy piggy"
 pcgs_guard_sweep_finished_thug_3,"Round and round we go, where we stop..."
 pcgs_guard_sweep_finished_thug_4,"Did you see... oh, just a glitch"
+pcgs_guard_sweep_finished_thug_5,"There's never anything out here on my watch"
 
 
 pcgs_guard_hostile_spotted_thug,"Time to kick some ass!"
 pcgs_guard_hostile_spotted_thug_1,"Now your going to fry sucker!"
 pcgs_guard_hostile_spotted_thug_2,"Finally, some action!"
+pcgs_guard_hostile_spotted_thug_3,"Let's punish these scum"
+pcgs_guard_hostile_spotted_thug_4,"Time to vent some trash"
+pcgs_guard_hostile_spotted_thug_5,"Alertstations!  We are engaging"
+
 
 pcgs_answering_distress_call_thug,"Hey, our buddies in trouble!"
 pcgs_answering_distress_call_thug_1,"It's a fight! Let's get in there!"
 pcgs_answering_distress_call_thug_2,"Hang on, we are on our way!"
+pcgs_answering_distress_call_thug_3,"Friendly are incoming!"
+pcgs_answering_distress_call_thug_4,"We are on an intercept to the hostiles!"
+pcgs_answering_distress_call_thug_5,"Hold tight, friendlies are on the way!"
+
 
 
 
 ; tsCargoScript
 
 pccgo_cargoship_requesting_cargo_dock,"Station, cargo freight inbound requesting cargo dock"
-pccgo_cargoship_requesting_cargo_dock_1,"Station, cargo freight inbound requesting cargo dock"
+pccgo_cargoship_requesting_cargo_dock_1,"Hailing Station, we are inbound and requesting cargo dock"
+pccgo_cargoship_requesting_cargo_dock_2,"Ahoy there! Cargo's inbound and we's requesting dock clearence"
+pccgo_cargoship_requesting_cargo_dock_3,"Station control, We are on an inbound vector.  Requesting cargo docking clearence"
+pccgo_cargoship_requesting_cargo_dock_4,"Come in, Station. Requesting cargo dock clearence"
+pccgo_cargoship_requesting_cargo_dock_5,"Wei.. We cargo freight inbound asking to cargo docking.  You reading me?"
+
 
 pccgo_cargoship_docking_cleared,"Freighter, you are clear for docking"
-pccgo_cargoship_docking_cleared_1,"Freighter, you are clear for docking"
+pccgo_cargoship_docking_cleared_1,"Incoming freighter, you are clear to the dock"
+pccgo_cargoship_docking_cleared_2,"Freighter, proceed to the cargo spewer, you are cleared for docking"
+pccgo_cargoship_docking_cleared_3,"Attention freighter, you are cleared for docking"
+pccgo_cargoship_docking_cleared_4,"Attention incoming freighter, you are clear for docking"
+pccgo_cargoship_docking_cleared_5,"Freighter, approach cleared for docking.  Bring it in nice and easy"
+
 
 pccgo_cargoship_starting_unload,"Cargo unlocked and clear for detachment"
 pccgo_cargoship_starting_unload_1,"Cargo unlocked and clear for detachment"
+pccgo_cargoship_starting_unload_2,"Unlocked and cargo cleared for detachment"
+pccgo_cargoship_starting_unload_3,"Locks are released, cargo ready for transfer"
+pccgo_cargoship_starting_unload_4,"We are ready for transfer"
+pccgo_cargoship_starting_unload_5,"Clamps released, ready for transfer when you are"
+
 
 pccgo_cargoship_starting_load,"Commencing cargo load"
-pccgo_cargoship_starting_load_1,"Commencing cargo load"
+pccgo_cargoship_starting_load_1,"Beginning cargo load"
+pccgo_cargoship_starting_load_2,"Switching to cargo loading"
+pccgo_cargoship_starting_load_3,"Cargo load commencing"
+pccgo_cargoship_starting_load_4,"Moving to cargo loading sequence"
+pccgo_cargoship_starting_load_5,"Sequence cargo load initiated"
+
 
 pccgo_cargoship_abandon_dock,"Cancel that docking request station. We are moving to alternate"
 pccgo_cargoship_abandon_dock_1,"Cancel that docking request station. We are moving to alternate"
+pccgo_cargoship_abandon_dock_2,"Negative on that docking request station. Switching to secondary destination"
+pccgo_cargoship_abandon_dock_3,"Cancel docking request"
+pccgo_cargoship_abandon_dock_4,"Cancel that docking request station"
+pccgo_cargoship_abandon_dock_5,"We are cancelling our docking request.  Will move to alternate"
+
