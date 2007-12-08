@@ -420,7 +420,7 @@ task replace_task()
    hcargo return_cargo;
    hsubsim new_subsim;
 
-   debug Debug.PrintString("tsLoadoutGui.OnReplacePress\n");
+
 
    if (none == cargo) {
       debug Debug.PrintString("tsLoadoutGui.OnReplacePress error cargo\n");
@@ -461,9 +461,17 @@ task replace_task()
 
    tsShip.LinkPlayerWeapons(ship);
 
+   // Allow the new systems time to be created and placed. Then update the menu items.
+   Task.Sleep(Task.Current(), 0.1);
+
+   // beam replacement can swap subsims, to retag the ship.
+   tag_equipment(ship);
+
    create_ship_systems_list();
 
    create_equipment_list();
+
+   create_player_inventory_list();
 
    Global.SetBool("gt_loadoutgui_allow_replace", true);
 }
@@ -473,6 +481,8 @@ task replace_task()
 //[of]:OnReplacePress()
 OnReplacePress()
 {
+   debug Debug.PrintString("tsLoadoutGui.OnReplacePress\n");
+
    if (Global.Bool("gt_loadoutgui_allow_replace")) {
       Global.SetBool("gt_loadoutgui_allow_replace", false);
       Task.Detach(start replace_task());
@@ -517,8 +527,8 @@ OnRefuelPress()
 //[cf]
 
 
-//[of]:OnRemovePress()
-OnRemovePress()
+//[of]:OnRefuelPress()
+task remove_task()
 {
    hsubsim subsim = Subsim.Cast(Global.Handle("gt_loadoutgui_subsim_select"));
    hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
@@ -526,7 +536,7 @@ OnRemovePress()
    string mountpoint_template, hardpoint_type;
    hsubsim new_subsim;
 
-   debug Debug.PrintString("tsLoadoutGui.OnRemovePress\n");
+
 
    if (none == ship) {
       debug Debug.PrintString("tsLoadoutGui.OnReplacePress error ship\n");
@@ -559,9 +569,34 @@ OnRemovePress()
 
    tsShip.LinkPlayerWeapons(ship);
 
+   // Allow the new systems time to be created and placed. Then update the menu items.
+   Task.Sleep(Task.Current(), 0.1);
+
+   // beam replacement can swap subsims, to retag the ship.
+   tag_equipment(ship);
+
    create_ship_systems_list();
 
    create_equipment_list();
+
+   create_player_inventory_list();
+
+   // Allow another subsim to be removed.
+   Global.SetBool("gt_loadoutgui_allow_remove", true);
+}
+//[cf]
+
+
+//[of]:OnRemovePress()
+OnRemovePress()
+{
+   debug Debug.PrintString("tsLoadoutGui.OnRemovePress\n");
+
+   // block other removal attempts until this subsim has been removed.
+   if (Global.Bool("gt_loadoutgui_allow_remove")) {
+      Global.SetBool("gt_loadoutgui_allow_remove", false);
+      Task.Detach(start remove_task());
+   }
 }
 //[cf]
 
@@ -948,14 +983,14 @@ create_player_fleet_list()
 	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
    int pods_remaining;
    int button_width, height, list_x, list_y;
-   list fleet_list;
+   list fleet_list, wingman_list;
    hship ship;
    string name;
    hship player = iShip.FindPlayerShip();
 
 
    // Find all the player fleet ships that are nearby.
-   fleet_list = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tsPlayerFleet.PlayerFleet()), player, 100km, TM_Ship));
+   fleet_list = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tsPlayerFleet.PlayerFleet()), player, 20km, TM_Ship));
    List.AddHead(fleet_list, player);
 
 
@@ -1189,6 +1224,7 @@ MainWindow()
    // Non GUI interfacing and preperation here.
 
    Global.CreateBool("gt_loadoutgui_allow_replace", GA_Write|GA_NoSave, true);
+   Global.CreateBool("gt_loadoutgui_allow_remove", GA_Write|GA_NoSave, true);   
 
 
    ///***********************************
