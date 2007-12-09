@@ -84,6 +84,8 @@ prototype create_player_systems_list();
 
 prototype int index_from_name(list item_list, string property, string name);
 
+prototype select_ordered_inventory(hcargo cargo);
+
 
 
 RunCheck()
@@ -488,6 +490,8 @@ OnOrderPress()
       return;
    }
 
+   select_ordered_inventory(cargo);
+
    order_item(cargo, false);
 }
 
@@ -499,6 +503,8 @@ OnOrderAllPress()
    if (none == cargo) {
       return;
    }
+
+   select_ordered_inventory(cargo);
 
    order_item(cargo, true);
 }
@@ -760,7 +766,8 @@ create_ordered_inventory_list()
    hwindow button;
 
    hcargo cargo;
-   int i, count;
+   hcargo selected_cargo;
+   int i, count, selected_index;
 	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
 
    int button_width, height, list_x, list_y;
@@ -810,6 +817,9 @@ create_ordered_inventory_list()
 
    cargo_list = List.SortByStringProperty(cargo_list, "name");
 
+   selected_cargo = iCargo.Cast(Global.Handle("gt_etradebuy_ordered_select"));
+   selected_index = 0;
+
 
    count = List.ItemCount(cargo_list);
    for (i=0;i<count;++i) {
@@ -838,9 +848,13 @@ create_ordered_inventory_list()
 											"" );
 
       GUI.AddListBoxEntry(list_box, button);
+
+      if (selected_cargo == cargo) {
+         selected_index = i;
+      }
    }   
 
-
+   GUI.SelectListBoxEntry(list_box, selected_index);
 
 }
 
