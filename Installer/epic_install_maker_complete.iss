@@ -1,8 +1,7 @@
 [Setup]
 UseSetupLdr=true
 OutputBaseFilename=unstable_space_11_5
-;OutputDir=D:\Epic\EpicRelease\USpace10_19
-OutputDir=.
+;OutputDir=D:\Documents and Settings\Mourfin\My Documents\Unstable_Space_11_6
 AppCopyright=Epic Team
 AppName=Unstable Space
 AppVerName=Unstable Space 11.5
@@ -23,7 +22,7 @@ SolidCompression=true
 VersionInfoVersion=11.5
 VersionInfoTextVersion=Epic 11.5
 UsePreviousAppDir=false
-WizardImageFile=.\Left_Install.bmp
+WizardImageFile=.\Left_Install3.bmp
 WizardSmallImageFile=.\install_small.bmp
 
 
@@ -190,11 +189,28 @@ Source: .\..\EpicSource\MS_Mod_Reference\TEXT\*; DestDir: {app}\mods\MS_Mod_Main
 Source: .\..\EpicSource\MS_Mod_Ships\*; DestDir: {app}\mods\MS_Mod_Ships;
 Source: .\..\EpicSource\MS_Mod_Ships\collisionhulls\*; DestDir: {app}\mods\MS_Mod_Ships\collisionhulls;
 Source: .\..\EpicSource\MS_Mod_Ships\audio\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\audio\sfx;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\assault_cannon\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\assault_cannon;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\assault_cannon_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\assault_cannon_bolt;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\cutting_beam\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\cutting_beam;
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\beam\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\beam;
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\capital_beam_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\capital_beam_bolt;
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\cutting_beam_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\cutting_beam_bolt;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\cutting_beam_projector\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\cutting_beam_projector;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\disruptor\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\disruptor;
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\eamp\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\eamp;
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\edrone\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\edrone;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\heavy_pbc_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\heavy_pbc_bolt;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\light_pbc\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\light_pbc;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\light_pbc_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\light_pbc_bolt;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\missile_magazine\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\missile_magazine;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\neutron_pbc\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\neutron_pbc;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\old_corvette\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\old_corvette;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\pbc_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\pbc_bolt;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\pbc_bolt_neutron\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\pbc_bolt_neutron;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\quad_pbc\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\quad_pbc;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\standard_pbc\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\standard_pbc;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\standard_pbc_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\standard_pbc_bolt;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_e\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\turret_e;
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\pulsar\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\pulsar;
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\tug_hull\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\tug_hull;
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\us_capital_beam_turret\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\us_capital_beam_turret;
@@ -210,6 +226,8 @@ Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\*; DestDir: {app}\mods\MS_Mod_Sh
 Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\default\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\default; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\player\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\player; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\utility\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\utility; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\default\emerald*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\default\emerald; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\default\leung*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\default\leung; Flags: skipifsourcedoesntexist
 
 Source: .\..\EpicSource\MS_Mod_Ships\sims\weapons\*; DestDir: {app}\mods\MS_Mod_Ships\sims\weapons; Flags: skipifsourcedoesntexist
 
