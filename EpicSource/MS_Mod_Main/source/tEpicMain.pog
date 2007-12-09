@@ -76,7 +76,9 @@ uses
    tsShipCreationEnum,
    tsShipCreation,
    tEReferenceGui,
-   tsLoadoutGui;
+   tsLoadoutGui,
+   tsEquipSell,
+   tsEquipBuy;
 
 
 // Exports
@@ -176,6 +178,9 @@ SessionEnter()
    tEReferenceGui.SessionStart();
 
    tsLoadoutGui.SessionStart();
+
+   tsEquipBuy.SessionStart();
+   tsEquipSell.SessionStart();   
 }
 //[cf]
 
@@ -198,6 +203,9 @@ SessionExit()
    tEReferenceGui.SessionEnd();
 
    tsLoadoutGui.SessionEnd();
+
+   tsEquipBuy.SessionEnd();
+   tsEquipSell.SessionEnd();
 }
 //[cf]
 
