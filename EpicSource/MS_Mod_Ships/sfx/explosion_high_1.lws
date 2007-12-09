@@ -9,6 +9,18 @@ PreviewLastFrame 60
 PreviewFrameStep 1
 FramesPerSecond 60.000000
 
+AddNullObject <node class=icShockwaveAvatar tint=(0.9,1.0,0.9) lifetime=15>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 0 0 0 0 0 0 0 0
+  0 0 0 0 0
+  0 0 0 0 0 0 1 1 1
+  60 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
 AddNullObject <node class=icMovieAvatar url=texture||images|sfx|fzgb frame_count=40>
 ShowObject 8 7
 ObjectMotion (unnamed)
@@ -68,11 +80,11 @@ LgtIntensity (envelope)
   0
   0 0 0 0 0
   1
-  3 0 0 0 0
+  13 0 0 0 0
   0.3
-  18 0 0 0 0
+  118 0 0 0 0
   0
-  60 0 0 0 0
+  860 0 0 0 0
 EndBehavior 1
 LightType 1
 LightFalloff 1
@@ -84,11 +96,11 @@ FlareIntensity (envelope)
   0
   0 0 0 0 0
   1
-  3 0 0 0 0
+  13 0 0 0 0
   0.3
-  18 0 0 0 0
+  118 0 0 0 0
   0
-  60 0 0 0 0
+  860 0 0 0 0
 EndBehavior 1
 FlareNominalDistance 8.000000
 FlareDissolve 0.000000
