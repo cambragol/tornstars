@@ -94,10 +94,13 @@ prototype list hardpoint_list(hship ship);
 prototype list find_equipment(string hardpoint_type);
 prototype hcargo subsim2cargo(string subsim_template);
 
+prototype bool store_subsim(hsubsim subsim);
+prototype rearm_subsim(hsubsim subsim, bool empty_subsim);
+
 prototype hide_window( hwindow win );
 prototype show_window( hwindow win );
 prototype tag_equipment(hship ship);
-prototype int rearm_cost(hship ship);
+prototype bool needs_rearm(hship ship);
 prototype rearm_ship(hship ship);
 
 prototype string get_mountpoint_template(string hardpoint_type);
@@ -122,18 +125,18 @@ bool allow_run()
       allow_trade = false;
    }
 
-   // Don't allow the player to trade when the station is not
+   // Don't allow the player to loadout when the station is not
    // operating (destroyed or under construction). 
    if (tStation.Status(iHabitat.Cast(station)) != ESS_Normal) {
       allow_trade = false;
    }
 
-   // If the player owns this station, do not allow trade.
+   // If the player owns this station, do not allow loadout.
    if (station_faction == tsFaction.PlayerFaction()){
       allow_trade = false;
    }
 
-   // If no one owns this station (it was abandond) do not allow trade.
+   // If no one owns this station (it was abandond) do not allow loadout.
    if (station_faction == tsFaction.EmptyFaction()){
       allow_trade = false;
    }
@@ -183,8 +186,8 @@ SessionEnd()
 AttachCargoHardpoint()
 {
    hinifile hardpoint_file = INIFile.Create("ini:/cargo_hardpoints");
-   string cargo_name, hardpoint_type, template_name;
-   int count, cargo_type, price, ammo_price;
+   string cargo_name, hardpoint_type, template_name, ammo_name;
+   int count, cargo_type, price, ammo_type;
    hcargo cargo;
    hinifile subsim_file;
    list mountpoint_list;
@@ -199,10 +202,11 @@ AttachCargoHardpoint()
       hardpoint_type = INIFile.NumberedString(hardpoint_file, "Cargo", "hardpoint_type", count, "");
       template_name = INIFile.NumberedString(hardpoint_file, "Cargo", "template", count, "");
       price = INIFile.NumberedInt(hardpoint_file, "Cargo", "price", count, 0);
-      ammo_price = INIFile.NumberedInt(hardpoint_file, "Cargo", "ammo_price", count, 0);
+      ammo_name = INIFile.NumberedString(hardpoint_file, "Cargo", "ammo_type", count, "CT_Invalid");
       ++count;
 
       cargo_type = tEconUtil.String2CargoType(cargo_name);
+      ammo_type = tEconUtil.String2CargoType(ammo_name);
 
       // Validate there are no typo errors.
       subsim_file = INIFile.Create(template_name);
@@ -222,7 +226,7 @@ AttachCargoHardpoint()
             Object.AddStringProperty(cargo, "hardpoint_type", hardpoint_type);
             Object.AddStringProperty(cargo, "template_name", template_name);
             Object.AddIntProperty(cargo, "equip_price", price);
-            Object.AddIntProperty(cargo, "ammo_price", ammo_price);
+            Object.AddIntProperty(cargo, "ammo_type", ammo_type);
          }else{
             debug {
                Debug.PrintString(cargo_name);
@@ -235,6 +239,29 @@ AttachCargoHardpoint()
             Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Error invalid cargo type\n");
          }
       }
+                  
+      if (CT_Invalid != ammo_type) {
+         cargo = iCargo.Find(ammo_type);
+
+         if (none != cargo) {
+            Object.AddStringProperty(cargo, "hardpoint_type", "ammo");
+            Object.AddStringProperty(cargo, "template_name", "");
+            Object.AddIntProperty(cargo, "equip_price", 0);
+            Object.AddIntProperty(cargo, "ammo_type", 0);
+         }else{
+            debug {
+               Debug.PrintString(cargo_name);
+               Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Error invalid ammo cargo type\n");
+            }
+         }
+      }else {
+         debug {
+            Debug.PrintString(cargo_name);
+            Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Error invalid cargo type\n");
+         }
+      }
+
+
    }  // while end
 
    // process the hard point types in the cargo_hardpoints.ini file
@@ -437,15 +464,11 @@ task replace_task()
       return;
    }
 
-   // remove one items worth.
+   // remove subsim from inventory.
    iInventory.Add(Object.IntProperty(cargo,"type"), -1);
 
-   // Credit the player if the subsystem removed was a real system (not mountpoint).
-   return_cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
-
-   if (none != return_cargo) {
-      iInventory.Add(Object.IntProperty(return_cargo,"type"), 1);
-   }
+   // put the removed subsim into inventory plus ammo.
+   store_subsim(subsim);
 
    template_name = Object.StringProperty(cargo,"template_name");
 
@@ -463,6 +486,9 @@ task replace_task()
 
    // Allow the new systems time to be created and placed. Then update the menu items.
    Task.Sleep(Task.Current(), 0.1);
+
+   // Fill the new subsim with ammo from inventory.
+   rearm_subsim(new_subsim, true);
 
    // beam replacement can swap subsims, to retag the ship.
    tag_equipment(ship);
@@ -505,15 +531,14 @@ OnRearmPress()
 {
    hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
    hwindow rearm_button = GUI.Cast(Global.Handle("gt_loadoutgui_rearm_button"));
-   int cost;
-
-   cost = Object.IntProperty(ship, "rearm_cost");
-   tEpicMoney.ChangeShipAccount(-1*cost);
 
    rearm_ship(ship);
 
    // The ship status has changed, force an update.
    select_ship(ship);
+
+   // We must have used up some ammo.
+   create_player_inventory_list();
 }
 //[cf]
 
@@ -548,15 +573,9 @@ task remove_task()
       return;
    }
 
-   return_cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
-
-   if (none == return_cargo) {
-      // If the item to be removed is not a loadout supported subsim, exit.
-      // We should not ever be here, but this is a safety check.
+   if (!store_subsim(subsim)) {
       return;
    }
-
-   iInventory.Add(Object.IntProperty(return_cargo,"type"), 1);
 
    hardpoint_type = Object.StringProperty(subsim, "hardpoint_type");
 
@@ -586,6 +605,39 @@ task remove_task()
 }
 //[cf]
 
+// Replaces a subsim into the inventory, including any ammo
+// Returns true if it was a Loadout supported subsim
+//[of]:store_subim()
+bool store_subsim(hsubsim subsim)
+{
+   hcargo return_cargo;
+   int ammo_type, ammo_count;
+
+   return_cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
+
+   if (none == return_cargo) {
+      // If the item to be removed is not a loadout supported subsim, exit.
+      // We should not ever be here, but this is a safety check.
+      return false;
+   }
+
+   iInventory.Add(Object.IntProperty(return_cargo,"type"), 1);
+
+   ammo_type = Object.IntProperty(return_cargo,"ammo_type");
+
+   if (ammo_type != 0) {
+      if (Object.PropertyExists(subsim, "ammo_count")) {
+         // Subsim uses ammo, so put it back into storage.
+         ammo_count = Object.IntProperty(subsim, "ammo_count");
+         iInventory.Add(ammo_type, ammo_count);
+      }
+   }
+
+   return true;
+
+}
+//[cf]
+
 
 //[of]:OnRemovePress()
 OnRemovePress()
@@ -609,7 +661,7 @@ update_ship_info()
    string text;
    int cost;
 
-   cost = Object.IntProperty(ship, "rearm_cost");
+
 
    text = String.Join(text,"Ship Info ");
    text = String.Join(text,Text.Field(Sim.Name(ship), FT_Text));
@@ -633,15 +685,11 @@ select_ship(hship ship)
 
    tag_equipment(ship);
 
-   cost = rearm_cost(ship);  
-
-   if (cost > 0) {
+   if (needs_rearm(ship)) {
       show_window(rearm_button);
-   }else {
+   }else{
       hide_window(rearm_button);
    }
-
-   Object.AddIntProperty(ship, "rearm_cost", cost);
 
    update_ship_info();
 
@@ -1581,16 +1629,14 @@ int repair_cost(hship ship)
 
 
 // Cost to replace ammo and missiles.
-//[of]:int rearm_cost(hship ship)
-int rearm_cost(hship ship)
+//[of]:int needs_rearm(hship ship)
+bool needs_rearm(hship ship)
 {
 
    int subsim_count = Sim.SubsimCount(ship);
-   int i, ammo_count, ammo_cost, total_cost, max_ammo;
+   int i, ammo_count, ammo_cost, max_ammo;
    hsubsim subsim;
    hcargo cargo;
-
-   total_cost = 0;
 
    for (i=0;i<subsim_count;++i) {
       subsim = Sim.NthSubsim(ship,i);
@@ -1600,26 +1646,14 @@ int rearm_cost(hship ship)
          max_ammo = Object.IntProperty(subsim, "max_ammo_count");
 
          if (ammo_count < max_ammo) {
-            // Find the cost of the ammo, add that to the total cost.
+            // Found an ammo using subsim that is below max
 
-            cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
-
-            if (none != cargo) {
-               ammo_cost = max_ammo - ammo_count;
-               ammo_cost = ammo_cost * Object.IntProperty(cargo, "ammo_price");
-               total_cost = total_cost + ammo_cost;
-            }
+            return true;
          }
       }
    }
 
-   debug {
-      Debug.PrintString("Ammo Cost ");
-      Debug.PrintInt(total_cost);
-      Debug.PrintString("\n");
-   }
-
-   return total_cost;
+   return false;
 }
 //[cf]
 
@@ -1635,13 +1669,53 @@ rearm_ship(hship ship)
       for (i=0;i<subsim_count;++i) {
          subsim = Sim.NthSubsim(ship,i);
 
-         if (Object.PropertyExists(subsim, "ammo_count")) {
-            max_ammo = Object.IntProperty(subsim, "max_ammo_count");
-            Object.SetIntProperty(subsim, "ammo_count", max_ammo);
-         }
+         rearm_subsim(subsim, false);
       }
    }
 } 
+//[cf]
+
+
+//[of]:rearm_subsim(hsubsim subsim)
+// try to reload the subsystem out of the player inventory.
+rearm_subsim(hsubsim subsim, bool empty_subsim)
+{
+   hcargo cargo;
+   int ammo_type, ammo_count, ammo_inv, max_ammo;
+
+   if (Object.PropertyExists(subsim, "ammo_count")) {
+      // This subsim uses ammo, we need to lookup the type.
+      cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
+      ammo_type = Object.IntProperty(cargo,"ammo_type");
+
+      if (ammo_type != 0) {
+
+         ammo_inv = iInventory.NumberOfCargoType(ammo_type);
+         max_ammo = Object.IntProperty(subsim, "max_ammo_count");
+
+         // new subsims carry over no ammo
+         if (empty_subsim) {
+            ammo_count = 0;
+         }else {
+            ammo_count = Object.IntProperty(subsim, "ammo_count");
+         }
+
+         // the player does not have enough to fill the subsim
+         if (max_ammo > (ammo_inv + ammo_count)) {
+            max_ammo = ammo_inv + ammo_count;
+         }
+
+         // Set the subsim to have the same amount.
+         Object.SetIntProperty(subsim, "ammo_count", max_ammo);
+
+         // remove any prior ammo from amount to take out of inventory.
+         max_ammo = max_ammo - ammo_count;
+
+         // Remove the lower amount from inventory.
+         iInventory.Add(ammo_type,-1*max_ammo);
+      }
+   }
+}
 //[cf]
 
 

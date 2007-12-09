@@ -383,7 +383,6 @@ ReadIniFile(hship ship)
 
 
 // If this ship is docked to a larger ship, return that ship.
-// Move this code to tsShip.
 hisim DockParent(hship ship)
 {
    return iSim.Cast(Sim.Parent(ship));
@@ -598,98 +597,7 @@ int default_daily_cost(int ship_type)
 }
 
 
-// This function reads the ships INI file and tries to match the template objects 
-// against the found subsims. If it finds a match it tags the ships subsims with 
-// the subsim class and the subsim template for use by the damage mod and loadout.
 
-tag_subsims(hship ship)
-{
-   string template_name, subsim_template, subsim_name, subsim_class;
-   hinifile ship_file;
-   hinifile template_file;
-   hsubsim subsim;
-   int subsim_count, template_count;
-   bool not_found;
-
-   template_name = Sim.TemplateName(ship);
-
-   if (template_name == "") {
-      // No template, there is nothing we can do.
-      debug Debug.PrintString("tsShip.tag_subsims ship has no template file\n");
-      return;
-   }
-
-   debug {
-      Debug.PrintString(template_name);
-      Debug.PrintString(" ship type\n");
-   }
-
-   ship_file = INIFile.Create(template_name);   
-
-   if (ship_file == none) {
-      // Invalid ship template, there is nothing we can do
-      debug Debug.PrintString("tsShip.tag_subsims invalid ship template file\n");
-      return;
-   }
-
-   template_count = 0;
-   while (INIFile.NumberedExists(ship_file,"Subsims","template",template_count)) {
-      subsim_template = INIFile.NumberedString(ship_file,"Subsims","template",template_count,"");
-
-      if ("" != subsim_template) {
-         template_file = INIFile.Create(subsim_template);
-
-         if (template_file != none) {
-            subsim_class = INIFile.String(template_file,"Class","name","");
-            subsim_name = INIFile.String(template_file,"Properties","name","");
-            INIFile.Destroy(template_file);
-
-
-            // Decrement through the ships subsims, looking for one by this name.
-            subsim_count = Sim.SubsimCount(ship);
-            not_found = true;
-            do {
-               subsim = Sim.NthSubsim(ship,subsim_count);
-
-               if (subsim_name == Object.StringProperty(subsim,"name")) {
-                  // Check if we already tagged this one.
-
-                  /*
-                  debug {
-                     Debug.PrintHandle(subsim);
-                     Debug.PrintString(" ");
-                     Debug.PrintString(subsim_template);
-                     Debug.PrintString(" ");
-                     Debug.PrintInt(template_count);
-                     Debug.PrintString("\n");
-                  }
-                  */
-
-                  if (!Object.PropertyExists(subsim,"subsim_template")) {
-                     not_found = false;
-                     Object.AddStringProperty(subsim,"subsim_template", subsim_template);
-                     Object.AddStringProperty(subsim,"subsim_class", subsim_class);
-                     Object.AddIntProperty(subsim,"template_number", template_count);
-                  }
-               }
-
-               --subsim_count;
-            } while (not_found && (subsim_count > -1) );
-
-            if (not_found) {
-                  debug {
-                     Debug.PrintString(subsim_template);
-                     Debug.PrintString(" tsShip.tag_subsims no match\n");
-                  }
-            }
-         }
-      }
-      ++template_count;
-   }
-
-
-   INIFile.Destroy(ship_file);
-}
 
 
 
@@ -711,7 +619,7 @@ null_subsims(hship ship)
 
    if (template_name == "") {
       // No template, there is nothing we can do.
-      debug Debug.PrintString("tsShip.tag_subsims ship has no template file\n");
+      debug Debug.PrintString("tsShip.null_subsims ship has no template file\n");
       return;
    }
 
@@ -724,7 +632,7 @@ null_subsims(hship ship)
 
    if (ship_file == none) {
       // Invalid ship template, there is nothing we can do
-      debug Debug.PrintString("tsShip.tag_subsims Error invalid ship template file\n");
+      debug Debug.PrintString("tsShip.null_subsims Error invalid ship template file\n");
       return;
    }
    
@@ -795,14 +703,13 @@ null_subsims(hship ship)
                      Object.AddVectorProperty(subsim, "orientation", yaw, pitch, roll);
                   }
                }
-
                --subsim_count;
             } while (not_found && (subsim_count > -1) );
 
             if (not_found) {
                   debug {
                      Debug.PrintString(subsim_template);
-                     Debug.PrintString(" tsShip.tag_subsims Error no match\n");
+                     Debug.PrintString(" tsShip.null_subsims Error no match\n");
                   }
             }
          }
@@ -836,81 +743,7 @@ hsubsim FindSubsimByTemplateNumber(hship ship, int template_number)
 
 
 
-/*
-[Hardpoints]
-hardpoint_name[0]="left_wing_mount"
-template[0]="ini:/subsims/systems/player/heavy_pbc"
-template_number[0]=15
-hardpoint_type[0]=weapon_medium
-position[0]=(15,30,75)
-orientation[0]=(0,90,0)
 
-hardpoint_name[1]="right_wing_mount"
-template[1]="ini:/subsims/systems/player/heavy_pbc"
-template_number[1]=16
-hardpoint_type[1]=weapon_medium
-position[1]=(15,30,-75)
-orientation[1]=(0,90,0)
-*/
-
-
-add_hardpoints(hship ship, hinifile ship_file)
-{
-   string subsim_template, hardpoint_name, subsim_class, hardpoint_type;
-   int template_number, count;
-   float xpos, ypos, zpos, roll, pitch, yaw;
-   hsubsim subsim;
-   hinifile subsim_file;
-
-   count = 0;
-   while (INIFile.NumberedExists(ship_file,"Hardpoints","template",count)) {
-      subsim_template = INIFile.NumberedString(ship_file,"Hardpoints","template", count,"");
-
-      subsim_file = INIFile.Create(subsim_template);
-
-      if (none != subsim_file) {
-         subsim_class = INIFile.String(subsim_file,"Class","name","");
-         INIFile.Destroy(subsim_file);
-
-         subsim = Subsim.Create(subsim_template);
-
-         if (none != subsim) {
-            // Mark the ship as allowing loadout.
-            Object.AddBoolProperty(ship,"hardpoints", true);
-
-            hardpoint_name = INIFile.NumberedString(ship_file,"Hardpoints","hardpoint_name", count,"");
-            template_number = INIFile.NumberedInt(ship_file,"Hardpoints","template_number", count, 0);
-            hardpoint_type = INIFile.NumberedString(ship_file,"Hardpoints","hardpoint_type", count, "");
-            xpos = INIFile.NumberedVectorX(ship_file,"Hardpoints","position",count);
-            ypos = INIFile.NumberedVectorY(ship_file,"Hardpoints","position",count);
-            zpos = INIFile.NumberedVectorZ(ship_file,"Hardpoints","position",count);
-
-            yaw = INIFile.NumberedVectorX(ship_file,"Hardpoints","orientation",count);
-            pitch = INIFile.NumberedVectorY(ship_file,"Hardpoints","orientation",count);
-            roll = INIFile.NumberedVectorZ(ship_file,"Hardpoints","orientation",count);
-
-            Object.AddStringProperty(subsim,"subsim_template", subsim_template);
-            Object.AddStringProperty(subsim,"subsim_class", subsim_class);
-            Object.AddVectorProperty(subsim, "position", xpos, ypos, zpos);
-            Object.AddVectorProperty(subsim, "orientation", yaw, pitch, roll);
-            Object.AddIntProperty(subsim,"template_number", template_number);
-            Object.AddStringProperty(subsim,"hardpoint_type", hardpoint_type);
-            Object.AddStringProperty(subsim,"hardpoint_name", hardpoint_name);
-
-            Sim.AddSubsim(ship, subsim);
-
-            PlaceSubsim(ship, subsim);
-
-            /*
-            Sim.AddSubsim(ship, subsim);
-            Subsim.Place(subsim, xpos, ypos, zpos);
-            Subsim.OrientateEuler(subsim, yaw, pitch, roll);
-            */
-         }
-      }
-      ++count;
-   }
-}
 
 // Replaces the passed in subsim with a new one created from template_name.
 hsubsim ReplaceSubsim(hship ship, hsubsim subsim, string template_name)
@@ -958,13 +791,13 @@ hsubsim ReplaceSubsim(hship ship, hsubsim subsim, string template_name)
 
             return new_subsim;
          }else{
-            debug Debug.PrintString("tsShip.ReplaceSubsim create subsim failed");
+            debug Debug.PrintString("tsShip.ReplaceSubsim Error create subsim failed");
          }
       }else {
-         debug Debug.PrintString("tsShip.ReplaceSubsim template file invalid");
+         debug Debug.PrintString("tsShip.ReplaceSubsim Error template file invalid");
       }
    }else {
-      debug Debug.PrintString("tsShip.ReplaceSubsim subsim has no template number");
+      debug Debug.PrintString("tsShip.ReplaceSubsim Error subsim has no template number");
    }
 
    return none;
