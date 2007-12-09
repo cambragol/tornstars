@@ -1463,9 +1463,14 @@ hwindow create_location_sublist_window()
    //********
 
    if (T_Station == iSim.Type(current_location)) {
-      // The submenu for stations is operations.
-//      item_list = tUnderOpFilter.FilterKnown(tUnderOp.StationOperations(current_location), true);
-      item_list = tUnderOp.StationOperations(current_location);
+      // The submenu for stations shows operations parked at the station.
+      if (Global.Bool("tsnav_show_ops")) {
+         // In debug mode, show all ops.
+         item_list = tUnderOp.StationOperations(current_location);
+      }else {
+         // Only show ops the player has already met and can track.
+         item_list = tUnderOpFilter.FilterKnown(tUnderOp.StationOperations(current_location), true);
+      }
    }else if (T_LagrangePoint == iSim.Type(current_location)) {
       item_list = tEJump.KnownList(iLagrangePoint.Cast(current_location));
    }else {
