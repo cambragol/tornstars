@@ -37,7 +37,7 @@ uses    Sim,
         tLRoot,
         tLTrade,
         tsFaction,
-        tETradeBuy,
+        tsEquipBuy,
         tEpicMoney,
         tShipName,
         tsCull;
@@ -189,7 +189,7 @@ setup_trade_ship(hship ship)
       debug Debug.PrintString("\n");
    }
 
-   // Read in the belt control properties
+   // Read in the weapon seller control properties
    seller_file = INIFile.String(control_file, "Properties", "trade_file", "ini:/weapon_cargo");
    seller_type = INIFile.String(control_file, "Properties", "seller_type", "Civilian");
 
@@ -287,7 +287,7 @@ task Comms()
     iConversation.End();
 
     if (start_deal) {
-       tETradeBuy.TradeObjectStart(ship);
+       tsEquipBuy.TradeObjectStart(ship);
     }
 
 }
@@ -347,7 +347,7 @@ task CriminalComms()
     iConversation.End();
 
     if (start_deal) {
-       tETradeBuy.TradeObjectStart(ship);
+       tsEquipBuy.TradeObjectStart(ship);
     }
 
 }
@@ -358,7 +358,7 @@ string type2comms(string seller_type)
 {
     if ("legal" == seller_type) {
         return "tPcWeaponSeller.Comms";
-    }else if ("legal" == seller_type) {
+    }else {
         return "tPcWeaponSeller.CriminalComms";
     }
 
