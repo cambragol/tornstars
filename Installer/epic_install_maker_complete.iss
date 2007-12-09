@@ -226,8 +226,8 @@ Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\*; DestDir: {app}\mods\MS_Mod_Sh
 Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\default\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\default; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\player\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\player; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\utility\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\utility; Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\default\emerald*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\default\emerald; Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\default\leung*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\default\leung; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\default\emerald\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\default\emerald; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_Ships\sims\ships\default\leung\*; DestDir: {app}\mods\MS_Mod_Ships\sims\ships\default\leung; Flags: skipifsourcedoesntexist
 
 Source: .\..\EpicSource\MS_Mod_Ships\sims\weapons\*; DestDir: {app}\mods\MS_Mod_Ships\sims\weapons; Flags: skipifsourcedoesntexist
 
