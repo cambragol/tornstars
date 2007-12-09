@@ -1706,7 +1706,8 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
       if (Sim.IsDead(player)) {
          // Player hit a wall, return based on distance travelled.
          debug tsDebug.PrintString("tsjump_debug","tEJump.player_watch player sim dead\n");
-         iHUD.SetPrompt("","Jump Failed Hit Object");
+         iHUD.SetPrompt("","");
+         iHUD.Print("Jump Failed Hit Object");
          return halfway;
       }
 
@@ -1717,8 +1718,8 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
          // Signal that the player had a good run.
          Global.SetBool("gt_ejump_passed", true);
 
-         //iHUD.SetPrompt("","");
-         iHUD.SetPrompt(String.FormatInt("%d Elapsed Seconds", float2int(elapsed_time)),"Jump Success");
+         iHUD.SetPrompt("","");
+         iHUD.Print(String.FormatInt("%d Jump Success Time", float2int(elapsed_time)));
          return true;
       }
 
@@ -1731,8 +1732,8 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
       if (Object.FloatProperty(player, "hit_points") < low_hit_points) {
          debug tsDebug.PrintString("tsjump_debug","tEJump.player_watch player damaged.\n");
 
-         //iHUD.SetPrompt("","");
-         iHUD.SetPrompt("","Jump Failed Hit Object");
+         iHUD.SetPrompt("","");
+         iHUD.Print("Jump Failed Hit Object");
          return halfway;
       }
 
@@ -1754,32 +1755,14 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
          iHUD.Print("Light Hit");
       }
 
-      // Check if the player has hit a disruptor
-      nearby_sims = iSim.SimsInRadius(player, disruptor_range, T_Waldo);
-      if (!Set.IsEmpty(nearby_sims)) {
-         atomic {
-            hit_points = Object.FloatProperty(player, "hit_points");
-            hit_points = hit_points - disruptor_damage;
-            if (hit_points < 1) {
-               hit_points = 0;
-            }
-            Object.SetFloatProperty(player, "hit_points", hit_points);
-         }
-         iHUD.Print("Disruptor Hit");
-
-         // These lights halt all player operation.
-         iShip.Disrupt(player, disruptor_time, false);
-      }
-
-
       // If time is up, end the simulation with
       // result based on distance traveled.
       elapsed_time = iGame.GameTime() - start_time;
       if (elapsed_time > route_time) {
          debug tsDebug.PrintString("tsjump_debug","tEJump.player_watch player slow.\n");
-         // Keep this commented out to leave record of how fast crossing jump.
-         //iHUD.SetPrompt("","");
-         iHUD.SetPrompt(String.FormatInt("%d Elapsed Seconds", float2int(elapsed_time)),"Jump Failed Time Up");
+
+         iHUD.SetPrompt("","");
+         iHUD.Print(String.FormatInt("%d Failed Jump Time", float2int(elapsed_time)));
          return halfway;
       }
 
