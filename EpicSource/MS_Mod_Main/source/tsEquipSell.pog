@@ -492,7 +492,6 @@ remove_item(hcargo cargo, bool remove_all)
 select_ordered_inventory(hcargo cargo)
 {
 
-
    update_cargo_info(cargo);
 
    Global.CreateHandle("gt_equipsell_ordered_select",GA_Write|GA_NoSave, cargo);
@@ -622,7 +621,7 @@ create_ordered_inventory_list()
 
    string name;
    list cargo_list = List.FromSet(ordered_set());
-
+   bool selection_found = false;
 
    // Remove the prior inventory list.
    if (none != list_base) {
@@ -667,6 +666,7 @@ create_ordered_inventory_list()
 
    selected_cargo = iCargo.Cast(Global.Handle("gt_etradebuy_ordered_select"));
    selected_index = 0;
+   selection_found = false;
 
    count = List.ItemCount(cargo_list);
    for (i=0;i<count;++i) {
@@ -696,13 +696,24 @@ create_ordered_inventory_list()
 
       GUI.AddListBoxEntry(list_box, button);
 
-      if (selected_cargo == cargo) {
+
+      if (cargo == selected_cargo) {
          selected_index = i;
+         selection_found = true;
       }
    }   
 
-
    GUI.SelectListBoxEntry(list_box, selected_index);
+
+   // If the cargo that was previously selected is not longer in the list
+   // a new cargo that is in the list must be selected. This bit of code
+   // forces the selection to be the first item in the list, which is 
+   // what is going to be highlighted in this case. 
+   if (!selection_found) {
+      cargo = iCargo.Cast(List.GetNth(cargo_list, 0));
+      select_ordered_inventory(cargo);
+   }
+
 }
 
 
