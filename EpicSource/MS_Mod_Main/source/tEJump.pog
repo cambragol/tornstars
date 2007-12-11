@@ -102,6 +102,7 @@ Init()
 
 
     Global.CreateBool("gt_ejump_player_jumping",GA_Write|GA_NoSave, false);
+    Global.CreateBool("gt_ejump_wingmen_jumping",GA_Write|GA_NoSave, false);
 
     Input.BindKey( "tEJump.SelectDialog","Multiplayer.Score");
 }
@@ -585,6 +586,14 @@ task select_dialog()
 
     // Stop other keypresses from starting the dialog
     Global.CreateBool("gt_ejump_running",GA_Write|GA_NoSave, true);
+
+
+    // Stop the player from second jumping before the wingmen can catch up.
+    if (Global.Bool("gt_ejump_wingmen_jumping")) {
+       iComms.Shout(none, "name_lori", "ejump_wingmen_still_jumping");
+       Global.SetBool("gt_ejump_running", false);
+       return;
+    }
 
     // ejump_no_lpoint, We don't have a capsule drive!"
     rating = jump_rating(player);
@@ -1086,6 +1095,8 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty, fl
            tsDebug.PrintString("tsjump_debug","tEJump.starting wingmen\n");
         }
 
+        Global.SetBool("gt_ejump_wingmen_jumping", true);
+
         // Move the player wingmen, with small time delays between.
         total = List.ItemCount(player_fleet);
         for (i=0;i<total;++i) {
@@ -1107,6 +1118,8 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty, fl
               jump_ship(wingman, destination, difficulty);
            }
         }
+
+        Global.SetBool("gt_ejump_wingmen_jumping", false);
 
         debug atomic {
            tsDebug.PrintString("tsjump_debug","tEJump.wingmen complete\n");
@@ -1735,24 +1748,6 @@ bool player_watch(hship player, hisim exit_mark, float route_time)
          iHUD.SetPrompt("","");
          iHUD.Print("Jump Failed Hit Object");
          return halfway;
-      }
-
-      // Check if the player has hit a light.
-      nearby_sims = iSim.SimsInRadius(player, light_range, T_Drone);
-      if (!Set.IsEmpty(nearby_sims)) {
-         atomic {
-            hit_points = Object.FloatProperty(player, "hit_points");
-            hit_points = hit_points - light_damage;
-            if (hit_points < 1) {
-               hit_points = 0;
-            }
-            Object.SetFloatProperty(player, "hit_points", hit_points);
-         }
-
-         iShip.Disrupt(player, 1, true);
-
-         debug tsDebug.PrintString("tsjump_debug","Light Hit\n");
-         iHUD.Print("Light Hit");
       }
 
       // If time is up, end the simulation with
