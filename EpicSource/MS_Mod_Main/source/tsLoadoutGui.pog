@@ -601,7 +601,7 @@ task remove_task()
    create_player_inventory_list();
 
    // Allow another subsim to be removed.
-   Global.SetBool("gt_loadoutgui_allow_remove", true);
+   Global.SetBool("gt_loadoutgui_allow_replace", true);
 }
 //[cf]
 
@@ -645,8 +645,8 @@ OnRemovePress()
    debug Debug.PrintString("tsLoadoutGui.OnRemovePress\n");
 
    // block other removal attempts until this subsim has been removed.
-   if (Global.Bool("gt_loadoutgui_allow_remove")) {
-      Global.SetBool("gt_loadoutgui_allow_remove", false);
+   if (Global.Bool("gt_loadoutgui_allow_replace")) {
+      Global.SetBool("gt_loadoutgui_allow_replace", false);
       Task.Detach(start remove_task());
    }
 }
@@ -1272,7 +1272,6 @@ MainWindow()
    // Non GUI interfacing and preperation here.
 
    Global.CreateBool("gt_loadoutgui_allow_replace", GA_Write|GA_NoSave, true);
-   Global.CreateBool("gt_loadoutgui_allow_remove", GA_Write|GA_NoSave, true);   
 
 
    ///***********************************
