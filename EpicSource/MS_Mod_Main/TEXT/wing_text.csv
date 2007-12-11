@@ -185,12 +185,14 @@ ejump_unstable_ask, "The lpoint is unstable and could damage us?"
 ejump_plotted, "Course plotted Sir"
 ejump_order_cancel, "Cancelling Sir"
 
-ejump_no_capsule_drive,"Our ship does not have a capsule drive!"
-
 ; Wingman and crew alerts that a ship will not jump
+
+ejump_no_capsule_drive,"Our ship does not have a capsule drive!"
 
 ejump_wingman_no_drive, "We don't have a capsule drive!"
 ejump_low_fuel, "We don't have enough fuel to jump"
+
+ejump_wingman_jumping, "Negative, our wingmen are still jumping"
 
 ; Player crew pilot responding to commands.
 
