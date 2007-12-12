@@ -114,6 +114,9 @@ prototype rearm_ship(hship ship);
 prototype string get_mountpoint_template(string hardpoint_type);
 prototype string get_mountpoint_type(hsubsim subsim);
 
+
+prototype bool allow_loadout(hship ship);
+prototype bool allow_rearming(hship ship);
 //
 // Determine if the gui can be run or not.
 //
@@ -391,12 +394,14 @@ select_system(hsubsim subsim)
 {
    hwindow remove_button = GUI.Cast(Global.Handle("gt_loadoutgui_remove_button"));
    hcargo return_cargo;
+   hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
+
 
    Global.SetHandle("gt_loadoutgui_subsim_select", subsim);
 
    return_cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
 
-   if (none != return_cargo) {
+   if ((none != return_cargo)&&(allow_loadout(ship))) {
       // Allow remove if subsim exists in inventory (not mountpoint).
       show_window(remove_button);
    }else {
@@ -739,7 +744,7 @@ select_ship(hship ship)
 
    tag_equipment(ship);
 
-   if (needs_rearm(ship)) {
+   if (needs_rearm(ship)&&allow_rearming(ship)) {
       show_window(rearm_button);
    }else{
       hide_window(rearm_button);
@@ -879,7 +884,8 @@ create_equipment_list()
    string name, hardpoint_type;
    hsubsim subsim;
    hcargo cargo;
-   
+   hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
+
    // Remove the prior inventory list.
    if (none != list_base) {
       GUI.DeleteWindow(list_base);
@@ -903,7 +909,10 @@ create_equipment_list()
       return;
    }
 
-   show_window(replace_button);
+   if (allow_loadout(ship)) {
+      show_window(replace_button);
+   }
+
    
    list_base = GUI.CreateWindow(0, 
                                 0,
@@ -1015,7 +1024,10 @@ create_ship_systems_list()
       return;
    }
 
-   show_window(remove_button);
+   if (allow_loadout(ship)) {
+      show_window(remove_button);   
+   }
+
 
 
    list_base = GUI.CreateWindow(0, 
@@ -1923,6 +1935,56 @@ tag_equipment(hship ship)
    }
 }
 //[cf]
+
+
+bool allow_loadout(hship ship)
+{
+   hship player = iShip.FindPlayerShip();
+   hhabitat station;
+
+   // if the debug global is set, always allow loadout.
+   if (Global.Bool("tsloadout_no_dock")) {
+      return true;
+   }
+   // We allow loadout if the ship is docked to a station that is within 20km of the player. 
+   // We allow loadout if a station is a type that supports doing loadouts.
+   // Otherwise, we don't allow it. 
+
+   // If the wingman is docked and the player is within 100km.
+   station = iHabitat.Nearest( iSim.SimsInRadius(ship, 20km, T_Station), ship);
+   if (station != none) {   
+      if (iSim.IsDockedToStructure(ship, station)) {
+         if (Sim.DistanceBetween(player, station) < 100km) {
+            return true;
+         }
+      }
+   }
+   return false;
+}
+
+bool allow_rearming(hship ship)
+{
+   hship player = iShip.FindPlayerShip();
+   hhabitat station;
+   
+   // if the debug global is set, always allow rearming.
+   if (Global.Bool("tsloadout_no_dock")) {
+      return true;
+   }
+
+   // We allow rearming within 20km of a station that is within 100km of the player.
+   // We allow rearming if the station is a type that allows rearming.
+   // If the wingman is docked and the player is within 100km.
+   station = iHabitat.Nearest(iSim.SimsInRadius(ship, 20km, T_Station), ship);
+   if (station != none) {
+      if (Sim.DistanceBetween(player, station) < 100km) {
+         return true;
+      }
+   }
+   return false;
+}
+
+
 
 
 //
