@@ -90,6 +90,14 @@ prototype create_equipment_list();
 prototype bool allow_run();
 
 prototype select_ship(hship ship);
+prototype clear_ship();
+
+prototype select_equipment(hcargo cargo);
+prototype clear_equipment();
+
+prototype select_system(hsubsim subsim);
+prototype clear_system();
+
 prototype list hardpoint_list(hship ship);
 prototype list find_equipment(string hardpoint_type);
 prototype hcargo subsim2cargo(string subsim_template);
@@ -397,9 +405,14 @@ select_system(hsubsim subsim)
 
    // Find matching equipment for the newly selected ship system.
    create_equipment_list();
+
 }
 //[cf]
 
+clear_system()
+{
+   Global.SetHandle("gt_loadoutgui_subsim_select", none);
+}
 
 //[of]:OnSystemPress()
 OnSystemPress()
@@ -413,6 +426,23 @@ OnSystemPress()
 }
 //[cf]
 
+select_equipment(hcargo cargo)
+{
+   // Set the value for the replace or remove button.
+   Global.SetHandle("gt_loadoutgui_equipment_select", cargo);
+
+   // We also steal the inventory information screen and display
+   // The selected cargo type. But only if the player makes
+   // the equipment selection.
+   Global.SetHandle("gt_loadoutgui_inventory_select", cargo);
+
+   update_item_info();
+}
+
+clear_equipment()
+{
+   Global.SetHandle("gt_loadoutgui_equipment_select", none);
+}
 
 //[of]:OnEquipmentPress()
 OnEquipmentPress()
@@ -423,16 +453,7 @@ OnEquipmentPress()
 
    cargo = iCargo.Cast(Object.HandleProperty(button,"gt_loadoutgui_equipment"));
 
-
-   // Set the value for the replace or remove button.
-   Global.SetHandle("gt_loadoutgui_equipment_select", cargo);
-
-   // We also steal the inventory information screen and display
-   // The selected cargo type. But only if the player makes
-   // the equipment selection.
-   Global.SetHandle("gt_loadoutgui_inventory_select", cargo);
-
-   update_item_info();
+   select_equipment(cargo);
 }
 //[cf]
 
@@ -446,52 +467,72 @@ task replace_task()
    string template_name, hardpoint_type;
    hcargo return_cargo;
    hsubsim new_subsim;
-
-
+   bool no_error = true;
 
    if (none == cargo) {
       debug Debug.PrintString("tsLoadoutGui.OnReplacePress error cargo\n");
-      return;
+      no_error = false;
    }
 
    if (none == ship) {
       debug Debug.PrintString("tsLoadoutGui.OnReplacePress error ship\n");
-      return;
+      no_error = false;
    }
 
    if (none == subsim) {
       debug Debug.PrintString("tsLoadoutGui.OnReplacePress error subsim\n");
-      return;
+      no_error = false;
    }
 
-   // remove subsim from inventory.
-   iInventory.Add(Object.IntProperty(cargo,"type"), -1);
-
-   // put the removed subsim into inventory plus ammo.
-   store_subsim(subsim);
-
-   template_name = Object.StringProperty(cargo,"template_name");
-
-   if ("" == template_name) {
-      debug Debug.PrintString("tsLoadoutGui.OnReplacePress error template\n");
-      return;
+   if (no_error) {
+      // Check the hardpoint types of the two systems match, in case of menu error
+      if (Object.StringProperty(subsim, "hardpoint_type") != Object.StringProperty(cargo, "hardpoint_type")){
+         no_error = false;
+      }
    }
 
-   new_subsim = tsShip.ReplaceSubsim(ship, subsim, template_name);
+   if (no_error) {
 
-   // Attach the hardpoint type to the new subsim to allow it to be changed again.
-   Object.AddStringProperty(new_subsim, "hardpoint_type", Object.StringProperty(cargo, "hardpoint_type"));
+      template_name = Object.StringProperty(cargo,"template_name");
 
-   tsShip.LinkPlayerWeapons(ship);
+      if ("" != template_name) {
 
-   // Allow the new systems time to be created and placed. Then update the menu items.
-   Task.Sleep(Task.Current(), 0.1);
+         // remove subsim from inventory.
+         iInventory.Add(Object.IntProperty(cargo,"type"), -1);
 
-   // Fill the new subsim with ammo from inventory.
-   rearm_subsim(new_subsim, true);
+         // put the removed subsim into inventory plus ammo.
+         store_subsim(subsim);      
+      }else {
+         debug Debug.PrintString("tsLoadoutGui.OnReplacePress error template\n");
+         no_error = false;
+      }
+   }
 
-   // beam replacement can swap subsims, to retag the ship.
-   tag_equipment(ship);
+   if (no_error) {
+
+      new_subsim = tsShip.ReplaceSubsim(ship, subsim, template_name);
+
+      // Attach the hardpoint type to the new subsim to allow it to be changed again.
+      Object.AddStringProperty(new_subsim, "hardpoint_type", Object.StringProperty(cargo, "hardpoint_type"));
+
+      tsShip.LinkPlayerWeapons(ship);
+
+      // Allow the new systems time to be created and placed. Then update the menu items.
+      Task.Sleep(Task.Current(), 0.1);
+
+      // Fill the new subsim with ammo from inventory.
+      rearm_subsim(new_subsim, true);
+
+      // beam replacement can swap subsims, to retag the ship.
+      tag_equipment(ship);
+
+      // Tell the systems menu where to focus
+      Global.SetHandle("gt_loadoutgui_subsim_new", new_subsim);
+   }
+
+   // Clear all old selections
+   clear_system();
+   clear_equipment();
 
    create_ship_systems_list();
 
@@ -559,48 +600,61 @@ task remove_task()
    hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
    hcargo return_cargo;
    string mountpoint_template, hardpoint_type;
-   hsubsim new_subsim;
-
+   hsubsim new_subsim = none;
+   bool no_error = true;
 
 
    if (none == ship) {
-      debug Debug.PrintString("tsLoadoutGui.OnReplacePress error ship\n");
-      return;
+      debug Debug.PrintString("tsLoadoutGui.OnRemovePress error ship\n");
+      no_error = false;
    }
 
    if (none == subsim) {
-      debug Debug.PrintString("tsLoadoutGui.OnReplacePress error subsim\n");
-      return;
+      debug Debug.PrintString("tsLoadoutGui.OnRemovePress error subsim\n");
+      no_error = false;
    }
 
    if (!store_subsim(subsim)) {
-      return;
+      debug Debug.PrintString("tsLoadoutGui.OnRemovePress error store_subsim\n");
+      no_error = false;
    }
 
-   hardpoint_type = Object.StringProperty(subsim, "hardpoint_type");
+   // Only swap if there are no errors.
+   if (no_error) {
 
-   mountpoint_template = get_mountpoint_template(hardpoint_type);
+      hardpoint_type = Object.StringProperty(subsim, "hardpoint_type");
 
-   // We replace the ship system with a mountpoint. 
-   new_subsim = tsShip.ReplaceSubsim(ship, subsim, mountpoint_template);
+      mountpoint_template = get_mountpoint_template(hardpoint_type);
 
-   Object.AddStringProperty(new_subsim, "hardpoint_type", hardpoint_type);
+      // We replace the ship system with a mountpoint. 
+      new_subsim = tsShip.ReplaceSubsim(ship, subsim, mountpoint_template);
 
-   tsShip.LinkPlayerWeapons(ship);
+      Object.AddStringProperty(new_subsim, "hardpoint_type", hardpoint_type);
 
-   // Allow the new systems time to be created and placed. Then update the menu items.
-   Task.Sleep(Task.Current(), 0.1);
+      tsShip.LinkPlayerWeapons(ship);
 
-   // beam replacement can swap subsims, to retag the ship.
-   tag_equipment(ship);
+      // Allow the new systems time to be created and placed. Then update the menu items.
+      Task.Sleep(Task.Current(), 0.1);
 
+      // beam replacement can swap subsims, to retag the ship.
+      tag_equipment(ship);
+   }
+
+   // Clear all old selections
+   clear_system();
+   clear_equipment();
+   
+   // Tell the systems menu where to focus
+   Global.SetHandle("gt_loadoutgui_subsim_new", new_subsim);
+
+   // Refresh all the lists to show the changes.
    create_ship_systems_list();
 
    create_equipment_list();
 
    create_player_inventory_list();
 
-   // Allow another subsim to be removed.
+   // Allow remove/replace buttons to function again.
    Global.SetBool("gt_loadoutgui_allow_replace", true);
 }
 //[cf]
@@ -691,11 +745,20 @@ select_ship(hship ship)
       hide_window(rearm_button);
    }
 
+   // Clear the two menu items relating to equipment
+   clear_system();
+   clear_equipment();
+
    update_ship_info();
 
    create_ship_systems_list();
 
    create_equipment_list();
+}
+
+clear_ship()
+{
+   Global.SetHandle("gt_loadoutgui_ship_select", none);
 }
 
 OnShipPress()
@@ -811,13 +874,11 @@ create_equipment_list()
 
    int i, count, index;
 	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
-   int pods_remaining;
    int button_width, height, list_x, list_y;
    list equipment_list;
    string name, hardpoint_type;
    hsubsim subsim;
    hcargo cargo;
-
    
    // Remove the prior inventory list.
    if (none != list_base) {
@@ -904,7 +965,7 @@ create_equipment_list()
    }   
 
    cargo = iCargo.Cast(List.Head(equipment_list));
-   Global.CreateHandle("gt_loadoutgui_equipment_select",GA_Write|GA_NoSave, cargo);
+   Global.SetHandle("gt_loadoutgui_equipment_select",cargo);
    GUI.SelectListBoxEntry(list_box, 0);
 
 }
@@ -922,16 +983,23 @@ create_ship_systems_list()
 
    int i, count, index;
 	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
-   int pods_remaining;
    int button_width, height, list_x, list_y;
+
    list subsim_list;
    string name;
+
    hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
    hsubsim subsim;
+   hsubsim new_subsim;
 
 
+   // See if there was a new subsim swapped onto the ship and
+   // remember it for selection in the list. Clear the request.
+   new_subsim = Subsim.Cast(Global.Handle("gt_loadoutgui_subsim_new"));
+   Global.SetHandle("gt_loadoutgui_subsim_new", none);
+
+   // Pull the list of ship systems.
    subsim_list = hardpoint_list(ship);
-
 
    // Remove the prior inventory list.
    if (none != list_base) {
@@ -957,7 +1025,7 @@ create_ship_systems_list()
                                 list_parent);
 
 
-   Global.CreateHandle("gt_loadoutgui_systems_base",GA_Write|GA_NoSave, list_base);
+   Global.CreateHandle("gt_loadoutgui_systems_base",GA_Write|GA_NoSave,list_base);
 
    // Set up the button and list sizes now.
    button_width = GUI.WindowCanvasWidth( list_base) - scrollbar_width;
@@ -983,9 +1051,17 @@ create_ship_systems_list()
 		Global.Float( "GUI_scrollbar_buttonratio" ),
 		"" );
 
-  
+
+   index = 0;
+   subsim_list = List.SortByStringProperty(subsim_list,"name");
+
    for (i=0;i<count;++i) {
       subsim = Subsim.Cast(List.GetNth(subsim_list,i));
+
+      // Try to reselect a just replaced subsim for player clarity.
+      if ((new_subsim != none)&&(subsim == new_subsim)) {
+         index = i;
+      }
 
       name = Text.Field(Object.StringProperty(subsim,"name"), FT_Text);
 
@@ -1010,8 +1086,7 @@ create_ship_systems_list()
       GUI.AddListBoxEntry(list_box, button);
    }   
 
-   subsim = Subsim.Cast(List.Head(subsim_list));
-   Global.CreateHandle("gt_loadoutgui_subsim_select", GA_Write|GA_NoSave, subsim);
+   subsim = Subsim.Cast(List.GetNth(subsim_list,index));
    GUI.SelectListBoxEntry(list_box, index);
 
    select_system(subsim);
@@ -1029,12 +1104,14 @@ create_player_fleet_list()
 
    int i, count, index;
 	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
-   int pods_remaining;
    int button_width, height, list_x, list_y;
    list fleet_list, wingman_list;
    hship ship;
    string name;
    hship player = iShip.FindPlayerShip();
+
+
+
 
 
    // Find all the player fleet ships that are nearby.
@@ -1111,7 +1188,6 @@ create_player_fleet_list()
 
    index = 0;
    ship = iShip.Cast(List.Head(fleet_list));
-   Global.CreateHandle("gt_loadoutgui_ship_select", GA_Write|GA_NoSave, ship);
 
    select_ship(ship);
 
@@ -1271,7 +1347,20 @@ MainWindow()
    ///***********************************
    // Non GUI interfacing and preperation here.
 
+   // This protects from button double clicks
    Global.CreateBool("gt_loadoutgui_allow_replace", GA_Write|GA_NoSave, true);
+
+   // This will be the currently selected ship
+   Global.CreateHandle("gt_loadoutgui_ship_select", GA_Write|GA_NoSave, none);
+
+   // This will be the subsim that gets replaced.
+   Global.CreateHandle("gt_loadoutgui_subsim_select", GA_Write|GA_NoSave, none);
+
+   // This will be the equipment to replace the subsim
+   Global.CreateHandle("gt_loadoutgui_equipment_select",GA_Write|GA_NoSave, none);
+
+   // This will be the subsim to replace the old subsim
+   Global.CreateHandle("gt_loadoutgui_subsim_new", GA_Write|GA_NoSave, none);
 
 
    ///***********************************
