@@ -606,12 +606,12 @@ hwindow create_ship_list(hwindow parent, int x, int y, int width, int height, st
 	float		standing_const_val;
 	bool		add_btn;
 	IeHabitatType station_type_docked;
-	hship		player;
 	eSimType	player_type;
-	int			player_resale;
+   string ship_template;
+	int			ship_price, player_resale;
 	hfaction	station_faction;
 	hfaction	player_faction;
-	
+	hship player = iShip.FindPlayerShip();
 	int cwidth = width - 25;
 	
 	
@@ -622,6 +622,8 @@ hwindow create_ship_list(hwindow parent, int x, int y, int width, int height, st
 	                             true,
 	                             false);
 	
+
+   player_resale = 0;
 
 	// Fill the listbox with the ships available for sale
 
@@ -649,6 +651,19 @@ hwindow create_ship_list(hwindow parent, int x, int y, int width, int height, st
 			station_faction = iSim.Faction( iSim.Cast(docked_to_station()) );
 			player_faction = iFaction.Find( "Player" );
 			
+
+
+
+
+         // We look through the entries until we find the players current ship.
+         // Then we look up the ships resale value.
+         ship_template = INIFile.String( shipyard_ini, ship_key, "ship_template", "");
+
+         if (Sim.TemplateName(player) == ship_template) {
+            player_resale = INIFile.Int( shipyard_ini, ship_key, "resale", 0);
+         }
+
+
 			if( iFaction.Feeling(station_faction, player_faction) >= standing_const_val )
 			{
 				station_i = 0;
@@ -703,32 +718,38 @@ hwindow create_ship_list(hwindow parent, int x, int y, int width, int height, st
 		debug Debug.PrintString( "jcEpicShipPurGUI.create_ship_list: player_ship.ini not found!\n" );
 	}
 	
+   // If we couldn't find a match to a 
 	// get the resale value of the players current ship. Then save in gui for later reference
 	// Do this here as we are already processing againts the player_ship.ini file.
-	player = iShip.FindPlayerShip();
-	player_type = iSim.Type( player );
-	switch( player_type )
-	{
-		case T_CommandSection:
-		player_resale = INIFile.Int( shipyard_ini, "Resale_Values", "commandsection", 0 );
-		break;
-		
-		case T_Tug:
-		player_resale = INIFile.Int( shipyard_ini, "Resale_Values", "tug", 0 );
-		break;
-		
-		case T_Patcom:
-		player_resale = INIFile.Int( shipyard_ini, "Resale_Values", "advancedpatcom", 0 );
-		break;
-		
-		case T_Interceptor:
-		player_resale = INIFile.Int( shipyard_ini, "Resale_Values", "stormpetrel", 0 );
-		break;
-		
-		case T_Corvette:
-		player_resale = INIFile.Int( shipyard_ini, "Resale_Values", "heavycorvette", 0 );
-		break;
-	}
+   if ( 0 == player_resale ) {
+
+      player_type = iSim.Type( player );
+      switch ( player_type ) {
+      case T_CommandSection:
+         player_resale = INIFile.Int( shipyard_ini, "Resale_Values", "commandsection", 0 );
+         break;
+
+      case T_Tug:
+         player_resale = INIFile.Int( shipyard_ini, "Resale_Values", "tug", 0 );
+         break;
+
+      case T_Patcom:
+         player_resale = INIFile.Int( shipyard_ini, "Resale_Values", "advancedpatcom", 0 );
+         break;
+
+      case T_Interceptor:
+         player_resale = INIFile.Int( shipyard_ini, "Resale_Values", "stormpetrel", 0 );
+         break;
+
+      case T_Corvette:
+         player_resale = INIFile.Int( shipyard_ini, "Resale_Values", "heavycorvette", 0 );
+         break;
+      default:
+         player_resale = INIFile.Int( shipyard_ini, "Resale_Values", "tug", 0 );
+         break;
+      }
+   }
+
 	Object.AddIntProperty(get_top_container(), "player_ship_resale", player_resale);
 	
 	INIFile.Destroy( shipyard_ini );
