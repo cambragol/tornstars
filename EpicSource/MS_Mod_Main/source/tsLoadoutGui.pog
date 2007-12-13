@@ -532,6 +532,9 @@ task replace_task()
       // beam replacement can swap subsims, to retag the ship.
       tag_equipment(ship);
 
+      // Try to get turret systems to fire on targets.
+      iShip.WeaponTargetsFromContactList(ship);
+
       // Tell the systems menu where to focus
       Global.SetHandle("gt_loadoutgui_subsim_new", new_subsim);
    }
