@@ -87,6 +87,8 @@ New(hisim operation)
 
    tUnderOp.SetName(operation, ship_name);
    tUnderOp.SetShipTemplate(operation, ship_template);
+
+   // Embezzle ops are special in that they want people to find them.
    tUnderOp.SetKnown(operation, true);
 
    // This is an embezzle op, so we set enough fleets for the 
