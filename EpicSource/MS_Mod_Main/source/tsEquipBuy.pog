@@ -52,7 +52,8 @@ uses	Sim,
       tEpicMoney,
       tPodUtil,
       uString,
-	  tSpewerOps;
+      tsDescribeINI;
+
 
 
 
@@ -68,6 +69,7 @@ provides TradeWindow,
          OnRemoveAllPress,
          OnOrderedItemPress,
          OnPurchasePress,
+         OnInventoryPress,
          OnSellScreen,
          SessionStart,
          SessionEnd,
@@ -363,6 +365,42 @@ update_cargo_info(hcargo cargo)
 }
 
 
+
+
+update_equip_info(hcargo cargo)
+{
+   hwindow equip_info = GUI.Cast(Global.Handle("gt_equipbuy_equip_window"));
+   string text, subsim_template;
+
+   if (none == cargo) {
+      text = uString.Htmlize("");
+      GUI.SetTextWindowString( equip_info, text);
+      return;
+   }
+
+   text = iCargo.Name(cargo);
+   
+   subsim_template = Object.StringProperty(cargo, "template_name");
+
+   if (subsim_template != "") {
+      text = String.Join(text, tsDescribeINI.Subsystem(subsim_template));
+   }
+
+   text = uString.Htmlize(text);
+
+   GUI.SetTextWindowString( equip_info, text);
+
+}
+
+OnInventoryPress()
+{
+   hwindow button = GUI.FocusedWindow();
+   hcargo cargo = iCargo.Cast(Object.HandleProperty(button,"gt_equipbuy_cargo"));
+
+   update_equip_info(cargo);
+}
+
+
 // Should display the total price
 update_order_info()
 {
@@ -454,6 +492,8 @@ select_station_inventory(hcargo cargo)
 {
    update_cargo_info(cargo);
 
+   update_equip_info(cargo);
+
    Global.CreateHandle("gt_equipbuy_station_select",GA_Write|GA_NoSave, cargo);
 }
 
@@ -465,6 +505,8 @@ OnStationPress()
 
    select_station_inventory(cargo);
 }
+
+
 
 
 OnOrderPress()
@@ -527,6 +569,8 @@ select_ordered_inventory(hcargo cargo)
 {
 
    update_cargo_info(cargo);
+
+   update_equip_info(cargo);
 
    Global.SetHandle("gt_equipbuy_ordered_select", cargo);
 }
@@ -977,6 +1021,20 @@ create_player_systems_list()
                                                                       button_width, 
                                                                       name,
                                                                       false );
+
+      Object.AddHandleProperty(button,"gt_equipbuy_cargo", cargo);
+
+      GUI.SetInputOverrideFunctions( button,
+											"", 
+											"",
+											"", 
+											"", 
+											"", 
+											"",
+											"tsEquipBuy.OnInventoryPress",
+											"",
+											"" );
+
       GUI.AddListBoxEntry(list_box, button);
    }   
 
@@ -1023,6 +1081,11 @@ int index_from_name(list item_list, string property, string name)
 }
 
 
+
+
+
+
+
 TradeWindow()
 {
    hwindow lh_shady, rh_shady;
@@ -1038,6 +1101,7 @@ TradeWindow()
    hwindow cargo_info;
    hwindow order_info;
    hwindow trade_center_info;
+   hwindow equipment_info_window;
 
    set trade_set;
    hisim trade_center = iSim.Cast(Global.Handle("g_epic_trade_start_object"));
@@ -1051,6 +1115,8 @@ TradeWindow()
    int lwidth, lheight, mid_width;
 
    int lshady_width = 525;
+   int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
+   int text_width;
 
    hfaction player_faction = iFaction.Find("Player");
    hfaction trade_faction = iSim.Faction(trade_center);
@@ -1308,7 +1374,7 @@ TradeWindow()
    rheight = rheight - Global.Int("EpicGui_content_footer");
    rwidth = GUI.WindowCanvasWidth(rh_shady);
 
-   // This button acts to replace the "back" button on the 
+   // Use this button to change to the selling screen.
 
    button = create_border_button(Global.Int("EpicGui_content_indent"), 
                                  GUI.WindowCanvasHeight(rh_shady) - Global.Int("EpicGui_content_footer"),
@@ -1328,7 +1394,7 @@ TradeWindow()
                                         false);
 
 
-   // This area is the players ship systems inventory
+   // This area is the inventory of stored ship systems
    top_splitter = GUI.SplitterWindowTopWindow(splitter);
 
    
@@ -1342,7 +1408,7 @@ TradeWindow()
                                                         Text.Field("gt_equipbuy_your_equipment",FT_Text));
 
 
-   // Create the base window for the player systems inventory box
+   // Create the base window for the player inventory box
    list_parent = GUI.CreateWindow(0,
                                   20,
                                   GUI.WindowCanvasWidth( top_splitter),
@@ -1353,8 +1419,46 @@ TradeWindow()
    Global.CreateHandle("gt_equipbuy_psystems_inv_parent",GA_Write|GA_NoSave, list_parent);
    
    create_player_systems_list();
-   
+
+
+   // Bottom Splitter. 
+   bottom_splitter = GUI.SplitterWindowBottomWindow(splitter);
+
+   // Set the list box title.
+   station_title = iGUI.CreateAndInitialiseStaticWindow(0,
+                                                        0,
+                                                        GUI.WindowCanvasWidth( bottom_splitter),
+                                                        20,
+                                                        bottom_splitter,
+                                                        title_font,
+                                                        Text.Field("gt_equipbuy_equipment_info",FT_Text));
+
+
+   text_width = GUI.WindowCanvasWidth(bottom_splitter);
+   text_width = text_width - 4;
+   text_width = text_width - scrollbar_width;
+
+   equipment_info_window = GUI.CreateTextWindow( 0,
+                                                 21,
+                                                 text_width,
+                                                 GUI.WindowCanvasHeight(bottom_splitter)-21,
+                                                 bottom_splitter);   
+
+
+   Global.CreateHandle("gt_equipbuy_equip_window",GA_Write|GA_NoSave, equipment_info_window);
+
+   GUI.CreateVerticalScrollbar( 0 + text_width + 4,
+                                21,
+                                scrollbar_width, 
+                                GUI.WindowCanvasHeight(bottom_splitter) - 21,
+                                bottom_splitter,
+                                equipment_info_window,
+                                Global.Float( "GUI_scrollbar_buttonratio" ),
+                                "");
+                                
 }
+
+
 
 
 /* 

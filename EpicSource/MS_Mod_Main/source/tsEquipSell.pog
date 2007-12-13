@@ -52,7 +52,8 @@ uses	Sim,
       tEpicMoney,
       tPodUtil,
       tLTrade,
-      uString;
+      uString, 
+      tsDescribeINI;
 
 
 
@@ -69,6 +70,7 @@ provides TradeWindow,
          OnOfferedItemPress,
          OnSellPress,
          OnBuyScreen,
+         OnInventoryPress,
          SessionStart,
          SessionEnd,
          ExitScreen;
@@ -338,6 +340,40 @@ update_cargo_info(hcargo cargo)
    GUI.SetTextWindowString( cargo_info, text);
 }
 
+update_equip_info(hcargo cargo)
+{
+   hwindow equip_info = GUI.Cast(Global.Handle("gt_equipsell_equip_window"));
+   string text, subsim_template;
+
+   if (none == cargo) {
+      text = uString.Htmlize("");
+      GUI.SetTextWindowString( equip_info, text);
+      return;
+   }
+
+   text = iCargo.Name(cargo);
+   
+   subsim_template = Object.StringProperty(cargo, "template_name");
+
+   if (subsim_template != "") {
+      text = String.Join(text, tsDescribeINI.Subsystem(subsim_template));
+   }
+
+   text = uString.Htmlize(text);
+
+   GUI.SetTextWindowString( equip_info, text);
+
+}
+
+OnInventoryPress()
+{
+   hwindow button = GUI.FocusedWindow();
+   hcargo cargo = iCargo.Cast(Object.HandleProperty(button,"gt_equipsell_cargo"));
+
+   update_equip_info(cargo);
+}
+
+
 
 // Should display the total price
 update_order_info()
@@ -422,6 +458,8 @@ select_station_inventory(hcargo cargo)
 {
    update_cargo_info(cargo);
 
+   update_equip_info(cargo);
+
    Global.CreateHandle("gt_equipsell_station_select",GA_Write|GA_NoSave, cargo);
 }
 
@@ -493,6 +531,8 @@ select_ordered_inventory(hcargo cargo)
 {
 
    update_cargo_info(cargo);
+
+   update_equip_info(cargo);
 
    Global.CreateHandle("gt_equipsell_ordered_select",GA_Write|GA_NoSave, cargo);
 }
@@ -869,6 +909,7 @@ TradeWindow()
    hwindow cargo_info;
    hwindow order_info;
    hwindow trade_center_info;
+   hwindow equipment_info_window;
 
    set trade_set;
    hisim trade_center = iSim.Cast(Global.Handle("g_epic_trade_start_object"));
@@ -887,6 +928,8 @@ TradeWindow()
    hfaction trade_faction = iSim.Faction(trade_center);
    float player_standing;
 
+	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
+   int text_width;
 
 
    debug Debug.PrintString("Purchase Window\n");
@@ -1185,31 +1228,41 @@ TradeWindow()
    Global.CreateHandle("gt_equipsell_psystems_inv_parent",GA_Write|GA_NoSave, list_parent);
    
 
-   // This section is for the player owned cargo pods near the current station.
-   // This area is unused for purchase, but is very important for the sales screen
-   // later.
+
+      // Bottom Splitter. 
    bottom_splitter = GUI.SplitterWindowBottomWindow(splitter);
 
-         // Set the list box title.
+   // Set the list box title.
    station_title = iGUI.CreateAndInitialiseStaticWindow(0,
                                                         0,
                                                         GUI.WindowCanvasWidth( bottom_splitter),
                                                         20,
                                                         bottom_splitter,
                                                         title_font,
-                                                        Text.Field("gt_equipsell_station_inventory",FT_Text));
-
-   // Create the base window for the station inventory list box.
-   list_parent = GUI.CreateWindow(0,
-                                  20,
-                                  GUI.WindowCanvasWidth( bottom_splitter),
-                                  GUI.WindowCanvasHeight( bottom_splitter) - 20,
-                                  bottom_splitter);
+                                                        Text.Field("gt_equipsell_equipment_info",FT_Text));
 
 
-   Global.CreateHandle("gt_equipsell_station_inv_parent",GA_Write|GA_NoSave, list_parent);
+   text_width = GUI.WindowCanvasWidth(bottom_splitter);
+   text_width = text_width - 4;
+   text_width = text_width - scrollbar_width;
+
+   equipment_info_window = GUI.CreateTextWindow( 0,
+                                                 21,
+                                                 text_width,
+                                                 GUI.WindowCanvasHeight(bottom_splitter)-21,
+                                                 bottom_splitter);   
 
 
+   Global.CreateHandle("gt_equipsell_equip_window",GA_Write|GA_NoSave, equipment_info_window);
+
+   GUI.CreateVerticalScrollbar( 0 + text_width + 4,
+                                21,
+                                scrollbar_width, 
+                                GUI.WindowCanvasHeight(bottom_splitter) - 21,
+                                bottom_splitter,
+                                equipment_info_window,
+                                Global.Float( "GUI_scrollbar_buttonratio" ),
+                                "");
 }
 
 
