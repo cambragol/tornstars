@@ -894,20 +894,14 @@ jump_ship(hship ship, hisim lpoint, int difficulty)
     float min_damage = Global.Float("tEJumpMinDamage");
     float max_damage = Global.Float("tEJumpMaxDamage");
 
+
     // Calculate and apply ship damage.
     drive_rating = jump_rating(ship);
 
 
-    // If the ship does not have a drive, it can't jump.
-    // At this point, the ship was already allowed to jump
-    // So we still place it. Prior code should have blocked the jump.
-    /*
-    if (drive_rating < 1) {
-       // ejump_wingman_no_drive, "We don't have a capsule drive! Sir"
-       iComms.Shout(ship, "", "ejump_wingman_no_drive");
-        return;
-    }
-    */
+    // Cancel the disrupt.
+    iShip.CancelDisrupt(ship);
+
 
 
     // Place the arriving ship within 1km of the lpoint, facing the correct way.
@@ -917,8 +911,7 @@ jump_ship(hship ship, hisim lpoint, int difficulty)
        Sim.PlaceNear(ship, lpoint, 1km);
     }
 
-    // Change the disrupt time to be very short
-    iShip.CancelDisrupt(ship);
+
 
     // if jumping a hard route, take damage.
     if (difficulty > drive_rating) {
@@ -1060,16 +1053,20 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty, fl
         // If the player failed the jump, then drop them 1000km from the starting
         // lpoint. This is outside the cull position of any traffic. And makes it feel like 
         // the player did move somewhere, if not where he was expecting. 
-        Sim.PlaceNear(player, destination, tDistance.WakingDistance() - 10km);
+
+        destination = none;
 
         if (jump_success) {
            Sim.PlaceNear(player, target_lpoint, tDistance.WakingDistance() - 10km);
            destination = target_lpoint;
         } else {
+           // Jump failed to reach 50%, toss player back 1000km from starting jump point.
            destination = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","jump_destination"));
            Sim.SetCullable(destination, false);
-           Sim.PlaceNear(destination, jump_point, 1000km);
-           Sim.PlaceNear(player, target_lpoint, tDistance.WakingDistance() - 10km);
+           Sim.PlaceNear(destination, jump_point, Math.RandomInt(100,1000));
+           // put the player near the jump point to wake it while waiting for the 
+           // fancy jump arrival move.
+           Sim.PlaceNear(player, jump_point, tDistance.WakingDistance() -10km);
         }
 
         // Give the lpoint time to wake up and place all objects. And give the day update
@@ -1583,8 +1580,9 @@ bool jump_simulation(hship player, list player_fleet,  hisim target_lpoint, int 
       wingman = iShip.Cast(List.GetNth(player_fleet, i));
 
       if (!Sim.IsDead(wingman)){
-         // stop the wingman from doing anything for 1 hour.
-         iShip.Disrupt(wingman, false, 3600);
+         // stop the wingmen for moving for 5 min while simulation is running
+         // sometimes cancel fails and this won't trap player for long
+         iShip.Disrupt(wingman, false, 300);
          Sim.PlaceNear(wingman, wingman_mark, 5km);
       }
    }

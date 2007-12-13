@@ -291,6 +291,7 @@ AttachCargoHardpoint()
             Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Error invalid mountpoint entry\n");
          }
       }
+
       INIFile.Destroy(subsim_file);
 
       mountpoint = Sim.Create("ini:/sims/nav/waypoint", hardpoint_type);
