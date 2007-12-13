@@ -110,6 +110,9 @@ New(hisim operation)
    tUnderOp.SetName(operation, ship_name);
    tUnderOp.SetShipTemplate(operation, ship_template);
 
+   // The defense forces want to be found. Flashing red lights and all.
+   tUnderOp.SetKnown(operation, true);
+
    tLFleet.SetFleets(operation, fleets);
    tLFleet.SetMaxFleets(operation, fleets);
 }
