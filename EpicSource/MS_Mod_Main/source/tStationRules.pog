@@ -476,9 +476,6 @@ bool spawn_operation(hhabitat station, int operation_type)
       // Creates the operation and places it into the station.
       op = tsFleetOperation.New(operation_type, faction, station);
 
-
-      // Unhide this so it is easy to debug.
-      tUnderOp.SetKnown(op, true);
       return true;
    }else {
       debug {
