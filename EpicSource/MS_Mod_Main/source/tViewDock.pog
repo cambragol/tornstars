@@ -65,6 +65,10 @@ task pull_back()
    hhabitat station;
    string screen_name;
    int time;
+   hinifile distance_file = INIFile.Create("ini:/MS_Mod_Main");
+   float factor = INIFile.Float(distance_file, "Controls", "dock_view_multiplier", 1);
+
+   INIFile.Destroy(distance_file);
 
    station = iHabitat.Nearest(iMapEntity.SystemHabitats(), player);
 
@@ -73,19 +77,19 @@ task pull_back()
    }
 
    start_point = Sim.Create("ini:/sims/nav/waypoint","close view");
-   Sim.PlaceRelativeToInside(start_point, player, 0, 0, 150);
+   Sim.PlaceRelativeToInside(start_point, player, 0, 0, Object.FloatProperty(player, "radius"));
    Sim.PointAway(start_point, station);
 
    Task.Sleep(Task.Current(), 0.1);
 
    view_point = Sim.Create("ini:/sims/nav/waypoint","distant view");
 //   Sim.PlaceInFrontOf(view_point, start_point, 1.5km);
-   Sim.PlaceRelativeToInside(view_point, start_point, 0, 0, 1.5km);
+   Sim.PlaceRelativeToInside(view_point, start_point, 0, 0, Object.FloatProperty(player, "radius") * factor);
 
    iDirector.Begin();
    prior_view = iDirector.Camera();
 	dolly = iDirector.CreateDolly();
-   Sim.PlaceRelativeToInside(dolly, player, 0, 0, 150);
+   Sim.PlaceRelativeToInside(dolly, player, 0, 0, Object.FloatProperty(player, "radius"));
 
 	iDirector.SetFocus(player);
 	iDirector.SetSecondaryFocus(dolly);
@@ -112,7 +116,7 @@ task pull_back()
          ++time;
 
          if (time > 1) {
-
+ 
             iDirector.SetCamera(prior_view);
             iDirector.End();
 
