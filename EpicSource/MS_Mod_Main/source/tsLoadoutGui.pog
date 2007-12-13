@@ -1864,6 +1864,9 @@ string get_mountpoint_type(hsubsim subsim)
 
 
 // Pull the ships equipment and place it into inventory.
+// Used mainly for selling player ships. Could also work
+// for stripping captures.
+
 //[of]:RemoveEquipment(hship ship)
 RemoveEquipment(hship ship)
 {
@@ -1880,12 +1883,9 @@ RemoveEquipment(hship ship)
    for (i=0;i<total;++i) {
       subsim = Subsim.Cast(List.GetNth(ship_systems, i));
 
-      // Put the subsim back into the inventory.
-      return_cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
+      // Put the subsim and ammo back into inventory.
+      store_subsim(subsim);
 
-      if (none != return_cargo) {
-         iInventory.Add(Object.IntProperty(return_cargo,"type"), 1);
-      }
       hardpoint_type = Object.StringProperty(subsim, "hardpoint_type");      
 
       // Lookup the replacement mountpoint type.
@@ -1916,6 +1916,7 @@ tag_equipment(hship ship)
 
       // If the subsim is a mountpoint, attach the hardpoint type for future reference.
       hardpoint_type = get_mountpoint_type(subsim);
+
       if ("" != hardpoint_type) {
          Object.AddStringProperty(subsim,"hardpoint_type", hardpoint_type);
       }else {
