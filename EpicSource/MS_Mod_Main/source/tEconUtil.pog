@@ -41,7 +41,9 @@ provides CargoType,
          IsAllowedGovernment,
          IsAllowedRebel,
          IsAllowedPirate,
-         IsAllowedMercenary;
+         IsAllowedMercenary,
+   
+         IsAllowedLoadout;
 
 
 
@@ -3672,4 +3674,26 @@ bool IsAllowedMercenary(int type)
    }
 
    return false;
+} 
+
+
+bool IsAllowedLoadout(int type)
+{
+   switch (type) {
+   case ept_SystemDefenceDock:
+   case ept_Shipyard:
+   case ept_Waystation:
+   case ept_MercenaryBase:
+   case ept_PoliceBase:
+   case ept_SecurityStation:
+   case ept_RepairStation:
+   case ept_Fortress:
+   case ept_PirateBase:
+   return true;
+   break;
+   default:
+      break;
+   }
+   return false;
 }
+

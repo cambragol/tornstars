@@ -48,6 +48,7 @@ uses	Sim,
 		tEpicMoney,
 		tsShip,
 		tsPlayerFleet,
+      tLProduction,
 		uString;
 //[cf]
 
@@ -133,6 +134,11 @@ bool allow_run()
    
    // Allow when player near the station.
    if (Sim.DistanceBetween(player, station) > 20km) {
+      allow_trade = false;
+   }
+
+   // Only when near stations with loadout ability
+   if (!tEconUtil.IsAllowedLoadout(tLProduction.GetType(iSim.Cast(station)))) {
       allow_trade = false;
    }
 
@@ -1955,8 +1961,10 @@ bool allow_loadout(hship ship)
    station = iHabitat.Nearest( iSim.SimsInRadius(ship, 20km, T_Station), ship);
    if (station != none) {   
       if (iSim.IsDockedToStructure(ship, station)) {
-         if (Sim.DistanceBetween(player, station) < 100km) {
-            return true;
+         if (tEconUtil.IsAllowedLoadout(tLProduction.GetType(station))) {
+            if (Sim.DistanceBetween(player, station) < 100km) {
+               return true;
+            }
          }
       }
    }
@@ -1978,8 +1986,10 @@ bool allow_rearming(hship ship)
    // If the wingman is docked and the player is within 100km.
    station = iHabitat.Nearest(iSim.SimsInRadius(ship, 20km, T_Station), ship);
    if (station != none) {
-      if (Sim.DistanceBetween(player, station) < 100km) {
-         return true;
+      if (tEconUtil.IsAllowedLoadout(tLProduction.GetType(station))) {
+         if (Sim.DistanceBetween(player, station) < 100km) {
+            return true;
+         }
       }
    }
    return false;
