@@ -80,6 +80,7 @@ PACKAGES = ECargoTypes.pkg \
 	tsLoadoutGui.pkg \
 	tsEquipBuy.pkg \
 	tsEquipSell.pkg \
+	tsDescribeINI.pkg \
 	tEconSmall.pkg \
 	tEconUtil.pkg \
 	tEpicComms.pkg \
@@ -230,8 +231,9 @@ tETradeBuy.pkg : tETradeBuy.pog tStation.h tEpicGui.h tsFaction.h tLProduction.h
 tETradeSell.pkg : tETradeSell.pog tSpewerOps.h tMegaTrucking.h tStation.h tEpicGui.h tsFaction.h tLProduction.h tEconSmall.h tEconUtil.h tEpicMoney.h tPodUtil.h tLTrade.h uString.h
 tEconSmall.pkg : tEconSmall.pog tEconUtil.h tLProduction.h tLTrade.h tsFaction.h ECargoTypes.h uString.h tStation.h
 tEconUtil.pkg : tEconUtil.pog
-tsEquipBuy.pkg : tsEquipBuy.pog tStation.h tEpicGui.h tsFaction.h tLProduction.h tLInventory.h tLTrade.h tEconSmall.h tEconUtil.h tEpicMoney.h tPodUtil.h uString.h tSpewerOps.h
-tsEquipSell.pkg : tsEquipSell.pog tStation.h tEpicGui.h tsFaction.h tLProduction.h tLInventory.h tLTrade.h tEconSmall.h tEconUtil.h tEpicMoney.h tPodUtil.h uString.h tSpewerOps.h
+tsEquipBuy.pkg : tsEquipBuy.pog tStation.h tEpicGui.h tsFaction.h tLProduction.h tLInventory.h tLTrade.h tEconSmall.h tEconUtil.h tEpicMoney.h tPodUtil.h uString.h tSpewerOps.h tsDescribeINI.h
+tsEquipSell.pkg : tsEquipSell.pog tStation.h tEpicGui.h tsFaction.h tLProduction.h tLInventory.h tLTrade.h tEconSmall.h tEconUtil.h tEpicMoney.h tPodUtil.h uString.h tSpewerOps.h tsDescribeINI.h
+tsDescribeINI.pkg : tsDescribeINI.pog tStation.h tEpicGui.h tsFaction.h tLProduction.h tLInventory.h tLTrade.h tEconSmall.h tEconUtil.h tEpicMoney.h tPodUtil.h uString.h
 tEpicComms.pkg : tEpicComms.pog
 tEpicFacGui.pkg : tEpicFacGui.pog tsFaction.h tEpicGui.h tEpicMoney.h
 
