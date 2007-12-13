@@ -44,6 +44,8 @@ prototype list tsShip.ShipPodList( hsim ship );
 
 prototype hisim tsShip.DockParent( hship ship );
 
+prototype bool tsShip.IsCapsuleJumping( hship ship );
+
 prototype bool tsShip.IsMiner( hship ship );
 
 prototype bool tsShip.IsProspector( hship ship );
