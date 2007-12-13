@@ -918,7 +918,7 @@ jump_ship(hship ship, hisim lpoint, int difficulty)
     }
 
     // Change the disrupt time to be very short
-    iShip.DisruptLDSDrive(ship, 1);
+    iShip.CancelDisrupt(ship);
 
     // if jumping a hard route, take damage.
     if (difficulty > drive_rating) {
@@ -1102,21 +1102,24 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty, fl
         for (i=0;i<total;++i) {
            wingman = iShip.Cast(List.GetNth(player_fleet,i));
 
-           fuel = tsShip.Fuel(wingman);
-           jump_cost = tsShip.FuelPerJump(wingman);
+           // Deduct the fuel for the jump. We already checked if there was enough
+           // fuel, but a day advance could have happened. To handle this case
+           // we always allow jump.
+           atomic{
+              fuel = tsShip.Fuel(wingman);
+              jump_cost = tsShip.FuelPerJump(wingman);
 
-           if (jump_cost < fuel) {
-
-              atomic{
-                 fuel = tsShip.Fuel(wingman);
-                 tsShip.SetFuel(wingman, fuel-jump_cost);
+              if (jump_cost > fuel) {
+                 jump_cost = fuel;
               }
-
-              // Put a bit of time between each one.
-              Task.Sleep(Task.Current(), 1.5);
-
-              jump_ship(wingman, destination, difficulty);
+              fuel = tsShip.Fuel(wingman);
+              tsShip.SetFuel(wingman, fuel-jump_cost);
            }
+
+           // Put a bit of time between each one.
+           Task.Sleep(Task.Current(), 1.5);
+
+           jump_ship(wingman, destination, difficulty);
         }
 
         Global.SetBool("gt_ejump_wingmen_jumping", false);
@@ -1580,14 +1583,13 @@ bool jump_simulation(hship player, list player_fleet,  hisim target_lpoint, int 
       wingman = iShip.Cast(List.GetNth(player_fleet, i));
 
       if (!Sim.IsDead(wingman)){
-         iShip.DisruptLDSDrive(wingman, 600);
+         // stop the wingman from doing anything for 1 hour.
+         iShip.Disrupt(wingman, false, 3600);
          Sim.PlaceNear(wingman, wingman_mark, 5km);
       }
    }
 
    Sim.SetCullable(wingman_mark, true);
-
-
 
 
 

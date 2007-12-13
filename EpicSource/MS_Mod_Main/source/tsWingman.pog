@@ -765,6 +765,29 @@ task wingman_watch(hship ship)
    set cargo_set, empty_set, stations, nearby_locations;
    int i, total;
 
+
+   // Inital checks before we start the watch task.
+   if (tsShip.IsCapsuleJumping(ship)) {
+      // Darn, we woke up in capsule space. This is not supposed to happen. 
+
+      do {
+         // pause a moment to let the player get placed correctly.
+         Task.Sleep(Task.Current(), 1.0);
+
+         player = iShip.FindPlayerShip();
+      } while (player == none );
+
+      // Move our ship to the player.
+      Sim.PlaceNear(ship, player, 100km);
+
+      debug {
+         Debug.PrintString("tsWingman.wingman_watch Lost jump wingman restored ");
+         Debug.PrintString(Text.Field(Sim.Name(ship), FT_Text));
+         Debug.PrintString("\n");
+      }
+
+   }
+
    while (1) {
       Task.Sleep(Task.Current(), 1.0);
 

@@ -76,7 +76,8 @@ provides
         ShipPodList,
    
         DockParent,
-
+ 
+        IsCapsuleJumping,
         IsMiner,
         IsProspector,
         IsLongRangeScan,
@@ -408,7 +409,14 @@ bool IsTanker(hship ship)
    return (Object.IntProperty(ship,"tanker") >= 1);
 }
 
+bool IsCapsuleJumping(hship ship)
+{
+   if (iSim.WorldName(ship) == "map:/geog/middle/capsule_space"){
+      return true;
+   }
 
+   return false;
+}
 
 
 // Is this an armed ship? Transports and utility vessels are excluded.
