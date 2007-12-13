@@ -253,10 +253,12 @@ DisplayWindow()
    hwindow title;
    hwindow subtitle;
    hwindow exit;
-   hwindow debug_list_box;
-   hwindow help_win;
+   hwindow start_choice_list_box;
+   hwindow help_window;
+   hwindow help_window_base;
 
    int width, height;
+   int shady_width = 600;
 
    list debug_list, empty_list;
 
@@ -271,18 +273,17 @@ DisplayWindow()
    // Set right hand shady bar width.
    shady_bar = iGUI.CreateWideShadyBar();
 
-   shady_bar_right = iGUI.CreateShadyBarRight();
-
+   GUI.SetShadyBarWidth(shady_width);
 
    Global.CreateHandle("gt_debug_gui_shady",GA_Write,shady_bar);
 
-
+   /*
    GUI.SetWindowClientArea( shady_bar, 
                             0,
                             0,
-                            500,
+                            shady_width,
                             GUI.WindowCanvasHeight( shady_bar));
-   
+   */
 
 
    height = GUI.WindowCanvasHeight( shady_bar);
@@ -290,11 +291,13 @@ DisplayWindow()
    height = height - Global.Int("EpicGui_content_footer");
 
 
-   width = 500; //GUI.WindowCanvasWidth( shady_bar);
-   //width = width/2;
+   width = shady_width; //GUI.WindowCanvasWidth( shady_bar);
+   width = width/2;
    width = width - Global.Int("EpicGui_content_indent");
    width = width - Global.Int("EpicGui_content_indent");
       
+
+
 
    tEpicGui.CreateTitle(shady_bar, "Start Game");
    tEpicGui.CreateSubtitle(shady_bar, "Select your starting position");
@@ -305,37 +308,61 @@ DisplayWindow()
 
 
 
+   // Put the start choices menu on the far left
 
-   // Create help window
-   help_win = iGUI.CreateAndInitialiseTextWindow(250+Global.Int("EpicGui_content_indent"),
-                                      Global.Int("EpicGui_content_drop") ,
-                                      275,
-                                      height,
-                                      shady_bar_right,
-                                      "html:/html/player_start_welcome");
-
-   GUI.CreateVerticalScrollbar( 525+Global.Int("EpicGui_content_indent"),
-                                Global.Int("EpicGui_content_drop") ,
-                                Global.Int("GUI_scrollbar_width"),
-                                height,
-                                shady_bar_right,
-                                help_win,
-                                Global.Float( "GUI_scrollbar_buttonratio"), 
-                                "");
-
-   Global.CreateHandle("gt_startgui_text_win", GA_Write|GA_NoSave, help_win);
-
-
-
-
-   debug_list_box = CreateOptionList(shady_bar, 
+   start_choice_list_box = CreateOptionList(shady_bar, 
                                      Global.Int("EpicGui_content_indent"),
                                      Global.Int("EpicGui_content_drop") ,
                                      width,
                                      height,
                                      "tStartGui.OnButtonPress");
 
-   Global.CreateHandle("gt_startgui_list_box", GA_Write|GA_NoSave, debug_list_box);
+   Global.CreateHandle("gt_startgui_list_box", GA_Write|GA_NoSave, start_choice_list_box);
+
+
+
+
+
+   // In the middle, put the help file with pictures and descriptions.
+
+
+   width = shady_width/2;
+
+   // Create help window
+
+
+   help_window_base = GUI.CreateWindow( width,
+                                        Global.Int("EpicGui_content_drop"),
+                                        width,
+                                        height,
+                                        shady_bar);
+
+   Global.CreateHandle("gt_startgui_help_window_base",GA_Write|GA_NoSave, help_window_base);
+
+   width = width - 4;
+   width = width - Global.Int("GUI_scrollbar_width");
+
+   help_window = GUI.CreateTextWindow( 0,
+                                       0,
+                                       width,
+                                       GUI.WindowCanvasHeight(help_window_base),
+                                       help_window_base);   
+
+
+   GUI.SetTextWindowResource( help_window,
+                              "html:/html/player_start_welcome");
+
+
+   GUI.CreateVerticalScrollbar( 0 + width + 4,
+                                0,
+                                Global.Int("GUI_scrollbar_width"),
+                                GUI.WindowCanvasHeight(help_window_base),
+                                help_window_base,
+                                help_window,
+                                Global.Float( "GUI_scrollbar_buttonratio" ),
+                                "" );
+
+   Global.CreateHandle("gt_startgui_text_win", GA_Write|GA_NoSave, help_window);
 
 }
 //[cf]
@@ -525,14 +552,18 @@ task setup_player()
 
    if (none != station) {
       Sim.PlaceNear(player, station, 10km);
+
    }else {
       debug {
-         Debug.PrintString("Start Location Not Found\n");
+         Debug.PrintString("Error Start Location Not Found\n");
          Debug.PrintString(start_location);
          Debug.PrintString("\n");
          Debug.PrintString(start_system);
          Debug.PrintString("\n");
       }
+
+      // Force the game to exit.
+      GUI.PopScreensTo("icSPMainPDAScreen");
    }
 
    funds = INIFile.Int(start_file, entry_key,"ship_account",0);
@@ -582,12 +613,15 @@ task setup_player()
 
    INIFile.Destroy(start_file);
 
+   Sim.PointAt(player, station);
 
    iGame.EnableBlackout(false);
 
    if ("" != cutscene) {
       iGame.PlayMovie(cutscene);
    }
+
+   UniGUI.UniGUIStart();
 }
 
 
@@ -605,7 +639,7 @@ StartGame()
    // Ok, player can now type keys normally.
    Input.ResumeBindings();
 
-	UniGUI.UniGUIRemoveScreen();
+	UniGUI.UniGUIClose();
 }
 //[cf]
 
