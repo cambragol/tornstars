@@ -137,11 +137,6 @@ bool allow_run()
       allow_trade = false;
    }
 
-   // Only when near stations with loadout ability
-   if (!tEconUtil.IsAllowedLoadout(tLProduction.GetType(iSim.Cast(station)))) {
-      allow_trade = false;
-   }
-
    // Don't allow the player to loadout when the station is not
    // operating (destroyed or under construction). 
    if (tStation.Status(iHabitat.Cast(station)) != ESS_Normal) {
@@ -730,9 +725,17 @@ update_ship_info()
 
    text = String.Join(text,"Ship Info ");
    text = String.Join(text,Text.Field(Sim.Name(ship), FT_Text));
-   if (cost > 0) {
-      text = String.Join(text,"<br>Rearm Cost ");
-      text = String.Join(text,String.FromInt(cost));
+
+   if (Global.Bool("tsloadout_no_dock")) {
+      text = String.Join(text,"<br>Debug Flag Allows Rearm at any station.");
+   }
+   if (!allow_rearming(ship)) {
+      text = String.Join(text,"<p>Rearming");
+      text = String.Join(text,"<br>Move ship near stations with shipyard arm docking ports to rearm.");
+   }
+   if (!allow_loadout(ship)) {
+      text = String.Join(text,"<p>Change Loadout");
+      text = String.Join(text,"<br>Dock ship to stations with shipyard arm docking ports to change ship equipment.");
    }
 
    text = uString.Htmlize(text);
@@ -1968,6 +1971,7 @@ bool allow_loadout(hship ship)
          }
       }
    }
+
    return false;
 }
 
