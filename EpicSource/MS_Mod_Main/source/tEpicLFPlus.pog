@@ -604,11 +604,15 @@ list create_location_list( string system )
    total = List.ItemCount(location_list);
    for (i=0;i<total;++i) {
       habitat = iMapEntity.Cast(List.GetNth(location_list,i));
-      if (!iMapEntity.IsVisibleOnMap(habitat)) {
-         Set.Remove(habitats, habitat);
-      }
-      if (iMapEntity.IsHidden(habitat)){
-         Set.Remove(habitats, habitat);
+
+      if (!Global.Bool("tsshow_hidden_stations")) {
+
+         if (!iMapEntity.IsVisibleOnMap(habitat)) {
+            Set.Remove(habitats, habitat);
+         }
+         if (iMapEntity.IsHidden(habitat)){
+            Set.Remove(habitats, habitat);
+         }
       }
    }
 
