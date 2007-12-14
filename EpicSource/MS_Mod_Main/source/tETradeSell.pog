@@ -998,83 +998,7 @@ int player_pod_count(int cargo_type)
 }
 
 
-
-create_player_systems_list()
-{
-   hwindow list_parent = GUI.Cast(Global.Handle("gt_etradesell_psystems_inv_parent"));
-   hwindow list_base = GUI.Cast(Global.Handle("gt_etradesell_psystems_inv_base"));
-   hwindow list_box;
-   hwindow button;
-
-   hcargo cargo;
-   int i, count;
-	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
-
-   int button_width, height, list_x, list_y;
-
-   string name;
-   list cargo_list;
-
-   // Remove the prior inventory list.
-   if (none != list_base) {
-      GUI.DeleteWindow(list_base);
-   }
-
-   list_base = GUI.CreateWindow(0, 
-                                0,
-                                GUI.WindowCanvasWidth( list_parent),
-                                GUI.WindowCanvasHeight( list_parent),
-                                list_parent);
-
-
-   Global.CreateHandle("gt_etradesell_psystems_inv_base",GA_Write|GA_NoSave, list_base);
-
-   // Set up the button and list sizes now.
-   button_width = GUI.WindowCanvasWidth( list_base) - scrollbar_width;
-   button_width -= 4;
-
-
-   list_box = GUI.CreateListBox( 0, 
-                                 0,
-                                 button_width,
-                                 GUI.WindowCanvasHeight( list_base),
-                                 list_base,
-                                 true,
-                                 false);
-
-	// Attach a scrollbar to the list box. from LFPlus.
-	GUI.CreateVerticalScrollbar( 
-		GUI.WindowCanvasWidth( list_base ) - scrollbar_width, 
-		0,
-		scrollbar_width, 
-		GUI.WindowCanvasHeight( list_base ),
-		list_base,
-		list_box,
-		Global.Float( "GUI_scrollbar_buttonratio" ),
-		"" );
-
-
-   cargo_list = List.FromSet(systems_inventory());
-
-   cargo_list = List.SortByStringProperty(cargo_list, "name");
-
-   count = List.ItemCount(cargo_list);
-   for (i=0;i<count;++i) {
-      cargo = iCargo.Cast(List.GetNth(cargo_list,i));
-
-      name = String.Join(iCargo.Name(cargo),
-                         String.FormatInt(" %d",
-                                          iInventory.NumberOfCargoType(Object.IntProperty(cargo,"type"))));
-
-      button = iGUI.CreateAndInitialiseRectangularInverseRadioButton( none, 0, 0, 
-                                                                      button_width, 
-                                                                      name,
-                                                                      false );
-      GUI.AddListBoxEntry(list_box, button);
-   }   
-
-}
-      
+ 
 
 // Display those items that the station is willing to purchase. This is for refrerence
 // information only.
@@ -1154,15 +1078,33 @@ create_station_inventory_list()
    }   
 }
 
+
+// Generate a trade set but with all player systems removed.
 set generate_trade_set(hisim trade_center)
 {
-   set cargo_set;
+   set cargo_set, final_set;
+   int total, i;
+   list cargo_list;
+   hcargo cargo;
 
    cargo_set = tEconSmall.StationUsedCargo(trade_center);
    Set.Union(cargo_set, tEconSmall.StationSupplyCargo(trade_center));
 
-   return cargo_set;
+   cargo_list = List.FromSet(cargo_set);
+
+   total = List.ItemCount(cargo_list);
+   for (i=0;i<total;++i) {
+      cargo = iCargo.Cast(List.GetNth(cargo_list,i));
+
+      if (!(iInventory.IsPieceOfAmmo(Object.IntProperty(cargo,"type"))||iCargo.PlayerSystem(cargo))) {
+         Set.Add(final_set, cargo);
+      }
+   }
+
+   return final_set;
 }
+
+
 
 int index_from_name(list item_list, string property, string name)
 {
@@ -1494,7 +1436,7 @@ TradeWindow()
                                         rheight/2,
                                         false);
 
-
+/*
    // This area is the players ship systems inventory
    top_splitter = GUI.SplitterWindowTopWindow(splitter);
 
@@ -1519,8 +1461,7 @@ TradeWindow()
 
    Global.CreateHandle("gt_etradesell_psystems_inv_parent",GA_Write|GA_NoSave, list_parent);
    
-   create_player_systems_list();
-   
+  */ 
 
 
    // This section is for the player owned cargo pods near the current station.

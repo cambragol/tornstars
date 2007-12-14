@@ -80,7 +80,6 @@ prototype create_player_pod_list();
 
 prototype create_station_inventory_list();
 
-prototype create_player_systems_list();
 
 prototype int index_from_name(list item_list, string property, string name);
 
@@ -293,28 +292,6 @@ ExitScreen()
    UniGUI.UniGUIRemoveScreen();
 }
 
-
-// This function builds a list of all the cargo items in the player
-// inventory that are ship systems.
-set systems_inventory()
-{
-   int total = CT_AdvancedHullMaterialRefit;
-   int i, number, cargo_type;
-   hcargo cargo;
-   set all_cargo;
-
-   for (i=CT_WasteBlocks;i<total;++i) {
-      cargo = iCargo.Find(i);
-      number = iInventory.NumberOfCargoType(i);
-
-      if (number > 0) {
-         if (iCargo.PlayerSystem(cargo)) {
-            Set.Add(all_cargo, cargo);
-         }
-      }
-   }
-   return all_cargo;
-}
 
 
 clear_inventory()
@@ -731,8 +708,6 @@ OnPurchasePress()
 
    create_station_inventory_list();
 
-   create_player_systems_list();
-
 
    // We might have a problem, because it takes time for the pods to exist.
    create_player_pod_list();
@@ -989,81 +964,6 @@ create_station_inventory_list()
 }
 
 
-create_player_systems_list()
-{
-   hwindow list_parent = GUI.Cast(Global.Handle("gt_etradebuy_psystems_inv_parent"));
-   hwindow list_base = GUI.Cast(Global.Handle("gt_etradebuy_psystems_inv_base"));
-   hwindow list_box;
-   hwindow button;
-
-   hcargo cargo;
-   int i, count;
-	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
-
-   int button_width, height, list_x, list_y;
-
-   string name;
-   list cargo_list;
-
-   // Remove the prior inventory list.
-   if (none != list_base) {
-      GUI.DeleteWindow(list_base);
-   }
-
-   list_base = GUI.CreateWindow(0, 
-                                0,
-                                GUI.WindowCanvasWidth( list_parent),
-                                GUI.WindowCanvasHeight( list_parent),
-                                list_parent);
-
-
-   Global.CreateHandle("gt_etradebuy_psystems_inv_base",GA_Write|GA_NoSave, list_base);
-
-   // Set up the button and list sizes now.
-   button_width = GUI.WindowCanvasWidth( list_base) - scrollbar_width;
-   button_width -= 4;
-
-
-   list_box = GUI.CreateListBox( 0, 
-                                 0,
-                                 button_width,
-                                 GUI.WindowCanvasHeight( list_base),
-                                 list_base,
-                                 true,
-                                 false);
-
-	// Attach a scrollbar to the list box. from LFPlus.
-	GUI.CreateVerticalScrollbar( 
-		GUI.WindowCanvasWidth( list_base ) - scrollbar_width, 
-		0,
-		scrollbar_width, 
-		GUI.WindowCanvasHeight( list_base ),
-		list_base,
-		list_box,
-		Global.Float( "GUI_scrollbar_buttonratio" ),
-		"" );
-
-
-   cargo_list = List.FromSet(systems_inventory());
-
-   cargo_list = List.SortByStringProperty(cargo_list, "name");
-
-   count = List.ItemCount(cargo_list);
-   for (i=0;i<count;++i) {
-      cargo = iCargo.Cast(List.GetNth(cargo_list,i));
-
-      name = String.Join(iCargo.Name(cargo),
-                         String.FormatInt(" %d",
-                                          iInventory.NumberOfCargoType(Object.IntProperty(cargo,"type"))));
-
-      button = iGUI.CreateAndInitialiseRectangularInverseRadioButton( none, 0, 0, 
-                                                                      button_width, 
-                                                                      name,
-                                                                      false );
-      GUI.AddListBoxEntry(list_box, button);
-   }   
-
-}
       
 create_player_pod_list()
 {
@@ -1146,12 +1046,26 @@ create_player_pod_list()
 
 }
 
+// Generate the station trade set filtering out any player systems
+// or ammunition.
 set generate_trade_set(hisim trade_center)
 {
    int station_type;
    set cargo_set;
+   list cargo_list;
+   int total, i;
+   hcargo cargo;
 
-   cargo_set = tEconSmall.StationProducedCargo(trade_center);
+   cargo_list = List.FromSet(tEconSmall.StationProducedCargo(trade_center));
+
+   total = List.ItemCount(cargo_list);
+   for (i=0;i<total;++i) {
+      cargo = iCargo.Cast(List.GetNth(cargo_list,i));
+
+      if (!(iInventory.IsPieceOfAmmo(Object.IntProperty(cargo,"type"))||iCargo.PlayerSystem(cargo))) {
+         Set.Add(cargo_set, cargo);
+      }
+   }
 
    return cargo_set;
 }
@@ -1487,10 +1401,11 @@ TradeWindow()
                                         false);
 
 
+   /*
    // This area is the players ship systems inventory
    top_splitter = GUI.SplitterWindowTopWindow(splitter);
 
-   
+
    // Set the list box title.
    station_title = iGUI.CreateAndInitialiseStaticWindow(0,
                                                         0,
@@ -1510,9 +1425,7 @@ TradeWindow()
 
 
    Global.CreateHandle("gt_etradebuy_psystems_inv_parent",GA_Write|GA_NoSave, list_parent);
-   
-   create_player_systems_list();
-   
+   */
 
 
    // This section is for the player owned cargo pods near the current station.
