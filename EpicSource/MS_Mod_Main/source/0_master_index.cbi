@@ -26,45 +26,48 @@ To add in a file put the cursor where you want to insert it, Ctrl+Shift+L to cre
 #[l]:tsWingman.pog:tsWingman.pog
 --- Wingman Commands ---
 #[l]:tsWingComm.pog:tsWingComm.pog
---- Loadout GUI ---
-#[l]:tsLoadoutGui.pog:tsLoadoutGui.pog
-	- Loadout Save -
-#[l]:	tsShipSave.pog:tsShipSave.pog
---- Player Sart GUI ---
-#[l]:tStartGui.pog:tStartGui.pog
---- Library GUI ---
-#[l]:tEReferenceGui.pog:tEReferenceGui.pog
---- Email & News GUI ---
-#[l]:tShipMail.pog:tShipMail.pog
-#[l]:tNewsNet.pog:tNewsNet.pog
---- Fleet Status GUI ---
-#[l]:tEFleetGui.pog:tEFleetGui.pog
---- Navigation GUI ---
-#[l]:tEpicLFPlus.pog:tEpicLFPlus.pog
---- Lpoint Scanner GUI ---
-#[l]:tELpointFind.pog:tELpointFind.pog
---- Reputation GUI ---
-#[l]:tEpicFacGui.pog:tEpicFacGui.pog
---- Rest Day GUI ---
-???
---- Quit Game GUI ---
-#[l]:tExitGui.pog:tExitGui.pog
---- Game Options GUI ---
-#[l]:tOptionsGui.pog:tOptionsGui.pog
---- Cargo Purchase GUI ---
-#[l]:tETradeBuy.pog:tETradeBuy.pog
---- Cargo Sell GUI ---
-#[l]:tETradeSell.pog:tETradeSell.pog
---- Mining Claim Sell GUI ---
-#[l]:tClaimGui.pog:tClaimGui.pog
---- Ship Buy/Sell GUI ---
-#[l]:jcEpicShipPurGUI.pog:jcEpicShipPurGUI.pog
---- Autosave ---
-#[l]:tEPlayerWatch.pog:tEPlayerWatch.pog
---- Crew Speaking ---
-???
---- Cargo Ships ---
-#[l]:tPcCargoShip.pog:tPcCargoShip.pog
+
+---GUIs---
+
+	-- Loadout GUI --
+#[l]:	tsLoadoutGui.pog:tsLoadoutGui.pog
+		- Loadout Save -
+#[l]:		tsShipSave.pog:tsShipSave.pog
+	-- Player Sart GUI --
+#[l]:	tStartGui.pog:tStartGui.pog
+	-- Library GUI --
+#[l]:	tEReferenceGui.pog:tEReferenceGui.pog
+	-- Email & News GUI --
+#[l]:	tShipMail.pog:tShipMail.pog
+#[l]:	tNewsNet.pog:tNewsNet.pog
+	-- Fleet Status GUI --
+#[l]:	tEFleetGui.pog:tEFleetGui.pog
+	-- Navigation GUI --
+#[l]:	tEpicLFPlus.pog:tEpicLFPlus.pog
+	-- Lpoint Scanner GUI --
+#[l]:	tELpointFind.pog:tELpointFind.pog
+	-- Reputation GUI --
+#[l]:	tEpicFacGui.pog:tEpicFacGui.pog
+	-- Rest Day GUI --
+	???
+	-- Quit Game GUI --
+#[l]:	tExitGui.pog:tExitGui.pog
+	-- Game Options GUI --
+#[l]:	tOptionsGui.pog:tOptionsGui.pog
+	-- Cargo Purchase GUI --
+#[l]:	tETradeBuy.pog:tETradeBuy.pog
+	-- Cargo Sell GUI --
+#[l]:	tETradeSell.pog:tETradeSell.pog
+	-- Mining Claim Sell GUI --
+#[l]:	tClaimGui.pog:tClaimGui.pog
+	-- Ship Buy/Sell GUI --
+#[l]:	jcEpicShipPurGUI.pog:jcEpicShipPurGUI.pog
+	-- Autosave --
+#[l]:	tEPlayerWatch.pog:tEPlayerWatch.pog
+	-- Crew Speaking --
+	???
+	-- Cargo Ships --
+#[l]:	tPcCargoShip.pog:tPcCargoShip.pog
 --- Fleet Operations ---
 	- Fleet Movement -
 #[l]:	tLCenter.pog:tLCenter.pog
@@ -171,6 +174,7 @@ Pog has no way to define classes, so it does not support inheritance. It also do
 #[l]:	tLTrade.pog:tLTrade.pog
 --- General Utility Modules ---
 #[l]:uString.pog:uString.pog
+#[l]:ECargoTypes.pog:ECargoTypes.pog
 --- Generic GUI Modules ---
 #[l]:UniGUI.pog:UniGUI.pog
 #[l]:UniGUIBase.pog:UniGUIBase.pog
@@ -188,7 +192,6 @@ Pog has no way to define classes, so it does not support inheritance. It also do
 
 
 --- To be allocated into logical groups of function/purpose ---
-#[l]:ECargoTypes.pog:ECargoTypes.pog
 #[l]:jcEChangeIdGui.pog:jcEChangeIdGui.pog
 #[l]:tDistance.pog:tDistance.pog
 #[l]:tECommEvent.pog:tECommEvent.pog
