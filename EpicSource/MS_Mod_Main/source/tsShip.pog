@@ -45,11 +45,11 @@ uses	 Sim,
 		CargoTypes,
 		iMultiplay,
 		
-		tStationEnum,
-		tEconUtil,
-		tPodUtil,
-		tEpicComms,
-		tFormation,
+		tsStationEnum,
+		tsEconUtil,
+		tsPodUtil,
+		tsShipComms,
+		tsFormation,
 		tsFaction; 
 //[cf]
 
@@ -631,10 +631,13 @@ null_subsims(hship ship)
       return;
    }
 
+   /*
    debug {
+      Debug.PrintString("tsShip.null_subsims ");                        
       Debug.PrintString(template_name);
       Debug.PrintString(" ship type\n");
    }
+   */
 
    ship_file = INIFile.Create(template_name);   
 
@@ -694,7 +697,10 @@ null_subsims(hship ship)
 
                   // Check if we already tagged this one.
                   if (!Object.PropertyExists(subsim,"subsim_template")) {
+
+                     /*
                      debug {
+                        Debug.PrintString("tsShip.null_subsims ");                     
                         Debug.PrintHandle(subsim);
                         Debug.PrintString(" ");
                         Debug.PrintString(subsim_template);
@@ -702,7 +708,7 @@ null_subsims(hship ship)
                         Debug.PrintInt(template_count);
                         Debug.PrintString("\n");
                      }
-
+*/
                      not_found = false;
                      Object.AddStringProperty(subsim,"subsim_template", subsim_template);
                      Object.AddStringProperty(subsim,"subsim_class", subsim_class);

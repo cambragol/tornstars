@@ -39,19 +39,19 @@ uses	Sim,
       iDockPort,                
       CargoTypes,
 		UniGUI,
-      tStationEnum,
-      tStation,
-      tEpicGuiEnum,
-      tEpicGui,
+      tsStationEnum,
+      tsStation,
+      tsGuiEnum,
+      tsGui,
       tsFaction,
-      tLProduction,
-      tLInventory,
-      tLTrade,
-      tEconSmall,
-      tEconUtil,
-      tEpicMoney,
-      tPodUtil,
-      uString,
+      tsLProduction,
+      tsLInventory,
+      tsLTrade,
+      tsEconomy,
+      tsEconUtil,
+      tsMoney,
+      tsPodUtil,
+      tsString,
       tsDescribeINI;
 
 
@@ -105,7 +105,7 @@ RunCheck()
 
    // Don't allow the player to trade when the station is not
    // operating (destroyed or under construction). 
-   if (tStation.Status(iHabitat.Cast(station)) != ESS_Normal) {
+   if (tsStation.Status(iHabitat.Cast(station)) != ESS_Normal) {
       allow_trade = false;
    }
 
@@ -239,7 +239,7 @@ hwindow create_border_button(int x, int y, int width, int height, hwindow parent
 
    GUI.SetButtonFunctionPog(button, function);
 
-//   tEpicGui.SetStandardWindowColours(button);
+//   tsGui.SetStandardWindowColours(button);
 
    // Add the border
    border = GUI.CreateBorder(button);
@@ -247,7 +247,7 @@ hwindow create_border_button(int x, int y, int width, int height, hwindow parent
    // we still return the button, because the function might need to change
    // or something. This is one of those no good choice decisions.
 
-   tEpicGui.SetStandardStateColours(button);
+   tsGui.SetStandardStateColours(button);
 
    return button;
 }
@@ -256,7 +256,7 @@ hwindow create_border_button(int x, int y, int width, int height, hwindow parent
 TradeObjectStart(hisim trade_object)
 {
 
-   if (tLTrade.IsTradeCenter(trade_object)) {
+   if (tsLTrade.IsTradeCenter(trade_object)) {
       Global.CreateHandle("g_epic_trade_start_object", GA_Write|GA_NoSave, trade_object);
 
       GUI.PopScreensTo("icSpaceFlightScreen");
@@ -339,10 +339,10 @@ update_cargo_info(hcargo cargo)
    int price, discount;
 
    // Price minus sellers hauling fee discount.
-   price = float2int(price_adjust() * int2float(tEconSmall.CargoPrice(cargo)));
+   price = float2int(price_adjust() * int2float(tsEconomy.CargoPrice(cargo)));
 
-   if (tEconSmall.TradedItem(cargo)) {
-      price -= tEconSmall.HaulFee(cargo);
+   if (tsEconomy.TradedItem(cargo)) {
+      price -= tsEconomy.HaulFee(cargo);
    }
 
    if (price < 0) {
@@ -356,10 +356,10 @@ update_cargo_info(hcargo cargo)
    text = String.Join(text,String.FormatInt(" %d<p>",price));
 
    text = String.Join(text,"Required Standing: ");
-   text = String.Join(text, Text.Field( tsFaction.Level2String(tEconSmall.CargoStanding(cargo)),
+   text = String.Join(text, Text.Field( tsFaction.Level2String(tsEconomy.CargoStanding(cargo)),
                                         FT_Text));
 
-   text = uString.Htmlize(text);
+   text = tsString.Htmlize(text);
 
    GUI.SetTextWindowString( cargo_info, text);
 }
@@ -373,7 +373,7 @@ update_equip_info(hcargo cargo)
    string text, subsim_template;
 
    if (none == cargo) {
-      text = uString.Htmlize("");
+      text = tsString.Htmlize("");
       GUI.SetTextWindowString( equip_info, text);
       return;
    }
@@ -386,7 +386,7 @@ update_equip_info(hcargo cargo)
       text = String.Join(text, tsDescribeINI.Subsystem(subsim_template));
    }
 
-   text = uString.Htmlize(text);
+   text = tsString.Htmlize(text);
 
    GUI.SetTextWindowString( equip_info, text);
 
@@ -419,11 +419,11 @@ update_order_info()
       cargo = iCargo.Cast(List.GetNth(player_order,i));
       number = Object.IntProperty(cargo,"gt_etrade_amount");
       pods += number;
-      pod_price = float2int(price_adjust()* int2float(tEconSmall.CargoPrice(cargo)));
+      pod_price = float2int(price_adjust()* int2float(tsEconomy.CargoPrice(cargo)));
       value = number * pod_price;
       // Sellers discount a local system hauling fee.
-      if (tEconSmall.TradedItem(cargo)) {
-         value = value - (number * tEconSmall.HaulFee(cargo));
+      if (tsEconomy.TradedItem(cargo)) {
+         value = value - (number * tsEconomy.HaulFee(cargo));
       }
 
       if (value < 0) {
@@ -437,7 +437,7 @@ update_order_info()
    price_string = String.Join(price_string, Text.Field("gt_equipbuy_total_price",FT_Text));
    price_string = String.Join(price_string, String.FormatInt(" %d<p> ",price));
 
-   funds = tEpicMoney.ShipAccount();
+   funds = tsMoney.ShipAccount();
    funds_string = "";
    funds_string = String.Join(funds_string,Text.Field("gt_equipbuy_funds", FT_Text));
    funds_string = String.Join(funds_string, String.FormatInt(" %d", funds));
@@ -451,7 +451,7 @@ update_order_info()
    text = String.Join(text, price_string);
    text = String.Join(text, funds_string);
 
-   text = uString.Htmlize(text);
+   text = tsString.Htmlize(text);
 
    GUI.SetTextWindowString( order_info, text);
 }
@@ -466,7 +466,7 @@ order_item(hcargo cargo, int amount)
 
    // The player must meet the minimum standing requirements
    // to order a piece of cargo.
-   min_standing = tEconSmall.CargoMinStanding(cargo);
+   min_standing = tsEconomy.CargoMinStanding(cargo);
 
    if (player_standing < min_standing) {
       iHUD.PlayAudioCue(AC_InvalidInput);
@@ -653,10 +653,10 @@ OnPurchasePress()
       cargo = iCargo.Cast(List.GetNth(player_order,i));
       number = Object.IntProperty(cargo,"gt_etrade_amount");
       pods += number;
-      pod_price = float2int(price_adjust()* int2float(tEconSmall.CargoPrice(cargo)));
+      pod_price = float2int(price_adjust()* int2float(tsEconomy.CargoPrice(cargo)));
       value = number * pod_price;
-      if (tEconSmall.TradedItem(cargo)) {
-         value = value - (number * tEconSmall.HaulFee(cargo));
+      if (tsEconomy.TradedItem(cargo)) {
+         value = value - (number * tsEconomy.HaulFee(cargo));
       }
 
       if (value < 0) {
@@ -667,14 +667,14 @@ OnPurchasePress()
    }
 
    // Check player has the funds. If not, beep and leave this screen up.
-   if (price > tEpicMoney.ShipAccount()) {
+   if (price > tsMoney.ShipAccount()) {
       iHUD.PlayAudioCue(AC_InvalidInput);
       return;
    }
 
    // If the player has the money:
    // Deduct the purchase price.
-   tEpicMoney.ChangeShipAccount(price*-1);
+   tsMoney.ChangeShipAccount(price*-1);
 
    total = List.ItemCount(player_order);
 
@@ -901,7 +901,7 @@ create_station_inventory_list()
    for (i=0;i<count;++i) {
       cargo = iCargo.Cast(List.GetNth(cargo_list,i));
 
-      min_standing = tEconSmall.CargoMinStanding(cargo);
+      min_standing = tsEconomy.CargoMinStanding(cargo);
 
       name = iCargo.Name(cargo);
       name = String.Join(name,"  ");
@@ -1049,7 +1049,7 @@ set generate_trade_set(hisim trade_center)
    list cargo_list;
    hcargo cargo;
 
-   cargo_list = List.FromSet(tEconSmall.StationProducedCargo(trade_center));
+   cargo_list = List.FromSet(tsEconomy.StationProducedCargo(trade_center));
 
    // Filter out the non-equipment and non-ammo.
    count = List.ItemCount(cargo_list);
@@ -1144,7 +1144,7 @@ TradeWindow()
 
    Global.CreateFloat("gt_equipbuy_standing",GA_Write|GA_NoSave, player_standing);
 
-   set_price_adjust(tEconSmall.PurchaseAdjustment(trade_center));
+   set_price_adjust(tsEconomy.PurchaseAdjustment(trade_center));
 
 
    Global.CreateHandle("gt_equipbuy_ordered_select",GA_Write|GA_NoSave, none);
@@ -1166,10 +1166,10 @@ TradeWindow()
 
    rh_shady = iGUI.CreateShadyBarRight();
    
-   tEpicGui.CreateTitle(lh_shady,Text.Field("gt_equipbuy_title",FT_Text));
-   tEpicGui.CreateSubtitle(lh_shady,Text.Field("gt_equipbuy_subtitle",FT_Text));
+   tsGui.CreateTitle(lh_shady,Text.Field("gt_equipbuy_title",FT_Text));
+   tsGui.CreateSubtitle(lh_shady,Text.Field("gt_equipbuy_subtitle",FT_Text));
 
-   tEpicGui.CreateExitButton(lh_shady, 
+   tsGui.CreateExitButton(lh_shady, 
                              Text.Field("gt_equipbuy_exit",FT_Text), 
                              "tsEquipBuy.ExitScreen" );   
 
@@ -1214,7 +1214,7 @@ TradeWindow()
    trade_center_string = String.Join(trade_center_string,"<p>");
    trade_center_string = String.Join(trade_center_string, 
                                      Text.Field(tsFaction.Feeling2String(player_standing), FT_Text));
-   trade_center_string = uString.Htmlize(trade_center_string);
+   trade_center_string = tsString.Htmlize(trade_center_string);
 
    trade_center_info = GUI.CreateTextWindow( 0,
                                              0,

@@ -1,0 +1,881 @@
+package tsPcCustomsToll;
+
+uses    Sim,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        GUI,
+        iGUI,
+        iHUD,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        Math,
+        iShipCreation, 
+        iComms,
+        iConversation,
+        iMapEntity,
+        iLagrangePoint,
+        iAI,
+        iPilotSetup,
+        iShipCreation,
+        iEscort,
+
+        tsShipCreationEnum,
+        tsShipCreation,
+        tsPodUtil,
+        tsShipComms,
+        tsShipEnum,
+        tsPlayerFleet,
+        tsFaction,
+        tsMoney,
+        tsShipName,
+        tsLCenter,
+        tsLFleet,
+        tsEconomy,
+        tsPcOwner,
+        tsPilotSetup,
+        tsShip;
+
+
+provides PogCreate,
+         PogStart,
+         Comm;
+
+
+prototype setup_toll_marker(hisim marker);
+prototype task toll_start_ask(hmapentity location, hship ship);
+prototype task toll_controller(hmapentity location, hship ship);
+
+prototype int cargo_pod_value(hmapentity location);
+prototype int dropped_pod_value(hmapentity location);
+prototype remove_dropped_pods(hmapentity location);
+
+prototype float int2float(int value);
+prototype int float2int(float value);
+
+prototype hmapentity nearby_location(hisim center);
+
+prototype task cull_task(hmapentity location, hship ship);
+
+prototype create_patrol(hisim operation, hisim waypoint, hgroup cull_group, string ship_type);
+
+
+
+
+
+hsim PogCreate(string template_name, string object_name)
+{
+
+   hinifile object_file;
+   string name;
+   string item_template, pog_class, start_function;
+   hsim item;
+
+   debug Debug.PrintString("tsPcCustomsToll.PogCreate\n");
+
+   object_file = INIFile.Create(template_name);
+
+   if (none == object_file) {
+      debug {
+         Debug.PrintString("tsPcCustomsToll.PogCreate, failed to find object file\n");
+      }
+
+      return none;
+   }
+
+   // Pull needed items out of template file. Create the object.
+   // Attach them
+
+   pog_class = INIFile.String(object_file, "PogClass","name","none");
+
+
+   ///********************
+   // This block of code is class dependent. The rest must be done to adhere
+   // to the pog otbject calling conventions.
+
+   item_template = INIFile.String(object_file, "Properties","template","none");
+
+   INIFile.Destroy(object_file);
+
+   item = Sim.Create("ini:/sims/nav/waypoint","customs_toll_mark");
+
+   if (none == item) {
+      debug {
+         Debug.PrintString("tsPcCustomsToll.PogCreate, bad object template\n");
+      }
+      return none;
+   }
+
+   Sim.SetCullable(item, false);
+
+   ///********************
+
+
+   // All 
+   Object.AddStringProperty(item, "gt_pog_object_class", pog_class);
+   Object.AddStringProperty(item, "gt_pog_object_template", template_name);
+
+   
+   return item;
+}
+
+
+/*
+This function is called after the ship has been placed. 
+
+*/
+task PogStart(hsim pog_object)
+{
+   debug Debug.PrintString("tsPcCustomsToll: starting\n");
+
+   ///***************************************
+   // This part of the start code is object dependent. The prior pieces must
+   // be done to adhere to the pog class calling convention.
+
+   setup_toll_marker(iSim.Cast(pog_object));
+
+   ///***************************************
+}
+
+/*
+; 
+; Example INI file for setting up a hired ship.
+; One of these template files should be created
+; for each kind of ship that can be hired.
+; Freighter, warship, etc.
+
+[PogClass]
+name=tsPcCustomsToll
+
+[Properties]
+
+template=ini:/sims/ships/navy/patcom
+
+;charges 10 percent of the value of the cargo above the 
+; minimum value. If the total value of player cargo is below
+; the minimum, they charge no fee.
+[Toll]
+FT_Love=0.0
+FT_Like=0.05
+FT_Neutral=0.1
+FT_Dislike=0.2
+FT_Hate=0.2
+minimum_value=10000
+
+
+*/
+
+
+
+// Read the ini file, setup the object. 
+setup_toll_marker(hisim marker)
+{
+   hinifile control_file;
+   int minimum_value;
+   float toll_percent, encounter_chance;
+   string template_file_name, comm_function;
+   hmapentity location;
+   hgroup station_cull;
+   hfaction toll_faction;
+   hfaction player_faction = tsFaction.PlayerFaction();
+   hisim owner;
+   eFeelingType level;
+
+   string ship_template;
+   int i, total;
+   hship patrol_ship;
+   hgroup patrol_group = Group.Create();
+
+   if (none == marker) {
+      debug Debug.PrintString("ERROR tsPcCustomsToll.setup_toll_marker invalid sim\n");
+      return;
+   }
+
+   template_file_name = Object.StringProperty(marker, "gt_pog_object_template");
+   control_file = INIFile.Create(template_file_name);
+
+   if (none == control_file) {
+      debug Debug.PrintString("ERROR tsPcCustomsToll. invalid template_file\n");
+      debug Debug.PrintString(template_file_name);
+      debug Debug.PrintString("\n");
+      return;
+   }
+
+   location = nearby_location(marker);
+
+
+   // Find the operation owner of the toll.
+   // Setup the marker to know how the toll should charge the player.
+   owner = iSim.Cast(tsPcOwner.Owner(marker));
+   toll_faction = iSim.Faction(owner);
+   level = iFaction.FeelingType(iFaction.Feeling(toll_faction, player_faction));
+
+
+   // Read the toll setup properties. Basically, how much we should charge
+   // the player.
+   toll_percent = INIFile.Float(control_file, "Toll", tsFaction.Level2String(level), 0.1);
+   minimum_value = INIFile.Int(control_file, "Toll", "minimum_value", 6000);
+
+   // Read the percent chance that this toll is actually operating.
+   encounter_chance = INIFile.Float(control_file, "Properties", "encounter_chance", 1.0);
+
+   INIFile.Destroy(control_file);
+
+
+   create_patrol(owner, marker, patrol_group, "EST_Interceptor");
+
+
+   // Pull out the leader ship.
+   patrol_ship = iShip.Cast(Group.NthSim(patrol_group, 0));
+
+   // Setup properties for later cargo value calculations.
+   // Attach these to the lead patrol ship.
+   Object.AddIntProperty(patrol_ship,"gtTollMinValue", minimum_value);
+   Object.AddFloatProperty(patrol_ship,"gtTollPercent", toll_percent);
+   Object.AddIntProperty(patrol_ship,"gtTollPodValue", 0);
+
+   // Setup the control booleans.
+   Object.AddBoolProperty(location, "gt_PcCustomstoll_attack", false);
+   Object.AddBoolProperty(location, "gt_PcCustomstoll_paidup", false);
+
+   // Launch the toll controller task.
+   Task.Detach(start toll_controller(location, patrol_ship));
+}
+
+
+
+attack_player_order(hship patrol_ship)
+{
+   hship player;
+   hgroup player_fleet;
+   hgroup patrol_group = Sim.Group(patrol_ship);
+   hfaction player_faction = tsFaction.PlayerFaction();
+   int total, i;
+
+   debug Debug.PrintString("tsPcCustomsToll.attack_player_order\n");
+
+   if (none == patrol_group) {
+      debug Debug.PrintString("tsPcCustomsToll.attack_player_order missing patrol group\n");
+      return;
+   }
+
+   player = iShip.FindPlayerShip();
+
+   // Attack them.
+   iAI.GiveAttackOrder(patrol_group, Sim.Group(player));
+
+   // Mark all attacking ships hostile.
+   total = Group.SimCount(patrol_group);
+   for (i=0;i<total;++i) {
+      patrol_ship = iShip.Cast(Group.NthSim(patrol_group, i));
+
+      iSim.SetHostile(patrol_ship, true);
+   }
+}
+
+
+// The toll controller launches the conversation and 
+// handles attacking the player if the player leaves.
+// It takes instruction from the conversation.
+
+task toll_controller(hmapentity location, hship ship)
+{
+   hship player = iShip.FindPlayerShip();
+   set player_set;
+   hgroup player_fleet;
+   hfaction player_faction = tsFaction.PlayerFaction();
+   hfaction toll_faction;
+   hgroup patrol_group = Sim.Group(ship);
+
+   bool attack_player = false;
+   bool player_arriving = false;
+   float spacing;
+
+
+   toll_faction = iSim.Faction(ship);
+
+   spacing = iUtilities.GetLargestShipRadius( patrol_group);
+   iEscort.Wedge( patrol_group, spacing, 50km, true );
+
+
+   // The player is ldsing in. Wait till less than 10k to start
+   // conversation.
+   if (Sim.DistanceBetween(player, location) > 30km) {
+      player_arriving = true;
+   }else {
+      // If we are dislike or lower toward player, attack (ships will already be attacking).
+      if (iFaction.Feeling(toll_faction, player_faction) < -0.2) {
+
+         // pcct_enemy_sighted, "Enemies sighted! Attack"
+         iComms.Shout(ship, "", "pcct_enemy_sighted");
+         attack_player_order(ship);
+         attack_player = true;
+      }else {
+         Task.Detach(start toll_start_ask(location, ship));
+      }
+   }
+
+
+   while (1) {
+
+      if (Sim.IsDead(ship)) {
+         // Our ship is gone, exit.
+         return;
+
+      }else if (OT_Flee == iAI.CurrentOrderType(ship)) {
+         // Our ship is damaged and fleeing, allow
+         // culling and exit.
+         Sim.SetCullable(ship, true);
+         return;
+
+
+      }else if (attack_player) {
+         // We just idle around waiting for one side or the other to lose.
+         // Block attacking twice, or allowing the player to leave.
+
+      }else if (Object.BoolProperty(location, "gt_PcCustomstoll_paidup")) {
+         // Player allowed to leave, allow culling and bail.
+         debug Debug.PrintString("tsPcCustomsToll.toll_controller player has paid\n");
+         Sim.SetCullable(ship, true);
+         return;
+      
+      }else if (Object.BoolProperty(location, "gt_PcCustomstoll_attack")) {
+         debug Debug.PrintString("tsPcCustomsToll.toll_controller player refuses, attack\n");
+         // Player refused to pay
+
+         // Penalty to the player same as attacking a ship.
+         tsFaction.AdjustCurrentAction(toll_faction, -2.0);
+
+         attack_player_order(ship);
+
+         tsShipComms.DisplayComms(ship, false);
+         attack_player == true;
+         return;
+
+      }else if (player_arriving){
+         // Waiting for the player to get close enough to start asking for
+         // money.
+         if (Sim.DistanceBetween(player, location) < 10km) {
+            player_arriving = false;
+
+            // If we are dislike or lower, announce attack
+            if (iFaction.Feeling(toll_faction, player_faction) < -0.2) {
+               // pcct_enemy_sighted, "Enemies sighted! Attack"
+               iComms.Shout(ship, "", "pcct_enemy_sighted");
+               attack_player_order(ship);
+               attack_player = true;
+            }else {
+               Task.Detach(start toll_start_ask(location, ship));
+            }
+         }
+      }else if (Sim.DistanceBetween(player, location) > 20km) {
+         // If the player has moved away from location: attack!
+         debug Debug.PrintString("tsPcCustomsToll.toll_controller player fled, attack\n");
+
+         // pcct_player_fled_attack, "Scum! I warned you not to leave! Attack!"
+         iComms.Shout(ship, "", "pcct_player_fled_attack");
+
+         // Penalty to the player same as attacking a ship.
+         tsFaction.AdjustCurrentAction(toll_faction, -2.0);
+
+         attack_player_order(ship);
+
+         attack_player == true;
+
+         tsShipComms.AddComms(ship, "");
+         tsShipComms.DisplayComms(ship, false);
+
+         Object.SetBoolProperty(location, "gt_PcCustomstoll_attack", true);
+      }
+
+      Task.Sleep(Task.Current(), 1.0);
+   }
+}
+
+
+// This task asks the player to pay the toll. It is the part that measures the
+// player worth and allows the player to leave the Lpoint.
+
+task toll_start_ask(hmapentity location, hship ship) {
+   hfaction player = iFaction.Find("Player");
+   hfaction source_faction;
+   string ask_string, ask_toll;
+   int toll_charge, pod_value, minimum_value, time_count, old_value;
+   float toll_percent;
+
+   // First we total up the players carried cargo and calculate the toll percent.
+   // If the player value is below our trouble, we just wave the player on past.
+
+   minimum_value = Object.IntProperty(ship,"gtTollMinValue");
+   toll_percent = Object.FloatProperty(ship,"gtTollPercent");
+
+   pod_value = cargo_pod_value(location);
+
+   Object.SetIntProperty(ship,"gtTollPodValue", pod_value);
+
+   toll_charge = float2int(toll_percent * int2float(pod_value - minimum_value));
+
+   // If the total is less than zero, then let the player leave.
+   if (toll_charge <= 0) {
+      Object.SetBoolProperty(location, "gt_PcCustomstoll_paidup", true);
+
+      // pcct_player_poor, "You don't have anything worth stealing. Leave! Now!" 
+      iConversation.OneLiner(ship,"", "pcct_player_poor");
+      return;
+   }
+
+   // The player has funds that are worth stealing. Stop them, and ask for the funds.
+   iConversation.Begin();
+
+   // pcct_halt_warning, "Halt Your Ship! You must pay to cross this system." 
+   iConversation.Say(ship,"", "pcct_halt_warning");
+
+   Task.Sleep(Task.Current(), 0.5);
+
+   // pcct_announce_inspection, "Wait here while we inspect your cargo."
+   iConversation.Say(ship,"", "pcct_announce_inspection");
+
+   Task.Sleep(Task.Current(), 0.5);
+
+   // pcct_distance_warning, "Do not move more than 10km from this location or we will attack." 
+   iConversation.Say(ship,"", "pcct_distance_warning");
+
+   Task.Sleep(Task.Current(), 5.0);
+
+   // if the player has fled, the fighting has started, so bail out.
+   // Tell them we are pissed. Actual attack orders are handled by the
+   // toll watch task.
+   if (Object.BoolProperty(location, "gt_PcCustomstoll_attack")) {
+
+      // pcct_player_fled_attack, "Scum! I warned you not to leave! Attack!"
+      iConversation.Say(ship,"", "announce_player_fled_attack");
+      iConversation.End();
+      return;
+   }
+
+
+   // The player is going along, so give them some options.
+   // pcct_ask_toll_charge, "We want payment for safe passage.", toll_charge);
+   ask_toll = String.Join(Text.Field("pcct_ask_toll_charge",FT_Text), " %d credits");
+   ask_string = String.FormatInt(ask_toll, toll_charge);
+
+   // Response 1
+   // pcct_player_pay_response, "Ok, here's your money dammit"
+   iConversation.AddResponse("pcct_player_pay_response",
+                             "pcct_player_pay_response");
+                            
+
+   // pcct_player_delay_response, "Uh, hold on a moment while I ... check my account"
+   iConversation.AddResponse("pcct_player_delay_response",
+                             "pcct_player_delay_response");
+
+   // Response 2
+   // pcct_player_refuse_response, "Go to Hell!"
+   iConversation.AddResponse("pcct_player_refuse_response",
+                             "pcct_player_refuse_response");
+
+
+
+   switch ( iConversation.Ask( ship, "", ask_string ) ) {
+   case 1 :
+
+      // The player does not have enough money.
+      if (tsMoney.ShipAccount() < toll_charge) {
+
+         // pcct_player_short_funds, "Your short funds. Drop enough cargo to pay." 
+
+         iConversation.Say(ship,"", "pcct_player_short_funds");
+         Task.Sleep(Task.Current(), 0.5);
+
+         // pcct_call_back_after_drop, "Call back when you have dropped the cargo." 
+         iConversation.Say(ship,"", "pcct_call_back_after_drop");
+
+         Task.Sleep(Task.Current(), 0.5);
+
+         // pcct_no_leave_warning, "Don't even think of leaving." 
+         iConversation.Say(ship,"", "pcct_no_leave_warning");
+
+
+         tsShipComms.AddComms(ship, "tsPcCustomsToll.Comm");
+         tsShipComms.DisplayComms(ship, true);
+      } else {
+         // The player paid.
+         tsMoney.ChangeShipAccount(-1*toll_charge);
+         // pcct_player_paid_can_leave, "Another sucker pays up. Heh. Ok Scum, leave!" 
+         iConversation.Say(ship,"", "pcct_player_paid_can_leave");
+
+         // refuse more conversation.
+         tsShipComms.AddComms(ship, "");
+         Object.SetBoolProperty(location, "gt_PcCustomstoll_paidup", true);
+      }
+
+      break;
+
+   case 2 :
+      // Player asked for more time
+      // pcct_call_back_when_pay, "Call back when your ready to pay."
+      iConversation.Say(ship,"", "pcct_call_back_when_pay");
+      Task.Sleep(Task.Current(), 0.5);
+
+      // pcct_no_leave_warning, "Don't even think of leaving." 
+      iConversation.Say(ship,"", "pcct_no_leave_warning");
+
+      tsShipComms.AddComms(ship, "tsPcCustomsToll.Comm");
+      tsShipComms.DisplayComms(ship, true);
+      break;
+
+   case 3 :
+   default:
+      // Player refuses to pay.
+      // pcct_call_beg, "Call and beg for mercy! I might let you live." );
+      iConversation.Say(ship,"", "pcct_call_beg");
+      Task.Sleep(Task.Current(), 0.5);
+
+      // pcct_no_leave_warning, "Don't even think of leaving." 
+      iConversation.Say(ship,"", "pcct_no_leave_warning");
+
+      tsShipComms.AddComms(ship, "tsPcCustomsToll.Comm");
+      tsShipComms.DisplayComms(ship, true);
+
+      break;
+   }
+
+   // Finish the conversation.
+   iConversation.End();
+}
+
+
+
+// Player is calling back, reporting he has dropped pods.
+// if the value of the pods is greater than the toll value,
+// take the pods, let him go.
+
+// If the player still does not have enough, tell him to drop pods.
+
+// Sets a global bool true if the player is allowed to leave. 
+task Comm()
+{
+   hship ship;
+   hfaction player = iFaction.Find("Player");
+   hfaction source_faction;
+   string ask_string, ask_toll;
+   int toll_charge, pod_value, minimum_value, dropped_value, old_value;
+   float toll_percent;
+   hmapentity location;
+
+   debug Debug.PrintString("tsPcCustomsToll.Comm\n");
+
+   ship = iShip.Cast(tsShipComms.CommsSource());
+
+   // Turn off the comms display, now that the player knows he can talk to this ship.
+   tsShipComms.DisplayComms(ship, false);
+
+
+   location = nearby_location(ship);
+
+   minimum_value = Object.IntProperty(ship,"gtTollMinValue");
+   toll_percent = Object.FloatProperty(ship,"gtTollPercent");
+   old_value = Object.IntProperty(ship,"gtTollPodValue");
+
+   pod_value = cargo_pod_value(location);
+   dropped_value = dropped_pod_value(location);
+
+   // if the player drops pods, the value goes down. Prevent that.
+   if (pod_value < old_value) {
+      pod_value = old_value;
+   }
+
+   toll_charge = float2int(toll_percent * int2float(pod_value - minimum_value));
+
+
+        // Start the conversation.
+    iConversation.Begin();
+
+    // Response 1
+   // pcct_player_pay_response, "Always glad to fund the Police"
+    iConversation.AddResponse(
+        "pcct_player_pay_response",
+        "pcct_player_pay_response");
+
+    // Response 2
+   // pcct_player_second_refusal,"Your just pirates with badges! Go to hell"
+    iConversation.AddResponse(
+       "pcct_player_second_refusal",
+       "pcct_player_second_refusal");
+
+
+    // Ask the player a question and switch on their response.
+    // pcct_second_ask_toll, "Are you ready to make payment?"
+    ask_toll = String.Join(Text.Field("pcct_second_ask_toll", FT_Text)," %d credits");
+    ask_string = String.FormatInt(ask_toll, toll_charge);
+
+    switch ( iConversation.Ask( ship, "", ask_string ) )
+    {
+    case 1 :
+
+       // Credit the player for dropped cargo, but don't pay the player 
+       // extra.
+       toll_charge = toll_charge - dropped_value;
+       if (toll_charge < 0) {
+          toll_charge = 0;
+       }
+
+       // Add in the value of dropped cargo.
+       if (toll_charge >= tsMoney.ShipAccount()) {
+          // The player does not have enough money.
+         iConversation.Say(ship,"", "pcct_player_short_funds");
+          Task.Sleep(Task.Current(), 0.5);
+
+         iConversation.Say(ship,"", "pcct_call_back_after_drop");
+          Task.Sleep(Task.Current(), 0.5);
+
+         iConversation.Say(ship,"", "pcct_no_leave_warning");
+
+          tsShipComms.DisplayComms(ship, true);
+       }else {
+          // The player paid.
+          // Remove the dropped cargo.
+          remove_dropped_pods(location);
+          tsMoney.ChangeShipAccount(-1*toll_charge);
+
+          iConversation.Say(ship,"", "pcct_player_paid_can_leave");
+          Object.SetBoolProperty(location, "gt_PcCustomstoll_paidup", true);
+          tsShipComms.AddComms(ship, "");
+       }
+
+       // Player has offered to pay.
+       break;
+
+    case 2 :
+
+       // pcct_second_refusal_response, "They don't pay us enough. Look, you pay, or you die. Get it?"
+       iConversation.Say(ship,"", "pcct_second_refusal_response");
+
+       tsShipComms.AddComms(ship, "");
+       Object.SetBoolProperty(location, "gt_PcCustomstoll_attack", true);
+       break;
+    default :
+
+       break;
+    }
+
+    // Finish the conversation.
+    iConversation.End();
+}
+
+// Finds the closest location or station.
+hmapentity nearby_location(hisim center)
+{
+   hlagrangepoint lpoint;
+   hhabitat habitat;
+
+   lpoint = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), center);
+   habitat = iHabitat.Nearest(iMapEntity.SystemHabitats(), center);
+
+   if (Sim.DistanceBetween(habitat, center) < Sim.DistanceBetween(lpoint, center)) {
+      return habitat;
+   }
+
+   return lpoint;
+}
+
+
+task cull_task(hmapentity location, hship ship)
+{
+   int timer;
+   hship player;
+   bool cull_ship;
+
+   while (1) {
+      Task.Sleep(Task.Current(), 2.0);
+
+      cull_ship = false;
+      player = iShip.FindPlayerShip();
+
+      // Player has moved away from the home location.
+      if (!tsLCenter.GetCullMarker(iSim.Cast(location))) {
+
+          // The player has jumped to another system. End pursuit.
+          if (iSim.ActiveWorld() != iSim.WorldName(ship)) {
+              cull_ship = true;
+          }
+
+          // The player is more than 500,000km away. Then the player
+          // has escaped.
+          if (Sim.DistanceBetween(ship, player) > 500000km) {
+              cull_ship = true;
+          }
+
+          if (OT_Attack != iAI.CurrentOrderType(ship)) {
+            // If the ship is not in hot pursuit, cull it. The ship 
+              // is fleeing or some other effect.
+              cull_ship = true;
+
+          }
+
+          if (cull_ship) {
+            debug {
+               Debug.PrintString("tsPcCustomsToll.cull_task removing ship\n");
+               Debug.PrintHandle(ship);
+               Debug.PrintString("\n");
+               Debug.PrintHandle(location);
+               Debug.PrintString("\n");
+            }
+
+            Sim.Destroy(ship);
+            return;
+          }
+
+      }
+   }
+}
+
+
+// Totals the value of all player cargo pods within 400km of the location.
+int cargo_pod_value(hmapentity location)
+{
+   list pod_list, fleet_list;
+   int i, total, value;
+   hisim pod, ship;
+   hcargo cargo;
+   set pod_set;
+
+   // Build a set of all pods near player ships
+   fleet_list = tsPlayerFleet.PlayerFleet();
+   total = List.ItemCount(fleet_list);
+   for (i=0;i<total;++i) {
+      ship = iSim.Cast(List.GetNth(fleet_list,i));
+      Set.Union(pod_set, tsPodUtil.PlayerPods(ship, Global.Float("gt_distance_culling")));
+   }
+
+   pod_list = List.FromSet(pod_set);
+   value = 0;
+   total = List.ItemCount(pod_list);
+   for (i=0;i<total;++i) {
+      pod = iSim.Cast(List.GetNth(pod_list, i));
+      
+      // Total up the value of player pods docked to ships
+      if (iSim.IsDocked(pod)) {
+         cargo = tsPodUtil.PodCargo(pod);
+         value= value + tsEconomy.CargoPrice(cargo);
+      }
+   }
+
+   debug {
+       Debug.PrintString(String.FormatInt("tsPcPiratToll.cargo_pod_value %d\n", value));
+   }
+
+   return value;
+}
+
+// Totals the value of all undocked player cargo pods within Global.Float("gt_distance_culling") of the location.
+int dropped_pod_value(hmapentity location)
+{
+   list pod_list;
+   int i, total, value;
+   hisim pod;
+   hcargo cargo;
+
+   pod_list = tsPodUtil.UndockedPodList(location, Global.Float("gt_distance_culling"));
+   value = 0;
+   total = List.ItemCount(pod_list);
+   for (i=0;i<total;++i) {
+      pod = iSim.Cast(List.GetNth(pod_list, i));
+      
+      cargo = tsPodUtil.PodCargo(pod);
+      value= value + tsEconomy.CargoPrice(cargo);
+   }
+
+   return value;
+}
+
+// Removes all undocked player cargo pods within Global.Float("gt_distance_culling") of the location.
+remove_dropped_pods(hmapentity location)
+{
+   hgroup pods;
+   
+   pods = Group.FromList(tsPodUtil.UndockedPodList(location, Global.Float("gt_distance_culling")));
+
+   Group.Destroy(pods, true);
+}
+
+
+
+create_patrol(hisim operation, hisim waypoint, hgroup cull_group, string ship_type)
+{
+   float threat;
+   string escort_template;
+   hfaction faction = iSim.Faction(operation);
+   hinifile escort_file;
+   int i, total, fleets;
+   hship escort;
+
+   // How many fleets remain in this operation?
+   fleets = tsLFleet.Fleets(operation);
+
+   if (fleets == 0) {
+      return;
+   }
+
+   // How many fleets does each of the patrol ships use?
+   escort_template = tsShipCreation.GetShip(faction, tsShipCreation.String2ShipType(ship_type));
+   escort_file = INIFile.Create(escort_template);
+
+   if (none == escort_file) {
+      debug Debug.PrintString("tsPcPirateToll.create_escort error escort ini file invalid\n");
+      return;
+   }
+
+   threat = INIFile.Float(escort_file,"Properties","threat", 40);
+   INIFile.Destroy(escort_file);
+
+
+   // Create the proper number of ships.
+   total = float2int(int2float(fleets)/threat);
+
+   for (i=0;i<total;++i) {
+      escort = tsShip.Create(escort_template, tsShipName.ShipName("govornment",10000));
+
+      tsPilotSetup.SetupEscort(escort, 0.9, 0.5);
+
+      iSim.SetFaction(escort, faction);
+      Sim.SetCullable(escort, true);
+
+      Sim.PlaceRelativeTo(escort, waypoint, 2km, 0, 0);
+
+      iShip.Attacked(escort);
+      iShip.LastAttacker(escort);
+
+      tsPcOwner.SetOwner(escort, operation);
+
+      Group.AddSim(cull_group, escort);
+   }
+}
+
+
+
+
+float int2float(int value)
+{
+   return value;
+}
+
+
+int float2int(float value)
+{
+   return value;
+}
+
+/*   
+
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

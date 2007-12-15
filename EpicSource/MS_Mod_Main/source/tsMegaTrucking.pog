@@ -1,0 +1,1293 @@
+//*******************************************************************************************/
+//
+// tsMegaTrucking
+//
+// Utility functions for megafreighter use
+// 
+// 
+// 
+//
+// November 2005, Kevin Baxter
+//
+//*******************************************************************************************/
+
+package tsMegaTrucking;
+
+uses    Sim,
+        Task,
+        iAI,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        Input,
+        List,
+        Object,
+        String,
+        Text,
+		State,
+        iCargo,
+        iInventory,
+        iAI,
+        INIFile,
+        iUtilities,
+        iRemotePilot,
+        iHUD;
+
+provides SlotFromInt,
+         MegaDockTest,
+         MegaPodDeath,
+         CreateMegaPod,		// Megapods MUST be created with this function to work with the spewer!
+         IsMegafreighter,
+		 MegaPodsOnShip,
+		 Initialize,
+		 Uninitialize,
+		 PodsOnMegafreighter,
+		 UnloadShip,
+		 LoadShip,
+		 SecurityWatch,
+		 DitchPods,
+		 LoadShipFromSpace,
+		 SetUpFreighter;
+
+prototype visible_minipods(hsim megapod);
+prototype launch_minipod(hsim megapod, int slot);
+prototype task dock_to_megapod(hship minipod, hsim megapod);
+prototype hsim create_dock_waypoint(hsim megapod, float x, float y, float z, bool isinner);
+prototype secure_ship(hsim ship);
+prototype unsecure_ship(hsim ship);
+prototype task SecurityWatch(hsim ship);
+
+//******************************************************************************************/
+// 
+//
+//
+//******************************************************************************************/
+
+string SlotFromInt(int slot)	// Converts slot number to handle prop name
+{
+	return String.Join("md_epic_slot",String.FromInt(slot)); 
+}
+
+/*
+int IntFromSlot(string slot)	// Converts handle prop name to slot number
+{
+	return String.ToInt(String.Right(slot, 1));
+}
+*/
+
+task wait_and_undock_test(hship minipod, hsim megapod)
+{
+	int i;
+
+	iHUD.Print("Waiting for dock");
+
+	while(Sim.Parent(minipod) != megapod)
+		Task.Sleep(Task.Current(),1);
+
+	iHUD.Print("Dock detected. Launching.");
+
+	for( i = 1; i <= 8; ++i)
+	{
+		launch_minipod(megapod, i);
+		Task.Sleep(Task.Current(),1);
+	}
+}
+
+task capsule_accel_test(hsim megapod)
+{
+	if(Object.PropertyExists(megapod, "md_debug_capsuletest"))
+		return;
+	Object.AddBoolProperty(megapod, "md_debug_capsuletest", true);
+
+	while(!iSim.IsCapsuleJumping(iShip.Cast(Sim.Parent(megapod))))
+		Task.Sleep(Task.Current(), 0.1);
+
+	Sim.AvatarSetChannel(megapod, "door", 1);
+
+	Object.RemoveProperty(megapod, "md_debug_capsuletest");
+
+	return;
+}
+
+MegaDockTest(hship minipod, hsim megapod)	// Testing function.
+{
+/*
+	list podlist;
+	hobject thingmabob;
+
+	Sim.AvatarSetChannel(megapod, "door", 1);
+
+	iShip.InstallAIPilot(minipod, 0.25, 4.0, 0.1,"","","","");
+	Task.Detach(start dock_to_megapod(minipod, megapod));
+
+//	Task.Detach(start wait_and_undock_test(minipod, megapod));
+
+	return;
+*/
+
+//	Task.Detach(start capsule_accel_test(megapod));
+}
+
+task MegaPodDeath(hsim sim)	// Death script for megapod.
+{
+	int i;
+
+	visible_minipods(sim);
+
+	iShip.RemovePilot(iShip.Cast(sim));
+	
+	Sim.AvatarSetChannel(sim, "door", 1);
+
+	iSim.StartExplosion(iSim.Cast(sim));
+
+	Task.Sleep(Task.Current(),1);
+
+	for( i = 1; i <= 8; ++i)
+	{
+		launch_minipod(sim, i);
+		Task.Sleep(Task.Current(),1);
+	}
+
+	iSim.StopExplosion(iSim.Cast(sim), SE_Normal, true);
+
+	return;
+}
+
+
+hsim CreateMegaPod()	// Makes a megapod and sets object properties
+{
+	hsim megapod;
+	int i;
+	
+	megapod = iShip.Create("ini:/sims/ships/utility/megapod_open_rotated", "Cargo Pod");
+
+	Object.SetStringProperty(megapod, "death_script", "tsMegaTrucking.MegaPodDeath");
+
+	for(i = 1; i <= 8; ++i)
+	{
+		Object.AddHandleProperty(megapod, SlotFromInt(i), none);
+	}
+
+	return megapod;
+}
+
+bool IsMegafreighter(hsim ship)	// Is this ship a megafreighter?
+{
+	if(Sim.TemplateName(ship) == "ini:/sims/ships/utility/megatransporter") return true;	// The stock megafreighter
+	if(Sim.TemplateName(ship) == "ini:/sims/ships/player/megatransporter") return true;	// The custom player megafreighter
+
+	return false; // All the other loser ships
+}
+
+list MegaPodsOnShip(hsim ship)	// Gets the megapods on this ship
+{
+	int i;
+	list megalist;
+	set megaset;
+
+	megalist = List.FromSet(Sim.Children(ship));
+
+	if(List.IsEmpty(megalist))
+		return megalist;	// if no megapods, return empty set
+
+	for(i = 0; i < List.ItemCount(megalist); ++i)
+	{
+		if(Sim.TemplateName(Sim.Cast(List.GetNth(megalist, i))) == "ini:/sims/ships/utility/megapod_open_rotated")
+			Set.Add(megaset, List.GetNth(megalist, i));
+	}
+
+	return List.FromSet(megaset);
+}
+
+set minipods_in_megapod(hobject megapod)	// Does not count sold pods
+{
+	int i;
+	set pods;
+	hobject currentpod;
+
+	for(i = 1; i <= 8; ++i)
+	{
+		currentpod = Object.HandleProperty(megapod, SlotFromInt(i));
+		if(currentpod != none && !Object.BoolProperty(currentpod, "md_epic_podsold"))
+			Set.Add(pods, currentpod);
+	}
+	return pods;
+}
+
+visible_minipods(hsim megapod)	// Makes minipods visible
+{
+	int slot;
+	hisim currentpod;
+
+	for(slot = 1; slot <= 8; ++slot)
+	{
+		currentpod = iSim.Cast(Object.HandleProperty(megapod, SlotFromInt(slot)));
+		if(currentpod != none)
+		{
+			Sim.SetHidden(currentpod, false);
+			iSim.SetIndestructable(currentpod, false);
+		}
+	}
+	return;
+}
+
+invisible_minipods(hsim megapod)	// Makes minipods invisible (and invincible)
+{
+	int slot;
+	hisim currentpod;
+
+	for(slot = 1; slot <= 8; ++slot)
+	{
+		currentpod = iSim.Cast(Object.HandleProperty(megapod, SlotFromInt(slot)));
+		if(currentpod != none)
+		{
+			Sim.SetHidden(currentpod, true);
+			iSim.SetIndestructable(currentpod, true);
+		}
+	}
+	return;
+}
+
+init_megapod(hobject megapod)
+{
+	int i;
+	int freeports = 0;
+
+	if(megapod == none) return;
+
+	if(!Object.PropertyExists(megapod, SlotFromInt(1)))	// If the pod is invalid
+	{
+		iHUD.Print("CODE ERROR: MEGAPOD CREATED INCORRECTLY! POD DISABLED");
+		Object.AddIntProperty(megapod, "md_epic_pfreeports", 0);
+		Object.AddIntProperty(megapod, "md_epic_pfuturefree", 0);
+		Object.AddIntProperty(megapod, "md_epic_ppodstogo", 0);
+	}
+
+	for(i = 1; i <= 8; ++i)	// find number of free ports
+	{
+		if(Object.HandleProperty(megapod, SlotFromInt(i)) == none)
+			++freeports;
+	}
+
+//	iHUD.Print(String.Join("Free ports: ",String.FromInt(freeports)));
+
+	Object.AddIntProperty(megapod, "md_epic_pfreeports", freeports);
+	Object.AddIntProperty(megapod, "md_epic_pfuturefree", freeports);
+	Object.AddIntProperty(megapod, "md_epic_ppodstogo", 0);
+	return;
+}
+
+uninit_megapod(hobject megapod)
+{
+	Object.RemoveProperty(megapod, "md_epic_pfreeports");
+	Object.RemoveProperty(megapod, "md_epic_pfuturefree");
+	Object.RemoveProperty(megapod, "md_epic_ppodstogo");
+	return;
+}
+
+task megaship_watch(hship freighter)
+{
+	int i;
+	hobject currentmegapod;
+	list megapods = MegaPodsOnShip(freighter);
+
+	while(Object.PropertyExists(freighter, "md_epic_shipinit"))	// wait until tsSpewerOps removes initialization
+		Task.Sleep(Task.Current(), 1);
+	// tsSpewerOps will take care of the main properties; we just have to get the megapods.
+
+	for(i = 0; i < List.ItemCount(megapods); ++i)
+	{
+		currentmegapod = List.GetNth(megapods, i);
+		uninit_megapod(currentmegapod);
+	}
+
+	return;
+}
+
+Initialize(hship freighter)
+{
+	int i;
+	int freeports = 0;
+	hobject currentmegapod;
+	list megapods = MegaPodsOnShip(freighter);
+	
+//	iHUD.Print("Megafreighter detected!");
+
+//	unsecure_ship(freighter);
+
+	for(i = 0; i < List.ItemCount(megapods); ++i)
+	{
+		currentmegapod = List.GetNth(megapods, i);
+		init_megapod(currentmegapod);
+		freeports += Object.IntProperty(currentmegapod, "md_epic_pfreeports");
+	}
+	// We do not need to add md_epic_freeports to the ship, as it is not used in megatrucking.
+
+	Object.AddIntProperty(freighter, "md_epic_spewerqueue", 4);			// The queue can be larger or smaller.
+	Object.AddIntProperty(freighter, "md_epic_futurefree", freeports);
+
+	Task.Detach(start megaship_watch(freighter));
+
+	return;
+}
+
+Uninitialize(hship freighter)
+{
+	int i;
+	hobject currentmegapod;
+	list megapods = MegaPodsOnShip(freighter);
+
+	for(i = 0; i < List.ItemCount(megapods); ++i)
+	{
+		currentmegapod = List.GetNth(megapods, i);
+		uninit_megapod(currentmegapod);
+	}
+	Object.RemoveProperty(freighter, "md_epic_spewerqueue");
+
+	Task.Detach(start SecurityWatch(freighter));
+}
+
+set PodsOnMegafreighter(hship freighter)
+{
+	int i;
+	set allpods;
+	list megapods = MegaPodsOnShip(freighter);
+
+	if(List.IsEmpty(megapods))
+		return Set.FromList(megapods);	// return empty set
+
+	for(i = 0; i < List.ItemCount(megapods); ++i)
+	{
+		Set.Union(allpods, minipods_in_megapod(List.GetNth(megapods, i)));
+	}
+
+	return allpods;
+}
+
+launch_minipod(hsim megapod, int slot)	// Fires off the minipod in said slot. Does not check for blocked pods!
+{
+	hsim minipod;
+
+	minipod = Sim.Cast(Object.HandleProperty(megapod, SlotFromInt(slot)));
+
+	if(minipod == none || Sim.Parent(minipod) != megapod)	// If there is no pod there, or if the pod is not yet docked
+	{
+//		iHUD.Print(String.Join(String.FromInt(slot), " empty."));
+		return;
+	}
+
+//	iHUD.Print(String.Join(String.FromInt(slot), " launching."));
+
+
+	Sim.DetachChild(megapod, minipod);
+
+	Sim.SetVelocityLocalToSim(minipod, 0, 0, 500);	// just like an undock
+
+	Object.SetHandleProperty(megapod, SlotFromInt(slot), none);
+	Object.RemoveProperty(minipod, "md_epic_slotin");
+
+	return;
+}
+
+task pod_watch(hship minipod, hsim megapod, htask parent)
+{
+	while(1)
+	{
+		Task.Sleep(Task.Current(),1);
+		atomic if(Object.BoolProperty(minipod, "md_epic_podsold"))	// if docking pod is sold...
+		{
+			Object.SetHandleProperty(megapod, SlotFromInt(Object.IntProperty(minipod, "md_epic_slotin")), none);	// declare slot free
+			if(iAI.CurrentOrderType(minipod) == OT_Approach)	// if it is on approach to megapod,
+				iAI.PurgeOrders(minipod);						// stop it.
+			Task.Halt(parent);
+		}
+		if(Sim.IsDead(minipod))	// if the lil pod dies...
+		{
+//			iHUD.Print("Small pod died!");
+			Object.SetIntProperty(megapod, "md_epic_pfreeports", Object.IntProperty(megapod, "md_epic_pfreeports") + 1);
+			Object.SetIntProperty(Sim.Parent(megapod), "md_epic_futurefree", Object.IntProperty(Sim.Parent(megapod), "md_epic_futurefree") + 1);
+			Object.SetIntProperty(Sim.Parent(megapod), "md_epic_podstogo", Object.IntProperty(Sim.Parent(megapod), "md_epic_podstogo") - 1);
+			Object.SetIntProperty(megapod, "md_epic_ppodstogo", Object.IntProperty(megapod, "md_epic_ppodstogo") - 1);
+			Object.SetHandleProperty(megapod, SlotFromInt(Object.IntProperty(minipod, "md_epic_slotin")), none);	// declare slot free
+			Task.Halt(parent);	// kill the calling task
+		}
+		if(Sim.IsDead(megapod))	// if the big pod dies...
+		{
+			iShip.RemovePilot(minipod);	// let it float. Another watch will handle the repercussions of losing a mega off the ship
+			Task.Halt(parent);	// kill calling task
+		}
+
+	}	// end while
+}
+
+
+task dock_to_megapod(hship minipod, hsim megapod)	// Sends minipod to megapod
+{
+	int freeslot = 8;
+	hsim outer;
+	hsim inner;
+	float x, y, z;
+	bool foundfree = false;
+	bool waitfordock = false;
+	bool waitforlaunch = false;
+	hsim lowerpod;
+	htask podwatch;
+
+	atomic
+	{
+		while(!foundfree)
+		{
+			if(Object.HandleProperty(megapod, SlotFromInt(freeslot)) == none)
+				foundfree = true;
+			else
+				--freeslot;
+		if(freeslot < 1) return;
+		}
+	
+		Object.SetHandleProperty(megapod, SlotFromInt(freeslot), minipod);
+		if(!Object.PropertyExists(minipod, "md_epic_slotin"))
+			Object.AddIntProperty(minipod, "md_epic_slotin", freeslot);
+		else
+			Object.SetIntProperty(minipod, "md_epic_slotin", freeslot);
+
+		podwatch = start pod_watch(minipod, megapod, Task.Current());	// If the pod watch halts this task, it will die, too.
+	}
+
+//	iHUD.Print(SlotFromInt(freeslot));
+
+	if(freeslot%2 == 1)	// Beats a bunch of || statements.
+		x = -30;	// 1,3,5,7
+	else
+		x = 30;		// 2,4,6,8
+
+	if(freeslot%4 < 2)
+		y = -30;	// 1,2,5,6
+	else
+		y = 30;		// 3,4,7,8
+
+	if(freeslot > 4)
+		z = -30;	// 5,6,7,8, lower floor
+	else
+		z = 30;		// 1,2,3,4, upper floor
+
+	outer = create_dock_waypoint(megapod, x, y, z, false);
+
+	iAI.GiveApproachOrderAdvanced(minipod, outer, 10, 150, true);
+//	iHUD.Print("Moving to Outer");
+
+	while(iAI.HasOrder(minipod))
+		Task.Sleep(Task.Current(),1);
+	
+	if(freeslot < 5)	// A lot can happen while the pod is in transit. We might have to wait and/or dock on the lower level.
+	{
+		atomic
+		{
+			lowerpod = Sim.Cast(Object.HandleProperty(megapod, SlotFromInt(freeslot+4)));
+			if(lowerpod == none)	// slot below unclaimed
+			{
+				Object.SetHandleProperty(megapod, SlotFromInt(freeslot), none);	// unclaim higher slot
+				freeslot += 4;
+				Object.SetHandleProperty(megapod, SlotFromInt(freeslot), minipod);	// claim lower slot
+				Object.SetIntProperty(minipod, "md_epic_slotin", freeslot);	// set pod to lower slot
+				z = -30;
+			}
+			else if(lowerpod != none && Sim.Parent(lowerpod) != megapod)	// slot claimed, but pod still in transit
+			{
+				waitfordock = true;	// pod will wait until lower pod is docked, then dock atop it
+			}
+			else if(lowerpod != none && Object.BoolProperty(lowerpod, "md_epic_podsold"))
+			{
+				waitforlaunch = true;	// pod will wait until lower pod launches, then might dock below
+			}
+		}
+	}
+
+	if(waitforlaunch)
+	{
+		while(Sim.Parent(lowerpod) == megapod)
+			Task.Sleep(Task.Current(),1);
+		atomic	// We should be able to dock lower now, but another task might have swooped in and stolen the low slot
+		{
+			lowerpod = Sim.Cast(Object.HandleProperty(megapod, SlotFromInt(freeslot+4)));
+			if(lowerpod == none)	// Still unclaimed! Success!
+			{
+				Object.SetHandleProperty(megapod, SlotFromInt(freeslot), none);	// unclaim higher slot
+				freeslot =+ 4;
+				Object.SetHandleProperty(megapod, SlotFromInt(freeslot), minipod);	// claim lower slot
+				Object.SetIntProperty(minipod, "md_epic_slotin", freeslot);	// set pod to lower slot
+				z = -30;
+			}
+			else	// No other checks needed, only way this can execute is if another pod is en-route. Just wait for it. The bastard.
+				waitfordock = true;
+		}
+		Task.Sleep(Task.Current(),2);	// give it time to clear out before docking
+	}
+
+	if(waitfordock)
+	{
+		while(Sim.Parent(lowerpod) != megapod)	// snooze until the lower pod gets here, then dock atop it as normal
+		{
+			Task.Sleep(Task.Current(),1);
+			atomic if(Sim.IsDead(lowerpod))	// Lower pod died! No!
+			{
+				Object.SetHandleProperty(megapod, SlotFromInt(freeslot), none);	// unclaim higher slot
+				freeslot =+ 4;
+				Object.SetHandleProperty(megapod, SlotFromInt(freeslot), minipod);	// claim lower slot
+				Object.SetIntProperty(minipod, "md_epic_slotin", freeslot);	// set pod to lower slot
+				z = -30;
+			}
+		}
+	}
+
+	inner = create_dock_waypoint(megapod, x, y, z, true);
+
+	iAI.GiveApproachOrderAdvanced(minipod, inner, 0, 0, false);
+//	iHUD.Print("Moving to Inner");
+
+	while(Sim.DistanceBetweenCentres(minipod, megapod) > 150)
+		Task.Sleep(Task.Current(),0.1);
+
+	Task.Halt(podwatch);
+
+	Sim.AddChildRelativeTo(megapod, minipod, x,y,z);
+	Sim.CopyOrientation(minipod, megapod);
+	Object.AddBoolProperty(minipod, "md_epic_podsold", false);
+
+//	iHUD.Print("Pod childed");
+	iShip.RemovePilot(minipod);
+
+	Sim.Destroy(outer);
+	Sim.Destroy(inner);
+
+	return;
+}
+
+hsim create_dock_waypoint(hsim megapod, float x, float y, float z, bool isinner)	// Creates the waypoint to guide pod in
+{
+	hsim waypoint;
+
+	if(!isinner)
+		z += 2500;	// Outer waypoint is 2.5k from pod
+
+	waypoint = Sim.Create("ini:/sims/nav/waypoint","waypoint");
+
+	Sim.AddChildRelativeTo(megapod, waypoint, x, y, z);	// Moving pod makes a moving waypoint
+
+	return waypoint;
+}
+
+task spew_and_dock_minipod(hship minipod, hsim megapod, hship freighter, hhabitat station, int delay)
+{
+	bool goodtospew = false;
+
+	// Spew phase
+
+	Task.Sleep(Task.Current(), delay);
+
+	while(!goodtospew)
+	{
+		atomic 
+		{
+			goodtospew = (Object.IntProperty(station, "md_epic_spewerslotsfree") > 0) && (Object.IntProperty(megapod, "md_epic_pfreeports") > 0);
+			if(goodtospew)
+			{
+				iHabitat.Spew(station,minipod);
+				Object.SetIntProperty(station, "md_epic_spewerslotsfree", Object.IntProperty(station, "md_epic_spewerslotsfree") - 1);
+				Object.SetIntProperty(megapod, "md_epic_pfreeports", Object.IntProperty(megapod, "md_epic_pfreeports") - 1);
+			}
+		}
+		Task.Sleep(Task.Current(), 0.1);
+	}
+
+	// Undock phase
+
+	while(!iShip.Undock(minipod,station))
+	{
+		Task.Sleep(Task.Current(), 0.1);
+	}
+	Object.SetIntProperty(station, "md_epic_spewerslotsfree", Object.IntProperty(station, "md_epic_spewerslotsfree") + 1);
+
+//	iHUD.Print(String.Join("PPods to go: ",String.FromInt(Object.IntProperty(megapod, "md_epic_ppodstogo"))));
+//	iHUD.Print(String.Join("Pods to go: ",String.FromInt(Object.IntProperty(freighter, "md_epic_podstogo"))));
+	
+	// Dock phase
+
+	iShip.InstallAIPilot(minipod, 0.25, 4.0, 0.1,"","","","");
+
+	Task.Detach(start dock_to_megapod(minipod, megapod));
+
+//	iHUD.Print("Docking pod...");
+
+	// Wait until docked
+
+	while(Sim.Parent(minipod) != megapod)
+		Task.Sleep(Task.Current(),1);
+
+//	iHUD.Print("Pod docked");
+
+	Object.SetIntProperty(megapod, "md_epic_ppodstogo", Object.IntProperty(megapod, "md_epic_ppodstogo") - 1);
+	Object.SetIntProperty(freighter, "md_epic_podstogo", Object.IntProperty(freighter, "md_epic_podstogo") - 1);
+
+//	iHUD.Print(String.Join("PPods to go: ",String.FromInt(Object.IntProperty(megapod, "md_epic_ppodstogo"))));
+//	iHUD.Print(String.Join("Pods to go: ",String.FromInt(Object.IntProperty(freighter, "md_epic_podstogo"))));
+
+	iShip.RemovePilot(minipod);
+
+	return;
+}
+
+task undock_mini_to_spewer(hship minipod, hsim megapod, hship freighter, hhabitat station, int delay)
+{
+	bool podblocked;
+	bool goodtodetach = false;
+	bool goodtodock = false;
+	int slot;
+	bool extricating;
+	float stationsize;
+//	hobject spewdock;
+	hsim gatherpoint;
+
+//	spewdock = Set.FirstElement(iDockport.DockportsOfType(station, DT_Freight, DS_Used));
+
+	stationsize = Object.FloatProperty(station, "radius");
+
+	// Undock phase
+
+	Task.Sleep(Task.Current(),delay);
+
+	gatherpoint = Sim.Create("ini:/sims/nav/waypoint", "Pod Gathering Place");
+
+	Sim.AddChildRelativeTo(freighter, gatherpoint, 500, 500, 1500);
+
+	while(!goodtodetach)
+	{
+		atomic
+		{
+			extricating = (Sim.Parent(minipod) != megapod);
+			slot = Object.IntProperty(minipod, "md_epic_slotin");
+			if(!extricating)
+				podblocked = (slot > 4 && Object.HandleProperty(megapod, SlotFromInt(slot-4)) != none);
+			else
+				podblocked = false;
+			goodtodetach = (!podblocked && Object.IntProperty(freighter, "md_epic_spewerqueue") > 0);
+			if(goodtodetach)
+			{
+				if(!extricating)
+					launch_minipod(megapod, slot);
+				Object.SetIntProperty(freighter, "md_epic_spewerqueue", Object.IntProperty(freighter, "md_epic_spewerqueue") - 1);
+				//Object.SetIntProperty(station, "md_epic_spewerslotsfree", Object.IntProperty(station, "md_epic_spewerslotsfree") - 1);
+				Object.SetIntProperty(megapod, "md_epic_pfreeports", Object.IntProperty(megapod, "md_epic_pfreeports") + 1);
+				Object.SetIntProperty(megapod, "md_epic_ppodstogo", Object.IntProperty(megapod, "md_epic_ppodstogo") - 1);
+				Object.SetIntProperty(freighter, "md_epic_podstogo", Object.IntProperty(freighter, "md_epic_podstogo") - 1);
+
+				// Dock phase, now the start of accelerated unloading.
+
+				iSim.SetFaction(minipod,iSim.Faction(station));
+				if(!extricating)
+					iShip.InstallAIPilot(minipod, 0.25, 4.0, 0.1,"","","","");
+				//iAI.GiveDockOrder(minipod, station);
+				iAI.GiveApproachOrderAdvanced(minipod, gatherpoint, 100, 100, true); 
+//				iAI.GiveApproachOrderAdvanced(minipod, station, stationsize, 0, true);
+			}
+		}
+		Task.Sleep(Task.Current(),1);
+	}
+
+	// Accelerated unloading routine
+	while(!goodtodock)
+	{
+		if(Sim.IsDead(minipod))
+		{
+			Object.SetIntProperty(freighter, "md_epic_spewerqueue", Object.IntProperty(freighter, "md_epic_spewerqueue") + 1);
+			break;
+		}
+		atomic
+		{
+			goodtodock = (Object.IntProperty(station, "md_epic_spewerslotsfree") > 0 && Sim.DistanceBetween(minipod, gatherpoint) < 300);
+			if(goodtodock)
+			{
+				Object.SetIntProperty(freighter, "md_epic_spewerqueue", Object.IntProperty(freighter, "md_epic_spewerqueue") + 1);
+				Object.SetIntProperty(station, "md_epic_spewerslotsfree", Object.IntProperty(station, "md_epic_spewerslotsfree") - 1);
+
+				iAI.GiveDockOrder(minipod, station);
+			}
+		}
+		Task.Sleep(Task.Current(),0.2);
+	}
+
+	Sim.Destroy(gatherpoint);
+
+	// And wait for the cull.
+
+	while(!Sim.IsDead(minipod))
+		Task.Sleep(Task.Current(),0.1);
+	Object.SetIntProperty(station, "md_epic_spewerslotsfree", Object.IntProperty(station, "md_epic_spewerslotsfree") + 1);
+	Object.RemoveProperty(minipod, "md_epic_podsold");
+
+	return;
+}
+
+task extricate_pod(hship minipod, hsim megapod, hship freighter)	// Frees a stuck pod. minipod refers to pod stuck.
+{
+	int highslot;
+	int lowslot;
+	hship highpod;
+
+	lowslot = Object.IntProperty(minipod, "md_epic_slotin");
+	highslot = lowslot - 4;
+	highpod = iShip.Cast(Object.HandleProperty(megapod, SlotFromInt(highslot)));
+
+	if(highpod == none) return;
+
+	Object.SetIntProperty(megapod, "md_epic_ppodstogo", Object.IntProperty(megapod, "md_epic_ppodstogo") + 1);		// Set one more pod to go
+	Object.SetIntProperty(freighter, "md_epic_podstogo", Object.IntProperty(freighter, "md_epic_podstogo") + 1);	// So our ship can't run off
+
+	launch_minipod(megapod, highslot);
+
+	iShip.InstallAIPilot(highpod, 0.25, 4.0, 0.1,"","","","");
+
+	Task.Detach(start dock_to_megapod(highpod, megapod));
+
+	while(Sim.Parent(highpod) != megapod)
+	{
+		if(Object.BoolProperty(highpod, "md_epic_podsold") || Sim.IsDead(highpod))	// If the high one dies, dock_to_megapod will take care of the variables.
+			return;
+		Task.Sleep(Task.Current(),1);
+	}
+
+	iShip.RemovePilot(highpod);
+	Object.SetIntProperty(megapod, "md_epic_ppodstogo", Object.IntProperty(megapod, "md_epic_ppodstogo") - 1);
+	Object.SetIntProperty(freighter, "md_epic_podstogo", Object.IntProperty(freighter, "md_epic_podstogo") - 1);
+
+	return;
+}
+
+task megapod_watch(hsim megapod, bool space)
+{
+	atomic
+	{
+		if(Object.PropertyExists(megapod, "md_epic_watched"))
+			return;
+		else
+			Object.AddBoolProperty(megapod, "md_epic_watched", true);
+	}
+	while(Object.IntProperty(megapod, "md_epic_ppodstogo") > 0)
+		Task.Sleep(Task.Current(),1);
+
+	Object.RemoveProperty(megapod, "md_epic_watched");
+	Sim.AvatarSetChannel(megapod, "door", 0);
+
+	if(space && !Object.PropertyExists(megapod, "md_epic_pfuturefree"))	// the ship might have docked and the spewer active by now
+		Object.RemoveProperty(megapod, "md_epic_ppodstogo");
+
+	Task.Sleep(Task.Current(), 5);	// give the door time to close,
+	if(Sim.AvatarChannelValue(megapod, "door") < 0.05)	// and if it is still closed by then
+		invisible_minipods(megapod);	// make the pods invisible
+	return;
+}
+
+unload_megapod(hsim megapod, hship freighter, hhabitat station, set pods)	// pods in set do not need to be in this pod
+{
+	int slot;
+	int delay = 0;
+	int podslaunched = 0;
+	hship currentpod;
+	hship higherpod;
+
+	for(slot=1;slot <= 8; ++slot)
+	{
+		currentpod = iShip.Cast(Object.HandleProperty(megapod, SlotFromInt(slot)));	// get pod in slot
+		if(currentpod != none) // only go on if slot is taken
+		{
+			if(Set.Contains(pods, currentpod))	// see if the pod in this slot is in the sell set
+			{
+				Task.Detach(start undock_mini_to_spewer(currentpod, megapod, freighter, station, ++delay));	// send it off
+				++podslaunched;
+			}
+			if(slot > 4)	// lower pods might need un-sticking
+			{
+				higherpod = iShip.Cast(Object.HandleProperty(megapod, SlotFromInt(slot - 4)));
+				if (higherpod != none && !Object.BoolProperty(higherpod, "md_epic_podsold"))	// if the higher pod is in the sell set, don't bother
+					Task.Detach(start extricate_pod(currentpod, megapod, freighter));			// lower will wait for it anyways
+			}
+		}
+	}
+
+	if(podslaunched > 0)	// if pods are due to launch, pop open the door and update the properties
+	{
+		visible_minipods(megapod);
+//		Object.SetIntProperty(freighter, "md_epic_podstogo", Object.IntProperty(freighter, "md_epic_podstogo") + podslaunched);	//  tsTradeSell handles this!
+		Object.SetIntProperty(megapod, "md_epic_ppodstogo", Object.IntProperty(megapod, "md_epic_ppodstogo") + podslaunched);
+		Object.SetIntProperty(megapod, "md_epic_pfuturefree", Object.IntProperty(megapod, "md_epic_pfuturefree") + podslaunched);
+		Sim.AvatarSetChannel(megapod, "door", 1);
+		Task.Detach(start megapod_watch(megapod, false));
+	}
+	return;
+}
+
+load_megapod(hsim megapod, hship freighter, hhabitat station, set pods, int delay)
+{
+	hship currentpod;
+
+//	Object.SetIntProperty(freighter, "md_epic_podstogo", Object.IntProperty(freighter, "md_epic_podstogo") + Set.ItemCount(pods));	// tsTradeBuy handles this!
+	Object.SetIntProperty(megapod, "md_epic_ppodstogo", Object.IntProperty(megapod, "md_epic_ppodstogo") + Set.ItemCount(pods));
+
+	visible_minipods(megapod);
+
+	while(!Set.IsEmpty(pods))
+	{
+		currentpod = iShip.Cast(Set.FirstElement(pods));
+		Set.Remove(pods, currentpod);
+		Task.Detach(start spew_and_dock_minipod(currentpod, megapod, freighter, station, ++delay));
+	}
+
+	Task.Detach(start megapod_watch(megapod, false));
+	Sim.AvatarSetChannel(megapod, "door", 1);
+	return;
+}
+
+UnloadShip(hship freighter, hhabitat station, set pods)
+{
+	int i;
+	list megapods = MegaPodsOnShip(freighter);
+	list alsopods = List.FromSet(pods);
+	
+	for(i = 0; i < List.ItemCount(alsopods); ++i)	// set sold flag on each pod
+	{
+		Object.SetBoolProperty(List.GetNth(alsopods, i), "md_epic_podsold", true);
+	}
+
+	for(i = 0; i < List.ItemCount(megapods); ++i)	// feed sold set to each megapod
+	{
+		unload_megapod(iShip.Cast(List.GetNth(megapods, i)), freighter, station, pods);
+	}
+
+	return;
+}
+
+LoadShip(hship freighter, hhabitat station, set pods)
+{
+	int i;
+	int delay = -1;
+	hship currentmegapod;
+	hobject currentminipod;
+	set sendtopod;
+	list megapods = MegaPodsOnShip(freighter);
+
+	for(i = 0; i < List.ItemCount(megapods); ++i)	// fill each pod to 4
+	{
+		currentmegapod = iShip.Cast(List.GetNth(megapods, i));
+		while(Object.IntProperty(currentmegapod, "md_epic_pfuturefree") > 4 && !Set.IsEmpty(pods))
+		{											// build set to send to this pod
+			currentminipod = Set.FirstElement(pods);
+			Set.Add(sendtopod, currentminipod);
+			Set.Remove(pods, currentminipod);
+			Object.SetIntProperty(currentmegapod, "md_epic_pfuturefree", Object.IntProperty(currentmegapod, "md_epic_pfuturefree") - 1);
+		}
+		load_megapod(currentmegapod, freighter, station, sendtopod, ++delay);
+		if(!Set.IsEmpty(sendtopod))
+			Set.Difference(sendtopod, sendtopod);	// Set should be emptied by load_megapod, this is backup
+		if(Set.IsEmpty(pods)) return;
+	}
+
+	for(i = 0; i < List.ItemCount(megapods); ++i)	// then fill each to 8
+	{
+		currentmegapod = iShip.Cast(List.GetNth(megapods, i));
+		while(Object.IntProperty(currentmegapod, "md_epic_pfuturefree") > 0 && !Set.IsEmpty(pods))
+		{
+			currentminipod = Set.FirstElement(pods);
+			Set.Add(sendtopod, currentminipod);
+			Set.Remove(pods, currentminipod);
+			Object.SetIntProperty(currentmegapod, "md_epic_pfuturefree", Object.IntProperty(currentmegapod, "md_epic_pfuturefree") - 1);
+		}
+		load_megapod(currentmegapod, freighter, station, sendtopod, ++delay);
+		if(!Set.IsEmpty(sendtopod))
+			Set.Difference(sendtopod, sendtopod);	// Set should be emptied by load_megapod
+		if(Set.IsEmpty(pods)) return;
+	}
+
+	// There should be no more pods in the set by here.
+
+	return;
+}
+
+secure_pods(hsim megapod, hsim ship)
+{
+	int i;
+	hsim currentpod;
+
+	for(i = 0; i <= 8; ++i)
+	{
+		currentpod = Sim.Cast(Object.HandleProperty(megapod, SlotFromInt(i)));
+		if(currentpod != none)
+		{
+			Sim.DetachChild(megapod, currentpod);
+			Sim.AttachChild(ship, currentpod);
+		}
+	}
+
+	return;
+}
+
+secure_ship(hsim ship)
+{
+	int i;
+	list megapods = MegaPodsOnShip(ship);
+
+	if(Object.BoolProperty(ship, "md_epic_podssecured"))
+		return;
+
+	for(i = 0; i < List.ItemCount(megapods); ++i)
+	{
+		secure_pods(Sim.Cast(List.GetNth(megapods, i)), ship);
+	}
+
+	if(Object.PropertyExists(ship, "md_epic_podssecured"))
+		Object.SetBoolProperty(ship, "md_epic_podssecured", true);
+	else
+		Object.AddBoolProperty(ship, "md_epic_podssecured", true);
+
+//	iHUD.Print("Ship Secured");
+	
+	return;
+}
+
+unsecure_pods(hsim megapod, hsim ship)
+{
+	int i;
+	float x, y, z;
+	hsim currentpod;
+
+	for(i = 1; i <= 8; ++i)
+	{
+		currentpod = Sim.Cast(Object.HandleProperty(megapod, SlotFromInt(i)));
+		if(currentpod != none)
+		{
+			if(i%2 == 1)	// In the interest of precision, we re-establish the XYZ coords.
+				x = -30;	// 1,3,5,7
+			else
+				x = 30;		// 2,4,6,8
+
+			if(i%4 < 2)
+				y = -30;	// 1,2,5,6
+			else
+				y = 30;		// 3,4,7,8
+
+			if(i > 4)
+				z = -30;	// 5,6,7,8, lower floor
+			else
+				z = 30;		// 1,2,3,4, upper floor
+
+			Sim.DetachChild(ship, currentpod);
+			Sim.AddChildRelativeTo(megapod, currentpod, x, y, z);
+		}
+	}
+
+	return;
+}
+
+unsecure_ship(hsim ship)
+{
+	int i;
+	list megapods = MegaPodsOnShip(ship);
+
+	if(!Object.BoolProperty(ship, "md_epic_podssecured"))
+		return;
+
+	for(i = 0; i < List.ItemCount(megapods); ++i)
+	{
+		unsecure_pods(Sim.Cast(List.GetNth(megapods, i)), ship);
+	}
+
+	Object.SetBoolProperty(ship, "md_epic_podssecured", false);
+
+//	iHUD.Print("Ship Unsecured");
+	
+	return;
+}
+
+task SecurityWatch(hsim ship)
+{
+	float delay = 0.1;
+
+	atomic{	// prevent multiple instances
+		if(Object.BoolProperty(ship, "md_epic_secwatched"))
+			return;
+		Object.AddBoolProperty(ship, "md_epic_secwatched", true);
+	}
+
+	while(1)
+	{
+
+		while(!iSim.IsCapsuleJumping(iSim.Cast(ship)))	// No point in bogging down the computer when there's no L-Points nearby.
+		{
+			if(Sim.DistanceBetween(ship, iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), ship)) > 20km)	// How far can a megafreighter really go in five seconds?
+				delay = 5;
+			else
+				delay = 0.1;
+
+			if(Sim.IsDead(ship))
+				return;
+			Task.Sleep(Task.Current(), delay);
+		}
+
+		secure_ship(ship);
+
+		while(iSim.IsCapsuleJumping(iSim.Cast(ship)))
+			Task.Sleep(Task.Current(), 1);
+
+		unsecure_ship(ship);
+	}
+}
+
+task dock_minipod_from_space(hship minipod, hsim megapod)
+{
+	iShip.InstallAIPilot(minipod, 0.25, 4.0, 0.1,"","","","");
+
+	Task.Detach(start dock_to_megapod(minipod, megapod));
+
+//	iHUD.Print("Docking pod...");
+
+	// Wait until docked
+
+	while(Sim.Parent(minipod) != megapod)
+		Task.Sleep(Task.Current(),1);
+
+	iShip.RemovePilot(minipod);
+
+	Object.SetIntProperty(megapod, "md_epic_ppodstogo", Object.IntProperty(megapod, "md_epic_ppodstogo") - 1);
+
+	return;
+}
+
+load_megapod_from_space(hsim megapod, set pods)
+{
+	hship currentpod;
+
+	if(Set.IsEmpty(pods))
+		return;
+
+	visible_minipods(megapod);
+
+	if(!Object.PropertyExists(megapod, "md_epic_ppodstogo"))
+		Object.AddIntProperty(megapod, "md_epic_ppodstogo", Set.ItemCount(pods));	// For the watch task
+	else
+		Object.SetIntProperty(megapod, "md_epic_ppodstogo", Object.IntProperty(megapod, "md_epic_ppodstogo") + Set.ItemCount(pods));
+
+	while(!Set.IsEmpty(pods))
+	{
+		currentpod = iShip.Cast(Set.FirstElement(pods));
+		Set.Remove(pods, currentpod);
+		Task.Detach(start dock_minipod_from_space(currentpod, megapod));
+	}
+
+	Task.Detach(start megapod_watch(megapod, true));
+	visible_minipods(megapod);
+	Sim.AvatarSetChannel(megapod, "door", 1);
+	return;
+}
+
+instant_load(hsim megapod, hsim pod)
+{
+	int i=8;
+	float x, y, z;
+	bool foundslot = false;
+
+	while(!foundslot)
+	{
+		if(i == 0) return;
+		foundslot = Object.HandleProperty(megapod, SlotFromInt(i)) == none;
+		if(!foundslot)
+			--i;
+	}
+
+		
+	Object.SetHandleProperty(megapod, SlotFromInt(i), pod);
+	if(!Object.PropertyExists(pod, "md_epic_slotin"))
+		Object.AddIntProperty(pod, "md_epic_slotin", i);
+	else
+		Object.SetIntProperty(pod, "md_epic_slotin", i);
+
+
+	if(i%2 == 1)
+		x = -30;	// 1,3,5,7
+	else
+		x = 30;		// 2,4,6,8
+
+	if(i%4 < 2)
+		y = -30;	// 1,2,5,6
+	else
+		y = 30;		// 3,4,7,8
+
+	if(i > 4)
+		z = -30;	// 5,6,7,8, lower floor
+	else
+		z = 30;		// 1,2,3,4, upper floor
+
+	Sim.AddChildRelativeTo(megapod, pod, x,y,z);
+	Sim.CopyOrientation(pod, megapod);
+
+	return;
+}
+
+task megapod_ditch(hsim megapod)
+{
+	int i;
+
+	visible_minipods(megapod);
+
+	Sim.AvatarSetChannel(megapod, "door", 1);
+	Task.Sleep(Task.Current(), 1);	// Give the door a second to open.
+
+	for(i = 8; i > 0; --i)	// Count 8 to 1
+	{
+		launch_minipod(megapod, i);
+		if(i == 5)
+			Task.Sleep(Task.Current(), 1);	// A pause between the upper level and lower level
+	}
+	
+	Sim.AvatarSetChannel(megapod, "door", 0);
+	return;
+}
+
+DitchPods(hship freighter)
+{
+	int i;
+	hsim currentmegapod;
+	list megapods = MegaPodsOnShip(freighter);
+
+	if(List.IsEmpty(megapods) || Set.IsEmpty(PodsOnMegafreighter(freighter)))	// If the ship has no pods, abort
+		return;
+
+	for(i = 0; i < List.ItemCount(megapods); ++i)
+	{
+		currentmegapod = Sim.Cast(List.GetNth(megapods, i));
+		Task.Detach(start megapod_ditch(currentmegapod));
+	}
+
+	return;
+}
+
+LoadShipFromSpace(hship freighter, set pods)
+{
+	int i;
+	int freeslots;
+	hship currentmegapod;
+	hobject currentminipod;
+	set sendtopod;
+	list megapods = MegaPodsOnShip(freighter);
+
+	for(i = 0; i < List.ItemCount(megapods); ++i)	// fill each pod to 4
+	{
+		currentmegapod = iShip.Cast(List.GetNth(megapods, i));
+		freeslots = 8 - Set.ItemCount(minipods_in_megapod(currentmegapod));
+		
+		if(!Object.PropertyExists(currentmegapod, SlotFromInt(1)))
+		{
+			iHUD.Print("CODE ERROR: MEGAPOD CREATED INCORRECTLY! POD DISABLED");
+			freeslots = 0;
+		}
+
+		while(freeslots > 4 && !Set.IsEmpty(pods))
+		{											// build set to send to this pod
+			currentminipod = Set.FirstElement(pods);
+			Set.Add(sendtopod, currentminipod);
+			Set.Remove(pods, currentminipod);
+			--freeslots;
+		}
+		load_megapod_from_space(currentmegapod, sendtopod);
+		if(!Set.IsEmpty(sendtopod))
+			Set.Difference(sendtopod, sendtopod);	// Set should be emptied by load_megapod_from_space
+		if(Set.IsEmpty(pods)) return;
+	}
+
+	for(i = 0; i < List.ItemCount(megapods); ++i)	// then fill each to 8
+	{
+		currentmegapod = iShip.Cast(List.GetNth(megapods, i));
+		freeslots = 8 - Set.ItemCount(minipods_in_megapod(currentmegapod));
+		if(!Object.PropertyExists(currentmegapod, SlotFromInt(1)))
+			freeslots = 0;
+		while(freeslots > 0 && !Set.IsEmpty(pods))
+		{
+			currentminipod = Set.FirstElement(pods);
+			Set.Add(sendtopod, currentminipod);
+			Set.Remove(pods, currentminipod);
+			--freeslots;
+		}
+		load_megapod_from_space(currentmegapod, sendtopod);
+		if(!Set.IsEmpty(sendtopod))
+			Set.Difference(sendtopod, sendtopod);	// Set should be emptied by load_megapod_from_space
+		if(Set.IsEmpty(pods)) return;
+	}
+
+	// set pods will end up as pods not loadable
+
+	return;
+}
+
+SetUpFreighter(hship freighter, int megapods, set pods)
+{
+	int i;
+	int freeslots;
+	set poddies = pods;
+	hship currentmegapod;
+	hsim currentpod;
+	list megapodlist;
+
+	if(!IsMegafreighter(freighter)) return;	// You want megapods on another kind of ship, do it yourself! :)
+
+	Task.Detach(start SecurityWatch(freighter));
+
+	for(i = 0; i < megapods; ++i)
+	{
+		currentmegapod = iShip.Cast(CreateMegaPod());
+		iSim.Dock(currentmegapod, freighter);
+		iSim.SetFaction(currentmegapod,iSim.Faction(freighter));
+		iSim.SetDockingLock(currentmegapod, freighter, true);
+	}
+
+	if(Set.IsEmpty(poddies)) return;	// no minipods, we're done
+
+	megapodlist = MegaPodsOnShip(freighter);
+	if(List.IsEmpty(megapodlist)) return;	// no megapods, no load
+	for(i = 0; i < List.ItemCount(megapodlist); ++i)	// fill each pod to 4
+	{
+		currentmegapod = iShip.Cast(List.GetNth(megapodlist, i));
+		freeslots = 8 - Set.ItemCount(minipods_in_megapod(currentmegapod));
+		
+		while(freeslots > 4 && !Set.IsEmpty(poddies))
+		{
+			currentpod = Sim.Cast(Set.FirstElement(poddies));
+			instant_load(currentmegapod, currentpod);
+			Set.Remove(poddies, currentpod);
+			--freeslots;
+		}
+		if(Set.IsEmpty(poddies)) return;
+	}
+
+	for(i = 0; i < List.ItemCount(megapodlist); ++i)	// then fill each to 8
+	{
+		currentmegapod = iShip.Cast(List.GetNth(megapodlist, i));
+		freeslots = 8 - Set.ItemCount(minipods_in_megapod(currentmegapod));
+		while(freeslots > 0 && !Set.IsEmpty(poddies))
+		{
+			currentpod = Sim.Cast(Set.FirstElement(poddies));
+			instant_load(currentmegapod, currentpod);
+			Set.Remove(poddies, currentpod);
+			--freeslots;
+		}
+		if(Set.IsEmpty(poddies)) return;
+	}
+
+	return;
+}
+
+
+
+/*
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

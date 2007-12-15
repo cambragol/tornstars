@@ -33,13 +33,13 @@ uses  Sim,
 	iMapEntity,
 	iHUD,
 	iComms,
-	tStationEnum,
-	tStation,
+	tsStationEnum,
+	tsStation,
 	tsFaction,
-	tTime,
+	tsTime,
 	tUnderOp,
-	tLCenter,
-	tLProduction,
+	tsLCenter,
+	tsLProduction,
 	tsFoEmbezzle,
 	tsFoFleetAttack,
 	tsFoFleetDefense,
@@ -104,7 +104,7 @@ hisim New(int operation_type, hfaction faction, hmapentity center)
 //[of]:Save(hisim operation)
 Save(hisim operation)
 {
-   int operation_type = tLProduction.GetType(operation);
+   int operation_type = tsLProduction.GetType(operation);
 
    switch (operation_type) {
 
@@ -134,7 +134,7 @@ Save(hisim operation)
 //[of]:Restore(hisim operation)
 Restore(hisim operation)
 {
-   int operation_type = tLProduction.GetType(operation);
+   int operation_type = tsLProduction.GetType(operation);
 
    switch (operation_type) {
    case ept_EmbezzleOp: tsFoEmbezzle.Restore(operation);break;
@@ -162,7 +162,7 @@ Restore(hisim operation)
 //[of]:Update(hisim operation)
 Update(hisim operation)
 {
-   int operation_type = tLProduction.GetType(operation);
+   int operation_type = tsLProduction.GetType(operation);
 
    switch (operation_type) {
    case ept_EmbezzleOp: tsFoEmbezzle.Update(operation);break;

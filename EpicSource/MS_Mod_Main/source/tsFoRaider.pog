@@ -45,18 +45,18 @@ iMapEntity,
    iCargoScript,
    iHUD,
    iComms,
-   tStationEnum,
-   tStation,
+   tsStationEnum,
+   tsStation,
    tsFaction,
-   tTime,
-   tUnderOp,
-   tLRoot,
-   tLCenter,
-   tLProduction,
-   tLFleet,
-   tStationFilter,
-   tEconUtil,
-   tShipName,
+   tsTime,
+   tsFleetOp,
+   tsLRoot,
+   tsLCenter,
+   tsLProduction,
+   tsLFleet,
+   tsStationFilter,
+   tsEconUtil,
+   tsShipName,
    tsShipCreationEnum,
 tsShipCreation,
    tsFleetOpCombat,
@@ -95,7 +95,7 @@ New(hisim operation)
       return;
    }
 
-   op_type = tEconUtil.StationIntToString(tLProduction.GetType(operation));
+   op_type = tsEconUtil.StationIntToString(tsLProduction.GetType(operation));
 
    fleets = INIFile.Int(op_data, op_type, "max_fleets", 600);
 
@@ -107,16 +107,16 @@ New(hisim operation)
 
    // We pick an underworld name for ourselves. 
    // using a large number means we get a random name.
-   ship_name = tShipName.ShipName("underworld", 10000);
+   ship_name = tsShipName.ShipName("underworld", 10000);
 
    // We pick a heavy warship for center vessel.
    ship_template = tsShipCreation.GetShip(faction, tsShipCreation.String2ShipType(ship_class));
 
-   tUnderOp.SetName(operation, ship_name);
-   tUnderOp.SetShipTemplate(operation, ship_template);
+   tsFleetOp.SetName(operation, ship_name);
+   tsFleetOp.SetShipTemplate(operation, ship_template);
 
-   tLFleet.SetMaxFleets(operation, fleets);
-   tLFleet.SetFleets(operation, fleets);
+   tsLFleet.SetMaxFleets(operation, fleets);
+   tsLFleet.SetFleets(operation, fleets);
 }
 
 
@@ -141,7 +141,7 @@ Restore(hisim operation)
 
 Update(hisim operation)
 {
-   hmapentity center = tLCenter.GetCenter(operation);
+   hmapentity center = tsLCenter.GetCenter(operation);
    hhabitat target_station, supporter_station;
    bool hostiles, wounded, dying, home, out_gunned, need_patrol;
    bool move_home, stay_still, move_safe, pick_raid;
@@ -150,7 +150,7 @@ Update(hisim operation)
    hfaction faction, visitor_faction, local_faction;
    int fleets, hostile_fleets, total_hostiles;
    int i, total;
-   int current_day = tTime.GetDay();
+   int current_day = tsTime.GetDay();
    int update_delay = 1;
 
    //tsDebug.PrintString("tsforaider_debug","tsFoRaider.Update\n");
@@ -161,7 +161,7 @@ Update(hisim operation)
    // Here we look up what other operations are nearby. 
    // Any combat between this and other operations happens here.
 
-   local_operations = tUnderOp.StationOperations(center);
+   local_operations = tsFleetOp.StationOperations(center);
    List.Remove(local_operations, operation);
    total = List.ItemCount(local_operations);
 
@@ -174,8 +174,8 @@ Update(hisim operation)
 
       if (iFaction.Feeling(visitor_faction, faction) < -0.2) {
          // There are hostile forces at this station
-         fleets = tLFleet.Fleets(operation);
-         hostile_fleets = tLFleet.Fleets(operation);
+         fleets = tsLFleet.Fleets(operation);
+         hostile_fleets = tsLFleet.Fleets(operation);
 
          if (fleets > hostile_fleets) {
             // We have the advantage, pound them.
@@ -190,16 +190,16 @@ Update(hisim operation)
       }
    }
 
-   fleets = tLFleet.Fleets(operation);
+   fleets = tsLFleet.Fleets(operation);
 
    if (fleets == 0) {
       // Ouch, we died.
       tsDebug.PrintString("tsforaider_debug",
                           String.FormatStrStr("tsFoRaider %s lost fleets and died\n%s",
-                                              tUnderOp.Name(operation),
+                                              tsFleetOp.Name(operation),
                                               ""));
 
-      tUnderOp.DestroyOp(operation);
+      tsFleetOp.DestroyOp(operation);
       return;
    }
 
@@ -211,20 +211,20 @@ Update(hisim operation)
    }
 
    // Wounded when half damaged (leave combat)
-   if (fleets < (tLFleet.MaxFleets(operation)/2)) {
+   if (fleets < (tsLFleet.MaxFleets(operation)/2)) {
       wounded = true;
    }else {
       wounded = false;
    }
 
    // Dying when down to 1/4 fleets (flee home)
-   if (fleets < (tLFleet.MaxFleets(operation)/4)) {
+   if (fleets < (tsLFleet.MaxFleets(operation)/4)) {
       dying = true;
    }else {
       dying = false;
    }
 
-   supporter_station = tUnderOp.Supporter(operation);
+   supporter_station = tsFleetOp.Supporter(operation);
 
    // Are we home?
    if (center == iMapEntity.Cast(supporter_station)) {
@@ -256,18 +256,18 @@ Update(hisim operation)
 
    // Repair some fleets. Double rate if at home.
    if (home) {
-      tLFleet.ChangeFleets(operation, 20 * update_delay);
+      tsLFleet.ChangeFleets(operation, 20 * update_delay);
    }else {
-      tLFleet.ChangeFleets(operation, 10 * update_delay);
+      tsLFleet.ChangeFleets(operation, 10 * update_delay);
    }
 
    if (move_home) {
 
-      tLCenter.SetCenter(operation, supporter_station);
+      tsLCenter.SetCenter(operation, supporter_station);
 
       tsDebug.PrintString("tsforaider_debug",
                           String.FormatStrStr("tsFoRaider %s moving home\n%s",
-                                              tUnderOp.Name(operation),
+                                              tsFleetOp.Name(operation),
                                               ""));
       tsDebug.PrintHandle("tsforaider_debug",supporter_station);
       tsDebug.PrintString("tsforaider_debug"," supporter station\n");
@@ -279,14 +279,14 @@ Update(hisim operation)
 
       if (none != target_station) {
          // To move an operation, we just move the center.
-         tLCenter.SetCenter(operation, target_station);
+         tsLCenter.SetCenter(operation, target_station);
       }else {
          // If there are no other stations, move home.
-         tLCenter.SetCenter(operation, supporter_station);
+         tsLCenter.SetCenter(operation, supporter_station);
       }
       tsDebug.PrintString("tsforaider_debug",
                           String.FormatStrStr("tsFoRaider %s moving home\n%s",
-                                              tUnderOp.Name(operation),
+                                              tsFleetOp.Name(operation),
                                               ""));
       tsDebug.PrintHandle("tsforaider_debug",target_station);
       tsDebug.PrintString("tsforaider_debug"," new station\n");
@@ -316,11 +316,11 @@ Update(hisim operation)
          target_station = find_raiding_station(operation, center, iSim.WorldName(center));
 
          if (none != target_station) {
-            tLCenter.SetCenter(operation, target_station);
+            tsLCenter.SetCenter(operation, target_station);
 
             tsDebug.PrintString("tsforaider_debug",
                           String.FormatStrStr("tsFoRaider %s new raid station\n%s",
-                                              tUnderOp.Name(operation),
+                                              tsFleetOp.Name(operation),
                                               ""));
             tsDebug.PrintHandle("tsforaider_debug",target_station);
             tsDebug.PrintString("tsforaider_debug"," new station\n");
@@ -331,7 +331,7 @@ Update(hisim operation)
    }
 
    // Set next wakeup date.
-   tUnderOp.SetWakeTimer(operation, current_day + update_delay);
+   tsFleetOp.SetWakeTimer(operation, current_day + update_delay);
 }
 
 
@@ -342,8 +342,8 @@ Update(hisim operation)
 bool is_production(hmapentity center)
 {
    if (T_Station == iSim.Type(center)) {
-      if (ESS_Normal == tStation.Status(iHabitat.Cast(center))) {
-         if ( (ESC_Mine|ESC_Process|ESC_Manufacture) & tStation.Category(iHabitat.Cast(center))){
+      if (ESS_Normal == tsStation.Status(iHabitat.Cast(center))) {
+         if ( (ESC_Mine|ESC_Process|ESC_Manufacture) & tsStation.Category(iHabitat.Cast(center))){
             return true;
          }
       }
@@ -357,13 +357,13 @@ hhabitat find_raiding_station(hisim operation, hmapentity center, string system_
 {
    set habitats;
 
-   habitats = tStationFilter.OnStatusAndCategory(iMapEntity.SystemHabitatsInSystem(system_name),
+   habitats = tsStationFilter.OnStatusAndCategory(iMapEntity.SystemHabitatsInSystem(system_name),
                                                  ESS_Normal,
                                                  (ESC_Mine|ESC_Process|ESC_Manufacture));
 
    Set.Remove(habitats, center);
 
-   habitats = tStationFilter.OnLowerFeeling(habitats,
+   habitats = tsStationFilter.OnLowerFeeling(habitats,
                                               iSim.Faction(operation),
                                               tsFaction.Type2LowerLevel(FT_Neutral));
 
@@ -383,7 +383,7 @@ hhabitat find_safe_station(hisim operation, hmapentity center, string system_nam
    set habitats;
 
 
-   habitats = tStationFilter.OnGreaterFeeling(iMapEntity.SystemHabitatsInSystem(system_name),
+   habitats = tsStationFilter.OnGreaterFeeling(iMapEntity.SystemHabitatsInSystem(system_name),
                                               iSim.Faction(operation),
                                               tsFaction.Type2LowerLevel(FT_Neutral));
    Set.Remove(habitats, center);

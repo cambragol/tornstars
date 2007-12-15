@@ -123,13 +123,20 @@ Restore()
 {
    list player_fleet;
    hship player = iShip.FindPlayerShip();
-   int player_id = Global.Int("ts_player_save");
-   hship restored_ship;
+   int player_id;
+   hship restored_ship = none;
    hship wingman;
    int i, total;
    hgroup combat_group = Group.Create();
 
-   restored_ship = tsShipSave.Restore(player_id);
+
+   // If there was a prior save, it will have left a global.
+   if (Global.Exists("ts_player_save")) {
+
+      player_id = Global.Int("ts_player_save");
+      restored_ship = tsShipSave.Restore(player_id);
+      
+   }
 
    if (none == player) {
       debug Debug.PrintString("tsPlayerSave.Restore no base launched ship\n");
@@ -154,8 +161,9 @@ Restore()
       tsShip.ReadIniFile(player);
    }else {
       debug {
-         Debug.PrintString("Error: tsPlayerSave.Restore There is no player starting ship\n");
-         return;
+         Debug.PrintString("Error: tsPlayerSave.Restore There is no player starting ship.\n");
+         Debug.PrintString("Error: tsPlayerSave.Restore Forcing a default player creation.\n");
+         player = create_new_player();
       }
    }
 

@@ -20,16 +20,16 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
    iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
    ECargoTypes,
-   tEconUtil,
-   tETradeBuy,
-   tPogClass,
-   tLRoot,
-   tLTrade,
-   tEpicMoney,
-   tTime,
+   tsEconUtil,
+   tsTradeBuy,
+   tsPogClass,
+   tsLRoot,
+   tsLTrade,
+   tsMoney,
+   tsTime,
    tsFaction,
    tsShip,
-   tPodUtil,
+   tsPodUtil,
    tsShipCreationEnum,
    tsShipCreation;
 
@@ -75,7 +75,7 @@ TestShipCreation()
 // This code exaimines every station and reports the distance between the stations and the 
 // planets. The idea is to make sure our stations are no too close to the planets that we 
 // could be creating a danger of crashes do to visual culling.
-TestStationPlacement()
+TestsStationPlacement()
 {
    hinifile flux_init = INIFile.Create("ini:/flux");
 

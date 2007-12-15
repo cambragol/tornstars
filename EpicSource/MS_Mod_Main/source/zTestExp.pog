@@ -20,19 +20,19 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
    iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
    ECargoTypes,
-   tEconUtil,
-   tETradeBuy,
-   tPogClass,
-   tLRoot,
-   tLTrade,
-   tEpicMoney,
-   tTime,
+   tsEconUtil,
+   tsTradeBuy,
+   tsPogClass,
+   tsLRoot,
+   tsLTrade,
+   tsMoney,
+   tsTime,
    tsFaction,
    tsShip,
-   tPodUtil,
+   tsPodUtil,
    tsShipCreationEnum,
 tsShipCreation,
-   tPcOwner;
+   tsPcOwner;
 
 
 
@@ -130,11 +130,11 @@ TestOrder()
 
    Sim.PlaceRelativeTo(ship, station, 10km, 5km, 5km);
 
-   pod = iSim.Cast (tPodUtil.CreateCargoPod(CT_Fruit ,"Police","Police"));
+   pod = iSim.Cast (tsPodUtil.CreateCargoPod(CT_Fruit ,"Police","Police"));
    Sim.SetCullable(pod, false);
    iSim.Dock(ship, pod);
 
-   pod = iSim.Cast (tPodUtil.CreateCargoPod(CT_Wire ,"MAAS Corporation","MAAS Corporation"));
+   pod = iSim.Cast (tsPodUtil.CreateCargoPod(CT_Wire ,"MAAS Corporation","MAAS Corporation"));
    Sim.SetCullable(pod, false);
    iSim.Dock(ship, pod);
 
@@ -221,7 +221,7 @@ task many_days()
    int i;
 
    for (i=0;i<10;++i) {
-      tTime.AdvanceTime(Global.Int("gt_time_one_day"));
+      tsTime.AdvanceTime(Global.Int("gt_time_one_day"));
 
       Task.Sleep(Task.Current(), 5.0);
    }

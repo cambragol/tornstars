@@ -1,0 +1,229 @@
+// String utilities 
+
+
+
+package tsString;
+
+uses String,
+     Text,
+     Math;
+
+provides RemoveSpace, 
+   Locate, 
+   Replace, 
+   Htmlize, 
+   EndName,
+   CargoNameNoSpace,
+   TranslatedString,
+   TranslatedStringRandom,
+   CommsString,
+   CommsStringRandom;
+
+// Removes all the spaces in words
+
+string RemoveSpace(string words)
+{
+   string one_word, snip;
+   int len, i;
+
+   len = String.Length(words);
+
+   for (i=0;i<len;++i) {
+      snip = String.Mid(words,i,1);
+
+      if (" " != snip) {
+         one_word = String.Join(one_word,snip);
+      }
+   }
+   
+   return one_word;
+}
+
+// Find a % marker in the string. Return the location of 
+// the marker.
+
+int Locate(string source, string mark)
+{
+   int i;
+   int size = String.Length(mark);
+   int length = String.Length(source);
+   for (i=0;i<length;++i) {
+      if (mark==String.Mid(source,i,size)) {
+         return i;
+      }
+   }
+
+   return 0;
+}
+
+string Replace(string source, string mark, string replacement)
+{
+   string new_string;
+   int i;
+   int size = String.Length(mark);
+   int length = String.Length(source);
+
+   for (i=0;i<length;++i) {
+      if (mark==String.Mid(source,i,size)) {
+         // Found the mark. Now just replace it
+         length = length -i;
+         length = length - size;
+         new_string = String.Join(String.Left(source,i),replacement);
+         new_string = String.Join(new_string,String.Right(source, length));
+         return new_string;
+      }
+   }
+	
+   // Just return the start string if we cannot find the marker.
+   return source;
+}
+
+
+string Htmlize(string source)
+{
+   string new_string;
+
+   new_string = String.Join("<HTML><BODY>",source);
+   new_string = String.Join(new_string, "</BODY></HTML>");
+
+   return new_string;
+}
+
+
+// Find the final name in a resource URL
+string EndName(string source)
+{
+   int length = String.Length(source);
+   int i;
+
+   // Find the location of the final slash. Cut from this point to the
+   // end
+   for (i=length;i>0;--i) {
+
+      if ("/" ==String.Mid(source,i,1)) {
+         // Found it. Cut.
+         return String.Mid(source,i+1, (length - i));
+      }
+   }
+
+   // We never found a slash, so hand back the whole name.
+   return source;
+}
+
+
+string CargoNameNoSpace(string source)
+{
+   string result;
+
+   result = RemoveSpace(source);
+   result = String.Join("Cargo_", result);
+
+   return result;
+}
+
+
+// This function will build a key string that allows indexing into multiple
+// text entries. This makes writing and coding easy.
+// There should always be a default translation using just the key_string alone.
+// More complex varients can be added. Trying to access a missing string
+// just forces the use of the default.
+// Example csv entries
+// lorie_speaks, "Nav here sir"
+// lorie_speaks_1, "Another nav entry sir"
+// lorie_speaks_2, "Yet Another nav entry sir"
+// lorie_speaks_1_leung, "I don't do Chinese sir"
+// lorie_speaks_2_leung, "No, and I won't tell you again"
+// lorie_speaks_barrens, "That's more my style sir"
+
+string TranslatedString(string key_string, string style, int index)
+{
+   string full_key;
+   string returned_string;
+   string style_key;
+
+   full_key = key_string;
+
+   // an empty string means don't use the style feature
+   if ("" !=style) {
+      full_key = String.Join(key_string,"_");
+      full_key = String.Join(full_key,style);
+      style_key = full_key;
+   }
+
+   // A zero index means don't use the index.
+   if (index != 0) {
+      full_key = String.Join(full_key,String.FormatInt("_%d", index));
+   }
+
+   returned_string = Text.Field(full_key, FT_Text);
+
+   if ("*"==String.Left(returned_string,1)) {
+      // Numbered string failed to translate, fall back on style.
+
+      returned_string = Text.Field(style_key, FT_Text);
+
+      if ("*"==String.Left(returned_string,1)) {
+         // Style string failed to translate, fall back on default.
+         returned_string = Text.Field(key_string, FT_Text);
+      }
+   }
+
+   return returned_string;
+}
+
+// Used to select a random string out of alist of string names;
+string TranslatedStringRandom(string key_string, string style, int highest_index)
+{
+
+   return TranslatedString(key_string, style, Math.RandomInt(0,highest_index));
+}
+
+
+// Comms strings are self translating. So we play this little game of
+// checking if a translation exists and then return the key string instead.
+string CommsString(string key_string, string style, int index)
+{
+   string full_key;
+   string style_key = "";
+   string returned_string;
+
+   full_key = key_string;
+
+   // an empty string means don't use the style feature
+   if ("" !=style) {
+      full_key = String.Join(key_string,"_");
+      full_key = String.Join(full_key,style);
+      style_key = full_key;
+   }
+
+   // A zero index means don't use the index.
+   if (index != 0) {
+      full_key = String.Join(full_key,String.FormatInt("_%d", index));
+   }
+
+   returned_string = Text.Field(full_key, FT_Text);
+
+
+   if ("*"==String.Left(returned_string,1)) {
+      // Numbered string failed to translate, fall back on style.
+
+      returned_string = Text.Field(style_key, FT_Text);
+
+      if ("*"==String.Left(returned_string,1)) {
+         // Style string failed to translate, fall back on default.
+
+         return key_string;
+      }
+      
+      return style_key;
+   }
+
+   return full_key;
+}
+
+// Used to select a random string out of alist of string names;
+string CommsStringRandom(string key_string, string style, int highest_index)
+{
+
+   return CommsString(key_string, style, Math.RandomInt(0,highest_index));
+}

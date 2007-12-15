@@ -44,14 +44,14 @@ uses	Sim,
 		
 		tsShipEnum,
 		tsShip,
-		tFormation,
-		tPodUtil,
+		tsFormation,
+		tsPodUtil,
 		tsFaction,
-		tStationEnum,
-		tStation,
-		tLProduction,
-		tMegaTrucking,
-		tStationFilter;
+		tsStationEnum,
+		tsStation,
+		tsLProduction,
+		tsMegaTrucking,
+		tsStationFilter;
 //[cf]
 
 
@@ -936,9 +936,9 @@ task wingman_watch(hship ship)
 
             iAI.GiveEscortOrder(ship, 
                                 target,
-                                tFormation.Xpos(ship),
-                                tFormation.Ypos(ship),
-                                tFormation.Zpos(ship),
+                                tsFormation.Xpos(ship),
+                                tsFormation.Ypos(ship),
+                                tsFormation.Zpos(ship),
                                 20km);
 
             wingman_state = change_state(ship, wingman_state, eSS_Escort, debug_on);
@@ -962,9 +962,9 @@ task wingman_watch(hship ship)
          
             iAI.GiveFormateOrder(ship, 
                                 target,
-                                tFormation.Xpos(ship),
-                                tFormation.Ypos(ship),
-                                tFormation.Zpos(ship));
+                                tsFormation.Xpos(ship),
+                                tsFormation.Ypos(ship),
+                                tsFormation.Zpos(ship));
                            
 
             wingman_state = change_state(ship, wingman_state, eSS_Formate, debug_on);
@@ -1038,10 +1038,10 @@ task wingman_watch(hship ship)
          Set.Remove(nearby_locations, station);
 
          // Only go to stations the player knows about.
-         nearby_locations = tStationFilter.OnMapVisible(nearby_locations, true);
+         nearby_locations = tsStationFilter.OnMapVisible(nearby_locations, true);
 
          // And those that are player friendly.
-         station = iHabitat.Nearest(tStationFilter.OnGreaterFeeling(nearby_locations,
+         station = iHabitat.Nearest(tsStationFilter.OnGreaterFeeling(nearby_locations,
                                                                         player_faction, 
                                                                         -0.2), 
                                         ship);
@@ -1128,7 +1128,7 @@ task wingman_watch(hship ship)
          // If they are done, then tell the player.
          // Formate to the player, remove the waypoint.
          // If we are told to halt, go to load pod stop.
-         if (tPodUtil.LoadDone(cargo_set)) {
+         if (tsPodUtil.LoadDone(cargo_set)) {
             iConversation.OneLiner(ship, "", "epo_cargo_load_done");
             iAI.PurgeOrders(ship);
             Task.Sleep(Task.Current(), 0.1);
@@ -1150,13 +1150,13 @@ task wingman_watch(hship ship)
    
          if (!Object.PropertyExists(ship, "md_epic_shipinit")) { // No loading pods when on the spewer!
 
-            if (!tMegaTrucking.IsMegafreighter(ship)) { // Megafreighters use their own method
+            if (!tsMegaTrucking.IsMegafreighter(ship)) { // Megafreighters use their own method
 
-               if (!Set.IsEmpty(tPodUtil.DockPorts(ship))){
-                  cargo_set = Set.FromList(tPodUtil.TaggedPodList(ship, Global.Float("gt_distance_wakeup")));
+               if (!Set.IsEmpty(tsPodUtil.DockPorts(ship))){
+                  cargo_set = Set.FromList(tsPodUtil.TaggedPodList(ship, Global.Float("gt_distance_wakeup")));
 
                   // Reserve the pods we intend to load
-                  cargo_set = tPodUtil.ClaimPods(ship, cargo_set);
+                  cargo_set = tsPodUtil.ClaimPods(ship, cargo_set);
 
                   if (!Set.IsEmpty(cargo_set)) {
 
@@ -1191,9 +1191,9 @@ task wingman_watch(hship ship)
    
          if (!Object.PropertyExists(ship, "md_epic_shipinit")) { // No loading pods when on the spewer!
 
-            if (!tMegaTrucking.IsMegafreighter(ship)) { // Megafreighters use their own method
+            if (!tsMegaTrucking.IsMegafreighter(ship)) { // Megafreighters use their own method
 
-               if (!Set.IsEmpty(tPodUtil.DockPorts(ship))){
+               if (!Set.IsEmpty(tsPodUtil.DockPorts(ship))){
 
                   Set.Difference(cargo_set, cargo_set);
 
@@ -1209,7 +1209,7 @@ task wingman_watch(hship ship)
                   }
 
                   // Reserve the pods we intend to load
-                  cargo_set = tPodUtil.ClaimPods(ship, cargo_set);
+                  cargo_set = tsPodUtil.ClaimPods(ship, cargo_set);
 
                   if (!Set.IsEmpty(cargo_set)) {
 
@@ -1240,7 +1240,7 @@ task wingman_watch(hship ship)
          iConversation.OneLiner(ship, "", "epo_load_cargo_stopping_ack");
 
          // Halt any remaining pods.
-         tPodUtil.FreePods(cargo_set);
+         tsPodUtil.FreePods(cargo_set);
 
          accept_order(ship, debug_on);
          next_state = new_order_state(neworder);
@@ -1251,7 +1251,7 @@ task wingman_watch(hship ship)
       case eSS_UnloadPodStart:
          if(!Object.PropertyExists(ship, "md_epic_shipinit"))	// No ditching on the spewer!
          {
-            if(!tMegaTrucking.IsMegafreighter(ship))
+            if(!tsMegaTrucking.IsMegafreighter(ship))
             {
 
                cargo_list = List.FromSet(Sim.Children(ship));
@@ -1264,9 +1264,9 @@ task wingman_watch(hship ship)
                      iShip.UndockSelf(pod);
                   }
                }	// end for(j...)
-            } // end if(!tMegaTrucking...)
+            } // end if(!tsMegaTrucking...)
             else{
-               tMegaTrucking.DitchPods(ship);
+               tsMegaTrucking.DitchPods(ship);
             }
 
             iConversation.OneLiner(ship, "", "epo_cargo_unloading_done");
@@ -1559,7 +1559,7 @@ task wingman_watch(hship ship)
                Set.Remove(stations, station);
 
                // Reveal the station if it exists, or has ever existed.
-               if (tStation.Status(station) != ESS_NeverBuilt) {
+               if (tsStation.Status(station) != ESS_NeverBuilt) {
 
                   // We used to not reveal pirate stations. Except there is no 
                   // way to find pirate stations in the outback areas and the player
@@ -1567,7 +1567,7 @@ task wingman_watch(hship ship)
                   if (!iMapEntity.IsVisibleOnMap(station)) {
                      // If the station is invisible to player, let them see it,
                      // save a note, to tell the player when done.
-                     tStation.SetMapVisibility(station, true);
+                     tsStation.SetMapVisibility(station, true);
                      new_station = true;
                   }
                }
@@ -2123,7 +2123,7 @@ bool is_mine(hisim station)
       return false;
    }
 
-   if (ESC_Mine == tStation.Category(iHabitat.Cast(station))) {
+   if (ESC_Mine == tsStation.Category(iHabitat.Cast(station))) {
       return true;
    }
 

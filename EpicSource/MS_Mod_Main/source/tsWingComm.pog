@@ -45,12 +45,12 @@ uses    Sim,
         iComms,
         Math,
 
-        tPodUtil,
+        tsPodUtil,
         tsShipEnum,
         tsShip,
         tsPlayerFleet,
         tsWingman,
-        tEJump;
+        tsCapsuleJump;
 
 provides ClearCommand,
          KeyOne,
@@ -195,7 +195,7 @@ Setup()
    Input.BindKey( "tsWingComm.KeyZero",  "tsWingComm.KeyZero"); 
 
    // Pod Control Keys
-   Input.BindKey( "tPodUtil.HackNearbyPods",  "tsWingComm.HackCargo"); 
+   Input.BindKey( "tsPodUtil.HackNearbyPods",  "tsWingComm.HackCargo"); 
 
    Text.Add("csv:/TEXT/wing_text");
 
@@ -746,7 +746,7 @@ KeyOne()
 
   // iHUD.Print("Key One");
 
-   if (tEJump.IsCapsuleJumping()){
+   if (tsCapsuleJump.IsCapsuleJumping()){
       return;
    }
 
@@ -777,7 +777,7 @@ KeyTwo()
 
   // iHUD.Print("Key Two");
 
-   if (tEJump.IsCapsuleJumping()){
+   if (tsCapsuleJump.IsCapsuleJumping()){
       return;
    }
 
@@ -811,7 +811,7 @@ KeyThree()
 
  //  iHUD.Print("Key Three");
 
-   if (tEJump.IsCapsuleJumping()){
+   if (tsCapsuleJump.IsCapsuleJumping()){
       return;
    }
 
@@ -845,7 +845,7 @@ KeyFour()
 
   // iHUD.Print("Key Four");
 
-   if (tEJump.IsCapsuleJumping()){
+   if (tsCapsuleJump.IsCapsuleJumping()){
       return;
    }
 
@@ -876,7 +876,7 @@ KeyFive()
 
 //   iHUD.Print("Key Five");
 
-   if (tEJump.IsCapsuleJumping()){
+   if (tsCapsuleJump.IsCapsuleJumping()){
       return;
    }
 
@@ -910,7 +910,7 @@ KeySix()
 
 //   iHUD.Print("Key Six");
 
-   if (tEJump.IsCapsuleJumping()){
+   if (tsCapsuleJump.IsCapsuleJumping()){
       return;
    }
 
@@ -944,7 +944,7 @@ KeySeven()
 
 //   iHUD.Print("Key Seven");
 
-   if (tEJump.IsCapsuleJumping()){
+   if (tsCapsuleJump.IsCapsuleJumping()){
       return;
    }
 
@@ -975,7 +975,7 @@ KeyEight()
 
 //   iHUD.Print("Key Eight");
 
-   if (tEJump.IsCapsuleJumping()){
+   if (tsCapsuleJump.IsCapsuleJumping()){
       return;
    }
 
@@ -1009,7 +1009,7 @@ KeyNine()
 
 //   iHUD.Print("Key Nine");
 
-   if (tEJump.IsCapsuleJumping()){
+   if (tsCapsuleJump.IsCapsuleJumping()){
       return;
    }
 
@@ -1043,7 +1043,7 @@ KeyZero()
 
    //iHUD.Print("Key Zero");
 
-   if (tEJump.IsCapsuleJumping()){
+   if (tsCapsuleJump.IsCapsuleJumping()){
       return;
    }
 

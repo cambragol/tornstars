@@ -1,0 +1,671 @@
+//*******************************************************************************************/
+//
+// tsPcFenceShip
+//
+// This pog object implements Fences that will sell/purchase goods from the player.
+// 
+//
+// May 2005, Jon Freise
+//******************************************************************************************/
+
+package tsPcFenceShip;
+
+uses    Sim,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        GUI,
+        iGUI,
+        iHUD,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        Math,
+        iAI,
+        iShipCreation,
+        iComms,
+        iConversation,
+        iEscort,
+
+        tsShipComms,
+        tsLRoot,
+        tsLTrade,
+        tsFaction,
+        tsTradeSell,
+        tsMoney,
+        tsShipName,
+        tsPcOwner,
+        tsLProduction,
+        tsFleetOp,
+        tsDistance,
+        tsShipCreationEnum,
+tsShipCreation,
+        tsLFleet,
+        tsPilotSetup,
+        tsStationFilter,
+        tsDistance,
+        tsCapsuleJump,
+        tsCull,
+        tsShip;
+
+
+provides PogCreate,
+         PogStart,
+         FenceComms,
+         DeathScript;
+
+
+
+enum eFenceState{
+   EFS_Idle,
+   EFS_Leave,
+   EFS_Fleeing, 
+   EFS_Cull
+};
+
+prototype setup_fence_ship(hship ship);
+
+prototype string Station2Fence(int type);
+
+prototype string Station2FenceAsk(int type);
+
+prototype create_escorts(hisim operation, hship fence, hgroup cull_group);
+
+
+
+hsim PogCreate(string template_name, string object_name)
+{
+   hinifile object_file;
+   string item_template, pog_class, start_function, name;
+   hsim item;
+
+
+   debug Debug.PrintString("PcFenceShip.PogCreate\n");
+
+   object_file = INIFile.Create(template_name);
+
+   if (none == object_file) {
+      debug {
+         Debug.PrintString("PcFenceShip.PogCreate, failed to find object file\n");
+         Debug.PrintString(template_name);
+         Debug.PrintString("\n");
+      }
+
+      return none;
+   }
+
+   // Pull needed items out of template file. Create the object.
+   // Attach them
+   pog_class = INIFile.String(object_file, "PogClass","name","none");
+
+
+   ///********************
+   // This block of code is class dependent. The rest must be done to adhere
+   // to the pog object calling conventions.
+
+   name = tsShipName.ShipName( "underworld", 10000);
+
+   item_template = INIFile.String(object_file, "Properties","template","none");
+   
+   INIFile.Destroy(object_file);
+
+   item = Sim.Create(item_template, name);
+
+   if (none == item) {
+      debug {
+         Debug.PrintString("PcFenceShip.PogCreate, bad object template\n");
+      }
+      return none;
+   }
+   ///********************
+
+   // All 
+   Object.AddStringProperty(item, "gt_pog_object_class", pog_class);
+   Object.AddStringProperty(item, "gt_pog_object_template", template_name);
+
+   return item;
+}
+
+
+/*
+This function is called after the ship has been placed. 
+
+*/
+task PogStart(hobject pog_object)
+{
+
+   debug Debug.PrintString("tsPcFenceShip: starting\n");
+
+
+   ///***************************************
+   // This part of the start code is object dependent. The prior pieces must
+   // be done to adhere to the pog class calling convention.
+
+   setup_fence_ship(iShip.Cast(pog_object));
+
+   ///***************************************
+}
+
+/*
+; 
+; Example INI file for setting up a hired ship.
+; One of these template files should be created
+; for each kind of ship that can be hired.
+; Freighter, warship, etc.
+
+[PogClass]
+name=tsPcFenceShip
+
+[Properties]
+
+template=ini:/sims/ships/utility/freighter
+
+
+; This code will be called by the players communication subsystem
+; It will check to see if the player has a high enough standing to hire the ship.
+; Then it will offer the player the choice of hiring. It will display fee info.
+; 
+comm_start_function="tsPcFenceShip.FenceComm"
+
+*/
+
+
+
+// Read the ini file, setup the object. 
+setup_fence_ship(hship ship)
+{
+   hinifile control_file;
+   string template_file_name, comm_function;
+   string fence_file, fence_type, station_string;
+   string ship_template, ship_name;
+   float faction_standing;
+   hfaction faction;
+   hisim owner;
+   hhabitat station;
+   hship fence_ship;
+   hgroup cull_group;
+
+   template_file_name = Object.StringProperty(ship, "gt_pog_object_template");
+   control_file = INIFile.Create(template_file_name);
+
+   if (none == control_file) {
+      debug Debug.PrintString("ERROR tsPcFenceShip. invalid template_file\n");
+      debug Debug.PrintString(template_file_name);
+      debug Debug.PrintString("\n");
+   }
+
+   fence_file = INIFile.String(control_file, "Properties", "trade_file", "ini:\fence_cargo");
+   fence_type = INIFile.String(control_file, "Properties", "fence_type", "none");
+
+   INIFile.Destroy(control_file);
+
+   // The first thing we do is learn if this ship is to represent an operation.
+   // If we do, then we handle some things differently.
+   owner = iSim.Cast(tsPcOwner.Owner(ship));
+
+   faction = iSim.Faction(iSim.Cast(owner));
+
+   if (tsFleetOp.IsOperation(owner)){
+
+      debug Debug.PrintString("tsPcFenceShip operation fence creating\n");
+
+      // If this operation already has an in game representation, get rid of ourselves.
+      if (tsFleetOp.IsCreated(owner)) {
+         Sim.Destroy(ship);
+         return;
+      }
+      
+      // The operation now has a ship representing it, us.
+      tsFleetOp.SetCreated(owner, true);
+
+      ship_template = tsFleetOp.ShipTemplate(owner);
+      ship_name = tsFleetOp.Name(owner);
+
+      fence_ship = tsShip.Create(ship_template, ship_name);
+      if (none == fence_ship) {
+         debug {
+            Debug.PrintString("PcFenceShip.PogCreate error operation ship template invalid\n");
+         }
+         return;
+      }
+
+      cull_group = Group.Create();
+      Group.AddSim(cull_group, fence_ship);
+
+
+      tsPcOwner.SetOwner(fence_ship, owner);
+
+      iSim.SetFaction(iSim.Cast(fence_ship), faction);
+
+      Sim.PlaceNear(fence_ship, ship, 1km);
+
+      // Now we get rid of the prior created ship.
+      Sim.Destroy(ship);
+
+      create_escorts(owner, fence_ship, cull_group);
+
+   }else {
+      fence_ship = ship;
+      iSim.SetFaction(fence_ship, faction);
+
+      // we auto cull fences that do not belong to a faction.
+      tsCull.AddSim(station, ship);
+
+      Object.SetStringProperty(ship, "death_script", "tsPcFenceShip.DeathScript");
+   }
+
+   comm_function = "tsPcFenceShip.FenceComms";
+
+   // Setup the later comms task.
+   tsShipComms.AddComms(fence_ship, comm_function);
+   tsShipComms.DisplayComms(fence_ship, true);
+
+
+   station = iHabitat.Nearest(iMapEntity.SystemHabitats(),fence_ship);
+   station_string = Station2Fence(tsLProduction.GetType(station));
+
+   // If the INI file did not specify a type of fence, then
+   // use the nearby station to set one. This will default
+   // to MineGoods if the station is not a production station.
+
+   if ("none" == fence_type) {
+      fence_type = station_string;
+   }
+
+   // Setup the trade properties for the fence.
+   tsLRoot.SetId(fence_ship, tsLRoot.GetId(owner));
+   tsLTrade.Create(fence_ship, fence_file, fence_type);
+
+
+}
+
+
+task fence_watch(hgroup fence_fleet)
+{
+   set nearby_ships;
+   hship ship;
+   hship player;
+   hship fence;
+   hisim operation;
+   hhabitat new_station;
+   int timer;
+   int state;
+   float spacing;
+   hfaction fence_faction, ship_faction;
+   bool nearby_hostile;
+
+   fence = iShip.Cast(Group.Leader(fence_fleet));
+   operation = iSim.Cast(tsPcOwner.Owner(fence));
+
+   fence_faction = iSim.Faction(fence);
+   state = EFS_Idle;
+
+   // Put the ships into formation. And give them guard orders.
+   // Any hostiles inside of 25km get shot. We use a smaller
+   // value than normal, because fences lurk on the edges of other
+   // stations. They don't like trouble.
+   spacing = iUtilities.GetLargestShipRadius( fence_fleet);
+   iEscort.Wedge( fence_fleet, spacing, 25km, true );
+
+   // Have any ships that dislike us come within 50km? Flee to a nearby non-dislike 
+   // station. Our escorts will tail along.
+
+   while (1) {
+      Task.Sleep(Task.Current(), 2.0);
+
+      if (Sim.IsDead(fence)) {
+         // Darn, we died. Exit task.
+         return;
+      }
+
+
+      // When to cull?
+      // if the player is capsule jumping.
+      // if the player is out of culling distance for 30 seconds or more.
+      if (tsCapsuleJump.IsCapsuleJumping()) {
+         // The player has jumped systems, we cull.
+         state = EFS_Cull;
+      }else {
+         player = iShip.FindPlayerShip();
+         if (Sim.DistanceBetween(player, fence) > tsDistance.CullingDistance()) {
+            ++timer;
+            if (timer > 15) {
+               // We have been 
+               state = EFS_Cull;
+            }
+         }else {
+            timer = 0;
+         }
+      }
+
+      switch (state) {
+      case EFS_Idle:
+
+         // Check for nearby ships. Are any of them dislike or lower?
+         nearby_ships = iSim.ShipsInRadius(fence, 50km);
+         nearby_hostile = false;
+
+         while (!Set.IsEmpty(nearby_ships)) {
+            ship = iShip.Cast(Set.FirstElement(nearby_ships));
+            Set.Remove(nearby_ships, ship);
+            ship_faction = iSim.Faction(ship);
+
+            // Are any of these ships dislike or lower?
+            if (iFaction.Feeling(ship_faction, fence_faction) < -0.2) {
+               nearby_hostile = true;
+            }
+         }
+
+         if (nearby_hostile) {
+            // Some bad guys have arrived, Run.
+            state = EFS_Leave;
+         }
+
+         break;
+      case EFS_Leave:
+         // Pick a non-hostile station that is near.
+         new_station = iHabitat.Nearest(tsStationFilter.OnGreaterFeeling(iMapEntity.SystemHabitats(), 
+                                                                        fence_faction, 
+                                                                        -0.2), 
+                                        fence);
+
+         if (none != new_station) {
+            iAI.PurgeOrders(fence);
+            iAI.GiveApproachOrderAdvanced( fence,
+                                           new_station,
+                                           75km,
+                                           80km,
+                                           true);
+
+
+
+            state = EFS_Fleeing;
+         }else {
+            // There is no non-hostile station, so just run to nearest lpoint.
+
+         }
+
+         break;
+      case EFS_Fleeing:
+         // We are now running. 
+         if (Sim.DistanceBetween(fence, new_station) < tsDistance.WakingDistance()){
+            // If we get near our target station, move our operation to that station.
+            // Reset to an idle state.
+
+            state = EFS_Idle;
+         }
+
+         break;
+
+      case EFS_Cull:
+
+         break;
+      default:
+         state = EFS_Idle;
+         break;
+      }
+   }
+}
+
+task FenceComms()
+{
+   hship ship;
+   string ask_string;
+   bool start_deal;
+   hfaction player_faction, source_faction;
+   hhabitat station;
+   string station_string;
+
+   ship = iShip.Cast(tsShipComms.CommsSource());
+
+   
+   // Turn off the comms display, now that the player knows he can talk to this ship.
+   tsShipComms.DisplayComms(ship, false);
+
+   station = iHabitat.Nearest(iMapEntity.SystemHabitats(),ship);
+   
+        // Start the conversation.
+    iConversation.Begin();
+
+    // pcfs_introduction, "Looking to unload any illegal cargo?"
+    iConversation.Say(ship,"", "pcfs_introduction");
+
+    // Response 1
+    // pcfs_player_agrees, "I do have a few cargo pods I.. found."
+    iConversation.AddResponse(
+        "pcfs_player_agrees",
+        "pcfs_player_agrees");
+
+    // Response 2
+    // pcfs_player_refuses, "No thanks. I only do legal trade."
+    iConversation.AddResponse(
+        "pcfs_player_refuses",
+        "pcfs_player_refuses");
+
+
+    // pcfs_ask_player, "is the kind of thing we handle."
+    ask_string = Station2FenceAsk(tsLProduction.GetType(station));
+    ask_string = String.Join(ask_string," ");
+    ask_string = String.Join(ask_string,Text.Field("pcfs_ask_player",FT_Text));
+
+    // Ask the player a question and switch on their response.
+    switch ( iConversation.Ask( ship, "", ask_string ) )
+    {
+    case 1 :
+       player_faction = tsFaction.PlayerFaction();
+       source_faction = iSim.Faction(iSim.Cast(ship));
+
+       if (FT_Hate == iFaction.FeelingType(iFaction.Feeling(source_faction, player_faction))) {
+
+          // Player standing is too low. Tell off the player.
+          // pcfs_player_low, "We don't trust you. You smell like the law."
+          iConversation.Say(ship,"", "pcfs_player_low");
+          start_deal = false;
+       }else {
+          start_deal = true;
+       }
+
+       break;
+
+    case 2 :
+       // Player said no.
+       // pcfs_player_refuse_reply, "If you... find anything, stop back."
+       iConversation.Say(ship,"", "pcfs_player_refuse_reply");
+       start_deal = false;
+       break;
+
+    default :
+       // Player selected "Nothing"
+       start_deal = false;
+       iConversation.Say(ship,"", "..." );
+    }
+
+    // Finish the conversation.
+    iConversation.End();
+
+    if (start_deal) {
+       tsTradeSell.TradeObjectStart(ship);
+    }
+
+}
+
+
+string Station2Fence(int type)
+{
+   switch (type) {
+   case HT_WaterMine :
+   case HT_OrganicsMine :
+   case HT_InorganicsMine :
+   case HT_BiomassMine : 
+   case HT_CommonMetalsMine :
+   case HT_RareMetalsMine : 
+   case HT_ExoticMetalsMine :
+   case HT_RadioactivesMine :
+   case HT_FusionableGasesMine :
+   case HT_NeutroniumMine :
+      return "MineGoods";
+   break;
+   case HT_WaterProcessingPlant : 
+   case HT_OrganicsProcessingPlant : 
+   case HT_InorganicsProcessingPlant :
+   case HT_BiomassProcessingPlant : 
+   case HT_CommonMetalsProcessingPlant :
+   case HT_RareMetalsProcessingPlant : 
+   case HT_ExoticMetalsProcessingPlant : 
+   case HT_RadioactivesProcessingPlant : 
+   case HT_FusionableGasesProcessingPlant :
+   case HT_NeutroniumProcessingPlant : 
+      return "ProcessedGoods";
+      break;
+   case HT_HeavyManufacturingPlant : 
+   case HT_BiologicalManufacturingPlant :
+   case HT_WetwareManufacturingPlant : 
+   case HT_HiTechManufacturingPlant : 
+   case HT_ElectronicsManufacturingPlant :
+   case HT_WeaponsManufacturingPlant : 
+   case HT_PharmaceuticalsManufacturingPlant : 
+   case HT_PlasticsManufacturingPlant : 
+   case HT_FusionReactorsManufacturingPlant : 
+   case HT_EnergyCellsManufacturingPlant : 
+   case HT_StationFabricationManufacturingPlant : 
+   case HT_LuxuriesManufacturingPlant : 
+   case HT_TerraformingStation : 
+      return "ManufacturedGoods";
+      break;
+   default:
+      break;
+   }
+
+
+   return "MineGoods";
+}
+
+
+string Station2FenceAsk(int type)
+{
+   switch (type) {
+   case HT_WaterMine :
+   case HT_OrganicsMine :
+   case HT_InorganicsMine :
+   case HT_BiomassMine : 
+   case HT_CommonMetalsMine :
+   case HT_RareMetalsMine : 
+   case HT_ExoticMetalsMine :
+   case HT_RadioactivesMine :
+   case HT_FusionableGasesMine :
+   case HT_NeutroniumMine :
+      return "Mine Ore";
+   break;
+   case HT_WaterProcessingPlant : 
+   case HT_OrganicsProcessingPlant : 
+   case HT_InorganicsProcessingPlant :
+   case HT_BiomassProcessingPlant : 
+   case HT_CommonMetalsProcessingPlant :
+   case HT_RareMetalsProcessingPlant : 
+   case HT_ExoticMetalsProcessingPlant : 
+   case HT_RadioactivesProcessingPlant : 
+   case HT_FusionableGasesProcessingPlant :
+   case HT_NeutroniumProcessingPlant : 
+      return "Processed Material";
+      break;
+   case HT_HeavyManufacturingPlant : 
+   case HT_BiologicalManufacturingPlant :
+   case HT_WetwareManufacturingPlant : 
+   case HT_HiTechManufacturingPlant : 
+   case HT_ElectronicsManufacturingPlant :
+   case HT_WeaponsManufacturingPlant : 
+   case HT_PharmaceuticalsManufacturingPlant : 
+   case HT_PlasticsManufacturingPlant : 
+   case HT_FusionReactorsManufacturingPlant : 
+   case HT_EnergyCellsManufacturingPlant : 
+   case HT_StationFabricationManufacturingPlant : 
+   case HT_LuxuriesManufacturingPlant : 
+   case HT_TerraformingStation : 
+      return "Manufactured Equipment";
+      break;
+   default:
+      break;
+   }
+
+
+   return "Mine Ore";
+}
+
+
+task DeathScript(hship fence)
+{
+   hisim owner;
+
+
+   owner = iSim.Cast(tsPcOwner.Owner(fence));
+
+   if (none != owner) {
+      if (tsFleetOp.IsOperation(owner)){
+
+         // This op is history.
+         tsFleetOp.DestroyOp(owner);
+      }
+   }
+
+   // Utter death threats..
+   iSim.Kill(fence);
+}
+
+
+// Don't call this until the fence has been placed into the game.
+create_escorts(hisim operation, hship fence, hgroup cull_group)
+{
+   float fleets, threat;
+   string escort_template;
+   hfaction faction = iSim.Faction(fence);
+   hinifile escort_file;
+   int i, total;
+   hship escort;
+
+   escort_template = tsShipCreation.GetShip(faction, EST_CombatLight);
+   escort_file = INIFile.Create(escort_template);
+
+   if (none == escort_file) {
+      debug Debug.PrintString("tsPcFenceShip.create_escort error escort ini file invalid\n");
+      return;
+   }
+
+   threat = INIFile.Float(escort_file,"Properties","threat", 40);
+   INIFile.Destroy(escort_file);
+
+   fleets = tsLFleet.Fleets(operation);
+
+   total = fleets/threat;
+
+   for (i=0;i<total;++i) {
+      escort = tsShip.Create(escort_template, tsShipName.ShipName("underworld",10000));
+
+      tsPilotSetup.SetupEscort(escort, 0.9, 0.5);
+
+      iSim.SetFaction(escort, faction);
+      Sim.SetCullable(escort, false);
+
+      Sim.PlaceRelativeTo(escort, fence, 2km, 0, 0);
+
+      iShip.Attacked(escort);
+      iShip.LastAttacker(escort);
+
+      tsPcOwner.SetOwner(escort, operation);
+
+      Group.AddSim(cull_group, escort);
+   }
+
+}
+
+/*   
+
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

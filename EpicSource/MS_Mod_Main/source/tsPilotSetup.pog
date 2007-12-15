@@ -31,19 +31,19 @@ uses	Sim,
 		iShipCreation,
 		iComms,
 		iConversation,
-		tEpicComms,
-		tLRoot,
-		tLTrade,
+		tsShipComms,
+		tsLRoot,
+		tsLTrade,
 		tsFaction,
-		tETradeSell,
-		tEpicMoney,
-		tShipName,
-		tPcOwner,
-		tLProduction,
-		tLFleet,
-		tUnderOp,
-		tPodUtil,
-		tRepWatch,
+		tsTradeSell,
+		tsMoney,
+		tsShipName,
+		tsPcOwner,
+		tsLProduction,
+		tsLFleet,
+		tsFleetOp,
+		tsPodUtil,
+		tsReputationWatch,
 		tEpicEventEnum,
 		tsEvent;
 //[cf]
@@ -105,7 +105,7 @@ task escort_task(hship escort)
             // This is a good place for a distress call.
 
             // Escorts don't normally carry cargo, but just in case.
-            tPodUtil.DropCargo(escort);
+            tsPodUtil.DropCargo(escort);
          }
       }
    }
@@ -155,10 +155,10 @@ task cargo_task(hship cargo_ship)
             // This is a good place for a distress call.
 
             // Drop all of our cargo and run for it.
-            //cargo = tPodUtil.ShipPods(cargo_ship);
+            //cargo = tsPodUtil.ShipPods(cargo_ship);
             //Task.Detach(start iUtilities.JettisonCargo( List.FromSet(cargo), cargo_ship ));
             
-            tPodUtil.DropCargo(cargo_ship);
+            tsPodUtil.DropCargo(cargo_ship);
          }
       }
    }
@@ -201,7 +201,7 @@ task EscortSelfPreserve(hship escort)
    Task.Detach(start escort_task(escort));
 
    // Test if the player did it, and give penalty/bonus.
-   tRepWatch.ShipAttacked(escort, -2.0);
+   tsReputationWatch.ShipAttacked(escort, -2.0);
 
 
    // We need to choose if the escort attacks the last
@@ -245,16 +245,16 @@ task EscortSelfPreserve(hship escort)
 //[of]:fleet_loss(hship ship)
 fleet_loss(hship ship)
 {
-   hisim operation = iSim.Cast(tPcOwner.Owner(ship));
+   hisim operation = iSim.Cast(tsPcOwner.Owner(ship));
 
    if (none != operation) {
       // If this escort is owned by a station or operation
       // then the owner will have fleets. So deduct this lost ship from
       // the supply of fleets.
-      if (tUnderOp.IsOperation(operation) || (T_Station == iSim.Type(operation))){
+      if (tsFleetOp.IsOperation(operation) || (T_Station == iSim.Type(operation))){
 
          // Subtract off the threat value of the dead ship.
-         tLFleet.ChangeFleets(operation, -1.0 * Object.FloatProperty(ship,"threat"));
+         tsLFleet.ChangeFleets(operation, -1.0 * Object.FloatProperty(ship,"threat"));
       }
    }
 }
@@ -271,7 +271,7 @@ task EscortDeath(hship escort)
 
    debug Debug.PrintString("tsPilotSetup.EscortDeath\n");
 
-   tRepWatch.ShipAttacked(escort, -8.0);
+   tsReputationWatch.ShipAttacked(escort, -8.0);
 
    fleet_loss(escort);
 
@@ -316,7 +316,7 @@ task CargoSelfPreserve(hship cargo_ship)
    // Launch the watch task that will set this ship to run.
    Task.Detach(start cargo_task(cargo_ship));
 
-   tRepWatch.ShipAttacked(cargo_ship, -2.0);
+   tsReputationWatch.ShipAttacked(cargo_ship, -2.0);
 
 }
 //[cf]
@@ -337,7 +337,7 @@ task CargoDeath(hship cargo_ship)
    fleet_loss(cargo_ship);
 
    // If the player is guilty this will assign penalty (or bonus);
-   tRepWatch.ShipAttacked(cargo_ship, -8.0);
+   tsReputationWatch.ShipAttacked(cargo_ship, -8.0);
 
    // Utter death threats..
    iSim.Kill(cargo_ship);
@@ -380,18 +380,18 @@ task OperationDeath(hship ship)
    debug Debug.PrintString("tsPilotSetup.OperationDeath\n");
 
 
-   operation = iSim.Cast(tPcOwner.Owner(ship));
+   operation = iSim.Cast(tsPcOwner.Owner(ship));
    if (none != operation) {
-      if (tUnderOp.IsOperation(operation)){
+      if (tsFleetOp.IsOperation(operation)){
 
          // This op is history.
-         tUnderOp.DestroyOp(operation);
+         tsFleetOp.DestroyOp(operation);
       }
    }
 
    fleet_loss(ship);
 
-   tRepWatch.ShipAttacked(ship, -8.0);
+   tsReputationWatch.ShipAttacked(ship, -8.0);
 
    // Utter death threats..
 

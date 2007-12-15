@@ -43,18 +43,18 @@ iMapEntity,
    iCargoScript,
    iHUD,
    iComms,
-   tStationEnum,
-   tStation,
+   tsStationEnum,
+   tsStation,
    tsFaction,
-   tTime,
-   tUnderOp,
-   tLRoot,
-   tLCenter,
-   tLProduction,
-   tLFleet,
-   tStationFilter,
-   tEconUtil,
-   tShipName,
+   tsTime,
+   tsFleetOp,
+   tsLRoot,
+   tsLCenter,
+   tsLProduction,
+   tsLFleet,
+   tsStationFilter,
+   tsEconUtil,
+   tsShipName,
    tsShipCreationEnum,
 tsShipCreation,
    tsFleetOpCombat,
@@ -89,7 +89,7 @@ New(hisim operation)
       return;
    }
 
-   op_type = tEconUtil.StationIntToString(tLProduction.GetType(operation));
+   op_type = tsEconUtil.StationIntToString(tsLProduction.GetType(operation));
 
    fleets = INIFile.Int(op_data, op_type, "max_fleets", 600);
 
@@ -102,19 +102,19 @@ New(hisim operation)
 
    // We pick an underworld name for ourselves. 
    // using a large number means we get a random name.
-   ship_name = tShipName.ShipName("military", 10000);
+   ship_name = tsShipName.ShipName("military", 10000);
 
    // We pick a heavy warship for center vessel.
    ship_template = tsShipCreation.GetShip(faction, tsShipCreation.String2ShipType(ship_class));
 
-   tUnderOp.SetName(operation, ship_name);
-   tUnderOp.SetShipTemplate(operation, ship_template);
+   tsFleetOp.SetName(operation, ship_name);
+   tsFleetOp.SetShipTemplate(operation, ship_template);
 
    // The defense forces want to be found. Flashing red lights and all.
-   tUnderOp.SetKnown(operation, true);
+   tsFleetOp.SetKnown(operation, true);
 
-   tLFleet.SetFleets(operation, fleets);
-   tLFleet.SetMaxFleets(operation, fleets);
+   tsLFleet.SetFleets(operation, fleets);
+   tsLFleet.SetMaxFleets(operation, fleets);
 }
 
 
@@ -135,7 +135,7 @@ Restore(hisim operation)
 
 Update(hisim operation)
 {
-   hmapentity center = tLCenter.GetCenter(operation);
+   hmapentity center = tsLCenter.GetCenter(operation);
    hhabitat target_station, supporter_station;
    hlagrangepoint target_lpoint;
    bool hostiles, wounded, dying, home, out_gunned, need_patrol;
@@ -145,7 +145,7 @@ Update(hisim operation)
    hfaction faction, visitor_faction;
    int fleets, hostile_fleets, total_hostiles;
    int i, total;
-   int current_day = tTime.GetDay();
+   int current_day = tsTime.GetDay();
    int patrol_day;
    int update_delay = 1;
 
@@ -157,7 +157,7 @@ Update(hisim operation)
    // Here we look up what other operations are nearby. 
    // Any combat between this and other operations happens here.
 
-   local_operations = tUnderOp.StationOperations(center);
+   local_operations = tsFleetOp.StationOperations(center);
    List.Remove(local_operations, operation);
    total = List.ItemCount(local_operations);
 
@@ -170,8 +170,8 @@ Update(hisim operation)
 
       if (iFaction.Feeling(visitor_faction, faction) < -0.2) {
          // There are hostile forces at this station
-         fleets = tLFleet.Fleets(operation);
-         hostile_fleets = tLFleet.Fleets(operation);
+         fleets = tsLFleet.Fleets(operation);
+         hostile_fleets = tsLFleet.Fleets(operation);
 
          if (fleets > hostile_fleets) {
             // We have the advantage, pound them.
@@ -186,36 +186,36 @@ Update(hisim operation)
       }
    }
 
-   fleets = tLFleet.Fleets(operation);
+   fleets = tsLFleet.Fleets(operation);
 
    if (fleets == 0) {
       // Ouch, we died.
       tsDebug.PrintString("tsfofleetdefense_debug",
                           String.FormatStrStr("tsFoFleetDefense %s died\n%s",
-                                              Text.Field(tUnderOp.Name(operation),FT_Text),
+                                              Text.Field(tsFleetOp.Name(operation),FT_Text),
                                               ""));
 
 
-      tUnderOp.DestroyOp(operation);
+      tsFleetOp.DestroyOp(operation);
       return;
    }
 
    // Dying when down to quarter damage (leave combat)
-   if (fleets < (tLFleet.MaxFleets(operation)/4)) {
+   if (fleets < (tsLFleet.MaxFleets(operation)/4)) {
       dying = true;
    }else {
       dying = false;
    }
 
    // Wounded when down to quarter damage (leave combat)
-   if (fleets < tLFleet.MaxFleets(operation)) {
+   if (fleets < tsLFleet.MaxFleets(operation)) {
       wounded = true;
    }else {
       wounded = false;
    }
 
 
-   supporter_station = tUnderOp.Supporter(operation);
+   supporter_station = tsFleetOp.Supporter(operation);
 
    // Are we home?
    if (center == iMapEntity.Cast(supporter_station)) {
@@ -238,18 +238,18 @@ Update(hisim operation)
 
    // Repair some fleets. Double rate if at home.
    if (home) {
-      tLFleet.ChangeFleets(operation, 20 * update_delay);
+      tsLFleet.ChangeFleets(operation, 20 * update_delay);
    }else {
-      tLFleet.ChangeFleets(operation, 10 * update_delay);
+      tsLFleet.ChangeFleets(operation, 10 * update_delay);
    }
 
    if (move_home) {
 
-      tLCenter.SetCenter(operation, supporter_station);
+      tsLCenter.SetCenter(operation, supporter_station);
 
       tsDebug.PrintString("tsfofleetdefense_debug",
                           String.FormatStrStr("tsFoFleetDefense %s moving home\n%s",
-                                              Text.Field(tUnderOp.Name(operation),FT_Text),
+                                              Text.Field(tsFleetOp.Name(operation),FT_Text),
                                               ""));
       tsDebug.PrintHandle("tsfofleetdefense_debug",supporter_station);
       tsDebug.PrintString("tsfofleetdefense_debug"," supporter station\n");
@@ -257,16 +257,16 @@ Update(hisim operation)
    }else if (!stay_still) {
 
       // Move every week, patrolling near our patrol station.
-      patrol_day = tUnderOp.EventTimer(operation);
+      patrol_day = tsFleetOp.EventTimer(operation);
       if (patrol_day == 0) {
          patrol_day = Math.RandomInt(1,7);
-         tUnderOp.SetEventTimer(operation, patrol_day);
+         tsFleetOp.SetEventTimer(operation, patrol_day);
       }
 
       if (current_day > patrol_day) {
 
          // Set next move date.
-         tUnderOp.SetEventTimer(operation, current_day + 7);
+         tsFleetOp.SetEventTimer(operation, current_day + 7);
 
          // Patrol stations near our own, avoiding dislike or lower stations.
          target_lpoint = find_lpoint(operation, center, iSim.WorldName(center), 1500000km);
@@ -275,21 +275,21 @@ Update(hisim operation)
          target_station = find_patrol_station(operation, center, iSim.WorldName(center), 500000km);
 
          if (none != target_lpoint) {
-            tLCenter.SetCenter(operation, target_lpoint);
+            tsLCenter.SetCenter(operation, target_lpoint);
 
             tsDebug.PrintString("tsfofleetdefense_debug",
                           String.FormatStrStr("tsFoFleetDefense %s new lpoint\n%s",
-                                              Text.Field(tUnderOp.Name(operation),FT_Text),
+                                              Text.Field(tsFleetOp.Name(operation),FT_Text),
                                               ""));
             tsDebug.PrintHandle("tsfofleetdefense_debug",target_lpoint);
             tsDebug.PrintString("tsfofleetdefense_debug"," new station\n");
 
          }else if (none != target_station) {
-            tLCenter.SetCenter(operation, target_station);
+            tsLCenter.SetCenter(operation, target_station);
 
             tsDebug.PrintString("tsfofleetdefense_debug",
                           String.FormatStrStr("tsFoFleetDefense %s new station\n%s",
-                                              Text.Field(tUnderOp.Name(operation),FT_Text),
+                                              Text.Field(tsFleetOp.Name(operation),FT_Text),
                                               ""));
             tsDebug.PrintHandle("tsfofleetdefense_debug",target_station);
             tsDebug.PrintString("tsfofleetdefense_debug"," new station\n");
@@ -298,12 +298,12 @@ Update(hisim operation)
    }else {
       tsDebug.PrintString("tsfofleetdefense_debug",
                           String.FormatStrStr("tsFoFleetDefense %s stay still\n%s",
-                                              Text.Field(tUnderOp.Name(operation),FT_Text),
+                                              Text.Field(tsFleetOp.Name(operation),FT_Text),
                                               ""));
    }
 
    // Set next wakeup date.
-   tUnderOp.SetWakeTimer(operation, current_day + update_delay);
+   tsFleetOp.SetWakeTimer(operation, current_day + update_delay);
 }
 
 
@@ -315,7 +315,7 @@ hhabitat find_patrol_station(hisim operation, hmapentity center, string system_n
    set habitats;
 
    // Search system stations and find a normal status station where we can live.
-   habitats = tStationFilter.OnStatus(iSim.SimsInRadius( center,
+   habitats = tsStationFilter.OnStatus(iSim.SimsInRadius( center,
                                                          distance,
                                                          T_Station),
                                       ESS_Normal);
@@ -323,7 +323,7 @@ hhabitat find_patrol_station(hisim operation, hmapentity center, string system_n
    Set.Remove(habitats, center);
    // We can hang out at neutral or better stations. We avoid people trying to
    // kill us.
-   habitats = tStationFilter.OnGreaterFeeling(habitats,
+   habitats = tsStationFilter.OnGreaterFeeling(habitats,
                                               iSim.Faction(operation),
                                               tsFaction.Type2LowerLevel(FT_Neutral));
 
@@ -353,14 +353,14 @@ hlagrangepoint find_lpoint(hisim operation, hmapentity center, string system_nam
       Set.Remove(lpoints, lpoint);
 
       if (Object.BoolProperty(lpoint,"standard_route")) {
-         lpoint_ops = tUnderOp.StationOperations(iSim.Cast(lpoint));
+         lpoint_ops = tsFleetOp.StationOperations(iSim.Cast(lpoint));
 
          taken = false;
          total = List.ItemCount(lpoint_ops);
          for (i=0;i<total;++i) {
             lpoint_op = iSim.Cast(List.GetNth(lpoint_ops, i));
 
-            if (ept_FleetDefenseOp == tLProduction.GetType(lpoint_op)){
+            if (ept_FleetDefenseOp == tsLProduction.GetType(lpoint_op)){
                // Fleet defense is already there.
                taken = true;
             }

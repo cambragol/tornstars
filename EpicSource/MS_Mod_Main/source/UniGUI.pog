@@ -25,9 +25,9 @@ uses    Sim,
       iComms,
       Math,
       iMod,
-      tEJump,
-      tEpicGuiEnum,
-      tEpicGui;
+      tsCapsuleJump,
+      tsGuiEnum,
+      tsGui;
 
 
 provides Initialise,
@@ -281,7 +281,7 @@ UniGUIToggle()
       return;
    }
 */
-   if ( tEJump.IsCapsuleSpace(iSim.ActiveWorld()))
+   if ( tsCapsuleJump.IsCapsuleSpace(iSim.ActiveWorld()))
    {
       debug Debug.PrintString( "UniGUIToggle: Not running. Player is capsule jumping.\n");
       return;
@@ -394,12 +394,12 @@ UniGUIScreen()
    station = is_docked();
 
    if (none != station) {
-      tEpicGui.CreateTitle(shady_bar, Text.Field( "zz_ug_title_dock", FT_Text ) );
-      //tEpicGui.CreateSubtitle(shady_bar, Text.Field( "zz_ug_subtitle_docked", FT_Text ) );
-      tEpicGui.CreateSubtitle(shady_bar, Sim.Name(station));
+      tsGui.CreateTitle(shady_bar, Text.Field( "zz_ug_title_dock", FT_Text ) );
+      //tsGui.CreateSubtitle(shady_bar, Text.Field( "zz_ug_subtitle_docked", FT_Text ) );
+      tsGui.CreateSubtitle(shady_bar, Sim.Name(station));
    }else {
-      tEpicGui.CreateTitle(shady_bar, Text.Field( "zz_ug_title", FT_Text ) );
-      tEpicGui.CreateSubtitle(shady_bar, Text.Field( "zz_ug_subtitle", FT_Text ) );
+      tsGui.CreateTitle(shady_bar, Text.Field( "zz_ug_title", FT_Text ) );
+      tsGui.CreateSubtitle(shady_bar, Text.Field( "zz_ug_subtitle", FT_Text ) );
    }
 
    height = GUI.WindowCanvasHeight( shady_bar);
@@ -459,7 +459,7 @@ UniGUIScreen()
                                                           "UniGUI.OnQuit" );
       */
 
-      current_button = tEpicGui.CreateExitButton(shady_bar, Text.Field( "zz_ug_exit", FT_Text ), "UniGUI.OnQuit");
+      current_button = tsGui.CreateExitButton(shady_bar, Text.Field( "zz_ug_exit", FT_Text ), "UniGUI.OnQuit");
 
       Global.SetHandle("g_zz_ug_text_box", CreateShadyBox( shady_bar_r ) );
       GUI.SetTextWindowResource( GUI.Cast( Global.Handle("g_zz_ug_text_box") ), Object.StringProperty( GUI.Cast( List.GetNth( screens_button_list, 0 ) ), "html_file" ) );

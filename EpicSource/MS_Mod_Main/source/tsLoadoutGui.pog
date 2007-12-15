@@ -38,18 +38,19 @@ uses	Sim,
 		iDockPort, 
 		iMultiplay,
 		CargoTypes,
-		tEconUtil,
+		tsEconUtil,
 		UniGUI,
-		tStationEnum,
-		tStation,
-		tEpicGuiEnum,
-		tEpicGui,
+		tsStationEnum,
+		tsStation,
+		tsGuiEnum,
+		tsGui,
 		tsFaction,
-		tEpicMoney,
+		tsMoney,
 		tsShip,
 		tsPlayerFleet,
-      tLProduction,
-		uString;
+      tsLProduction,
+      tsDescribeINI,
+		tsString;
 //[cf]
 
 
@@ -82,7 +83,7 @@ provides MainWindow,
 
 
 prototype update_ship_info();
-prototype update_item_info();
+prototype update_cargo_info(hcargo cargo);
 
 prototype create_player_inventory_list();
 prototype create_player_fleet_list();
@@ -115,6 +116,7 @@ prototype rearm_ship(hship ship);
 prototype string get_mountpoint_template(string hardpoint_type);
 prototype string get_mountpoint_type(hsubsim subsim);
 
+prototype string ship_status2string(hship ship);
 
 prototype bool allow_loadout(hship ship);
 prototype bool allow_rearming(hship ship);
@@ -139,7 +141,7 @@ bool allow_run()
 
    // Don't allow the player to loadout when the station is not
    // operating (destroyed or under construction). 
-   if (tStation.Status(iHabitat.Cast(station)) != ESS_Normal) {
+   if (tsStation.Status(iHabitat.Cast(station)) != ESS_Normal) {
       allow_trade = false;
    }
 
@@ -217,8 +219,8 @@ AttachCargoHardpoint()
       ammo_name = INIFile.NumberedString(hardpoint_file, "Cargo", "ammo_type", count, "CT_Invalid");
       ++count;
 
-      cargo_type = tEconUtil.String2CargoType(cargo_name);
-      ammo_type = tEconUtil.String2CargoType(ammo_name);
+      cargo_type = tsEconUtil.String2CargoType(cargo_name);
+      ammo_type = tsEconUtil.String2CargoType(ammo_name);
 
       // Validate there are no typo errors.
       subsim_file = INIFile.Create(template_name);
@@ -358,7 +360,7 @@ hwindow create_border_button(int x, int y, int width, int height,
 
    GUI.SetButtonFunctionPog(button, function);
 
-//   tEpicGui.SetStandardWindowColours(button);
+//   tsGui.SetStandardWindowColours(button);
 
    // Add the border
    border = GUI.CreateBorder(button);
@@ -366,7 +368,7 @@ hwindow create_border_button(int x, int y, int width, int height,
    // we still return the button, because the function might need to change
    // or something. This is one of those no good choice decisions.
 
-   tEpicGui.SetStandardStateColours(button);
+   tsGui.SetStandardStateColours(button);
 
    return button;
 }
@@ -410,6 +412,10 @@ select_system(hsubsim subsim)
       hide_window(remove_button);
    }
 
+   if (none != return_cargo) {
+      update_cargo_info(return_cargo);
+   }
+
    // Find matching equipment for the newly selected ship system.
    create_equipment_list();
 
@@ -443,7 +449,7 @@ select_equipment(hcargo cargo)
    // the equipment selection.
    Global.SetHandle("gt_loadoutgui_inventory_select", cargo);
 
-   update_item_info();
+   update_cargo_info(cargo);
 }
 
 clear_equipment()
@@ -549,6 +555,8 @@ task replace_task()
    create_equipment_list();
 
    create_player_inventory_list();
+
+   update_ship_info();
 
    Global.SetBool("gt_loadoutgui_allow_replace", true);
 }
@@ -664,6 +672,8 @@ task remove_task()
 
    create_player_inventory_list();
 
+   update_ship_info();
+
    // Allow remove/replace buttons to function again.
    Global.SetBool("gt_loadoutgui_allow_replace", true);
 }
@@ -717,6 +727,8 @@ OnRemovePress()
 //[cf]
 
 
+
+
 //[of]:OnShipPress()
 update_ship_info()
 {
@@ -725,24 +737,24 @@ update_ship_info()
    string text;
    int cost;
 
-
-
    text = String.Join(text,"Ship Info ");
    text = String.Join(text,Text.Field(Sim.Name(ship), FT_Text));
 
+   text = String.Join(text, ship_status2string(ship));
+
    if (Global.Bool("tsloadout_no_dock")) {
-      text = String.Join(text,"<br>Debug Flag Allows Rearm at any station.");
+      text = String.Join(text,"<p>Debug Flag Allows Loadout at any station.");
    }
    if (!allow_rearming(ship)) {
-      text = String.Join(text,"<p>Rearming");
+      text = String.Join(text,"<p>To Rearm");
       text = String.Join(text,"<br>Move ship near stations with shipyard arm docking ports to rearm.");
    }
    if (!allow_loadout(ship)) {
-      text = String.Join(text,"<p>Change Loadout");
+      text = String.Join(text,"<p>To Change Loadout");
       text = String.Join(text,"<br>Dock ship to stations with shipyard arm docking ports to change ship equipment.");
    }
 
-   text = uString.Htmlize(text);
+   text = tsString.Htmlize(text);
 
    GUI.SetTextWindowString( ship_info, text);
 }
@@ -792,21 +804,31 @@ OnShipPress()
 
 
 //[of]:OnInventoryItemPress()
-update_item_info()
+update_cargo_info(hcargo cargo)
 {
-   hcargo cargo = iCargo.Cast(Global.Handle("gt_loadoutgui_inventory_select"));
-   hwindow item_info = GUI.Cast(Global.Handle("gt_loadoutgui_item_info"));
+   hwindow equip_info = GUI.Cast(Global.Handle("gt_loadoutgui_item_info"));
+   string text, subsim_template;
 
-   string text;
+   if (none == cargo) {
+      text = tsString.Htmlize("");
+      GUI.SetTextWindowString( equip_info, text);
+      return;
+   }
 
-   text = String.Join(text,"Item Info ");
-   text = String.Join(text,Text.Field(iCargo.Name(cargo), FT_Text));
-   text = String.Join(text,"<br>");
-   text = String.Join(text,Object.StringProperty(cargo,"hardpoint_type"));
-   text = uString.Htmlize(text);
+   text = iCargo.Name(cargo);
+   
+   subsim_template = Object.StringProperty(cargo, "template_name");
 
-   GUI.SetTextWindowString( item_info, text);
+   if (subsim_template != "") {
+      text = String.Join(text, tsDescribeINI.Subsystem(subsim_template));
+   }
+
+   text = tsString.Htmlize(text);
+
+   GUI.SetTextWindowString( equip_info, text);
+
 }
+
 
 OnInventoryItemPress()
 {
@@ -815,9 +837,7 @@ OnInventoryItemPress()
 
    cargo = iCargo.Cast(Object.HandleProperty(button,"gt_loadoutgui_inventory"));
 
-   Global.SetHandle("gt_loadoutgui_inventory_select", cargo);
-
-   update_item_info();
+   update_cargo_info(cargo);
 }
 //[cf]
 
@@ -1366,6 +1386,9 @@ MainWindow()
 
    int lshady_width = 525;
 
+   int text_width;
+	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
+
    debug Debug.PrintString("tsLoadoutGui.MainWindow\n");
 
 
@@ -1405,10 +1428,10 @@ MainWindow()
 
    rh_shady = iGUI.CreateShadyBarRight();
    
-   tEpicGui.CreateTitle(lh_shady,Text.Field("gt_loadoutgui_title",FT_Text));
-   tEpicGui.CreateSubtitle(lh_shady,Text.Field("gt_loadoutgui_subtitle",FT_Text));
+   tsGui.CreateTitle(lh_shady,Text.Field("gt_loadoutgui_title",FT_Text));
+   tsGui.CreateSubtitle(lh_shady,Text.Field("gt_loadoutgui_subtitle",FT_Text));
 
-   tEpicGui.CreateExitButton(lh_shady, 
+   tsGui.CreateExitButton(lh_shady, 
                              Text.Field("gt_loadoutgui_exit",FT_Text), 
                              "tsLoadoutGui.ExitScreen" );   
 
@@ -1663,16 +1686,34 @@ MainWindow()
    // 
    bottom_splitter = GUI.SplitterWindowBottomWindow(splitter);
 
-   // Create the text window for the inventory item description.
+   list_title = iGUI.CreateAndInitialiseStaticWindow(0,
+                                                        0,
+                                                        GUI.WindowCanvasWidth( bottom_splitter),
+                                                        20,
+                                                        bottom_splitter,
+                                                        title_font,
+                                                        Text.Field("gt_loadoutgui_equipment_info",FT_Text));
 
+
+   text_width = GUI.WindowCanvasWidth(bottom_splitter);
+   text_width = text_width - 4;
+   text_width = text_width - scrollbar_width;
 
    item_info = GUI.CreateTextWindow( 0,
-                                      0,
-                                      GUI.WindowCanvasWidth( bottom_splitter),
-                                      GUI.WindowCanvasHeight( bottom_splitter)/2,
-                                      bottom_splitter );   
+                                     21,
+                                     text_width,
+                                     GUI.WindowCanvasHeight(bottom_splitter)-21,
+                                     bottom_splitter);   
 
-   GUI.SetWindowFont( item_info, Global.String( "GUI_detail_font" ) );
+
+   GUI.CreateVerticalScrollbar( 0 + text_width + 4,
+                                21,
+                                scrollbar_width, 
+                                GUI.WindowCanvasHeight(bottom_splitter) - 21,
+                                bottom_splitter,
+                                item_info,
+                                Global.Float( "GUI_scrollbar_buttonratio" ),
+                                "");
 
    Global.CreateHandle("gt_loadoutgui_item_info",GA_Write|GA_NoSave, item_info);
 
@@ -1686,13 +1727,6 @@ MainWindow()
 
    create_player_inventory_list();
 
-
-
-   // display information about the selected item.
-   update_item_info();
-
-
-   // check if we should display the rearm or refuel buttons.
 }
 //[cf]
 
@@ -1968,7 +2002,7 @@ bool allow_loadout(hship ship)
    station = iHabitat.Nearest( iSim.SimsInRadius(ship, 20km, T_Station), ship);
    if (station != none) {   
       if (iSim.IsDockedToStructure(ship, station)) {
-         if (tEconUtil.IsAllowedLoadout(tLProduction.GetType(station))) {
+         if (tsEconUtil.IsAllowedLoadout(tsLProduction.GetType(station))) {
             if (Sim.DistanceBetween(player, station) < 100km) {
                return true;
             }
@@ -1994,7 +2028,7 @@ bool allow_rearming(hship ship)
    // If the wingman is docked and the player is within 100km.
    station = iHabitat.Nearest(iSim.SimsInRadius(ship, 20km, T_Station), ship);
    if (station != none) {
-      if (tEconUtil.IsAllowedLoadout(tLProduction.GetType(station))) {
+      if (tsEconUtil.IsAllowedLoadout(tsLProduction.GetType(station))) {
          if (Sim.DistanceBetween(player, station) < 100km) {
             return true;
          }
@@ -2003,7 +2037,39 @@ bool allow_rearming(hship ship)
    return false;
 }
 
+// builds a text representation of a ships current 
+// hit points, fuel, heat and power levels.
+string ship_status2string(hship ship)
+{
+   int subsim_count = Sim.SubsimCount(ship);
+   int i;
+   hsubsim subsim;
+   float power, output_power, heat_rate, heat_loss_rate;
+   string text;
 
+   power = 0;
+   output_power = 0;
+   heat_rate = 0;
+   heat_loss_rate = 0;
+
+   for (i=0;i<subsim_count;++i) {
+      subsim = Sim.NthSubsim(ship,i);
+
+      heat_rate = heat_rate + Object.FloatProperty(subsim, "heat_rate");
+      heat_loss_rate = heat_loss_rate + Object.FloatProperty(subsim, "heat_loss_rate");
+
+      power = power + Object.FloatProperty(subsim, "power");
+      output_power = output_power + Object.FloatProperty(subsim, "output_power");      
+   }
+
+   text = String.FormatInt("<p>Heat Sink Rate: %d", float2int(heat_loss_rate));
+   text = String.Join(text, String.FormatInt("<br>Heat Build Rate: %d", float2int(heat_rate)));
+   
+   text = String.Join(text, String.FormatInt("<p>Reactor Power: %d", float2int(output_power)));
+   text = String.Join(text, String.FormatInt("<br>Power Draw: %d", float2int(power)));
+
+   return text;
+}
 
 
 //

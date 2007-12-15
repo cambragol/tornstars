@@ -1,0 +1,153 @@
+//*******************************************************************************************/
+//
+// tsReputationUpdate.pog
+//
+// 
+// 
+// 
+//
+// March 2006, Jon Freise
+//******************************************************************************************/
+
+package tsReputationUpdate;
+
+
+uses  Sim,
+      iShip,
+      iSim,
+      Debug,
+      Global,
+      GUI,
+      iGame,
+      iGUI,
+      iHUD,
+      iHabitat,
+      iMapEntity,
+      iFaction,
+      INIFile,
+      Input,
+      List,
+      Object,
+      String,
+      Task,
+      State,
+      Text,
+      iUtilities,
+      iCargo,
+      iInventory,
+      iComms,
+      Math,
+      iPilotSetup,
+      iMusic,
+      iMod,
+      iShipCreation,
+      iDockport,
+      tsFaction;
+
+
+
+
+provides Update;
+
+
+Update()
+{
+   hinifile faction_info = INIFile.Create("ini:/faction_info");
+   set factions;
+   hfaction faction;
+   hfaction player = iFaction.Find("Player");
+
+   float events_to_level, level_decay, action_decay;
+   float current_action, past_action;
+   float level_change;
+   float default_level;
+
+   events_to_level = INIFile.Float(faction_info, "Actions","events_to_level", 0.1);
+   level_decay = INIFile.Float(faction_info, "Actions","level_decay", 0.1);
+   action_decay = INIFile.Float(faction_info, "Actions","action_decay", 0.1);
+
+
+
+
+   // For each faction
+   // Convert the players current event points into relation
+   // level changes.
+   // Decay the current relations just a little bit toward zero.
+   // Decay the past actions value a bit toward zero.
+
+
+   factions = Set.FromList(iFaction.All());
+   while (!Set.IsEmpty(factions)) {
+      faction = iFaction.Cast(Set.FirstElement(factions));
+      Set.Remove(factions, faction);
+
+      current_action = tsFaction.CurrentAction(faction);
+
+
+      level_change = current_action * events_to_level;
+
+      level_change = level_change + iFaction.Feeling(faction, player);
+      
+      default_level = tsFaction.DefaultFeeling(faction);
+
+      // Time moves the faction level slowly toward default.
+      if (level_change > default_level) {
+         level_change = level_change - level_decay;
+         if (level_change < default_level) {
+            level_change = default_level;
+         }
+      }else {
+         level_change = level_change + level_decay;
+         if (level_change > default_level) {
+            level_change = default_level;
+         }
+      }
+
+      // Clamp
+      if (level_change > 1.0) {
+         level_change = 1.0;
+      }else if (level_change < -1.0) {
+         level_change = -1.0;
+      }
+
+      // Set the feelings to a new level
+      iFaction.SetFeeling(faction, player, level_change);
+      iFaction.SetFeeling(player, faction, level_change);
+
+      // The current action is accounted for, clear it.
+      tsFaction.SetCurrentAction(faction, 0);
+
+      
+      // Now remember these new actions for a while.
+      past_action = tsFaction.PastAction(faction);
+
+      past_action = past_action + current_action;
+
+      // Decay the memory a bit toward zero.
+      if (past_action > 0.0) {
+         past_action = past_action - action_decay;
+         if (past_action < 0.0) {
+            past_action = 0.0;
+         }
+      }else {
+         past_action = past_action + action_decay;
+         if (past_action > 0.0) {
+            past_action = 0.0;
+         }
+      }
+
+
+   }
+
+   INIFile.Destroy(faction_info);
+}
+
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

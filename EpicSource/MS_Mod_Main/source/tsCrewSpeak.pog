@@ -28,7 +28,7 @@ uses    Sim,
         Text,
         iMod,
         iComms,
-        uString;
+        tsString;
 
 
 
@@ -57,25 +57,25 @@ Init()
 AutopilotHalt()
 {
    // crew_halting, "Acknowledged  Halting ship"
-   iComms.Shout(none,"name_az",uString.CommsStringRandom( "crew_halting","",5));
+   iComms.Shout(none,"name_az",tsString.CommsStringRandom( "crew_halting","",5));
 }
 
 AutopilotApproach()
 {
    // crew_approach, "Aye Sir. Setting course for target"
-   iComms.Shout(none,"name_az",uString.CommsStringRandom( "crew_approach","",5));
+   iComms.Shout(none,"name_az",tsString.CommsStringRandom( "crew_approach","",5));
 }
 
 AutopilotFormate()
 {
    // crew_formate, "Formation maneuver initiated"
-   iComms.Shout(none,"name_az", uString.CommsStringRandom("crew_formate","",5));
+   iComms.Shout(none,"name_az", tsString.CommsStringRandom("crew_formate","",5));
 }
 
 AutopilotDock()
 {
    // crew_dock, "Aligning with dockport now, Sir"
-   iComms.Shout(none,"name_az", uString.CommsStringRandom("crew_dock","",5));
+   iComms.Shout(none,"name_az", tsString.CommsStringRandom("crew_dock","",5));
 }
 
 

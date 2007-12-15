@@ -267,7 +267,8 @@ hship Restore(int id)
    if (none == ship) {
       atomic debug {
          // There is no ship, bail out
-         Debug.PrintString("Error tsShipSave.Restore restore failed\n");
+         Debug.PrintString(String.FormatInt("Error tsShipSave.Restore restore failed\n", id));
+
       }
       return none;
    }

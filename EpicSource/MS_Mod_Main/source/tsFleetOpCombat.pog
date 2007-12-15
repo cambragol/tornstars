@@ -36,14 +36,14 @@ iHabitat,
 iMapEntity,
    iHUD,
    iComms,
-   tStationEnum,
-   tStation,
+   tsStationEnum,
+   tsStation,
    tsFaction,
-   tTime,
-   tUnderOp,
-   tLCenter,
-   tLFleet,
-   tLProduction;
+   tsTime,
+   tsFleetOp,
+   tsLCenter,
+   tsLFleet,
+   tsLProduction;
 
 
 
@@ -66,17 +66,17 @@ Offense (hmapentity location, hisim attacking_op, hisim defending_op)
    int defenders, defense_value;
 
    // We use 25% damage when attacking
-   attackers = tLFleet.Fleets(attacking_op);
+   attackers = tsLFleet.Fleets(attacking_op);
    attack_value = attackers/4;
 
-   defenders = tLFleet.Fleets(defending_op);
+   defenders = tsLFleet.Fleets(defending_op);
    defense_value = defenders/4;
 
-   tLFleet.ChangeFleets(attacking_op, -1*defense_value);
-   tLFleet.ChangeFleets(defending_op, -1*attack_value);
+   tsLFleet.ChangeFleets(attacking_op, -1*defense_value);
+   tsLFleet.ChangeFleets(defending_op, -1*attack_value);
 
    // Add the destroyed ships to the locations total wreckage.
-   tLFleet.ChangeWrecks(location, defense_value + attack_value);
+   tsLFleet.ChangeWrecks(location, defense_value + attack_value);
 }
 
 
@@ -89,17 +89,17 @@ Defense(hmapentity location, hisim defending_op, hisim hostile_op)
    int defenders, defense_value;
 
    // We use 10% damage when dodging
-   attackers = tLFleet.Fleets(hostile_op);
+   attackers = tsLFleet.Fleets(hostile_op);
    attack_value = attackers/10;
 
-   defenders = tLFleet.Fleets(defending_op);
+   defenders = tsLFleet.Fleets(defending_op);
    defense_value = defenders/10;
 
-   tLFleet.ChangeFleets(hostile_op, -1*defense_value);
-   tLFleet.ChangeFleets(defending_op, -1*attack_value);
+   tsLFleet.ChangeFleets(hostile_op, -1*defense_value);
+   tsLFleet.ChangeFleets(defending_op, -1*attack_value);
 
    // Add the destroyed ships to the locations total wreckage.
-   tLFleet.ChangeWrecks(location, defense_value + attack_value);
+   tsLFleet.ChangeWrecks(location, defense_value + attack_value);
 }
 
 
@@ -120,24 +120,24 @@ bool Station(hisim attacking_op, hhabitat station)
    int defenders, defense_value;
 
    // attackers do 25% damage, but only half effect.
-   attackers = tLFleet.Fleets(attacking_op);
+   attackers = tsLFleet.Fleets(attacking_op);
    attack_value = attackers/8;
 
    // defenders get the station guns bonus.
-   defenders = tLFleet.Fleets(station);
+   defenders = tsLFleet.Fleets(station);
    defenders = defenders + 200;
    defense_value = defenders/4;
 
    // Remove the ships the station shoots down.
-   tLFleet.ChangeFleets(attacking_op, -1*defense_value);
+   tsLFleet.ChangeFleets(attacking_op, -1*defense_value);
 
    // Add those ships to the total wrecks near the station.
-   tLFleet.ChangeWrecks(station, defense_value);
+   tsLFleet.ChangeWrecks(station, defense_value);
 
    // Remove the damage points from the stations fleets.
-   tLFleet.ChangeFleets(station, -1*attack_value);
+   tsLFleet.ChangeFleets(station, -1*attack_value);
 
-   if (tLFleet.Fleets(station) == 0) {
+   if (tsLFleet.Fleets(station) == 0) {
       return true;
    }
 

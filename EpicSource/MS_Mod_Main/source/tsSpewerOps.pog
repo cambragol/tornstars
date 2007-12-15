@@ -1,0 +1,514 @@
+//*******************************************************************************************/
+//
+// tsSpewerOps
+//
+// Utility functions between a hauler and the spewer.
+// 
+// 
+// 
+//
+// October 2005, Kevin Baxter
+//
+//*******************************************************************************************/
+
+package tsSpewerOps;
+
+uses    Sim,
+        Task,
+        iAI,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        Input,
+        List,
+        Object,
+        String,
+        Text,
+        iCargo,
+        iInventory,
+        iAI,
+        INIFile,
+        iUtilities,
+        iRemotePilot,
+        iHUD,
+		tsMegaTrucking;
+
+provides ShipDocked,
+         IsFinished,
+         Initialize,
+		 LoadShip,
+		 UnloadShip,
+		 PodsOfTypeOnShip;
+
+prototype task ship_watch(hship ship, hhabitat station, htask podwatch);
+prototype task pod_watch(hship ship, hhabitat station);
+prototype task spew_and_dock_pod(hship pod, hship ship, hhabitat station, int delay);
+prototype task undock_to_spewer(hship pod, hship ship, hhabitat station, int delay);
+prototype task variable_watch(hobject thingy, string variable);
+prototype task ai_pod_watch(hship pod, hhabitat station);
+
+//******************************************************************************************/
+// 
+//
+//
+//******************************************************************************************/
+
+hship ShipDocked(hhabitat station, bool lock)
+{
+	set player_ships;
+	hobject funny_object;
+	hship current_ship;
+	
+	player_ships = iSim.SimsInRadiusOfFaction(station, 20km, iFaction.Find("Player"));
+
+	while(!Set.IsEmpty(player_ships))
+	{
+		funny_object = Set.FirstElement(player_ships);
+		Set.Remove(player_ships, funny_object);
+
+		current_ship = iShip.Cast(funny_object);
+
+		if(!Set.IsEmpty(iDockport.DockportsOfType(current_ship, DT_CargoFreightOnly, DS_Any)))
+		{
+		atomic
+			{
+				if(iSim.IsDockedTo(current_ship,station))
+				{
+					if(lock)
+					{
+						iSim.SetDockingLock(current_ship,station,true);
+						iHUD.Print("VESSEL LOCKED");
+					}
+					return current_ship;
+				}	// end if (iSim.IsDockedTo...)
+			}	// end atomic
+		}	// end if (!Set.IsEmpty(iDockport...))
+	}	// end while (!Set.IsEmpty(iSim...))
+	return none;
+}
+
+bool IsFinished(hship ship)
+{
+	if(!Object.PropertyExists(ship, "md_epic_spewdone"))	// If the ship isn't initialized, it's done.
+		return true;
+
+	return Object.BoolProperty(ship, "md_epic_spewdone");
+}
+
+Initialize(hship ship, hhabitat station)
+{
+	htask podwatch;
+	hship current_pod;
+	set nearby_pods;
+	int number_nearby;
+	int i;
+	bool gotmega = tsMegaTrucking.IsMegafreighter(ship);
+	
+	if(Object.PropertyExists(ship, "md_epic_shipinit")) return;
+
+	Object.AddBoolProperty(ship, "md_epic_shipinit", true);
+
+	if(gotmega)
+		tsMegaTrucking.Initialize(ship);
+	else
+	{
+		Object.AddIntProperty(ship, "md_epic_freeports", Set.ItemCount(iDockport.DockportsOfType(ship, DT_CargoFreightOnly, DS_Free)));
+		Object.AddIntProperty(ship, "md_epic_futurefree", Object.IntProperty(ship, "md_epic_freeports"));
+	}
+
+	Object.AddBoolProperty(ship, "md_epic_spewdone", true);
+
+	Object.AddIntProperty(ship, "md_epic_podstogo", 0);
+
+	if(!Object.PropertyExists(station, "md_epic_spewerslotsfree"))
+	{
+		Object.AddIntProperty(station, "md_epic_spewerslotsfree", 4);
+		nearby_pods = iSim.SimsInRadius(station, 10km, T_CargoPod);
+		number_nearby = Set.ItemCount(nearby_pods);
+
+		if(number_nearby > 0)
+		{
+			for(i=0;i<number_nearby;++i)
+			{
+				current_pod = iShip.Cast(Set.FirstElement(nearby_pods));
+				Set.Remove(nearby_pods, current_pod);
+
+				if(iAI.CurrentOrderTarget(current_pod) == station || iSim.IsDockedTo(current_pod, station))
+				{
+					Object.SetIntProperty(station, "md_epic_spewerslotsfree", Object.IntProperty(station, "md_epic_spewerslotsfree") - 1);
+					Task.Detach(start ai_pod_watch(current_pod, station));
+				}	// end if(iAI...)
+			}	// end for
+		}	// end if(number_nearby...)
+	}	// end if(!Object...)
+
+   	podwatch = start pod_watch(ship, station);
+	Task.Detach(podwatch);
+	Task.Detach(start ship_watch(ship, station, podwatch));
+	return;
+}
+
+task ship_watch(hship ship, hhabitat station, htask podwatch)
+{
+	while(iSim.IsDockedTo(ship, station))
+	{
+		Task.Sleep(Task.Current(),1);
+	}
+	if(Global.Int("gtWingCommDepth") == 0)
+		iHUD.SetPrompt("","");
+	Task.Halt(podwatch);
+	Object.RemoveProperty(ship, "md_epic_freeports");
+	Object.RemoveProperty(ship, "md_epic_futurefree");
+	Object.RemoveProperty(ship, "md_epic_shipinit");
+	Object.RemoveProperty(ship, "md_epic_podstogo");
+	Object.RemoveProperty(ship, "md_epic_spewdone");
+	if(tsMegaTrucking.IsMegafreighter(ship))
+		tsMegaTrucking.Uninitialize(ship);
+	return;
+}
+
+task pod_watch(hship ship, hhabitat station)
+{
+	int podstogo = 0;
+	bool isplayer = iSim.Faction(ship) == iFaction.Find("Player");
+
+	while(1)
+	{
+		while(Object.IntProperty(ship, "md_epic_podstogo") < 1)
+		{
+			Task.Sleep(Task.Current(),1);
+		}
+		while(Object.IntProperty(ship, "md_epic_podstogo") > 0)
+		{
+			if(isplayer && (Global.Int("gtWingCommDepth") == 0 && Object.IntProperty(ship, "md_epic_podstogo") != podstogo))
+			{
+				podstogo = Object.IntProperty(ship, "md_epic_podstogo");
+				if(podstogo == 1)
+					iHUD.SetPrompt(iMapEntity.Name(station),"1 pod remaining");
+				else
+					iHUD.SetPrompt(iMapEntity.Name(station),String.Join(String.FromInt(podstogo), " pods remaining"));
+			}
+			Task.Sleep(Task.Current(),1);
+		}
+		if(isplayer && Global.Int("gtWingCommDepth") == 0)
+			iHUD.SetPrompt("","");
+		iSim.SetDockingLock(ship, station, false);
+		Object.SetBoolProperty(ship, "md_epic_spewdone", true);
+		if(isplayer)
+			iHUD.Print("TRANSACTION COMPLETE, VESSEL UNLOCKED");
+	}
+}
+
+LoadShip(hship ship, hhabitat station, set pods)
+{
+	int delay = -1;
+	hship current_pod;
+
+	atomic
+	{
+		if(!iSim.IsDockedTo(ship, station))
+		{
+			debug
+			{
+				Debug.PrintString("tsSpewerOps.LoadShip error: Ship ");
+				Debug.PrintHandle(ship);
+				Debug.PrintString(" is not docked to station ");
+				Debug.PrintHandle(station);
+				Debug.PrintString("\n");
+			}
+			return;
+		}
+		iSim.SetDockingLock(ship, station, true);
+	}
+
+	if(Set.IsEmpty(pods)) return;
+
+	if(!Object.PropertyExists(ship, "md_epic_shipinit")) Initialize(ship, station);
+
+	Object.SetBoolProperty(ship, "md_epic_spewdone", false);
+
+	Object.SetIntProperty(ship, "md_epic_futurefree", Object.IntProperty(ship, "md_epic_futurefree") - Set.ItemCount(pods));
+
+	Object.SetIntProperty(ship, "md_epic_podstogo", Object.IntProperty(ship, "md_epic_podstogo") + Set.ItemCount(pods));
+
+
+	if(tsMegaTrucking.IsMegafreighter(ship))
+	{
+		tsMegaTrucking.LoadShip(ship, station, pods);
+		return;
+	}
+	
+	while(!Set.IsEmpty(pods))
+	{
+		current_pod = iShip.Cast(Set.FirstElement(pods));
+		Set.Remove(pods, current_pod);
+		Task.Detach(start spew_and_dock_pod(current_pod, ship, station, ++delay));
+	}
+
+	return;
+}
+
+task spew_and_dock_pod(hship pod, hship ship, hhabitat station, int delay)
+{
+	bool goodtospew = false;
+
+	// Spew phase
+
+	Task.Sleep(Task.Current(), delay);
+
+	while(!goodtospew)
+	{
+		atomic 
+		{
+			goodtospew = (Object.IntProperty(station, "md_epic_spewerslotsfree") > 0) && (Object.IntProperty(ship, "md_epic_freeports") > 0);
+			if(goodtospew)
+			{
+				iHabitat.Spew(station,pod);
+				Object.SetIntProperty(station, "md_epic_spewerslotsfree", Object.IntProperty(station, "md_epic_spewerslotsfree") - 1);
+				Object.SetIntProperty(ship, "md_epic_freeports", Object.IntProperty(ship, "md_epic_freeports") - 1);
+			}
+		}
+		Task.Sleep(Task.Current(), 0.1);
+	}
+
+	// Undock phase
+
+	while(!iShip.Undock(pod,station))
+	{
+		Task.Sleep(Task.Current(), 0.1);
+	}
+	Object.SetIntProperty(station, "md_epic_spewerslotsfree", Object.IntProperty(station, "md_epic_spewerslotsfree") + 1);
+
+
+	// Dock phase
+
+	iShip.InstallAIPilot(pod, 0.25, 4.0, 0.1,"","","","");
+
+	iAI.GiveReservedDockOrder(pod, ship);
+
+	while(!iSim.IsDockedTo(pod, ship))
+	{
+		Task.Sleep(Task.Current(), 0.5);
+		// Pod die? That's a spot available on the ship, and one less pod to go.
+		if(Sim.IsDead(pod))
+		{
+			Object.SetIntProperty(ship, "md_epic_freeports", Object.IntProperty(ship, "md_epic_freeports") + 1);
+			Object.SetIntProperty(ship, "md_epic_futurefree", Object.IntProperty(ship, "md_epic_futurefree") + 1);
+			Object.SetIntProperty(ship, "md_epic_podstogo", Object.IntProperty(ship, "md_epic_podstogo") - 1);
+			return;
+		}
+		// Ship die? Sucks. Let it float.
+		if(Sim.IsDead(ship))
+		{
+			iAI.PurgeOrders(pod);
+			iShip.RemovePilot(pod);
+			return;
+		}
+	}
+	
+	// Once docked, update the properties and lock it down.
+
+	Object.SetIntProperty(ship, "md_epic_podstogo", Object.IntProperty(ship, "md_epic_podstogo") - 1);
+	iShip.RemovePilot(pod);
+	iSim.SetDockingLock(pod, ship, true);
+	return;
+}
+
+UnloadShip(hship ship, hhabitat station, set pods)
+{
+	int delay = -1;
+	hship current_pod;
+   hfaction station_faction = iSim.Faction(station);
+
+	atomic
+	{
+		if(!iSim.IsDockedTo(ship, station))
+		{
+			debug
+			{
+				Debug.PrintString("tsSpewerOps.UnloadShip error: Ship ");
+				Debug.PrintHandle(ship);
+				Debug.PrintString(" is not docked to station ");
+				Debug.PrintHandle(station);
+				Debug.PrintString("\n");
+			}
+			return;
+		}
+		iSim.SetDockingLock(ship, station, true);
+	}
+
+	if(Set.IsEmpty(pods)) return;
+
+	if(!Object.PropertyExists(ship, "md_epic_shipinit")) Initialize(ship, station);
+
+	Object.SetBoolProperty(ship, "md_epic_spewdone", false);
+
+   	Object.SetIntProperty(ship, "md_epic_futurefree", Object.IntProperty(ship, "md_epic_futurefree") + Set.ItemCount(pods));
+	Object.SetIntProperty(ship, "md_epic_podstogo", Object.IntProperty(ship, "md_epic_podstogo") + Set.ItemCount(pods));
+
+	if(tsMegaTrucking.IsMegafreighter(ship))
+	{
+		tsMegaTrucking.UnloadShip(ship, station, pods);
+		return;
+	}
+
+	while(!Set.IsEmpty(pods))
+	{
+		current_pod = iShip.Cast(Set.FirstElement(pods));
+
+
+
+		if(Object.PropertyExists(current_pod, "md_epic_podsold"))
+			Object.SetBoolProperty(current_pod, "md_epic_podsold", true);
+		else
+			Object.AddBoolProperty(current_pod, "md_epic_podsold", true);
+		Set.Remove(pods, current_pod);
+		Task.Detach(start undock_to_spewer(current_pod, ship, station, ++delay));
+	}
+
+	return;
+}
+
+task undock_to_spewer(hship pod, hship ship, hhabitat station, int delay)
+{
+	bool goodtodetach = false;
+
+	// Undock phase
+
+	Task.Sleep(Task.Current(),delay);
+
+	while(!goodtodetach)
+	{
+		atomic
+		{
+			goodtodetach = Object.IntProperty(station, "md_epic_spewerslotsfree") > 0;
+			if(goodtodetach)
+			{
+				iSim.SetDockingLock(pod, ship, false);
+				iShip.Undock(pod, ship);
+				Object.SetIntProperty(station, "md_epic_spewerslotsfree", Object.IntProperty(station, "md_epic_spewerslotsfree") - 1);
+				Object.SetIntProperty(ship, "md_epic_freeports", Object.IntProperty(ship, "md_epic_freeports") + 1);
+				Object.SetIntProperty(ship, "md_epic_podstogo", Object.IntProperty(ship, "md_epic_podstogo") - 1);
+
+				// Dock phase
+
+				iSim.SetFaction(pod,iSim.Faction(station));
+				iShip.InstallAIPilot(pod, 0.25, 4.0, 0.1,"","","","");
+				iAI.GiveDockOrder(pod, station);
+			}
+		}
+		Task.Sleep(Task.Current(),1);
+	}
+
+	// And wait for the cull
+
+	while(!Sim.IsDead(pod))
+		Task.Sleep(Task.Current(),0.1);
+	Object.SetIntProperty(station, "md_epic_spewerslotsfree", Object.IntProperty(station, "md_epic_spewerslotsfree") + 1);
+	return;
+}
+
+task variable_watch(hobject thingy, string variable)
+{
+	int currentvar = Object.IntProperty(thingy, variable);
+
+	iHUD.Print(String.Join("Variable watch started on ",variable));
+	
+	while (1)
+	{
+		iHUD.Print(String.Join(variable, String.FromInt(currentvar)));
+		while(currentvar == Object.IntProperty(thingy,variable))
+			Task.Sleep(Task.Current(),0.1);
+		currentvar = Object.IntProperty(thingy,variable);
+	}
+}
+
+task ai_pod_watch(hship pod, hhabitat station)
+{
+	while(!Sim.IsDead(pod))
+	{
+		Task.Sleep(Task.Current(),0.1);
+	}
+	Object.SetIntProperty(station, "md_epic_spewerslotsfree", Object.IntProperty(station, "md_epic_spewerslotsfree") + 1);
+}
+
+list PodsOfTypeOnShip(int cargo_type, hship ship, bool legit, int max_number)
+{
+	int i;
+	list all_pods;
+	list docked_pods;
+	list right_pods;
+	list legal_pods;
+	list semifinal_pods;
+	list final_pods;
+	int pod_list_size;
+	int docked_list_size;
+	int right_list_size;
+	int final_count = 0;
+	hisim current_pod;
+
+	all_pods = List.FromSet(iSim.SimsInRadius(ship, 5km, T_CargoPod));
+	pod_list_size = List.ItemCount(all_pods);
+
+	if(tsMegaTrucking.IsMegafreighter(ship))
+		docked_pods = List.FromSet(tsMegaTrucking.PodsOnMegafreighter(ship));
+	else
+	{
+		docked_pods = all_pods;
+		for(i=0;i<pod_list_size;++i)	// Remove pods not docked or already sold
+		{
+			current_pod = iSim.Cast(List.GetNth(all_pods, i));
+			if(!iSim.IsDockedTo(current_pod, ship) || Object.PropertyExists(current_pod, "md_epic_podsold"))
+				List.Remove(docked_pods, current_pod);
+		}
+	}
+	
+	docked_list_size = List.ItemCount(docked_pods);
+	right_pods = docked_pods;
+
+	for(i=0;i<docked_list_size;++i)	// Remove pods not of given type
+	{
+		current_pod = iSim.Cast(List.GetNth(docked_pods, i));
+		if(Object.IntProperty(current_pod, "cargo") != cargo_type)
+			List.Remove(right_pods, current_pod);
+	}
+
+	if(!legit)	// Remove ill-gotten pods if requested
+		semifinal_pods = right_pods;
+	else
+	{	
+		right_list_size = List.ItemCount(right_pods);
+		legal_pods = right_pods;
+
+		for(i=0;i<right_list_size;++i)
+		{
+			current_pod = iSim.Cast(List.GetNth(right_pods, i));
+			if(Object.IntProperty(current_pod, "cargo_faction") != iFaction.Allegiance(iSim.Faction(current_pod)))
+				List.Remove(legal_pods, current_pod);
+		}
+
+		semifinal_pods = legal_pods;
+	}
+
+	if(max_number < 0)	// Return all
+		return semifinal_pods;
+
+	while(final_count<max_number)	// Pick out number of pods to return
+	{
+		if(List.IsEmpty(semifinal_pods))
+			break;
+		current_pod = iSim.Cast(List.Head(semifinal_pods));
+		List.RemoveHead(semifinal_pods);
+		List.AddTail(final_pods, current_pod);
+		++final_count;
+	}
+	return final_pods;
+}
+
+/*
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

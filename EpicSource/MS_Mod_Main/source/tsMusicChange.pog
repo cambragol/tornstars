@@ -1,0 +1,419 @@
+//*******************************************************************************************/
+//
+// tsMusicChange.pog
+//
+// This file implements the context sensitive mood changes in Epic.
+// 
+// 
+// 
+//
+// July 2003, Jon Freise
+//******************************************************************************************/
+package tsMusicChange;
+
+uses  Sim,
+      iShip,
+      iSim,
+      Debug,
+      Global,
+      GUI,
+      iGame,
+      iGUI,
+      iHUD,
+      iHabitat,
+      MapEnumerations,
+      iMapEntity,
+      iFaction,
+      INIFile,
+      Input,
+      List,
+      Object,
+      String,
+      Task,
+      State,
+      Text,
+      iUtilities,
+      iCargo,
+      iInventory,
+      iComms,
+      Math,
+      iPilotSetup,
+      iMusic,
+      iMod,
+      Stream,
+      tsMusic,
+      tsStationEnum,
+      tsLProduction;
+
+provides Init,
+         NewSystem,
+         SoundNear;
+
+
+prototype string station_sound(hhabitat producer);
+
+
+
+// Reads the music INI file and creates globals needed by the 
+// rest of the music change code.
+Init()
+{
+   
+
+
+   Global.CreateString("gt_musicchange_planet_sound",GA_Write|GA_NoSave,"");
+   Global.CreateString("gt_musicchange_moon_sound",GA_Write|GA_NoSave,"");
+   Global.CreateString("gt_musicchange_giant_sound",GA_Write|GA_NoSave,"");
+   
+   //ldsi sound.
+   Global.CreateString("gt_musicchange_station_sound",GA_Write|GA_NoSave,"");
+
+   //production sounds.
+   Global.CreateString("gt_musicchange_pirate_type_sound",GA_Write|GA_NoSave,"");
+   Global.CreateString("gt_musicchange_prod_type_sound",GA_Write|GA_NoSave,"");
+   Global.CreateString("gt_musicchange_admin_type_sound",GA_Write|GA_NoSave,"");
+   Global.CreateString("gt_musicchange_fortress_type_sound",GA_Write|GA_NoSave,"");
+   Global.CreateString("gt_musicchange_habitat_type_sound",GA_Write|GA_NoSave,"");   
+
+
+   Global.CreateHandle("gt_musicchange_entity",GA_Write|GA_NoSave, none);
+   Global.CreateHandle("gt_musicchange_entity_sim",GA_Write|GA_NoSave, none);
+
+   
+   Global.CreateHandle("gt_musicchange_station",GA_Write|GA_NoSave, none);
+   Global.CreateHandle("gt_musicchange_station_sim",GA_Write|GA_NoSave, none);
+   Global.CreateHandle("gt_musicchange_station_prod_sim",GA_Write|GA_NoSave, none);
+}
+
+/*
+   When a player visits a new system, they should get a discovery theme. And then after a few moments,
+   the theme should shift back to ambient.
+
+*/ 
+NewSystem()
+{
+   string system_name = iSim.ActiveWorld();
+   string suite_name;
+   hinifile music_file = INIFile.Create("ini:/epic_music");
+
+
+   if (!Global.Bool("gt_option_music_on")) {
+      return;
+   }
+
+   if (none == music_file) {
+
+      debug Debug.PrintString("ERROR tsMusicChange epic_music.ini missing");
+
+      return;
+   }
+      
+
+   suite_name = INIFile.String(music_file, system_name, "key_name", "none");
+
+   INIFile.Destroy(music_file);
+
+   debug {
+      Debug.PrintString("Music System Change: ");
+      Debug.PrintString(system_name);
+      Debug.PrintString("\n");
+      Debug.PrintString(suite_name);
+      Debug.PrintString(" suit\n");
+   }
+
+   tsMusic.SetSuite(suite_name);
+
+   tsMusic.SetMood("Discovery");
+
+   tsMusic.Resume();
+
+   tsMusic.Discovery();
+
+
+}
+
+
+// Called every few seconds by the player watch task,
+// this function looks for nearby stations and planets
+// and attaches sound objects.
+
+SoundNear()
+{
+   hship player = iShip.FindPlayerShip();
+   hmapentity center;
+   hbody body, prior_body;
+   hhabitat habitat, prior_habitat;
+   hsim sound, body_sim, empire, prod;
+   string sound_ini, station_empire_file, station_prod_file;
+   IeBodyType body_type;
+   float volume, distance, radius;
+   set bodies;
+
+   float max_distance, min_distance, difference, fraction, sound_distance;
+   float location, sound_pos;
+   int i, total;
+
+   // Hack this in to disable sound while I wait for real music loops!
+//   return;
+
+   /*
+   bodies = iMapEntity.SystemBodies();
+   total = Set.ItemCount(bodies);
+   for (i=0;i<total;++i) {
+      body = iBody.Cast(Set.FirstElement(bodies));
+      Set.Remove(bodies, body);
+      body_type = iBody.Type(body);
+      debug {
+         Debug.PrintHandle(body);
+         Debug.PrintString(String.FormatInt(" new %d\n", body_type));
+      }
+   }
+   */
+
+   if (!Global.Bool("gt_option_music_on")) {
+      return;
+   }
+
+   bodies = iMapEntity.SystemBodies();
+   body = iBody.Nearest(bodies, player);
+   prior_body = iBody.Cast(Global.Handle("gt_musicchange_entity"));
+
+   if (body != prior_body) {
+      sound = Sim.Cast(Global.Handle("gt_musicchange_entity_sim"));
+      Sim.Destroy(sound);
+
+      body_sim = iMapEntity.SimForEntity(body);
+
+      body_type = iBody.Type(body);
+
+      switch (body_type) {
+      case 	BT_Planet:
+         sound_ini = Global.String("gt_musicchange_planet_sound");
+         break;
+      case BT_Moon:
+         sound_ini = Global.String("gt_musicchange_moon_sound");
+         break;
+      case BT_GasGiant:
+         sound_ini = Global.String("gt_musicchange_giant_sound");
+         break;
+      case BT_SystemCentre:
+      case BT_Star:
+         sound_ini = Global.String("gt_musicchange_star_sound");
+         break;
+      default:
+         sound_ini = Global.String("gt_musicchange_planet_sound");
+         break;
+      }
+
+      sound = Sim.Create(sound_ini, sound_ini);
+      Sim.SetCullable(sound, false);
+      Sim.PlaceAt(sound, body_sim);
+
+      Global.SetHandle("gt_musicchange_entity", body);
+      Global.SetHandle("gt_musicchange_entity_sim", sound);
+
+      debug {
+         Debug.PrintHandle(body);
+         Debug.PrintString(String.FormatInt(" new %d\n", body_type));
+      }
+
+   }else if (!(iShip.IsInLDS(player) || iSim.IsCapsuleJumping(player))) {
+
+      sound = Sim.Cast(Global.Handle("gt_musicchange_entity_sim"));
+
+      body = iBody.Cast(Global.Handle("gt_musicchange_entity"));
+      body_type = iBody.Type(body);
+
+      if (BT_SystemCentre == body_type) {
+         radius = 350000km;
+      }else {
+         radius = Object.FloatProperty(body,"radius");
+      }
+
+      min_distance = radius * 1.5;
+      max_distance = radius * 4.0;
+      difference = max_distance - min_distance;
+
+      distance = Sim.DistanceBetweenCentres(player, body);
+      
+      if (distance < min_distance) {
+         fraction = 0.0;
+      }else if (distance > max_distance) {
+         fraction = 1.0;
+      }else {
+         fraction = distance - min_distance;
+         fraction = fraction / difference;
+
+         fraction = fraction;
+      }
+
+      sound_distance = 200km * fraction;
+
+      // The sound is never placed closer the player than 20km to keep
+      // the player from flying past it while using thrusters.
+      // (can still happen if player travelling faster than 20km per second).
+      if (sound_distance < 20km) {
+         sound_distance = 20km;
+      }
+
+      location = sound_distance / distance;
+
+      Sim.PlaceBetween( sound, player, body, location);
+
+      sound_pos = Sim.DistanceBetween(player, sound);
+
+/*
+      debug {
+         Debug.PrintHandle(body);
+         Debug.PrintString(" planet\n");
+
+         Debug.PrintFloat(distance);
+         Debug.PrintString(" planet dist\n");
+
+         Debug.PrintFloat(fraction);
+         Debug.PrintString(" planet ratio\n");
+
+         Debug.PrintFloat(sound_distance);
+         Debug.PrintString(" sound exp\n");
+
+         Debug.PrintFloat(sound_pos);
+         Debug.PrintString(" sound real\n");
+
+         Debug.PrintFloat(Object.FloatProperty(body,"radius"));
+         Debug.PrintString(" radius\n");
+      }
+      */
+   }
+
+
+   habitat = iHabitat.Nearest(iMapEntity.SystemHabitats(), player);
+   prior_habitat = iHabitat.Cast(Global.Handle("gt_musicchange_station"));
+
+   if (habitat != prior_habitat) {
+      sound = Sim.Cast(Global.Handle("gt_musicchange_station_sim"));
+      Sim.Destroy(sound);
+      sound = Sim.Cast(Global.Handle("gt_musicchange_station_prod_sim"));
+      Sim.Destroy(sound);
+
+      
+      // Do the production type dependent sound.
+      station_prod_file = station_sound(habitat);
+      sound = Sim.Create(station_prod_file, String.Join("Type :",station_prod_file));
+
+      Sim.SetCullable(sound, false);
+      Sim.PlaceAt(sound, habitat);
+
+
+      // Create the empire dependent sound.
+      station_empire_file = Global.String("gt_musicchange_station_sound");
+      empire = Sim.Create(station_empire_file, String.Join("Empire :", station_empire_file));
+
+      Sim.SetCullable(empire, false);
+      Sim.PlaceAt(empire, habitat);
+
+
+      Global.SetHandle("gt_musicchange_station", habitat);
+      Global.SetHandle("gt_musicchange_station_sim", empire);
+      Global.SetHandle("gt_musicchange_station_prod_sim", sound);
+   }
+}
+
+
+string station_sound(hhabitat producer)
+{
+   int production_type;
+
+   production_type = tsLProduction.GetType(iSim.Cast(producer));
+
+   switch (production_type) {
+
+
+   case ept_WaterMine : 
+   case ept_OrganicsMine : 
+   case ept_InorganicsMine : 
+   case ept_BiomassMine : 
+   case ept_CommonMetalsMine : 
+   case ept_RareMetalsMine : 
+   case ept_ExoticMetalsMine : 
+   case ept_RadioactivesMine : 
+   case ept_FusionableGasesMine : 
+   case ept_NeutroniumMine : 
+   case ept_WaterProcessingPlant : 
+   case ept_OrganicsProcessingPlant : 
+   case ept_InorganicsProcessingPlant : 
+   case ept_BiomassProcessingPlant : 
+   case ept_CommonMetalsProcessingPlant :
+   case ept_RareMetalsProcessingPlant : 
+   case ept_ExoticMetalsProcessingPlant : 
+   case ept_RadioactivesProcessingPlant : 
+   case ept_FusionableGasesProcessingPlant :
+   case ept_NeutroniumProcessingPlant : 
+   case ept_Shipyard : 
+   case ept_HeavyManufacturingPlant : 
+   case ept_BiologicalManufacturingPlant : 
+   case ept_WetwareManufacturingPlant : 
+   case ept_HiTechManufacturingPlant : 
+   case ept_ElectronicsManufacturingPlant : 
+   case ept_WeaponsManufacturingPlant : 
+   case ept_PharmaceuticalsManufacturingPlant : 
+   case ept_PlasticsManufacturingPlant : 
+   case ept_FusionReactorsManufacturingPlant : 
+   case ept_EnergyCellsManufacturingPlant : 
+   case ept_StationFabricationManufacturingPlant : 
+   case ept_LuxuriesManufacturingPlant : 
+   case ept_TerraformingStation : 
+   case ept_BioBomber : 
+   case ept_Waystation : 
+   case ept_RepairStation : 
+   case ept_Warehousing:
+      return Global.String("gt_musicchange_prod_type_sound");
+      break;
+   case ept_MedicalFacility:
+   case ept_CentralHQ:
+   case ept_ResearchStation :
+   case ept_EntertainmentStation :
+
+   case ept_Outpost :
+   case ept_SystemAdministration :   
+   case ept_ClusterAdministration :
+   case ept_RegionalDepartment :
+
+   case ept_University:
+   case ept_ReligiousCentre:
+   case ept_AgriculturalSettlement:
+   case ept_Settlement:
+   case ept_Habitat:
+      return Global.String("gt_musicchange_admin_type_sound");
+      break;
+
+   case ept_SecurityStation :
+   case ept_PoliceBase :
+   case ept_SystemDefenceDock :
+   case ept_MercenaryBase:
+      return Global.String("gt_musicchange_fortress_type_sound");
+      break;
+
+   case ept_PirateBase:
+   case ept_PirateCove:
+   case ept_PirateOutpost: 
+   case ept_GangsterHideout: 
+      return Global.String("gt_musicchange_pirate_type_sound");
+      break;
+
+   default:
+     break;
+   }
+
+   return Global.String("gt_musicchange_habitat_type_sound");
+}
+
+/*   
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+

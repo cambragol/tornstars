@@ -1,0 +1,241 @@
+//*******************************************************************************************/
+//
+// tsLocationInit.pog
+//
+// This package manages all the work that is done when a player arrives and leaves a station.
+// Most of this moved out of the player watch task, because it should be grouped better, and
+// the watch task should only worry about tracking the player.
+
+// These features have been extended to Lpoints, which are the only other MapEntity small
+// enough to count at single locations.
+//
+// May 2005, Jon Freise
+//******************************************************************************************/
+
+package tsLocationInit;
+
+// Imports
+uses    Sim,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        GUI,
+        iGUI,
+        iHUD,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        iMod,
+        CargoTypes,
+        iCargo,
+        iMapEntity,
+        tsEconUtil,
+        tsStationEnum,
+        tsStation,
+        tsFleetOp,
+        tsLCenter,
+        tsLProduction,
+        tsStationEnv,
+        tsPlayerFleetUpkeep;
+
+
+// Exports
+provides Arrives,
+         Leaves;
+
+// Prototypes
+prototype status_setup(hisim producer);
+prototype operations_setup(hmapentity center);
+
+
+// Wakes all items that depend on the player arriving near the station.
+// It only runs once, using the cull marker to prevent double starts.
+//[of]:Arrives(hmapentity location)
+Arrives(hmapentity location)
+{
+
+   if (!tsLCenter.GetCullMarker(location)) {
+      tsLCenter.SetCullMarker(location, true);
+
+      tsStationEnv.SetupEnv(iSim.Cast(location));
+
+      // Once the player is inside the culling distance,
+      // we mark this station as known.
+      iMapEntity.SetMapVisibility(location, true);
+
+
+      //tEAction.WakeLocation(location);
+      //tEpicChess.PlayerArrives(location);
+      //tsStationDef.PlayerArrives(location); 
+
+      //tsStationModule.PlayerArrives(location);
+      //tsFleetOpRules.PlayerArrives(location);
+
+      // Sets up objects around the station based on
+      // station status and type.
+
+      // Also marks that station visible for future map use.
+      if (T_Station == iSim.Type(location)){
+
+         tsStation.SetKnown(iHabitat.Cast(location), true);
+
+         status_setup(iSim.Cast(location));
+
+         // Only stations can have mining rigs attached.
+         tsPlayerFleetUpkeep.ProduceCargo(iHabitat.Cast(location));
+
+      }
+
+      operations_setup(location);
+   }
+}
+//[cf]
+
+
+//[of]:Leaves(hmapentity location)
+Leaves(hmapentity location)
+{
+   tsLCenter.SetCullMarker(location, false);
+   tsStationEnv.LeaveStation(location);
+}
+//[cf]
+
+
+//[of]:setup_section_name(hmapentity center, hisim producer, hinifile stations_file, string section, string key_name)
+setup_section_name(hmapentity center, hisim producer, hinifile stations_file, string section, string key_name)
+{
+   int count;
+   string env_file;
+
+   count = 0;
+   while (INIFile.NumberedExists(stations_file, section, key_name, count)){
+      env_file = INIFile.NumberedString(stations_file, section, key_name, count, "none");
+      ++count;
+
+      if ("none" != env_file) {
+         tsStationEnv.SetupObjects(center, producer, env_file, 0, 0, 0);
+      }
+   }
+}
+//[cf]
+
+
+// Setup a production center based on the type. 
+//[of]:status_setup(hisim producer)
+status_setup(hisim producer)
+{
+   hmapentity center;
+   hinifile stations_file;
+   string station_type, op_type, station_status, station_category;
+   string env_file;
+   int count, total, i;
+   list operations;
+   hisim operation;
+
+   debug Debug.PrintString("tsLocationInit.status_setup\n");
+
+   if (!tsStation.IsStation(producer)) {
+      // This function only handles stations!
+      return;
+   }
+
+
+   stations_file = INIFile.Create("ini:/station_status_env");
+
+   if (none == stations_file) {
+      debug Debug.PrintString("Error tsLocationInit.status_setup cannot open station status ini\n");
+      return;
+   }
+
+   // Open the station type ini file
+   // use the type to read in each new INI file name
+   // SetupObjects on each item.
+   center = tsLCenter.GetCenter(producer);
+   station_status = tsStation.Status2String(tsStation.Status(iHabitat.Cast(producer)));
+   
+
+   // Setup the station based on the stations category.
+   station_category = tsStation.Category2String(tsStation.Category(iHabitat.Cast(producer)));
+
+   setup_section_name(center, producer, stations_file, station_category, station_status);
+
+
+   // Then we setup the station environment that is specific to this type of station.
+   station_type = tsEconUtil.StationIntToString(tsLProduction.GetType(producer));
+
+   setup_section_name(center, producer, stations_file, station_type, "Any_Status");
+
+   setup_section_name(center, producer, stations_file, station_type, station_status);
+
+
+   debug {
+      Debug.PrintString(station_type);
+      Debug.PrintString(" type\n");
+      Debug.PrintString(station_status);
+      Debug.PrintString(" status\n");
+   }
+
+   INIFile.Destroy(stations_file);
+}
+//[cf]
+
+
+
+//[of]:operations_setup(hmapentity center)
+operations_setup(hmapentity center)
+{
+   hinifile stations_file = INIFile.Create("ini:/station_status_env");
+   string op_type;
+   string env_file;
+   int count, total, i;
+   list operations;
+   hisim operation;
+
+   debug Debug.PrintString("tsStationInit.operations_setup\n");
+
+   if (none == stations_file) {
+      debug Debug.PrintString("Error tsStationInit.operations_setup cannot open station status ini\n");
+      return;
+   }
+
+   operations = tsFleetOp.StationOperations(center);
+
+   total = List.ItemCount(operations);
+   for (i=0;i<total;++i) {
+
+      operation = iSim.Cast(List.GetNth(operations, i));
+      op_type = tsEconUtil.StationIntToString(tsLProduction.GetType(operation));
+
+      tsFleetOp.SetKnown(operation, true);
+
+      debug Debug.PrintString("tsStationInit.op found ");
+      debug Debug.PrintString(op_type);
+      debug Debug.PrintString("\n");
+
+      count = 0;
+      while (INIFile.NumberedExists(stations_file, op_type, "ESS_Normal", count)){
+         env_file = INIFile.NumberedString(stations_file, op_type, "ESS_Normal", count, "none");
+         ++count;
+
+         if ("none" != env_file) {
+            tsStationEnv.SetupObjects(center, operation, env_file, 0, 0, 0);
+         }
+      }
+   }
+
+   INIFile.Destroy(stations_file);
+}
+//[cf]
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

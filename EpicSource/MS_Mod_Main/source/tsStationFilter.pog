@@ -1,0 +1,237 @@
+//*******************************************************************************************/
+//
+// tsStationFilter
+//
+// Filters stations in many new ways.
+// 
+// 
+//
+// 
+//
+// March 2006, Jon Freise
+//******************************************************************************************/
+
+package tsStationFilter;
+
+uses 
+iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, 
+Task, Debug, iFaction, iSim, iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+iConversation, iFormation, Group, Text, iEmail, State, iTrafficCreation, 
+iRangeCheck,iRemotePilot, iRegion, iMissionTracker, iWingmen,
+iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+iStartSystem, 
+iLagrangePoint, 
+   iGame, 
+   Stream, 
+   iDockport,
+   tsEconUtil,
+   tsFaction,
+   tsStationEnum,
+   tsStation,
+   tsLRoot,
+   tsLProduction,
+   tsLCenter,
+   tsLTrade,
+   iRangeCheck,
+   tsStarSystemSetup;
+
+
+
+provides OnStatus,
+         OnType,
+         OnCategory,
+         OnStatusAndCategory,
+         OnGreaterFeeling,
+         OnLowerFeeling,
+         OnPodSpewer,
+         OnDistance,
+         OnMapVisible;
+
+
+
+set OnStatus(set habitats, int station_status)
+{
+   hhabitat habitat;
+   set final_set;
+
+   while (!Set.IsEmpty(habitats)) {
+      habitat = iHabitat.Cast(Set.FirstElement(habitats));
+      Set.Remove(habitats, habitat);
+
+      if (station_status & tsStation.Status(habitat)) {
+         Set.Add(final_set, habitat);
+      }
+   }
+
+   return final_set;
+}
+
+
+set OnType(set habitats, int station_type)
+{
+   hhabitat habitat;
+   set final_set;
+
+   while (!Set.IsEmpty(habitats)) {
+      habitat = iHabitat.Cast(Set.FirstElement(habitats));
+      Set.Remove(habitats, habitat);
+
+      if (station_type == tsLProduction.GetType(iSim.Cast(habitat))){
+         Set.Add(final_set, habitat);
+      }
+   }
+
+   return final_set;
+}
+
+
+set OnCategory(set habitats, int station_category)
+{
+   hhabitat habitat;
+   set final_set;
+
+   while (!Set.IsEmpty(habitats)) {
+      habitat = iHabitat.Cast(Set.FirstElement(habitats));
+      Set.Remove(habitats, habitat);
+
+      if (station_category & tsStation.Category(habitat)) {
+         Set.Add(final_set, habitat);
+      }
+   }
+
+   return final_set;
+}
+
+
+// Most of the time,  you want working stations of x category, so we make that case faster.
+set OnStatusAndCategory(set habitats, int station_status, int station_category)
+{
+   hhabitat habitat;
+   set final_set;
+
+   while (!Set.IsEmpty(habitats)) {
+      habitat = iHabitat.Cast(Set.FirstElement(habitats));
+      Set.Remove(habitats, habitat);
+
+      if (station_status & tsStation.Status(habitat)) {
+         if (station_category & tsStation.Category(habitat)) {
+            Set.Add(final_set, habitat);
+         }
+      }
+   }
+
+   return final_set;
+}
+
+
+set OnGreaterFeeling(set habitats, hfaction faction, float feeling_level)
+{
+   hhabitat habitat;
+   hfaction owner;
+   set final_set;
+
+   while (!Set.IsEmpty(habitats)) {
+      habitat = iHabitat.Cast(Set.FirstElement(habitats));
+      Set.Remove(habitats, habitat);
+
+      owner = iSim.Faction(iSim.Cast(habitat));
+      if (iFaction.Feeling(owner, faction) >= feeling_level) {
+         Set.Add(final_set, habitat);
+      }
+   }
+
+   return final_set;
+}
+
+set OnLowerFeeling(set habitats, hfaction faction, float feeling_level)
+{
+   hhabitat habitat;
+   hfaction owner;
+   set final_set;
+
+   while (!Set.IsEmpty(habitats)) {
+      habitat = iHabitat.Cast(Set.FirstElement(habitats));
+      Set.Remove(habitats, habitat);
+
+      owner = iSim.Faction(iSim.Cast(habitat));
+      if (iFaction.Feeling(owner, faction) <= feeling_level) {
+         Set.Add(final_set, habitat);
+      }
+   }
+
+   return final_set;
+}
+
+
+set OnPodSpewer(set habitats)
+{
+   hhabitat habitat;
+   set final_set;
+
+   while (!Set.IsEmpty(habitats)) {
+      habitat = iHabitat.Cast(Set.FirstElement(habitats));
+      Set.Remove(habitats, habitat);
+
+      if (iHabitat.HasSpewer(habitat )) {
+            Set.Add(final_set, habitat);
+      }
+   }
+
+   return final_set;
+}
+
+
+set OnMapVisible(set habitats, bool visible)
+{
+   hhabitat habitat;
+   set final_set;
+
+   while (!Set.IsEmpty(habitats)) {
+      habitat = iHabitat.Cast(Set.FirstElement(habitats));
+      Set.Remove(habitats, habitat);
+
+      if (iMapEntity.IsVisibleOnMap(habitat) == visible) {
+         Set.Add(final_set, habitat);
+      }
+   }
+
+   return final_set;
+}
+
+
+
+list OnDistance(set habitats, hisim mark)
+{
+   list habitat_list;
+   hhabitat station;
+   int i, total;
+   float distance;
+
+   habitat_list = List.FromSet(habitats);
+
+   total = List.ItemCount(habitat_list);
+   for (i=0;i<total;++i) {
+      station = iHabitat.Cast(List.GetNth(habitat_list, i));
+
+      distance = Sim.DistanceBetween(station, mark);
+
+      Object.AddFloatProperty(station, "distance", distance);
+   }
+
+   return List.SortByFloatProperty(habitat_list, "distance");
+}
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+

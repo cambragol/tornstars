@@ -34,16 +34,16 @@ iMapEntity,
    iLagrangePoint,
    iHUD,
    iComms,
-   tStationEnum,
-   tStation,
+   tsStationEnum,
+   tsStation,
    tsFaction,
-   tTime,
-   tUnderOp,
-   tLCenter,
-   tLProduction,
-   tLFleet,
-   tStationFilter,
-   tShipName,
+   tsTime,
+   tsFleetOp,
+   tsLCenter,
+   tsLProduction,
+   tsLFleet,
+   tsStationFilter,
+   tsShipName,
    tsShipCreationEnum,
 tsShipCreation,
    tsFleetOpCombat,
@@ -83,18 +83,18 @@ New(hisim operation)
 
    // We pick an underworld name for ourselves. 
    // using a large number means we get a random name.
-   ship_name = tShipName.ShipName("underworld", 10000);
+   ship_name = tsShipName.ShipName("underworld", 10000);
 
    // Also pick a large freighter for collecting player sales.
    ship_template = tsShipCreation.GetShip(faction, EST_CombatLight);
 
-   tUnderOp.SetName(operation, ship_name);
-   tUnderOp.SetShipTemplate(operation, ship_template);
+   tsFleetOp.SetName(operation, ship_name);
+   tsFleetOp.SetShipTemplate(operation, ship_template);
 
    // This is an protection op, so we set enough fleets for the 
    // freighter and 2 tugs escort. Fleets use threat value for points.
-   tLFleet.SetFleets(operation, 400);
-   tLFleet.SetMaxFleets(operation, 400);
+   tsLFleet.SetFleets(operation, 400);
+   tsLFleet.SetMaxFleets(operation, 400);
 }
 
 
@@ -119,7 +119,7 @@ Restore(hisim operation)
 
 Update(hisim operation)
 {
-   hmapentity center = tLCenter.GetCenter(operation);
+   hmapentity center = tsLCenter.GetCenter(operation);
    hhabitat target_station, supporter_station;
    bool hostiles, wounded, dying, out_gunned, home;
    bool move_home, move_safe, stay_still;
@@ -134,13 +134,13 @@ Update(hisim operation)
 
    debug tsDebug.PrintString("tsfoprotection_debug",
                                 String.FormatStrStr("tsFoProtection %s update\n%s",
-                                                    Text.Field(tUnderOp.Name(operation),FT_Text),
+                                                    Text.Field(tsFleetOp.Name(operation),FT_Text),
                                                     ""));
    
    faction = iSim.Faction(operation);
 
 
-   local_operations = tUnderOp.StationOperations(center);
+   local_operations = tsFleetOp.StationOperations(center);
    List.Remove(local_operations, operation);
    total = List.ItemCount(local_operations);
 
@@ -153,8 +153,8 @@ Update(hisim operation)
 
       if (iFaction.Feeling(visitor_faction, faction) < -0.2) {
          // There are hostile forces at this station
-         fleets = tLFleet.Fleets(operation);
-         hostile_fleets = tLFleet.Fleets(operation);
+         fleets = tsLFleet.Fleets(operation);
+         hostile_fleets = tsLFleet.Fleets(operation);
 
          if (fleets > hostile_fleets) {
             // We have the advantage, pound them.
@@ -170,28 +170,28 @@ Update(hisim operation)
    }
 
 
-   fleets = tLFleet.Fleets(operation);
+   fleets = tsLFleet.Fleets(operation);
 
    if (fleets == 0) {
       // Ouch, we died.
       debug tsDebug.PrintString("tsfoprotection_debug",
                                 String.FormatStrStr("tsFoProtection %s died\n%s",
-                                                    Text.Field(tUnderOp.Name(operation),FT_Text),
+                                                    Text.Field(tsFleetOp.Name(operation),FT_Text),
                                                     ""));
 
-      tUnderOp.DestroyOp(operation);
+      tsFleetOp.DestroyOp(operation);
       return;
    }
 
    // Are we damaged
-   if (fleets < tLFleet.MaxFleets(operation)) {
+   if (fleets < tsLFleet.MaxFleets(operation)) {
       wounded = true;
    }else {
       wounded = false;
    }
 
    // Are we dying? Anything over half damage for protection operations.
-   if (fleets < (tLFleet.MaxFleets(operation)/2)) {
+   if (fleets < (tsLFleet.MaxFleets(operation)/2)) {
       dying = true;
    }else {
       dying = false;
@@ -205,7 +205,7 @@ Update(hisim operation)
    }
 
 
-   supporter_station = tUnderOp.Supporter(operation);
+   supporter_station = tsFleetOp.Supporter(operation);
 
    // Are we home?
    if (center == iMapEntity.Cast(supporter_station)) {
@@ -217,9 +217,9 @@ Update(hisim operation)
 
    // Repair some fleets. Double rate if at home.
    if (home) {
-      tLFleet.ChangeFleets(operation, 20 * update_delay);
+      tsLFleet.ChangeFleets(operation, 20 * update_delay);
    }else {
-      tLFleet.ChangeFleets(operation, 10 * update_delay);
+      tsLFleet.ChangeFleets(operation, 10 * update_delay);
    }
 
 
@@ -243,12 +243,12 @@ Update(hisim operation)
    // Otherwise, pick a place to earn funds.
    if (move_home) {
 
-      tLCenter.SetCenter(operation, supporter_station);
+      tsLCenter.SetCenter(operation, supporter_station);
 
       debug {
          tsDebug.PrintString("tsfoprotection_debug",
                              String.FormatStrStr("tsFoProtection %s moving home\n%s",
-                                                 Text.Field(tUnderOp.Name(operation),FT_Text),
+                                                 Text.Field(tsFleetOp.Name(operation),FT_Text),
                                                  ""));
          tsDebug.PrintHandle("tsfoprotection_debug",supporter_station);
          tsDebug.PrintString("tsfoprotection_debug"," supporter station\n");
@@ -260,12 +260,12 @@ Update(hisim operation)
 
       if (none != target_station) {
          // To move an operation, we just move the center.
-         tLCenter.SetCenter(operation, target_station);
+         tsLCenter.SetCenter(operation, target_station);
 
          debug {
             tsDebug.PrintString("tsfoprotection_debug",
                                 String.FormatStrStr("tsFoProtection %s moving to safety\n%s",
-                                                    Text.Field(tUnderOp.Name(operation),FT_Text),
+                                                    Text.Field(tsFleetOp.Name(operation),FT_Text),
                                                     ""));
             tsDebug.PrintHandle("tsfoprotection_debug",target_station);
             tsDebug.PrintString("tsfoprotection_debug"," new station\n");
@@ -282,12 +282,12 @@ Update(hisim operation)
 
          if (none != lpoint) {
             // If there is an empty lpoint, take it.
-            tLCenter.SetCenter(operation, lpoint);
+            tsLCenter.SetCenter(operation, lpoint);
 
             debug {
                tsDebug.PrintString("tsfoprotection_debug",
                                    String.FormatStrStr("tsFoProtection %s moving to lpoint\n%s",
-                                                       Text.Field(tUnderOp.Name(operation),FT_Text),
+                                                       Text.Field(tsFleetOp.Name(operation),FT_Text),
                                                        ""));
                tsDebug.PrintHandle("tsfoprotection_debug",lpoint);
                tsDebug.PrintString("tsfoprotection_debug"," \n");
@@ -298,12 +298,12 @@ Update(hisim operation)
 
             if (none != target_station) {
                // To move an operation, we just move the center.
-               tLCenter.SetCenter(operation, target_station);
+               tsLCenter.SetCenter(operation, target_station);
 
                debug {
                   tsDebug.PrintString("tsfoprotection_debug",
                                       String.FormatStrStr("tsFoProtection %s moving to production\n%s",
-                                                          Text.Field(tUnderOp.Name(operation),FT_Text),
+                                                          Text.Field(tsFleetOp.Name(operation),FT_Text),
                                                           ""));
                   tsDebug.PrintHandle("tsfoprotection_debug",target_station);
                   tsDebug.PrintString("tsfoprotection_debug"," new station\n");
@@ -315,7 +315,7 @@ Update(hisim operation)
    }
 
    // Next update, tomorrow.
-   tUnderOp.SetWakeTimer(operation, tTime.GetDay() + update_delay);
+   tsFleetOp.SetWakeTimer(operation, tsTime.GetDay() + update_delay);
 }
 
 
@@ -323,8 +323,8 @@ Update(hisim operation)
 bool is_production(hmapentity center)
 {
    if (T_Station == iSim.Type(center)) {
-      if (ESS_Normal == tStation.Status(iHabitat.Cast(center))) {
-         if ( (ESC_Mine|ESC_Process|ESC_Manufacture) & tStation.Category(iHabitat.Cast(center))){
+      if (ESS_Normal == tsStation.Status(iHabitat.Cast(center))) {
+         if ( (ESC_Mine|ESC_Process|ESC_Manufacture) & tsStation.Category(iHabitat.Cast(center))){
 
             /*
             debug {
@@ -346,14 +346,14 @@ hhabitat find_production_station(hisim operation, hmapentity center, string syst
    set habitats;
 
    // Search system stations and find a production station where we can live.
-   habitats = tStationFilter.OnStatusAndCategory(iMapEntity.SystemHabitatsInSystem(system_name),
+   habitats = tsStationFilter.OnStatusAndCategory(iMapEntity.SystemHabitatsInSystem(system_name),
                                                  ESS_Normal,
                                                  (ESC_Mine|ESC_Process|ESC_Manufacture));
 
    Set.Remove(habitats, center);
    // We can hang out at neutral or better stations. We avoid people trying to
    // kill us.
-   habitats = tStationFilter.OnGreaterFeeling(habitats,
+   habitats = tsStationFilter.OnGreaterFeeling(habitats,
                                               iSim.Faction(operation),
                                               tsFaction.Type2LowerLevel(FT_Neutral));
 
@@ -365,7 +365,7 @@ hhabitat find_non_dislike_station(hisim operation, hmapentity center, string sys
 {
    set habitats;
 
-   habitats = tStationFilter.OnGreaterFeeling(iMapEntity.SystemHabitatsInSystem(system_name),
+   habitats = tsStationFilter.OnGreaterFeeling(iMapEntity.SystemHabitatsInSystem(system_name),
                                               iSim.Faction(operation),
                                               tsFaction.Type2LowerLevel(FT_Neutral));
    Set.Remove(habitats, center);
@@ -392,7 +392,7 @@ hlagrangepoint find_lpoint(hisim operation, hmapentity center, string system_nam
 
       if (Object.BoolProperty(lpoint,"standard_route")) {
 
-         lpoint_ops = tUnderOp.StationOperations(iSim.Cast(lpoint));
+         lpoint_ops = tsFleetOp.StationOperations(iSim.Cast(lpoint));
          if (List.IsEmpty(lpoint_ops)) {
             Set.Add(final_set, lpoint);
          }

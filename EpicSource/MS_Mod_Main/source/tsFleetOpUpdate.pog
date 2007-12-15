@@ -31,10 +31,10 @@ iHabitat,
 iMapEntity,
    iHUD,
    iComms,
-   tStationEnum,
-   tTime,
-   tUnderOp,
-   tsFleetOperation;
+   tsStationEnum,
+   tsTime,
+   tsFleetOp,
+   tsFleetOpCall;
 
 
 
@@ -55,9 +55,9 @@ UpdateAll()
    hisim operation;
    int timer, current_day;
 
-   current_day = tTime.GetDay();
+   current_day = tsTime.GetDay();
 
-   op_list = tUnderOp.OperationList();
+   op_list = tsFleetOp.OperationList();
    op_count = List.ItemCount(op_list);
 
    debug {
@@ -68,11 +68,11 @@ UpdateAll()
 
       operation = iSim.Cast(List.GetNth(op_list,opnum));
 
-      timer = tUnderOp.WakeTimer(operation);
+      timer = tsFleetOp.WakeTimer(operation);
       if (current_day >= timer) {
 
          // This operation wants to take action.
-         tsFleetOperation.Update(operation);
+         tsFleetOpCall.Update(operation);
       }
    }
 }

@@ -1,0 +1,148 @@
+//*******************************************************************************************/
+//
+// tsViewDock.pog
+//
+// This module uses the new player_dock and player_undock events to give a long range view
+// of the player and station when the player is docked.
+// 
+// 
+//
+// 
+//	
+// 
+//
+// September 2003, Jon Freise
+//******************************************************************************************/
+
+package tsViewDock;
+
+
+uses  Sim,
+      iShip,
+      iSim,
+      Debug,
+      Global,
+      GUI,
+      iGame,
+      iGUI,
+      iHUD,
+      iHabitat,
+      iMapEntity,
+      iFaction,
+      INIFile,
+      Input,
+      List,
+      Object,
+      String,
+      Task,
+      State,
+      Text,
+      iDirector,
+      iUtilities,
+      UniGUI;
+
+  
+provides PlayerDock;
+
+
+prototype task pull_back();
+
+
+PlayerDock()
+{
+   debug Debug.PrintString("ViewDock.PlayerDock\n");
+
+   Task.Detach(start pull_back());
+}
+    
+
+task pull_back()
+{
+
+   hsim view_point, start_point, dolly;
+   hship player = iShip.FindPlayerShip();
+   eCamera prior_view;
+   hhabitat station;
+   string screen_name;
+   int time;
+   hinifile distance_file = INIFile.Create("ini:/MS_Mod_Main");
+   float factor = INIFile.Float(distance_file, "Controls", "dock_view_multiplier", 1);
+
+   INIFile.Destroy(distance_file);
+
+   station = iHabitat.Nearest(iMapEntity.SystemHabitats(), player);
+
+   while (iDirector.IsBusy()) {
+      Task.Sleep(Task.Current(),1.0);
+   }
+
+   start_point = Sim.Create("ini:/sims/nav/waypoint","close view");
+   Sim.PlaceRelativeToInside(start_point, player, 0, 0, Object.FloatProperty(player, "radius"));
+   Sim.PointAway(start_point, station);
+
+   Task.Sleep(Task.Current(), 0.1);
+
+   view_point = Sim.Create("ini:/sims/nav/waypoint","distant view");
+//   Sim.PlaceInFrontOf(view_point, start_point, 1.5km);
+   Sim.PlaceRelativeToInside(view_point, start_point, 0, 0, Object.FloatProperty(player, "radius") * factor);
+
+   iDirector.Begin();
+   prior_view = iDirector.Camera();
+	dolly = iDirector.CreateDolly();
+   Sim.PlaceRelativeToInside(dolly, player, 0, 0, Object.FloatProperty(player, "radius"));
+
+	iDirector.SetFocus(player);
+	iDirector.SetSecondaryFocus(dolly);
+	iDirector.SetCamera(CAM_Dolly);
+
+   Task.Sleep(Task.Current(), 1.0);
+
+   UniGUI.UniGUIStart();
+
+   iDirector.SetDirection( dolly, start_point, view_point, 8, 1.0 );
+
+//   Task.Sleep(Task.Current(), 2.0);
+
+//   iDirector.End();
+
+
+   time = 0;
+
+   while (1) {
+
+      screen_name  = GUI.CurrentScreenClassname();
+
+      if ("icCustomGUIScreen" != screen_name) {
+         ++time;
+
+         if (time > 1) {
+ 
+            iDirector.SetCamera(prior_view);
+            iDirector.End();
+
+            return;
+         }
+      }else {
+         time = 0;
+      }
+
+      Task.Sleep(Task.Current(), 1.0);
+   }
+
+
+//   iDirector.SetCamera(CAM_TargetExternal);
+   
+
+
+
+}
+
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

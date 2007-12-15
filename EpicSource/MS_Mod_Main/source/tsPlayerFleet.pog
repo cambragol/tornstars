@@ -56,11 +56,11 @@ uses	Sim,
 		iConversation,
 		CargoTypes,
 		
-		tStationEnum,
-		tEconUtil,
-		tPodUtil,
-		tEpicComms,
-		tFormation,
+		tsStationEnum,
+		tsEconUtil,
+		tsPodUtil,
+		tsShipComms,
+		tsFormation,
 		tsFaction, 
 		tsShipEnum,
 		tsShip,
@@ -279,7 +279,7 @@ set_position(hship ship, int counter)
       break;
    }
 
-   tFormation.SetPos(ship, x, y, z);
+   tsFormation.SetPos(ship, x, y, z);
 }
 //[cf]
 
@@ -308,7 +308,7 @@ SetupPlayerWingman(hship ship)
 
    Sim.SetCullable(ship, false);
 
-   tEpicComms.AddComms(ship, "tsPlayerFleet.WingmanComms");
+   tsShipComms.AddComms(ship, "tsPlayerFleet.WingmanComms");
 
    Object.SetStringProperty(ship, "death_script", "tsWingmanDeath.Death");
 }
@@ -407,7 +407,7 @@ release_wingman(hship ship)
    Group.RemoveSim(Sim.Group(ship), ship);
 
    // remove the comms function.
-   tEpicComms.AddComms(ship, "");
+   tsShipComms.AddComms(ship, "");
 }
 //[cf]
 
@@ -454,7 +454,7 @@ task WingmanComms()
 {
    hship ship;
 
-   ship = iShip.Cast(tEpicComms.CommsSource());
+   ship = iShip.Cast(tsShipComms.CommsSource());
 
         // Start the conversation.
     iConversation.Begin();

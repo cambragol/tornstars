@@ -20,20 +20,20 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
    iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
    ECargoTypes,
-   tEconUtil,
-   tETradeBuy,
-   tPogClass,
-   tLRoot,
-   tLTrade,
-   tEpicMoney,
-   tTime,
+   tsEconUtil,
+   tsTradeBuy,
+   tsPogClass,
+   tsLRoot,
+   tsLTrade,
+   tsMoney,
+   tsTime,
    tsFaction,
    tsShip,
    tsPlayerFleet,
-   tPodUtil,
+   tsPodUtil,
    tsShipCreationEnum,
 tsShipCreation,
-   tPcOwner;
+   tsPcOwner;
 
 
 
@@ -56,14 +56,14 @@ provides GiveMillion,
 // Give the player an extra million to work with
 GiveMillion()
 {
-   tEpicMoney.ChangeShipAccount(1000000);
+   tsMoney.ChangeShipAccount(1000000);
 }
 
 // Cut the player down to 1000 credits.
 SetThousand()
 {
-   tEpicMoney.ChangeShipAccount(-1*tEpicMoney.ShipAccount());
-   tEpicMoney.ChangeShipAccount(1000);
+   tsMoney.ChangeShipAccount(-1*tsMoney.ShipAccount());
+   tsMoney.ChangeShipAccount(1000);
 }
 
 
@@ -95,7 +95,7 @@ UnhideStations()
 // Push the timer forward one day for testing purposes.
 AdvanceDay()
 {
-   tTime.AdvanceTime(Global.Int("gt_time_one_day"));
+   tsTime.AdvanceTime(Global.Int("gt_time_one_day"));
 }
 
 
@@ -122,11 +122,11 @@ CreateCargo()
       hack_level = INIFile.NumberedInt(cargo_file,"TestCargo","hack_level",count,0);
       ++count;
 
-      cargo_type = tEconUtil.String2CargoType(cargo_name);
-      pod = iShip.Cast(tPodUtil.CreateCargoPod(cargo_type, "Independent", "Independent"));
+      cargo_type = tsEconUtil.String2CargoType(cargo_name);
+      pod = iShip.Cast(tsPodUtil.CreateCargoPod(cargo_type, "Independent", "Independent"));
       Sim.SetCullable(pod, false);
       Sim.PlaceNear(pod, player, 1km);
-      tPodUtil.SetHackLevel(pod, hack_level);
+      tsPodUtil.SetHackLevel(pod, hack_level);
    }
 
    INIFile.Destroy(cargo_file);
@@ -247,7 +247,7 @@ CreateFuelPod()
    hship pod;
    hship player  = iShip.FindPlayerShip();
 
-   pod = iShip.Cast(tPodUtil.CreateCargoPod(tEconUtil.String2CargoType("CT_LiquifiedFuel"),"Player","Player"));
+   pod = iShip.Cast(tsPodUtil.CreateCargoPod(tsEconUtil.String2CargoType("CT_LiquifiedFuel"),"Player","Player"));
    Sim.PlaceNear(pod, player, 2km);
 
 }

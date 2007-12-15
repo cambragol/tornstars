@@ -1,0 +1,768 @@
+/*************************************************************************
+   tsMail
+   
+ 	This package provides tools to store and retrieve mail messages. 
+   It allows creating multiple mail archives, so it is useful for email, or bulletin board
+   emulation in game. It does not implement the GUI interface.
+   
+   Updated to provide a non-destructive save, as needed by Epic 
+   save anywhere.
+   
+**************************************************************************/
+
+// Specify the package name
+package tsMail;
+
+// Imports
+uses Global, 
+   Object, 
+   Sim,
+   Math, 
+   Task, 
+   Debug, 
+   INIFile, 
+   Group, 
+   Text, 
+   State, 
+   Stream,
+   iSim, 
+   iHUD;
+
+
+// Exports
+//
+provides       ReadArchives, 
+               SaveArchives,
+
+               CreateArchive,
+               FindArchive,
+               NewArchiveMail,
+               GetArchiveMail,
+               DeleteArchiveMail,
+               isArViewable,
+               isArBaseOnly,
+               SetArViewable,
+               SetArBaseOnly,
+               ScreenName,
+               Desc,
+               SendMail,
+               Sender,
+               Subject,
+               Body,
+               SetRead,
+               HasReply,
+               RunReply,
+               GetReplyId,
+               GetReplyObject,
+               isDeleted,
+               DeleteMail,
+               Read,
+               isRead,
+               isHtml,
+               MoveMail;
+
+/*
+   Define structures
+  
+   Control structures:
+   ArchiveIdCount: A counter used to assign a unique number to new archives.
+   ArchiveNumber:  The current number of existing archives. 
+   MailIdCount:    A counter used to assign unique email ids
+   
+   An Archive is a place to store mails. 
+   It has these properties:
+   Name: 	A unique string for this archive.
+   MailList:    The list of mail objects.
+   
+   
+   An Mail stores the text and header info
+   MailId:	A unique number for this email
+   Name:	str, Sender
+   MailSubject:	str, Mail subject
+   MailBody:	str, Body of mail, html formatted
+   Date:	str, Arbitrary time stamp string
+   Urgent	int, A mark that allows player interruption.
+
+   Archive accessor functions
+   MailList(harchive)
+   UnreadList(harchive)
+   Unread(harchive,id)  : used to let external programs know the player has looked
+         at this paticular email.
+   Find(harchive, id)
+   BySender(harchive, name)
+   UrgentList(harchive)
+   Add(harchive,hmail)
+      
+
+   Mail accessor functions
+   MailId(hmail)
+   Name(hmail)
+   Subject(hmail)
+   Body(hmail)
+   IsRead(hmail)
+   MarkRead(hmail)
+   Create(name,subject,body)
+
+*/
+
+/* 
+
+   archiveIdNum = Global.Int("g_trout_marchive_archive_id");
+   archiveMailId = Global.Int("g_trout_marchive_mail_id");
+
+*/
+
+
+hsim CreateArchive(string name, string screen_name, string desc, bool base_only, bool player_viewable)
+{
+   list empty_list;
+   list archive_list;
+   hsim archive;
+   int acount,total_archive;
+   archive_list = Global.List("g_trout_marchive_active_list");
+
+   // Check the name is not in use.
+   total_archive = List.ItemCount(archive_list);
+   for (acount=0;acount<total_archive;++acount) {
+      archive = Sim.Cast(List.GetNth(archive_list,acount));
+      if (name == Sim.Name(archive)) {
+         debug Debug.PrintString("Archive: Name in use!\n");
+         // name in use, bail.
+         return none;
+      }
+   }
+
+   archive = Sim.Create("ini:/sims/nav/waypoint",name);
+   Sim.SetCullable(archive,false);
+   List.AddTail(archive_list,archive);
+
+   Global.SetList("g_trout_marchive_active_list",archive_list);
+
+   Object.AddListProperty(archive,"MailList" ,empty_list);
+   Object.AddStringProperty(archive,"MailDesc" ,desc);
+   Object.AddStringProperty(archive,"MailScreenName" ,screen_name);
+   Object.AddBoolProperty(archive,"MailBaseOnly" ,base_only);
+   Object.AddBoolProperty(archive,"MailViewable" ,player_viewable);
+
+
+   return archive;
+}
+
+
+hsim FindArchive(string name)
+{
+   int acount, total_archive;
+   hsim archive;
+   list archive_list = Global.List("g_trout_marchive_active_list");
+
+
+   // Check the name is not in use.
+   total_archive = List.ItemCount(archive_list);
+   for (acount=0;acount<total_archive;++acount) {
+      archive = Sim.Cast(List.GetNth(archive_list,acount));
+      if (name == Sim.Name(archive)) {
+         return archive;
+      }
+   }
+
+   debug Debug.PrintString("Archive: find archive could not locate archive\n");
+   // Could not find the archive.
+   return none;
+}
+
+int SendMail(hsim archive,
+             string sender,
+             string subj,
+             string body,
+             string reply,
+             hobject reply_obj,
+             string date,
+             bool no_save,
+             bool critical,
+             bool html)
+{
+
+   hsim mail;
+   int mail_id;
+   list mail_list;
+
+
+   if (archive == none) {
+      // no archive, bail out.
+      return 0;
+   }
+   mail = Sim.Create("ini:/sims/nav/waypoint",sender);
+   Sim.SetCullable(mail,false);
+   debug Debug.PrintString("SendMail:\n");
+   debug Debug.PrintString(Sim.Name(mail));
+
+   // Each mail created is unique (at least for the first 32k mails 
+   atomic {
+      mail_id = 1 + Global.Int("g_trout_marchive_mail_id");
+      Global.SetInt("g_trout_marchive_mail_id",mail_id);
+   }
+
+   Object.AddStringProperty(mail,"MailSubj",subj);
+
+   Object.AddStringProperty(mail,"MailBody", body);
+
+   Object.AddStringProperty(mail,"MailDate",date);
+
+   Object.AddStringProperty(mail,"MailReturn",reply);
+
+   Object.AddHandleProperty(mail,"MailReturnObj",reply_obj);
+
+
+   Object.AddIntProperty(mail, "MailId", mail_id);
+
+   Object.AddBoolProperty(mail,"MailRead", false);
+
+   Object.AddBoolProperty(mail,"MailDelete",no_save);
+
+   Object.AddBoolProperty(mail,"MailHtml",html);
+
+   Object.AddBoolProperty(mail,"MailCritical",critical);
+
+   atomic {
+      mail_list = Object.ListProperty(archive,"MailList");
+      List.AddTail(mail_list, mail);
+      Object.SetListProperty(archive,"MailList",mail_list);
+   }
+
+   return mail_id;
+}
+
+// Returns true if there is any unread mail
+int NewArchiveMail(hsim archive)
+{
+   hsim mail;
+   int mcount,mtotal, ucount;
+   list mail_list = Object.ListProperty(archive,"MailList");
+   
+   ucount = 0;
+   atomic {
+      mtotal = List.ItemCount(mail_list);
+      for(mcount=0;mcount<mtotal;++mcount){
+         mail = Sim.Cast(List.GetNth(mail_list, mcount));
+         if (!Object.BoolProperty(mail,"MailRead")) {
+            ++ucount;
+         }
+      }
+   }
+   return ucount;
+}
+
+
+
+bool isArViewable(hsim archive)
+{
+   return Object.BoolProperty(archive,"MailViewable");
+}
+
+bool isArBaseOnly(hsim archive)
+{
+   return Object.BoolProperty(archive,"MailBaseOnly");
+}
+
+SetArViewable(hsim archive, bool player_viewable)
+{
+   Object.SetBoolProperty(archive,"MailViewable", player_viewable);
+}
+
+SetArBaseOnly(hsim archive, bool base_only )
+{
+   Object.SetBoolProperty(archive,"MailBaseOnly", base_only);
+}
+
+list GetArchiveMail(hsim archive)
+{
+   return Object.ListProperty(archive,"MailList");
+}
+
+string ScreenName(hsim archive)
+{
+   return Object.StringProperty(archive,"MailScreenName");
+}
+
+string Desc(hsim archive)
+{
+   return Object.StringProperty(archive,"MailDesc");
+}
+
+bool isDeleted(hsim mail)
+{
+   return Object.BoolProperty(mail,"MailDelete");
+}
+
+// Can be used to set or clear the delete flag on a mail.
+// called with true, deletes the mail.
+DeleteMail(hsim mail, bool check)
+{
+
+   Object.SetBoolProperty(mail,"MailDelete", check);      
+}
+
+bool HasReply(hsim mail)
+{
+   string reply = Object.StringProperty(mail,"MailReturn");
+
+   // check if a function has been passed as a return property
+   if (0<String.Length(reply)) {
+      return true;
+   }
+   return false;
+}
+
+string Sender(hsim mail)
+{
+   return Sim.Name(mail);
+}
+
+string Subject(hsim mail)
+{
+   return Object.StringProperty(mail,"MailSubj");
+}
+
+string Body(hsim mail)
+{
+   return Object.StringProperty(mail,"MailBody");
+}
+
+bool isHtml(hsim mail)
+{
+   return Object.BoolProperty(mail,"MailHtml");
+}
+
+// Used by a mail browser to signal the player has accepted a mail
+// offer.
+RunReply(hsim mail)
+{
+   string reply_fun;
+   int mail_id;
+   hobject mail_obj;
+   htask reply_task;
+
+   if (none == mail) {
+      debug Debug.PrintString("Archive: Invalid mail handle in run reply task\n");
+   }
+
+   reply_fun = Object.StringProperty(mail, "MailReturn");
+   mail_id = Object.IntProperty(mail, "MailId");
+   mail_obj = Object.HandleProperty(mail,"MailReturnObj");
+
+   // Set up the mailbox
+   Global.CreateInt("g_trout_marchive_reply_id", GA_Write|GA_NoSave, mail_id);
+   Global.CreateHandle("g_trout_marchive_reply_obj", GA_Write|GA_NoSave, mail_obj);
+   Global.CreateBool("g_trout_marchive_reply_flag", GA_Write|GA_NoSave, false);
+
+   debug atomic{
+      Debug.PrintString("Archive: Trying this reply function:" );
+      Debug.PrintString(reply_fun);
+      Debug.PrintString("\n" );
+   }
+   // Run the function.
+   atomic {
+      reply_task = Task.Start(reply_fun);
+      Object.AddHandleProperty(reply_task,"MailReturnObj",mail_obj);
+      Object.AddIntProperty(reply_task,"MailId",mail_id);
+   }
+
+}
+
+
+
+// Should be called by a reply accept task on first line to release the mail program ASAP.
+int GetReplyId()
+{
+   int mail_id = 0; 
+
+   Global.SetBool("g_trout_marchive_reply_flag",true);
+
+   if (Global.Exists("g_trout_marchive_reply_id")) {
+      mail_id = Global.Int("g_trout_marchive_reply_id");
+   }
+
+   return mail_id;
+}
+
+// Call this function first, before getting the reply id.
+hobject GetReplyObject()
+{
+   hobject mail_obj;
+
+   if (Global.Exists("g_trout_marchive_reply_obj")) {
+      mail_obj = Global.Handle("g_trout_marchive_reply_obj");
+   }
+
+   return mail_obj;
+}
+
+string Date(hsim mail)
+{
+   return Object.StringProperty(mail, "MailDate");
+}
+
+// mark this message as read
+SetRead(hsim mail)
+{
+   Object.SetBoolProperty(mail, "MailRead", true);
+}
+
+
+bool Read(hsim mail)
+{
+   return Object.BoolProperty(mail, "MailRead");
+}
+
+
+bool isRead(hsim archive, int mail_id)
+{
+   int mcount, total_mail;
+   list mail_list;
+   hsim mail;
+
+   mail_list = GetArchiveMail(archive);
+   total_mail = List.ItemCount(mail_list);
+   for (mcount=0;mcount<total_mail;++mcount) {
+      mail = Sim.Cast(List.GetNth(mail_list, mcount));
+      if (mail_id == Object.IntProperty(mail,"MailId")) {
+         // found the mail, return the state.
+         debug Debug.PrintString("isRead found the mail\n");
+         // once the email has been read by player,
+         // and the script knows, allow the player to delete 
+         // the mail.
+         Object.SetBoolProperty(mail,"MailCritical",false);
+         return Object.BoolProperty(mail,"MailRead");
+      }
+   }
+   // could not find the mail, must not have sent it!
+   debug Debug.PrintString("isRead no mail by id\n");
+   return false;
+}
+
+
+/** 
+
+
+
+*/
+MoveMail(hsim mail, hsim old_archive, hsim new_archive)
+{
+   list mail_list;
+
+   // remove the mail from the old archive list
+   atomic {
+      mail_list = Object.ListProperty(old_archive, "MailList");
+      List.Remove(mail_list, mail);
+      Object.SetListProperty(old_archive,"MailList",mail_list);
+   }
+
+   // add the mail to the new archive 
+   atomic{
+      mail_list = Object.ListProperty(new_archive, "MailList");
+      List.AddTail(mail_list, mail);
+      Object.SetListProperty(new_archive,"MailList",mail_list);
+   }
+}
+
+
+
+DeleteArchiveMail(hsim archive)
+{
+   hsim mail;
+   list mail_list;
+   list empty_list;
+   int mcount, mtotal;
+
+   debug{
+      Debug.PrintHandle(archive);
+      Debug.PrintString("Delete all mail in archive\n");
+   }
+   mail_list = Object.ListProperty(archive, "MailList");
+
+   mtotal = List.ItemCount(mail_list);
+   for (mcount=0;mcount<mtotal; ++mcount) {
+      mail = Sim.Cast(List.GetNth(mail_list, mcount));    
+      Sim.Destroy(mail);
+   }
+
+   Object.SetListProperty(archive,"MailList",empty_list);
+}
+
+
+
+// Called at final setup. This means it only happens once, and when the player
+// is put into space.
+
+ReadArchives()
+{
+   list archiveList;
+   list mail_list;
+   list empty_list;
+   int archiveCount;
+   int archiveIdNum;
+   int archiveMailId;
+   int acount,mcount;
+   int mail_count;
+   hsim archive;
+   hsim mail;
+   string aname,mname;
+   string archive_desc;
+   string screen_name;
+   bool viewable;
+   bool base_only;
+
+   debug Debug.PrintString("tsMail.ReadArchives\n");
+
+   if (!Global.Exists("g_trout_marchive_count")) {
+      // This package has never been run.
+      // Create the globals, and prep for first use.
+
+      Global.CreateInt("g_trout_marchive_archive_id",GA_Write,100);
+      Global.CreateInt("g_trout_marchive_mail_id",GA_Write,500);
+      Global.CreateInt("g_trout_marchive_count",GA_Write,0);
+      Global.CreateList("g_trout_marchive_active_list",GA_NoSave|GA_Write, empty_list);
+      debug Debug.PrintString("Archive: Creating archive data for first time\n");
+      return;
+   }
+
+   // Read the control globals
+   archiveCount = Global.Int("g_trout_marchive_count");
+
+   debug Debug.PrintString(String.FormatInt("Archive: r number archives %d\n",archiveCount));
+   for (acount=0;acount<archiveCount;++acount) {
+      // Loop, reading the archive objects
+      //ex "g_trout_marchive_5_name"
+      aname = Global.String(String.FormatInt("g_trout_marchive_%d_name",acount));
+      mail_count = Global.Int(String.FormatInt("g_trout_marchive_%d_mail_count",acount));
+
+      archive = Sim.Create("ini:/sims/nav/waypoint",aname);
+      Sim.SetCullable(archive,false);
+      Object.AddBoolProperty(archive,"MailNew",false);
+
+      List.AddTail(archiveList,archive);
+
+
+      screen_name = Global.String(String.FormatInt("g_trout_marchive_%d_screen_name",acount));
+      Object.AddStringProperty(archive,"MailScreenName",screen_name);
+
+
+      archive_desc = Global.String(String.FormatInt("g_trout_marchive_%d_desc",acount));
+      Object.AddStringProperty(archive,"MailDesc",archive_desc);
+
+
+      viewable = Global.Bool(String.FormatInt("g_trout_marchive_%d_viewable",acount));
+      Object.AddBoolProperty(archive,"MailViewable",viewable);
+
+
+      base_only = Global.Bool(String.FormatInt("g_trout_marchive_%d_base_only",acount));
+      Object.AddBoolProperty(archive,"MailBaseOnly",base_only);
+
+
+      // this info really comes from checking the mail List.ItemCount
+      //Object.AddIntProperty(archive,"MailCount" ,mail_count);
+
+      // clear the list for the next archive. 
+      List.RemoveAll(mail_list);
+
+      debug Debug.PrintString(String.FormatInt("Archive: r number mails %d\n",mail_count));
+
+      for (mcount=0;mcount<mail_count;++mcount) {
+         // Loop reading the mail objects
+         //ex "g_trout_marchive_shipmail_5_name, created from archive name and mail count.
+         mname = Global.String(String.FormatStrStr("g_trout_marchive_%s_%s_name",aname,String.FormatInt("%d",mcount)));
+
+         mail = Sim.Create("ini:/sims/nav/waypoint",mname);
+         Sim.SetCullable(mail,false);
+         debug Debug.PrintString(String.FormatStrStr("Restoring: %s %s\n",aname,mname));
+
+         Object.AddStringProperty(mail,"MailSubj",
+                                  Global.String(String.FormatStrStr("g_trout_marchive_%s_%s_subj",
+                                                                    aname,String.FormatInt("%d",mcount))));
+
+         Object.AddStringProperty(mail,"MailBody",
+                                  Global.String(String.FormatStrStr("g_trout_marchive_%s_%s_body",
+                                                                    aname,String.FormatInt("%d",mcount))));
+
+         Object.AddStringProperty(mail,"MailDate",
+                                  Global.String(String.FormatStrStr("g_trout_marchive_%s_%s_date",
+                                                                    aname,String.FormatInt("%d",mcount))));
+
+         Object.AddStringProperty(mail,"MailReturn",
+                                  Global.String(String.FormatStrStr("g_trout_marchive_%s_%s_return",
+                                                                    aname,String.FormatInt("%d",mcount))));
+
+         Object.AddIntProperty(mail, "MailId",
+                               Global.Int(String.FormatStrStr("g_trout_marchive_%s_%s_id",
+                                                              aname,String.FormatInt("%d",mcount))));
+         Object.AddBoolProperty(mail,"MailHtml", 
+                                Global.Bool(String.FormatStrStr("g_trout_marchive_%s_%s_html",
+                                                                aname,String.FormatInt("%d",mcount))));
+         Object.AddBoolProperty(mail,"MailRead", 
+                                Global.Bool(String.FormatStrStr("g_trout_marchive_%s_%s_read",
+                                                                aname,String.FormatInt("%d",mcount))));
+
+         Object.AddBoolProperty(mail,"MailDelete", 
+                                Global.Bool(String.FormatStrStr("g_trout_marchive_%s_%s_delete",
+                                                                aname,String.FormatInt("%d",mcount))));
+
+         Object.AddBoolProperty(mail,"MailCritical", 
+                                Global.Bool(String.FormatStrStr("g_trout_marchive_%s_%s_crit",
+                                                                aname,String.FormatInt("%d",mcount))));
+
+         List.AddTail(mail_list, mail);
+
+      } //For every mail
+
+      // Copy the mail into the archive object
+      Object.AddListProperty(archive,"MailList" ,mail_list);
+
+   }//For every archive
+
+   // Put all the archive handles in a place the accessor functions can get them.
+   Global.CreateList("g_trout_marchive_active_list",GA_NoSave|GA_Write, archiveList);
+
+}// ReadArchives
+
+
+
+// Called on save game event. 
+// Modified to not destroy the archive when it is saved.
+
+SaveArchives()
+{
+   list archive_list;
+   list mail_list;
+   list clean_list;
+
+   int archive_count;
+
+   int archiveIdNum;
+   int archiveMailId;
+   int acount,mcount;
+   int mail_count;
+   hsim archive;
+   hsim mail;
+   string aname,mname;
+   string sproperty;
+   int iproperty;
+   bool bproperty;
+
+   debug Debug.PrintString("tsMail.SaveArchives\n");
+
+   //calculate the current number of archives.
+   archive_list = Global.List("g_trout_marchive_active_list");
+   archive_count = List.ItemCount(archive_list);
+
+   for (acount=0; acount<archive_count;++acount) {
+
+      //Loop, turning each archive object into a set of globals
+      archive = Sim.Cast(List.GetNth(archive_list, acount));
+
+      mail_list = Object.ListProperty(archive, "MailList");
+
+
+      mail_count = List.ItemCount(mail_list);
+
+      debug Debug.PrintString(String.FormatInt("All mails %d\n",mail_count));
+      List.RemoveAll(clean_list);
+      for (mcount=0;mcount<mail_count; ++mcount) {
+         mail = Sim.Cast(List.GetNth(mail_list, mcount));    
+
+         // Remove noncritical deleted mails that have been read.
+         if (Object.BoolProperty(mail,"MailDelete")&& 
+             Object.BoolProperty(mail,"MailRead") &&
+             (!Object.BoolProperty(mail,"MailCritical"))) {
+            //Sim.Destroy(mail);
+         } else {
+            List.AddTail(clean_list, mail);
+         }   
+      }
+
+      mail_count = List.ItemCount(clean_list);
+
+      debug {
+         sproperty = Object.StringProperty(archive,"MailScreenName");
+         Debug.PrintString(sproperty);
+         Debug.PrintString(" archive name\n");
+         Debug.PrintString(String.FormatInt("tsMail.SaveArchives save emails %d\n",mail_count));
+      }
+         
+         
+
+
+      aname = Sim.Name(archive);
+
+      // save away the info needed to get mail list back
+      Global.CreateString(String.FormatInt("g_trout_marchive_%d_name",acount),GA_Write,aname);
+      Global.CreateInt(String.FormatInt("g_trout_marchive_%d_mail_count",acount),GA_Write,mail_count);
+
+      sproperty = Object.StringProperty(archive,"MailScreenName");
+      Global.CreateString(String.FormatInt("g_trout_marchive_%d_screen_name",acount),GA_Write,sproperty);
+
+      sproperty = Object.StringProperty(archive,"MailDesc");
+      Global.CreateString(String.FormatInt("g_trout_marchive_%d_desc",acount),GA_Write,sproperty);
+
+      bproperty = Object.BoolProperty(archive,"MailViewable");
+      Global.CreateBool(String.FormatInt("g_trout_marchive_%d_viewable",acount),GA_Write,bproperty);
+
+      bproperty = Object.BoolProperty(archive,"MailBaseOnly");
+      Global.CreateBool(String.FormatInt("g_trout_marchive_%d_base_only",acount),GA_Write,bproperty);
+
+      for (mcount=0; mcount<mail_count; ++mcount) {
+
+         // Loop, saving mail objects
+         mail = Sim.Cast(List.GetNth(clean_list, mcount));
+
+         sproperty = Sim.Name(mail);
+         Global.CreateString(String.FormatStrStr("g_trout_marchive_%s_%s_name",
+                                                 aname,String.FormatInt("%d",mcount)), GA_Write, sproperty);  
+
+         debug Debug.PrintString(String.FormatStrStr("Saving: %s %s\n",aname,sproperty));
+
+         sproperty = Object.StringProperty(mail,"MailSubj");
+         Global.CreateString(String.FormatStrStr("g_trout_marchive_%s_%s_subj",
+                                                 aname,String.FormatInt("%d",mcount)), GA_Write, sproperty);
+
+         sproperty = Object.StringProperty(mail,"MailBody");
+         Global.CreateString(String.FormatStrStr("g_trout_marchive_%s_%s_body",
+                                                 aname,String.FormatInt("%d",mcount)),GA_Write,sproperty);
+
+         sproperty = Object.StringProperty(mail,"MailDate");
+         Global.CreateString(String.FormatStrStr("g_trout_marchive_%s_%s_date",
+                                                 aname,String.FormatInt("%d",mcount)),GA_Write,sproperty);
+
+         sproperty = Object.StringProperty(mail,"MailReturn");
+         Global.CreateString(String.FormatStrStr("g_trout_marchive_%s_%s_return",
+                                                 aname,String.FormatInt("%d",mcount)),GA_Write,sproperty);
+
+         iproperty = Object.IntProperty(mail,"MailId");
+         Global.CreateInt(String.FormatStrStr("g_trout_marchive_%s_%s_id",
+                                              aname,String.FormatInt("%d",mcount)),GA_Write,iproperty);
+
+         bproperty = Object.BoolProperty(mail,"MailHtml");
+         Global.CreateBool(String.FormatStrStr("g_trout_marchive_%s_%s_html",
+                                               aname,String.FormatInt("%d",mcount)),GA_Write,bproperty);
+
+         bproperty = Object.BoolProperty(mail,"MailRead");
+         Global.CreateBool(String.FormatStrStr("g_trout_marchive_%s_%s_read",
+                                               aname,String.FormatInt("%d",mcount)),GA_Write,bproperty);
+
+         bproperty = Object.BoolProperty(mail,"MailDelete");
+         Global.CreateBool(String.FormatStrStr("g_trout_marchive_%s_%s_delete",
+                                               aname,String.FormatInt("%d",mcount)),GA_Write,bproperty);
+
+         bproperty = Object.BoolProperty(mail,"MailCritical");
+         Global.CreateBool(String.FormatStrStr("g_trout_marchive_%s_%s_crit",
+                                               aname,String.FormatInt("%d",mcount)),GA_Write,bproperty);
+
+
+         //Sim.Destroy(mail);
+      } //For every mail
+
+      //Sim.Destroy(archive);
+   }//For every archive
+
+   // The control variable we need to restore the archives
+   Global.CreateInt("g_trout_marchive_count", GA_Write, archive_count);
+}

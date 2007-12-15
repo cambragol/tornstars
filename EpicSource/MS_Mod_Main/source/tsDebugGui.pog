@@ -33,8 +33,8 @@ uses	Sim,
 		Task,
 		Text,
 		UniGUI,
-      tEpicGuiEnum,
-      tEpicGui;
+      tsGuiEnum,
+      tsGui;
 
 
 provides StartScreen,
@@ -273,11 +273,11 @@ DisplayWindow()
    width = width - Global.Int("EpicGui_content_indent");
       
 
-   tEpicGui.CreateTitle(shady_bar, "EPIC DEBUG");
-   tEpicGui.CreateSubtitle(shady_bar, "Select Debug Message Flags");
+   tsGui.CreateTitle(shady_bar, "EPIC DEBUG");
+   tsGui.CreateSubtitle(shady_bar, "Select Debug Message Flags");
 
    // Create the exit button
-   tEpicGui.CreateExitButton(shady_bar, "EXIT", "tsDebugGui.ExitScreen");
+   tsGui.CreateExitButton(shady_bar, "EXIT", "tsDebugGui.ExitScreen");
 
 
 
