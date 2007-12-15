@@ -207,7 +207,7 @@ AttachCargoHardpoint()
    list mountpoint_list;
    hsim mountpoint;
 
-   debug Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Start\n");
+   debug Debug.PrintString("tsLoadoutGui.AttachCargoHardpoint Start\n");
    
    // process the cargo types in the cargo_hardpoints.ini file
    count = 0;
@@ -216,22 +216,27 @@ AttachCargoHardpoint()
       hardpoint_type = INIFile.NumberedString(hardpoint_file, "Cargo", "hardpoint_type", count, "");
       template_name = INIFile.NumberedString(hardpoint_file, "Cargo", "template", count, "");
       price = INIFile.NumberedInt(hardpoint_file, "Cargo", "price", count, 0);
-      ammo_name = INIFile.NumberedString(hardpoint_file, "Cargo", "ammo_type", count, "CT_Invalid");
+      ammo_name = INIFile.NumberedString(hardpoint_file, "Cargo", "ammo_type", count, "no_ammo");
       ++count;
 
       cargo_type = tsEconUtil.String2CargoType(cargo_name);
-      ammo_type = tsEconUtil.String2CargoType(ammo_name);
+
+      if ("no_ammo" == ammo_name) {
+         ammo_type = CT_Invalid;
+      }else {
+         ammo_type = tsEconUtil.String2CargoType(ammo_name);
+      }
 
       // Validate there are no typo errors.
       subsim_file = INIFile.Create(template_name);
       if (none == subsim_file) {
          debug {
-            Debug.PrintString(cargo_name);
-            Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Error invalid template entry\n");
+            Debug.PrintString(String.FormatStrStr("tsLoadoutGui.AttachCargoHardpoint Error invalid template entry '%s' in cargo '%s'\n",
+                                                  template_name,
+                                                  cargo_name));
          }
       }
       INIFile.Destroy(subsim_file);
-
 
       if (CT_Invalid != cargo_type) {
          cargo = iCargo.Find(cargo_type);
@@ -243,14 +248,16 @@ AttachCargoHardpoint()
             Object.AddIntProperty(cargo, "ammo_type", ammo_type);
          }else{
             debug {
-               Debug.PrintString(cargo_name);
-               Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Error invalid cargo type\n");
+               Debug.PrintString(String.FormatStrStr("tsLoadoutGui.AttachCargoHardpoint Error invalid cargo type from cargo name '%s' %s\n",
+                                                     cargo_name, 
+                                                     ""));
             }
          }
       }else {
          debug {
-            Debug.PrintString(cargo_name);
-            Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Error invalid cargo type\n");
+            Debug.PrintString(String.FormatStrStr("tsLoadoutGui.AttachCargoHardpoint Error invalid cargo name '%s' %s\n",
+                                                  template_name,
+                                                  cargo_name));
          }
       }
                   
@@ -264,14 +271,19 @@ AttachCargoHardpoint()
             Object.AddIntProperty(cargo, "ammo_type", 0);
          }else{
             debug {
-               Debug.PrintString(cargo_name);
-               Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Error invalid ammo cargo type\n");
+               Debug.PrintString(String.FormatStrStr("tsLoadoutGui.AttachCargoHardpoint Error invalid template entry '%s' in cargo '%s'\n",
+                                                     template_name,
+                                                     cargo_name));
             }
          }
       }else {
-         debug {
-            Debug.PrintString(cargo_name);
-            Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Error invalid cargo type\n");
+         // User was trying to setup some ammo, but did a typo or something
+         if ("no_ammo" != ammo_name) {
+            debug {
+               Debug.PrintString(String.FormatStrStr("tsLoadoutGui.AttachCargoHardpoint Error invalid ammo_type '%s' in cargo '%s'\n",
+                                                     ammo_name,
+                                                     cargo_name));
+            }
          }
       }
 
@@ -289,8 +301,9 @@ AttachCargoHardpoint()
       subsim_file = INIFile.Create(template_name);
       if (none == subsim_file) {
          debug {
-            Debug.PrintString(template_name);
-            Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint Error invalid mountpoint entry\n");
+            Debug.PrintString(String.FormatStrStr("tsLoadoutGui.AttachCargoHardpoint Error subsim INI '%s' does not exist in mountpoint entry '%s'\n",
+                                                  template_name,
+                                                  cargo_name));
          }
       }
 

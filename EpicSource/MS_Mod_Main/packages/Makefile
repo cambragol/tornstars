@@ -176,6 +176,7 @@ PACKAGES = ECargoTypes.pkg \
 	zTestExp.pkg \
 	zTestFacShip.pkg \
 	zTestObject.pkg \
+	zMapTest.pkg \
 	tsSystemDamage.pkg \
 	tssdGUI.pkg \
 	tsMain.pkg
@@ -349,14 +350,16 @@ tsLoadoutGui.pkg : tsLoadoutGui.pog tsStation.h tsGui.h tsFaction.h tsLProductio
 tsPilotSetup.pkg : tsPilotSetup.pog tsShipComms.h tsShip.h tsLRoot.h tsLTrade.h tsFaction.h tsTradeSell.h tsMoney.h tsShipName.h tsPcOwner.h tsLProduction.h tsLFleet.h tsFleetOp.h tsPodUtil.h tsReputationWatch.h tsEvent.h
 
 tsWingman.pkg : tsWingman.pog tsShip.h tsFormation.h tsPodUtil.h tsFaction.h tsStationEnum.h tsStation.h tsLProduction.h tsMegaTrucking.h tsStationFilter.h
-
-#ts_StationEvent.pkg : ts_StationEvent.pog UniGUI.h tsTime.h tsFaction.h tsMail.h tsShipMail.h tsNewsNet.h tsStation.h tsEconUtil.h tsFleetOp.h tsLProduction.h
-
 tsString.pkg : tsString.pog
+
+
+
+
 zTestCapsule.pkg : zTestCapsule.pog tsShip.h
 zTestCargo.pkg : zTestCargo.pog tsEconUtil.h tsTradeBuy.h tsPogClass.h tsLRoot.h tsLTrade.h tsMoney.h tsTime.h tsFaction.h tsShip.h tsPodUtil.h tsShipCreation.h tsPcOwner.h
 zTestCode.pkg : zTestCode.pog tsEconUtil.h tsTradeBuy.h tsPogClass.h tsLRoot.h tsLTrade.h tsMoney.h tsTime.h tsFaction.h tsShip.h tsPodUtil.h tsShipCreation.h
 zTestExp.pkg : zTestExp.pog tsEconUtil.h tsTradeBuy.h tsPogClass.h tsLRoot.h tsLTrade.h tsMoney.h tsTime.h tsFaction.h tsShip.h tsPodUtil.h tsShipCreation.h tsPcOwner.h
 zTestFacShip.pkg : zTestFacShip.pog
 zTestObject.pkg : zTestObject.pog
+zMapTest.pkg : zMapTest.pog UniGUI.h tsGui.h tsFaction.h
 

@@ -88,14 +88,6 @@ prototype float   colour_component
 );
 
 
-// bind at enter space
-Test()
-{
-   debug Debug.PrintString("FacGui Test\n");
-
-//   Input.BindKey( "tsFactionGui.CreateMenu", "AnySection.CallMyFunction" ); 
-
-}
 
 //********************************************************************
 // Setup fixed positions for use by all EpicGui screens.
@@ -609,34 +601,25 @@ hwindow CreateExitButton(hwindow parent, string name, string function)
 
 // GUI:
 
-                  SetWindowStateColours
-( hwindow         to_set,
-  eColour         n_base_colour,
-  eIntensity      n_intensity,
-  eColour         f_base_colour,
-  eIntensity      f_intensity,
-  eColour         s_base_colour,
-  eIntensity      s_intensity
-) // Wrapper function to simplify setting state colours by name without
+SetWindowStateColours( hwindow         to_set,
+                       eColour         n_base_colour,
+                       eIntensity      n_intensity,
+                       eColour         f_base_colour,
+                       eIntensity      f_intensity,
+                       eColour         s_base_colour,
+                       eIntensity      s_intensity) 
+// Wrapper function to simplify setting state colours by name without
 { // using globals (colour_component() hard-codes what would be global values)
-  float           sc_n_red
-    = colour_component(n_base_colour, n_intensity, epgRed);
-  float           sc_n_green
-    = colour_component(n_base_colour, n_intensity, epgGreen);
-  float           sc_n_blue
-    = colour_component(n_base_colour, n_intensity, epgBlue);
-  float           sc_f_red
-    = colour_component(f_base_colour, f_intensity, epgRed);
-  float           sc_f_green
-    = colour_component(f_base_colour, f_intensity, epgGreen);
-  float           sc_f_blue
-    = colour_component(f_base_colour, f_intensity, epgBlue);
-  float           sc_s_red
-    = colour_component(s_base_colour, s_intensity, epgRed);
-  float           sc_s_green
-    = colour_component(s_base_colour, s_intensity, epgGreen);
-  float           sc_s_blue
-    = colour_component(s_base_colour, s_intensity, epgBlue);
+     
+   float sc_n_red = colour_component(n_base_colour, n_intensity, epgRed);
+   float sc_n_green = colour_component(n_base_colour, n_intensity, epgGreen);
+   float sc_n_blue = colour_component(n_base_colour, n_intensity, epgBlue);
+   float sc_f_red = colour_component(f_base_colour, f_intensity, epgRed);
+   float sc_f_green = colour_component(f_base_colour, f_intensity, epgGreen);
+   float sc_f_blue = colour_component(f_base_colour, f_intensity, epgBlue);
+   float sc_s_red = colour_component(s_base_colour, s_intensity, epgRed);
+   float sc_s_green = colour_component(s_base_colour, s_intensity, epgGreen);
+   float sc_s_blue = colour_component(s_base_colour, s_intensity, epgBlue);
 
   GUI.SetWindowStateColours
   ( to_set,

@@ -55,14 +55,16 @@ hsim PogCreate(string template_name, string object_name)
    string item_template, pog_class, start_function;
    hisim center;
 
-   debug Debug.PrintString("tsPcAsteroidBelt.PogCreate\n");
+   //debug Debug.PrintString("tsPcAsteroidBelt.PogCreate\n");
 
 
    object_file = INIFile.Create(template_name);
 
    if (none == object_file) {
       debug {
-         Debug.PrintString("tsPcAsteroidBelt.PogCreate, failed to find object file\n");
+         Debug.PrintString(String.FormatStrStr("tsPcAsteroidBelt.PogCreate ERROR INI file missing '%s' %s\n",
+                                               template_name,
+                                               ""));
       }
 
       return none;
@@ -104,7 +106,7 @@ task PogStart(hsim pog_object)
    hship player;
    float distance;
 
-   debug Debug.PrintString("tsPcAsteroidBelt.PogStart\n");
+   //debug Debug.PrintString("tsPcAsteroidBelt.PogStart\n");
 
    ///***************************************
    // This part of the start code is object dependent. The prior pieces must
@@ -155,7 +157,7 @@ setup_asteroid_belt(hisim center)
    float length_pos, width_pos, height_pos, spin, angle;
    list cull_list;
 
-   debug Debug.PrintString("PcAsteroidBelt.setup_asteroid_belt\n");
+   debug Debug.PrintString("tsPcAsteroidBelt.setup_asteroid_belt\n");
 
    // If the player has turned off the asteroid fields, do no setup.
    if (!Global.Bool("gt_option_asteroids_on")) {
@@ -195,9 +197,9 @@ setup_asteroid_belt(hisim center)
       item_count = INIFile.NumberedInt(control_file,"Properties","number",count,0);
 
       if ("none" == item_template) {
-         debug Debug.PrintString("ERROR tsPcAsteroidBelt.setup_asteroid_belt invalid item_template\n");
-         debug Debug.PrintString(template_file);
-         debug Debug.PrintString("\n");
+         debug Debug.PrintString(String.FormatStrStr("ERROR tsPcAsteroidBelt.setup_asteroid_belt invalid item '%s' in object '%s'\n",
+                                                     item_template,
+                                                     template_file));
       }else {
 
          for (i=0;i<item_count;++i) {
@@ -205,7 +207,9 @@ setup_asteroid_belt(hisim center)
             item = Sim.Create(item_template,String.FormatInt("tsPcAsteroidBelt%d",i));
 
             if (none == item) {
-               debug Debug.PrintString("ERROR tsPcAsteroidBelt.setup_asteroid_belt invalid item\n");
+               debug Debug.PrintString(String.FormatStrStr("ERROR tsPcAsteroidBelt.setup_asteroid_belt invalid item '%s' in object '%s'\n",
+                                                           item_template,
+                                                           template_file));
             }
 
             length_pos = 0.0;
