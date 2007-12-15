@@ -1,0 +1,870 @@
+//*****************************************************************************/
+//
+// tsGui.pog
+//
+// This package offers utility functions for quick formatting of Epic GUI
+// Screens.  It provides the globals needed for consistant look and feel in
+// Epic.
+// 
+// 
+//
+// Feb 2003, Jon Freise
+//
+// Last Edit: 2003-07-10 23:02:44 (859L/24589C)
+//****************************************************************************/
+
+
+package tsGui;
+
+uses	Sim,
+		iShip,
+		iSim,
+		Debug,
+		Global,
+		GUI,
+		iDirector,
+		iGUI,
+		iHUD,
+		INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+		Math;
+
+
+
+provides
+          InitGlobals,
+
+          CreateTitle,
+          CreateSubtitle,
+          CreateExitButton,
+          SetStandardStateColours,
+          SetWindowStateColours
+;
+
+// Enumerators for easy reference to standardised state colours by name
+enum  eColour     // (YRGB double as offsets into custom gui palette)
+{ epgYellow     = 0,
+  epgRed        = 64,
+  epgGreen      = 128,
+  epgBlue       = 192,
+  epgWhite      = 256,
+  epgBlack      = 0x7FFFFFF
+};
+enum  eIntensity
+{ epgFaded,
+  epgNeutral,
+  epgFocused,
+  epgSelected
+};
+
+prototype hwindow CreateTitle(hwindow parent, string name);
+prototype hwindow CreateExitButton(hwindow parent, string name, string function);
+prototype hwindow CreateSubtitle(hwindow parent, string name);
+
+prototype         SetStandardStateColours
+( hwindow         to_set
+);
+
+prototype         SetWindowStateColours
+( hwindow         to_set,
+  eColour         n_base_colour,
+  eIntensity      n_intensity,
+  eColour         f_base_colour,
+  eIntensity      f_intensity,
+  eColour         s_base_colour,
+  eIntensity      s_intensity
+);
+
+
+prototype float   colour_component
+( eColour         base_colour,
+  eIntensity      intensity,
+  eColour         component
+);
+
+
+// bind at enter space
+Test()
+{
+   debug Debug.PrintString("FacGui Test\n");
+
+//   Input.BindKey( "tsFactionGui.CreateMenu", "AnySection.CallMyFunction" ); 
+
+}
+
+//********************************************************************
+// Setup fixed positions for use by all EpicGui screens.
+
+// To be bound at start session.
+//*******************************************************************
+InitGlobals()
+{
+   int drop = Global.Int("GUI_title_y_offset");
+   int indent = Global.Int("GUI_main_title_x_offset");
+   int height = Global.Int( "GUI_main_title_height"); 
+
+
+   // Positions from screen top. Do not allow content above content drop
+   drop = 10;
+   Global.CreateInt("EpicGui_title_drop",GA_Write|GA_NoSave, drop);
+   drop = drop +height;
+   drop = drop + 4;
+   Global.CreateInt("EpicGui_subtitle_drop",GA_Write|GA_NoSave, drop);
+   drop = drop + height;
+   Global.CreateInt("EpicGui_content_drop",GA_Write|GA_NoSave, drop);
+
+   // Left hand indents 
+   Global.CreateInt("EpicGui_title_indent",GA_Write|GA_NoSave, indent);
+   Global.CreateInt("EpicGui_subtitle_indent",GA_Write|GA_NoSave, indent*2);
+   Global.CreateInt("EpicGui_content_indent",GA_Write|GA_NoSave, indent);
+
+   // Do not allow content below this value.
+   // Picked to be a little lower than the back button, but not right
+   // on the very screen bottom   
+   Global.CreateInt("EpicGui_content_footer",GA_Write|GA_NoSave, 50);
+
+   // Entirely optional: for the benefit of coders who'd rather not depend on
+   // tsGui to get at the standard colour floats.  Stops at "// END" for
+   // easy deletion :).
+   // red
+   Global.CreateFloat
+   ( "EpicGui_red_faded_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgRed, epgFaded, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_red_faded_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgRed, epgFaded, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_red_faded_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgRed, epgFaded, epgBlue)
+   );
+   Global.CreateFloat
+   ( "EpicGui_red_neutral_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgRed, epgNeutral, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_red_neutral_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgRed, epgNeutral, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_red_neutral_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgRed, epgNeutral, epgBlue)
+   );
+   Global.CreateFloat
+   ( "EpicGui_red_focused_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgRed, epgFocused, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_red_focused_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgRed, epgFocused, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_red_focused_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgRed, epgFocused, epgBlue)
+   );
+   Global.CreateFloat
+   ( "EpicGui_red_selected_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgRed, epgSelected, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_red_selected_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgRed, epgSelected, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_red_selected_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgRed, epgSelected, epgBlue)
+   );
+   // green
+   Global.CreateFloat
+   ( "EpicGui_green_faded_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgGreen, epgFaded, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_green_faded_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgGreen, epgFaded, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_green_faded_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgGreen, epgFaded, epgBlue)
+   );
+   Global.CreateFloat
+   ( "EpicGui_green_neutral_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgGreen, epgNeutral, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_green_neutral_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgGreen, epgNeutral, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_green_neutral_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgGreen, epgNeutral, epgBlue)
+   );
+   Global.CreateFloat
+   ( "EpicGui_green_focused_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgGreen, epgFocused, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_green_focused_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgGreen, epgFocused, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_green_focused_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgGreen, epgFocused, epgBlue)
+   );
+   Global.CreateFloat
+   ( "EpicGui_green_selected_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgGreen, epgSelected, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_green_selected_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgGreen, epgSelected, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_green_selected_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgGreen, epgSelected, epgBlue)
+   );
+   // blue
+   Global.CreateFloat
+   ( "EpicGui_blue_faded_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgBlue, epgFaded, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_blue_faded_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgBlue, epgFaded, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_blue_faded_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgBlue, epgFaded, epgBlue)
+   );
+   Global.CreateFloat
+   ( "EpicGui_blue_neutral_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgBlue, epgNeutral, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_blue_neutral_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgBlue, epgNeutral, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_blue_neutral_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgBlue, epgNeutral, epgBlue)
+   );
+   Global.CreateFloat
+   ( "EpicGui_blue_focused_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgBlue, epgFocused, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_blue_focused_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgBlue, epgFocused, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_blue_focused_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgBlue, epgFocused, epgBlue)
+   );
+   Global.CreateFloat
+   ( "EpicGui_blue_selected_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgBlue, epgSelected, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_blue_selected_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgBlue, epgSelected, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_blue_selected_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgBlue, epgSelected, epgBlue)
+   );
+   // yellow
+   Global.CreateFloat
+   ( "EpicGui_yellow_faded_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgYellow, epgFaded, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_yellow_faded_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgYellow, epgFaded, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_yellow_faded_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgYellow, epgFaded, epgBlue)
+   );
+   Global.CreateFloat
+   ( "EpicGui_yellow_neutral_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgYellow, epgNeutral, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_yellow_neutral_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgYellow, epgNeutral, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_yellow_neutral_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgYellow, epgNeutral, epgBlue)
+   );
+   Global.CreateFloat
+   ( "EpicGui_yellow_focused_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgYellow, epgFocused, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_yellow_focused_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgYellow, epgFocused, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_yellow_focused_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgYellow, epgFocused, epgBlue)
+   );
+   Global.CreateFloat
+   ( "EpicGui_yellow_selected_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgYellow, epgSelected, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_yellow_selected_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgYellow, epgSelected, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_yellow_selected_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgYellow, epgSelected, epgBlue)
+   );
+   // white
+   Global.CreateFloat
+   ( "EpicGui_white_faded_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgWhite, epgFaded, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_white_faded_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgWhite, epgFaded, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_white_faded_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgWhite, epgFaded, epgBlue)
+   );
+   Global.CreateFloat
+   ( "EpicGui_white_neutral_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgWhite, epgNeutral, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_white_neutral_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgWhite, epgNeutral, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_white_neutral_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgWhite, epgNeutral, epgBlue)
+   );
+   Global.CreateFloat
+   ( "EpicGui_white_focused_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgWhite, epgFocused, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_white_focused_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgWhite, epgFocused, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_white_focused_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgWhite, epgFocused, epgBlue)
+   );
+   Global.CreateFloat
+   ( "EpicGui_white_selected_red",
+     GA_Read | GA_NoSave,
+     colour_component(epgWhite, epgSelected, epgRed)
+   );
+   Global.CreateFloat
+   ( "EpicGui_white_selected_green",
+     GA_Read | GA_NoSave,
+     colour_component(epgWhite, epgSelected, epgGreen)
+   );
+   Global.CreateFloat
+   ( "EpicGui_white_selected_blue",
+     GA_Read | GA_NoSave,
+     colour_component(epgWhite, epgSelected, epgBlue)
+   );
+   // END of (maybe) unnecessary colour float globals
+
+
+/*
+   Global.SetFloat( "GUI_neutral_red", 0.0);
+   Global.SetFloat( "GUI_neutral_green", 0.0);
+   Global.SetFloat( "GUI_neutral_blue", 0.6);
+
+   Global.SetFloat( "GUI_focused_red", 0.0);
+   Global.SetFloat( "GUI_focused_green", 0.0);
+   Global.SetFloat( "GUI_focused_blue", 0.8);
+
+   Global.SetFloat( "GUI_selected_red", 0.0);
+   Global.SetFloat( "GUI_selected_green", 0.0);
+   Global.SetFloat( "GUI_selected_blue", 0.4);
+*/
+
+//   Global.CreateInt("EpicGui_min_shady_width",GA_Write|GA_NoSave, 200);
+
+}
+
+hwindow CreateTitle(hwindow parent, string name)
+{
+   hwindow title;
+   int width;
+   int height = Global.Int("GUI_main_title_height");
+
+
+   width = GUI.WindowCanvasWidth(parent);
+
+   title = GUI.CreateStaticWindow(Global.Int("EpicGui_title_indent"),
+                                  Global.Int("EpicGui_title_drop"),
+                                  width, 
+                                  height,
+                                  parent);
+
+   GUI.SetWindowFont(title,Global.String("GUI_main_title_font"));
+
+   // The main title font doesn't support lower case
+   GUI.SetWindowTitle(title, String.UpperCase(name));
+
+   GUI.SetWindowTextFormatting( title,
+                                false,
+                                0);
+
+   // Title is in green
+   /*
+   GUI.SetWindowStateColours( title,
+                              0.2,0.8,0.2,
+                              0.2,0.8,0.2,
+                              0.2,0.8,0.2);
+   */
+   SetWindowStateColours
+   ( title,
+     epgGreen, epgFocused, epgGreen, epgFocused, epgGreen, epgFocused
+   );
+
+   return title;
+}
+
+
+hwindow CreateSubtitle(hwindow parent, string name)
+{
+   hwindow title;
+   int width;
+   int height = Global.Int("GUI_main_title_height");
+
+   width = GUI.WindowCanvasWidth(parent);
+
+   title = GUI.CreateStaticWindow(Global.Int("EpicGui_subtitle_indent"),
+                                  Global.Int("EpicGui_subtitle_drop"),
+                                  width, 
+                                  height,
+                                  parent);
+
+   GUI.SetWindowFont(title,Global.String("GUI_subtitle_font"));
+
+   GUI.SetWindowTitle(title, name);
+
+   GUI.SetWindowTextFormatting( title,
+                                false,
+                                0);
+
+   SetWindowStateColours
+   ( title,
+     epgWhite, epgFocused, epgWhite, epgFocused, epgWhite, epgFocused
+   );
+
+   return title;
+}
+
+hwindow CreateExitButton(hwindow parent, string name, string function)
+{
+   hwindow button, border;
+   int x,y, height, width, text_off;
+
+   // default text
+   if(name == "")
+     name = "Exit";
+
+   height = Global.Int("GUI_fancybutton_height"); // /3;
+   width = Global.Int("GUI_fancybutton_width") - 30; // /2;
+   text_off = Global.Int("GUI_fancybutton_textoffset");
+
+   y = GUI.WindowCanvasHeight( parent );
+
+   // y position uses back button position, add room for fancy border, add a little whitespace
+   y= y - Global.Int("EpicGui_content_footer");
+   y += 5;
+   //y=y+10;
+   y = y - Global.Int("GUI_fancybutton_alignmentoffset");
+   x = Global.Int("GUI_backbutton_left");
+
+   button = GUI.CreateButton(x, y, width, height, parent);
+
+   // Not sure about this -- is it intended to be the standard?
+   GUI.SetWindowTitle(button, String.UpperCase(name));
+
+   GUI.SetWindowFont(button, Global.String("GUI_title_font"));
+
+   GUI.SetWindowTextFormatting( button,
+                                false,
+                                text_off);
+
+   // Exit button is in white.
+   SetWindowStateColours
+   ( button,
+     epgWhite, epgNeutral, epgWhite, epgSelected, epgWhite, epgSelected
+   );
+
+   // default to basic 'back' function if none supplied
+   if(function == "")
+     GUI.SetButtonFunctionPog(button, "UniGUI.UniGUIRemoveScreen");
+   else
+     GUI.SetButtonFunctionPog(button, function);
+
+   /* Squared-off version
+   GUI.SetWindowStateTextures
+   ( button, "texture:/images/gui/flm_utStdGUI_GS",
+     230, 45, 233, 61,
+     233, 45, 235, 61,
+     235, 45, 238, 61,
+     238, 45, 241, 61,
+     241, 45, 243, 61,
+     243, 45, 246, 61,
+     238, 45, 241, 61,
+     241, 45, 243, 61,
+     243, 45, 246, 61
+   );
+   */
+   GUI.SetWindowStateTextures
+   ( button, "texture:/images/gui/flm_utStdGUI_GS",
+      0, 42, 12, 62,
+     13, 42, 15, 62,
+     16, 42, 28, 62,
+     28, 42, 41, 62,
+     42, 42, 44, 62,
+     45, 42, 57, 62,
+     28, 42, 41, 62,
+     42, 42, 44, 62,
+     45, 42, 57, 62
+   );
+
+   return button;
+
+   // Add the border
+   //border = GUI.CreateBorder(button);
+
+   //return border;
+}
+
+// GUI:
+
+                  SetWindowStateColours
+( hwindow         to_set,
+  eColour         n_base_colour,
+  eIntensity      n_intensity,
+  eColour         f_base_colour,
+  eIntensity      f_intensity,
+  eColour         s_base_colour,
+  eIntensity      s_intensity
+) // Wrapper function to simplify setting state colours by name without
+{ // using globals (colour_component() hard-codes what would be global values)
+  float           sc_n_red
+    = colour_component(n_base_colour, n_intensity, epgRed);
+  float           sc_n_green
+    = colour_component(n_base_colour, n_intensity, epgGreen);
+  float           sc_n_blue
+    = colour_component(n_base_colour, n_intensity, epgBlue);
+  float           sc_f_red
+    = colour_component(f_base_colour, f_intensity, epgRed);
+  float           sc_f_green
+    = colour_component(f_base_colour, f_intensity, epgGreen);
+  float           sc_f_blue
+    = colour_component(f_base_colour, f_intensity, epgBlue);
+  float           sc_s_red
+    = colour_component(s_base_colour, s_intensity, epgRed);
+  float           sc_s_green
+    = colour_component(s_base_colour, s_intensity, epgGreen);
+  float           sc_s_blue
+    = colour_component(s_base_colour, s_intensity, epgBlue);
+
+  GUI.SetWindowStateColours
+  ( to_set,
+    sc_n_red, sc_n_green, sc_n_blue,
+    sc_f_red, sc_f_green, sc_f_blue,
+    sc_s_red, sc_s_green, sc_s_blue
+  );
+}
+
+                  SetStandardStateColours
+( hwindow         to_set
+)
+{
+  SetWindowStateColours
+  ( to_set,
+    epgYellow, epgNeutral, epgYellow, epgFocused, epgYellow, epgSelected
+  );
+}
+
+
+float             colour_component
+( eColour         base_colour,
+  eIntensity      intensity,
+  eColour         component
+)
+{
+  switch(base_colour)
+  {
+    case epgYellow:
+      switch(intensity)
+      {
+        case epgFaded:
+          switch(component)
+          {
+            case epgRed:
+              return 0.5;         // yellow_faded_red
+            case epgGreen:
+              return 0.3745;      // yellow_faded_green
+            case epgBlue:
+              return 0.0;         // yellow_faded_blue
+          }
+        case epgNeutral:
+          switch(component)
+          {
+            case epgRed:
+              return 0.6;         // yellow_neutral_red
+            case epgGreen:
+              return 0.451;       // yellow_neutral_green
+            case epgBlue:
+              return 0.0;         // yellow_neutral_blue
+          }
+        case epgFocused:
+          switch(component)
+          {
+            case epgRed:
+              return 1.0;         // yellow_focused_red
+            case epgGreen:
+              return 0.749;       // yellow_focused_green
+            case epgBlue:
+              return 0.0;         // yellow_focused_blue
+          }
+        case epgSelected:
+          switch(component)
+          {
+            case epgRed:
+              return 1.0;         // yellow_selected_red
+            case epgGreen:
+              return 0.859;       // yellow_selected_green
+            case epgBlue:
+              return 0.278;       // yellow_selected_blue
+          }
+      }
+    case epgRed:
+      switch(intensity)
+      {
+        case epgFaded:
+          switch(component)
+          {
+            case epgRed:
+              return 0.375;       // red_faded_red
+            case epgGreen:
+              return 0.078125;    // red_faded_green
+            case epgBlue:
+              return 0.0;         // red_faded_blue
+          }
+        case epgNeutral:
+          switch(component)
+          {
+            case epgRed:
+              return 0.6640625;   // red_neutral_red
+            case epgGreen:
+              return 0.125;       // red_neutral_green
+            case epgBlue:
+              return 0.0;         // red_neutral_blue
+          }
+        case epgFocused:
+          switch(component)
+          {
+            case epgRed:
+              return 1.0;         // red_focused_red
+            case epgGreen:
+              return 0.33203125;  // red_focused_green
+            case epgBlue:
+              return 0.00390625;  // red_focused_blue
+          }
+        case epgSelected:
+          switch(component)
+          {
+            case epgRed:
+              return 1.0;         // red_selected_red
+            case epgGreen:
+              return 0.19140625;  // red_selected_green
+            case epgBlue:
+              return 0.00390625;  // red_selected_blue
+          }
+      }
+    case epgGreen:
+      switch(intensity)
+      {
+        case epgFaded:
+          switch(component)
+          {
+            case epgRed:
+              return 0.0;         // green_faded_red
+            case epgGreen:
+              return 0.375;       // green_faded_green
+            case epgBlue:
+              return 0.11328125;  // green_faded_blue
+          }
+        case epgNeutral:
+          switch(component)
+          {
+            case epgRed:
+              return 0.0;         // green_neutral_red
+            case epgGreen:
+              return 0.6640625;   // green_neutral_green
+            case epgBlue:
+              return 0.1875;      // green_neutral_blue
+          }
+        case epgFocused:
+          switch(component)
+          {
+            case epgRed:
+              return 0.15;        // green_focused_red
+            case epgGreen:
+              return 1.0;         // green_focused_green
+            case epgBlue:
+              return 0.28515625;  // green_focused_blue
+          }
+        case epgSelected:
+          switch(component)
+          {
+            case epgRed:
+              return 0.2;         // green_selected_red
+            case epgGreen:
+              return 1.0;         // green_selected_green
+            case epgBlue:
+              return 0.42578125;  // green_selected_blue
+          }
+      }
+    case epgBlue:
+      switch(intensity)
+      {
+        case epgFaded:
+          switch(component)
+          {
+            case epgRed:
+              return 0.18359375;  // blue_faded_red
+            case epgGreen:
+              return 0.0;         // blue_faded_green
+            case epgBlue:
+              return 0.375;       // blue_faded_blue
+          }
+        case epgNeutral:
+          switch(component)
+          {
+            case epgRed:
+              return 0.296875;    // blue_neutral_red
+            case epgGreen:
+              return 0.0;         // blue_neutral_green
+            case epgBlue:
+              return 0.6640625;   // blue_neutral_blue
+          }
+        case epgFocused:
+          switch(component)
+          {
+            case epgRed:
+              return 0.44921875;  // blue_focused_red
+            case epgGreen:
+              return 0.00390625;  // blue_focused_green
+            case epgBlue:
+              return 1.0;         // blue_focused_blue
+          }
+        case epgSelected:
+          switch(component)
+          {
+            case epgRed:
+              return 0.609375;    // blue_selected_red
+            case epgGreen:
+              return 0.00390625;  // blue_selected_green
+            case epgBlue:
+              return 1.0;         // blue_selected_blue
+          }
+      }
+    case epgWhite:
+      switch(intensity)
+      {
+        case epgFaded:
+          return 0.4;             // white_faded_*
+        case epgNeutral:
+          return 0.6;             // white_neutral_*
+        case epgFocused:
+          return 0.9;             // white_focused_*
+        case epgSelected:
+          return 1.0;             // white_selected_*
+      }
+  }
+  return 0.0;                     // black_*_*
+}
+
+
+
+
+
+/*  
+ * this mod is not made, distributed, or supported by infogrames
+ * or particle systems ltd. 
+ *
+ * elements tm & (c) infogrames and particle systems ltd.
+ */
+

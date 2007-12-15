@@ -1,0 +1,272 @@
+//*******************************************************************************************/
+//
+// tsLInventory.pog
+//
+// This package implements an Inventory layer for interacting with the Trade GUIs.
+// 
+//
+//  
+// 
+//
+// May 2005, Jon Freise
+//******************************************************************************************/
+package tsLInventory;
+
+
+uses 
+iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, 
+Task, Debug, iFaction, iSim, iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+iConversation, iFormation, Group, Text, iEmail, State, iTrafficCreation, 
+iRangeCheck,iRemotePilot, iRegion, iMissionTracker, iWingmen,
+iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,
+iDirector, iEscort, 
+iLagrangePoint, iMusic, iGame, Stream,
+   tsTime,
+   tsLRoot,
+   tsEconUtil,
+   tsStationEnum,
+   tsStation;
+
+
+
+
+provides Init,
+         Inventory,
+         ChangeInventory,
+         ClearInventory,
+         SetGrowthRate,
+         GrowthRate;
+
+prototype float GrowthRate(hisim producer);
+
+prototype SetGrowthRate(hisim producer,  float growth_rate);
+
+
+float int2float(int value)
+{
+   return value;
+}
+
+
+int float2int(float value)
+{
+   return value;
+}
+
+// Setup the max inventory globals from INI file
+Init()
+{
+   hinifile info_file = INIFile.Create("ini:/station_cargo");
+   int max_inventory;
+   float growth_rate;
+
+   // Max inventory a station can store of any 1 pod type.
+   max_inventory = INIFile.Int(info_file,"Volume","pods", 1);
+   growth_rate = INIFile.Float(info_file,"Volume","growth", 1.0);   
+
+   INIFile.Destroy(info_file);
+
+   // max pods in station inventory, pre pod type
+   Global.CreateInt("gt_tlinventory_max",GA_Write|GA_NoSave, max_inventory);
+
+   // Pods per day of inventory growth
+   Global.CreateFloat("gt_tlinventory_growth",GA_Write|GA_NoSave, growth_rate);
+}
+
+
+
+int Inventory(hisim producer, hcargo cargo)
+{
+   int root_id = tsLRoot.GetId(producer);
+   string global_name, global_day;
+   int day, current_day, days_passed;
+
+   float pod_growth, total_pods;
+   float max_inventory = int2float(Global.Int("gt_tlinventory_max"));
+   float growth_rate = GrowthRate(producer);
+
+   global_name = String.FormatInt("gt_tlinv_cargo%d", root_id);
+   global_name = String.Join(global_name, String.FormatInt(" %d",tsEconUtil.CargoType(cargo)));
+   global_day = String.Join(global_name, "day");
+
+   // This station does have inventory. We need to update
+   // based on production and return the new total pods.
+   if (Global.Exists(global_name)) {
+      current_day = tsTime.GetDay();
+      day = Global.Int(global_day);
+      
+      days_passed = current_day - day;
+      if (days_passed > 0) {
+         // Production has happened since players last visit. 
+         // So calculate total pods created.
+         pod_growth = int2float(days_passed) * growth_rate;
+         total_pods = pod_growth + Global.Float(global_name);
+
+         if (total_pods >= max_inventory){
+            total_pods = max_inventory;
+
+            // Station is full, we get rid of space wasting globals.
+            Global.Destroy(global_name);
+            Global.Destroy(global_day);
+         }else {
+            Global.SetFloat(global_name, total_pods);
+            Global.SetInt(global_day, current_day);
+         }
+
+         return float2int(total_pods);
+      }else {
+         // Inventory is current, return the value.
+         return float2int(Global.Float(global_name));
+      }
+   }
+
+   // Non working stations have no inventory.
+   if (ESS_Normal != tsStation.Status(iHabitat.Cast(producer))) {
+       debug Debug.PrintString("tsLInventory.Inventory empty station\n");
+       return 0;
+   }
+    
+   return float2int(max_inventory);
+}
+
+
+
+ChangeInventory(hisim producer, hcargo cargo, int amount)
+{
+   int root_id = tsLRoot.GetId(producer);
+   string global_name, global_day;
+   int day, current_day, days_passed;
+   float pod_growth, total_pods;
+   float max_inventory = int2float(Global.Int("gt_tlinventory_max"));
+   float growth_rate = GrowthRate(producer);
+
+
+   global_name = String.FormatInt("gt_tlinv_cargo%d", root_id);
+   global_name = String.Join(global_name,String.FormatInt(" %d",tsEconUtil.CargoType(cargo)));
+   global_day = String.Join(global_name, "day");
+
+   current_day = tsTime.GetDay();
+
+   // This station does have inventory. We need to update
+   // based on production. Change the pods by the amount
+   // listed, and then create any globals.
+   if (Global.Exists(global_name)) {
+
+      day = Global.Int(global_day);
+         days_passed = current_day - day;
+      if (days_passed > 0) {
+         // Production has happened since players last visit. 
+         // So calculate total pods created.
+         pod_growth = int2float(days_passed) * growth_rate;
+         total_pods = pod_growth + Global.Float(global_name);
+      }else {
+         total_pods = Global.Float(global_name);
+      }
+
+      // Now ready to adjust for purchase or return.
+      total_pods = total_pods + int2float(amount);
+      if (total_pods >= max_inventory){
+         total_pods = max_inventory;
+
+         // Station is full, we get rid of space wasting globals.
+         Global.Destroy(global_name);
+         Global.Destroy(global_day);
+      }else  {
+         if (total_pods < 0 ) {
+            total_pods = 0;
+         }
+
+         Global.SetFloat(global_name, total_pods);
+         Global.SetInt(global_day, current_day);
+      }
+
+   }else {
+      // This station has never been used. We need to 
+      // create the globals for the first time.
+
+      if (ESS_Normal == tsStation.Status(iHabitat.Cast(producer))) {
+         total_pods = max_inventory;
+         total_pods = total_pods + int2float(amount);
+      }else {
+         // If the station is not producing, it will not
+         // have any inventory.
+          debug Debug.PrintString("tsLInventory.ChangeInventory empty station\n");
+         total_pods = 0.0;
+      }
+
+      if (total_pods < max_inventory) {
+
+         // It should not be possible to have negative inventory, so we clip.
+         if (total_pods < 0.0) {
+            total_pods = 0.0;
+         }
+
+         Global.CreateFloat(global_name, GA_Write, total_pods);
+         Global.CreateInt(global_day, GA_Write, current_day);
+      }
+   }// if else inventory does not exist
+}
+
+
+ClearInventory(hisim producer, hcargo cargo)
+{
+   int root_id = tsLRoot.GetId(producer);
+   string global_name, global_day;
+   int day, current_day, days_passed;
+   float pod_growth, total_pods;
+   float max_inventory = int2float(Global.Int("gt_tlinventory_max"));
+   float growth_rate = GrowthRate(producer);
+
+   global_name = String.FormatInt("gt_tlinv_cargo%d", root_id);
+   global_name = String.Join(global_name,String.FormatInt(" %d",tsEconUtil.CargoType(cargo)));
+   global_day = String.Join(global_name, "day");
+
+   current_day = tsTime.GetDay();
+
+   // This station does have inventory. We need to update
+   // based on production. Change the pods by the amount
+   // listed, and then create any globals.
+   if (Global.Exists(global_name)) {
+      Global.SetFloat(global_name, 0.0);
+      Global.SetInt(global_day, current_day);
+   }else {
+      Global.CreateFloat(global_name, GA_Write, 0.0);
+      Global.CreateInt(global_day, GA_Write, current_day);
+   }// if else inventory does not exist
+}
+
+
+
+float GrowthRate(hisim producer)
+{
+   int root_id = tsLRoot.GetId(producer);
+   string global_name;
+
+   global_name = String.FormatInt("gt_tlinventory_grow%d", root_id);
+   if (Global.Exists(global_name)) {
+      return Global.Float(global_name);
+   }
+
+   return Global.Float("gt_tlinventory_growth");
+}
+
+
+
+SetGrowthRate(hisim producer,  float growth_rate)
+{
+   int root_id = tsLRoot.GetId(producer);
+   string global_name;
+   global_name = String.FormatInt("gt_tlinventory_grow%d", root_id);
+
+   Global.CreateFloat(global_name, GA_Write, growth_rate);
+}
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
