@@ -2575,7 +2575,7 @@ Initialise()
 	  Global.CreateInt("g_zz_lf_fav_count", GA_Write, 0 );
 
 	// This adds the custom text for the location finder.
-	Text.Add( "csv:/text/tsNavGui" );
+	Text.Add( "csv:/text/ts_nav_gui" );
 
 	// Favourites code:
 	count = Global.Int("g_zz_lf_fav_count");
