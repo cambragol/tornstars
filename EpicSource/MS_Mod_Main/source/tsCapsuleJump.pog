@@ -1905,42 +1905,33 @@ DebugJump()
     hisim waypoint;
     bool jump_success;
 
-
     target_lpoint = iShip.CurrentTarget(player);
 
-    // Only allow jumps to stations and lpoints.
-    if (T_Station == iSim.Type(target_lpoint)){
-       // This is a station. To prevent collision, we put a 
-       // jump mark near the station.
-       waypoint = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","Jump Exit"));
-       Sim.SetCullable(waypoint, false);
-       Sim.PlaceNear(waypoint, target_lpoint, 20km);
-       target_lpoint = waypoint;
-
-    }else if (T_LagrangePoint != iSim.Type(target_lpoint)) {
-
-       iHUD.Print("No Jump Target");
+    if (none == target_lpoint) {
        iHUD.PlayAudioCue(AC_InvalidInput);
        return;
-
     }
+
+    waypoint = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","Jump Exit"));
+    Sim.SetCullable(waypoint, false);
+    Sim.PlaceNear(waypoint, target_lpoint, 20km);
+
 
     // Create a list of wingmen to jump after player.
     player_fleet = List.FromSet(find_following_ships(player));
 
-    jump_ship(player, target_lpoint, 1);   
+    Sim.PlaceNear(player, waypoint, 5km);
 
 
-    // Move the player wingmen, with small time delays between.
+    // Do a fast move of the 
     total = List.ItemCount(player_fleet);
     for (i=0;i<total;++i) {
        wingman = iShip.Cast(List.GetNth(player_fleet,i));
 
-       // Put a bit of time between each one.
-       Task.Sleep(Task.Current(), 1.5);
-
-       jump_ship(wingman, target_lpoint, 1);
+       Sim.PlaceNear(wingman, waypoint, 5km);
     }
+
+    Sim.Destroy(waypoint);
 }
 //[cf]
 
