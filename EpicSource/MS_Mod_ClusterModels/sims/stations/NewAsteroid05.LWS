@@ -9,30 +9,20 @@ PreviewLastFrame 100
 PreviewFrameStep 1
 FramesPerSecond 25.000000
 
-AddNullObject dock_arm_dock01
-ShowObject 4 7
+AddNullObject dock_arm_dock03
+ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
-  -649.8003 39.10779 -1440.121 -90 270 180 1 1 1
+  -1600 0 -500 -90 90 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 50
-ShadowOptions 7
-
-AddNullObject dock_arm_dock02
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -850.3002 39.10791 -1579.899 -90 270 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 50
+LockedChannels 3
 ShadowOptions 7
 
 AmbientColor 255 255 255
 AmbIntensity 0.250000
+
 
 AddNullObject freighter_dock
 ShowObject 8 7
