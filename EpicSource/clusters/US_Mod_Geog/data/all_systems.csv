@@ -281,11 +281,11 @@ SpecialPlanetTexture,22,,,,
 SpecialPlanetBump,23,,,,
 Planet,Emerald,,,,
 Station,Fairweather Organics Processing,HT_OrganicsProcessingPlant,MT_ProcessingPlant,EmeraldCitizens,ok
-Station,Emerald Shipbays,HT_Waystation,MT_AdminStation,EmeraldCitizens,ok
-Station,Emerald STC,HT_PoliceBase,MT_ShipYardStation,AllianceNavy,ok
+Station,Emerald Shipbays,HT_Waystation,MT_NavalBaseStation,EmeraldCitizens,ok
+Station,Emerald STC,HT_PoliceBase,MT_NavalBaseStation,AllianceNavy,ok
 Station,Emerald Capitol ,HT_ClusterAdministration,MT_AdminStation,AllianceNavy,ok
 Station,Emerald Defense Station,HT_SystemDefenceDock,MT_ShipYardStation,AllianceNavy,ok
-Station,Emerald Waystation Station,HT_Waystation,MT_AdminStation,EmeraldCitizens,ok
+Station,Emerald Waystation Station,HT_Waystation,MT_NavalBaseStation,EmeraldCitizens,ok
 Station,Amethyst Transfer Station,HT_Beanstalk,MT_AdminStation,EmeraldCitizens,ok
 Station,Sapphire Transfer Station,HT_Beanstalk,MT_AdminStation,EmeraldCitizens,ok
 Station,Emerald Minerals Processing,HT_BiomassProcessingPlant,MT_ProcessingPlant,EmeraldCitizens,ok
@@ -305,7 +305,7 @@ Moon,Beryl,,,,
 Station,NSO Laplace Regional Headquarters,HT_CentralHQ,MT_AdminStation,NSOLaplace,ok
 Station,Beryl Shipyard,HT_Shipyard,MT_ShipYardStation,NSOLaplace,ok
 Station,Beryl Shipyard Storage Facility,HT_Warehousing,MT_AdminStation,NSOLaplace,ok
-Station,Beryl Waystation,HT_Waystation,MT_AdminStation,NSOLaplace,ok
+Station,Beryl Waystation,HT_Waystation,MT_NavalBaseStation,NSOLaplace,ok
 Station,Beryl Radioactives Processing,HT_RadioactivesProcessingPlant,MT_ProcessingPlant,EmeraldCitizens,ok
 Station,Emerald Heavy Manufacturing,HT_HeavyManufacturingPlant,MT_ManufacturePlant,EmeraldCitizens,ok
 ;Operation,Embezzle,Pimental,,,
@@ -330,31 +330,31 @@ Star,Providence Alpha,7,,,,,,,,,,,,
 Planet,Palermo,,,,,,,,,,,,,
 
 Moon,Musetta,,,,,,,,,,,,,
-Station,The Dragon Nest,HT_MercenaryBase,MT_ShipYardStation,Dragons,ok,,,,,,,,,
+Station,The Dragon Nest,HT_MercenaryBase,MT_NavalBaseStation,Dragons,ok,,,,,,,,,
 Moon,DeMarlo,,,,,,,,,,,,,
 Mine,DeMarlo Asteroid Cluster,HT_WaterMine,MT_SmallWaterMine,Empty,ok,2,,,,,,,,
 Moon,Garrabrant,,,,,,,,,,,,,
 Planet,Edgewater,,,,
 Moon,Ward,,,,
-Station,Edgewater Waystation Station,HT_Waystation,MT_AdminStation,EmeraldCitizens,ok
+Station,Edgewater Waystation Station,HT_Waystation,MT_NavalBaseStation,EmeraldCitizens,ok
 ;Operation,Protection,GoldenLotus,,,
 Station,Ward Medicine Production,HT_PharmaceuticalsManufacturingPlant,MT_ManufacturePlant,StellarParamed,ok
 Moon,Ruppert,,,,
-Station,Providence STC,HT_PoliceBase,MT_ShipYardStation,AllianceNavy,ok
+Station,Providence STC,HT_PoliceBase,MT_NavalBaseStation,AllianceNavy,ok
 Station,Providence Senate,HT_SystemAdministration,MT_AdminStation,AllianceNavy,ok
 Station,Ruppert Consumer Goods ,HT_PlasticsManufacturingPlant,MT_ManufacturePlant,EmeraldCitizens,ok
 Station,Stellar Paramed Headquarters,HT_CentralHQ,MT_AdminStation,StellarParamed,ok
-Station,Stellar Paramed Secuirty ,HT_SecurityStation,MT_ShipYardStation,StellarParamed,ok
-Station,Chavez Providence Depot,HT_Waystation,MT_AdminStation,Chavez,ok
+Station,Stellar Paramed Secuirty ,HT_SecurityStation,MT_NavalBaseStation,StellarParamed,ok
+Station,Chavez Providence Depot,HT_Waystation,MT_NavalBaseStation,Chavez,ok
 Station,Chavez Central Warehousing,HT_Warehousing,MT_AdminStation,Chavez,ok
-Station,Chavez Shipping Security,HT_SecurityStation,MT_ShipYardStation,Chavez,ok
+Station,Chavez Shipping Security,HT_SecurityStation,MT_NavalBaseStation,Chavez,ok
 Planet,Roessner,,,,
 Moon,Vander,,,,
 Station,Providence Medical Complex,HT_MedicalFacility,MT_AdminStation,EmeraldCitizens,ok,
 Station,Providence Medical Production,HT_PharmaceuticalsManufacturingPlant,MT_ManufacturePlant,StellarParamed,ok,
 Station,Vander Medical Research,HT_MedicalFacility,MT_AdminStation,StellarParamed,ok,
 Station,Vander Consumer Production,HT_PlasticsManufacturingPlant,MT_ManufacturePlant,EmeraldCitizens,ok,
-Station,Vander Waystation,HT_Waystation,MT_AdminStation,StellarParamed,ok,
+Station,Vander Waystation,HT_Waystation,MT_NavalBaseStation,StellarParamed,ok,
 ;Operation,Embezzle,Pimental,,,,
 Moon,Fritz,,,,,
 Mine,Fritz Asteroid Base,HT_WaterMine,MT_SmallWaterMine,EmeraldCitizens,ok,1
@@ -398,7 +398,7 @@ Mine,Kulas Asteroid Cluster Beta,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,Em
 Moon,Shekar,,,,,
 Planet,Mindanayo,,,,,
 Moon,Andsager,,,,,
-Station,Penda STC,HT_PoliceBase,MT_ShipYardStation,AllianceNavy,ok
+Station,Penda STC,HT_PoliceBase,MT_NavalBaseStation,AllianceNavy,ok
 Station,Penda System Defense Station,HT_SystemDefenceDock,MT_ShipYardStation,AllianceNavy,ok
 Station,Penda Senate,HT_SystemAdministration,MT_AdminStation,AllianceNavy,ok
 Moon,Baranec,,,,
@@ -432,24 +432,24 @@ Star,Huang Alpha,7,,,,,,,,,,,,,,,,,
 
 Planet,Lin,,,,
 Moon,Long,,,,
-Station,Drake Station,HT_Fortress,MT_AdminStation,Dragons,ok
+Station,Drake Station,HT_Fortress,MT_NavalBaseStation,Dragons,ok
 Moon,Lou,,,,
 Station,Yong Yuan Factory,HT_CommonMetalsProcessingPlant,MT_ProcessingPlant,Azran,ok
 ;Operation,Protection,Pimental,,,
 Moon,Lai,,,,
 Moon,Lung,,,,
-Station,Chavez Huang Depot,HT_Waystation,MT_AdminStation,Chavez,ok
-Station,Chavez Shipping Security,HT_SecurityStation,MT_ShipYardStation,Chavez,ok
+Station,Chavez Huang Depot,HT_Waystation,MT_NavalBaseStation,Chavez,ok
+Station,Chavez Shipping Security,HT_SecurityStation,MT_NavalBaseStation,Chavez,ok
 Station,Feichang Hao Nano Production,HT_CommonMetalsProcessingPlant,MT_ProcessingPlant,Chavez,ok
 ;Operation,Embezzle,Pimental,,,
 Station,Chao Yun Nano Materials,HT_CommonMetalsProcessingPlant,MT_ProcessingPlant,Chavez,ok
 Station,Lung Fuel Refinery,HT_FusionableGasesProcessingPlant,MT_ProcessingPlant,Chavez,ok
 Moon,Lan,,,,
-Station,Huang Waystation Station,HT_Waystation,MT_AdminStation,EmeraldCitizens,ok
+Station,Huang Waystation Station,HT_Waystation,MT_NavalBaseStation,EmeraldCitizens,ok
 Planet,Tong,,,,,
 Moon,Yee,,,,,
 Station,Yee Entertainment,HT_Resort,MT_CasinoStation,EmeraldCitizens,ok,
-Station,Tong Station,HT_Waystation,MT_AdminStation,EmeraldCitizens,ok,
+Station,Tong Station,HT_Waystation,MT_NavalBaseStation,EmeraldCitizens,ok,
 ;Operation,Protection,GoldenLotus,,ok,,
 Station,Gin Hua Yan,HT_PirateCove,MT_NewAsteroid01,GoldenLotus,ok,
 Moon,Liang,,,,,
@@ -457,7 +457,7 @@ Moon,Liang,,,,,
 Planet,Chu Xien,,,,,
 Moon,Ko Shiu,,,,,
 Station,Huang Senate,HT_SystemAdministration,MT_AdminStation,AllianceNavy,ok,
-Station,Huang STC,HT_PoliceBase,MT_AdminStation,AllianceNavy,ok,
+Station,Huang STC,HT_PoliceBase,MT_NavalBaseStation,AllianceNavy,ok,
 Moon,Lieh,,,,,
 Mine,Lieh Asteroid Cluster,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,EmeraldCitizens,ok,3
 Moon,Yeung Jun,,,,,
@@ -471,7 +471,7 @@ Moon,Pang,,,,,,,,,,,,,
 Station,Pang ElementRefinery,HT_CommonMetalsProcessingPlant,MT_ProcessingPlant,CMCMining,ok,,,,,,,,,
 ;Operation,Embezzle,Scavengers,,ok,,,,,,,,,,
 Moon,Kong,,,,,,,,,,,,,
-Station,Golligers Waypoint,HT_Fortress,MT_AdminStation,Golligers,ok,,,,,,,,,
+Station,Golligers Waypoint,HT_Fortress,MT_NavalBaseStation,Golligers,ok,,,,,,,,,
 
 Lpoint,Ko Shiu Lpoint,Chu Xien,Ko Shiu,2,emerald_sys,Crystal Lpoint,1,100,0,bedalov,Kirby Lpoint,1,100,0
 Lpoint,Lai Lpoint,Lin,Lai,2,powys,Flindall Lpoint,1,100,0,t_ang,Qian Lpoint,1,100,0
@@ -487,10 +487,10 @@ Moon,Accolus,,,,
 Moon,Aurius  ,,,,
 Moon,Carolus,,,,
 Moon,Djibouti,,,,
-Station,Battani Sation,HT_Waystation,MT_AdminStation,SultanateCitizens,ok
+Station,Battani Sation,HT_Waystation,MT_NavalBaseStation,SultanateCitizens,ok
 Station,Battani Shipyard,HT_Shipyard,MT_ShipYardStation,NSOLaplace,ok
 Moon,Leolius,,,,
-Station,Marius Base,HT_SystemDefenceDock,MT_AdminStation,RoyalGuard,ok
+Station,Marius Base,HT_SystemDefenceDock,MT_ShipYardStation,RoyalGuard,ok
 Moon,Olalius,,,,
 Moon,Singulus ,,,,
 Moon,Trochlius ,,,,
@@ -509,7 +509,7 @@ Moon,Mariq,,,,
 Moon,Tariq,,,,
 Station,Manufacturing Station,HT_HeavyManufacturingPlant,MT_ManufacturePlant,SultanateCitizens,ok
 Station,Tariq Shipyard,HT_Shipyard,MT_ShipYardStation,NSOLaplace,ok
-Station,NSO Laplace Central Security,HT_SecurityStation,MT_ShipYardStation,NSOLaplace,ok
+Station,NSO Laplace Central Security,HT_SecurityStation,MT_NavalBaseStation,NSOLaplace,ok
 Giant,Antara,,,,
 Moon,Akbar,,,,
 Moon,Biralla,,,,
@@ -522,13 +522,13 @@ Moon,Harsha,,,,
 Moon,Hira,,,,
 Planet,Dramhin,,,,
 Planet,Eva Cara,,,,
-Station,Waystation Station,HT_Waystation,MT_AdminStation,SultanateCitizens,ok
+Station,Waystation Station,HT_Waystation,MT_NavalBaseStation,SultanateCitizens,ok
 ;Operation,Embezzle,Forty,,ok,
 Giant,Ibn Abi R abia,,,,
 Moon,Harun,,,,
 Moon,Muhammed,,,,
 Planet,Kasim,,,,
-Station,Kasim Station,HT_Waystation,MT_AdminStation,SultanateCitizens,ok
+Station,Kasim Station,HT_Waystation,MT_NavalBaseStation,SultanateCitizens,ok
 Moon,Cindra,,,,
 SpecialPlanetTexture,28,,,,
 SpecialPlanetBump,29,,,,
@@ -544,7 +544,7 @@ Station,NC Organics Production,HT_OrganicsProcessingPlant,MT_ProcessingPlant,Sul
 Moon,Iona,,,,
 Station,Pashasan Systems Manufacturing,HT_WetwareManufacturingPlant,MT_ManufacturePlant,SultanateCitizens,ok
 Station,Iona Electronics Manufacturing,HT_ElectronicsManufacturingPlant,MT_ManufacturePlant,SultanateCitizens,ok
-Station,New Constantinople STC,HT_PoliceBase,MT_ShipYardStation,RoyalGuard,ok
+Station,New Constantinople STC,HT_PoliceBase,MT_NavalBaseStation,RoyalGuard,ok
 Station,New Constantinople Trade Bureau HQ,HT_CentralHQ,MT_AdminStation,Empty,empty
 Station,Iona Radioactive Processing,HT_RadioactivesProcessingPlant,MT_ProcessingPlant,SultanateCitizens,ok
 Station,NSO Laplace Corporate Headquarters,HT_CentralHQ,MT_AdminStation,NSOLaplace,ok
@@ -555,7 +555,7 @@ Moon,Eimskip,,,,
 Moon,Gruner,,,,
 Station,Grinnel Freightlines Headquarters,HT_CentralHQ,MT_AdminStation,Grinnel,ok
 Station,Grinnel Main Warehousing,HT_Warehousing,MT_AdminStation,Grinnel,ok
-Station,Gruner Waystation,HT_Waystation,MT_AdminStation,Grinnel,ok
+Station,Gruner Waystation,HT_Waystation,MT_NavalBaseStation,Grinnel,ok
 ;Operation,Embezzle,Faceless,,ok,
 Moon,Jazeel,,,,
 Station,Jazeel Naval Shipyard,HT_SystemDefenceDock,MT_ShipYardStation,RoyalGuard,ok,
@@ -578,7 +578,7 @@ Station,Research Facility,HT_ResearchStation,MT_AdminStation,SultanateCitizens,o
 Planet,Zelda,,,,,,,,,,,,,,,,,,
 Station,MelNet FTL Relay,HT_FTLArray,MT_AdminStation,EtCom,ok,,,,,,,,,,,,,,
 Belt,Kuniper Belt,,,,,,,,,,,,,,,,,,
-Station,Angels Rest,HT_Fortress,MT_AdminStation,Angels,ok,,,,,,,,,,,,,,
+Station,Angels Rest,HT_Fortress,MT_NavalBaseStation,Angels,ok,,,,,,,,,,,,,,
 
 Lpoint,Jazeel Lpoint,Sirocco,Jazeel,3,aleppo,Sarfati Lpoint,1,100,0,epitaph,Mordred Lpoint,1,100,0,ivory_garden,Soham Lpoint,1,100,0
 ;Operation,Fleetdefense,RoyalGuard,,,,,,,,,,,,,,,,,
@@ -600,12 +600,12 @@ Station,Obregon Arms Factory,HT_WeaponsManufacturingPlant,MT_ManufacturePlant,Ja
 Station,Soham Arms Production,HT_WeaponsManufacturingPlant,MT_ManufacturePlant,NSOLaplace,ok
 Moon,Ostir,,,,
 
-Station,STC Station,HT_PoliceBase,MT_ShipYardStation,RoyalGuard,ok
+Station,STC Station,HT_PoliceBase,MT_NavalBaseStation,RoyalGuard,ok
 Station,Processing Station,HT_CommonMetalsProcessingPlant,MT_ProcessingPlant,SultanateCitizens,ok
 ;Operation,Embezzle,Faceless,,ok,
 Planet,Faidi,,,,
 Moon,Ishai,,,,
-Station,Security Station,HT_PoliceBase,MT_ShipYardStation,RoyalGuard,ok
+Station,Security Station,HT_PoliceBase,MT_NavalBaseStation,RoyalGuard,ok
 Station,Military Garrison Station,HT_SystemDefenceDock,MT_ShipYardStation,RoyalGuard,ok,,,,,,,,,
 Station,Military Weapons Facility,HT_WeaponsManufacturingPlant,MT_ManufacturePlant,SultanateCitizens,ok,,,,,,,,,
 Station,Al Quaan Governor,HT_RegionalDepartment,MT_AdminStation,RoyalGuard,ok,,,,,,,,,
@@ -616,7 +616,7 @@ Mine,Aziz Organics Mine,HT_OrganicsMine,MT_SmallOrganicsMine,SultanateCitizens,o
 Mine,Aziz Mine Base,HT_BiomassMine,MT_LargeBiomassMine,SultanateCitizens,ok,2,,,,,,,,
 Belt,Alquua Belt,,,,,,,,,,,,,
 Station,Rock of Thieves,HT_PirateCove,MT_NewAsteroid01,Forty,ok,,,,,,,,,
-Station,Paradise,HT_MercenaryBase,MT_ShipYardStation,Angels,ok,,,,,,,,,
+Station,Paradise,HT_MercenaryBase,MT_NavalBaseStation,Angels,ok,,,,,,,,,
 ;Star,Al Quaan Beta,5,,,,,,,,,,,,
 
 Lpoint,Soham Lpoint,Obregon,Soham,2,aleppo,Sarfati Lpoint,1,100,0,new_const,Jazeel Lpoint,1,100,0
@@ -633,8 +633,8 @@ Moon,Malil,,,,
 Moon,Sarfati,,,,
 Moon,Al Barran,,,,
 Moon,Ayala,,,,
-Station,Ayala Trade Depot,HT_Waystation,MT_AdminStation,SultanateCitizens,ok
-Station,Aleppo STC,HT_PoliceBase,MT_AdminStation,RoyalGuard,ok
+Station,Ayala Trade Depot,HT_Waystation,MT_NavalBaseStation,SultanateCitizens,ok
+Station,Aleppo STC,HT_PoliceBase,MT_NavalBaseStation,RoyalGuard,ok
 Station,Aleppo Governor,HT_RegionalDepartment,MT_AdminStation,RoyalGuard,ok
 Station,Minerals Processing,HT_BiologicalManufacturingPlant,MT_ManufacturePlant,SultanateCitizens,ok
 Planet,Qataar,,,,
@@ -721,8 +721,8 @@ Mine,Qom Asteroid Cluster,HT_FusionableGasesMine,MT_SmallFusionableGassesMine,Su
 Moon,Zajowicz,,,,
 Planet,Igreja,,,,
 Moon,Maloufi,,,,
-Station,Al Wadi STC,HT_PoliceBase,MT_ShipYardStation,RoyalGuard,ok
-Station,Al Wadi Naval Defense,HT_SystemDefenceDock,MT_AdminStation,RoyalGuard,ok
+Station,Al Wadi STC,HT_PoliceBase,MT_NavalBaseStation,RoyalGuard,ok
+Station,Al Wadi Naval Defense,HT_SystemDefenceDock,MT_ShipYardStation,RoyalGuard,ok
 Station,Al Wadi Governor,HT_RegionalDepartment,MT_AdminStation,RoyalGuard,ok
 Moon,Maffindi,,,,
 Moon,Ogenna,,,,
@@ -732,7 +732,7 @@ Station,Common Ore Handling Station,HT_CommonMetalsProcessingPlant,MT_Processing
 ;Operation,Embezzle,Faceless,,ok,
 Moon,Hajela,,,,
 Moon,Jamirai,,,,
-Station,Heaven,HT_MercenaryBase,MT_ShipYardStation,Angels,ok
+Station,Heaven,HT_MercenaryBase,MT_NavalBaseStation,Angels,ok
 
 Lpoint,Al Paz Lpoint,Khodaverdi,Al Paz,1,new_const,Jazeel Lpoint,1,100,0
 Lpoint,Laputo Lpoint,Khodaverdi,Laputo,1,hant,Borroni Lpoint,3,100,0
@@ -745,16 +745,16 @@ Star,Nureddin,5,,,,,,,
 
 Giant,Cordoba,,,,,,,,
 Moon,Barakka ,,,,,,,,
-Station,Barakka Asteroid Cluster,HT_Fortress,MT_AdminStation,Angels,ok,,,,
+Station,Barakka Asteroid Cluster,HT_Fortress,MT_NavalBaseStation,Angels,ok,,,,
 Moon,El Cid,,,,,,,,
 Moon,Drexen,,,,,,,,
 Mine,Drexen Asteroid Cluster,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,CaliphateCitizens,ok,3,,,
 Moon,Olaf,,,,,,,,
 Moon,New Istanbul  ,,,,,
-Station,Nureddin STC Station,HT_PoliceBase,MT_ShipYardStation,YezhidNavy,ok,
+Station,Nureddin STC Station,HT_PoliceBase,MT_NavalBaseStation,YezhidNavy,ok,
 Station,Yehzid Food Processing,HT_BiologicalManufacturingPlant,MT_ManufacturePlant,CaliphateCitizens,ok,
 Mine,New Istanbul Asteroid Cluster,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,CaliphateCitizens,ok,2
-Station,Grinnel Shipping Station,HT_Waystation,MT_AdminStation,Grinnel,ok,
+Station,Grinnel Shipping Station,HT_Waystation,MT_NavalBaseStation,Grinnel,ok,
 Moon,Jiddah,,,,,
 Station,Nureddin System Defense Station,HT_SystemDefenceDock,MT_ShipYardStation,YezhidNavy,ok,
 Station,Nureddin Centeral Government,HT_RegionalDepartment,MT_AdminStation,YezhidNavy,ok,
@@ -776,7 +776,7 @@ SpecialPlanetBump,31,,,,,
 Planet,Autharia,,,,,
 ;Station,Nureddin Station,HT_CentralHQ,MT_AdminStation,CaliphateCitizens,ok,
 Station,Nureddin Naval Shipyard,HT_SystemDefenceDock,MT_ShipYardStation,YezhidNavy,ok,
-Station,Security Station,HT_PoliceBase,MT_ShipYardStation,YezhidNavy,ok,
+Station,Security Station,HT_PoliceBase,MT_NavalBaseStation,YezhidNavy,ok,
 Moon,Thrasamund,,,,,
 Belt,Fatteeh Asteroids Belt,,,,,
 Mine,Rileefah Asteroid Zone,HT_FusionableGasesMine,MT_LargeFusionableGassesMine,CaliphateCitizens,ok,2
@@ -797,12 +797,12 @@ Planet,Ottokar,,,,,,,,,,,,,
 Planet,Oswald,,,,,,,,,,,,,
 Giant,Abassid,,,,,,,,,,,,,
 Moon,Abghi,,,,,,,,,,,,,
-Station,Abghi Asteroid Cluster,HT_Fortress,MT_AdminStation,Fist,ok,,,,,,,,,
+Station,Abghi Asteroid Cluster,HT_Fortress,MT_NavalBaseStation,Fist,ok,,,,,,,,,
 Moon,Al Khibbi,,,,,
-Station,Saladin STC,HT_PoliceBase,MT_ShipYardStation,YezhidNavy,ok,
+Station,Saladin STC,HT_PoliceBase,MT_NavalBaseStation,YezhidNavy,ok,
 Station,Saladin System Defence,HT_SystemDefenceDock,MT_ShipYardStation,YezhidNavy,ok,
 Station,Saladin Governor,HT_RegionalDepartment,MT_AdminStation,YezhidNavy,ok,
-Station,Chavez Saladin Depot,HT_Waystation,MT_AdminStation,Chavez,ok,
+Station,Chavez Saladin Depot,HT_Waystation,MT_NavalBaseStation,Chavez,ok,
 Moon,Motassim,,,,,
 Moon,Ewalla,,,,,
 Mine,Ewalla Asteroid Cluster,HT_WaterMine,MT_SmallWaterMine,CaliphateCitizens,ok,3
@@ -814,7 +814,7 @@ Moon,Tafla,,,,,
 Station,Tafla Heavy Manufacturing,HT_HeavyManufacturingPlant,MT_ManufacturePlant,Mesa,ok,
 ;Operation,Protection,Forty,,ok,,
 Station,Tafla Orbital Systems Production,HT_StationFabricationManufacturingPlant,MT_ManufacturePlant,Mesa,ok,
-Station,Waystation Station,HT_Waystation,MT_AdminStation,CaliphateCitizens,ok,
+Station,Waystation Station,HT_Waystation,MT_NavalBaseStation,CaliphateCitizens,ok,
 ;Operation,Embezzle,Forty,,ok,,
 Moon,Zajonc,,,,,
 Moon,Zapenna,,,,,
@@ -822,7 +822,7 @@ Giant,Khayyam,,,,,
 Moon,Olivia,,,,,
 Mine,Olivia Asteroid Cluster,HT_WaterMine,MT_SmallWaterMine,CaliphateCitizens,ok,2
 Moon,Antonia,,,,,
-Station,Antonia Waystation,HT_Waystation,MT_AdminStation,Grinnel,ok,
+Station,Antonia Waystation,HT_Waystation,MT_NavalBaseStation,Grinnel,ok,
 ;Operation,Protection,Forty,,ok,,
 Mine,Antonia Asteroid Cluster,HT_WaterMine,MT_SmallWaterMine,Grinnel,ok,3
 Station,Khayyam Storage Depot,HT_Warehousing,MT_AdminStation,Grinnel,ok,
@@ -835,7 +835,7 @@ Mine,Dutaan Asteroid Zone,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,Caliphate
 Station,Rock of the Thieves,HT_PirateCove,MT_NewAsteroid01,Forty,ok,,,,,,,,,
 Planet,Sangria,,,,,,,,,,,,,
 Mine,Sangria Asteroid Cluster,HT_WaterMine,MT_LargeWaterMine,CaliphateCitizens,ok,1,,,,,,,,
-Station,Waystation Station,HT_Waystation,MT_AdminStation,CaliphateCitizens,ok,,,,,,,,,
+Station,Waystation Station,HT_Waystation,MT_NavalBaseStation,CaliphateCitizens,ok,,,,,,,,,
 ;Operation,Embezzle,Faceless,,ok,,,,,,,,,,
 
 Lpoint,Antonia Lpoint,Khayyam,Antonia,2,nureddin,Drexen Lpoint,1,100,0,hant,Verdad Lpoint,1,100,0
@@ -863,19 +863,19 @@ Moon,Fabio,,,,,
 Planet,Kladnik,,,,,
 Planet,Llianna,,,,,
 Moon,Lindy,,,,
-Station,Waystation Station,HT_Waystation,MT_AdminStation,Transients,ok
+Station,Waystation Station,HT_Waystation,MT_NavalBaseStation,Transients,ok
 ;Operation,Protection,TakananRaiders,,ok,
 Moon,Bailey,,,,
 Planet,Rurik,,,,
 Moon,Cedric,,,,
 Station,The Raiders Rock,HT_PirateCove,MT_NewAsteroid01,TakananRaiders,ok
 Moon,Ramona,,,,
-Station,Hant STC,HT_PoliceBase,MT_ShipYardStation,Empty,destroyed
+Station,Hant STC,HT_PoliceBase,MT_NavalBaseStation,Empty,destroyed
 Station,Hant Outpost,HT_Outpost,MT_AdminStation,Empty,destroyed
 Planet,Weldrik,,,,
 Moon,Verdad,,,,
-Station,Verdad Station,HT_Waystation,MT_AdminStation,Corliss,ok
-Station,Verdad Security Outpost,HT_SecurityStation,MT_ShipYardStation,Corliss,ok
+Station,Verdad Station,HT_Waystation,MT_NavalBaseStation,Corliss,ok
+Station,Verdad Security Outpost,HT_SecurityStation,MT_NavalBaseStation,Corliss,ok
 Moon,San Pablo,,,,
 Moon,Cruz,,,,
 Moon,Doralicia,,,,,
@@ -903,9 +903,9 @@ Moon,Hecht,,,,,,,,
 Moon,Southin,,,,,,,,
 Moon,Marjacq,,,,,,,,
 Moon,Wessel,,,,,,,,
-Station,Wessel Waystation,HT_Waystation,MT_AdminStation,Transients,ok,,,,
+Station,Wessel Waystation,HT_Waystation,MT_NavalBaseStation,Transients,ok,,,,
 Belt,Kuniper Belt,,,,,,,,
-Station,The Edge,HT_Fortress,MT_AdminStation,Angels,ok,,,,
+Station,The Edge,HT_Fortress,MT_NavalBaseStation,Angels,ok,,,,
 
 Lpoint,Corinna Lpoint,Seljuk,Corinna,1,nisami,Noda Lpoint,1,100,0
 ;Operation,PirateToll,TakananRaiders,,,,,,,
@@ -934,21 +934,21 @@ Station,Trinidad Base,HT_Hideout,MT_AsteroidPlain,Fonseka,ok,
 Moon,Brentano,,,,,
 Station,Foundation HQ,HT_GangsterHideout,MT_AsteroidPlain,Fonseka,ok,
 Moon,Pollard,,,,,
-Station,Akra STC,HT_PoliceBase,MT_ShipYardStation,Empty,empty,
+Station,Akra STC,HT_PoliceBase,MT_NavalBaseStation,Empty,empty,
 Moon,Espirito Santo,,,,,
 
 Planet,Stahl,,,,,
 Mine,CMC Mining Outpost,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,CMCMining,ok,2
 ;Operation,Embezzle,Droznic,,ok,,
 Mine,Stahl Asteroid Outpost,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,CMCMining,ok,3
-Station,CMC Security Station,HT_SecurityStation,MT_ShipYardStation,CMCMining,ok,
+Station,CMC Security Station,HT_SecurityStation,MT_NavalBaseStation,CMCMining,ok,
 Station,CMC Akra Storage,HT_Warehousing,MT_AdminStation,CMCMining,ok,
 ;Operation,Protection,Droznic,,ok,,
 
 Planet,Hevesi,,,,,
-Station,Hevesi Station,HT_Waystation,MT_AdminStation,CMCMining,ok,
+Station,Hevesi Station,HT_Waystation,MT_NavalBaseStation,CMCMining,ok,
 Moon,Surya Dava,,,,,
-Station,Surya Grande,HT_MercenaryBase,MT_ShipYardStation,Fist,ok,
+Station,Surya Grande,HT_MercenaryBase,MT_NavalBaseStation,Fist,ok,
 Station,Surya Pocito,HT_Habitat,MT_AdminStation,Aikenites,ok,
 Station,Akra Governor,HT_RegionalDepartment,MT_AdminStation,Empty,destroyed,
 Moon,Varley,,,,,
@@ -959,11 +959,11 @@ Moon,Wyndham,,,,,
 Giant,Margate,,,,,
 Moon,Williams,,,,,
 Moon,Powell ,,,,,
-Station,Wrecked Waystation Station,HT_Waystation,MT_AdminStation,Transients,ok,
+Station,Wrecked Waystation Station,HT_Waystation,MT_NavalBaseStation,Transients,ok,
 ;Operation,Protection,Droznic,,ok,,
 Moon,Umberto,,,,,
 Mine,Umberto Asteroid Base,HT_BiomassMine,MT_SmallBiomassMine,Transients,ok,2
-Station,Umberto Grande,HT_MercenaryBase,MT_ShipYardStation,Fist,ok,
+Station,Umberto Grande,HT_MercenaryBase,MT_NavalBaseStation,Fist,ok,
 Moon,Placentia,,,,,
 Moon,New Adelaide,,,,,
 Station,New Adelaide processing Facility,HT_CommonMetalsProcessingPlant,MT_ProcessingPlant,Aikenites,ok,
@@ -1029,7 +1029,7 @@ Moon,Mordred,,,,
 Moon,Scar,,,,
 Planet,Quatermass,,,,
 Moon,Farnham,,,,
-Station,Quatermass Station,HT_Waystation,MT_AdminStation,Empty,empty
+Station,Quatermass Station,HT_Waystation,MT_NavalBaseStation,Empty,empty
 Station,The Keep,HT_PirateBase,MT_PirateStation,Gargoyles,ok
 Station,Omayyad Outpost,HT_Outpost,MT_AdminStation,Empty,destroyed
 ;Operation,Fleetdefense,Machines,,,
@@ -1050,7 +1050,7 @@ Star,Lombard Alpha,5,,,,,,,,,,,,
 
 Planet,Shapiro,,,,,,,,,,,,,
 Mine,Shapiro Exotics Outpost Alpha,HT_ExoticMetalsMine,MT_SmallExoticMetalsMine,CMCMining,ok,2,,,,,,,,
-Station,CMC Lombard Security,HT_SecurityStation,MT_ShipYardStation,CMCMining,ok,,,,,,,,,
+Station,CMC Lombard Security,HT_SecurityStation,MT_NavalBaseStation,CMCMining,ok,,,,,,,,,
 Mine,Shapiro Exotics Outpost Beta,HT_ExoticMetalsMine,MT_SmallExoticMetalsMine,CMCMining,ok,2,,,,,,,,
 Planet,Vogel,,,,,,,,,,,,,
 Moon,Dunlop,,,,,,,,,,,,,
@@ -1084,12 +1084,12 @@ Station,Opaline Luxuries Production,HT_LuxuriesManufacturingPlant,MT_Manufacture
 Moon,Salvatore,,,,,
 Moon,Archer,,,,,
 Station,Archer Pleasure Palace,HT_Casino,MT_CasinoStation,Droznic,ok,
-Station,Lombard Station,HT_Waystation,MT_AdminStation,Aikenites,ok,
-Station,Lombard STC,HT_SecurityStation,MT_ShipYardStation,UCP,ok,
+Station,Lombard Station,HT_Waystation,MT_NavalBaseStation,Aikenites,ok,
+Station,Lombard STC,HT_SecurityStation,MT_NavalBaseStation,UCP,ok,
 Station,Lombard Government Center,HT_ClusterAdministration,MT_AdminStation,Empty,destroyed,
 Station,Universal Consumer Products Headquarters,HT_CentralHQ,MT_AdminStation,Empty,empty,
 Station,UCP Plastics Processing,HT_PlasticsManufacturingPlant,MT_ManufacturePlant,UCP,ok,
-Station,Archer Waystation,HT_Waystation,MT_AdminStation,UCP,ok,
+Station,Archer Waystation,HT_Waystation,MT_NavalBaseStation,UCP,ok,
 ;Operation,Protection,Droznic,,ok,,
 Moon,Remy,,,,,
 Moon,Foreman,,,,,
@@ -1138,7 +1138,7 @@ Moon,Hastings,,,,,
 Mine,Hastings Asteroid Cluster,HT_InorganicsMine,MT_LargeInorganicsMine,Empty,empty,2
 Moon,Gilmour,,,,,
 Moon,Albertus,,,,,
-Station,Ripon STC,HT_PoliceBase,MT_ShipYardStation,Empty,destroyed,
+Station,Ripon STC,HT_PoliceBase,MT_NavalBaseStation,Empty,destroyed,
 Station,Ripon Government Admin,HT_Outpost,MT_AdminStation,Empty,destroyed,
 Moon,Monaghan,,,,,
 Moon,Carlotta,,,,,
@@ -1181,7 +1181,7 @@ Star,Corliss Alpha,6,,,,,,,,,,,,
 
 Planet,Oxalis,,,,,,,,,,,,,
 Moon,Chawla,,,,,,,,,,,,,
-Station,Chawla Asteroid Cluster,HT_Fortress,MT_AdminStation,Fist,ok,,,,,,,,,
+Station,Chawla Asteroid Cluster,HT_Fortress,MT_NavalBaseStation,Fist,ok,,,,,,,,,
 Moon,Guilbeault,,,,
 Moon,Jai Gahn,,,,
 Moon,Vaidwan,,,,
@@ -1190,26 +1190,26 @@ Moon,Chiama,,,,
 Station,Chiama Fuel Production Station Alpha,HT_FusionableGasesProcessingPlant,MT_ProcessingPlant,Saffron,ok
 Station,Chiama Fuel Production Station Beta,HT_FusionableGasesProcessingPlant,MT_ProcessingPlant,Saffron,ok
 Station,Chiama Fuel Storage,HT_Warehousing,MT_AdminStation,Saffron,ok
-Station,Saffron Security Services,HT_SecurityStation,MT_ShipYardStation,Saffron,ok
+Station,Saffron Security Services,HT_SecurityStation,MT_NavalBaseStation,Saffron,ok
 Moon,Shaiman,,,,
 Moon,Vano,,,,
 Planet,Corliss,,,,
-Station,Corliss STC,HT_PoliceBase,MT_ShipYardStation,CDF,ok
+Station,Corliss STC,HT_PoliceBase,MT_NavalBaseStation,CDF,ok
 Station,Corliss Government Center,HT_SystemAdministration,MT_AdminStation,CDF,ok
 Station,Corliss Commodities Exchange,HT_CentralHQ,MT_AdminStation,Corliss,ok
-Station,Corliss Trade Station,HT_Waystation,MT_AdminStation,Corliss,ok
+Station,Corliss Trade Station,HT_Waystation,MT_NavalBaseStation,Corliss,ok
 Station,Corliss Consumer Goods Production,HT_PlasticsManufacturingPlant,MT_ManufacturePlant,UCP,ok
 Station,Universal Consumer Products Regional HQ,HT_CentralHQ,MT_AdminStation,UCP,ok
 Station,Corliss Luxury Goods Production,HT_LuxuriesManufacturingPlant,MT_ManufacturePlant,Corliss,ok
-Station,Chavez Corliss Admin,HT_Waystation,MT_AdminStation,Chavez,ok
+Station,Chavez Corliss Admin,HT_Waystation,MT_NavalBaseStation,Chavez,ok
 Station,Chavez Warehousing,HT_Warehousing,MT_AdminStation,Chavez,ok
 Station,Saffron Industries Headquarters,HT_CentralHQ,MT_AdminStation,Saffron,ok
 Moon,Mowat,,,,
-Station,Mowat Station,HT_Waystation,MT_AdminStation,Grinnel,ok
+Station,Mowat Station,HT_Waystation,MT_NavalBaseStation,Grinnel,ok
 Station,Mowat Freight Storage,HT_Warehousing,MT_AdminStation,Grinnel,ok
 Station,Mowat Mineral Processing,HT_InorganicsProcessingPlant,MT_ProcessingPlant,Corliss,ok
 ;Operation,Embezzle,Droznic,,ok,
-Station,Mowat Docking Platform,HT_Waystation,MT_AdminStation,Corliss,ok
+Station,Mowat Docking Platform,HT_Waystation,MT_NavalBaseStation,Corliss,ok
 Station,Mowat ResearchStation Post,HT_ResearchStation,MT_AdminStation,Corliss,ok
 Station,Corliss Central Warehousing,HT_Warehousing,MT_AdminStation,Corliss,ok
 Moon,Ladson,,,,
@@ -1217,7 +1217,7 @@ Station,Ladson Naval Base and Shipyard,HT_SystemDefenceDock,MT_ShipYardStation,C
 Planet,Gault,,,,,,,,,,,,,
 Moon,Boone,,,,,,,,,,,,,
 Station,Boone Leisure Complex,HT_Casino,MT_CasinoStation,Saffron,ok,,,,,,,,,
-Station,Boone Waystation,HT_Waystation,MT_AdminStation,Saffron,ok,,,,,,,,,
+Station,Boone Waystation,HT_Waystation,MT_NavalBaseStation,Saffron,ok,,,,,,,,,
 Station,Boone Storage Depot,HT_Warehousing,MT_AdminStation,Saffron,ok,,,,,,,,,
 Station,Boone Fuel Processing,HT_FusionableGasesProcessingPlant,MT_ProcessingPlant,Saffron,ok,,,,,,,,,
 Planet,Fallis,,,,,,,,,,,,,
@@ -1248,14 +1248,14 @@ Mine,Wurts Mining Outpost,HT_FusionableGasesMine,MT_SmallFusionableGassesMine,Sa
 Moon,Bromley,,,,,
 Station,Markus Corporation HQ Station,HT_CentralHQ,MT_AdminStation,Markus,ok,
 Station,Nisami Senate,HT_SystemAdministration,MT_AdminStation,CDF,ok,
-Station,Chavez Nisami Depot,HT_Waystation,MT_AdminStation,Chavez,ok,
-Station,Bromley Police Base,HT_PoliceBase,MT_ShipYardStation,CDF,ok,
+Station,Chavez Nisami Depot,HT_Waystation,MT_NavalBaseStation,Chavez,ok,
+Station,Bromley Police Base,HT_PoliceBase,MT_NavalBaseStation,CDF,ok,
 Moon,Ostergard,,,,,
 Station,Markus Corp. Manufacturing Station,HT_HeavyManufacturingPlant,MT_ManufacturePlant,Markus,ok,
 Giant,Odom,,,,,
 Moon,Travis,,,,,
-Station,Odom Waystation Station,HT_Waystation,MT_AdminStation,Grinnel,ok,
-Station,Grinnel Freight Security,HT_SecurityStation,MT_ShipYardStation,Grinnel,ok,
+Station,Odom Waystation Station,HT_Waystation,MT_NavalBaseStation,Grinnel,ok,
+Station,Grinnel Freight Security,HT_SecurityStation,MT_NavalBaseStation,Grinnel,ok,
 Station,Minerals Processing Station,HT_BiologicalManufacturingPlant,MT_ManufacturePlant,Corliss,ok,
 Station,Travis Heavy Industry Station,HT_HeavyManufacturingPlant,MT_ManufacturePlant,Jardin,ok,
 ;Operation,Embezzle,Scavengers,,ok,,
@@ -1264,7 +1264,7 @@ Moon,Dugald,,,,,
 Mine,Dugald Gas Mine Alpha,HT_FusionableGasesMine,MT_SmallFusionableGassesMine,Corliss,ok,2
 Mine,Dugald Gas Mine Beta,HT_FusionableGasesMine,MT_LargeFusionableGassesMine,Corliss,ok,1
 Belt,Inner Asteroid Belt,,,,,
-Station,Clenched ,HT_Fortress,MT_AdminStation,Fist,ok,
+Station,Clenched ,HT_Fortress,MT_NavalBaseStation,Fist,ok,
 Planet,Sento,,,,,
 Station,Markus Corp Research Labs,HT_ResearchStation,MT_AdminStation,Markus,ok,
 Planet,Yamagishi,,,,,
@@ -1276,7 +1276,7 @@ Mine,Suzuki Metals Mine Alpha,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,Corli
 Mine,Suzuki Metals Mine Beta,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,Corliss,ok,1
 Station,MelNet FTL Relay,HT_FTLArray,MT_AdminStation,EtCom,ok,
 Belt,Kuniper Belt,,,,,
-Station,The Holy Rock,HT_Fortress,MT_AdminStation,Angels,ok,
+Station,The Holy Rock,HT_Fortress,MT_NavalBaseStation,Angels,ok,
 
 Lpoint,Noda Lpoint,Hom,Noda,2,hant,Corinna Lpoint,1,100,0,akra,Brown Lpoint,1,100,0
 ;Operation,CustomsToll,CDF,,,,,,,,,,,,
@@ -1308,8 +1308,8 @@ Station,Renquist Station Assembly,HT_StationFabricationManufacturingPlant,MT_Man
 Moon,Daltry,,,,
 Station,CMC Nano Producer,HT_CommonMetalsProcessingPlant,MT_ProcessingPlant,CMCMining,ok
 Station,CMC Nano Fibre Production,HT_WaterProcessingPlant,MT_ProcessingPlant,CMCMining,ok
-Station,Grinnel Watts Waystation,HT_Waystation,MT_AdminStation,Grinnel,ok
-Station,Watts STC,HT_PoliceBase,MT_ShipYardStation,CMCSS,ok
+Station,Grinnel Watts Waystation,HT_Waystation,MT_NavalBaseStation,Grinnel,ok
+Station,Watts STC,HT_PoliceBase,MT_NavalBaseStation,CMCSS,ok
 Station,Daltry Weapons Facility,HT_WeaponsManufacturingPlant,MT_ManufacturePlant,CMCMining,ok,
 Moon,Cooper,,,,,
 Station,Sutter Agricultural Orbital,HT_AgriculturalSettlement,MT_AdminStation,CorlissCitizens,ok,
@@ -1317,7 +1317,7 @@ Station,Sutter Station Assembly,HT_StationFabricationManufacturingPlant,MT_Manuf
 Station,Cooper Cell Production,HT_EnergyCellsManufacturingPlant,MT_ManufacturePlant,CMCMining,ok,
 ;Operation,Protection,Droznic,,ok,,
 Station,Cooper Heavy Industry,HT_HeavyManufacturingPlant,MT_ManufacturePlant,Jardin,ok,
-Station,Cooper Waystation,HT_Waystation,MT_AdminStation,Jardin,ok,
+Station,Cooper Waystation,HT_Waystation,MT_NavalBaseStation,Jardin,ok,
 ;Operation,Embezzle,Scavengers,,ok,,
 Moon,Beraud,,,,,
 Moon,Brion,,,,,
@@ -1330,7 +1330,7 @@ Mine,CMC Mining Outpost Pal,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,CMCMini
 ;Operation,Embezzle,Uncleansed,,ok,,,,,,,,,,
 Belt,Kuniper Belt,,,,,,,,,,,,,
 Station,MelNet FTL Relay,HT_FTLArray,MT_AdminStation,Markus,ok,,,,,,,,,
-Station,Kuniper Asteroid Zone,HT_Fortress,MT_AdminStation,Fist,ok,,,,,,,,,
+Station,Kuniper Asteroid Zone,HT_Fortress,MT_NavalBaseStation,Fist,ok,,,,,,,,,
 
 Lpoint,Cooper Lpoint,Sutter,Cooper,2,corliss ,Lars Lpoint,1,100,0,lombard,Brammell Lpoint,1,100,0
 ;Operation,CustomsToll,CMCSS,,,,,,,,,,,,
@@ -1348,11 +1348,11 @@ Planet,Kogan,,,,
 Moon,Lamar,,,,
 Station,Lamar Shipyard,HT_Shipyard,MT_ShipYardStation,Kronholm,ok
 Moon,Vernons Leap,,,,
-Station,Vernon Asteroid Cluster,HT_Fortress,MT_AdminStation,Angels,ok
+Station,Vernon Asteroid Cluster,HT_Fortress,MT_NavalBaseStation,Angels,ok
 Planet,Lundquist,,,,
 Moon,Daiglish,,,,
-Station,Kronholm STC,HT_PoliceBase,MT_ShipYardStation,ImperialNavy,ok
-Station,Kronholm Waystation Station,HT_Waystation,MT_AdminStation,LeungCitizens,ok
+Station,Kronholm STC,HT_PoliceBase,MT_NavalBaseStation,ImperialNavy,ok
+Station,Kronholm Waystation Station,HT_Waystation,MT_NavalBaseStation,LeungCitizens,ok
 Moon,Withnail,,,,
 Station,Kronholm Station,HT_CentralHQ,MT_AdminStation,Kronholm,ok
 Moon,Rochester,,,,
@@ -1367,9 +1367,9 @@ Station,Reardon Shipyard,HT_Shipyard,MT_ShipYardStation,LeungCitizens,ok
 Station,System Defense Station,HT_SystemDefenceDock,MT_ShipYardStation,ImperialNavy,ok
 Station,Kronholm Government Center,HT_SystemAdministration,MT_AdminStation,ImperialNavy,ok
 Moon,Stibbe,,,,
-Station,Chavez Kronholm Depot,HT_Waystation,MT_AdminStation,Chavez,ok
+Station,Chavez Kronholm Depot,HT_Waystation,MT_NavalBaseStation,Chavez,ok
 Station,Stibbe Warehousing,HT_Warehousing,MT_AdminStation,Chavez,ok
-Station,Chavez Shipping Security,HT_SecurityStation,MT_ShipYardStation,Chavez,ok
+Station,Chavez Shipping Security,HT_SecurityStation,MT_NavalBaseStation,Chavez,ok
 Moon,Angevine,,,,
 Moon,Mudra,,,,
 Station,Imperial Military Garrison,HT_SystemDefenceDock,MT_ShipYardStation,ImperialNavy,ok
@@ -1388,7 +1388,7 @@ Station,Energy Cells Production,HT_EnergyCellsManufacturingPlant,MT_ManufactureP
 Station,Okahara Systems Factory,HT_ElectronicsManufacturingPlant,MT_ManufacturePlant,EtCom,ok
 ;Operation,Protection,GoldenLotus,,ok,
 Station,Okahara Storage Depot,HT_Warehousing,MT_AdminStation,Grinnel,ok
-Station,Aoki Waystation,HT_Waystation,MT_AdminStation,Grinnel,ok
+Station,Aoki Waystation,HT_Waystation,MT_NavalBaseStation,Grinnel,ok
 ;Operation,Protection,GoldenLotus,,ok,
 Station,Okahara Heavy Industry,HT_HeavyManufacturingPlant,MT_ManufacturePlant,Jardin,ok,,,,,,,,,,,,,,
 ;Operation,Protection,GoldenLotus,,ok,,,,,,,,,,,,,,,
@@ -1419,20 +1419,20 @@ SpecialPlanetTexture,24,,,,
 SpecialPlanetBump,25,,,,
 Planet,Tseng ,,,,
 Station,Forbidden Orbital Imperial HQ,HT_ClusterAdministration,MT_AdminStation,ImperialNavy,ok
-Station,Tau Tsun STC ,HT_PoliceBase,MT_ShipYardStation,ImperialNavy,ok
+Station,Tau Tsun STC ,HT_PoliceBase,MT_NavalBaseStation,ImperialNavy,ok
 Station,Imperial Mining Institute,HT_CentralHQ,MT_AdminStation,ImperialMining,ok
-Station,Imperial Customs and Security Station,HT_PoliceBase,MT_ShipYardStation,ImperialNavy,ok
+Station,Imperial Customs and Security Station,HT_PoliceBase,MT_NavalBaseStation,ImperialNavy,ok
 ;Station,Tau Tsun Trade and Commerce Station,HT_CentralHQ,MT_AdminStation,LeungCitizens,ok
-Station,Tau Tsun Waystation Station,HT_Waystation,MT_AdminStation,LeungCitizens,ok
+Station,Tau Tsun Waystation Station,HT_Waystation,MT_NavalBaseStation,LeungCitizens,ok
 Station,Hao Shun Systems Facility,HT_WetwareManufacturingPlant,MT_ManufacturePlant,LeungCitizens,ok
 Station,Chui Gon Manufacturing Facility,HT_HeavyManufacturingPlant,MT_ManufacturePlant,LeungCitizens,ok
 ;Operation,Embezzle,Uncleansed,,ok,
 Station,Hao Ping Consumer Production,HT_LuxuriesManufacturingPlant,MT_ManufacturePlant,LeungCitizens,ok
-Station,Tau Tsun System Defense Station,HT_SystemDefenceDock,MT_AdminStation,ImperialNavy,ok
+Station,Tau Tsun System Defense Station,HT_SystemDefenceDock,MT_ShipYardStation,ImperialNavy,ok
 Station,NSO Laplace Regional Headquarters,HT_CentralHQ,MT_AdminStation,NSOLaplace,ok
 Station,Tseng Shipyard,HT_Shipyard,MT_ShipYardStation,NSOLaplace,ok
 Station,Tseng Shipyard Storage,HT_Warehousing,MT_AdminStation,NSOLaplace,ok
-Station,Tseng Waystation,HT_Waystation,MT_AdminStation,NSOLaplace,ok
+Station,Tseng Waystation,HT_Waystation,MT_NavalBaseStation,NSOLaplace,ok
 Moon,Chui Gon,,,,
 Moon,Sook ,,,,
 ;Station,Imperial Naval Academy,HT_CentralHQ,MT_AdminStation,ImperialNavy,ok
@@ -1458,13 +1458,13 @@ Station,Li Po Naval Shipyards,HT_Shipyard,MT_ShipYardStation,LeungCitizens,ok
 SpecialPlanetTexture,26,,,,
 SpecialPlanetBump,27,,,,
 Planet,Chenyuang ,,,,
-Station,Li Po STC,HT_PoliceBase,MT_ShipYardStation,ImperialNavy,ok
+Station,Li Po STC,HT_PoliceBase,MT_NavalBaseStation,ImperialNavy,ok
 Station,Li Po Station,HT_SystemAdministration,MT_AdminStation,ImperialNavy,ok
 Station,Li Po Beanstalk,HT_TransferStation,MT_AdminStation,LeungCitizens,ok
 Station,Jardin Terraforming Corporate Headquarters,HT_CentralHQ,MT_AdminStation,Jardin,ok
 Station,Synthetics Production Shang,HT_BiomassProcessingPlant,MT_ProcessingPlant,Jardin,ok
 Station,Synthetics Production Xia,HT_BiomassProcessingPlant,MT_ProcessingPlant,Jardin,ok
-Station,Chavez Li Po Depot,HT_Waystation,MT_AdminStation,Chavez,ok
+Station,Chavez Li Po Depot,HT_Waystation,MT_NavalBaseStation,Chavez,ok
 Station,Liu Feng Organics Production,HT_OrganicsProcessingPlant,MT_ProcessingPlant,LeungCitizens,ok
 Station,Exotic Metals Processing ,HT_ExoticMetalsProcessingPlant,MT_AdminStation,LeungCitizens,ok
 Station,Chenyuang Heavy Industry,HT_HeavyManufacturingPlant,MT_ManufacturePlant,Jardin,ok
@@ -1514,7 +1514,7 @@ Station,Yellow Flower,HT_PirateBase,MT_PirateStation,GoldenLotus,ok,
 Mine,Manchurian Mining Outpost Yi,HT_CommonMetalsMine,MT_LargeCommonMetalsMine,LeungCitizens,ok,3
 ;Operation,Protection,GoldenLotus,,ok,,
 Mine,Manchurian Mining Outpost Er,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,LeungCitizens,ok,1
-Station,The Dragons Cave,HT_MercenaryBase,MT_ShipYardStation,Dragons,ok,
+Station,The Dragons Cave,HT_MercenaryBase,MT_NavalBaseStation,Dragons,ok,
 Planet,Jin Gzhu,,,,,
 Station,Jin Gzhu Shipyard,HT_Shipyard,MT_ShipYardStation,LeungCitizens,ok,
 Station,Tian Liang Reactor Assembly,HT_FusionReactorsManufacturingPlant,MT_ManufacturePlant,Lomax,ok,
@@ -1552,17 +1552,17 @@ Mine,Perkings Exotic Rock,HT_ExoticMetalsMine,MT_SmallExoticMetalsMine,CMCMining
 Moon,Keylime ,,,,,
 Station,Keylime Refinery,HT_CommonMetalsProcessingPlant,MT_ProcessingPlant,CMCMining,ok,
 Station,CMC Bumpys Warehousing,HT_Warehousing,MT_AdminStation,CMCMining,ok,
-Station,CMC Bumpys Security,HT_SecurityStation,MT_ShipYardStation,CMCMining,ok,
+Station,CMC Bumpys Security,HT_SecurityStation,MT_NavalBaseStation,CMCMining,ok,
 Planet,Jellyroll,,,,,
 Moon,Sweet Sheila,,,,,
 Mine,Sweety Rock,HT_ExoticMetalsMine,MT_LargeExoticMetalsMine,DAMN,ok,3
 ;Operation,Protection,Lindevaal,,ok,,
 Moon,Lubecks Hole,,,,,
 Mine,Lubecks Pebble,HT_CommonMetalsMine,MT_LargeCommonMetalsMine,Junkers,ok,3
-Station,The Dragons Hole,HT_MercenaryBase,MT_ShipYardStation,Dragons,ok,
+Station,The Dragons Hole,HT_MercenaryBase,MT_NavalBaseStation,Dragons,ok,
 Moon,Goodboy,,,,,
 Mine,Badboy Imperial Mining ,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,ImperialMining,ok,2
-Station,Imperial Mining Security,HT_SecurityStation,MT_ShipYardStation,ImperialMining,ok,
+Station,Imperial Mining Security,HT_SecurityStation,MT_NavalBaseStation,ImperialMining,ok,
 Moon,Sit,,,,,
 Mine,Stand Mine,HT_RareMetalsMine,MT_SmallRareMetalsMine,Junkers,ok,2
 Moon,Stay,,,,,
@@ -1574,8 +1574,8 @@ Station,Woomera Leisure Station,HT_Casino,MT_CasinoStation,Lindevaal,ok,
 Station,Woomera Outpost,HT_Outpost,MT_AdminStation,Empty,destroyed,
 Planet,Dizzy,,,,,
 Station,Woomera Station Doran HQ,HT_CentralHQ,MT_AdminStation,DAMN,ok,
-Station,Doran Security Central,HT_SecurityStation,MT_ShipYardStation,DAMN,ok,
-Station,Dizzy Waystation,HT_Waystation,MT_AdminStation,DAMN,ok,
+Station,Doran Security Central,HT_SecurityStation,MT_NavalBaseStation,DAMN,ok,
+Station,Dizzy Waystation,HT_Waystation,MT_NavalBaseStation,DAMN,ok,
 Station,Doran Storage Central,HT_Warehousing,MT_AdminStation,DAMN,ok,
 Moon,Three Bears,,,,,
 Mine,Goldilocks,HT_RareMetalsMine,MT_SmallRareMetalsMine,DAMN,ok,3
@@ -1598,7 +1598,7 @@ Mine,Magdalena Asteroid One,HT_InorganicsMine,MT_SmallInorganicsMine,DAMN,ok,3
 ;Operation,Protection,Lindevaal,,ok,,
 Mine,Magdalena Asteroid Two,HT_InorganicsMine,MT_SmallInorganicsMine,DAMN,ok,2
 Mine,Magdalena Asteroid Three,HT_InorganicsMine,MT_SmallInorganicsMine,DAMN,ok,1
-Station,Golligers Redoubt,HT_MercenaryBase,MT_ShipYardStation,Golligers,ok,,,,,,,,,
+Station,Golligers Redoubt,HT_MercenaryBase,MT_NavalBaseStation,Golligers,ok,,,,,,,,,
 Planet,Ella,,,,,,,,,,,,,
 Moon,Jennys Beat,,,,,,,,,,,,,
 Moon,Hopkins Hazard,,,,,,,,,,,,,
@@ -1616,9 +1616,9 @@ Star,Alcuin Alpha,5,,,,,,,,,,,,
 Planet,Danforth,,,,,,,,,,,,,
 Moon,Stohl,,,,,
 Mine,Stohl Common Metals Mine,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,ImperialMining,ok,2
-Station,Imperial Mining Security,HT_SecurityStation,MT_ShipYardStation,ImperialMining,ok,
+Station,Imperial Mining Security,HT_SecurityStation,MT_NavalBaseStation,ImperialMining,ok,
 Moon,Miehl,,,,,
-Station,Wyvern Watch,HT_MercenaryBase,MT_ShipYardStation,Dragons,ok,
+Station,Wyvern Watch,HT_MercenaryBase,MT_NavalBaseStation,Dragons,ok,
 Belt,McKeown Belt,,,,,
 Mine,Common Metals Mine One,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,CMCMining,ok,1
 Mine,Common Metals Mine Two,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,CMCMining,ok,3
@@ -1629,9 +1629,9 @@ Planet,Toffelmeyer,,,,,
 Moon,Dietrich,,,,,
 Mine,Dietrich Asteroid Base,HT_RareMetalsMine,MT_LargeRareMetalsMine,EtCom,ok,1
 Station,EtCom HQ Station,HT_CentralHQ,MT_AdminStation,EtCom,ok,
-Station,EtCom Security Forces,HT_SecurityStation,MT_ShipYardStation,EtCom,ok,
+Station,EtCom Security Forces,HT_SecurityStation,MT_NavalBaseStation,EtCom,ok,
 Moon,Vaden,,,,,
-Station,Alcuin STC,HT_PoliceBase,MT_ShipYardStation,Empty,destroyed,
+Station,Alcuin STC,HT_PoliceBase,MT_NavalBaseStation,Empty,destroyed,
 Station,Alcuin Governor,HT_RegionalDepartment,MT_AdminStation,Empty,destroyed,
 Moon,Wachhaus,,,,,
 Station,Toffelmeyer Entertainment,HT_EntertainmentStation,MT_CasinoStation,Junkers,ok,
@@ -1656,7 +1656,7 @@ Moon,Brandt,,,,,
 Station,Azran Corporate HQ,HT_CentralHQ,MT_AdminStation,Azran,ok,
 Station,Azran Consumer Production,HT_PlasticsManufacturingPlant,MT_ManufacturePlant,Azran,ok,
 Station,Azran Shipbuilding,HT_Shipyard,MT_ShipYardStation,Azran,ok,
-Station,Azran Security,HT_SecurityStation,MT_ShipYardStation,Azran,ok,
+Station,Azran Security,HT_SecurityStation,MT_NavalBaseStation,Azran,ok,
 Belt,Inner Kuniper Belt,,,,,
 Station,Last Stop Cove,HT_PirateCove,MT_NewAsteroid01,Lindevaal,ok,
 Mine,Doran Exotic Metals Mine,HT_ExoticMetalsMine,MT_LargeExoticMetalsMine,DAMN,ok,2
@@ -1664,7 +1664,7 @@ Mine,Doran Exotic Metals Mine,HT_ExoticMetalsMine,MT_LargeExoticMetalsMine,DAMN,
 Mine,Reinberg Asteroid Base,HT_ExoticMetalsMine,MT_SmallExoticMetalsMine,Chavez,ok,3
 ;Operation,Protection,Lindevaal,,ok,,,,,,,,,,,,,,,
 Mine,Kuniper Exotics Mine,HT_ExoticMetalsMine,MT_SmallExoticMetalsMine,Junkers,ok,1,,,,,,,,,,,,,
-Station,Golligers Stopover,HT_MercenaryBase,MT_ShipYardStation,Golligers,ok,,,,,,,,,,,,,,
+Station,Golligers Stopover,HT_MercenaryBase,MT_NavalBaseStation,Golligers,ok,,,,,,,,,,,,,,
 
 Lpoint,Hoel Lpoint,Geisebrecht,Hoel,3,bedalov,Calbault Lpoint,1,100,0,bumpys_star,Jennys Lpoint,1,100,0,alcuin,Vaden Lpoint,1,100,0
 Lpoint,Vaden Lpoint,Toffelmeyer,Vaden,2,x788,MoonD Mutian Lpoint,3,100,0,alcuin,Hoel Lpoint,1,100,0,,,,,
@@ -1696,7 +1696,7 @@ Moon,Kuhlmey,,,,,
 Belt,Hough Belt,,,,,
 Mine,Rare Metals Mine,HT_NeutroniumMine,MT_SmallNeutroniumMine,DAMN,ok,1
 Mine,Hough Metals Mine,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,DAMN,ok,3
-Station,Golligers Fort,HT_MercenaryBase,MT_ShipYardStation,Golligers,ok,
+Station,Golligers Fort,HT_MercenaryBase,MT_NavalBaseStation,Golligers,ok,
 Planet,Poboron,,,,,
 Moon,Mason,,,,,
 Mine,Mason Asteroid Cluster,HT_RareMetalsMine,MT_SmallRareMetalsMine,Chavez,ok,3
@@ -1707,7 +1707,7 @@ Station,Rare Metals Processing,HT_RareMetalsProcessingPlant,MT_ProcessingPlant,C
 Station,Ore Processing Facility,HT_CommonMetalsProcessingPlant,MT_ProcessingPlant,Chavez,ok,
 ;Operation,Embezzle,Pimental,,,,
 Station,Chavez Shipping Headquarters,HT_CentralHQ,MT_AdminStation,Chavez,ok,
-Station,Chavez Central Security,HT_SecurityStation,MT_ShipYardStation,Chavez,ok,
+Station,Chavez Central Security,HT_SecurityStation,MT_NavalBaseStation,Chavez,ok,
 Station,Chavez Central Warehousing,HT_Warehousing,MT_AdminStation,Chavez,ok,
 Station,Manufacturing Station,HT_HeavyManufacturingPlant,MT_ManufacturePlant,Lomax,ok,
 Station,Bedalov Senate,HT_SystemAdministration,MT_AdminStation,Empty,destroyed,
@@ -1743,12 +1743,12 @@ Moon,Glynn,,,,,,,,,,,,,,,,,,
 Mine,Glynn Radioactives Mine,HT_RadioactivesMine,MT_LargeRadioactivesMine,Markus,ok,2,,,,,,,,,,,,,
 ;Operation,Protection,Pimental,,ok,,,,,,,,,,,,,,,
 Planet,Mabinogion,,,,,
-Station,Powys STC station,HT_PoliceBase,MT_ShipYardStation,Empty,destroyed,
+Station,Powys STC station,HT_PoliceBase,MT_NavalBaseStation,Empty,destroyed,
 Station,Powys Senate,HT_SystemAdministration,MT_AdminStation,Empty,destroyed,
 Moon,Giddings,,,,,
 Planet,Llywelyn,,,,,
-Station,CMC Llywelyn Waystation,HT_Waystation,MT_AdminStation,CMCMining,ok,
-Station,CMC Llywelyn Security,HT_SecurityStation,MT_ShipYardStation,CMCMining,ok,
+Station,CMC Llywelyn Waystation,HT_Waystation,MT_NavalBaseStation,CMCMining,ok,
+Station,CMC Llywelyn Security,HT_SecurityStation,MT_NavalBaseStation,CMCMining,ok,
 Station,CMC Llywelyn Warehousing,HT_Warehousing,MT_AdminStation,CMCMining,ok,
 Moon,Gurnsey,,,,,
 Mine,Gurnsey Asteroid Mine,HT_CommonMetalsMine,MT_LargeCommonMetalsMine,CMCMining,ok,2
@@ -1774,7 +1774,7 @@ Station,Gruffydd Medical Production,HT_PharmaceuticalsManufacturingPlant,MT_Manu
 ;Operation,Protection,Droznic,,ok,,
 Moon,Llynlea,,,,,
 Moon,Flindall,,,,,
-Station,Flindall Waystation Station,HT_Waystation,MT_AdminStation,Junkers,ok,,,,,,,,,
+Station,Flindall Waystation Station,HT_Waystation,MT_NavalBaseStation,Junkers,ok,,,,,,,,,
 ;Operation,Protection,Droznic,,ok,,,,,,,,,,
 Moon,Hammond,,,,,,,,,,,,,
 
@@ -1798,10 +1798,10 @@ Mine,Grundy Asteroid Cluster,HT_BiomassMine,MT_SmallBiomassMine,Empty,empty,0
 Moon,Quesnelle,,,,,
 
 Planet,Ypres,,,,,
-Station,T Ang STC station,HT_SecurityStation,MT_ShipYardStation,Markus,ok,
+Station,T Ang STC station,HT_SecurityStation,MT_NavalBaseStation,Markus,ok,
 Station,Markus Corp Capsule Research Facility,HT_ResearchStation,MT_AdminStation,Markus,ok,
-Station,Ypres Waystation,HT_Waystation,MT_AdminStation,Markus,ok,
-Station,Ypres Police,HT_PoliceBase,MT_ShipYardStation,Empty,empty,
+Station,Ypres Waystation,HT_Waystation,MT_NavalBaseStation,Markus,ok,
+Station,Ypres Police,HT_PoliceBase,MT_NavalBaseStation,Empty,empty,
 Moon,Pynenburg,,,,,
 Station,T Ang Governor,HT_RegionalDepartment,MT_AdminStation,Empty,destroyed,
 Moon,Zhonyang,,,,,
@@ -1816,7 +1816,7 @@ Station,Liu Waystation,HT_PirateOutpost,MT_AsteroidPlain,Pimental,ok,
 Moon,Han,,,,,
 Mine,Han Asteroid Cluster,HT_BiomassMine,MT_LargeBiomassMine,Empty,empty,0
 Moon,Qian,,,,,
-Station,Qian Waystation,HT_Waystation,MT_AdminStation,Jardin,ok,
+Station,Qian Waystation,HT_Waystation,MT_NavalBaseStation,Jardin,ok,
 ;Operation,Protection,Pimental,,ok,,
 Moon,Zhang Shan,,,,,
 Station,Zhang Gathering,HT_GangsterHideout,MT_AsteroidPlain,Eastern,ok,
