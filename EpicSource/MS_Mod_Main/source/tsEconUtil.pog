@@ -202,6 +202,9 @@ string StationIntToString(int type)
    case ept_PatrolOp : return "HT_PatrolOp"; break; 
    case ept_RaiderOp : return "HT_RaiderOp"; break; 
 
+   case ept_StationConstructionOp : return "HT_StationConstructionOp"; break; 
+   case ept_StationRepairOp : return "HT_StationRepairOp"; break; 
+
    default:
       debug Debug.PrintString("tsEconUtil.StationIntToString Invalid station type ");
       debug Debug.PrintString(String.FormatInt("%d\n", type));
@@ -630,7 +633,6 @@ int StationStringToEnum(string instring)
       return ept_PirateTollOp;
    }
 
-
    if ( "HT_ThugsOp" == instring ) {
       return ept_ThugsOp;
    }
@@ -640,7 +642,12 @@ int StationStringToEnum(string instring)
    if ( "HT_RaiderOp" == instring ) {
       return ept_RaiderOp;
    }
-
+   if ( "HT_StationConstructionOp" == instring ) {
+      return ept_StationConstructionOp;
+   }
+   if ( "HT_StationRepairOp" == instring ) {
+      return ept_StationRepairOp;
+   }
 
    debug Debug.PrintString("tsEconUtil.StationStringToEnum Invalid string :");
    debug Debug.PrintString(instring);

@@ -47,7 +47,8 @@ uses  Sim,
 	tsFoThugs,
 	tsFoRaider,
 	tsFoCustoms,
-	tsFoPatrol;
+	tsFoPatrol,
+   tsFoConstruction;
 
 
 // Exports
@@ -88,6 +89,8 @@ hisim New(int operation_type, hfaction faction, hmapentity center)
 
    case ept_FleetAttackOp: tsFoFleetAttack.New(operation);break;
    case ept_FleetDefenseOp: tsFoFleetDefense.New(operation);break;
+   case ept_StationConstructionOp: tsFoConstruction.New(operation);break;
+   case ept_StationRepairOp: tsFoConstruction.New(operation);break;
 
    default:
       debug {
@@ -120,6 +123,10 @@ Save(hisim operation)
    case ept_FleetAttackOp: tsFoFleetAttack.Save(operation);break;
    case ept_FleetDefenseOp: tsFoFleetDefense.Save(operation);break;
 
+   case ept_StationConstructionOp: tsFoConstruction.Save(operation);break;
+   case ept_StationRepairOp: tsFoConstruction.Save(operation);break;
+
+
    default:
       debug {
          Debug.PrintString(String.FormatInt("tFleetOperation.Save invalid op type %d\n", operation_type));
@@ -148,6 +155,10 @@ Restore(hisim operation)
 
    case ept_FleetAttackOp: tsFoFleetAttack.Restore(operation);break;
    case ept_FleetDefenseOp: tsFoFleetDefense.Restore(operation);break;
+
+   case ept_StationConstructionOp: tsFoConstruction.Restore(operation);break;
+   case ept_StationRepairOp: tsFoConstruction.Restore(operation);break;
+
    default:
       debug {
          Debug.PrintString(String.FormatInt("tFleetOperation.Restore invalid op type %d\n", operation_type));
@@ -176,6 +187,10 @@ Update(hisim operation)
 
    case ept_FleetAttackOp: tsFoFleetAttack.Update(operation);break;
    case ept_FleetDefenseOp: tsFoFleetDefense.Update(operation);break;
+
+   case ept_StationConstructionOp: tsFoConstruction.Update(operation);break;
+   case ept_StationRepairOp: tsFoConstruction.Update(operation);break;
+
    default:
       
       debug {

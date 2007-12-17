@@ -101,20 +101,8 @@ update_system(string system, hinifile production_file)
          }
 
       }else if (ESS_Building == status) {
-
-         if ( current_day >= timer) {
-            // Build time completed, change station to normal.
-            tsStation.SetStatus(station, ESS_Normal);
-            tsStation.SetChangeTime(station, 0);
-
-
-            // Check if this station can produce operations.
-            // If it can, then set the change timer to
-            // the build time.
-            restart_timer(station, production_file);
-
-         }
-
+         // We wait here for the operation to finish
+         // construction.
       } else if (ESS_Leaving == status) {
 
          if ( current_day >= timer) {
@@ -132,6 +120,12 @@ update_system(string system, hinifile production_file)
             tsStation.SetChangeTime(station, 0);
 
          }
+      }else if (ESS_Finished == status) {
+         // Station finished construction! 
+         // Change status to normal, and set the station to wake up.
+
+         tsStation.SetStatus(station, ESS_Normal);
+         restart_timer(station, production_file);
       }
    }
 }
