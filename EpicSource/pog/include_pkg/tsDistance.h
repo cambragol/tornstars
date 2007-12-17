@@ -26,5 +26,7 @@ prototype float tsDistance.TradeDistance();
 
 prototype float tsDistance.PodDistance();
 
+prototype float tsDistance.PlanetaryRange();
+
 // EOF /////////////////////////////////////////////////////////////////////////
 

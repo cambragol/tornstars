@@ -42,6 +42,8 @@ prototype bool tsEconUtil.IsAllowedPirate( int type );
 
 prototype bool tsEconUtil.IsAllowedMercenary( int type );
 
+prototype bool tsEconUtil.IsAllowedFaction( int type, int faction_type );
+
 prototype bool tsEconUtil.IsAllowedLoadout( int type );
 
 // EOF /////////////////////////////////////////////////////////////////////////

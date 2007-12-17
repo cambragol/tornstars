@@ -34,5 +34,7 @@ prototype list tsStationFilter.OnDistance( set habitats, hisim mark );
 
 prototype set tsStationFilter.OnMapVisible( set habitats, bool visible );
 
+prototype set tsStationFilter.OnFactionAllowed( set habitats, hfaction faction );
+
 // EOF /////////////////////////////////////////////////////////////////////////
 
