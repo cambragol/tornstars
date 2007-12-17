@@ -8,6 +8,7 @@
    ESS_Leaving:   Station is being abandond.
    ESS_Fleeing:   Station was destroyed, survivors fleeing.
    ESS_NeverBuilt: Station has not yet been created.
+   ESS_Finished: Station construction finished.
    
 */
 
@@ -19,7 +20,8 @@ enum eStationStatus {
    ESS_Building = 8,
    ESS_Leaving = 16,
    ESS_Fleeing = 32,
-   ESS_NeverBuilt = 64
+   ESS_NeverBuilt = 64,
+   ESS_Finished = 128
 };
 
 
@@ -363,6 +365,10 @@ enum eProductionType
 
    // Cargo raiders that do distant blockades of enemy stations.
    // They attack cargo ships outside of station guard radius.
-   ept_RaiderOp = 143
+   ept_RaiderOp = 143,
+
+   ept_StationConstructionOp = 144,
+
+   ept_StationRepairOp = 145
 
 };	
