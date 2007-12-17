@@ -254,6 +254,36 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
+AddNullObject heatsink
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -10.95 -11.4 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject autorepair
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -10.95 -11.4 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject cpu
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -10.95 -11.4 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
 AddNullObject capsule_drive
 ShowObject 8 7
 ObjectMotion (unnamed)

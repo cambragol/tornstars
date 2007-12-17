@@ -1019,6 +1019,30 @@ ParentObject 56
 ShadowOptions 7
 
 
+LoadObject Objects_IW2\Stations\ModularStations\modules\Docking_Arm\Rto\0_DockArm(JB)_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -193.1 -82.5 537.1 90 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject LightNull
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 0.2 0.2 0.2
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 88
+ShadowOptions 7
+
+
 AmbientColor 255 255 255
 AmbIntensity 0.250000
 
@@ -4359,6 +4383,862 @@ FlareRingColor 80 20 10
 FlareRingSize 0.220000
 FlareStarFilter 2
 ShadowType 1
+
+
+AddLight
+LightName WhiteNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -72.5 7.5 182.75 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  1 1 0 0 0
+  0.25
+  2 1 0 0 0
+  0.25
+  4 1 0 0 0
+  4.656613e-010
+  5 1 0 0 0
+  0
+  38 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName WhiteNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -101 -14.5 206.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  16 1 0 0 0
+  0.25
+  17 1 0 0 0
+  0.25
+  19 1 0 0 0
+  4.656613e-010
+  20 1 0 0 0
+  0
+  38 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName WhiteNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -82 0.5 207.25 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  6 1 0 0 0
+  0.25
+  7 1 0 0 0
+  0.25
+  9 1 0 0 0
+  4.656613e-010
+  10 1 0 0 0
+  0
+  38 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName WhiteNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -91.5 -7 206.75 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  11 1 0 0 0
+  0.25
+  12 1 0 0 0
+  0.25
+  14 1 0 0 0
+  4.656613e-010
+  15 1 0 0 0
+  0
+  38 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName WhiteNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -101 -14.5 183.75 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  16 1 0 0 0
+  0.25
+  17 1 0 0 0
+  0.25
+  19 1 0 0 0
+  4.656613e-010
+  20 1 0 0 0
+  0
+  38 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName WhiteNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -91.5 -7 183.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  11 1 0 0 0
+  0.25
+  12 1 0 0 0
+  0.25
+  14 1 0 0 0
+  4.656613e-010
+  15 1 0 0 0
+  0
+  38 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName WhiteNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -82 0.5 183 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  6 1 0 0 0
+  0.25
+  7 1 0 0 0
+  0.25
+  9 1 0 0 0
+  4.656613e-010
+  10 1 0 0 0
+  0
+  38 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName WhiteNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -72.5 7.5 207.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  1 1 0 0 0
+  0.25
+  2 1 0 0 0
+  0.25
+  4 1 0 0 0
+  4.656613e-010
+  5 1 0 0 0
+  0
+  38 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName WhiteNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  72.5 7.5 67 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  20 1 0 0 0
+  0.25
+  21 1 0 0 0
+  0.25
+  23 1 0 0 0
+  4.656613e-010
+  24 1 0 0 0
+  0
+  38 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName WhiteNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  72.5 7.5 42.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  20 1 0 0 0
+  0.25
+  21 1 0 0 0
+  0.25
+  23 1 0 0 0
+  4.656613e-010
+  24 1 0 0 0
+  0
+  38 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName WhiteNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  82 0.5 66.75 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  24 1 0 0 0
+  0.25
+  25 1 0 0 0
+  0.25
+  27 1 0 0 0
+  4.656613e-010
+  28 1 0 0 0
+  0
+  38 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName WhiteNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  82 0.5 42.75 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  24 1 0 0 0
+  0.25
+  25 1 0 0 0
+  0.25
+  27 1 0 0 0
+  4.656613e-010
+  28 1 0 0 0
+  0
+  38 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName WhiteNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  91.5 -7 66.25 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  28 1 0 0 0
+  0.25
+  29 1 0 0 0
+  0.25
+  31 1 0 0 0
+  4.656613e-010
+  32 1 0 0 0
+  0
+  38 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName WhiteNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  91.5 -7 43.25 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  28 1 0 0 0
+  0.25
+  29 1 0 0 0
+  0.25
+  31 1 0 0 0
+  4.656613e-010
+  32 1 0 0 0
+  0
+  38 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName WhiteNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  101 -14.5 66 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  32 1 0 0 0
+  0.25
+  33 1 0 0 0
+  0.25
+  35 1 0 0 0
+  4.656613e-010
+  36 1 0 0 0
+  0
+  38 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName WhiteNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  101 -14.5 43.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  32 1 0 0 0
+  0.25
+  33 1 0 0 0
+  0.25
+  35 1 0 0 0
+  4.656613e-010
+  36 1 0 0 0
+  0
+  38 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNavlight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -5.1 25.5 225 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 89
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNavlight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  5.1 25.5 225 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 89
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNavlight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  5.1 -25.5 225 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 89
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNavlight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -5.1 -25.5 225 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 89
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNavlight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -100.25 -40.5 195.175 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 89
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  0
+  11 1 0 0 0
+  0.25
+  12 0 0 0 0
+  0.25
+  14 1 0 0 0
+  0
+  16 0 0 0 0
+  0
+  18 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNavlight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  100.25 -40.5 54.8 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  0
+  11 1 0 0 0
+  0.25
+  12 0 0 0 0
+  0.25
+  14 1 0 0 0
+  0
+  16 0 0 0 0
+  0
+  18 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName <glow>
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -190 0 778.7 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 3
+LightColor 252 244 190
+LgtIntensity 0.700000
+LightType 1
+LightFalloff 1
+LightRange 300.000000
+ShadowType 1
+
+AddLight
+LightName <glow>
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  190 0 778.7 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 3
+LightColor 252 244 190
+LgtIntensity 0.700000
+LightType 1
+LightFalloff 1
+LightRange 300.000000
+ShadowType 1
+
 
 ShowCamera 1 7
 CameraMotion (unnamed)

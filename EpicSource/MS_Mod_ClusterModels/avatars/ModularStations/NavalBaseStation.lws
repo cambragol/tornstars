@@ -10,17 +10,17 @@ PreviewFrameStep 1
 FramesPerSecond 25.000000
 
 AddNullObject <detail_switch min=0.0 max=0.01>
-ShowObject 4 7
+ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
-  -4000 0 0 0 0 0 1 1 1
+  -1500 0 0 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ShadowOptions 7
 
 AddNullObject <detail_switch min=0.01 max=0.1>
-ShowObject 4 7
+ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
@@ -30,26 +30,14 @@ EndBehavior 1
 ShadowOptions 7
 
 AddNullObject <detail_switch min=0.1 max=1.0>
-ShowObject 4 7
+ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
-  4000 0 0 0 0 0 1 1 1
+  1500 0 0 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 6
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\MODULARSTATIONS\CONNECTORS\GANTRY_C\RTO\0_GANTRY_C_Curved.LWO
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  1100 0 800 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 5
 ShadowOptions 7
 
 AddNullObject root
@@ -57,136 +45,233 @@ ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  0 0 0 0 0 0 1 1 1
+  0 0 128.75 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ParentObject 3
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\MODULARSTATIONS\CONNECTORS\GANTRY_C\RTO\0_GANTRY_C_Curved.LWO
+LoadObject Objects_IW2\Stations\ModularStations\modules\engineering_large\RTO\0_EngLarge.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  -1125 0 -750 180 0 0 5 5 5
+  0 250 0 0 90 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\Command_Mod\Rto\Command_0.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 861 0 0 -90 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\connectors\conv\RTO\Mod_Conv_RTO_LOD0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 250 0 0 -90 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\connectors\conv\RTO\Mod_Conv_RTO_LOD0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 175 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry\RTO\Mod_Gantry_RTO_LOD0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 743.5 0 0 0 5 5 5
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 5
+ParentObject 4
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\MODULARSTATIONS\CONNECTORS\GANTRY_C\RTO\0_GANTRY_C_Curved.LWO
+LoadObject Objects_IW2\Stations\ModularStations\connectors\conv\RTO\Mod_Conv_RTO_LOD0_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  -775 -275 -1100 90 180 0 5 5 5
+  0 0 -175 180 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\Fort\Rto\0_Fort(JB)_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -242 180 0 0 5 5 5
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 5
+ParentObject 4
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\modules\engineering_small\RTO\0_Eng_small.lwo
+LoadObject Objects_IW2\Stations\ModularStations\connectors\conv\RTO\Mod_Conv_RTO_LOD0_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  997.75 -525 1046.25 -90 -90 -45 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 43
-ParentObject 5
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\0_Gantry_B_D.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  1100 0 -250 0 0 0 5 5 5
+  0 0 361 180 0 0 5 5 5
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 5
+ParentObject 4
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\0_Gantry_B_D.lwo
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\0_buildingsJB_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  997.75 25 1046.3 0 -90 -45 5 5 5
+  0 -250 0 0 90 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 5
-ParentObject 5
+ParentObject 4
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\modules\hotel\RTO\0_hotel_T.lwo
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\0_ribJB_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  -750 275 -1125 180 0 0 5 5 5
+  -118 -192 80.5 90 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 5
-ShadowOptions 7
-
-AddNullObject LightNull
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 0.2 0.2 0.2
-  0 0 0 0 0
-EndBehavior 2
-LockedChannels 24
-ParentObject 11
-Metamorph (envelope)
-  1
-  1
-  0
-  0 0 0 0 0
-EndBehavior 1
-MorphTarget 0
-MorphSurfaces 0
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\hotel\RTO\0_hotel_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -1040.5 0 -1015 225 0 90 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 5
-ShadowOptions 7
-
-AddNullObject LightNull
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 0.2 0.2 0.2
-  0 0 0 0 0
-EndBehavior 2
-LockedChannels 24
+LockedChannels 48
 ParentObject 13
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\modules\hotel\RTO\0_hotel_T.lwo
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\0_ribJB_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  725.2003 0 1175.1 0 0 90 5 5 5
+  118 -192 80.5 90 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 5
+LockedChannels 48
+ParentObject 13
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\0_ribJB_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  228 -192 288 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 13
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\0_ribJB_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  228 -192 530 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 13
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\0_ribJB_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  228 -192 772 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 13
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\0_ribJB_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -228 -192 772 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 13
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\0_ribJB_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -228 -192 530 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 13
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\0_ribJB_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -228 -192 288 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 13
+ShadowOptions 7
+
+AddNullObject LightHandle
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 13
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\hab\RTO\0_hab(JB)_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 361 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 4
 ShadowOptions 7
 
 AddNullObject LightNull
@@ -196,216 +281,143 @@ ObjectMotion (unnamed)
   1
   0 0 0 0 0 0 0.2 0.2 0.2
   0 0 0 0 0
-EndBehavior 2
-LockedChannels 24
-ParentObject 15
-ShadowOptions 7
-
-LoadObject C:\particle\IWAR2\RESOURCE\Avatars\mp_asteroids\HotelAst03.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  43.47868 0 29.76447 78.2 -11.1 0 1 1 1
-  0 0 0 0 0
 EndBehavior 1
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\0_Gantry_B_D.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  1100 0 250 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 5
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\0_Gantry_B_D.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -725 -275 -1100 90 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 5
-ParentObject 5
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\0_Gantry_B_D.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 0 -1125 180 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 5
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\0_Gantry_B_D.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -1125 0 -750 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 5
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\0_Gantry_B_D.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  200 0 1150 90 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 5
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\0_Gantry_B_D.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 250 -1100 0 90 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 5
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\0_GantryCube_B_D.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 275 -1100 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 5
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\0_GantryCube_B_D.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 -275 -1100 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 5
+ParentObject 23
 ShadowOptions 7
 
 LoadObject Objects_IW2\Stations\ModularStations\modules\Docking_Arm\Rto\0_DockArm(JB)_T.lwo
-ShowObject 8 7
+ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  -750.0226 0 -1624.9 180 180 0 5 5 5
+  0 0 1243.5 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject LightNull
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 0.2 0.2 0.2
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 25
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\connectors\conv\RTO\Mod_Conv_RTO_LOD0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -361 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\pod_spewer\RTO\LOD0_RTO_pod_spewer_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -645 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 30
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\pod_spewer\RTO\LOD0_RTO_PS_conveyors_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -645 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 30
+ShadowOptions 7
+
+AddNullObject PodSpewerHandle
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -361 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 5
+ParentObject 4
 ShadowOptions 7
 
-AddNullObject LightNull
-ShowObject 8 7
+LoadObject Objects_IW2\Stations\ModularStations\modules\pod_spewer\RTO\LOD0_RTO_interfacer_mod_T.lwo
+ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  0 0 0 0 0 0 0.2 0.2 0.2
+  0 0 -645 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 26
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\0_GantryCube_B_D.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  725 0 1150 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 5
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\0_GantryCube_B_D.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  1100 0 775 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 5
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\hotel\RTO\0_hotel_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  1124.901 0 774.9998 90 0 90 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 5
-ShadowOptions 7
-
-AddNullObject LightNull
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 0.2 0.2 0.2
-  0 0 0 0 0
-EndBehavior 2
-LockedChannels 24
 ParentObject 30
 ShadowOptions 7
 
 AddNullObject NavLightNull
-ShowObject 5 7
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 30
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\Fort\Rto\0_Fort(JB)_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 317 0 0 -90 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\Fort\Rto\0_Fort(JB)_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 242 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject NavLightNull
+ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
   0 0 0 0 0 0 0.2 0.2 0.2
   0 0 0 0 0
 EndBehavior 1
-ParentObject 33
+ParentObject 36
 ShadowOptions 7
 
 LoadObject Objects_IW2\Stations\ModularStations\modules\comms\RTO\0_Comms(JB)_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  997.85 524.4999 1046.3 0 -90 45 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 6
-ParentObject 5
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\MODULARSTATIONS\CONNECTORS\GANTRY_C\RTO\LOD1\1_GANTRY_C_Curved.LWO
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  1100 0 800 0 0 0 5 5 5
+  25 611 0 90 0 -90 5 5 5
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 35
+LockedChannels 24
+ParentObject 4
 ShadowOptions 7
 
 AddNullObject root
@@ -413,348 +425,213 @@ ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  0 0 0 0 0 0 1 1 1
+  0 0 128.75 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ParentObject 2
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\MODULARSTATIONS\CONNECTORS\GANTRY_C\RTO\LOD1\1_GANTRY_C_Curved.LWO
+LoadObject Objects_IW2\Stations\ModularStations\modules\engineering_large\RTO\LOD1\1_EngLarge.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  -1125 0 -750 180 0 0 5 5 5
+  0 250 0 0 90 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 37
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\Command_Mod\RTO\LOD1\Command_1.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 861 0 0 -90 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 37
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\connectors\conv\RTO\LOD1\Mod_Conv_RTO_LOD1_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 250 0 0 -90 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 37
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\connectors\conv\RTO\LOD1\Mod_Conv_RTO_LOD1_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 175 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 37
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry\RTO\LOD1\Mod_Gantry_RTO_LOD1_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 361 0 0 -90 0 5 5 5
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 35
+ParentObject 37
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\MODULARSTATIONS\CONNECTORS\GANTRY_C\RTO\LOD1\1_GANTRY_C_Curved.LWO
+LoadObject Objects_IW2\Stations\ModularStations\connectors\conv\RTO\LOD1\Mod_Conv_RTO_LOD1_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  -775 -275 -1100 90 180 0 5 5 5
+  0 0 -175 180 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 37
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\Fort\RTO\LOD1\1_Fort(JB)_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -242 180 0 0 5 5 5
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 35
+ParentObject 37
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\modules\engineering_small\RTO\LOD1\1_Eng_small.lwo
+LoadObject Objects_IW2\Stations\ModularStations\connectors\conv\RTO\LOD1\Mod_Conv_RTO_LOD1_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  997.75 -525 1046.25 -90 -90 -45 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 43
-ParentObject 35
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\lod1\1_Gantry_B_D.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  1100 0 -250 0 0 0 5 5 5
+  0 0 361 180 0 0 5 5 5
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 35
+ParentObject 37
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\lod1\1_Gantry_B_D.lwo
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\LOD1\1_buildingsJB_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  997.75 25 1046.3 0 -90 -45 5 5 5
+  0 -250 0 0 90 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 5
-ParentObject 35
+ParentObject 37
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\modules\hotel\RTO\LOD1\1_hotel_T.lwo
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\LOD1\1_ribJB_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  -750 275 -1125 180 0 0 5 5 5
+  -118 -192 80.5 90 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 35
+LockedChannels 48
+ParentObject 46
 ShadowOptions 7
 
-AddNullObject LightNull
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\LOD1\1_ribJB_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  0 0 0 0 0 0 0.2 0.2 0.2
-  0 0 0 0 0
-EndBehavior 2
-LockedChannels 24
-ParentObject 41
-Metamorph (envelope)
-  1
-  1
-  0
+  118 -192 80.5 90 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-MorphTarget 0
-MorphSurfaces 0
+LockedChannels 48
+ParentObject 46
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\modules\hotel\RTO\LOD1\1_hotel_T.lwo
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\LOD1\1_ribJB_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  -1040.5 0 -1015 225 0 90 5 5 5
+  228 -192 288 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 35
+LockedChannels 48
+ParentObject 46
 ShadowOptions 7
 
-AddNullObject LightNull
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\LOD1\1_ribJB_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  0 0 0 0 0 0 0.2 0.2 0.2
+  228 -192 530 0 0 0 1 1 1
   0 0 0 0 0
-EndBehavior 2
-LockedChannels 24
-ParentObject 43
+EndBehavior 1
+LockedChannels 48
+ParentObject 46
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\modules\hotel\RTO\LOD1\1_hotel_T.lwo
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\LOD1\1_ribJB_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  725.2003 0 1175.1 0 0 90 5 5 5
+  228 -192 772 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 35
+LockedChannels 48
+ParentObject 46
 ShadowOptions 7
 
-AddNullObject LightNull
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\LOD1\1_ribJB_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  0 0 0 0 0 0 0.2 0.2 0.2
+  -228 -192 772 180 0 0 1 1 1
   0 0 0 0 0
-EndBehavior 2
-LockedChannels 24
-ParentObject 45
+EndBehavior 1
+LockedChannels 48
+ParentObject 46
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\lod1\1_Gantry_B_D.lwo
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\LOD1\1_ribJB_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  1100 0 250 0 0 0 5 5 5
+  -228 -192 530 180 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 35
+LockedChannels 48
+ParentObject 46
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\lod1\1_Gantry_B_D.lwo
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\LOD1\1_ribJB_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  -725 -275 -1100 90 0 0 5 5 5
+  -228 -192 288 180 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 5
-ParentObject 35
+LockedChannels 48
+ParentObject 46
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\lod1\1_Gantry_B_D.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 0 -1125 180 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 35
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\lod1\1_Gantry_B_D.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -1125 0 -750 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 35
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\lod1\1_Gantry_B_D.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  200 0 1150 90 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 35
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\lod1\1_Gantry_B_D.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 250 -1100 0 90 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 35
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\LOD1\1_GantryCube_B_D.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 275 -1100 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 35
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\LOD1\1_GantryCube_B_D.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 -275 -1100 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 35
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\Docking_Arm\RTO\LOD1\1_DockArm(JB)_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750.0226 0 -1624.9 180 180 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 6
-ParentObject 35
-ShadowOptions 7
-
-AddNullObject LightNull
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 0.2 0.2 0.2
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 55
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\LOD1\1_GantryCube_B_D.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  725 0 1150 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 35
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\LOD1\1_GantryCube_B_D.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  1100 0 775 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 35
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\hotel\RTO\LOD1\1_hotel_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  1124.901 0 774.9998 90 0 90 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 35
-ShadowOptions 7
-
-AddNullObject LightNull
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 0.2 0.2 0.2
-  0 0 0 0 0
-EndBehavior 2
-LockedChannels 24
-ParentObject 59
-ShadowOptions 7
-
-AddNullObject NavLightNull
-ShowObject 5 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 0.2 0.2 0.2
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 62
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\comms\RTO\LOD1\1_Comms(JB)_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  997.85 524.4999 1046.3 0 -90 45 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 6
-ParentObject 35
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\MODULARSTATIONS\CONNECTORS\GANTRY_C\RTO\LOD2\2_GANTRY_C_Curved.LWO
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  1100 0 800 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 64
-ShadowOptions 7
-
-AddNullObject root
+AddNullObject LightHandle
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
@@ -762,79 +639,19 @@ ObjectMotion (unnamed)
   0 0 0 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 1
+ParentObject 46
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\MODULARSTATIONS\CONNECTORS\GANTRY_C\RTO\LOD2\2_GANTRY_C_Curved.LWO
+LoadObject Objects_IW2\Stations\ModularStations\modules\hab\RTO\LOD1\1_hab(JB)_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  -1100 0 -750 180 0 0 5 5 5
+  0 0 361 0 0 0 5 5 5
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\MODULARSTATIONS\CONNECTORS\GANTRY_C\RTO\LOD2\2_GANTRY_C_Curved.LWO
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -775 -275 -1100 90 180 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\engineering_small\RTO\LOD2\2_Eng_small.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  997.75 -525 1046.25 -90 -90 -45 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 43
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\lod2\2_Gantry_B_D.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  1100 0 -250 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\lod2\2_Gantry_B_D.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  997.75 25 1046.3 0 -90 -45 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 5
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\hotel\RTO\LOD2\2_hotel_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 275 -1125 180 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 64
+ParentObject 37
 ShadowOptions 7
 
 AddNullObject LightNull
@@ -844,28 +661,19 @@ ObjectMotion (unnamed)
   1
   0 0 0 0 0 0 0.2 0.2 0.2
   0 0 0 0 0
-EndBehavior 2
-LockedChannels 24
-ParentObject 70
-Metamorph (envelope)
-  1
-  1
-  0
-  0 0 0 0 0
 EndBehavior 1
-MorphTarget 0
-MorphSurfaces 0
+ParentObject 56
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\modules\hotel\RTO\LOD2\2_hotel_T.lwo
+LoadObject Objects_IW2\Stations\ModularStations\modules\Docking_Arm\RTO\LOD1\1_DockArm(JB)_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  -1040.5 0 -1015 225 0 90 5 5 5
+  0 0 1243.5 0 0 0 5 5 5
   0 0 0 0 0
 EndBehavior 1
-ParentObject 64
+ParentObject 37
 ShadowOptions 7
 
 AddNullObject LightNull
@@ -875,198 +683,381 @@ ObjectMotion (unnamed)
   1
   0 0 0 0 0 0 0.2 0.2 0.2
   0 0 0 0 0
-EndBehavior 2
-LockedChannels 24
-ParentObject 72
+EndBehavior 1
+ParentObject 58
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\modules\hotel\RTO\LOD2\2_hotel_T.lwo
+LoadObject Objects_IW2\Stations\ModularStations\connectors\conv\RTO\LOD1\Mod_Conv_RTO_LOD1_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  725.2003 0 1175.1 0 0 90 5 5 5
+  0 0 -361 0 0 0 5 5 5
   0 0 0 0 0
 EndBehavior 1
-ParentObject 64
+ParentObject 37
 ShadowOptions 7
 
-AddNullObject LightNull
+LoadObject Objects_IW2\Stations\ModularStations\modules\pod_spewer\RTO\LOD1\LOD1_RTO_pod_spewer_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  0 0 0 0 0 0 0.2 0.2 0.2
+  0 0 -645 0 0 0 1 1 1
   0 0 0 0 0
-EndBehavior 2
-LockedChannels 24
-ParentObject 74
+EndBehavior 1
+ParentObject 63
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\lod2\2_Gantry_B_D.lwo
+LoadObject Objects_IW2\Stations\ModularStations\modules\pod_spewer\RTO\LOD1\LOD1_RTO_PS_conveyors_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  1100 0 250 0 0 0 5 5 5
+  0 0 -645 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 63
+ShadowOptions 7
+
+AddNullObject PodSpewerHandle
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -361 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 64
+ParentObject 37
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\lod2\2_Gantry_B_D.lwo
+LoadObject Objects_IW2\Stations\ModularStations\modules\pod_spewer\RTO\LOD1\LOD1_RTO_interfacer_mod_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  -725 -275 -1100 90 0 0 5 5 5
+  0 0 -645 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 5
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\lod2\2_Gantry_B_D.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 0 -1125 180 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\lod2\2_Gantry_B_D.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -1125 0 -750 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\lod2\2_Gantry_B_D.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  200 0 1150 90 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\lod2\2_Gantry_B_D.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 250 -1100 0 90 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\LOD2\2_GantryCube_B_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 275 -1100 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\LOD2\2_GantryCube_B_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 -275 -1100 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\Docking_Arm\RTO\LOD2\2_DockArm(JB)_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750.0226 0 -1624.9 180 180 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 6
-ParentObject 64
-ShadowOptions 7
-
-AddNullObject LightNull
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 0.2 0.2 0.2
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 84
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\LOD2\2_GantryCube_B_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  725 0 1150 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry_b\RTO\LOD2\2_GantryCube_B_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  1100 0 775 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\hotel\RTO\LOD2\2_hotel_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  1124.901 0 774.9998 90 0 90 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 64
-ShadowOptions 7
-
-AddNullObject LightNull
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 0.2 0.2 0.2
-  0 0 0 0 0
-EndBehavior 2
-LockedChannels 24
-ParentObject 88
+ParentObject 63
 ShadowOptions 7
 
 AddNullObject NavLightNull
-ShowObject 5 7
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 63
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\Fort\RTO\LOD1\1_Fort(JB)_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 317 0 0 -90 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 37
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\Fort\RTO\LOD1\1_Fort(JB)_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 242 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 37
+ShadowOptions 7
+
+AddNullObject NavLightNull
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 0.2 0.2 0.2
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 69
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\comms\RTO\LOD1\1_Comms(JB)_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  25 611 0 90 0 -90 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 24
+ParentObject 37
+ShadowOptions 7
+
+AddNullObject root
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 128.75 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\engineering_large\RTO\LOD2\2_EngLarge.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 250 0 0 90 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 70
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\Command_Mod\RTO\LOD2\Command_2_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 861 0 0 -90 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 70
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\connectors\conv\RTO\LOD2\Mod_Conv_RTO_LOD2_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 250 0 0 -90 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 70
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\connectors\conv\RTO\LOD2\Mod_Conv_RTO_LOD2_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 175 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 70
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry\RTO\LOD2\Mod_Gantry_RTO_LOD2_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 361 0 0 -90 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 70
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\connectors\conv\RTO\LOD2\Mod_Conv_RTO_LOD2_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -175 180 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 70
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\Fort\RTO\LOD2\2_Fort(JB)_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -242 180 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 70
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\connectors\conv\RTO\LOD2\Mod_Conv_RTO_LOD2_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 361 180 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 70
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\LOD2\2_buildingsJB_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -250 0 0 90 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 70
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\LOD2\2_ribJB_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -118 -192 80.5 90 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 79
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\LOD2\2_ribJB_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  118 -192 80.5 90 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 79
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\LOD2\2_ribJB_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  228 -192 288 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 79
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\LOD2\2_ribJB_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  228 -192 530 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 79
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\LOD2\2_ribJB_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  228 -192 772 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 79
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\LOD2\2_ribJB_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -228 -192 772 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 79
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\LOD2\2_ribJB_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -228 -192 530 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 79
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\LOD2\2_ribJB_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -228 -192 288 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 79
+ShadowOptions 7
+
+AddNullObject LightHandle
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 79
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\hab\RTO\LOD2\2_hab(JB)_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 361 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 70
+ShadowOptions 7
+
+AddNullObject LightNull
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 0.2 0.2 0.2
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\Docking_Arm\RTO\LOD2\2_DockArm(JB)_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 1243.5 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 70
+ShadowOptions 7
+
+AddNullObject LightNull
+ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
@@ -1076,490 +1067,166 @@ EndBehavior 1
 ParentObject 91
 ShadowOptions 7
 
+LoadObject Objects_IW2\Stations\ModularStations\connectors\conv\RTO\LOD2\Mod_Conv_RTO_LOD2_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -361 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 70
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\pod_spewer\RTO\LOD2\LOD2_RTO_pod_spewer_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -645 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 96
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\pod_spewer\RTO\LOD2\LOD2_RTO_PS_conveyors_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -645 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 96
+ShadowOptions 7
+
+AddNullObject PodSpewerHandle
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -361 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 70
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\pod_spewer\RTO\LOD2\LOD2_RTO_interfacer_mod_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -645 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 96
+ShadowOptions 7
+
+AddNullObject NavLightNull
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 96
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\Fort\RTO\LOD2\2_Fort(JB)_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 317 0 0 -90 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 70
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\Fort\RTO\LOD2\2_Fort(JB)_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 242 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 70
+ShadowOptions 7
+
+AddNullObject NavLightNull
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 0.2 0.2 0.2
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 102
+ShadowOptions 7
+
 LoadObject Objects_IW2\Stations\ModularStations\modules\comms\RTO\LOD2\2_Comms(JB)_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  997.85 524.4999 1046.3 0 -90 45 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 6
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\pod_spewer\RTO\LOD0_RTO_pod_spewer_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  -750 -275 -2200 180 180 0 1 1 1
+  25 611 0 90 0 -90 5 5 5
   0 0 0 0 0
 EndBehavior 1
-ParentObject 5
+LockedChannels 24
+ParentObject 70
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\modules\pod_spewer\RTO\LOD0_RTO_PS_conveyors_T.lwo
+LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry\RTO\Mod_Gantry_RTO_LOD0_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  -750 -275 -2200 180 180 0 1 1 1
+  0 361 0 0 -90 0 5 5 5
   0 0 0 0 0
 EndBehavior 1
-ParentObject 5
+LockedChannels 3
+ParentObject 4
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\modules\pod_spewer\RTO\LOD0_RTO_interfacer_mod_T.lwo
+LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry\RTO\LOD1\Mod_Gantry_RTO_LOD1_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  -750 -275 -2200 180 180 0 1 1 1
+  0 0 743.5 0 0 0 5 5 5
   0 0 0 0 0
 EndBehavior 1
-ParentObject 5
+LockedChannels 3
+ParentObject 37
 ShadowOptions 7
 
-LoadObject Objects_IW2\Stations\ModularStations\modules\engineering_small\RTO\0_EngLarge.lwo
+LoadObject Objects_IW2\Stations\ModularStations\connectors\gantry\RTO\LOD2\Mod_Gantry_RTO_LOD2_T.lwo
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  -750 -275 -1575 0 0 0 5 5 5
+  0 0 743.5 0 0 0 5 5 5
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 43
-ParentObject 5
+LockedChannels 3
+ParentObject 70
 ShadowOptions 7
 
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\pod_spewer\RTO\LOD1_RTO_pod_spewer_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 -275 -2200 180 180 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 35
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\pod_spewer\RTO\LOD1_RTO_PS_conveyors_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 -275 -2200 180 180 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 35
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\pod_spewer\RTO\LOD1_RTO_interfacer_mod_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 -275 -2200 180 180 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 35
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\engineering_small\RTO\1_EngLarge.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 -275 -1575 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 43
-ParentObject 35
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\pod_spewer\RTO\LOD2_RTO_pod_spewer_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 -275 -2200 180 180 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\pod_spewer\RTO\LOD2_RTO_PS_conveyors_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 -275 -2200 180 180 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\pod_spewer\RTO\LOD2_RTO_interfacer_mod_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 -275 -2200 180 180 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\engineering_small\RTO\2_EngLarge.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -750 -275 -1575 0 0 0 5 5 5
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 43
-ParentObject 64
-ShadowOptions 7
-
-
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\0_buildingsJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -1147.9 0 -500 -90 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 5
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\0_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -118 -192 80.5 90 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 104
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\0_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  118 -192 80.5 90 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 104
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\0_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  228 -192 288 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 104
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\0_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  228 -192 530 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 104
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\0_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  228 -192 772 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 104
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\0_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -228 -192 772 180 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 104
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\0_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -228 -192 530 180 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 104
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\0_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -228 -192 288 180 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 104
-ShadowOptions 7
-
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\1_buildingsJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -1147.9 0 -500 -90 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 35
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\1_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -118 -192 80.5 90 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 113
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\1_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  118 -192 80.5 90 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 113
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\1_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  228 -192 288 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 113
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\1_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  228 -192 530 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 113
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\1_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  228 -192 772 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 113
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\1_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -228 -192 772 180 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 113
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\1_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -228 -192 530 180 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 113
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\1_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -228 -192 288 180 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 113
-ShadowOptions 7
-
-
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\2_buildingsJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -1147.9 0 -500 -90 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 64
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\2_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -118 -192 80.5 90 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 122
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\2_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  118 -192 80.5 90 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 122
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\2_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  228 -192 288 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 122
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\2_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  228 -192 530 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 122
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\2_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  228 -192 772 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 122
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\2_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -228 -192 772 180 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 122
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\2_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -228 -192 530 180 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 122
-ShadowOptions 7
-
-LoadObject Objects_IW2\Stations\ModularStations\modules\new_space_dock\RTO\2_ribJB_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -228 -192 288 180 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 48
-ParentObject 122
-ShadowOptions 7
 
 LoadObject Objects_IW2\Stations\ModularStations\modules\Docking_Arm\Rto\0_DockArm(JB)_T.lwo
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
-  -1437 -83.165 -692.5 0 0 0 5 5 5
+  -192 -538 -83.165 -90 180 -90 5 5 5
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 5
+ParentObject 4
 ShadowOptions 7
 
 AddNullObject LightNull
@@ -1570,7 +1237,7 @@ ObjectMotion (unnamed)
   0 0 0 0 0 0 0.2 0.2 0.2
   0 0 0 0 0
 EndBehavior 1
-ParentObject 131
+ParentObject 106
 ShadowOptions 7
 
 AmbientColor 255 255 255
@@ -1578,7 +1245,7 @@ AmbIntensity 0.250000
 
 AddLight
 LightName Light
-ShowLight 1 7
+ShowLight 0 7
 LightMotion (unnamed)
   9
   1
@@ -1592,7 +1259,7 @@ ShadowType 1
 
 AddLight
 LightName Light
-ShowLight 1 7
+ShowLight 0 7
 LightMotion (unnamed)
   9
   1
@@ -1610,11 +1277,50 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 47.31 0 0 0 1 1 1
+  -193.5 -70 902.31 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 22
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  11 1 0 0 0
+  0.2
+  12 1 0 0 0
+  0.2
+  14 1 0 0 0
+  4.656613e-010
+  15 1 0 0 0
+  0
+  30 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  193.5 -70 902.31 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 6
-ParentObject 12
+ParentObject 22
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -1626,9 +1332,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -1650,10 +1356,10 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 118.6 47.31 0 0 0 1 1 1
+  135 -340 772 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 12
+ParentObject 22
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -1664,15 +1370,15 @@ FlareIntensity (envelope)
   -7.63685e-008
   0 0 0 0 0
   -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
+  11 1 0 0 0
+  0.2
+  12 1 0 0 0
+  0.2
+  14 1 0 0 0
   4.656613e-010
-  19 1 0 0 0
+  15 1 0 0 0
   0
-  34 1 0 0 0
+  30 1 0 0 0
 EndBehavior 2
 FlareNominalDistance 10.000000
 FlareDissolve 0.000000
@@ -1689,11 +1395,10 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 118.6 252.71 0 0 0 1 1 1
+  135 -340 530 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 12
+ParentObject 22
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -1704,15 +1409,15 @@ FlareIntensity (envelope)
   -7.63685e-008
   0 0 0 0 0
   -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
+  11 1 0 0 0
+  0.2
+  12 1 0 0 0
+  0.2
+  14 1 0 0 0
   4.656613e-010
-  19 1 0 0 0
+  15 1 0 0 0
   0
-  34 1 0 0 0
+  30 1 0 0 0
 EndBehavior 2
 FlareNominalDistance 10.000000
 FlareDissolve 0.000000
@@ -1729,11 +1434,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 252.71 0 0 0 1 1 1
+  -135 -340 288 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 12
+LockedChannels 7
+ParentObject 22
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -1744,15 +1449,15 @@ FlareIntensity (envelope)
   -7.63685e-008
   0 0 0 0 0
   -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
+  11 1 0 0 0
+  0.2
+  12 1 0 0 0
+  0.2
+  14 1 0 0 0
   4.656613e-010
-  19 1 0 0 0
+  15 1 0 0 0
   0
-  34 1 0 0 0
+  30 1 0 0 0
 EndBehavior 2
 FlareNominalDistance 10.000000
 FlareDissolve 0.000000
@@ -1769,11 +1474,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 -118.6 252.71 0 0 0 1 1 1
+  -295.5 -40 772 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 12
+LockedChannels 5
+ParentObject 22
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -1785,9 +1490,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -1809,11 +1514,10 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 -118.6 252.71 0 0 0 1 1 1
+  -135 -340 530 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 12
+ParentObject 22
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -1825,9 +1529,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -1849,10 +1553,10 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 -118.6 47.31 0 0 0 1 1 1
+  135 -340 288 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 12
+ParentObject 22
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -1864,9 +1568,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -1888,11 +1592,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 -118.6 47.31 0 0 0 1 1 1
+  -295.5 -40 530 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 6
-ParentObject 12
+LockedChannels 5
+ParentObject 22
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -1904,9 +1608,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -1928,11 +1632,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 47.31 0 0 0 1 1 1
+  -295.5 -40 288 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 6
-ParentObject 14
+LockedChannels 5
+ParentObject 22
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -1944,9 +1648,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -1968,10 +1672,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 118.6 47.31 0 0 0 1 1 1
+  295.5 -40 288 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 14
+LockedChannels 5
+ParentObject 22
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -1983,9 +1688,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -2007,11 +1712,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 118.6 252.71 0 0 0 1 1 1
+  295.5 -40 530 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 14
+LockedChannels 5
+ParentObject 22
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -2023,9 +1728,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -2047,11 +1752,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 252.71 0 0 0 1 1 1
+  295.5 -40 772 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 14
+LockedChannels 5
+ParentObject 22
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -2063,9 +1768,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -2087,11 +1792,10 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 -118.6 252.71 0 0 0 1 1 1
+  -135 -340 772 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 14
+ParentObject 22
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -2103,9 +1807,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -2122,32 +1826,32 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 -118.6 252.71 0 0 0 1 1 1
+  -133.5 37 -2 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 14
-LightColor 255 1 1
+ParentObject 24
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
   1
   6
-  -7.63685e-008
+  -1.52737e-008
   0 0 0 0 0
-  -7.63685e-008
+  -1.52737e-008
   15 1 0 0 0
   0.15
   16 1 0 0 0
   0.15
   18 1 0 0 0
-  4.656613e-010
+  9.313226e-011
   19 1 0 0 0
   0
   34 1 0 0 0
@@ -2162,16 +1866,16 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 -118.6 47.31 0 0 0 1 1 1
+  -133.5 -37 385 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 14
-LightColor 255 1 1
+ParentObject 24
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
@@ -2201,32 +1905,31 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 -118.6 47.31 0 0 0 1 1 1
+  133.5 37 385 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 6
-ParentObject 14
-LightColor 255 1 1
+ParentObject 24
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
   1
   6
-  -7.63685e-008
+  -2.291055e-007
   0 0 0 0 0
-  -7.63685e-008
+  -2.291055e-007
   15 1 0 0 0
-  0.15
+  0.45
   16 1 0 0 0
-  0.15
+  0.45
   18 1 0 0 0
-  4.656613e-010
+  1.396984e-009
   19 1 0 0 0
   0
   34 1 0 0 0
@@ -2241,17 +1944,16 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 47.31 0 0 0 1 1 1
+  133.5 -37 -2 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 6
-ParentObject 16
-LightColor 255 1 1
+ParentObject 24
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
@@ -2281,56 +1983,17 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 118.6 47.31 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 16
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  28.425 118.6 252.71 0 0 0 1 1 1
+  -133.5 37 385 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 16
-LightColor 255 1 1
+ParentObject 24
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
@@ -2360,17 +2023,16 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 252.71 0 0 0 1 1 1
+  133.5 37 -2 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 16
-LightColor 255 1 1
+ParentObject 24
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
@@ -2400,17 +2062,16 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 -118.6 252.71 0 0 0 1 1 1
+  133.5 -37 385 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 16
-LightColor 255 1 1
+ParentObject 24
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
@@ -2440,96 +2101,16 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 -118.6 252.71 0 0 0 1 1 1
+  -133.5 -37 -2 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 16
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  28.425 -118.6 47.31 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 16
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  -28.425 -118.6 47.31 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 6
-ParentObject 16
-LightColor 255 1 1
+ParentObject 24
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
@@ -2568,9 +2149,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 27
+ParentObject 26
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -2608,9 +2189,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 27
+ParentObject 26
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -2648,9 +2229,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 27
+ParentObject 26
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -2688,9 +2269,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 27
+ParentObject 26
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -2728,9 +2309,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 27
+ParentObject 26
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -2768,9 +2349,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 27
+ParentObject 26
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -2808,9 +2389,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 27
+ParentObject 26
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -2848,9 +2429,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 27
+ParentObject 26
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -2888,9 +2469,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 27
+ParentObject 26
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -2928,9 +2509,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 27
+ParentObject 26
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -2968,9 +2549,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 27
+ParentObject 26
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -3008,9 +2589,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 27
+ParentObject 26
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -3048,9 +2629,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 27
+ParentObject 26
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -3088,9 +2669,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 27
+ParentObject 26
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -3128,9 +2709,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 27
+ParentObject 26
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -3168,9 +2749,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 27
+ParentObject 26
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -3208,7 +2789,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 27
+ParentObject 26
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -3233,7 +2814,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 27
+ParentObject 26
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -3258,7 +2839,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 27
+ParentObject 26
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -3283,7 +2864,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 27
+ParentObject 26
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -3308,7 +2889,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 27
+ParentObject 26
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -3348,7 +2929,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 27
+ParentObject 26
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -3380,312 +2961,174 @@ ShadowType 1
 
 AddLight
 LightName RedNav
-ShowLight 1 7
+ShowLight 1 1
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 47.31 0 0 0 1 1 1
+  -60 -60 888 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 32
+LightColor 255 1 1
+LgtIntensity 1.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 1
+LightMotion (unnamed)
+  9
+  1
+  60 60 888 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ParentObject 32
+LightColor 255 1 1
+LgtIntensity 1.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 1
+LightMotion (unnamed)
+  9
+  1
+  -60 60 888 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 4
+ParentObject 32
+LightColor 255 1 1
+LgtIntensity 1.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 1
+LightMotion (unnamed)
+  9
+  1
+  60 -60 888 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 32
+LightColor 255 1 1
+LgtIntensity 1.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 1
+LightMotion (unnamed)
+  9
+  1
+  64 239 333 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 32
+LightColor 255 1 1
+LgtIntensity 1.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  0
+  8 1 0 0 0
+  0.3
+  9 0 0 0 0
+  0.3
+  11 1 0 0 0
+  0
+  12 1 0 0 0
+  0
+  24 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 1
+LightMotion (unnamed)
+  9
+  1
+  -64 239 333 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 6
-ParentObject 31
+ParentObject 32
 LightColor 255 1 1
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
   1
   6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
   0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  28.425 118.6 47.31 0 0 0 1 1 1
   0 0 0 0 0
-EndBehavior 1
-ParentObject 31
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
   0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  28.425 118.6 252.71 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 31
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
+  12 1 0 0 0
+  0.3
+  13 1 0 0 0
+  0.3
   15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
   0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  -28.425 118.6 252.71 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 31
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
+  16 0 0 0 0
   0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  -28.425 -118.6 252.71 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 31
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  28.425 -118.6 252.71 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 31
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  28.425 -118.6 47.31 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 31
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  -28.425 -118.6 47.31 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 6
-ParentObject 31
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
+  24 1 0 0 0
 EndBehavior 2
 FlareNominalDistance 10.000000
 FlareDissolve 0.000000
@@ -3706,7 +3149,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 32
+ParentObject 35
 LightColor 255 1 1
 LgtIntensity 1.000000
 LightType 1
@@ -3746,7 +3189,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 32
+ParentObject 35
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -3786,7 +3229,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 32
+ParentObject 35
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -3818,7 +3261,7 @@ ShadowType 1
 
 AddLight
 LightName Light
-ShowLight 1 7
+ShowLight 0 7
 LightMotion (unnamed)
   9
   1
@@ -3836,11 +3279,50 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 47.31 0 0 0 1 1 1
+  -193.5 -70 902.31 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 55
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  11 1 0 0 0
+  0.2
+  12 1 0 0 0
+  0.2
+  14 1 0 0 0
+  4.656613e-010
+  15 1 0 0 0
+  0
+  30 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  193.5 -70 902.31 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 6
-ParentObject 42
+ParentObject 55
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -3852,9 +3334,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -3876,10 +3358,10 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 118.6 47.31 0 0 0 1 1 1
+  135 -340 772 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 42
+ParentObject 55
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -3890,15 +3372,15 @@ FlareIntensity (envelope)
   -7.63685e-008
   0 0 0 0 0
   -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
+  11 1 0 0 0
+  0.2
+  12 1 0 0 0
+  0.2
+  14 1 0 0 0
   4.656613e-010
-  19 1 0 0 0
+  15 1 0 0 0
   0
-  34 1 0 0 0
+  30 1 0 0 0
 EndBehavior 2
 FlareNominalDistance 10.000000
 FlareDissolve 0.000000
@@ -3915,11 +3397,10 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 118.6 252.71 0 0 0 1 1 1
+  135 -340 530 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 42
+ParentObject 55
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -3930,15 +3411,15 @@ FlareIntensity (envelope)
   -7.63685e-008
   0 0 0 0 0
   -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
+  11 1 0 0 0
+  0.2
+  12 1 0 0 0
+  0.2
+  14 1 0 0 0
   4.656613e-010
-  19 1 0 0 0
+  15 1 0 0 0
   0
-  34 1 0 0 0
+  30 1 0 0 0
 EndBehavior 2
 FlareNominalDistance 10.000000
 FlareDissolve 0.000000
@@ -3955,11 +3436,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 252.71 0 0 0 1 1 1
+  -135 -340 288 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 42
+LockedChannels 7
+ParentObject 55
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -3970,15 +3451,15 @@ FlareIntensity (envelope)
   -7.63685e-008
   0 0 0 0 0
   -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
+  11 1 0 0 0
+  0.2
+  12 1 0 0 0
+  0.2
+  14 1 0 0 0
   4.656613e-010
-  19 1 0 0 0
+  15 1 0 0 0
   0
-  34 1 0 0 0
+  30 1 0 0 0
 EndBehavior 2
 FlareNominalDistance 10.000000
 FlareDissolve 0.000000
@@ -3995,11 +3476,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 -118.6 252.71 0 0 0 1 1 1
+  -295.5 -40 772 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 42
+LockedChannels 5
+ParentObject 55
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -4011,9 +3492,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -4035,11 +3516,10 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 -118.6 252.71 0 0 0 1 1 1
+  -135 -340 530 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 42
+ParentObject 55
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -4051,9 +3531,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -4075,10 +3555,10 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 -118.6 47.31 0 0 0 1 1 1
+  135 -340 288 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 42
+ParentObject 55
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -4090,9 +3570,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -4114,11 +3594,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 -118.6 47.31 0 0 0 1 1 1
+  -295.5 -40 530 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 6
-ParentObject 42
+LockedChannels 5
+ParentObject 55
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -4130,9 +3610,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -4154,11 +3634,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 47.31 0 0 0 1 1 1
+  -295.5 -40 288 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 6
-ParentObject 44
+LockedChannels 5
+ParentObject 55
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -4170,9 +3650,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -4194,10 +3674,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 118.6 47.31 0 0 0 1 1 1
+  295.5 -40 288 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 44
+LockedChannels 5
+ParentObject 55
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -4209,9 +3690,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -4233,11 +3714,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 118.6 252.71 0 0 0 1 1 1
+  295.5 -40 530 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 44
+LockedChannels 5
+ParentObject 55
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -4249,9 +3730,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -4273,11 +3754,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 252.71 0 0 0 1 1 1
+  295.5 -40 772 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 44
+LockedChannels 5
+ParentObject 55
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -4289,9 +3770,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -4313,11 +3794,10 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 -118.6 252.71 0 0 0 1 1 1
+  -135 -340 772 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 44
+ParentObject 55
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -4329,9 +3809,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -4348,32 +3828,32 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 -118.6 252.71 0 0 0 1 1 1
+  -133.5 37 -2 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 44
-LightColor 255 1 1
+ParentObject 57
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
   1
   6
-  -7.63685e-008
+  -1.52737e-008
   0 0 0 0 0
-  -7.63685e-008
+  -1.52737e-008
   15 1 0 0 0
   0.15
   16 1 0 0 0
   0.15
   18 1 0 0 0
-  4.656613e-010
+  9.313226e-011
   19 1 0 0 0
   0
   34 1 0 0 0
@@ -4388,16 +3868,16 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 -118.6 47.31 0 0 0 1 1 1
+  -133.5 -37 385 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 44
-LightColor 255 1 1
+ParentObject 57
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
@@ -4427,32 +3907,31 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 -118.6 47.31 0 0 0 1 1 1
+  133.5 37 385 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 6
-ParentObject 44
-LightColor 255 1 1
+ParentObject 57
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
   1
   6
-  -7.63685e-008
+  -2.291055e-007
   0 0 0 0 0
-  -7.63685e-008
+  -2.291055e-007
   15 1 0 0 0
-  0.15
+  0.45
   16 1 0 0 0
-  0.15
+  0.45
   18 1 0 0 0
-  4.656613e-010
+  1.396984e-009
   19 1 0 0 0
   0
   34 1 0 0 0
@@ -4467,17 +3946,16 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 47.31 0 0 0 1 1 1
+  133.5 -37 -2 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 6
-ParentObject 46
-LightColor 255 1 1
+ParentObject 57
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
@@ -4507,56 +3985,17 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 118.6 47.31 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 46
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  28.425 118.6 252.71 0 0 0 1 1 1
+  -133.5 37 385 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 46
-LightColor 255 1 1
+ParentObject 57
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
@@ -4586,17 +4025,16 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 252.71 0 0 0 1 1 1
+  133.5 37 -2 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 46
-LightColor 255 1 1
+ParentObject 57
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
@@ -4626,17 +4064,16 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 -118.6 252.71 0 0 0 1 1 1
+  133.5 -37 385 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 46
-LightColor 255 1 1
+ParentObject 57
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
@@ -4666,96 +4103,16 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 -118.6 252.71 0 0 0 1 1 1
+  -133.5 -37 -2 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 46
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  28.425 -118.6 47.31 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 46
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  -28.425 -118.6 47.31 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 6
-ParentObject 46
-LightColor 255 1 1
+ParentObject 57
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
@@ -4794,9 +4151,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 56
+ParentObject 59
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -4834,9 +4191,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 56
+ParentObject 59
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -4874,9 +4231,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 56
+ParentObject 59
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -4914,9 +4271,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 56
+ParentObject 59
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -4954,9 +4311,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 56
+ParentObject 59
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -4994,9 +4351,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 56
+ParentObject 59
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -5034,9 +4391,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 56
+ParentObject 59
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -5074,9 +4431,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 56
+ParentObject 59
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -5114,9 +4471,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 56
+ParentObject 59
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -5154,9 +4511,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 56
+ParentObject 59
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -5194,9 +4551,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 56
+ParentObject 59
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -5234,9 +4591,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 56
+ParentObject 59
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -5274,9 +4631,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 56
+ParentObject 59
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -5314,9 +4671,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 56
+ParentObject 59
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -5354,9 +4711,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 56
+ParentObject 59
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -5394,9 +4751,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 56
+ParentObject 59
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -5434,7 +4791,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 56
+ParentObject 59
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -5459,7 +4816,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 56
+ParentObject 59
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -5484,7 +4841,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 56
+ParentObject 59
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -5509,7 +4866,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 56
+ParentObject 59
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -5534,7 +4891,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 56
+ParentObject 59
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -5574,7 +4931,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 56
+ParentObject 59
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -5606,312 +4963,174 @@ ShadowType 1
 
 AddLight
 LightName RedNav
-ShowLight 1 7
+ShowLight 1 1
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 47.31 0 0 0 1 1 1
+  -60 -60 888 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 65
+LightColor 255 1 1
+LgtIntensity 1.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 1
+LightMotion (unnamed)
+  9
+  1
+  60 60 888 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ParentObject 65
+LightColor 255 1 1
+LgtIntensity 1.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 1
+LightMotion (unnamed)
+  9
+  1
+  -60 60 888 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 4
+ParentObject 65
+LightColor 255 1 1
+LgtIntensity 1.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 1
+LightMotion (unnamed)
+  9
+  1
+  60 -60 888 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 65
+LightColor 255 1 1
+LgtIntensity 1.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 1
+LightMotion (unnamed)
+  9
+  1
+  64 239 333 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 65
+LightColor 255 1 1
+LgtIntensity 1.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  0
+  8 1 0 0 0
+  0.3
+  9 0 0 0 0
+  0.3
+  11 1 0 0 0
+  0
+  12 1 0 0 0
+  0
+  24 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 1
+LightMotion (unnamed)
+  9
+  1
+  -64 239 333 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 6
-ParentObject 60
+ParentObject 65
 LightColor 255 1 1
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
   1
   6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
   0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  28.425 118.6 47.31 0 0 0 1 1 1
   0 0 0 0 0
-EndBehavior 1
-ParentObject 60
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
   0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  28.425 118.6 252.71 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 60
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
+  12 1 0 0 0
+  0.3
+  13 1 0 0 0
+  0.3
   15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
   0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  -28.425 118.6 252.71 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 60
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
+  16 0 0 0 0
   0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  -28.425 -118.6 252.71 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 60
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  28.425 -118.6 252.71 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 60
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  28.425 -118.6 47.31 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 60
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  -28.425 -118.6 47.31 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 6
-ParentObject 60
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
+  24 1 0 0 0
 EndBehavior 2
 FlareNominalDistance 10.000000
 FlareDissolve 0.000000
@@ -5932,7 +5151,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 61
+ParentObject 68
 LightColor 255 1 1
 LgtIntensity 1.000000
 LightType 1
@@ -5972,7 +5191,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 61
+ParentObject 68
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -6012,7 +5231,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 61
+ParentObject 68
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -6044,7 +5263,7 @@ ShadowType 1
 
 AddLight
 LightName Light
-ShowLight 1 7
+ShowLight 0 7
 LightMotion (unnamed)
   9
   1
@@ -6062,11 +5281,50 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 47.31 0 0 0 1 1 1
+  -193.5 -70 902.31 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 88
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  11 1 0 0 0
+  0.2
+  12 1 0 0 0
+  0.2
+  14 1 0 0 0
+  4.656613e-010
+  15 1 0 0 0
+  0
+  30 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  193.5 -70 902.31 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 6
-ParentObject 71
+ParentObject 88
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -6078,9 +5336,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -6102,10 +5360,10 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 118.6 47.31 0 0 0 1 1 1
+  135 -340 772 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 71
+ParentObject 88
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -6116,15 +5374,15 @@ FlareIntensity (envelope)
   -7.63685e-008
   0 0 0 0 0
   -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
+  11 1 0 0 0
+  0.2
+  12 1 0 0 0
+  0.2
+  14 1 0 0 0
   4.656613e-010
-  19 1 0 0 0
+  15 1 0 0 0
   0
-  34 1 0 0 0
+  30 1 0 0 0
 EndBehavior 2
 FlareNominalDistance 10.000000
 FlareDissolve 0.000000
@@ -6141,11 +5399,10 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 118.6 252.71 0 0 0 1 1 1
+  135 -340 530 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 71
+ParentObject 88
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -6156,15 +5413,15 @@ FlareIntensity (envelope)
   -7.63685e-008
   0 0 0 0 0
   -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
+  11 1 0 0 0
+  0.2
+  12 1 0 0 0
+  0.2
+  14 1 0 0 0
   4.656613e-010
-  19 1 0 0 0
+  15 1 0 0 0
   0
-  34 1 0 0 0
+  30 1 0 0 0
 EndBehavior 2
 FlareNominalDistance 10.000000
 FlareDissolve 0.000000
@@ -6181,11 +5438,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 252.71 0 0 0 1 1 1
+  -135 -340 288 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 71
+LockedChannels 7
+ParentObject 88
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -6196,15 +5453,15 @@ FlareIntensity (envelope)
   -7.63685e-008
   0 0 0 0 0
   -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
+  11 1 0 0 0
+  0.2
+  12 1 0 0 0
+  0.2
+  14 1 0 0 0
   4.656613e-010
-  19 1 0 0 0
+  15 1 0 0 0
   0
-  34 1 0 0 0
+  30 1 0 0 0
 EndBehavior 2
 FlareNominalDistance 10.000000
 FlareDissolve 0.000000
@@ -6221,11 +5478,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 -118.6 252.71 0 0 0 1 1 1
+  -295.5 -40 772 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 71
+LockedChannels 5
+ParentObject 88
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -6237,9 +5494,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -6261,11 +5518,10 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 -118.6 252.71 0 0 0 1 1 1
+  -135 -340 530 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 71
+ParentObject 88
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -6277,9 +5533,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -6301,10 +5557,10 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 -118.6 47.31 0 0 0 1 1 1
+  135 -340 288 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 71
+ParentObject 88
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -6316,9 +5572,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -6340,11 +5596,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 -118.6 47.31 0 0 0 1 1 1
+  -295.5 -40 530 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 6
-ParentObject 71
+LockedChannels 5
+ParentObject 88
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -6356,9 +5612,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -6380,11 +5636,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 47.31 0 0 0 1 1 1
+  -295.5 -40 288 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 6
-ParentObject 73
+LockedChannels 5
+ParentObject 88
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -6396,9 +5652,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -6420,10 +5676,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 118.6 47.31 0 0 0 1 1 1
+  295.5 -40 288 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 73
+LockedChannels 5
+ParentObject 88
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -6435,9 +5692,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -6459,11 +5716,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 118.6 252.71 0 0 0 1 1 1
+  295.5 -40 530 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 73
+LockedChannels 5
+ParentObject 88
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -6475,9 +5732,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -6499,11 +5756,11 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 252.71 0 0 0 1 1 1
+  295.5 -40 772 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 73
+LockedChannels 5
+ParentObject 88
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -6515,9 +5772,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -6539,11 +5796,10 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 -118.6 252.71 0 0 0 1 1 1
+  -135 -340 772 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 73
+ParentObject 88
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -6555,9 +5811,9 @@ FlareIntensity (envelope)
   0 0 0 0 0
   -7.63685e-008
   15 1 0 0 0
-  0.15
+  0.2
   16 1 0 0 0
-  0.15
+  0.2
   18 1 0 0 0
   4.656613e-010
   19 1 0 0 0
@@ -6574,32 +5830,32 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 -118.6 252.71 0 0 0 1 1 1
+  -133.5 37 -2 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 73
-LightColor 255 1 1
+ParentObject 90
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
   1
   6
-  -7.63685e-008
+  -1.52737e-008
   0 0 0 0 0
-  -7.63685e-008
+  -1.52737e-008
   15 1 0 0 0
   0.15
   16 1 0 0 0
   0.15
   18 1 0 0 0
-  4.656613e-010
+  9.313226e-011
   19 1 0 0 0
   0
   34 1 0 0 0
@@ -6614,16 +5870,16 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 -118.6 47.31 0 0 0 1 1 1
+  -133.5 -37 385 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ParentObject 73
-LightColor 255 1 1
+ParentObject 90
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
@@ -6653,32 +5909,31 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 -118.6 47.31 0 0 0 1 1 1
+  133.5 37 385 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 6
-ParentObject 73
-LightColor 255 1 1
+ParentObject 90
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
   1
   6
-  -7.63685e-008
+  -2.291055e-007
   0 0 0 0 0
-  -7.63685e-008
+  -2.291055e-007
   15 1 0 0 0
-  0.15
+  0.45
   16 1 0 0 0
-  0.15
+  0.45
   18 1 0 0 0
-  4.656613e-010
+  1.396984e-009
   19 1 0 0 0
   0
   34 1 0 0 0
@@ -6693,17 +5948,16 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 47.31 0 0 0 1 1 1
+  133.5 -37 -2 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 6
-ParentObject 75
-LightColor 255 1 1
+ParentObject 90
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
@@ -6733,56 +5987,17 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 118.6 47.31 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 75
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  28.425 118.6 252.71 0 0 0 1 1 1
+  -133.5 37 385 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 75
-LightColor 255 1 1
+ParentObject 90
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
@@ -6812,17 +6027,16 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 252.71 0 0 0 1 1 1
+  133.5 37 -2 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 75
-LightColor 255 1 1
+ParentObject 90
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
@@ -6852,17 +6066,16 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -28.425 -118.6 252.71 0 0 0 1 1 1
+  133.5 -37 385 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 75
-LightColor 255 1 1
+ParentObject 90
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
@@ -6892,96 +6105,16 @@ FlareStarFilter 2
 ShadowType 1
 
 AddLight
-LightName RedNav
+LightName BlueNav
 ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  28.425 -118.6 252.71 0 0 0 1 1 1
+  -133.5 -37 -2 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-LockedChannels 3
-ParentObject 75
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  28.425 -118.6 47.31 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 75
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  -28.425 -118.6 47.31 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 6
-ParentObject 75
-LightColor 255 1 1
+ParentObject 90
+LightColor 0 0 255
 LgtIntensity 0.000000
 LightType 1
 LensFlare 1
@@ -7020,9 +6153,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 85
+ParentObject 92
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -7060,9 +6193,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 85
+ParentObject 92
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -7100,9 +6233,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 85
+ParentObject 92
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -7140,9 +6273,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 85
+ParentObject 92
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -7180,9 +6313,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 85
+ParentObject 92
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -7220,9 +6353,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 85
+ParentObject 92
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -7260,9 +6393,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 85
+ParentObject 92
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -7300,9 +6433,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 85
+ParentObject 92
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -7340,9 +6473,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 85
+ParentObject 92
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -7380,9 +6513,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 85
+ParentObject 92
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -7420,9 +6553,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 85
+ParentObject 92
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -7460,9 +6593,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 85
+ParentObject 92
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -7500,9 +6633,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 85
+ParentObject 92
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -7540,9 +6673,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 85
+ParentObject 92
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -7580,9 +6713,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 85
+ParentObject 92
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -7620,9 +6753,9 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 85
+ParentObject 92
 LightColor 255 255 255
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
@@ -7660,7 +6793,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 85
+ParentObject 92
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -7685,7 +6818,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 85
+ParentObject 92
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -7710,7 +6843,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 85
+ParentObject 92
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -7735,7 +6868,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 85
+ParentObject 92
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -7760,7 +6893,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 85
+ParentObject 92
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -7800,7 +6933,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 85
+ParentObject 92
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -7832,312 +6965,174 @@ ShadowType 1
 
 AddLight
 LightName RedNav
-ShowLight 1 7
+ShowLight 1 1
 LightMotion (unnamed)
   9
   1
-  -28.425 118.6 47.31 0 0 0 1 1 1
+  -60 -60 888 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 98
+LightColor 255 1 1
+LgtIntensity 1.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 1
+LightMotion (unnamed)
+  9
+  1
+  60 60 888 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ParentObject 98
+LightColor 255 1 1
+LgtIntensity 1.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 1
+LightMotion (unnamed)
+  9
+  1
+  -60 60 888 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 4
+ParentObject 98
+LightColor 255 1 1
+LgtIntensity 1.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 1
+LightMotion (unnamed)
+  9
+  1
+  60 -60 888 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 98
+LightColor 255 1 1
+LgtIntensity 1.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 1
+LightMotion (unnamed)
+  9
+  1
+  64 239 333 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 98
+LightColor 255 1 1
+LgtIntensity 1.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  0
+  8 1 0 0 0
+  0.3
+  9 0 0 0 0
+  0.3
+  11 1 0 0 0
+  0
+  12 1 0 0 0
+  0
+  24 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 1
+LightMotion (unnamed)
+  9
+  1
+  -64 239 333 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 6
-ParentObject 89
+ParentObject 98
 LightColor 255 1 1
-LgtIntensity 0.000000
+LgtIntensity 1.000000
 LightType 1
 LensFlare 1
 FlareIntensity (envelope)
   1
   6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
   0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  28.425 118.6 47.31 0 0 0 1 1 1
   0 0 0 0 0
-EndBehavior 1
-ParentObject 89
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
   0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  28.425 118.6 252.71 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 89
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
+  12 1 0 0 0
+  0.3
+  13 1 0 0 0
+  0.3
   15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
   0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  -28.425 118.6 252.71 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 89
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
+  16 0 0 0 0
   0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  -28.425 -118.6 252.71 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 89
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  28.425 -118.6 252.71 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 89
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  28.425 -118.6 47.31 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 89
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 10.000000
-FlareDissolve 0.000000
-LensFlareFade 14
-LensFlareOptions 7
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareStarFilter 2
-ShadowType 1
-
-AddLight
-LightName RedNav
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  -28.425 -118.6 47.31 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 6
-ParentObject 89
-LightColor 255 1 1
-LgtIntensity 0.000000
-LightType 1
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  6
-  -7.63685e-008
-  0 0 0 0 0
-  -7.63685e-008
-  15 1 0 0 0
-  0.15
-  16 1 0 0 0
-  0.15
-  18 1 0 0 0
-  4.656613e-010
-  19 1 0 0 0
-  0
-  34 1 0 0 0
+  24 1 0 0 0
 EndBehavior 2
 FlareNominalDistance 10.000000
 FlareDissolve 0.000000
@@ -8158,7 +7153,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 90
+ParentObject 101
 LightColor 255 1 1
 LgtIntensity 1.000000
 LightType 1
@@ -8198,7 +7193,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 90
+ParentObject 101
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -8238,7 +7233,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 90
+ParentObject 101
 LightColor 255 1 1
 LgtIntensity 0.000000
 LightType 1
@@ -8268,7 +7263,6 @@ FlareRingSize 0.220000
 FlareStarFilter 2
 ShadowType 1
 
-
 AddLight
 LightName WhiteNav
 ShowLight 1 7
@@ -8279,7 +7273,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 132
+ParentObject 107
 LightColor 255 255 255
 LgtIntensity 0.000000
 LightType 1
@@ -8319,7 +7313,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 132
+ParentObject 107
 LightColor 255 255 255
 LgtIntensity 0.000000
 LightType 1
@@ -8359,7 +7353,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 132
+ParentObject 107
 LightColor 255 255 255
 LgtIntensity 0.000000
 LightType 1
@@ -8399,7 +7393,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 132
+ParentObject 107
 LightColor 255 255 255
 LgtIntensity 0.000000
 LightType 1
@@ -8439,7 +7433,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 132
+ParentObject 107
 LightColor 255 255 255
 LgtIntensity 0.000000
 LightType 1
@@ -8479,7 +7473,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 132
+ParentObject 107
 LightColor 255 255 255
 LgtIntensity 0.000000
 LightType 1
@@ -8519,7 +7513,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 132
+ParentObject 107
 LightColor 255 255 255
 LgtIntensity 0.000000
 LightType 1
@@ -8559,7 +7553,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 132
+ParentObject 107
 LightColor 255 255 255
 LgtIntensity 0.000000
 LightType 1
@@ -8599,7 +7593,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 132
+ParentObject 107
 LightColor 255 255 255
 LgtIntensity 0.000000
 LightType 1
@@ -8639,7 +7633,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 132
+ParentObject 107
 LightColor 255 255 255
 LgtIntensity 0.000000
 LightType 1
@@ -8679,7 +7673,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 132
+ParentObject 107
 LightColor 255 255 255
 LgtIntensity 0.000000
 LightType 1
@@ -8719,7 +7713,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 132
+ParentObject 107
 LightColor 255 255 255
 LgtIntensity 0.000000
 LightType 1
@@ -8759,7 +7753,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 132
+ParentObject 107
 LightColor 255 255 255
 LgtIntensity 0.000000
 LightType 1
@@ -8799,7 +7793,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 132
+ParentObject 107
 LightColor 255 255 255
 LgtIntensity 0.000000
 LightType 1
@@ -8839,7 +7833,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 132
+ParentObject 107
 LightColor 255 255 255
 LgtIntensity 0.000000
 LightType 1
@@ -8879,7 +7873,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 132
+ParentObject 107
 LightColor 255 255 255
 LgtIntensity 0.000000
 LightType 1
@@ -8919,7 +7913,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 132
+ParentObject 107
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -8944,7 +7938,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 132
+ParentObject 107
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -8969,7 +7963,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 132
+ParentObject 107
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -8994,7 +7988,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 132
+ParentObject 107
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -9019,7 +8013,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
-ParentObject 132
+ParentObject 107
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -9059,7 +8053,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 3
-ParentObject 132
+ParentObject 107
 LightColor 255 0 0
 LgtIntensity 0.000000
 LightType 1
@@ -9095,7 +8089,7 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -1677 -82.5 -310 45 35 0 1 1 1
+  -190 -779.9 41 45 35 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ParentObject 3
@@ -9112,7 +8106,7 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  -1677 -82.5 -688 45 35 0 1 1 1
+  190 -779.9 41 45 35 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ParentObject 3
@@ -9158,12 +8152,12 @@ ClipRayColors 0
 DataOverlayLabel  
 FullSceneParamEval 0
 
-ViewMode 1
-ViewAimpoint -4880.820313 516.009949 -1054.331055
-ViewDirection -5.126033 -0.371754 0.000000
-ViewZoomFactor 9.000002
+ViewMode 2
+ViewAimpoint 0.398419 7.785179 203.837708
+ViewDirection -2.949609 -0.415388 0.000000
+ViewZoomFactor 1.185186
 GridNumber 40
-GridSize 500.000000
+GridSize 100.000000
 ShowMotionPath 1
 ShowBGImage 0
 ShowFogRadius 0

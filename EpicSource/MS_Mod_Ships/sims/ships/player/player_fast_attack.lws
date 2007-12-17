@@ -24,7 +24,7 @@ ShowObject 4 7
 ObjectMotion (unnamed)
   9
   1
-  -0.1973665 8.499999 -5.927146 0 -90 0 1 1 1
+  0 8.499999 -2 0 -90 180 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ShadowOptions 7
@@ -225,89 +225,6 @@ ObjectMotion (unnamed)
   0 0 0 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ShadowOptions 7
-
-AddNullObject weapon_lod0_handle
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 6
-ShadowOptions 7
-
-LoadObject Objects_IW2\Weapons&Effects\Pbc_cannons\RTO\LOD0_RTO_StandardPBC_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -24.45001 0 0.4 0 0 0 0.93 0.93 0.93
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 2
-ParentObject 22
-ShadowOptions 7
-
-LoadObject Objects_IW2\Weapons&Effects\Pbc_cannons\RTO\LOD0_RTO_Weaponlatch_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 54
-ParentObject 23
-ShadowOptions 7
-
-LoadObject Objects_IW2\Weapons&Effects\Pbc_cannons\RTO\LOD0_RTO_StandardPBC_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  24.45001 0 0.4 0 0 180 0.93 0.93 0.93
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ParentObject 22
-ShadowOptions 7
-
-LoadObject Objects_IW2\Weapons&Effects\Pbc_cannons\RTO\LOD0_RTO_Weaponlatch_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 54
-ParentObject 25
-ShadowOptions 7
-
-LoadObject Objects_IW2\Weapons&Effects\MissileLauncher\RTO\ML_LOD0_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -7.199997 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 6
-ParentObject 23
-ShadowOptions 7
-
-LoadObject Objects_IW2\Weapons&Effects\MissileLauncher\RTO\ML_LOD0_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -7.099992 0 0 0 0 180 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 6
-ParentObject 25
 ShadowOptions 7
 
 AddNullObject right_pbc_prefitted
