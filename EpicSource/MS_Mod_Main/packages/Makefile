@@ -177,7 +177,6 @@ PACKAGES = ECargoTypes.pkg \
 	zTestExp.pkg \
 	zTestFacShip.pkg \
 	zTestObject.pkg \
-	zMapTest.pkg \
 	tsSystemDamage.pkg \
 	tssdGUI.pkg \
 	tsMain.pkg
