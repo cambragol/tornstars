@@ -1,15 +1,16 @@
 //*******************************************************************************************/
 //
-// tsStarSystemSetup
+// tsStarSystem
 //
 // This module does system setup tasks when a player arrives in a new system.
 // 
 // 
 //
 // May 2005, Jon Freise
+// Rewrite December 2007, jf
 //******************************************************************************************/
 
-package tsStarSystemSetup;
+package tsStarSystem;
 
 // Imports
 uses  Sim,
@@ -59,11 +60,10 @@ provides Government,
          IsKnown,
          SetKnown,
          UpdateSystem,
-         DebugInfo;
-
+         StarSystems;
 
 // Prototypes
-prototype FindGovernment();
+prototype hfaction FindGovernment(string system);
 
 prototype bool IsKnown(string system);
 
@@ -81,7 +81,7 @@ UpdateSystem()
    string system = iSim.ActiveWorld();
    hregion region;
 
-   FindGovernment();
+   FindGovernment(system);
 
    if (!tsCapsuleJump.IsCapsuleSpace(system)) {
       SetKnown(system, true);
@@ -111,7 +111,7 @@ UpdateSystem()
 
 // Returns the government of the active system.
 //[of]:hfaction Government()
-hfaction Government()
+hfaction Government(string system)
 {
    return iFaction.Cast(Global.Handle("gt_esyssetup_system_gov"));
 }
@@ -120,7 +120,7 @@ hfaction Government()
 
 //Sets the government of the active system.
 //[of]:SetGovernment(hfaction government_faction)
-SetGovernment(hfaction government_faction)
+SetGovernment(string system, hfaction government_faction)
 {
    if (Global.Exists("gt_esyssetup_system_gov")) {
       Global.SetHandle("gt_esyssetup_system_gov", government_faction);
@@ -134,7 +134,7 @@ SetGovernment(hfaction government_faction)
 // Find government looks through the system and finds the government stations.
 // The first government station found wins.
 //[of]:FindGovernment()
-FindGovernment()
+hfaction FindGovernment(string system)
 {
    list station_list;
    int i, total, station_type;
@@ -142,7 +142,7 @@ FindGovernment()
    hfaction gov_faction;
 
 
-   station_list = List.FromSet(iMapEntity.SystemHabitats());
+   station_list = List.FromSet(iMapEntity.SystemHabitatsInSystem(system));
 
    total = List.ItemCount(station_list);
    for (i=0;i<total;++i) {
@@ -157,15 +157,17 @@ FindGovernment()
       case ept_ClusterAdministration:
 
          gov_faction = iSim.Faction(station);
-         SetGovernment(gov_faction);
-         return;
+         SetGovernment(system, gov_faction);
+         return gov_faction;
          break;
       default:
          break;
       }
    }
 
-   SetGovernment(tsFaction.EmptyFaction());
+   SetGovernment(system, tsFaction.EmptyFaction());
+
+   return tsFaction.EmptyFaction();
 }
 //[cf]
 
@@ -194,16 +196,67 @@ SetKnown(string system, bool known)
 //[cf]
 
 
-DebugInfo()
-{
-   debug {
-      Debug.PrintHandle(Government());
-      Debug.PrintString("\n");
-      Debug.PrintString("System Government\n");
-      Debug.PrintString("\n");
 
-   }
+hsim restore_system(string system_name)
+{
+   return none;
 }
+
+
+// Use the cluster name to look up the save id values.
+RestoreSystems()
+{
+   hinifile geog;
+   hsim system;
+   string system_name;
+   list system_list;
+   int count,i,total;
+   bool visible;
+
+   debug Debug.PrintString("tsStarSystem.RestoreSystems\n");
+
+   geog = INIFile.Create("ini:/geog/clusters");
+
+   if (none == geog) {
+      debug Debug.PrintString("Station: Geog file not found!\n");      
+   }
+
+   count = 0;
+   while (INIFile.NumberedExists(geog,"badlands","system",count)) {
+      system_name = INIFile.NumberedString(geog,"badlands","system",count,"invalid");
+
+      if (!tsCapsuleJump.IsCapsuleSpace(system_name)) {
+         system = restore_system(system_name);
+         List.AddTail(system_list, system);
+      }
+
+      ++count;
+   }
+
+   Global.CreateList("tsstarsystem_system_list", GA_Write|GA_NoSave, system_list);
+
+   INIFile.Destroy(geog);
+}
+
+
+
+SaveSystems()
+{
+
+}
+
+
+
+list StarSystems()
+{
+   return Global.List("tsstarsystem_system_list");
+}
+
+
+
+
+
+
 
 /*  
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES

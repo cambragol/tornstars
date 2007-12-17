@@ -33,7 +33,7 @@ iLagrangePoint,
    tsLCenter,
    tsLTrade,
    iRangeCheck,
-   tsStarSystemSetup;
+   tsStarSystem;
 
 
 
@@ -45,7 +45,8 @@ provides OnStatus,
          OnLowerFeeling,
          OnPodSpewer,
          OnDistance,
-         OnMapVisible;
+         OnMapVisible,
+         OnFactionAllowed;
 
 
 
@@ -142,7 +143,7 @@ set OnGreaterFeeling(set habitats, hfaction faction, float feeling_level)
 
    return final_set;
 }
-
+ 
 set OnLowerFeeling(set habitats, hfaction faction, float feeling_level)
 {
    hhabitat habitat;
@@ -219,6 +220,29 @@ list OnDistance(set habitats, hisim mark)
    }
 
    return List.SortByFloatProperty(habitat_list, "distance");
+}
+
+
+
+set OnFactionAllowed(set habitats, hfaction faction )
+{
+   hhabitat habitat;
+   set final_set;
+   int faction_type;
+
+   faction_type = tsFaction.Type(faction);
+
+   while (!Set.IsEmpty(habitats)) {
+      habitat = iHabitat.Cast(Set.FirstElement(habitats));
+      Set.Remove(habitats, habitat);
+
+
+      if (tsEconUtil.IsAllowedFaction(tsLProduction.GetType(habitat), faction_type)){
+         Set.Add(final_set, habitat);
+      }
+   }
+
+   return final_set;
 }
 
 

@@ -30,16 +30,13 @@ iLagrangePoint,
    tsStationEnum,
    tsStation,
    tsStationRules,
-//   tEActionEnum,
    tsLRoot,
    tsLProduction,
-//   tLProdRules,
    tsLFleet,
    tsLCenter,
    tsLTrade,
-//   tLMission,
    iRangeCheck,
-   tsStarSystemSetup;
+   tsStarSystem;
 
 
 
@@ -350,9 +347,9 @@ ReadSystemIni(string system_file, string system)
    // Mark the system hidden on the map. Not the best to hide this here, but 
    // we have all the files open.
    if (esvHidden == system_visible) {
-      tsStarSystemSetup.SetKnown(system, false);
+      tsStarSystem.SetKnown(system, false);
    }else {
-      tsStarSystemSetup.SetKnown(system, true);
+      tsStarSystem.SetKnown(system, true);
    }
 
 

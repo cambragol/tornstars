@@ -65,7 +65,7 @@ uses	Sim,
       tsFleetOp,
       tsFleetOpFilter,
       tsFaction,
-      tsStarSystemSetup,
+      tsStarSystem,
       tsCapsuleJump,
 		UniGUI;
 
@@ -926,7 +926,7 @@ list create_system_buttons( hwindow list_box )
 		}	
       */
 		
-      if (tsStarSystemSetup.IsKnown(system_map)) {
+      if (tsStarSystem.IsKnown(system_map)) {
 
          // Create a special parentless rectangular inverse button
          button = iGUI.CreateAndInitialiseRectangularInverseRadioButton(

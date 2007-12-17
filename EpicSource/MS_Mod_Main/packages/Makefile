@@ -73,7 +73,7 @@ PACKAGES = ECargoTypes.pkg \
 	tsCapsuleJump.pkg \
 	tsReferenceGui.pkg \
 	tsShipCreation.pkg \
-	tsStarSystemSetup.pkg \
+	tsStarSystem.pkg \
 	tsTradeBuy.pkg \
 	tsTradeSell.pkg \
 	tsLoadoutGui.pkg \
@@ -150,6 +150,7 @@ PACKAGES = ECargoTypes.pkg \
 	tsFleetOpCombat.pkg \
 	tsFleetOpUpdate.pkg \
 	tsFleetOpCall.pkg \
+	tsFoConstruction.pkg \
 	tsFoCustoms.pkg \
 	tsFoEmbezzle.pkg \
 	tsFoFleetAttack.pkg \
@@ -224,7 +225,7 @@ tEPlayerOrders.pkg : tEPlayerOrders.pog tsShip.h tsFormation.h tsPodUtil.h tsFac
 tsPlayerWatch.pkg : tsPlayerWatch.pog tsTime.h tsLCenter.h tsFaction.h tsShip.h tsFormation.h tsPlayerFleetUpkeep.h tsMusic.h tsReputationWatch.h tsLocationInit.h tsCapsuleJump.h
 tsReferenceGui.pkg : tsReferenceGui.pog tsGui.h tsLProduction.h tsEconomy.h tsEconUtil.h tsMoney.h tsPodUtil.h tsString.h
 tsShipCreation.pkg : tsShipCreation.pog tsFaction.h
-tsStarSystemSetup.pkg : tsStarSystemSetup.pog tsFaction.h tsStation.h tsLProduction.h tsCapsuleJump.h
+tsStarSystem.pkg : tsStarSystem.pog tsFaction.h tsStation.h tsLProduction.h tsCapsuleJump.h
 tsTradeBuy.pkg : tsTradeBuy.pog tsStation.h tsGui.h tsFaction.h tsLProduction.h tsLInventory.h tsLTrade.h tsEconomy.h tsEconUtil.h tsMoney.h tsPodUtil.h tsString.h tsSpewerOps.h
 
 tsTradeSell.pkg : tsTradeSell.pog tsSpewerOps.h tsMegaTrucking.h tsStation.h tsGui.h tsFaction.h tsLProduction.h tsEconomy.h tsEconUtil.h tsMoney.h tsPodUtil.h tsLTrade.h tsString.h
@@ -257,8 +258,8 @@ tsPlayerSave.pkg : tsPlayerSave.pog tsShip.h tsShipSave.h
 
 
 tsGui.pkg : tsGui.pog
-tsNavGui.pkg : tsNavGui.pog tsStation.h tsGui.h tsEconUtil.h tsLProduction.h tsLFleet.h tsFleetOp.h tsFleetOpFilter.h tsStarSystemSetup.h tsCapsuleJump.h 
-tsMain.pkg : tsMain.pog tsTime.h tsDistance.h tMultimod.h UniGUI.h UniGUIBase.h tsNavGui.h tsFaction.h tsGui.h tsShip.h tsDistance.h tsWingComm.h tsPlayerWatch.h tsStationEnv.h tsShipComms.h tsFleetOp.h tsFleetOpSave.h tsLInventory.h tsEconomy.h tsTradeBuy.h tsTradeSell.h tsPlayerFleetGui.h tsExitGui.h tsStationSave.h tsStarSystemSetup.h tsMusic.h tsMail.h tsNewsNet.h tsShipMail.h tsViewDock.h tsCapsuleJump.h  tsLpointFindGui.h tsStationRules.h tsFleetOpUpdate.h tsCrewSpeak.h tsReputationUpdate.h tsOptionsGui.h tsStartGui.h tsReferenceGui.h tsDebug.h
+tsNavGui.pkg : tsNavGui.pog tsStation.h tsGui.h tsEconUtil.h tsLProduction.h tsLFleet.h tsFleetOp.h tsFleetOpFilter.h tsStarSystem.h tsCapsuleJump.h 
+tsMain.pkg : tsMain.pog tsTime.h tsDistance.h tMultimod.h UniGUI.h UniGUIBase.h tsNavGui.h tsFaction.h tsGui.h tsShip.h tsDistance.h tsWingComm.h tsPlayerWatch.h tsStationEnv.h tsShipComms.h tsFleetOp.h tsFleetOpSave.h tsLInventory.h tsEconomy.h tsTradeBuy.h tsTradeSell.h tsPlayerFleetGui.h tsExitGui.h tsStationSave.h tsStarSystem.h tsMusic.h tsMail.h tsNewsNet.h tsShipMail.h tsViewDock.h tsCapsuleJump.h  tsLpointFindGui.h tsStationRules.h tsFleetOpUpdate.h tsCrewSpeak.h tsReputationUpdate.h tsOptionsGui.h tsStartGui.h tsReferenceGui.h tsDebug.h
 tsMoney.pkg : tsMoney.pog
 
 #ECargoScript.h 
@@ -305,16 +306,16 @@ tsPcWreckBelt.pkg : tsPcWreckBelt.pog tsCull.h tsFaction.h tsLCenter.h tsLFleet.
 tsPodUtil.pkg : tsPodUtil.pog tsFaction.h
 tsPogClass.pkg : tsPogClass.pog tsPcFenceShip.h tsPcAsteroidBelt.h tsPcConstructionShip.h tsPcCustomsToll.h tsPcPirateToll.h tsPcGuards.h tsPcHiredShip.h tsPcOwner.h tsPcPirateToll.h tsPcPodScrapper.h tsPcRumorSeller.h tsPcTankerShip.h tsPcWeaponSeller.h tsPcEmbezzleOp.h tsPcWreckBelt.h tsPcCargoShip.h
 tsReputationUpdate.pkg : tsReputationUpdate.pog tsFaction.h
-tsReputationWatch.pkg : tsReputationWatch.pog UniGUI.h tsTime.h tsShip.h tsFaction.h tsStarSystemSetup.h tsWingman.h
+tsReputationWatch.pkg : tsReputationWatch.pog UniGUI.h tsTime.h tsShip.h tsFaction.h tsStarSystem.h tsWingman.h
 tsSaveGui.pkg : tsSaveGui.pog tsTime.h tsMain.h tsGui.h tsLProduction.h UniGUI.h tsSpewerOps.h
 tsShipMail.pkg : tsShipMail.pog UniGUI.h tsGui.h tsMail.h tsNewsNet.h
 tsShipName.pkg : tsShipName.pog
 tsSpewerOps.pkg : tsSpewerOps.pog tsMegaTrucking.h
 tsStation.pkg : tsStation.pog
 tsStationEnv.pkg : tsStationEnv.pog tsPogClass.h tsPcOwner.h tsCull.h
-tsStationFilter.pkg : tsStationFilter.pog tsEconUtil.h tsFaction.h tsStation.h tsLRoot.h tsLProduction.h tsLCenter.h tsLTrade.h tsStarSystemSetup.h
+tsStationFilter.pkg : tsStationFilter.pog tsEconUtil.h tsFaction.h tsStation.h tsLRoot.h tsLProduction.h tsLCenter.h tsLTrade.h tsStarSystem.h
 tsStationRules.pkg : tsStationRules.pog tsTime.h tsStation.h tsFleetOp.h tsFleetOpFilter.h tsEconUtil.h tsLProduction.h tsLFleet.h tsFleetOpCall.h tsFaction.h
-tsStationSave.pkg : tsStationSave.pog tsEconUtil.h tsFaction.h tsStation.h tsStationRules.h tsLRoot.h tsLProduction.h tsLFleet.h tsLCenter.h tsLTrade.h tsStarSystemSetup.h
+tsStationSave.pkg : tsStationSave.pog tsEconUtil.h tsFaction.h tsStation.h tsStationRules.h tsLRoot.h tsLProduction.h tsLFleet.h tsLCenter.h tsLTrade.h tsStarSystem.h
 
 #tsStation_t.pkg : tsStation_t.pog tEpicFaction.h tsStation.h tsLProduction.h tsLCenter.h tsLFleet.h tLMission.h
 
@@ -337,7 +338,9 @@ tsDistress.pkg : tsDistress.pog tsEvent.h
 tsEvent.pkg : tsEvent.pog
 tsFleetOpCombat.pkg : tsFleetOpCombat.pog tsStation.h tsFaction.h tsTime.h tsFleetOp.h tsLCenter.h tsLFleet.h tsLProduction.h
 tsFleetOpUpdate.pkg : tsFleetOpUpdate.pog tsTime.h tsFleetOp.h tsFleetOpCall.h
+
 tsFleetOpCall.pkg : tsFleetOpCall.pog tsStation.h tsFaction.h tsTime.h tsFleetOp.h tsLCenter.h tsLProduction.h tsFoEmbezzle.h tsFoFleetAttack.h tsFoFleetDefense.h tsFoProtection.h tsFoThugs.h tsFoRaider.h tsFoCustoms.h tsFoPatrol.h
+tsFoConstruction.pkg : tsFoConstruction.pog tsStation.h tsFaction.h tsTime.h tsFleetOp.h tsLCenter.h tsLProduction.h tsLFleet.h tsStationFilter.h tsShipName.h tsShipCreation.h tsFleetOpCombat.h tsDebug.h
 tsFoCustoms.pkg : tsFoCustoms.pog tsStation.h tsFaction.h tsTime.h tsFleetOp.h tsLCenter.h tsLProduction.h tsLFleet.h tsStationFilter.h tsShipName.h tsShipCreation.h tsFleetOpCombat.h tsDebug.h
 tsFoEmbezzle.pkg : tsFoEmbezzle.pog tsStation.h tsFaction.h tsTime.h tsFleetOp.h tsLCenter.h tsLProduction.h tsLFleet.h tsStationFilter.h tsShipName.h tsShipCreation.h tsFleetOpCombat.h tsDebug.h
 tsFoFleetAttack.pkg : tsFoFleetAttack.pog tsStation.h tsFaction.h tsTime.h tsFleetOp.h tsLRoot.h tsLCenter.h tsLProduction.h tsLFleet.h tsStationFilter.h tsEconUtil.h tsShipName.h tsShipCreation.h tsFleetOpCombat.h tsDebug.h

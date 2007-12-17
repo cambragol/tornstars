@@ -48,7 +48,7 @@ uses  Sim,
       tsShipEnum,
       tsPlayerFleet,
       tsFaction,
-      tsStarSystemSetup,
+      tsStarSystem,
       tsWingman;
 
 
@@ -133,7 +133,7 @@ ship_was_attacked(hisim target)
             // If the faction is not criminal, the government will step in to
             // protect the civilians. So change the government of this system
             // to hostile.
-            gov_faction = tsStarSystemSetup.Government();
+            gov_faction = tsStarSystem.Government(iSim.ActiveWorld());
 
             if ((none != gov_faction)&& (target_faction != gov_faction)) {
                // One special case, if the government is the empty faction
@@ -298,7 +298,7 @@ apply_penalty(hship target, float penalty)
       // If the faction is not criminal, the government will step in to
       // protect the civilians. So change the government of this system
       // to hostile.
-      gov_faction = tsStarSystemSetup.Government();
+      gov_faction = tsStarSystem.Government(iSim.ActiveWorld());
 
       if ((none != gov_faction)&& (target_faction != gov_faction)) {
          // One special case, if the government is the empty faction

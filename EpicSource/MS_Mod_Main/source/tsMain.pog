@@ -57,7 +57,7 @@ uses
    tsPlayerFleetGui,
    tsExitGui,
    tsStationSave,
-   tsStarSystemSetup,
+   tsStarSystem,
    tsMusic,
    tsMail,
    tsNewsNet,
@@ -313,7 +313,7 @@ SystemEnter()
 
    tsFleetOpSave.Restore();
 
-   tsStarSystemSetup.UpdateSystem();
+   tsStarSystem.UpdateSystem();
 
    tsStationEnv.CallMods();
    tsStationEnv.SystemSetup();

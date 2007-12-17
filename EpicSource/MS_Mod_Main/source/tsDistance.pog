@@ -22,8 +22,9 @@ provides Init,
          CullingDistance,
          WakingDistance,
          TradeDistance,
-         PodDistance;
-
+         PodDistance,
+         PlanetaryRange;
+ 
 
 Init()
 {
@@ -66,6 +67,12 @@ Init()
    // Pod counting distance, for tradinge or working with stations
    // Global.Float("gt_distance_trade_pods")
    Global.CreateFloat("gt_distance_trade_pods", GA_NoSave|GA_Write, 50km);
+
+
+   // Distance that is considered to be within the same planetary range.
+   // The diameter that would encompass a planet and all of its moons.
+   // Used for distress call response max distance and strategic planning.
+   Global.CreateFloat("gt_distance_planet_system_diameter", GA_NoSave|GA_Write, 5000000km);
 }
 
 
@@ -94,6 +101,12 @@ float TradeDistance()
 float PodDistance()
 {
    return Global.Float("gt_distance_trade_pods");
+}
+
+
+float PlanetaryRange()
+{
+   return Global.Float("gt_distance_planet_system_diameter");
 }
 
 

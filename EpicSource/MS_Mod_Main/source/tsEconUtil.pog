@@ -26,6 +26,7 @@ uses Debug,
      iSim,
      iCargo,
      tsStationEnum,
+     tsFactionEnum,
      CargoTypes;
 
 provides CargoType,
@@ -42,7 +43,8 @@ provides CargoType,
          IsAllowedRebel,
          IsAllowedPirate,
          IsAllowedMercenary,
-   
+         IsAllowedFaction,
+
          IsAllowedLoadout;
 
 
@@ -3627,7 +3629,7 @@ bool IsAllowedRebel(int type)
    case ept_GangsterHideout : 
    case ept_Hideout : 
 
-      // Rebels must capture of build
+      // Rebels must capture or build
       // one of these to become a 
       // new government.
    case ept_SystemAdministration : 
@@ -3661,7 +3663,7 @@ bool IsAllowedPirate(int type)
 
    return false;
 }
-
+ 
 
 bool IsAllowedMercenary(int type)
 {
@@ -3677,6 +3679,37 @@ bool IsAllowedMercenary(int type)
 
    return false;
 } 
+
+
+bool IsAllowedFaction(int type, int faction_type)
+{
+   switch (type) {
+   case FCT_Invalid:
+      break;
+   case FCT_Independent:
+      return IsAllowedIndependent(type);   
+      break;
+   case FCT_Navy:
+      return IsAllowedGovernment(type);
+      break;
+   case FCT_Pirate:
+      return IsAllowedPirate(type);   
+      break;
+   case FCT_Mercenary:
+      return IsAllowedMercenary(type);
+      break;
+   case FCT_Rebel:
+      return IsAllowedRebel(type);
+      break;
+   case FCT_MegaCorp:
+      return IsAllowedMegaCorp(type);
+      break;
+   default:
+      break;
+   }
+
+   return false;
+}
 
 
 bool IsAllowedLoadout(int type)
