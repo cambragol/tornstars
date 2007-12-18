@@ -1126,6 +1126,9 @@ create_ship_systems_list()
       }
 
       name = Text.Field(Object.StringProperty(subsim,"name"), FT_Text);
+      name = String.Join(name," ");
+      name = String.Join(name,Text.Field(Object.StringProperty(subsim,"null_name"), FT_Text));
+      name = String.Left(name, 30);
 
       button = iGUI.CreateAndInitialiseRectangularInverseRadioButton( none, 0, 0, 
                                                                       button_width, 

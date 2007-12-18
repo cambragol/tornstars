@@ -613,7 +613,7 @@ int default_daily_cost(int ship_type)
 // each subsim.
 null_subsims(hship ship)
 {
-   string template_name, subsim_template, subsim_name, subsim_class;
+   string template_name, subsim_template, subsim_name, subsim_class, null_name;
    hinifile ship_file;
    hinifile template_file;
    hsubsim subsim;
@@ -672,13 +672,15 @@ null_subsims(hship ship)
          // Check if this template entry has a matching null entry. Then attach the nulls position
          // data to the subsim.
          if (INIFile.NumberedExists(ship_file, "Subsims", "null", template_count)) {
+            null_name = INIFile.NumberedString(ship_file,"Subsims","null",template_count,"null");
+
             xpos = INIFile.NumberedVectorX(ship_file,"Subsims","null_position",template_count);
             ypos = INIFile.NumberedVectorY(ship_file,"Subsims","null_position",template_count);
             zpos = INIFile.NumberedVectorZ(ship_file,"Subsims","null_position",template_count);
 
             yaw = INIFile.NumberedVectorX(ship_file,"Subsims","null_orientation",template_count);
             pitch = INIFile.NumberedVectorY(ship_file,"Subsims","null_orientation",template_count);
-            roll = INIFile.NumberedVectorZ(ship_file,"Subsims","null_orientation",template_count);            
+            roll = INIFile.NumberedVectorZ(ship_file,"Subsims","null_orientation",template_count);   
          }
 
          if (template_file != none) {
@@ -708,13 +710,15 @@ null_subsims(hship ship)
                         Debug.PrintInt(template_count);
                         Debug.PrintString("\n");
                      }
-*/
+                     */
+
                      not_found = false;
                      Object.AddStringProperty(subsim,"subsim_template", subsim_template);
                      Object.AddStringProperty(subsim,"subsim_class", subsim_class);
                      Object.AddIntProperty(subsim,"template_number", template_count);
                      Object.AddVectorProperty(subsim, "position", xpos, ypos, zpos);
                      Object.AddVectorProperty(subsim, "orientation", yaw, pitch, roll);
+                     Object.AddStringProperty(subsim,"null_name", null_name);
                   }
                }
                --subsim_count;
@@ -762,7 +766,7 @@ hsubsim FindSubsimByTemplateNumber(hship ship, int template_number)
 // Replaces the passed in subsim with a new one created from template_name.
 hsubsim ReplaceSubsim(hship ship, hsubsim subsim, string template_name)
 {
-   string hardpoint_name, subsim_class, hardpoint_type;
+   string hardpoint_name, subsim_class, hardpoint_type, null_name;
    int template_number;
    float xpos, ypos, zpos, roll, pitch, yaw;
    hsubsim new_subsim;
@@ -788,9 +792,11 @@ hsubsim ReplaceSubsim(hship ship, hsubsim subsim, string template_name)
             yaw =   Object.VectorPropertyX(subsim,"orientation");
             pitch = Object.VectorPropertyY(subsim,"orientation");
             roll =  Object.VectorPropertyZ(subsim,"orientation");
+            null_name = Object.StringProperty(subsim, "null_name");
 
             Object.AddStringProperty(new_subsim,"subsim_template", template_name);
             Object.AddStringProperty(new_subsim,"subsim_class", subsim_class);
+            Object.AddStringProperty(new_subsim,"null_name", null_name);
             Object.AddIntProperty(new_subsim,"template_number", template_number);
 
             Object.AddVectorProperty(new_subsim, "position", xpos, ypos, zpos);
