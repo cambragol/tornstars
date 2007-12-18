@@ -29,6 +29,86 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
+AddNullObject heatsink
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -0.4415404 -33 221.1362 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject passive_sensors
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -0.4415404 -33 221.1362 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject lds
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -0.4415404 -33 221.1362 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject drive
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -0.4415404 -33 221.1362 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject drive_capsule
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -0.4415404 -33 221.1362 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject autorepair
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -0.4415404 -33 221.1362 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject cpu
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -0.4415404 -33 221.1362 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject active_sensors
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -0.4415404 -33 221.1362 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
 AddNullObject dockport
 ShowObject 8 7
 ObjectMotion (unnamed)
@@ -212,16 +292,6 @@ ObjectMotion (unnamed)
   9
   1
   -67 -42 161.3 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ShadowOptions 7
-
-LoadObject I:\Projects\resource\avatars\old_destroyer\0_Destroyer_T.lwo
-ShowObject 8 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ShadowOptions 7
