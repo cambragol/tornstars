@@ -911,9 +911,12 @@ LinkPlayerWeapons(hship ship)
 
    beams = remove_beams(ship);
 
-   iMultiplay.UnlinkShipWeapons(ship);
+   if (!Global.Bool("tsdisable_weapon_link")) {
 
-   iMultiplay.LinkShipWeapons(ship);
+      iMultiplay.UnlinkShipWeapons(ship);
+
+      iMultiplay.LinkShipWeapons(ship);
+   }
 
    attach_beams(ship, beams);
 }
