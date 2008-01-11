@@ -1,0 +1,882 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 0
+PreviewLastFrame 100
+PreviewFrameStep 1
+FramesPerSecond 25
+
+AddNullObject <detail_switch min=0.0 max=0.01>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -50 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.01 max=0.1>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.1 max=1.0>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  50 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ShadowOptions 7
+
+LoadObject I:\Projects\resource\avatars\marauderfighter\MF0_RTO_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 5
+ShadowOptions 7
+
+AddNullObject resizer0
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 10 10 10
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 3
+ShadowOptions 7
+
+AddNullObject <scene name=MF_0_Eng>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 4.2 -12.8 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 3
+ShadowOptions 7
+
+AddNullObject <scene name=MF_0_Eng>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -1.55 1.35 -13.4 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 3
+ShadowOptions 7
+
+AddNullObject <scene name=MF_0_Eng>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  1.55 1.35 -13.4 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 3
+ShadowOptions 7
+
+LoadObject I:\Projects\resource\avatars\marauderfighter\MF0_LGuns_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0.09 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 5
+ShadowOptions 7
+
+LoadObject I:\Projects\resource\avatars\marauderfighter\MF0_RGuns_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -0.09 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 5
+ShadowOptions 7
+
+LoadObject I:\Projects\resource\avatars\marauderfighter\MF1_RTO_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 12
+ShadowOptions 7
+
+AddNullObject resizer1
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 10 10 10
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 2
+ShadowOptions 7
+
+AddNullObject resizer2
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 10 10 10
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 1
+ShadowOptions 7
+
+LoadObject I:\Projects\resource\avatars\marauderfighter\MF2_RTO_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 13
+ShadowOptions 7
+
+LoadObject I:\Projects\resource\avatars\marauderfighter\MF0_LGuns_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0.09 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 11
+ShadowOptions 7
+
+LoadObject I:\Projects\resource\avatars\marauderfighter\MF0_RGuns_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -0.09 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 11
+ShadowOptions 7
+
+AddNullObject <scene name=MF_1_Eng>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 4.2 -12.8 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 2
+ShadowOptions 7
+
+AddNullObject <scene name=MF_1_Eng>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -1.55 1.35 -13.4 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 2
+ShadowOptions 7
+
+AddNullObject <scene name=MF_1_Eng>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  1.55 1.35 -13.4 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 2
+ShadowOptions 7
+
+AddNullObject <scene name=MF_1_Eng>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -1.55 1.35 -13.4 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 1
+ShadowOptions 7
+
+AddNullObject <scene name=MF_1_Eng>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 4.2 -12.8 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 1
+ShadowOptions 7
+
+AddNullObject <scene name=MF_1_Eng>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  1.55 1.35 -13.4 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 1
+ShadowOptions 7
+
+AddNullObject <node template=ini||audio|sfx|heavy_fighter_drive>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 2.95 -5.149999 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ShadowOptions 7
+
+AddNullObject ComSecThruster_Null
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 27.5 0 0 0 2 2 2
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 3
+ShadowOptions 7
+
+AddNullObject <anim channel="RR?+j(0.1) RY?-j(0.1) LX?+j(0.1)">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  -2.436739 2.47703 -19.0014 0 0 45 0 0 0
+  0 0 0 0 0
+  -2.443716 2.47703 -19.00139 0 0 45 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 216
+ParentObject 24
+ShadowOptions 7
+
+AddNullObject <anim channel="RR?-j(0.1) RY?+j(0.1) LX?-j(0.1)">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  2.4367 2.47 -19 0 0 -45 0 0 0
+  0 0 0 0 0
+  2.4367 2.47 -19 0 0 -45 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 24
+ShadowOptions 7
+
+AddNullObject <anim channel="RR?-j(0.1) RY?-j(0.1) LX?+j(0.1)">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  -2.693136 0.27 -17.28813 0 0 -45 0 0 0
+  0 0 0 0 0
+  -2.693136 0.27 -17.28813 0 0 -45 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+ParentObject 24
+ShadowOptions 7
+
+AddNullObject <anim channel="RR?+j(0.1) RY?+j(0.1) LX?-j(0.1)">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  2.69 0.27 -17.2881 0 0 45 0 0 0
+  0 0 0 0 0
+  2.69 0.27 -17.2881 0 0 45 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 24
+ShadowOptions 7
+
+AddNullObject <anim channel="RP?-j(0.1) LY?-j(0.1)">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 3.185 -18.505 0 0 0 0 0 0
+  0 0 0 0 0
+  0 3.184997 -18.50503 0 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 24
+ParentObject 24
+ShadowOptions 7
+
+AddNullObject <anim channel="RP?+j(0.1) LY?+j(0.1)">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 -0.7749999 -18.78 0 0 0 0 0 0
+  0 0 0 0 0
+  0 -0.7749999 -18.78 0 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 24
+ParentObject 24
+ShadowOptions 7
+
+AddNullObject <anim channel="RR?+j(0.1) LY?-j(0.1) RP?+j(0.1)">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  -0.8065 0.675 -8.8 0 0 0 0 0 0
+  0 0 0 0 0
+  -0.8065 0.675 -8.8 0 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 24
+ParentObject 24
+ShadowOptions 7
+
+AddNullObject <anim channel="RR?-j(0.1) LY?-j(0.1) RP?+j(0.1)">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0.7564999 0.65 -8.775 0 0 0 0 0 0
+  0 0 0 0 0
+  0.756509 0.65 -8.775006 0 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 24
+ParentObject 24
+ShadowOptions 7
+
+AddNullObject <anim channel="RR?-j(0.1) LY?+j(0.1) RP?-j(0.1)">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  -0.3999999 -3.39 -8.75 0 0 0 0 0 0
+  0 0 0 0 0
+  -0.3999999 -3.39 -8.75 0 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 24
+ParentObject 24
+ShadowOptions 7
+
+AddNullObject <anim channel="RR?+j(0.1) LY?+j(0.1) RP?-j(0.1)">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0.3499999 -3.365 -8.75 0 0 0 0 0 0
+  0 0 0 0 0
+  0.3499999 -3.365 -8.75 0 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 24
+ParentObject 24
+ShadowOptions 7
+
+AddNullObject <anim channel="RY?+j(0.1) LX?+j(0.1) LZ?-j(0.1)">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  -0.9601733 -2.85 -8.75 51 0 0 0 0 0
+  0 0 0 0 0
+  -0.9601733 -2.85 -8.75 51 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 24
+ShadowOptions 7
+
+AddNullObject <anim channel="RY?-j(0.1) LX?-j(0.1) LZ?-j(0.1)">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0.9420847 -2.9 -8.8 -51 0 0 0 0 0
+  0 0 0 0 0
+  0.9420858 -2.9 -8.8 -51.00003 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 24
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 -89.99999 -89.99999 0 0.5 1 4
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 25
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 89.99999 -89.99999 0 0.5 1 4
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 26
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 89.99999 89.99999 0 0.5 1 4
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 27
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 -89.99999 89.99999 0 0.5 1 4
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 28
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 -89.99999 0 0.5 1 4
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 89.99999 0 0.5 1 4
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 30
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 89.99999 0 0.5 1 4
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 33
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 89.99999 0 0.5 1 4
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 34
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 -89.99999 0 0.5 1 4
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 31
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 -89.99999 0 0.5 1 4
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 32
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 -89.99999 0 0 0.5 1 4
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 35
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 89.99999 0 0 0.5 1 4
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 36
+ShadowOptions 7
+
+AddNullObject <node template=ini||audio|sfx|player_jets>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+  -0.2 4.05 -9.55 0 0 0 1 1 1
+  32 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject root
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -98.43266 1.35 -13.26288 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ShadowOptions 7
+
+AmbientColor 255 255 255
+AmbIntensity 0.25
+
+AddLight
+LightName Nav_Light_Green
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  114.1023 -4.526996 14.64001 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 50
+LightColor 0 200 10
+LgtIntensity (envelope)
+  1
+  5
+  -7.63685e-008
+  0 0 0 0 0
+  0
+  15 1 0 0 0
+  0.9
+  16 0 0 0 0
+  0.9
+  17 1 0 0 0
+  0
+  18 0 0 0 0
+EndBehavior 2
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  -7.63685e-008
+  0 0 0 0 0
+  0
+  15 1 0 0 0
+  0.05
+  16 0 0 0 0
+  0.05
+  17 1 0 0 0
+  0
+  18 0 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 14
+LensFlareOptions 41
+FlareRandStreakInt 0.03
+FlareRandStreakDens 50
+FlareRandStreakSharp 6
+ShadowType 0
+
+AddLight
+LightName Nav_Light_Green
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  112.025 -7.150002 14.64001 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 50
+LightColor 0 200 10
+LgtIntensity (envelope)
+  1
+  5
+  -7.63685e-008
+  0 0 0 0 0
+  0
+  15 1 0 0 0
+  0.9
+  16 0 0 0 0
+  0.9
+  17 1 0 0 0
+  0
+  18 0 0 0 0
+EndBehavior 2
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  -7.63685e-008
+  0 0 0 0 0
+  0
+  15 1 0 0 0
+  0.05
+  16 0 0 0 0
+  0.05
+  17 1 0 0 0
+  0
+  18 0 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 14
+LensFlareOptions 41
+FlareRandStreakInt 0.03
+FlareRandStreakDens 50
+FlareRandStreakSharp 6
+ShadowType 0
+
+AddLight
+LightName Nav_Light_Red
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  82.80562 -4.400002 14.64 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 50
+LightColor 250 0 10
+LgtIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  0
+  7 1 0 0 0
+  0.9
+  8 0 0 0 0
+  0.896
+  9 1 0 0 0
+  0
+  10 0 0 0 0
+  0
+  18 1 0 0 0
+EndBehavior 2
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  0
+  7 1 0 0 0
+  0.05
+  8 0 0 0 0
+  0.05
+  9 1 0 0 0
+  0
+  10 0 0 0 0
+  0
+  18 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 14
+LensFlareOptions 9
+FlareRandStreakInt 0.03
+FlareRandStreakDens 50
+FlareRandStreakSharp 6
+ShadowType 0
+
+AddLight
+LightName Nav_Light_Red
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  84.83406 -7.100002 14.64001 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 50
+LightColor 250 0 10
+LgtIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  0
+  7 1 0 0 0
+  0.9
+  8 0 0 0 0
+  0.896
+  9 1 0 0 0
+  0
+  10 0 0 0 0
+  0
+  18 1 0 0 0
+EndBehavior 2
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  0
+  7 1 0 0 0
+  0.05
+  8 0 0 0 0
+  0.05
+  9 1 0 0 0
+  0
+  10 0 0 0 0
+  0
+  18 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 14
+LensFlareOptions 9
+FlareRandStreakInt 0.03
+FlareRandStreakDens 50
+FlareRandStreakSharp 6
+ShadowType 0
+
+AddLight
+LightName Light
+ShowLight 0 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1
+LightType 0
+ShadowType 1
+
+ShowCamera 0 7
+CameraMotion (unnamed)
+  9
+  1
+  0 0.25 -247.308 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ZoomFactor 3.2
+Resolution 1
+CustomSize 752 576
+PixelAspectRatio -1
+CustomPixelRatio 1.0186
+MaskPosition 0 0 752 576
+MotionBlur 0
+FieldRendering 0
+SegmentMemory 8000000
+ApertureHeight 0.015
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 0
+RayTraceOptimization 1
+DataOverlayLabel  
+SaveRGB 0
+SaveAlpha 0
+
+ViewType 6
+ViewAimpoint -13.39859 -5.900002 4.377132
+ViewZoomFactor 4.423038
+
+GridNumber 40
+GridSize 10
+NearClipDistance 0.1
+CameraViewBG 0
+ShowMotionPath 1
+ShowFogRadius 0
+ShowFogEffect 0
+ShowSafeAreas 0
+ShowFieldChart 0

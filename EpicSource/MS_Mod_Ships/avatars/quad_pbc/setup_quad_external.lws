@@ -164,7 +164,7 @@ ObjectMotion (unnamed)
   1
   0 0 0 0 0 0 1 1 1
   0 0 0 0 0
-EndBehavior 13
+EndBehavior 1
 ShadowOptions 7
 
 AmbientColor 255 255 255
@@ -176,7 +176,7 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  0 0 10.5 45 35 0 1 1 1
+  0 2.25 9 45 35 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ParentObject 13
@@ -184,9 +184,9 @@ LightColor 255 160 18
 LgtIntensity 0.000000
 LightType 1
 LightFalloff 1
-LightRange 300.000000
+LightRange 100.000000
 LensFlare 1
-FlareIntensity 1.000000
+FlareIntensity 0.700000
 FlareNominalDistance 6.000000
 FlareDissolve 0.000000
 LensFlareFade 6
@@ -204,7 +204,7 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  0 0 10.5 45 35 0 1 1 1
+  0 -2.25 9 45 35 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ParentObject 13
@@ -212,21 +212,75 @@ LightColor 255 160 18
 LgtIntensity 0.000000
 LightType 1
 LightFalloff 1
-LightRange 300.000000
+LightRange 100.000000
 LensFlare 1
-FlareIntensity 1.000000
+FlareIntensity 0.700000
 FlareNominalDistance 6.000000
 FlareDissolve 0.000000
 LensFlareFade 6
-LensFlareOptions 15
+LensFlareOptions 11
 FlareRingColor 80 20 10
 FlareRingSize 0.220000
-FlareStarFilter 2
 FlareRandStreakInt 0.030000
 FlareRandStreakDens 50.000000
 FlareRandStreakSharp 6.000000
 ShadowType 1
 
+AddLight
+LightName FlashFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1.8 0 7 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 13
+LightColor 255 160 18
+LgtIntensity 0.000000
+LightType 1
+LightFalloff 1
+LightRange 100.000000
+LensFlare 1
+FlareIntensity 0.700000
+FlareNominalDistance 6.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 11
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName FlashFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -1.8 0 7.2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 13
+LightColor 255 160 18
+LgtIntensity 0.000000
+LightType 1
+LightFalloff 1
+LightRange 100.000000
+LensFlare 1
+FlareIntensity 0.700000
+FlareNominalDistance 6.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 11
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
 
 ShowCamera 0 7
 CameraMotion (unnamed)
@@ -259,11 +313,13 @@ AnimatedDither 0
 
 RenderMode 2
 RayTraceEffects 0
+ClipRayColors 0
 DataOverlayLabel  
+FullSceneParamEval 0
 
-ViewMode 1
+ViewMode 3
 ViewAimpoint -0.283797 0.000000 0.252297
-ViewDirection -4.068370 -0.514873 0.000000
+ViewDirection -11.957250 -0.211186 0.000000
 ViewZoomFactor 10.440494
 GridNumber 40
 GridSize 20.000000
@@ -273,3 +329,4 @@ ShowFogRadius 0
 ShowRedraw 0
 ShowSafeAreas 0
 ShowFieldChart 0
+

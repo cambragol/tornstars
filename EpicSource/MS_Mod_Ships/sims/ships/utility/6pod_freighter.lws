@@ -4,17 +4,17 @@ LWSC
 FirstFrame 1
 LastFrame 100
 FrameStep 1
-PreviewFirstFrame 1
+PreviewFirstFrame 0
 PreviewLastFrame 100
 PreviewFrameStep 1
-FramesPerSecond 25.000000
+FramesPerSecond 25
 
 AddNullObject flatbed_dockport_fl
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
-  -27 13.1 41 90 -90 0 1 1 1
+  -27 13.1 41 89.99999 -89.99999 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 40
@@ -25,7 +25,7 @@ ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
-  27 13.1 41 -90 -90 -90 1 1 1
+  27 13.1 41 -89.99999 -89.99999 -89.99999 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ShadowOptions 7
@@ -35,7 +35,7 @@ ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
-  -27 13.1 -13 90 -90 90 1 1 1
+  -27 13.1 -13 89.99999 -89.99999 89.99999 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 24
@@ -46,7 +46,7 @@ ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
-  27 13.1 -13 -90 -90 0 1 1 1
+  27 13.1 -13 -89.99999 -89.99999 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ShadowOptions 7
@@ -56,7 +56,7 @@ ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
-  -27 13.1 -67 90 -90 180 1 1 1
+  -27 13.1 -67 89.99999 -89.99999 180 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ShadowOptions 7
@@ -66,7 +66,7 @@ ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
-  27 13.1 -67 -90 -90 0 1 1 1
+  27 13.1 -67 -89.99999 -89.99999 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ShadowOptions 7
@@ -82,6 +82,17 @@ EndBehavior 1
 LockedChannels 3
 ShadowOptions 7
 
+AddNullObject forward_turret
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 10.3 78.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ShadowOptions 7
+
 AddNullObject crew
 ShowObject 8 7
 ObjectMotion (unnamed)
@@ -93,18 +104,48 @@ EndBehavior 1
 LockedChannels 5
 ShadowOptions 7
 
-AddNullObject autorepair
+AddNullObject cpu
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
-  23 7 91.75 0 0 0 1 1 1
+  23 7 84.75 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject active_sensors
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  23 7 90.75 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
 ShadowOptions 7
 
-LoadObject C:\particle\IWAR2\resource\collisionhulls\SNRV_HULL.lwo
+AddNullObject passive_sensors
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  23 7 79.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject autorepair
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  33.5 2.75 74.75 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject SNRV_HULL
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -119,7 +160,7 @@ ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
-  0 15.5 0 0 -90 0 1 1 1
+  0 15.5 0 0 -89.99999 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ShadowOptions 7
@@ -129,7 +170,17 @@ ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
-  -27.5 0 81 0 0 0 1 1 1
+  27.25 4 -59.25 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject heatsink
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0.25 0 14.36658 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ShadowOptions 7
@@ -139,13 +190,33 @@ ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
-  0 0 88.5 0 0 0 1 1 1
+  0 1.5 -51.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject drive
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -77.25 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject I:\Projects\resource\avatars\snrv\SNRV_RTO_LOD0_T.lwo
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ShadowOptions 7
 
 AmbientColor 255 255 255
-AmbIntensity 0.250000
+AmbIntensity 0.25
 
 AddLight
 LightName Light
@@ -157,7 +228,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LightColor 255 255 255
-LgtIntensity 1.000000
+LgtIntensity 1
 LightType 0
 ShadowType 1
 
@@ -168,17 +239,19 @@ CameraMotion (unnamed)
   0 1.705899 -296.52 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ZoomFactor 3.200000
+ZoomFactor 3.2
 Resolution 1
-PixelAspectRatio 3
-SegmentMemory 1050000
+CustomSize 752 576
+PixelAspectRatio -1
+CustomPixelRatio 1.0186
+MaskPosition 0 0 752 576
+MotionBlur 0
+FieldRendering 0
+SegmentMemory 8000000
+ApertureHeight 0.015
 Antialiasing 0
 AdaptiveSampling 1
 AdaptiveThreshold 16
-FilmSize 2
-FieldRendering 0
-MotionBlur 0
-DepthOfField 0
 
 SolidBackdrop 1
 BackdropColor 0 0 0
@@ -192,19 +265,22 @@ AnimatedDither 0
 
 RenderMode 2
 RayTraceEffects 0
-ClipRayColors 0
+RayTraceOptimization 1
 DataOverlayLabel  
-FullSceneParamEval 0
+SaveRGB 0
+SaveAlpha 0
 
-ViewMode 2
-ViewAimpoint -22.801456 8.000000 -5.348938
-ViewDirection -3.466224 -0.851720 0.000000
-ViewZoomFactor 9.000000
+ViewType 7
+ViewAimpoint -22.80146 8 -5.348938
+ViewDirection -8.426449 -0.3263763 0
+ViewZoomFactor 28.24502
+
 GridNumber 40
-GridSize 50.000000
+GridSize 50
+NearClipDistance 0.1
+CameraViewBG 0
 ShowMotionPath 1
-ShowBGImage 0
 ShowFogRadius 0
-ShowRedraw 0
+ShowFogEffect 0
 ShowSafeAreas 0
 ShowFieldChart 0

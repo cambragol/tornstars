@@ -413,15 +413,15 @@ ObjectMotion (unnamed)
   0 0 0 0 0 0 1 1 1
   1 0 0 0 0
 EndBehavior 1
-ParentObject 32
+ParentObject 37
 ShadowOptions 7
 
-AddNullObject <anim channel=dock?+s(0.5)>
+AddNullObject <channel="dock?+s(0.3) ">
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
   2
-  0 0 -76.1801 0 0 0 1 1 1
+  0 0 -76.1801 0 0 0 1 1 0.1
   0 0 0 0 0
   0 0 -76.1801 0 0 0 1 1 1
   1 0 0 0 0

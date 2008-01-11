@@ -9,16 +9,7 @@ PreviewLastFrame 100
 PreviewFrameStep 1
 FramesPerSecond 25.000000
 
-AddNullObject hardpoint_leftwing
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  -14 -2.5 6.5 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 5
-ShadowOptions 7
+
 
 AddNullObject dockport_rear
 ShowObject 4 7
@@ -29,6 +20,17 @@ ObjectMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 41
+ShadowOptions 7
+
+AddNullObject heatsink
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -2.249995 -4.0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
 ShadowOptions 7
 
 AddNullObject crew
@@ -42,7 +44,63 @@ EndBehavior 1
 LockedChannels 1
 ShadowOptions 7
 
-AddNullObject hardpoint_rightwing
+AddNullObject active_sensors
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -2.275001 9.775 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ShadowOptions 7
+
+AddNullObject passive_sensors
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -2.275001 8.775 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ShadowOptions 7
+
+AddNullObject autorepair
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -2.275001 3.775 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ShadowOptions 7
+
+AddNullObject cpu
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -2.275001 5.775 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ShadowOptions 7
+
+AddNullObject left_wing_hardpoint
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -14 -2.5 6.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ShadowOptions 7
+
+
+AddNullObject right_wing_hardpoint
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
@@ -52,7 +110,7 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
-AddNullObject hardpoint_rear
+AddNullObject aft_decoy_hardpoint
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -62,12 +120,12 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
-AddNullObject hardpoint_upper
+AddNullObject upper_pylon
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
-  0 11.374991 -1.375 0 0 -90 1 1 1
+  0 11.1 -4 0 0 -90 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ShadowOptions 7
@@ -81,6 +139,37 @@ ObjectMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 ShadowOptions 7
+
+AddNullObject lds
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -8.47501 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject drive
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -9.47501 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject capsule_drive
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -7.47501 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
 
 AmbientColor 255 255 255
 AmbIntensity 0.250000

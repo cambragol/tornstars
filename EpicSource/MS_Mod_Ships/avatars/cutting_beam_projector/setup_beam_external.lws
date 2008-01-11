@@ -169,51 +169,6 @@ ShadowOptions 7
 AmbientColor 255 255 255
 AmbIntensity 0.250000
 
-AddLight
-LightName Flare
-ShowLight 1 7
-LightMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ParentObject 13
-LightColor 255 128 0
-LgtIntensity 0.000000
-LightType 1
-LightFalloff 1
-LightRange 50.000000
-LensFlare 1
-FlareIntensity (envelope)
-  1
-  7
-  0.2500003
-  0 1 0 0 0
-  1.26
-  10 1 0 0 0
-  0.48
-  20 1 0 0 0
-  1.04
-  30 1 0 0 0
-  0.2
-  40 1 0 0 0
-  1.19
-  50 1 0 0 0
-  0.25
-  60 1 0 0 0
-EndBehavior 2
-FlareNominalDistance 6.000000
-FlareDissolve 0.000000
-LensFlareFade 6
-LensFlareOptions 11
-FlareRingColor 80 20 10
-FlareRingSize 0.220000
-FlareRandStreakInt 0.030000
-FlareRandStreakDens 50.000000
-FlareRandStreakSharp 6.000000
-ShadowType 1
-
 ShowCamera 0 7
 CameraMotion (unnamed)
   9

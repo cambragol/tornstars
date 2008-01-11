@@ -1,0 +1,234 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 0
+PreviewLastFrame 100
+PreviewFrameStep 1
+FramesPerSecond 25
+
+AddNullObject dockport
+ShowObject 5 2
+ObjectMotion (unnamed)
+  9
+  1
+  0 10.275 2.725 180 -89.99999 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ShadowOptions 7
+
+AddNullObject crew
+ShowObject 5 5
+ObjectMotion (unnamed)
+  9
+  1
+  0 2.35 26.57499 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject active_sensors
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1.175 30.27502 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject passive_sensors
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -3.474999 24.77498 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject cpu
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 1.25 20.15001 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject autorepair
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 1.225 13.77503 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject lds
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 1 -19.92503 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject heatsink
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 5.2 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject capsule_drive
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -0.25 -11.22502 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject drive
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0.9999999 -27.02503 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject forward_hardpoint
+ShowObject 5 1
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1.445 31.61501 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ShadowOptions 7
+
+AddNullObject Y+DockOrientationArrow
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 0.1 0.3 0.1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 1
+ShadowOptions 7
+
+AddNullObject Z+DockOrientationArrow
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 0.1 0.1 0.3
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 1
+ShadowOptions 7
+
+LoadObject I:\Projects\resource\avatars\interfacer\Inter0_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ShadowOptions 7
+
+AddNullObject shield_forward
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 6.825001 20.6 -10.9 -38.59999 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AmbientColor 255 255 255
+AmbIntensity 0.25
+
+AddLight
+LightName Light
+ShowLight 0 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1
+LightType 0
+ShadowType 1
+
+ShowCamera 0 7
+CameraMotion (unnamed)
+  9
+  1
+  0 0.5266764 -40.54919 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ZoomFactor 3.2
+Resolution 1
+CustomSize 752 576
+PixelAspectRatio -1
+CustomPixelRatio 1.0186
+MaskPosition 0 0 752 576
+MotionBlur 0
+FieldRendering 0
+SegmentMemory 8000000
+ApertureHeight 0.015
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 0
+RayTraceOptimization 1
+DataOverlayLabel  
+SaveRGB 0
+SaveAlpha 0
+
+ViewType 7
+ViewAimpoint 0 10.275 2.725
+ViewDirection -4.82758 -0.136138 0
+ViewZoomFactor 6.431314
+
+GridNumber 40
+GridSize 5
+CameraViewBG 0
+ShowMotionPath 1
+ShowFogRadius 0
+ShowFogEffect 0
+ShowSafeAreas 0
+ShowFieldChart 0

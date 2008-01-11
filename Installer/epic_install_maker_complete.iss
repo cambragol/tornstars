@@ -1,7 +1,7 @@
 [Setup]
 UseSetupLdr=true
 OutputBaseFilename=unstable_space_11_5
-;OutputDir=D:\Documents and Settings\Mourfin\My Documents\Unstable_Space_11_6
+;OutputDir=D:\Documents and Settings\Mourfin\My Documents\Unstable_Space_11_9
 AppCopyright=Epic Team
 AppName=Unstable Space
 AppVerName=Unstable Space 11.5
@@ -215,6 +215,15 @@ Source: .\..\EpicSource\MS_Mod_Ships\avatars\pulsar\*; DestDir: {app}\mods\MS_Mo
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\tug_hull\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\tug_hull;
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\us_capital_beam_turret\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\us_capital_beam_turret;
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\us_mining_beam_turret\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\us_mining_beam_turret;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\interceptor\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\interceptor;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\marauderfighter\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\marauderfighter;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\old_destroyer\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\old_destroyer;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\stormpetrel\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\stormpetrel;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\truck\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\truck;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_a\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\turret_a;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_b\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\turret_b;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_c\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\turret_c;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_d\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\turret_d;
 
 
 Source: .\..\EpicSource\MS_Mod_Ships\images\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\images\sfx; Flags: skipifsourcedoesntexist

@@ -121,7 +121,7 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
-AddNullObject upper_pbc_prefitted
+AddNullObject upper_pylon_1
 ShowObject 5 7
 ObjectMotion (unnamed)
   9
@@ -131,7 +131,7 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
-AddNullObject upper_missile_prefitted
+AddNullObject upper_pylon_2
 ShowObject 5 7
 ObjectMotion (unnamed)
   9
@@ -141,7 +141,7 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
-AddNullObject lower_pbc_prefitted
+AddNullObject lower_pylon_1
 ShowObject 5 7
 ObjectMotion (unnamed)
   9
@@ -151,7 +151,7 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
-AddNullObject lower_missile_prefitted
+AddNullObject lower_pylon_2
 ShowObject 5 7
 ObjectMotion (unnamed)
   9
@@ -294,7 +294,17 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
-AddNullObject sensors
+AddNullObject passive_sensors
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 9.424999 8.15 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject active_sensors
 ShowObject 8 7
 ObjectMotion (unnamed)
   9

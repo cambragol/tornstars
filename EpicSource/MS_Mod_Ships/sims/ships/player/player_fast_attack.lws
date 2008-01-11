@@ -81,7 +81,7 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
-AddNullObject front_shield
+AddNullObject shield_front
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
@@ -91,7 +91,7 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
-AddNullObject lower_shield
+AddNullObject shield_lower
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
@@ -101,7 +101,7 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
-AddNullObject flare_launcher
+AddNullObject aft_decoy_hardpoint
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
@@ -207,7 +207,7 @@ EndBehavior 1
 ParentObject 17
 ShadowOptions 7
 
-AddNullObject light_hardpoint
+AddNullObject comsec_hardpoint
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
@@ -217,17 +217,7 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
-LoadObject Objects_IW2\Ships\FastAttackShip2\RTO\FAS_Lod0_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 0 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-ShadowOptions 7
-
-AddNullObject right_pbc_prefitted
+AddNullObject right_pylon_1
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
@@ -237,7 +227,7 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
-AddNullObject left_pbc_prefitted
+AddNullObject left_pylon_1
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
@@ -247,7 +237,7 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
-AddNullObject left_missile_prefitted
+AddNullObject left_pylon_2
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
@@ -257,7 +247,7 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
-AddNullObject right_missile_prefitted
+AddNullObject right_pylon_2
 ShowObject 4 7
 ObjectMotion (unnamed)
   9
@@ -268,16 +258,7 @@ EndBehavior 1
 LockedChannels 3
 ShadowOptions 7
 
-LoadObject Objects_IW2\Ships\CommandSection\RTO\_RT_CommandSection(Centred)_T.lwo
-ShowObject 4 7
-ObjectMotion (unnamed)
-  9
-  1
-  0 0 35.2 0 0 0 1 1 1
-  0 0 0 0 0
-EndBehavior 1
-LockedChannels 3
-ShadowOptions 7
+
 
 AddNullObject drive
 ShowObject 8 7
@@ -299,12 +280,52 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
-AddNullObject sensors
+AddNullObject heatsink
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -3.7 -5.599999 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject autorepair
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -3.7 5.599999 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject active_sensors
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
   0 4.1 9.400002 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject cpu
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 2.1 5.400002 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject passive_sensors
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 4.1 7.400002 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ShadowOptions 7

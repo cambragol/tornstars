@@ -177,7 +177,35 @@ ShowLight 1 7
 LightMotion (unnamed)
   9
   1
-  0 0 10.5 45 35 0 1 1 1
+  0 3 13.5 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 13
+LightColor 252 180 16
+LgtIntensity 0.000000
+LightType 1
+LightFalloff 1
+LightRange 300.000000
+LensFlare 1
+FlareIntensity 1.000000
+FlareNominalDistance 4.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 11
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName FlashFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 -3 13.5 45 35 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ParentObject 13
