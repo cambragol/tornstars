@@ -227,7 +227,7 @@ init_system(string system_name)
         end_lpoint = INIFile.NumberedString(system_file,"starting_stations","end_lpoint",count,"Invalid");
         end_system = INIFile.NumberedString(system_file,"starting_stations","end_system",count,"Invalid");
         difficulty = INIFile.NumberedInt(system_file,"starting_stations","difficulty",count,0);
-        cost = INIFile.NumberedInt(system_file,"starting_stations","percent_cost",count,1000);
+        cost = INIFile.NumberedInt(system_file,"starting_stations","percent_cost",count,100);
 
         lpoint = iLagrangePoint.Cast(iSim.FindByNameInSystem(start_lpoint, system_name));
 
@@ -856,15 +856,15 @@ int sensor_rating(hship ship)
 
         name = Object.StringProperty(subsim,"name");
 
-        if (name == "Cargo_LongRangePassiveSensors") {
+        if (name == "Cargo_LongRangeActiveSensors") {
             return 5;
         } else if (name == "Cargo_MilitaryGradeActiveSensors") {
             return 4;
         } else if (name == "Cargo_AdvancedActiveSensors") {
             return 3;
-        } else if (name == "Cargo_ShortActiveSensors") {
-            return 2;
         } else if (name == "Cargo_ActiveSensorPackage") {
+            return 2;
+        } else if (name == "Cargo_ShortRangeActiveSensors") {
             return 1;
         } else if (name == "system_sensors") {
             return 1;
@@ -1014,12 +1014,13 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty, fl
     fuel = tsShip.Fuel(player);
     jump_cost = tsShip.FuelPerJump(player) * route_cost;
 
-    if (jump_cost < fuel) {
+    debug {
+        tsDebug.PrintString("tsjump_debug", String.FormatInt("Player fuel %d\n", float2int(fuel)));
+        tsDebug.PrintString("tsjump_debug", String.FormatInt("route cost %d\n", float2int(route_cost)));
+        tsDebug.PrintString("tsjump_debug", String.FormatInt("Player jump cost %d\n", float2int(jump_cost)));
+    }
 
-        debug {
-            tsDebug.PrintString("tsjump_debug", String.FormatInt("Player fuel %d\n", float2int(fuel)));
-            tsDebug.PrintString("tsjump_debug", String.FormatInt("Player jump cost %d\n", float2int(jump_cost)));
-        }
+    if (jump_cost < fuel) {
 
         atomic{
             fuel = tsShip.Fuel(player);
