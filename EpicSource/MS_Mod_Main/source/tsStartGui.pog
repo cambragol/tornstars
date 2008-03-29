@@ -495,6 +495,9 @@ adjust_player_standing(string entry_key, hinifile start_file)
       target = tsFaction.EFind(adjust_name);
       adjust_level = tsFaction.String2Level(adjust_string);
 
+      // set these so the daily reputation decay decays to the right values
+      Object.AddStringProperty(target, "jgw_sf_level", adjust_string);
+
       // Change the feeling
       iFaction.SetFeeling(player_faction, target, adjust_level);
       iFaction.SetFeeling(target, player_faction, adjust_level);
@@ -505,6 +508,7 @@ adjust_player_standing(string entry_key, hinifile start_file)
       }
 
       debug {
+         Debug.PrintString("tsStartGui.adjust_player_standing: ");
          Debug.PrintHandle(player_faction);
          Debug.PrintString(" to ");
          Debug.PrintHandle(target);

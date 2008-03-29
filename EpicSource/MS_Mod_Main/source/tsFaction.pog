@@ -64,6 +64,8 @@ provides Init,
          EmptyFaction,
 
          CopyFeelings,
+
+         Reset,
    
          String2Type,
          String2Level,
@@ -248,7 +250,7 @@ SessionStart()
  
 SaveGame()
 {
-   debug Debug.PrintString("tsFaction.Save\n");
+   debug Debug.PrintString("tsFaction.SaveGame\n");
 
    save_properties();
 
@@ -613,12 +615,72 @@ CopyFeelings(hfaction source, hfaction new_faction)
 
 }
 
+/*
+ * reset our standings to what they where at the start.
+ */
+Reset()
+{
+   set factions;
+   hfaction faction;
+   hfaction player = iFaction.Find("Player");
+
+   float default_level;
+
+   factions = Set.FromList(iFaction.All());
+
+   while (!Set.IsEmpty(factions)) {
+      faction = iFaction.Cast(Set.FirstElement(factions));
+      Set.Remove(factions, faction);
+
+        if (faction == player)
+        {
+            debug Debug.PrintString("tsFaction.Reset: skipping player faction\n");
+            continue;
+        }
+
+        if (Object.PropertyExists(faction, "jgw_sf_level"))
+        {
+         debug {
+            Debug.PrintString("found starting faction: ");
+            Debug.PrintString(EName(faction));
+            Debug.PrintString(" : ");
+            Debug.PrintString(Object.StringProperty(faction, "jgw_sf_level"));
+            Debug.PrintString("\n");
+         }
+         default_level = String2Level(Object.StringProperty(faction, "jgw_sf_level"));
+      } else {
+         default_level = DefaultFeeling(faction);
+      }
+
+      if (iFaction.Feeling(faction, player) != default_level)
+      {
+         debug {
+            Debug.PrintString("tsFaction.Reset: resetting "); 
+            Debug.PrintString(EName(faction));
+            Debug.PrintString(" from ");
+            Debug.PrintString(String.FromFloat(iFaction.Feeling(faction, player)));
+            Debug.PrintString(" to ");
+            Debug.PrintString(String.FromFloat(default_level));
+            Debug.PrintString("\n");
+         }
+         iFaction.SetFeeling(faction, player, default_level);
+         iFaction.SetFeeling(player, faction, default_level);         
+      } else {
+         debug {
+            Debug.PrintString("tsFaction.Reset: skipping "); 
+            Debug.PrintString(EName(faction));
+            Debug.PrintString("\n");
+         }        
+      }
+      
+   }   
+}
 
 save_properties()
 {
    int total, i;
    list faction_list;
-   string start_string, feeling_string;
+   string start_string, feeling_string, jgw_sf_start_string;
    hfaction faction, player_faction;
 
    player_faction = iFaction.Find("Player");
@@ -630,6 +692,7 @@ save_properties()
       for (i=0;i<total;++i) {
          faction = iFaction.Cast(List.GetNth(faction_list, i));
          start_string = String.FormatInt("gt_ef%d",iFaction.Allegiance(faction));
+         jgw_sf_start_string = String.FormatInt("jgw_sf%d", iFaction.Allegiance(faction));
 
          Global.CreateInt(String.Join(start_string,"type"),GA_Write, 
                           Type(faction));
@@ -659,6 +722,15 @@ save_properties()
          Global.CreateFloat(String.Join(start_string,"default"),GA_Write, 
                             DefaultFeeling(faction));
 
+         if (Object.PropertyExists(faction, "jgw_sf_level"))
+         {
+            debug Debug.PrintString("tsFaction.save_properties: saveing start faction: ");
+            debug Debug.PrintString(iFaction.Name(faction));
+            debug Debug.PrintString("\n");
+            Global.CreateString(String.Join(jgw_sf_start_string, "sf_level"), GA_Write, 
+                            Object.StringProperty(faction, "jgw_sf_level"));
+         }
+
 
 //      debug Debug.PrintString(iFaction.Name(faction));
 //      debug Debug.PrintString(" faction\n");
@@ -674,12 +746,14 @@ restore_properties(bool read_file)
 {
    int total, i;
    list faction_list;
-   string start_string;
+   string start_string, jgw_sf_start_string;
    hfaction faction, player_faction;
 
 
 
    if (read_file) {
+
+      debug Debug.PrintString("tsFaction.restore_properties: calling read_faction with the faction_info ini\n");
 
       read_factions("ini:/faction_info");
 
@@ -694,6 +768,7 @@ restore_properties(bool read_file)
       for (i=0;i<total;++i) {
          faction = iFaction.Cast(List.GetNth(faction_list, i));
          start_string = String.FormatInt("gt_ef%d",iFaction.Allegiance(faction));
+         jgw_sf_start_string = String.FormatInt("jgw_sf%d", iFaction.Allegiance(faction));
 
          // Need to save, the faction name, for later lookup.
          SetType(faction, Global.Int(String.Join(start_string,"type")));
@@ -708,6 +783,14 @@ restore_properties(bool read_file)
 
          SetDefaultFeeling(faction, Global.Float(String.Join(start_string,"default")));
 
+         if (Global.Exists(String.Join(jgw_sf_start_string, "sf_level")))
+         {
+            Object.AddStringProperty(faction, "jgw_sf_level", 
+               Global.String(String.Join(jgw_sf_start_string, "sf_level"))
+               );
+            
+            Global.Destroy(String.Join(jgw_sf_start_string, "sf_level"));
+         }
          
          Global.Destroy(String.Join(start_string,"type"));
          Global.Destroy(String.Join(start_string,"known"));

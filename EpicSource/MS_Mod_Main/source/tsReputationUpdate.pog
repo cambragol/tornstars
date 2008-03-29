@@ -81,14 +81,35 @@ Update()
       faction = iFaction.Cast(Set.FirstElement(factions));
       Set.Remove(factions, faction);
 
-      current_action = tsFaction.CurrentAction(faction);
+      if (faction == player)
+      {
+         debug Debug.PrintString("tsReputationUpdate: skipping player faction\n");
+         continue;
+      }
 
+      /*
+       * We don't want to decay the players rep with their start factions
+       * we do want to adjust it on the basis of the players actions
+       * if we just kept it fixed it would be too easy to pirate
+       * your starting friends.
+       */
+      current_action = tsFaction.CurrentAction(faction);
 
       level_change = current_action * events_to_level;
 
       level_change = level_change + iFaction.Feeling(faction, player);
       
-      default_level = tsFaction.DefaultFeeling(faction);
+      if (Object.PropertyExists(faction, "jgw_sf_level"))
+      {
+         debug {
+            Debug.PrintString("tsReputationUpdate.Update: start faction: "); 
+            Debug.PrintString(tsFaction.EName(faction));
+            Debug.PrintString("\n");
+         }
+         default_level = tsFaction.String2Level(Object.StringProperty(faction, "jgw_sf_level"));
+      } else {
+         default_level = tsFaction.DefaultFeeling(faction);       
+      }
 
       // Time moves the faction level slowly toward default.
       if (level_change > default_level) {
@@ -110,10 +131,34 @@ Update()
          level_change = -1.0;
       }
 
-      // Set the feelings to a new level
-      iFaction.SetFeeling(faction, player, level_change);
-      iFaction.SetFeeling(player, faction, level_change);
+      if (iFaction.Feeling(faction, player) != level_change)
+      {
+         debug {
+            Debug.PrintString("tsReputationUpdate.Update: updating for faction: "); 
+            Debug.PrintString(tsFaction.EName(faction));
 
+            Debug.PrintString(String.FormatStrStr(
+               " curr: %s %s ", 
+               tsFaction.Feeling2String(iFaction.Feeling(faction, player)), 
+               String.FromFloat(iFaction.Feeling(faction, player))
+            ));
+            Debug.PrintString(String.FormatStrStr(
+               "now: %s %s\n", 
+               tsFaction.Feeling2String(level_change), 
+               String.FromFloat(level_change)
+            ));
+         }
+         // Set the feelings to a new level
+         iFaction.SetFeeling(faction, player, level_change);
+         iFaction.SetFeeling(player, faction, level_change);
+		} else {
+         debug {
+            Debug.PrintString("tsReputationUpdate.Update: faction ");
+            Debug.PrintString(tsFaction.EName(faction));
+            Debug.PrintString(" : no change\n");
+         }
+      }
+		
       // The current action is accounted for, clear it.
       tsFaction.SetCurrentAction(faction, 0);
 
