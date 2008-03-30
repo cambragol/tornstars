@@ -1,0 +1,15 @@
+Center,hd3479_center,0,0,0,1,0,0,0,0,,,end,
+
+;Star, name, parent, distance, rotation, elevation, magnitude, end,
+Star,HD3479,hd3479_center,0,0,0,8,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (giant),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,GasA Solius,HD3479,3000000000.000000,0.000000,0,1,0,0,0,43383892.330699,4,2,4,0,200,200,200,149,138,114,127,116,96,0,5,255,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,MoonA Fito,GasA Solius,400000000.000000,0.000000,0,1,0,0,0,11090609.454634,3,1,10,14,139,131,104,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Fito Asteroid Cluster Alpha,MoonA Fito,44362437.818537,0.000000,0,1,0,0,55,53,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Fito Asteroid Cluster Beta,MoonA Fito,44362437.818537,127.000000,0,1,0,0,47,6,0,0,end,
+Lpoint,Solius Lpoint,HD3479,GasA Solius,0.500000,0,end,
+Lpoint,Fito Lpoint,GasA Solius,MoonA Fito,0.500000,0,end,
