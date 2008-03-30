@@ -51,31 +51,31 @@ Init()
    Input.BindKey( "tsCrewSpeak.AutopilotFormate", "icPlayerPilot.AutopilotFormate" );
 
    Input.BindKey( "tsCrewSpeak.AutopilotDock", "icPlayerPilot.AutopilotDock" );
-
+   
 }
 
 AutopilotHalt()
 {
-   // crew_halting, "Acknowledged  Halting ship"
-   iComms.Shout(none,"name_az",tsString.CommsStringRandom( "crew_halting","",5));
+   // crew_halting, "Copy That Sir.  All Engines Stopped"
+   iComms.Shout(none,"name_az",tsString.CommsStringRandom( "crew_halting_","",4));
 }
 
 AutopilotApproach()
 {
-   // crew_approach, "Aye Sir. Setting course for target"
-   iComms.Shout(none,"name_az",tsString.CommsStringRandom( "crew_approach","",5));
+   // crew_approach, "Aye Aye Sir. On Approach to target"
+   iComms.Shout(none,"name_az",tsString.CommsStringRandom( "crew_approach_","",4));
 }
 
 AutopilotFormate()
 {
    // crew_formate, "Formation maneuver initiated"
-   iComms.Shout(none,"name_az", tsString.CommsStringRandom("crew_formate","",5));
+   iComms.Shout(none,"name_az", tsString.CommsStringRandom("crew_formate_","",4));
 }
 
 AutopilotDock()
 {
    // crew_dock, "Aligning with dockport now, Sir"
-   iComms.Shout(none,"name_az", tsString.CommsStringRandom("crew_dock","",5));
+   iComms.Shout(none,"name_az", tsString.CommsStringRandom("crew_dock_","",4));
 }
 
 
