@@ -227,7 +227,7 @@ init_system(string system_name)
         end_lpoint = INIFile.NumberedString(system_file,"starting_stations","end_lpoint",count,"Invalid");
         end_system = INIFile.NumberedString(system_file,"starting_stations","end_system",count,"Invalid");
         difficulty = INIFile.NumberedInt(system_file,"starting_stations","difficulty",count,0);
-        cost = INIFile.NumberedInt(system_file,"starting_stations","percent_cost",count,100);
+        cost = INIFile.NumberedInt(system_file,"starting_stations","percent_cost",count,10);
 
         lpoint = iLagrangePoint.Cast(iSim.FindByNameInSystem(start_lpoint, system_name));
 
@@ -376,7 +376,7 @@ task jump_watch()
                 route_cost = Object.IntProperty(jump_point,"tsCapsuleJumpCost");
 
 
-                success = jump_player_fleet(jump_point, target_lpoint, difficulty, int2float(route_cost)/100.0);
+                success = jump_player_fleet(jump_point, target_lpoint, difficulty, int2float(route_cost));
 
                 if (true == success) {
                    set_known(Sim.Name(jump_point), Sim.Name(Sim.Cast(target_lpoint)));
@@ -988,7 +988,7 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty, fl
         wingman = iShip.Cast(List.GetNth(player_fleet,i));
 
         fuel = tsShip.Fuel(wingman);
-        jump_cost = tsShip.FuelPerJump(wingman) * route_cost;
+        jump_cost = tsShip.FuelPerJump(wingman) + route_cost;
 
         if (jump_cost > fuel) {
            // ejump_low_fuel, "We don't have enough fuel to jump Sir"
@@ -1012,7 +1012,7 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty, fl
 
     // The player is now clear to jump.
     fuel = tsShip.Fuel(player);
-    jump_cost = tsShip.FuelPerJump(player) * route_cost;
+    jump_cost = tsShip.FuelPerJump(player) + route_cost;
 
     debug {
         tsDebug.PrintString("tsjump_debug", String.FormatInt("Player fuel %d\n", float2int(fuel)));
