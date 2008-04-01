@@ -55,6 +55,8 @@ Init()
 
    Input.BindKey( "tsCrewSpeak.AutopilotDock", "icPlayerPilot.AutopilotDock" );
    
+   Input.BindKey( "tsCrewSpeak.AutopilotMatchVelocity", "icPlayerPilot.AutopilotMatchVelocity" );
+   
    Text.Add("csv:/TEXT/crew_text");
       
 }
@@ -80,7 +82,10 @@ AutopilotDock()
    iComms.Shout(none,"name_az", tsString.CommsStringRandom("crew_dock","",4));
 }
 
-
+AutopilotMatchVelocity()
+{
+   iComms.Shout(none,"name_az", tsString.CommsStringRandom("crew_pursuit","",4));
+}
 
 /*  
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
