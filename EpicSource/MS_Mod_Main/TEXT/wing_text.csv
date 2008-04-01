@@ -190,35 +190,6 @@ ejump_low_fuel, "We don't have enough fuel to jump"
 
 ejump_wingman_jumping, "Negative, our wingmen are still jumping"
 
-; Player crew pilot responding to commands.
-
-crew_halting_1, "Acknowledged Sir, Halting ship"
-crew_halting_2, "Yes Sir, All Engines Stop"
-crew_halting_3, "Full Stop, Aye Sir"
-crew_halting_4, "Ship's Speed decreasing now"
-
-crew_approach_1, "Aye Sir. Setting course for target"
-crew_approach_2, "Taking Bearing to target, Sir"
-crew_approach_3, "On Approach Sir"
-crew_approach_4, "Sir, we are on Approach Course"
-
-crew_formate_1, "Formation maneuver initiated"
-crew_formate_2, "All Units, Order to Close Formation"
-crew_formate_3, "Wingmen, Take Formation Alpha 0-6"
-crew_formate_4, "Forming Now. Sir"
-
-crew_dock_1, "Aligning with dockport now, Sir"
-crew_dock_2, "Copy that, Beginning Docking Procedure, Sir"
-crew_dock_3, "Sir, Docking Protocol Launched"
-crew_dock_4, "Sir, Docking Manoeuver Initiated, waiting to complete"
-
-crew_wingman_lost_1, "We lost a wingman! "
-crew_wingman_lost_2, "She's Down! I repeat! She's Down!!"
-crew_wingman_lost_3, "Wingman has Bought the Farm Sir !"
-crew_wingman_lost_4, "All Comms interrupted, Sir"
-crew_wingman_lost_5, "Sir, Sensors returns nothing"
-
-
 ; Wingman order groups responding
 
 OrderGroupZeroAck,"Group Zero Here"
