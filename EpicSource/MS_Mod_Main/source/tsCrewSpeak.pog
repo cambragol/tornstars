@@ -56,9 +56,7 @@ Init()
    Input.BindKey( "tsCrewSpeak.AutopilotDock", "icPlayerPilot.AutopilotDock" );
    
    Text.Add("csv:/TEXT/crew_text");
-   
-   }
-   
+      
 }
 
 AutopilotHalt()
