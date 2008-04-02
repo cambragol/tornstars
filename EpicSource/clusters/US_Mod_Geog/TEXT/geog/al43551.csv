@@ -1,14 +1,26 @@
-al43551_center,"al43551"
-al43551,"al43551"
-GasA Ilfah,"GasA Ilfah"
-MoonA Zakee,"MoonA Zakee"
-Zakee Asteroid Cluster,"Zakee Asteroid Cluster"
-MoonB Zafeer,"MoonB Zafeer"
-Zafeer Asteroid Cluster,"Zafeer Asteroid Cluster"
-MoonC Rafee,"MoonC Rafee"
-MoonD Shaneem,"MoonD Shaneem"
-Shaneem Asteroid Cluster Alpha,"Shaneem Asteroid Cluster Alpha"
-Shaneem Asteroid Cluster Beta,"Shaneem Asteroid Cluster Beta"
-MoonB Zafeer Lpoint,"MoonB Zafeer Lpoint"
-MoonC Rafee Lpoint,"MoonC Rafee Lpoint"
-MoonD Shaneem Lpoint,"MoonD Shaneem Lpoint"
+Center,al43551_center,0,0,0,1,0,0,0,0,,,end,
+
+;Star, name, parent, distance, rotation, elevation, magnitude, end,
+Star,al43551,al43551_center,0,0,0,8,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (giant),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,GasA Ilfah,al43551,3000000000.000000,0.000000,0,1,0,0,0,36404614.398633,4,2,6,0,200,200,200,149,138,114,127,116,96,0,5,255,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,MoonA Zakee,GasA Ilfah,400000000.000000,0.000000,0,1,0,0,0,10232139.042329,3,1,1,19,135,102,104,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Zakee Asteroid Cluster,MoonA Zakee,40928556.169317,0.000000,0,1,0,0,48,7,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,MoonB Zafeer,GasA Ilfah,480000000.000000,150.000000,0,1,0,0,0,10809831.537828,3,1,12,16,124,137,138,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Zafeer Asteroid Cluster,MoonB Zafeer,43239326.151311,0.000000,0,1,0,0,48,7,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,MoonC Rafee,GasA Ilfah,576000000.000000,300.000000,0,1,0,0,0,1866534.928434,3,1,9,18,121,111,140,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,MoonD Shaneem,GasA Ilfah,691200000.000000,90.000000,0,1,0,0,0,1398213.141270,3,1,7,20,141,142,113,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Shaneem Asteroid Cluster Alpha,MoonD Shaneem,5592852.565081,0.000000,0,1,0,0,49,8,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Shaneem Asteroid Cluster Beta,MoonD Shaneem,5592852.565081,127.000000,0,1,0,0,51,4,0,0,end,
+Lpoint,MoonB Zafeer Lpoint,GasA Ilfah,MoonB Zafeer,0.500000,0,end,
+Lpoint,MoonC Rafee Lpoint,GasA Ilfah,MoonC Rafee,0.500000,0,end,
+Lpoint,MoonD Shaneem Lpoint,GasA Ilfah,MoonD Shaneem,0.500000,0,end,

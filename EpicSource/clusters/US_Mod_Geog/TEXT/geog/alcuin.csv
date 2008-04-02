@@ -1,47 +1,95 @@
-alcuin_center,"alcuin"
-Alcuin Alpha,"Alcuin Alpha"
-Danforth,"Danforth"
-Stohl,"Stohl"
-Stohl Common Metals Mine,"Stohl Common Metals Mine"
-Imperial Mining Security,"Imperial Mining Security"
-Miehl,"Miehl"
-Wyvern Watch,"Wyvern Watch"
-McKeown Belt,"McKeown Belt"
-Common Metals Mine One,"Common Metals Mine One"
-Common Metals Mine Two,"Common Metals Mine Two"
-Rare Metals Mine,"Rare Metals Mine"
-Toffelmeyer,"Toffelmeyer"
-Dietrich,"Dietrich"
-Dietrich Asteroid Base,"Dietrich Asteroid Base"
-EtCom HQ Station,"EtCom HQ Station"
-EtCom Security Forces,"EtCom Security Forces"
-Vaden,"Vaden"
-Alcuin STC,"Alcuin STC"
-Alcuin Governor,"Alcuin Governor"
-Wachhaus,"Wachhaus"
-Toffelmeyer Entertainment,"Toffelmeyer Entertainment"
-Common Metals Processing,"Common Metals Processing"
-Siess,"Siess"
-Siess Rare Metals Mine,"Siess Rare Metals Mine"
-Reinl,"Reinl"
-Geisebrecht,"Geisebrecht"
-Hoel,"Hoel"
-Geisinger,"Geisinger"
-Geisebrecht Manufacturing,"Geisebrecht Manufacturing"
-Infineon Manufacturing,"Infineon Manufacturing"
-Geisebrecht Casino,"Geisebrecht Casino"
-Schalk,"Schalk"
-Schalk Hideout,"Schalk Hideout"
-Brandt,"Brandt"
-Azran Corporate HQ,"Azran Corporate HQ"
-Azran Consumer Production,"Azran Consumer Production"
-Azran Shipbuilding,"Azran Shipbuilding"
-Azran Security,"Azran Security"
-Inner Kuniper Belt,"Inner Kuniper Belt"
-Last Stop Cove,"Last Stop Cove"
-Doran Exotic Metals Mine,"Doran Exotic Metals Mine"
-Reinberg Asteroid Base,"Reinberg Asteroid Base"
-Kuniper Exotics Mine,"Kuniper Exotics Mine"
-Golligers Stopover,"Golligers Stopover"
-Hoel Lpoint,"Hoel Lpoint"
-Vaden Lpoint,"Vaden Lpoint"
+Center,alcuin_center,0,0,0,1,0,0,0,0,,,end,
+
+;Star, name, parent, distance, rotation, elevation, magnitude, end,
+Star,Alcuin Alpha,alcuin_center,0,0,0,5,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Danforth,Alcuin Alpha,3000000000.000000,0.000000,0,1,0,0,0,7559526.352733,2,1,5,4,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Stohl,Danforth,400000000.000000,0.000000,0,1,0,0,0,1657186.998287,3,1,9,21,145,113,138,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Stohl Common Metals Mine,Stohl,6628747.993149,0.000000,0,1,0,0,47,6,31,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Imperial Mining Security,Stohl,6628747.993149,127.000000,0,1,0,0,15,54,31,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Miehl,Danforth,480000000.000000,150.000000,0,1,0,0,0,2105638.309155,3,1,13,21,132,102,113,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Wyvern Watch,Miehl,8422553.236621,0.000000,0,1,0,0,15,60,52,4,end,
+;Belt, name, parent, distance, rotation, elevation, field size, end,
+Belt,McKeown Belt,Alcuin Alpha,4500000000.000000,140.000000,0,40000000.000000,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Common Metals Mine One,McKeown Belt,18000000.000000,140.000000,0,1,0,0,47,6,27,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Common Metals Mine Two,McKeown Belt,18000000.000000,267.000000,0,1,0,0,47,6,27,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Rare Metals Mine,McKeown Belt,18000000.000000,34.000000,0,1,0,0,48,7,27,4,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Toffelmeyer,Alcuin Alpha,6750000000.000000,280.000000,0,1,0,0,0,3309152.500992,2,1,11,3,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Dietrich,Toffelmeyer,400000000.000000,280.000000,0,1,0,0,0,653150.719807,3,1,4,21,140,112,116,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Dietrich Asteroid Base,Dietrich,2612602.879228,0.000000,0,1,0,0,58,7,37,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,EtCom HQ Station,Dietrich,2612602.879228,127.000000,0,1,0,0,9,47,37,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,EtCom Security Forces,Dietrich,2612602.879228,254.000000,0,1,0,0,15,54,37,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Vaden,Toffelmeyer,480000000.000000,70.000000,0,1,0,0,0,572820.634861,3,1,13,15,146,140,105,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Alcuin STC,Vaden,2291282.539443,0.000000,0,1,0,0,15,68,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Alcuin Governor,Vaden,2291282.539443,127.000000,0,1,0,0,9,95,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Wachhaus,Toffelmeyer,576000000.000000,220.000000,0,1,0,0,0,1060802.324843,3,1,3,17,109,139,144,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Toffelmeyer Entertainment,Wachhaus,4243209.299372,0.000000,0,1,0,0,11,66,13,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Common Metals Processing,Wachhaus,4243209.299372,127.000000,0,1,0,0,1,15,37,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Siess,Toffelmeyer,691200000.000000,10.000000,0,1,0,0,0,684356.857395,3,1,0,20,135,127,127,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Siess Rare Metals Mine,Siess,2737427.429582,0.000000,0,1,0,0,48,7,7,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Reinl,Toffelmeyer,829440000.000000,160.000000,0,1,0,0,0,767730.398068,3,1,1,14,138,101,116,15,15,15,127,44,34,255,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Geisebrecht,Alcuin Alpha,10125000000.000000,60.000000,0,1,0,0,0,3466628.009888,2,1,2,7,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Hoel,Geisebrecht,400000000.000000,60.000000,0,1,0,0,0,735369.205634,3,1,10,18,128,146,133,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Geisinger,Geisebrecht,480000000.000000,210.000000,0,1,0,0,0,1302855.529252,3,1,8,14,114,100,138,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Geisebrecht Manufacturing,Geisinger,5211422.117006,0.000000,0,1,0,0,5,22,15,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Infineon Manufacturing,Geisinger,5211422.117006,127.000000,0,1,0,0,5,33,15,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Geisebrecht Casino,Geisinger,5211422.117006,254.000000,0,1,0,0,11,106,4,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Schalk,Geisebrecht,576000000.000000,0.000000,0,1,0,0,0,1729511.448213,3,1,8,16,123,106,125,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Schalk Hideout,Schalk,6918045.792851,0.000000,0,1,0,0,26,111,42,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Brandt,Geisebrecht,691200000.000000,150.000000,0,1,0,0,0,527722.446984,3,1,7,17,125,133,136,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Azran Corporate HQ,Brandt,2110889.787937,0.000000,0,1,0,0,9,47,15,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Azran Consumer Production,Brandt,2110889.787937,127.000000,0,1,0,0,5,29,15,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Azran Shipbuilding,Brandt,2110889.787937,254.000000,0,1,0,0,7,21,15,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Azran Security,Brandt,2110889.787937,21.000000,0,1,0,0,15,54,15,4,end,
+;Belt, name, parent, distance, rotation, elevation, field size, end,
+Belt,Inner Kuniper Belt,Alcuin Alpha,15187500000.000000,200.000000,0,40000000.000000,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Last Stop Cove,Inner Kuniper Belt,18000000.000000,200.000000,0,1,0,0,39,102,4,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Doran Exotic Metals Mine,Inner Kuniper Belt,18000000.000000,327.000000,0,1,0,0,59,8,2,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Reinberg Asteroid Base,Inner Kuniper Belt,18000000.000000,94.000000,0,1,0,0,49,8,7,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Kuniper Exotics Mine,Inner Kuniper Belt,18000000.000000,221.000000,0,1,0,0,49,8,13,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Golligers Stopover,Inner Kuniper Belt,18000000.000000,348.000000,0,1,0,0,15,60,9,4,end,
+Lpoint,Hoel Lpoint,Geisebrecht,Hoel,0.500000,0,end,
+Lpoint,Vaden Lpoint,Toffelmeyer,Vaden,0.500000,0,end,

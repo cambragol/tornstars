@@ -1,38 +1,76 @@
-nureddin_center,"nureddin"
-Nureddin,"Nureddin"
-Cordoba,"Cordoba"
-Barakka,"Barakka"
-Barakka Asteroid Cluster,"Barakka Asteroid Cluster"
-El Cid,"El Cid"
-Drexen,"Drexen"
-Drexen Asteroid Cluster,"Drexen Asteroid Cluster"
-Olaf,"Olaf"
-New Istanbul,"New Istanbul"
-Nureddin STC Station,"Nureddin STC Station"
-Yehzid Food Processing,"Yehzid Food Processing"
-New Istanbul Asteroid Cluster,"New Istanbul Asteroid Cluster"
-Grinnel Shipping Station,"Grinnel Shipping Station"
-Jiddah,"Jiddah"
-Nureddin System Defense Station,"Nureddin System Defense Station"
-Nureddin Centeral Government,"Nureddin Centeral Government"
-Clovis,"Clovis"
-Clovis Nano Fibre Production,"Clovis Nano Fibre Production"
-Clovis Fuel Processing Facility,"Clovis Fuel Processing Facility"
-Clovis Asteroid Cluster,"Clovis Asteroid Cluster"
-Ghiddrah,"Ghiddrah"
-Mesa Corporation HQ Station,"Mesa Corporation HQ Station"
-Mesa Advanced Materials,"Mesa Advanced Materials"
-Mesa Orbital Systems Production,"Mesa Orbital Systems Production"
-Vellus,"Vellus"
-Tallus,"Tallus"
-Autharia,"Autharia"
-Nureddin Naval Shipyard,"Nureddin Naval Shipyard"
-Security Station,"Security Station"
-Thrasamund,"Thrasamund"
-Fatteeh Asteroids Belt,"Fatteeh Asteroids Belt"
-Rileefah Asteroid Zone,"Rileefah Asteroid Zone"
-The Basket,"The Basket"
-Natf Asteroid Zone,"Natf Asteroid Zone"
-Sareen Asteroid Zone,"Sareen Asteroid Zone"
-Drexen Lpoint,"Drexen Lpoint"
-Thrasamund Lpoint,"Thrasamund Lpoint"
+Center,nureddin_center,0,0,0,1,0,0,0,0,,,end,
+
+;Star, name, parent, distance, rotation, elevation, magnitude, end,
+Star,Nureddin,nureddin_center,0,0,0,5,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (giant),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Cordoba,Nureddin,3000000000.000000,0.000000,0,1,0,0,0,83877376.628925,4,2,4,0,200,200,200,149,138,114,127,116,96,0,5,255,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Barakka,Cordoba,400000000.000000,0.000000,0,1,0,0,0,5421979.430525,3,1,1,16,141,121,108,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Barakka Asteroid Cluster,Barakka,21687917.722098,0.000000,0,1,0,0,15,55,50,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,El Cid,Cordoba,480000000.000000,150.000000,0,1,0,0,0,260040.589618,3,1,9,20,103,104,119,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Drexen,Cordoba,576000000.000000,300.000000,0,1,0,0,0,8285699.026460,3,1,11,15,107,102,117,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Drexen Asteroid Cluster,Drexen,33142796.105838,0.000000,0,1,0,0,47,6,33,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Olaf,Cordoba,691200000.000000,90.000000,0,1,0,0,0,468024.231697,3,1,13,19,102,145,131,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,New Istanbul,Cordoba,829440000.000000,240.000000,0,1,0,0,0,5322649.311808,3,1,0,15,119,132,139,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Nureddin STC Station,New Istanbul,21290597.247230,0.000000,0,1,0,0,15,68,47,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Yehzid Food Processing,New Istanbul,21290597.247230,127.000000,0,1,0,0,5,23,33,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,New Istanbul Asteroid Cluster,New Istanbul,21290597.247230,254.000000,0,1,0,0,47,6,33,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Grinnel Shipping Station,New Istanbul,21290597.247230,21.000000,0,1,0,0,15,36,23,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Jiddah,Cordoba,995328000.000000,30.000000,0,1,0,0,0,518227.179785,3,1,11,15,131,127,149,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Nureddin System Defense Station,Jiddah,2072908.719138,0.000000,0,1,0,0,7,71,47,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Nureddin Centeral Government,Jiddah,2072908.719138,127.000000,0,1,0,0,9,95,47,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Clovis,Cordoba,1194393600.000000,180.000000,0,1,0,0,0,5695226.905118,3,1,3,16,139,117,124,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Clovis Nano Fibre Production,Clovis,22780907.620472,0.000000,0,1,0,0,1,11,33,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Clovis Fuel Processing Facility,Clovis,22780907.620472,127.000000,0,1,0,0,1,19,33,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Clovis Asteroid Cluster,Clovis,22780907.620472,254.000000,0,1,0,0,57,6,33,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Ghiddrah,Cordoba,1433272320.000000,330.000000,0,1,0,0,0,7394238.105411,3,1,1,21,137,107,122,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Mesa Corporation HQ Station,Ghiddrah,29576952.421644,0.000000,0,1,0,0,9,47,30,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Mesa Advanced Materials,Ghiddrah,29576952.421644,127.000000,0,1,0,0,1,16,30,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Mesa Orbital Systems Production,Ghiddrah,29576952.421644,254.000000,0,1,0,0,5,32,30,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Vellus,Cordoba,1719926784.000000,120.000000,0,1,0,0,0,8611659.596545,3,1,13,20,132,131,147,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Tallus,Cordoba,2063912140.800000,270.000000,0,1,0,0,0,8335901.974548,3,1,4,18,114,127,135,15,15,15,127,44,34,255,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Autharia,Nureddin,4500000000.000000,140.000000,0,1,0,0,0,2971495.712149,2,1,30,31,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Nureddin Naval Shipyard,Autharia,11885982.848598,0.000000,0,1,0,0,7,71,47,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Security Station,Autharia,11885982.848598,127.000000,0,1,0,0,15,68,47,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Thrasamund,Autharia,400000000.000000,140.000000,0,1,0,0,0,925556.240909,3,1,6,21,133,138,131,15,15,15,127,44,34,255,0,0,end,
+;Belt, name, parent, distance, rotation, elevation, field size, end,
+Belt,Fatteeh Asteroids Belt,Nureddin,6750000000.000000,280.000000,0,40000000.000000,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Rileefah Asteroid Zone,Fatteeh Asteroids Belt,18000000.000000,280.000000,0,1,0,0,60,10,33,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,The Basket,Fatteeh Asteroids Belt,18000000.000000,47.000000,0,1,0,0,39,102,38,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Natf Asteroid Zone,Fatteeh Asteroids Belt,18000000.000000,174.000000,0,1,0,0,50,10,33,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Sareen Asteroid Zone,Fatteeh Asteroids Belt,18000000.000000,301.000000,0,1,0,0,50,10,33,4,end,
+Lpoint,Drexen Lpoint,Cordoba,Drexen,0.500000,0,end,
+Lpoint,Thrasamund Lpoint,Autharia,Thrasamund,0.500000,0,end,

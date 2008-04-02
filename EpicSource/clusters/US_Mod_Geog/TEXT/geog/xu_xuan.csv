@@ -1,36 +1,73 @@
-xu_xuan_center,"xu_xuan"
-Xu Xuan Alpha,"Xu Xuan Alpha"
-The Great Wall Belt,"The Great Wall Belt"
-Asteroid Base Yin,"Asteroid Base Yin"
-Asteroid Base Jin,"Asteroid Base Jin"
-Asteroid Base Gang,"Asteroid Base Gang"
-Mining Outpost,"Mining Outpost"
-Fei Hong,"Fei Hong"
-Processing Facility,"Processing Facility"
-Nanoscience Facility,"Nanoscience Facility"
-Manufacturing Station,"Manufacturing Station"
-Manchuria,"Manchuria"
-Imperial Biosciences Complex,"Imperial Biosciences Complex"
-System Defense Outpost,"System Defense Outpost"
-Imperial Governor,"Imperial Governor"
-Holder,"Holder"
-Manchurian Belt,"Manchurian Belt"
-Yellow Flower,"Yellow Flower"
-Manchurian Mining Outpost Yi,"Manchurian Mining Outpost Yi"
-Manchurian Mining Outpost Er,"Manchurian Mining Outpost Er"
-The Dragons Cave,"The Dragons Cave"
-Jin Gzhu,"Jin Gzhu"
-Jin Gzhu Shipyard,"Jin Gzhu Shipyard"
-Tian Liang Reactor Assembly,"Tian Liang Reactor Assembly"
-Lomax Technologies Headquarters,"Lomax Technologies Headquarters"
-Lomax Station Components,"Lomax Station Components"
-Jin Systems Factory,"Jin Systems Factory"
-Jin Gzhu Belt,"Jin Gzhu Belt"
-Imperial Weapons Facility,"Imperial Weapons Facility"
-Long March Belt,"Long March Belt"
-Imperial Naval Research Facility,"Imperial Naval Research Facility"
-Naval Finishing Shipyard,"Naval Finishing Shipyard"
-Naval Component Production Plant,"Naval Component Production Plant"
-Imperial Tactical Fighter Base,"Imperial Tactical Fighter Base"
-Sensor Outpost,"Sensor Outpost"
-Holder Lpoint,"Holder Lpoint"
+Center,xu_xuan_center,0,0,0,1,0,0,0,0,,,end,
+
+;Star, name, parent, distance, rotation, elevation, magnitude, end,
+Star,Xu Xuan Alpha,xu_xuan_center,0,0,0,7,end,
+;Belt, name, parent, distance, rotation, elevation, field size, end,
+Belt,The Great Wall Belt,Xu Xuan Alpha,3000000000.000000,0.000000,0,40000000.000000,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Asteroid Base Yin,The Great Wall Belt,18000000.000000,0.000000,0,1,0,0,48,7,31,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Asteroid Base Jin,The Great Wall Belt,18000000.000000,127.000000,0,1,0,0,48,7,31,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Asteroid Base Gang,The Great Wall Belt,18000000.000000,254.000000,0,1,0,0,58,7,25,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Mining Outpost,The Great Wall Belt,18000000.000000,21.000000,0,1,0,0,47,6,31,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Fei Hong,The Great Wall Belt,400000000.000000,0.000000,0,1,0,0,0,2145565.660573,3,1,11,15,110,143,121,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Processing Facility,Fei Hong,8582262.642293,0.000000,0,1,0,0,1,15,31,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Nanoscience Facility,Fei Hong,8582262.642293,127.000000,0,1,0,0,5,25,25,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Manufacturing Station,Fei Hong,8582262.642293,254.000000,0,1,0,0,5,22,51,4,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Manchuria,Xu Xuan Alpha,4500000000.000000,140.000000,0,1,0,0,0,2645802.179022,2,1,13,10,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Imperial Biosciences Complex,Manchuria,10583208.716086,0.000000,0,1,0,0,9,42,5,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,System Defense Outpost,Manchuria,10583208.716086,127.000000,0,1,0,0,7,71,5,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Imperial Governor,Manchuria,10583208.716086,254.000000,0,1,0,0,9,95,5,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Holder,Manchuria,400000000.000000,140.000000,0,1,0,0,0,668427.168275,3,1,5,18,131,147,136,15,15,15,127,44,34,255,0,0,end,
+;Belt, name, parent, distance, rotation, elevation, field size, end,
+Belt,Manchurian Belt,Xu Xuan Alpha,6750000000.000000,280.000000,0,40000000.000000,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Yellow Flower,Manchurian Belt,18000000.000000,280.000000,0,1,0,0,16,101,34,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Manchurian Mining Outpost Yi,Manchurian Belt,18000000.000000,47.000000,0,1,0,0,57,6,25,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Manchurian Mining Outpost Er,Manchurian Belt,18000000.000000,174.000000,0,1,0,0,47,6,25,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,The Dragons Cave,Manchurian Belt,18000000.000000,301.000000,0,1,0,0,15,60,52,4,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Jin Gzhu,Xu Xuan Alpha,10125000000.000000,60.000000,0,1,0,0,0,6888363.292337,2,1,5,7,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Jin Gzhu Shipyard,Jin Gzhu,27553453.169347,0.000000,0,1,0,0,7,21,25,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Tian Liang Reactor Assembly,Jin Gzhu,27553453.169347,127.000000,0,1,0,0,5,30,51,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Lomax Technologies Headquarters,Jin Gzhu,27553453.169347,254.000000,0,1,0,0,9,47,51,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Lomax Station Components,Jin Gzhu,27553453.169347,21.000000,0,1,0,0,5,32,51,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Jin Systems Factory,Jin Gzhu,27553453.169347,148.000000,0,1,0,0,5,26,51,4,end,
+;Belt, name, parent, distance, rotation, elevation, field size, end,
+Belt,Jin Gzhu Belt,Xu Xuan Alpha,15187500000.000000,200.000000,0,40000000.000000,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Imperial Weapons Facility,Jin Gzhu Belt,18000000.000000,200.000000,0,1,0,0,5,27,25,4,end,
+;Belt, name, parent, distance, rotation, elevation, field size, end,
+Belt,Long March Belt,Xu Xuan Alpha,22781250000.000000,340.000000,0,40000000.000000,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Imperial Naval Research Facility,Long March Belt,18000000.000000,340.000000,0,1,0,0,9,42,5,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Naval Finishing Shipyard,Long March Belt,18000000.000000,107.000000,0,1,0,0,7,71,5,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Naval Component Production Plant,Long March Belt,18000000.000000,234.000000,0,1,0,0,5,22,25,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Imperial Tactical Fighter Base,Long March Belt,18000000.000000,1.000000,0,1,0,0,7,71,5,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Sensor Outpost,Long March Belt,18000000.000000,128.000000,0,1,0,0,9,88,25,4,end,
+Lpoint,Holder Lpoint,Manchuria,Holder,0.500000,0,end,

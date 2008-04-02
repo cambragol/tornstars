@@ -1,50 +1,100 @@
-kronholm_center,"kronholm"
-Kronholm Alpha,"Kronholm Alpha"
-Kogan,"Kogan"
-Lamar,"Lamar"
-Lamar Shipyard,"Lamar Shipyard"
-Vernons Leap,"Vernons Leap"
-Vernon Asteroid Cluster,"Vernon Asteroid Cluster"
-Lundquist,"Lundquist"
-Daiglish,"Daiglish"
-Kronholm STC,"Kronholm STC"
-Kronholm Waystation Station,"Kronholm Waystation Station"
-Withnail,"Withnail"
-Kronholm Station,"Kronholm Station"
-Rochester,"Rochester"
-Rochester Reactors Assembly,"Rochester Reactors Assembly"
-Rochester Weapons Facility,"Rochester Weapons Facility"
-Rochester Manufacturing,"Rochester Manufacturing"
-Lundquist Systems Factory,"Lundquist Systems Factory"
-Bartlett,"Bartlett"
-Reardon,"Reardon"
-Reardon Shipyard,"Reardon Shipyard"
-System Defense Station,"System Defense Station"
-Kronholm Government Center,"Kronholm Government Center"
-Stibbe,"Stibbe"
-Chavez Kronholm Depot,"Chavez Kronholm Depot"
-Stibbe Warehousing,"Stibbe Warehousing"
-Chavez Shipping Security,"Chavez Shipping Security"
-Angevine,"Angevine"
-Mudra,"Mudra"
-Imperial Military Garrison,"Imperial Military Garrison"
-Klepaki,"Klepaki"
-Shiumi,"Shiumi"
-Aoki,"Aoki"
-Naval Outpost,"Naval Outpost"
-Okahara,"Okahara"
-Systems Manufacturing,"Systems Manufacturing"
-Advanced Nano Facility A,"Advanced Nano Facility A"
-Advanced Nano Facility B,"Advanced Nano Facility B"
-Okahara Reactors Assembly,"Okahara Reactors Assembly"
-Energy Cells Production,"Energy Cells Production"
-Okahara Systems Factory,"Okahara Systems Factory"
-Okahara Storage Depot,"Okahara Storage Depot"
-Aoki Waystation,"Aoki Waystation"
-Okahara Heavy Industry,"Okahara Heavy Industry"
-Fukuoka,"Fukuoka"
-MelNet FTL Relay,"MelNet FTL Relay"
-Aoki Lpoint,"Aoki Lpoint"
-Angevine Lpoint,"Angevine Lpoint"
-Fukuoka Lpoint,"Fukuoka Lpoint"
-Reardon Lpoint,"Reardon Lpoint"
+Center,kronholm_center,0,0,0,1,0,0,0,0,,,end,
+
+;Star, name, parent, distance, rotation, elevation, magnitude, end,
+Star,Kronholm Alpha,kronholm_center,0,0,0,4,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Kogan,Kronholm Alpha,3000000000.000000,0.000000,0,1,0,0,0,4047212.134159,2,1,7,12,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Lamar,Kogan,400000000.000000,0.000000,0,1,0,0,0,1299863.071904,3,1,6,14,133,127,117,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Lamar Shipyard,Lamar,5199452.287616,0.000000,0,1,0,0,7,21,32,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Vernons Leap,Kogan,480000000.000000,150.000000,0,1,0,0,0,1265546.038104,3,1,10,14,100,127,137,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Vernon Asteroid Cluster,Vernons Leap,5062184.152415,0.000000,0,1,0,0,15,55,50,4,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Lundquist,Kronholm Alpha,4500000000.000000,140.000000,0,1,0,0,0,3257881.405072,2,1,11,11,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Daiglish,Lundquist,400000000.000000,140.000000,0,1,0,0,0,1248087.607717,3,1,4,18,120,105,119,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Kronholm STC,Daiglish,4992350.430866,0.000000,0,1,0,0,15,68,5,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Kronholm Waystation Station,Daiglish,4992350.430866,127.000000,0,1,0,0,15,36,25,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Withnail,Lundquist,480000000.000000,290.000000,0,1,0,0,0,383361.708009,3,1,9,15,134,133,136,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Kronholm Station,Withnail,1533446.832037,0.000000,0,1,0,0,9,47,32,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Rochester,Lundquist,576000000.000000,80.000000,0,1,0,0,0,1474831.969583,3,1,10,18,113,105,113,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Rochester Reactors Assembly,Rochester,5899327.878330,0.000000,0,1,0,0,5,30,32,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Rochester Weapons Facility,Rochester,5899327.878330,127.000000,0,1,0,0,5,27,32,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Rochester Manufacturing,Rochester,5899327.878330,254.000000,0,1,0,0,5,22,51,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Lundquist Systems Factory,Rochester,5899327.878330,21.000000,0,1,0,0,5,26,51,4,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Bartlett,Kronholm Alpha,6750000000.000000,280.000000,0,1,0,0,0,6867610.705893,2,1,13,6,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Reardon,Bartlett,400000000.000000,280.000000,0,1,0,0,0,934235.886576,3,1,11,18,117,124,149,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Reardon Shipyard,Reardon,3736943.546306,0.000000,0,1,0,0,7,21,25,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,System Defense Station,Reardon,3736943.546306,127.000000,0,1,0,0,7,71,5,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Kronholm Government Center,Reardon,3736943.546306,254.000000,0,1,0,0,9,93,5,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Stibbe,Bartlett,480000000.000000,70.000000,0,1,0,0,0,1439688.184499,3,1,13,15,131,128,107,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Chavez Kronholm Depot,Stibbe,5758752.737996,0.000000,0,1,0,0,15,36,7,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Stibbe Warehousing,Stibbe,5758752.737996,127.000000,0,1,0,0,9,62,7,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Chavez Shipping Security,Stibbe,5758752.737996,254.000000,0,1,0,0,15,54,7,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Angevine,Bartlett,576000000.000000,220.000000,0,1,0,0,0,3210617.362111,3,1,6,19,102,132,137,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Mudra,Bartlett,691200000.000000,10.000000,0,1,0,0,0,568312.519799,3,1,9,15,111,136,149,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Imperial Military Garrison,Mudra,2273250.079196,0.000000,0,1,0,0,7,71,5,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Klepaki,Bartlett,829440000.000000,160.000000,0,1,0,0,0,2650946.997629,3,1,12,18,144,143,130,15,15,15,127,44,34,255,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Shiumi,Kronholm Alpha,10125000000.000000,60.000000,0,1,0,0,0,6759208.960234,2,1,10,2,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Aoki,Shiumi,400000000.000000,60.000000,0,1,0,0,0,2616663.698624,3,1,2,17,130,135,141,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Naval Outpost,Aoki,10466654.794497,0.000000,0,1,0,0,7,71,5,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Okahara,Shiumi,480000000.000000,210.000000,0,1,0,0,0,3022966.914006,3,1,0,17,130,124,122,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Systems Manufacturing,Okahara,12091867.656025,0.000000,0,1,0,0,5,24,25,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Advanced Nano Facility A,Okahara,12091867.656025,127.000000,0,1,0,0,1,17,32,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Advanced Nano Facility B,Okahara,12091867.656025,254.000000,0,1,0,0,1,17,32,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Okahara Reactors Assembly,Okahara,12091867.656025,21.000000,0,1,0,0,5,30,32,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Energy Cells Production,Okahara,12091867.656025,148.000000,0,1,0,0,5,31,25,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Okahara Systems Factory,Okahara,12091867.656025,275.000000,0,1,0,0,5,26,37,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Okahara Storage Depot,Okahara,12091867.656025,42.000000,0,1,0,0,9,62,23,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Aoki Waystation,Okahara,12091867.656025,169.000000,0,1,0,0,15,36,23,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Okahara Heavy Industry,Okahara,12091867.656025,296.000000,0,1,0,0,5,22,28,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Fukuoka,Shiumi,576000000.000000,0.000000,0,1,0,0,0,2634142.186733,3,1,8,16,129,118,137,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,MelNet FTL Relay,Fukuoka,10536568.746933,0.000000,0,1,0,0,9,88,37,4,end,
+Lpoint,Aoki Lpoint,Shiumi,Aoki,0.500000,0,end,
+Lpoint,Angevine Lpoint,Bartlett,Angevine,0.500000,0,end,
+Lpoint,Fukuoka Lpoint,Shiumi,Fukuoka,0.500000,0,end,
+Lpoint,Reardon Lpoint,Bartlett,Reardon,0.500000,0,end,

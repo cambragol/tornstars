@@ -1,56 +1,113 @@
-al_wadi_center,"al_wadi"
-Al Wadi,"Al Wadi"
-Belt of Power,"Belt of Power"
-Jazeed Asteroid Zone,"Jazeed Asteroid Zone"
-Zeerah Asteroid Zone,"Zeerah Asteroid Zone"
-Arsidus Asteroid Zone,"Arsidus Asteroid Zone"
-Belt of Riches,"Belt of Riches"
-Thaah Asteroid Zone,"Thaah Asteroid Zone"
-Hareeb Asteroid Zone,"Hareeb Asteroid Zone"
-Nares Asteroid Zone,"Nares Asteroid Zone"
-Uvates Asteroid Zone,"Uvates Asteroid Zone"
-Itha Asteroid Zone,"Itha Asteroid Zone"
-Shabel Asteroid Zone,"Shabel Asteroid Zone"
-Kaffal Djoba,"Kaffal Djoba"
-Rumi,"Rumi"
-Belt of Great Wealth,"Belt of Great Wealth"
-Akeem Asteroid Zone,"Akeem Asteroid Zone"
-Qudeenah Asteroid Zone,"Qudeenah Asteroid Zone"
-Adonos Asteroid Zone,"Adonos Asteroid Zone"
-Daonos Asteroid Zone,"Daonos Asteroid Zone"
-Endanos Asteroid Zone,"Endanos Asteroid Zone"
-Ennaros Asteroid Zone,"Ennaros Asteroid Zone"
-Al Amaaros Asteroid Zone,"Al Amaaros Asteroid Zone"
-Khodaverdi,"Khodaverdi"
-Adjaina,"Adjaina"
-Al Paz,"Al Paz"
-Al Paz Asteroid Cluster,"Al Paz Asteroid Cluster"
-Califendi,"Califendi"
-Califendi Asteroid Cluster,"Califendi Asteroid Cluster"
-Al Galife,"Al Galife"
-Guzman,"Guzman"
-Guzman Asteroid Cluster,"Guzman Asteroid Cluster"
-Laputo,"Laputo"
-Omer Alfez,"Omer Alfez"
-Omer Asteroid Cluster,"Omer Asteroid Cluster"
-Pyette,"Pyette"
-Pyette Asteroid Cluster,"Pyette Asteroid Cluster"
-Qom,"Qom"
-Qom Asteroid Cluster,"Qom Asteroid Cluster"
-Zajowicz,"Zajowicz"
-Igreja,"Igreja"
-Maloufi,"Maloufi"
-Al Wadi STC,"Al Wadi STC"
-Al Wadi Naval Defense,"Al Wadi Naval Defense"
-Al Wadi Governor,"Al Wadi Governor"
-Maffindi,"Maffindi"
-Ogenna,"Ogenna"
-Ogenna Base,"Ogenna Base"
-Neutronium Processing Facility,"Neutronium Processing Facility"
-Common Ore Handling Station,"Common Ore Handling Station"
-Hajela,"Hajela"
-Jamirai,"Jamirai"
-Heaven,"Heaven"
-Al Paz Lpoint,"Al Paz Lpoint"
-Laputo Lpoint,"Laputo Lpoint"
-Qom Lpoint,"Qom Lpoint"
+Center,al_wadi_center,0,0,0,1,0,0,0,0,,,end,
+
+;Star, name, parent, distance, rotation, elevation, magnitude, end,
+Star,Al Wadi,al_wadi_center,0,0,0,8,end,
+;Belt, name, parent, distance, rotation, elevation, field size, end,
+Belt,Belt of Power,Al Wadi,3000000000.000000,0.000000,0,40000000.000000,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Jazeed Asteroid Zone,Belt of Power,18000000.000000,0.000000,0,1,0,0,55,53,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Zeerah Asteroid Zone,Belt of Power,18000000.000000,127.000000,0,1,0,0,55,53,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Arsidus Asteroid Zone,Belt of Power,18000000.000000,254.000000,0,1,0,0,55,53,29,4,end,
+;Belt, name, parent, distance, rotation, elevation, field size, end,
+Belt,Belt of Riches,Al Wadi,4500000000.000000,140.000000,0,40000000.000000,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Thaah Asteroid Zone,Belt of Riches,18000000.000000,140.000000,0,1,0,0,65,53,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Hareeb Asteroid Zone,Belt of Riches,18000000.000000,267.000000,0,1,0,0,55,53,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Nares Asteroid Zone,Belt of Riches,18000000.000000,34.000000,0,1,0,0,55,53,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Uvates Asteroid Zone,Belt of Riches,18000000.000000,161.000000,0,1,0,0,51,4,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Itha Asteroid Zone,Belt of Riches,18000000.000000,288.000000,0,1,0,0,51,4,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Shabel Asteroid Zone,Belt of Riches,18000000.000000,55.000000,0,1,0,0,61,4,29,4,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Kaffal Djoba,Al Wadi,6750000000.000000,280.000000,0,1,0,0,0,7528519.547105,2,1,9,4,200,200,200,55,55,55,127,44,34,255,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Rumi,Al Wadi,10125000000.000000,60.000000,0,1,0,0,0,1081789.605396,2,1,3,4,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Belt, name, parent, distance, rotation, elevation, field size, end,
+Belt,Belt of Great Wealth,Al Wadi,15187500000.000000,200.000000,0,40000000.000000,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Akeem Asteroid Zone,Belt of Great Wealth,18000000.000000,200.000000,0,1,0,0,51,4,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Qudeenah Asteroid Zone,Belt of Great Wealth,18000000.000000,327.000000,0,1,0,0,55,53,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Adonos Asteroid Zone,Belt of Great Wealth,18000000.000000,94.000000,0,1,0,0,51,4,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Daonos Asteroid Zone,Belt of Great Wealth,18000000.000000,221.000000,0,1,0,0,51,4,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Endanos Asteroid Zone,Belt of Great Wealth,18000000.000000,348.000000,0,1,0,0,65,53,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Ennaros Asteroid Zone,Belt of Great Wealth,18000000.000000,115.000000,0,1,0,0,55,53,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Al Amaaros Asteroid Zone,Belt of Great Wealth,18000000.000000,242.000000,0,1,0,0,49,8,29,4,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (giant),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Khodaverdi,Al Wadi,22781250000.000000,340.000000,0,1,0,0,0,36246528.519547,4,2,6,0,200,200,200,149,138,114,127,116,96,0,5,255,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Adjaina,Khodaverdi,400000000.000000,340.000000,0,1,0,0,0,4618015.076144,3,1,12,14,136,131,144,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Al Paz,Khodaverdi,480000000.000000,130.000000,0,1,0,0,0,2400479.140599,3,1,7,21,139,148,109,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Al Paz Asteroid Cluster,Al Paz,9601916.562395,0.000000,0,1,0,0,47,6,29,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Califendi,Khodaverdi,576000000.000000,280.000000,0,1,0,0,0,10843180.639058,3,1,11,21,142,144,131,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Califendi Asteroid Cluster,Califendi,43372722.556230,0.000000,0,1,0,0,47,6,29,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Al Galife,Khodaverdi,691200000.000000,70.000000,0,1,0,0,0,2429166.539506,3,1,8,16,112,136,139,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Guzman,Khodaverdi,829440000.000000,220.000000,0,1,0,0,0,2258476.516007,3,1,9,17,104,140,142,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Guzman Asteroid Cluster,Guzman,9033906.064028,0.000000,0,1,0,0,47,6,29,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Laputo,Khodaverdi,995328000.000000,10.000000,0,1,0,0,0,1714491.714225,3,1,4,18,123,138,109,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Omer Alfez,Khodaverdi,1194393600.000000,160.000000,0,1,0,0,0,8801355.021821,3,1,13,14,132,134,108,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Omer Asteroid Cluster,Omer Alfez,35205420.087283,0.000000,0,1,0,0,50,10,29,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Pyette,Khodaverdi,1433272320.000000,310.000000,0,1,0,0,0,1097354.045228,3,1,3,19,141,127,118,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Pyette Asteroid Cluster,Pyette,4389416.180914,0.000000,0,1,0,0,50,10,29,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Qom,Khodaverdi,1719926784.000000,100.000000,0,1,0,0,0,9409169.286172,3,1,3,19,111,110,148,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Qom Asteroid Cluster,Qom,37636677.144688,0.000000,0,1,0,0,50,10,29,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Zajowicz,Khodaverdi,2063912140.800000,250.000000,0,1,0,0,0,3560525.833918,3,1,0,20,107,102,100,15,15,15,127,44,34,255,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Igreja,Al Wadi,34171875000.000000,120.000000,0,1,0,0,0,3788659.321879,2,1,9,4,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Maloufi,Igreja,400000000.000000,120.000000,0,1,0,0,0,931678.948766,3,1,5,14,127,134,116,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Al Wadi STC,Maloufi,3726715.795062,0.000000,0,1,0,0,15,68,11,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Al Wadi Naval Defense,Maloufi,3726715.795062,127.000000,0,1,0,0,7,71,11,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Al Wadi Governor,Maloufi,3726715.795062,254.000000,0,1,0,0,9,95,11,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Maffindi,Igreja,480000000.000000,270.000000,0,1,0,0,0,1331181.754355,3,1,12,18,128,102,123,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Ogenna,Igreja,576000000.000000,60.000000,0,1,0,0,0,677504.635198,3,1,5,20,124,104,128,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Ogenna Base,Ogenna,2710018.540793,0.000000,0,1,0,0,7,71,11,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Neutronium Processing Facility,Ogenna,2710018.540793,127.000000,0,1,0,0,1,20,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Common Ore Handling Station,Ogenna,2710018.540793,254.000000,0,1,0,0,1,15,29,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Hajela,Igreja,691200000.000000,210.000000,0,1,0,0,0,1416491.987931,3,1,10,20,142,114,143,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Jamirai,Igreja,829440000.000000,0.000000,0,1,0,0,0,1310456.385845,3,1,10,20,138,143,145,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Heaven,Jamirai,5241825.543378,0.000000,0,1,0,0,15,60,50,4,end,
+Lpoint,Al Paz Lpoint,Khodaverdi,Al Paz,0.500000,0,end,
+Lpoint,Laputo Lpoint,Khodaverdi,Laputo,0.500000,0,end,
+Lpoint,Qom Lpoint,Khodaverdi,Qom,0.500000,0,end,

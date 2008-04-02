@@ -1,59 +1,121 @@
-hant_center,"hant"
-Hant Alpha,"Hant Alpha"
-Olnyk,"Olnyk"
-Bandychuk,"Bandychuk"
-Bandychuk Radioactives Mine,"Bandychuk Radioactives Mine"
-Feschuk,"Feschuk"
-Kilik,"Kilik"
-Kilik Asteroid Mine,"Kilik Asteroid Mine"
-Pablo,"Pablo"
-Marco,"Marco"
-Fabio,"Fabio"
-Kladnik,"Kladnik"
-Llianna,"Llianna"
-Lindy,"Lindy"
-Waystation Station,"Waystation Station"
-Bailey,"Bailey"
-Rurik,"Rurik"
-Cedric,"Cedric"
-The Raiders Rock,"The Raiders Rock"
-Ramona,"Ramona"
-Hant STC,"Hant STC"
-Hant Outpost,"Hant Outpost"
-Weldrik,"Weldrik"
-Verdad,"Verdad"
-Verdad Station,"Verdad Station"
-Verdad Security Outpost,"Verdad Security Outpost"
-San Pablo,"San Pablo"
-Cruz,"Cruz"
-Doralicia,"Doralicia"
-El Lobo,"El Lobo"
-Seljuk,"Seljuk"
-Deitch,"Deitch"
-Deitch Organics Mine,"Deitch Organics Mine"
-Corinna,"Corinna"
-Artiss,"Artiss"
-Winblad,"Winblad"
-Ore Processing Station,"Ore Processing Station"
-Bengt,"Bengt"
-Brason,"Brason"
-Kowalyk,"Kowalyk"
-Archetti,"Archetti"
-Borroni,"Borroni"
-Borroni Shipyard Repair Depot,"Borroni Shipyard Repair Depot"
-The Stronghold,"The Stronghold"
-Hinton,"Hinton"
-Czernansky,"Czernansky"
-Valle,"Valle"
-Hecht,"Hecht"
-Southin,"Southin"
-Marjacq,"Marjacq"
-Wessel,"Wessel"
-Wessel Waystation,"Wessel Waystation"
-Kuniper Belt,"Kuniper Belt"
-The Edge,"The Edge"
-Corinna Lpoint,"Corinna Lpoint"
-Valle Lpoint,"Valle Lpoint"
-Lindy Lpoint,"Lindy Lpoint"
-Verdad Lpoint,"Verdad Lpoint"
-Borroni Lpoint,"Borroni Lpoint"
+Center,hant_center,0,0,0,1,0,0,0,0,,,end,
+
+;Star, name, parent, distance, rotation, elevation, magnitude, end,
+Star,Hant Alpha,hant_center,0,0,0,4,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Olnyk,Hant Alpha,3000000000.000000,0.000000,0,1,0,0,0,5647846.919156,2,1,2,13,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Bandychuk,Olnyk,400000000.000000,0.000000,0,1,0,0,0,739695.084903,3,1,5,16,106,109,102,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Bandychuk Radioactives Mine,Bandychuk,2958780.339611,0.000000,0,1,0,0,53,9,6,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Feschuk,Olnyk,480000000.000000,150.000000,0,1,0,0,0,2234938.258006,3,1,10,21,100,122,121,15,15,15,127,44,34,255,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Kilik,Hant Alpha,4500000000.000000,140.000000,0,1,0,0,0,7412305.063021,2,1,6,6,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Kilik Asteroid Mine,Kilik,29649220.252083,0.000000,0,1,0,0,53,9,6,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Pablo,Kilik,400000000.000000,140.000000,0,1,0,0,0,2839978.497001,3,1,3,18,104,146,144,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Marco,Kilik,480000000.000000,290.000000,0,1,0,0,0,3211994.549085,3,1,0,17,131,137,137,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Fabio,Kilik,576000000.000000,80.000000,0,1,0,0,0,1133894.107305,3,1,12,20,109,127,102,15,15,15,127,44,34,255,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Kladnik,Hant Alpha,6750000000.000000,280.000000,0,1,0,0,0,5177373.577074,2,1,11,9,200,200,200,55,55,55,127,44,34,255,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Llianna,Hant Alpha,10125000000.000000,60.000000,0,1,0,0,0,1192388.683737,2,1,10,7,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Lindy,Llianna,400000000.000000,60.000000,0,1,0,0,0,566495.184332,3,1,12,20,115,119,124,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Waystation Station,Lindy,2265980.737328,0.000000,0,1,0,0,15,36,6,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Bailey,Llianna,480000000.000000,210.000000,0,1,0,0,0,268204.072727,3,1,9,14,138,137,110,15,15,15,127,44,34,255,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Rurik,Hant Alpha,15187500000.000000,200.000000,0,1,0,0,0,2238074.892422,2,1,0,9,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Cedric,Rurik,400000000.000000,200.000000,0,1,0,0,0,278404.770192,3,1,4,19,139,121,149,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,The Raiders Rock,Cedric,1113619.080769,0.000000,0,1,0,0,39,102,18,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Ramona,Rurik,480000000.000000,350.000000,0,1,0,0,0,802314.975962,3,1,4,17,143,103,105,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Hant STC,Ramona,3209259.903848,0.000000,0,1,0,0,15,68,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Hant Outpost,Ramona,3209259.903848,127.000000,0,1,0,0,9,74,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Weldrik,Hant Alpha,22781250000.000000,340.000000,0,1,0,0,0,2145786.919767,2,1,2,12,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Verdad,Weldrik,400000000.000000,340.000000,0,1,0,0,0,504047.982427,3,1,5,20,102,140,111,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Verdad Station,Verdad,2016191.929707,0.000000,0,1,0,0,15,36,26,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Verdad Security Outpost,Verdad,2016191.929707,127.000000,0,1,0,0,15,54,26,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,San Pablo,Weldrik,480000000.000000,130.000000,0,1,0,0,0,988863.749603,3,1,3,16,110,111,142,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Cruz,Weldrik,576000000.000000,280.000000,0,1,0,0,0,969903.070803,3,1,12,20,130,102,108,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Doralicia,Weldrik,691200000.000000,70.000000,0,1,0,0,0,401208.274238,3,1,4,17,109,144,131,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,El Lobo,Weldrik,829440000.000000,220.000000,0,1,0,0,0,699581.552136,3,1,12,18,136,149,148,15,15,15,127,44,34,255,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Seljuk,Hant Alpha,34171875000.000000,120.000000,0,1,0,0,0,7939420.758690,2,1,11,2,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Deitch,Seljuk,400000000.000000,120.000000,0,1,0,0,0,1642663.561931,3,1,3,15,148,137,135,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Deitch Organics Mine,Deitch,6570654.247725,0.000000,0,1,0,0,52,3,6,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Corinna,Seljuk,480000000.000000,270.000000,0,1,0,0,0,364882.256658,3,1,9,20,136,140,106,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Artiss,Seljuk,576000000.000000,60.000000,0,1,0,0,0,2924077.507732,3,1,5,19,145,144,101,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Winblad,Seljuk,691200000.000000,210.000000,0,1,0,0,0,3127164.817179,3,1,6,14,111,120,107,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Ore Processing Station,Winblad,12508659.268716,0.000000,0,1,0,0,1,15,6,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Bengt,Seljuk,829440000.000000,0.000000,0,1,0,0,0,3668541.775677,3,1,7,15,137,145,110,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Brason,Seljuk,995328000.000000,150.000000,0,1,0,0,0,369423.057316,3,1,10,15,127,140,142,15,15,15,127,44,34,255,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Kowalyk,Hant Alpha,51257812500.000000,260.000000,0,1,0,0,0,3652912.991729,2,1,7,13,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Archetti,Kowalyk,400000000.000000,260.000000,0,1,0,0,0,1620492.866030,3,1,9,15,140,118,118,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Borroni,Kowalyk,480000000.000000,50.000000,0,1,0,0,0,305135.323474,3,1,7,17,105,116,144,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Borroni Shipyard Repair Depot,Borroni,1220541.293895,0.000000,0,1,0,0,7,21,6,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,The Stronghold,Borroni,1220541.293895,127.000000,0,1,0,0,16,101,18,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Hinton,Kowalyk,576000000.000000,200.000000,0,1,0,0,0,567629.498755,3,1,13,15,142,144,122,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Czernansky,Kowalyk,691200000.000000,350.000000,0,1,0,0,0,600152.604050,3,1,8,18,131,121,100,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Valle,Kowalyk,829440000.000000,140.000000,0,1,0,0,0,1612265.867501,3,1,1,16,114,134,128,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Hecht,Kowalyk,995328000.000000,290.000000,0,1,0,0,0,1761554.618582,3,1,8,20,121,140,136,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Southin,Kowalyk,1194393600.000000,80.000000,0,1,0,0,0,464046.295056,3,1,7,14,100,137,116,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Marjacq,Kowalyk,1433272320.000000,230.000000,0,1,0,0,0,1672164.190123,3,1,6,20,102,131,101,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Wessel,Kowalyk,1719926784.000000,20.000000,0,1,0,0,0,1325812.363171,3,1,13,18,135,113,141,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Wessel Waystation,Wessel,5303249.452685,0.000000,0,1,0,0,15,36,6,4,end,
+;Belt, name, parent, distance, rotation, elevation, field size, end,
+Belt,Kuniper Belt,Hant Alpha,76886718750.000000,40.000000,0,40000000.000000,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,The Edge,Kuniper Belt,18000000.000000,40.000000,0,1,0,0,15,55,50,4,end,
+Lpoint,Corinna Lpoint,Seljuk,Corinna,0.500000,0,end,
+Lpoint,Valle Lpoint,Kowalyk,Valle,0.500000,0,end,
+Lpoint,Lindy Lpoint,Kladnik,Lindy,0.500000,0,end,
+Lpoint,Verdad Lpoint,Weldrik,Verdad,0.500000,0,end,
+Lpoint,Borroni Lpoint,Kowalyk,Borroni,0.500000,0,end,

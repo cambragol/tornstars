@@ -1,11 +1,23 @@
-hd3887_center,"hd3887"
-HD3887,"HD3887"
-GasA Nempius,"GasA Nempius"
-MoonA Dosta,"MoonA Dosta"
-Dosta Asteroid Cluster,"Dosta Asteroid Cluster"
-MoonA Penius,"MoonA Penius"
-Penius Asteroid Cluster Alpha,"Penius Asteroid Cluster Alpha"
-Penius Asteroid Cluster Beta,"Penius Asteroid Cluster Beta"
-MoonA Fepes,"MoonA Fepes"
-Fepes Asteroid Cluster,"Fepes Asteroid Cluster"
-GasA Nempius Lpoint,"GasA Nempius Lpoint"
+Center,hd3887_center,0,0,0,1,0,0,0,0,,,end,
+
+;Star, name, parent, distance, rotation, elevation, magnitude, end,
+Star,HD3887,hd3887_center,0,0,0,8,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (giant),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,GasA Nempius,HD3887,3000000000.000000,0.000000,0,1,0,0,0,27250587.481307,4,2,4,0,200,200,200,149,138,114,127,116,96,0,5,255,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,MoonA Dosta,GasA Nempius,400000000.000000,0.000000,0,1,0,0,0,7294549.394208,3,1,6,14,133,148,121,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Dosta Asteroid Cluster,MoonA Dosta,29178197.576830,0.000000,0,1,0,0,54,2,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,MoonA Penius,GasA Nempius,480000000.000000,150.000000,0,1,0,0,0,1139309.366131,3,1,4,20,105,145,129,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Penius Asteroid Cluster Alpha,MoonA Penius,4557237.464522,0.000000,0,1,0,0,54,2,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Penius Asteroid Cluster Beta,MoonA Penius,4557237.464522,127.000000,0,1,0,0,54,2,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,MoonA Fepes,GasA Nempius,576000000.000000,300.000000,0,1,0,0,0,8596957.304605,3,1,2,18,102,113,128,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Fepes Asteroid Cluster,MoonA Fepes,34387829.218421,0.000000,0,1,0,0,54,2,0,0,end,
+Lpoint,GasA Nempius Lpoint,HD3887,GasA Nempius,0.500000,0,end,
+Lpoint,MoonA Dosta Lpoint,HD3887,MoonA Dosta,0.500000,0,end,

@@ -1,94 +1,197 @@
-tulunid_center,"tulunid"
-tulunid,"tulunid"
-Al Battani,"Al Battani"
-Accolus,"Accolus"
-Aurius,"Aurius"
-Carolus,"Carolus"
-Djibouti,"Djibouti"
-Battani Sation,"Battani Sation"
-Battani Shipyard,"Battani Shipyard"
-Leolius,"Leolius"
-Marius Base,"Marius Base"
-Olalius,"Olalius"
-Singulus,"Singulus"
-Trochlius,"Trochlius"
-Aljaya,"Aljaya"
-Aljaya Transfer Beanstalk,"Aljaya Transfer Beanstalk"
-Aljaya Robotics Facility,"Aljaya Robotics Facility"
-Allah Energy Cells Assembly,"Allah Energy Cells Assembly"
-Sultanate Consumer Production,"Sultanate Consumer Production"
-Aljaya Heavy Systems Production,"Aljaya Heavy Systems Production"
-Aljaya Reactors Production,"Aljaya Reactors Production"
-Aljaya Shipyard,"Aljaya Shipyard"
-Mariq,"Mariq"
-Tariq,"Tariq"
-Manufacturing Station,"Manufacturing Station"
-Tariq Shipyard,"Tariq Shipyard"
-NSO Laplace Central Security,"NSO Laplace Central Security"
-Antara,"Antara"
-Akbar,"Akbar"
-Biralla,"Biralla"
-Ibrahim,"Ibrahim"
-Joaqim,"Joaqim"
-Omar,"Omar"
-Raballa,"Raballa"
-Ashalla,"Ashalla"
-Harsha,"Harsha"
-Hira,"Hira"
-Dramhin,"Dramhin"
-Eva Cara,"Eva Cara"
-Waystation Station,"Waystation Station"
-Ibn Abi R abia,"Ibn Abi R abia"
-Harun,"Harun"
-Muhammed,"Muhammed"
-Kasim,"Kasim"
-Kasim Station,"Kasim Station"
-Cindra,"Cindra"
-New Constantinople,"New Constantinople"
-New Constantinople Transfer,"New Constantinople Transfer"
-Palace,"Palace"
-Idris,"Idris"
-The Mustapha Institute,"The Mustapha Institute"
-Idris Food Processing,"Idris Food Processing"
-Idris Radioactives,"Idris Radioactives"
-Synthetic Foods Production,"Synthetic Foods Production"
-NC Organics Production,"NC Organics Production"
-Iona,"Iona"
-Pashasan Systems Manufacturing,"Pashasan Systems Manufacturing"
-Iona Electronics Manufacturing,"Iona Electronics Manufacturing"
-New Constantinople STC,"New Constantinople STC"
-New Constantinople Trade Bureau HQ,"New Constantinople Trade Bureau HQ"
-Iona Radioactive Processing,"Iona Radioactive Processing"
-NSO Laplace Corporate Headquarters,"NSO Laplace Corporate Headquarters"
-Jardin Terraforming Regional Headquarters,"Jardin Terraforming Regional Headquarters"
-Sirocco,"Sirocco"
-Brophius,"Brophius"
-Eimskip,"Eimskip"
-Gruner,"Gruner"
-Grinnel Freightlines Headquarters,"Grinnel Freightlines Headquarters"
-Grinnel Main Warehousing,"Grinnel Main Warehousing"
-Gruner Waystation,"Gruner Waystation"
-Jazeel,"Jazeel"
-Jazeel Naval Shipyard,"Jazeel Naval Shipyard"
-Jazeel Civilian Shipyard,"Jazeel Civilian Shipyard"
-Ludmilla,"Ludmilla"
-Matella,"Matella"
-Matella Asteroid Cluster,"Matella Asteroid Cluster"
-Naleema,"Naleema"
-Occam,"Occam"
-Omalla,"Omalla"
-Pasha,"Pasha"
-Pasha Asteroid Cluster,"Pasha Asteroid Cluster"
-Rula,"Rula"
-Suleyman,"Suleyman"
-Telos,"Telos"
-Asteroids,"Asteroids"
-Asteroid Base,"Asteroid Base"
-Research Facility,"Research Facility"
-Zelda,"Zelda"
-MelNet FTL Relay,"MelNet FTL Relay"
-Kuniper Belt,"Kuniper Belt"
-Angels Rest,"Angels Rest"
-Jazeel Lpoint,"Jazeel Lpoint"
-Aurius Lpoint,"Aurius Lpoint"
-Rula Lpoint,"Rula Lpoint"
+Center,tulunid_center,0,0,0,1,0,0,0,0,,,end,
+
+;Star, name, parent, distance, rotation, elevation, magnitude, end,
+Star,tulunid,tulunid_center,0,0,0,2,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (giant),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Al Battani,tulunid,3000000000.000000,0.000000,0,1,0,0,0,40320444.349498,4,2,7,0,200,200,200,149,138,114,127,116,96,0,5,255,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Accolus,Al Battani,400000000.000000,0.000000,0,1,0,0,0,6726180.303354,3,1,9,14,124,118,124,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Aurius,Al Battani,480000000.000000,150.000000,0,1,0,0,0,9571970.274972,3,1,7,17,134,126,130,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Carolus,Al Battani,576000000.000000,300.000000,0,1,0,0,0,4893414.105655,3,1,0,19,105,131,143,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Djibouti,Al Battani,691200000.000000,90.000000,0,1,0,0,0,6025131.992553,3,1,10,17,119,139,127,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Battani Sation,Djibouti,24100527.970214,0.000000,0,1,0,0,15,36,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Battani Shipyard,Djibouti,24100527.970214,127.000000,0,1,0,0,7,21,16,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Leolius,Al Battani,829440000.000000,240.000000,0,1,0,0,0,4445890.682699,3,1,13,19,108,118,106,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Marius Base,Leolius,17783562.730796,0.000000,0,1,0,0,7,71,11,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Olalius,Al Battani,995328000.000000,30.000000,0,1,0,0,0,8983520.004883,3,1,13,18,101,116,102,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Singulus,Al Battani,1194393600.000000,180.000000,0,1,0,0,0,7760719.626453,3,1,1,20,143,129,136,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Trochlius,Al Battani,1433272320.000000,330.000000,0,1,0,0,0,10284134.952849,3,1,0,15,135,130,110,15,15,15,127,44,34,255,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Aljaya,tulunid,4500000000.000000,140.000000,0,1,0,0,0,1527603.991821,2,1,32,33,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Aljaya Transfer Beanstalk,Aljaya,6110415.967284,0.000000,0,1,0,0,9,67,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Aljaya Robotics Facility,Aljaya,6110415.967284,127.000000,0,1,0,0,5,24,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Allah Energy Cells Assembly,Aljaya,6110415.967284,254.000000,0,1,0,0,5,31,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Sultanate Consumer Production,Aljaya,6110415.967284,21.000000,0,1,0,0,5,29,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Aljaya Heavy Systems Production,Aljaya,6110415.967284,148.000000,0,1,0,0,5,22,28,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Aljaya Reactors Production,Aljaya,6110415.967284,275.000000,0,1,0,0,5,30,28,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Aljaya Shipyard,Aljaya,6110415.967284,42.000000,0,1,0,0,7,21,16,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Mariq,Aljaya,400000000.000000,140.000000,0,1,0,0,0,336791.407433,3,1,8,16,115,118,133,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Tariq,Aljaya,480000000.000000,290.000000,0,1,0,0,0,662270.945661,3,1,11,18,130,139,145,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Manufacturing Station,Tariq,2649083.782645,0.000000,0,1,0,0,5,22,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Tariq Shipyard,Tariq,2649083.782645,127.000000,0,1,0,0,7,21,16,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,NSO Laplace Central Security,Tariq,2649083.782645,254.000000,0,1,0,0,15,54,16,4,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (giant),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Antara,tulunid,6750000000.000000,280.000000,0,1,0,0,0,30136722.922452,4,2,5,0,200,200,200,149,138,114,127,116,96,0,5,255,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Akbar,Antara,400000000.000000,280.000000,0,1,0,0,0,4978400.524918,3,1,3,15,142,103,121,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Biralla,Antara,480000000.000000,70.000000,0,1,0,0,0,6986877.040925,3,1,4,18,111,115,105,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Ibrahim,Antara,576000000.000000,220.000000,0,1,0,0,0,9744453.260903,3,1,1,16,139,144,139,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Joaqim,Antara,691200000.000000,10.000000,0,1,0,0,0,8989616.077151,3,1,8,16,142,111,143,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Omar,Antara,829440000.000000,160.000000,0,1,0,0,0,2945898.312326,3,1,3,18,149,102,104,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Raballa,Antara,995328000.000000,310.000000,0,1,0,0,0,6414922.025208,3,1,5,14,112,144,111,15,15,15,127,44,34,255,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (giant),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Ashalla,tulunid,10125000000.000000,60.000000,0,1,0,0,0,30258491.775262,4,2,1,0,200,200,200,149,138,114,127,116,96,0,5,255,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Harsha,Ashalla,400000000.000000,60.000000,0,1,0,0,0,11196752.830592,3,1,1,14,102,116,145,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Hira,Ashalla,480000000.000000,210.000000,0,1,0,0,0,4933576.464125,3,1,6,21,141,126,142,15,15,15,127,44,34,255,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Dramhin,tulunid,15187500000.000000,200.000000,0,1,0,0,0,6548265.022736,2,1,5,3,200,200,200,55,55,55,127,44,34,255,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Eva Cara,tulunid,22781250000.000000,340.000000,0,1,0,0,0,1034669.026765,2,1,7,13,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Waystation Station,Eva Cara,4138676.107059,0.000000,0,1,0,0,15,36,29,4,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (giant),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Ibn Abi R abia,tulunid,34171875000.000000,120.000000,0,1,0,0,0,47908566.545610,4,2,1,0,200,200,200,149,138,114,127,116,96,0,5,255,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Harun,Ibn Abi R abia,400000000.000000,120.000000,0,1,0,0,0,7130314.035463,3,1,3,19,147,121,144,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Muhammed,Ibn Abi R abia,480000000.000000,270.000000,0,1,0,0,0,334269.234291,3,1,13,18,139,128,107,15,15,15,127,44,34,255,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Kasim,tulunid,51257812500.000000,260.000000,0,1,0,0,0,2778618.732261,2,1,5,0,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Kasim Station,Kasim,11114474.929044,0.000000,0,1,0,0,15,36,29,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Cindra,Kasim,400000000.000000,260.000000,0,1,0,0,0,726140.704361,3,1,1,19,142,103,140,15,15,15,127,44,34,255,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,New Constantinople,tulunid,76886718750.000000,40.000000,0,1,0,0,0,6296548.356578,2,1,28,29,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,New Constantinople Transfer,New Constantinople,25186193.426313,0.000000,0,1,0,0,9,67,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Palace,New Constantinople,25186193.426313,127.000000,0,1,0,0,9,94,11,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Idris,New Constantinople,400000000.000000,40.000000,0,1,0,0,0,2254122.938678,3,1,11,18,134,107,134,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,The Mustapha Institute,Idris,9016491.754714,0.000000,0,1,0,0,9,112,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Idris Food Processing,Idris,9016491.754714,127.000000,0,1,0,0,5,23,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Idris Radioactives,Idris,9016491.754714,254.000000,0,1,0,0,1,18,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Synthetic Foods Production,Idris,9016491.754714,21.000000,0,1,0,0,1,14,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,NC Organics Production,Idris,9016491.754714,148.000000,0,1,0,0,1,12,29,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Iona,New Constantinople,480000000.000000,190.000000,0,1,0,0,0,2359644.991192,3,1,10,14,143,132,135,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Pashasan Systems Manufacturing,Iona,9438579.964766,0.000000,0,1,0,0,5,24,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Iona Electronics Manufacturing,Iona,9438579.964766,127.000000,0,1,0,0,5,26,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,New Constantinople STC,Iona,9438579.964766,254.000000,0,1,0,0,15,68,11,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,New Constantinople Trade Bureau HQ,Iona,9438579.964766,21.000000,0,1,0,0,9,47,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Iona Radioactive Processing,Iona,9438579.964766,148.000000,0,1,0,0,1,18,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,NSO Laplace Corporate Headquarters,Iona,9438579.964766,275.000000,0,1,0,0,9,47,16,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Jardin Terraforming Regional Headquarters,Iona,9438579.964766,42.000000,0,1,0,0,9,47,28,4,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (giant),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Sirocco,tulunid,115330078125.000000,180.000000,0,1,0,0,0,25981627.857295,4,2,4,0,200,200,200,149,138,114,127,116,96,0,5,255,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Brophius,Sirocco,400000000.000000,180.000000,0,1,0,0,0,11387882.625813,3,1,0,16,107,149,130,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Eimskip,Sirocco,480000000.000000,330.000000,0,1,0,0,0,3683881.649220,3,1,12,16,134,110,107,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Gruner,Sirocco,576000000.000000,120.000000,0,1,0,0,0,3076425.977355,3,1,7,21,105,145,122,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Grinnel Freightlines Headquarters,Gruner,12305703.909421,0.000000,0,1,0,0,9,47,23,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Grinnel Main Warehousing,Gruner,12305703.909421,127.000000,0,1,0,0,9,62,23,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Gruner Waystation,Gruner,12305703.909421,254.000000,0,1,0,0,15,36,23,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Jazeel,Sirocco,691200000.000000,270.000000,0,1,0,0,0,1191305.276650,3,1,10,15,148,138,143,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Jazeel Naval Shipyard,Jazeel,4765221.106601,0.000000,0,1,0,0,7,71,11,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Jazeel Civilian Shipyard,Jazeel,4765221.106601,127.000000,0,1,0,0,7,21,16,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Ludmilla,Sirocco,829440000.000000,60.000000,0,1,0,0,0,2725005.340739,3,1,6,14,137,105,120,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Matella,Sirocco,995328000.000000,210.000000,0,1,0,0,0,3905850.398267,3,1,13,14,112,109,112,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Matella Asteroid Cluster,Matella,15623401.593066,0.000000,0,1,0,0,57,6,29,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Naleema,Sirocco,1194393600.000000,0.000000,0,1,0,0,0,2053720.206305,3,1,8,21,146,109,138,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Occam,Sirocco,1433272320.000000,150.000000,0,1,0,0,0,7835306.863613,3,1,9,21,122,146,133,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Omalla,Sirocco,1719926784.000000,300.000000,0,1,0,0,0,2021446.882534,3,1,8,18,121,147,127,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Pasha,Sirocco,2063912140.800000,90.000000,0,1,0,0,0,7048196.356090,3,1,7,16,119,117,101,15,15,15,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Pasha Asteroid Cluster,Pasha,28192785.424360,0.000000,0,1,0,0,47,6,29,4,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Rula,Sirocco,2476694568.960000,240.000000,0,1,0,0,0,9594203.009125,3,1,2,14,119,129,103,15,15,15,127,44,34,255,0,0,end,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Suleyman,Sirocco,2972033482.751999,30.000000,0,1,0,0,0,2572603.534043,3,1,2,19,122,130,134,15,15,15,127,44,34,255,0,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Telos,tulunid,172995117187.500000,320.000000,0,1,0,0,0,4530381.176183,2,1,9,5,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Belt, name, parent, distance, rotation, elevation, field size, end,
+Belt,Asteroids,tulunid,259492675781.250000,100.000000,0,40000000.000000,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Asteroid Base,Asteroids,18000000.000000,100.000000,0,1,0,0,47,6,29,4,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Research Facility,Asteroids,18000000.000000,227.000000,0,1,0,0,9,40,29,4,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
+Body,Zelda,tulunid,389239013671.875000,240.000000,0,1,0,0,0,7685750.907926,2,1,8,2,200,200,200,55,55,55,127,44,34,255,0,0,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,MelNet FTL Relay,Zelda,30743003.631703,0.000000,0,1,0,0,9,88,37,4,end,
+;Belt, name, parent, distance, rotation, elevation, field size, end,
+Belt,Kuniper Belt,tulunid,583858520507.812500,20.000000,0,40000000.000000,end,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
+Station,Angels Rest,Kuniper Belt,18000000.000000,20.000000,0,1,0,0,15,55,50,4,end,
+Lpoint,Jazeel Lpoint,Sirocco,Jazeel,0.500000,0,end,
+Lpoint,Aurius Lpoint,Al Battani,Aurius,0.500000,0,end,
+Lpoint,Rula Lpoint,Sirocco,Rula,0.500000,0,end,
