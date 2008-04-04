@@ -1,94 +1,47 @@
-Center,providence_center,0,0,0,1,0,0,0,0,,,end,
-
-;Star, name, parent, distance, rotation, elevation, magnitude, end,
-Star,Providence Alpha,providence_center,0,0,0,7,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Palermo,Providence Alpha,3000000000.000000,0.000000,0,1,0,0,0,4006927.701651,2,1,1,9,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Musetta,Palermo,400000000.000000,0.000000,0,1,0,0,0,348571.135997,3,1,0,21,113,113,129,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,The Dragon Nest,Musetta,1394284.543989,0.000000,0,1,0,0,15,60,52,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,DeMarlo,Palermo,480000000.000000,150.000000,0,1,0,0,0,1461964.760079,3,1,11,19,124,110,137,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,DeMarlo Asteroid Cluster,DeMarlo,5847859.040315,0.000000,0,1,0,0,54,2,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Garrabrant,Palermo,576000000.000000,300.000000,0,1,0,0,0,1071426.133310,3,1,6,21,137,105,129,15,15,15,127,44,34,255,0,0,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Edgewater,Providence Alpha,4500000000.000000,140.000000,0,1,0,0,0,4081881.160924,2,1,10,8,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Ward,Edgewater,400000000.000000,140.000000,0,1,0,0,0,1275143.636193,3,1,5,15,111,121,140,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Edgewater Waystation Station,Ward,5100574.544773,0.000000,0,1,0,0,15,36,53,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Ward Medicine Production,Ward,5100574.544773,127.000000,0,1,0,0,5,28,45,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Ruppert,Edgewater,480000000.000000,290.000000,0,1,0,0,0,1176105.447412,3,1,13,20,117,108,132,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Providence STC,Ruppert,4704421.789648,0.000000,0,1,0,0,15,68,3,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Providence Senate,Ruppert,4704421.789648,127.000000,0,1,0,0,9,93,3,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Ruppert Consumer Goods,Ruppert,4704421.789648,254.000000,0,1,0,0,5,29,53,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Stellar Paramed Headquarters,Ruppert,4704421.789648,21.000000,0,1,0,0,9,47,45,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Stellar Paramed Secuirty,Ruppert,4704421.789648,148.000000,0,1,0,0,15,54,45,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Chavez Providence Depot,Ruppert,4704421.789648,275.000000,0,1,0,0,15,36,7,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Chavez Central Warehousing,Ruppert,4704421.789648,42.000000,0,1,0,0,9,62,7,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Chavez Shipping Security,Ruppert,4704421.789648,169.000000,0,1,0,0,15,54,7,4,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Roessner,Providence Alpha,6750000000.000000,280.000000,0,1,0,0,0,4935178.685873,2,1,0,9,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Vander,Roessner,400000000.000000,280.000000,0,1,0,0,0,1369453.881085,3,1,2,21,107,145,134,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Providence Medical Complex,Vander,5477815.524340,0.000000,0,1,0,0,9,51,53,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Providence Medical Production,Vander,5477815.524340,127.000000,0,1,0,0,5,28,45,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Vander Medical Research,Vander,5477815.524340,254.000000,0,1,0,0,9,51,45,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Vander Consumer Production,Vander,5477815.524340,21.000000,0,1,0,0,5,29,53,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Vander Waystation,Vander,5477815.524340,148.000000,0,1,0,0,15,36,45,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Fritz,Roessner,480000000.000000,70.000000,0,1,0,0,0,922037.787266,3,1,5,14,148,134,107,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Fritz Asteroid Base,Fritz,3688151.149066,0.000000,0,1,0,0,54,2,53,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Denker,Roessner,576000000.000000,220.000000,0,1,0,0,0,2195390.351961,3,1,11,18,109,108,140,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Denker Asteroid Cluster,Denker,8781561.407844,0.000000,0,1,0,0,54,2,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Ritter,Roessner,691200000.000000,10.000000,0,1,0,0,0,1303942.040393,3,1,2,18,136,120,113,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Ritter Mine One,Ritter,5215768.161571,0.000000,0,1,0,0,54,2,27,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Ritter Mine Two,Ritter,5215768.161571,127.000000,0,1,0,0,54,2,27,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Gertner,Roessner,829440000.000000,160.000000,0,1,0,0,0,1511238.288368,3,1,9,20,136,123,106,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Gertner Asteroid Cluster,Gertner,6044953.153473,0.000000,0,1,0,0,54,2,0,0,end,
-;Belt, name, parent, distance, rotation, elevation, field size, end,
-Belt,Asteroid Belt,Providence Alpha,10125000000.000000,60.000000,0,40000000.000000,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Lotus Outpost,Asteroid Belt,18000000.000000,60.000000,0,1,0,0,26,103,34,4,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Dufferin,Providence Alpha,15187500000.000000,200.000000,0,1,0,0,0,3942472.609638,2,1,11,0,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Lewis,Dufferin,400000000.000000,200.000000,0,1,0,0,0,1139903.385722,3,1,9,17,105,147,146,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Barkers Marker,Lewis,4559613.542886,0.000000,0,1,0,0,7,71,3,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,MelNet FTL Relay Station,Lewis,4559613.542886,127.000000,0,1,0,0,9,88,39,4,end,
-Lpoint,Lewis Lpoint,Dufferin,Lewis,0.500000,0,end,
-Lpoint,Vander Lpoint,Roessner,Vander,0.500000,0,end,
-Lpoint,Ritter Lpoint,Roessner,Ritter,0.500000,0,end,
-Lpoint,Fritz Lpoint,Roessner,Fritz,0.500000,0,end,
+providence_center,"providence"
+Providence Alpha,"Providence Alpha"
+Palermo,"Palermo"
+Musetta,"Musetta"
+The Dragon Nest,"The Dragon Nest"
+DeMarlo,"DeMarlo"
+DeMarlo Asteroid Cluster,"DeMarlo Asteroid Cluster"
+Garrabrant,"Garrabrant"
+Edgewater,"Edgewater"
+Ward,"Ward"
+Edgewater Waystation Station,"Edgewater Waystation Station"
+Ward Medicine Production,"Ward Medicine Production"
+Ruppert,"Ruppert"
+Providence STC,"Providence STC"
+Providence Senate,"Providence Senate"
+Ruppert Consumer Goods,"Ruppert Consumer Goods"
+Stellar Paramed Headquarters,"Stellar Paramed Headquarters"
+Stellar Paramed Secuirty,"Stellar Paramed Secuirty"
+Chavez Providence Depot,"Chavez Providence Depot"
+Chavez Central Warehousing,"Chavez Central Warehousing"
+Chavez Shipping Security,"Chavez Shipping Security"
+Roessner,"Roessner"
+Vander,"Vander"
+Providence Medical Complex,"Providence Medical Complex"
+Providence Medical Production,"Providence Medical Production"
+Vander Medical Research,"Vander Medical Research"
+Vander Consumer Production,"Vander Consumer Production"
+Vander Waystation,"Vander Waystation"
+Fritz,"Fritz"
+Fritz Asteroid Base,"Fritz Asteroid Base"
+Denker,"Denker"
+Denker Asteroid Cluster,"Denker Asteroid Cluster"
+Ritter,"Ritter"
+Ritter Mine One,"Ritter Mine One"
+Ritter Mine Two,"Ritter Mine Two"
+Gertner,"Gertner"
+Gertner Asteroid Cluster,"Gertner Asteroid Cluster"
+Asteroid Belt,"Asteroid Belt"
+Lotus Outpost,"Lotus Outpost"
+Dufferin,"Dufferin"
+Lewis,"Lewis"
+Barkers Marker,"Barkers Marker"
+MelNet FTL Relay Station,"MelNet FTL Relay Station"
+Lewis Lpoint,"Lewis Lpoint"
+Vander Lpoint,"Vander Lpoint"
+Ritter Lpoint,"Ritter Lpoint"
+Fritz Lpoint,"Fritz Lpoint"

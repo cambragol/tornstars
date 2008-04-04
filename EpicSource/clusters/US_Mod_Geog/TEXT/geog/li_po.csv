@@ -1,66 +1,33 @@
-Center,li_po_center,0,0,0,1,0,0,0,0,,,end,
-
-;Star, name, parent, distance, rotation, elevation, magnitude, end,
-Star,Li Po Alpha,li_po_center,0,0,0,7,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Pyunyang,Li Po Alpha,3000000000.000000,0.000000,0,1,0,0,0,2966612.750633,2,1,1,3,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Cheong 1,Pyunyang,400000000.000000,0.000000,0,1,0,0,0,825081.274101,3,1,8,14,119,105,149,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Golden Petal Station,Cheong 1,3300325.096403,0.000000,0,1,0,0,16,101,34,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Cheong 2,Pyunyang,480000000.000000,150.000000,0,1,0,0,0,1162549.609960,3,1,0,14,134,147,135,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,We,Pyunyang,576000000.000000,300.000000,0,1,0,0,0,1176061.893316,3,1,1,19,130,133,148,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Li Po Military Garrison,We,4704247.573265,0.000000,0,1,0,0,7,71,5,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Li Po Naval Shipyards,We,4704247.573265,127.000000,0,1,0,0,7,21,25,4,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Chenyuang,Li Po Alpha,4500000000.000000,140.000000,0,1,0,0,0,1568865.016633,2,1,26,27,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Li Po STC,Chenyuang,6275460.066530,0.000000,0,1,0,0,15,68,5,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Li Po Station,Chenyuang,6275460.066530,127.000000,0,1,0,0,9,93,5,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Li Po Beanstalk,Chenyuang,6275460.066530,254.000000,0,1,0,0,9,122,25,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Jardin Terraforming Corporate Headquarters,Chenyuang,6275460.066530,21.000000,0,1,0,0,9,47,28,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Synthetics Production Shang,Chenyuang,6275460.066530,148.000000,0,1,0,0,1,14,28,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Synthetics Production Xia,Chenyuang,6275460.066530,275.000000,0,1,0,0,1,14,28,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Chavez Li Po Depot,Chenyuang,6275460.066530,42.000000,0,1,0,0,15,36,7,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Liu Feng Organics Production,Chenyuang,6275460.066530,169.000000,0,1,0,0,1,12,25,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Exotic Metals Processing,Chenyuang,6275460.066530,296.000000,0,1,0,0,9,17,25,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Chenyuang Heavy Industry,Chenyuang,6275460.066530,63.000000,0,1,0,0,5,22,28,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Lau,Chenyuang,400000000.000000,140.000000,0,1,0,0,0,734947.714767,3,1,12,19,144,128,107,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Lau System Defense Station,Lau,2939790.859068,0.000000,0,1,0,0,7,71,5,4,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Tu Fu,Li Po Alpha,6750000000.000000,280.000000,0,1,0,0,0,8188940.092166,2,1,8,3,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Hyland,Tu Fu,400000000.000000,280.000000,0,1,0,0,0,924633.099307,3,1,8,20,133,142,122,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Gibbs,Tu Fu,480000000.000000,70.000000,0,1,0,0,0,4029001.303576,3,1,9,19,102,140,137,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Gibbs Agricultural orbital,Gibbs,16116005.214305,0.000000,0,1,0,0,9,48,25,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Gibbs Organics Production,Gibbs,16116005.214305,127.000000,0,1,0,0,1,12,25,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Gibbs Entertainment Center,Gibbs,16116005.214305,254.000000,0,1,0,0,11,106,34,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Lafferty,Tu Fu,576000000.000000,220.000000,0,1,0,0,0,3995093.657368,3,1,11,16,105,110,114,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,MelNet FTL Relay,Lafferty,15980374.629471,0.000000,0,1,0,0,9,88,37,4,end,
-Lpoint,Gibbs Lpoint,Tu Fu,Gibbs,0.500000,0,end,
-Lpoint,Lau Lpoint,Chenyuang,Lau,0.500000,0,end,
-Lpoint,Lafferty Lpoint,Tu Fu,Lafferty,0.500000,0,end,
+li_po_center,"li_po"
+Li Po Alpha,"Li Po Alpha"
+Pyunyang,"Pyunyang"
+Cheong 1,"Cheong 1"
+Golden Petal Station,"Golden Petal Station"
+Cheong 2,"Cheong 2"
+We,"We"
+Li Po Military Garrison,"Li Po Military Garrison"
+Li Po Naval Shipyards,"Li Po Naval Shipyards"
+Chenyuang,"Chenyuang"
+Li Po STC,"Li Po STC"
+Li Po Station,"Li Po Station"
+Li Po Beanstalk,"Li Po Beanstalk"
+Jardin Terraforming Corporate Headquarters,"Jardin Terraforming Corporate Headquarters"
+Synthetics Production Shang,"Synthetics Production Shang"
+Synthetics Production Xia,"Synthetics Production Xia"
+Chavez Li Po Depot,"Chavez Li Po Depot"
+Liu Feng Organics Production,"Liu Feng Organics Production"
+Exotic Metals Processing,"Exotic Metals Processing"
+Chenyuang Heavy Industry,"Chenyuang Heavy Industry"
+Lau,"Lau"
+Lau System Defense Station,"Lau System Defense Station"
+Tu Fu,"Tu Fu"
+Hyland,"Hyland"
+Gibbs,"Gibbs"
+Gibbs Agricultural orbital,"Gibbs Agricultural orbital"
+Gibbs Organics Production,"Gibbs Organics Production"
+Gibbs Entertainment Center,"Gibbs Entertainment Center"
+Lafferty,"Lafferty"
+MelNet FTL Relay,"MelNet FTL Relay"
+Gibbs Lpoint,"Gibbs Lpoint"
+Lau Lpoint,"Lau Lpoint"
+Lafferty Lpoint,"Lafferty Lpoint"

@@ -1,95 +1,46 @@
-Center,bedalov_center,0,0,0,1,0,0,0,0,,,end,
-
-;Star, name, parent, distance, rotation, elevation, magnitude, end,
-Star,Bedalov Alpha,bedalov_center,0,0,0,7,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Pallava,Bedalov Alpha,3000000000.000000,0.000000,0,1,0,0,0,6661305.581835,2,1,8,1,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Seelye,Pallava,400000000.000000,0.000000,0,1,0,0,0,3198088.917655,3,1,10,14,111,124,106,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Seelye Mine,Seelye,12792355.670621,0.000000,0,1,0,0,47,6,37,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Harman,Pallava,480000000.000000,150.000000,0,1,0,0,0,3250362.331509,3,1,6,20,130,138,130,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Harman Metals Mine,Harman,13001449.326036,0.000000,0,1,0,0,47,6,37,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Julich,Pallava,576000000.000000,300.000000,0,1,0,0,0,2835841.681002,3,1,4,21,142,116,107,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Julich Gathering,Julich,11343366.724009,0.000000,0,1,0,0,26,104,42,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Moravek,Pallava,691200000.000000,90.000000,0,1,0,0,0,581785.750882,3,1,13,21,129,105,103,15,15,15,127,44,34,255,0,0,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Mosgrove,Bedalov Alpha,4500000000.000000,140.000000,0,1,0,0,0,3647541.734062,2,1,5,6,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Hummel,Mosgrove,400000000.000000,140.000000,0,1,0,0,0,1405821.281017,3,1,11,18,143,128,145,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Hummel Mine,Hummel,5623285.124070,0.000000,0,1,0,0,47,6,13,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Calbault,Mosgrove,480000000.000000,290.000000,0,1,0,0,0,574052.615127,3,1,3,15,121,116,110,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Common Metals Mining,Calbault,2296210.460507,0.000000,0,1,0,0,47,6,37,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Mining Outpost,Calbault,2296210.460507,127.000000,0,1,0,0,57,6,13,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Kuhlmey,Mosgrove,576000000.000000,80.000000,0,1,0,0,0,1563693.067874,3,1,10,20,119,122,147,15,15,15,127,44,34,255,0,0,end,
-;Belt, name, parent, distance, rotation, elevation, field size, end,
-Belt,Hough Belt,Bedalov Alpha,6750000000.000000,280.000000,0,40000000.000000,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Rare Metals Mine,Hough Belt,18000000.000000,280.000000,0,1,0,0,55,53,2,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Hough Metals Mine,Hough Belt,18000000.000000,47.000000,0,1,0,0,47,6,2,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Golligers Fort,Hough Belt,18000000.000000,174.000000,0,1,0,0,15,60,9,4,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Poboron,Bedalov Alpha,10125000000.000000,60.000000,0,1,0,0,0,1381603.442488,2,1,11,4,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Mason,Poboron,400000000.000000,60.000000,0,1,0,0,0,478990.353069,3,1,3,19,114,108,143,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Mason Asteroid Cluster,Mason,1915961.412276,0.000000,0,1,0,0,48,7,7,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Eaton,Poboron,480000000.000000,210.000000,0,1,0,0,0,458206.068291,3,1,11,21,129,107,122,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Rare Metals Processing,Eaton,1832824.273164,0.000000,0,1,0,0,1,16,7,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Ore Processing Facility,Eaton,1832824.273164,127.000000,0,1,0,0,1,15,7,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Chavez Shipping Headquarters,Eaton,1832824.273164,254.000000,0,1,0,0,9,47,7,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Chavez Central Security,Eaton,1832824.273164,21.000000,0,1,0,0,15,54,7,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Chavez Central Warehousing,Eaton,1832824.273164,148.000000,0,1,0,0,9,62,7,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Manufacturing Station,Eaton,1832824.273164,275.000000,0,1,0,0,5,22,51,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Bedalov Senate,Eaton,1832824.273164,42.000000,0,1,0,0,9,93,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Kirby,Poboron,576000000.000000,0.000000,0,1,0,0,0,550638.961954,3,1,11,21,148,125,104,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Kirby Rare Metals Mine,Kirby,2202555.847818,0.000000,0,1,0,0,48,7,7,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Mavor,Poboron,691200000.000000,150.000000,0,1,0,0,0,272358.240324,3,1,8,20,129,130,129,15,15,15,127,44,34,255,0,0,end,
-;Belt, name, parent, distance, rotation, elevation, field size, end,
-Belt,Markides Belt,Bedalov Alpha,15187500000.000000,200.000000,0,40000000.000000,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Markides Mining Outpost,Markides Belt,18000000.000000,200.000000,0,1,0,0,47,6,7,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Markides Asteroid Mine,Markides Belt,18000000.000000,327.000000,0,1,0,0,47,6,7,4,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Knutson,Bedalov Alpha,22781250000.000000,340.000000,0,1,0,0,0,3263985.106967,2,1,11,5,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Sunczyk,Knutson,400000000.000000,340.000000,0,1,0,0,0,1468390.480820,3,1,1,21,102,120,117,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Sunczyk Mining Outpost,Sunczyk,5873561.923281,0.000000,0,1,0,0,47,6,27,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Kambeitz,Knutson,480000000.000000,130.000000,0,1,0,0,0,745529.969508,3,1,0,16,110,139,124,15,15,15,127,44,34,255,0,0,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Pasechnik,Bedalov Alpha,34171875000.000000,120.000000,0,1,0,0,0,1489028.595843,2,1,12,5,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Janik,Pasechnik,400000000.000000,120.000000,0,1,0,0,0,531176.057759,3,1,6,19,128,129,130,15,15,15,127,44,34,255,0,0,end,
-Lpoint,Kirby Lpoint,Poboron,Kirby,0.500000,0,end,
-Lpoint,Calbault Lpoint,Mosgrove,Calbault,0.500000,0,end,
+bedalov_center,"bedalov"
+Bedalov Alpha,"Bedalov Alpha"
+Pallava,"Pallava"
+Seelye,"Seelye"
+Seelye Mine,"Seelye Mine"
+Harman,"Harman"
+Harman Metals Mine,"Harman Metals Mine"
+Julich,"Julich"
+Julich Gathering,"Julich Gathering"
+Moravek,"Moravek"
+Mosgrove,"Mosgrove"
+Hummel,"Hummel"
+Hummel Mine,"Hummel Mine"
+Calbault,"Calbault"
+Common Metals Mining,"Common Metals Mining"
+Mining Outpost,"Mining Outpost"
+Kuhlmey,"Kuhlmey"
+Hough Belt,"Hough Belt"
+Rare Metals Mine,"Rare Metals Mine"
+Hough Metals Mine,"Hough Metals Mine"
+Golligers Fort,"Golligers Fort"
+Poboron,"Poboron"
+Mason,"Mason"
+Mason Asteroid Cluster,"Mason Asteroid Cluster"
+Eaton,"Eaton"
+Rare Metals Processing,"Rare Metals Processing"
+Ore Processing Facility,"Ore Processing Facility"
+Chavez Shipping Headquarters,"Chavez Shipping Headquarters"
+Chavez Central Security,"Chavez Central Security"
+Chavez Central Warehousing,"Chavez Central Warehousing"
+Manufacturing Station,"Manufacturing Station"
+Bedalov Senate,"Bedalov Senate"
+Kirby,"Kirby"
+Kirby Rare Metals Mine,"Kirby Rare Metals Mine"
+Mavor,"Mavor"
+Markides Belt,"Markides Belt"
+Markides Mining Outpost,"Markides Mining Outpost"
+Markides Asteroid Mine,"Markides Asteroid Mine"
+Knutson,"Knutson"
+Sunczyk,"Sunczyk"
+Sunczyk Mining Outpost,"Sunczyk Mining Outpost"
+Kambeitz,"Kambeitz"
+Pasechnik,"Pasechnik"
+Janik,"Janik"
+Kirby Lpoint,"Kirby Lpoint"
+Calbault Lpoint,"Calbault Lpoint"

@@ -1,81 +1,39 @@
-Center,t_ang_center,0,0,0,1,0,0,0,0,,,end,
-
-;Star, name, parent, distance, rotation, elevation, magnitude, end,
-Star,T Ang Alpha,t_ang_center,0,0,0,8,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Lavoisier,T Ang Alpha,3000000000.000000,0.000000,0,1,0,0,0,2404339.732047,2,1,5,6,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Lavoisier Sec,Lavoisier,9617358.928190,0.000000,0,1,0,0,16,101,34,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Asseltine,Lavoisier,400000000.000000,0.000000,0,1,0,0,0,1187291.757823,3,1,12,14,103,104,119,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Asseltine Asteroid Cluster Alpha,Asseltine,4749167.031293,0.000000,0,1,0,0,52,3,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Asseltine Asteroid Mine,Asseltine,4749167.031293,127.000000,0,1,0,0,52,3,39,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Grundy,Lavoisier,480000000.000000,150.000000,0,1,0,0,0,552008.161186,3,1,13,20,128,124,119,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Grundy Asteroid Cluster,Grundy,2208032.644744,0.000000,0,1,0,0,46,5,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Quesnelle,Lavoisier,576000000.000000,300.000000,0,1,0,0,0,1125745.208666,3,1,7,14,143,120,137,15,15,15,127,44,34,255,0,0,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Ypres,T Ang Alpha,4500000000.000000,140.000000,0,1,0,0,0,8965819.269387,2,1,3,0,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,T Ang STC station,Ypres,35863277.077548,0.000000,0,1,0,0,15,54,39,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Markus Corp Capsule Research Facility,Ypres,35863277.077548,127.000000,0,1,0,0,9,40,39,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Ypres Waystation,Ypres,35863277.077548,254.000000,0,1,0,0,15,36,39,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Ypres Police,Ypres,35863277.077548,21.000000,0,1,0,0,15,68,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Pynenburg,Ypres,400000000.000000,140.000000,0,1,0,0,0,2219768.550975,3,1,1,16,117,147,101,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,T Ang Governor,Pynenburg,8879074.203901,0.000000,0,1,0,0,9,95,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Zhonyang,Ypres,480000000.000000,290.000000,0,1,0,0,0,4238497.115121,3,1,10,20,138,137,130,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Zhonyang Asteroid Cluster,Zhonyang,16953988.460483,0.000000,0,1,0,0,46,5,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Gui Jin,Ypres,576000000.000000,80.000000,0,1,0,0,0,436409.759907,3,1,0,18,134,106,114,15,15,15,127,44,34,255,0,0,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Bonaparte,T Ang Alpha,6750000000.000000,280.000000,0,1,0,0,0,6851496.932890,2,1,4,4,200,200,200,55,55,55,127,44,34,255,0,0,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Yinma,T Ang Alpha,10125000000.000000,60.000000,0,1,0,0,0,5078249.458296,2,1,12,13,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Liu,Yinma,400000000.000000,60.000000,0,1,0,0,0,2367337.329967,3,1,12,18,146,134,115,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Liu Waystation,Liu,9469349.319867,0.000000,0,1,0,0,26,103,12,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Han,Yinma,480000000.000000,210.000000,0,1,0,0,0,2518306.248076,3,1,5,21,130,124,108,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Han Asteroid Cluster,Han,10073224.992305,0.000000,0,1,0,0,56,5,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Qian,Yinma,576000000.000000,0.000000,0,1,0,0,0,1908702.000310,3,1,0,16,125,110,100,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Qian Waystation,Qian,7634808.001241,0.000000,0,1,0,0,15,36,28,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Zhang Shan,Yinma,691200000.000000,150.000000,0,1,0,0,0,610341.360300,3,1,7,16,142,127,117,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Zhang Gathering,Zhang Shan,2441365.441200,0.000000,0,1,0,0,26,104,42,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,San Xiang,Yinma,829440000.000000,300.000000,0,1,0,0,0,252794.426990,3,1,1,16,127,100,138,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,San Xiang Minerals Mine,San Xiang,1011177.707958,0.000000,0,1,0,0,46,5,39,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,San Xiang Asteroid Cluster,San Xiang,1011177.707958,127.000000,0,1,0,0,58,7,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Su-Ping,Yinma,995328000.000000,90.000000,0,1,0,0,0,424861.268870,3,1,12,20,110,119,122,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Su-Ping Asteroid Cluster Yi,Su-Ping,1699445.075479,0.000000,0,1,0,0,46,5,39,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Su-Ping Asteroid Cluster Er,Su-Ping,1699445.075479,127.000000,0,1,0,0,46,5,39,4,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,She Tsung,T Ang Alpha,15187500000.000000,200.000000,0,1,0,0,0,7200140.385144,2,1,12,12,200,200,200,55,55,55,127,44,34,255,0,0,end,
-Lpoint,Qian Lpoint,Yinma,Qian,0.500000,0,end,
-Lpoint,Liu Lpoint,Yinma,Liu,0.500000,0,end,
+t_ang_center,"t_ang"
+T Ang Alpha,"T Ang Alpha"
+Lavoisier,"Lavoisier"
+Lavoisier Sec,"Lavoisier Sec"
+Asseltine,"Asseltine"
+Asseltine Asteroid Cluster Alpha,"Asseltine Asteroid Cluster Alpha"
+Asseltine Asteroid Mine,"Asseltine Asteroid Mine"
+Grundy,"Grundy"
+Grundy Asteroid Cluster,"Grundy Asteroid Cluster"
+Quesnelle,"Quesnelle"
+Ypres,"Ypres"
+T Ang STC station,"T Ang STC station"
+Markus Corp Capsule Research Facility,"Markus Corp Capsule Research Facility"
+Ypres Waystation,"Ypres Waystation"
+Ypres Police,"Ypres Police"
+Pynenburg,"Pynenburg"
+T Ang Governor,"T Ang Governor"
+Zhonyang,"Zhonyang"
+Zhonyang Asteroid Cluster,"Zhonyang Asteroid Cluster"
+Gui Jin,"Gui Jin"
+Bonaparte,"Bonaparte"
+Yinma,"Yinma"
+Liu,"Liu"
+Liu Waystation,"Liu Waystation"
+Han,"Han"
+Han Asteroid Cluster,"Han Asteroid Cluster"
+Qian,"Qian"
+Qian Waystation,"Qian Waystation"
+Zhang Shan,"Zhang Shan"
+Zhang Gathering,"Zhang Gathering"
+San Xiang,"San Xiang"
+San Xiang Minerals Mine,"San Xiang Minerals Mine"
+San Xiang Asteroid Cluster,"San Xiang Asteroid Cluster"
+Su-Ping,"Su-Ping"
+Su-Ping Asteroid Cluster Yi,"Su-Ping Asteroid Cluster Yi"
+Su-Ping Asteroid Cluster Er,"Su-Ping Asteroid Cluster Er"
+She Tsung,"She Tsung"
+Qian Lpoint,"Qian Lpoint"
+Liu Lpoint,"Liu Lpoint"

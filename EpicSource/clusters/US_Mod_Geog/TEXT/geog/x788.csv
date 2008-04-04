@@ -1,67 +1,34 @@
-Center,x788_center,0,0,0,1,0,0,0,0,,,end,
-
-;Star, name, parent, distance, rotation, elevation, magnitude, end,
-Star,X788,x788_center,0,0,0,7,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (giant),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,GasA Plarus,X788,3000000000.000000,0.000000,0,1,0,0,0,88919034.394360,4,2,5,0,200,200,200,149,138,114,127,116,96,0,5,255,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonA Laelia,GasA Plarus,400000000.000000,0.000000,0,1,0,0,0,1041772.209845,3,1,3,19,149,110,118,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Laelia Asteroid Cluster Alpha,MoonA Laelia,4167088.839381,0.000000,0,1,0,0,48,7,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Laelia Asteroid Cluster Beta,MoonA Laelia,4167088.839381,127.000000,0,1,0,0,48,7,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonB Ammenes,GasA Plarus,480000000.000000,150.000000,0,1,0,0,0,930249.946593,3,1,3,15,122,146,126,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Ammenes Asteroid Cluster,MoonB Ammenes,3720999.786370,0.000000,0,1,0,0,47,6,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonC Quillus,GasA Plarus,576000000.000000,300.000000,0,1,0,0,0,8424115.726188,3,1,3,18,120,137,103,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Quillus Asteroid Cluster,MoonC Quillus,33696462.904752,0.000000,0,1,0,0,47,6,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonD Cario,GasA Plarus,691200000.000000,90.000000,0,1,0,0,0,9621456.038087,3,1,13,18,118,103,127,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Cario Asteroid Cluster,MoonD Cario,38485824.152348,0.000000,0,1,0,0,57,6,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonE Danius,GasA Plarus,829440000.000000,240.000000,0,1,0,0,0,8028946.806238,3,1,7,19,127,116,119,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Danius Asteroid Cluster,MoonE Danius,32115787.224952,0.000000,0,1,0,0,48,7,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonF Recia,GasA Plarus,995328000.000000,30.000000,0,1,0,0,0,2105357.524339,3,1,1,15,114,104,133,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Recia Asteroid Cluster,MoonF Recia,8421430.097354,0.000000,0,1,0,0,48,7,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonG Nallia,GasA Plarus,1194393600.000000,180.000000,0,1,0,0,0,8674054.689169,3,1,9,18,142,100,138,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonH Sartis,GasA Plarus,1433272320.000000,330.000000,0,1,0,0,0,8035042.878506,3,1,13,15,108,143,148,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonI Arria,GasA Plarus,1719926784.000000,120.000000,0,1,0,0,0,7005882.442701,3,1,3,20,109,141,109,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonJ Litis,GasA Plarus,2063912140.800000,270.000000,0,1,0,0,0,5615260.780663,3,1,6,17,140,120,113,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Litis Asteroid Cluster,MoonJ Litis,22461043.122654,0.000000,0,1,0,0,47,6,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonK Vaeco,GasA Plarus,2476694568.960000,60.000000,0,1,0,0,0,5525971.251564,3,1,2,18,110,130,139,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonL Potho,GasA Plarus,2972033482.751999,210.000000,0,1,0,0,0,10647389.141514,3,1,7,17,141,145,101,15,15,15,127,44,34,255,0,0,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,PlanetA Sicanian,X788,4500000000.000000,140.000000,0,1,0,0,0,6314615.314188,2,1,11,9,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonA Mecia,PlanetA Sicanian,400000000.000000,140.000000,0,1,0,0,0,955732.142232,3,1,1,14,122,143,102,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Mecia Asteroid Cluster,MoonA Mecia,3822928.568929,0.000000,0,1,0,0,54,2,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonB Brupus,PlanetA Sicanian,480000000.000000,290.000000,0,1,0,0,0,1592168.734668,3,1,11,19,103,115,123,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonC Veccius,PlanetA Sicanian,576000000.000000,80.000000,0,1,0,0,0,2769838.174428,3,1,2,19,104,116,125,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Veccius Asteroid Cluster,MoonC Veccius,11079352.697711,0.000000,0,1,0,0,54,2,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonD Mutian,PlanetA Sicanian,691200000.000000,230.000000,0,1,0,0,0,767365.366024,3,1,9,14,123,127,104,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonE Enaeus,PlanetA Sicanian,829440000.000000,20.000000,0,1,0,0,0,2736920.570107,3,1,12,17,117,141,118,15,15,15,127,44,34,255,0,0,end,
-Lpoint,MoonD Mutian Lpoint,PlanetA Sicanian,MoonD Mutian,0.500000,0,end,
-Lpoint,MoonB Brupus Lpoint,PlanetA Sicanian,MoonB Brupus,0.500000,0,end,
-Lpoint,MoonJ Litis Lpoint,GasA Plarus,MoonJ Litis,0.500000,0,end,
+x788_center,"x788"
+X788,"X788"
+GasA Plarus,"GasA Plarus"
+MoonA Laelia,"MoonA Laelia"
+Laelia Asteroid Cluster Alpha,"Laelia Asteroid Cluster Alpha"
+Laelia Asteroid Cluster Beta,"Laelia Asteroid Cluster Beta"
+MoonB Ammenes,"MoonB Ammenes"
+Ammenes Asteroid Cluster,"Ammenes Asteroid Cluster"
+MoonC Quillus,"MoonC Quillus"
+Quillus Asteroid Cluster,"Quillus Asteroid Cluster"
+MoonD Cario,"MoonD Cario"
+Cario Asteroid Cluster,"Cario Asteroid Cluster"
+MoonE Danius,"MoonE Danius"
+Danius Asteroid Cluster,"Danius Asteroid Cluster"
+MoonF Recia,"MoonF Recia"
+Recia Asteroid Cluster,"Recia Asteroid Cluster"
+MoonG Nallia,"MoonG Nallia"
+MoonH Sartis,"MoonH Sartis"
+MoonI Arria,"MoonI Arria"
+MoonJ Litis,"MoonJ Litis"
+Litis Asteroid Cluster,"Litis Asteroid Cluster"
+MoonK Vaeco,"MoonK Vaeco"
+MoonL Potho,"MoonL Potho"
+PlanetA Sicanian,"PlanetA Sicanian"
+MoonA Mecia,"MoonA Mecia"
+Mecia Asteroid Cluster,"Mecia Asteroid Cluster"
+MoonB Brupus,"MoonB Brupus"
+MoonC Veccius,"MoonC Veccius"
+Veccius Asteroid Cluster,"Veccius Asteroid Cluster"
+MoonD Mutian,"MoonD Mutian"
+MoonE Enaeus,"MoonE Enaeus"
+MoonD Mutian Lpoint,"MoonD Mutian Lpoint"
+MoonB Brupus Lpoint,"MoonB Brupus Lpoint"
+MoonJ Litis Lpoint,"MoonJ Litis Lpoint"

@@ -1,86 +1,42 @@
-Center,ripon_center,0,0,0,1,0,0,0,0,,,end,
-
-;Star, name, parent, distance, rotation, elevation, magnitude, end,
-Star,Ripon,ripon_center,0,0,0,9,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Port-Royal,Ripon,3000000000.000000,0.000000,0,1,0,0,0,4512558.366649,2,1,13,3,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Richelieu,Port-Royal,400000000.000000,0.000000,0,1,0,0,0,465341.162992,3,1,7,16,100,128,138,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Iberville,Port-Royal,480000000.000000,150.000000,0,1,0,0,0,465708.534893,3,1,13,16,145,126,111,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Iberville Asteroid Cluster,Iberville,1862834.139574,0.000000,0,1,0,0,53,9,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Colbert,Port-Royal,576000000.000000,300.000000,0,1,0,0,0,857143.296055,3,1,6,16,120,138,142,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Saints-Martyrs,Port-Royal,691200000.000000,90.000000,0,1,0,0,0,1030665.290914,3,1,5,19,136,104,104,15,15,15,127,44,34,255,0,0,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Saint-Gabriel,Ripon,4500000000.000000,140.000000,0,1,0,0,0,7024597.918638,2,1,11,8,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Sainte-Genevieve,Saint-Gabriel,400000000.000000,140.000000,0,1,0,0,0,1423220.952074,3,1,6,14,120,109,117,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Carignan,Saint-Gabriel,480000000.000000,290.000000,0,1,0,0,0,3229746.255484,3,1,3,16,107,117,109,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Carignan Asteroid Cluster,Carignan,12918985.021937,0.000000,0,1,0,0,61,4,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Saint-Gilles,Saint-Gabriel,576000000.000000,80.000000,0,1,0,0,0,1138278.796199,3,1,2,15,116,103,125,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Saint-Albert,Saint-Gabriel,691200000.000000,230.000000,0,1,0,0,0,3393821.962292,3,1,11,17,145,108,124,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Ripon STC,Saint-Albert,13575287.849167,0.000000,0,1,0,0,15,68,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Ripon Government Admin,Saint-Albert,13575287.849167,127.000000,0,1,0,0,9,74,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,La Vieille Garde,Saint-Gabriel,829440000.000000,20.000000,0,1,0,0,0,1790101.400852,3,1,9,15,146,113,114,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Sainte-Helene,Saint-Gabriel,995328000.000000,170.000000,0,1,0,0,0,2933055.960408,3,1,11,19,139,100,113,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Soulange,Saint-Gabriel,1194393600.000000,320.000000,0,1,0,0,0,1194530.479661,3,1,13,20,125,135,112,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Ripon System Defense Station,Soulange,4778121.918645,0.000000,0,1,0,0,16,101,48,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Montmorency,Saint-Gabriel,1433272320.000000,110.000000,0,1,0,0,0,3254735.941412,3,1,6,14,141,103,114,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Levis,Saint-Gabriel,1719926784.000000,260.000000,0,1,0,0,0,1502271.990427,3,1,9,18,121,107,148,15,15,15,127,44,34,255,0,0,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Saint-Laurent,Ripon,6750000000.000000,280.000000,0,1,0,0,0,1596942.045351,2,1,0,12,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Alma,Saint-Laurent,400000000.000000,280.000000,0,1,0,0,0,475785.870689,3,1,10,15,105,121,133,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Alma orbital,Alma,1903143.482756,0.000000,0,1,0,0,26,103,48,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Alma Waystation Station,Alma,1903143.482756,127.000000,0,1,0,0,39,102,48,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Temple of Salvation,Alma,1903143.482756,254.000000,0,1,0,0,16,101,48,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,House of the Brethren,Alma,1903143.482756,21.000000,0,1,0,0,16,101,48,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Sainte-Foy,Saint-Laurent,480000000.000000,70.000000,0,1,0,0,0,539275.069853,3,1,11,20,113,124,143,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Jeanne DArc,Saint-Laurent,576000000.000000,220.000000,0,1,0,0,0,331717.445378,3,1,13,18,111,103,110,15,15,15,127,44,34,255,0,0,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Orleans,Ripon,10125000000.000000,60.000000,0,1,0,0,0,2581835.383160,2,1,2,2,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Salliere,Orleans,400000000.000000,60.000000,0,1,0,0,0,1245935.256469,3,1,8,19,114,133,139,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Le Rocher,Salliere,4983741.025876,0.000000,0,1,0,0,52,3,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Salliere Asteroid Cluster,Salliere,4983741.025876,127.000000,0,1,0,0,50,10,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Verchere,Orleans,480000000.000000,210.000000,0,1,0,0,0,1209021.704493,3,1,12,20,112,105,103,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Pompadour,Orleans,576000000.000000,0.000000,0,1,0,0,0,1190755.532043,3,1,2,21,117,147,119,15,15,15,127,44,34,255,0,0,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Saint-Charles,Ripon,15187500000.000000,200.000000,0,1,0,0,0,3651692.251350,2,1,9,12,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Sainte-Croix,Saint-Charles,400000000.000000,200.000000,0,1,0,0,0,848991.775118,3,1,6,19,113,124,126,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Sainte-Croix Asteroid Cluster,Sainte-Croix,3395967.100471,0.000000,0,1,0,0,50,10,0,0,end,
-Lpoint,Salliere Lpoint,Orleans,Salliere,0.500000,0,end,
-Lpoint,Sainte-Foy Lpoint,Saint-Laurent,Sainte-Foy,0.500000,0,end,
-Lpoint,Pompadour Lpoint,Orleans,Pompadour,0.500000,0,end,
+ripon_center,"ripon"
+Ripon,"Ripon"
+Port-Royal,"Port-Royal"
+Richelieu,"Richelieu"
+Iberville,"Iberville"
+Iberville Asteroid Cluster,"Iberville Asteroid Cluster"
+Colbert,"Colbert"
+Saints-Martyrs,"Saints-Martyrs"
+Saint-Gabriel,"Saint-Gabriel"
+Sainte-Genevieve,"Sainte-Genevieve"
+Carignan,"Carignan"
+Carignan Asteroid Cluster,"Carignan Asteroid Cluster"
+Saint-Gilles,"Saint-Gilles"
+Saint-Albert,"Saint-Albert"
+Ripon STC,"Ripon STC"
+Ripon Government Admin,"Ripon Government Admin"
+La Vieille Garde,"La Vieille Garde"
+Sainte-Helene,"Sainte-Helene"
+Soulange,"Soulange"
+Ripon System Defense Station,"Ripon System Defense Station"
+Montmorency,"Montmorency"
+Levis,"Levis"
+Saint-Laurent,"Saint-Laurent"
+Alma,"Alma"
+Alma orbital,"Alma orbital"
+Alma Waystation Station,"Alma Waystation Station"
+Temple of Salvation,"Temple of Salvation"
+House of the Brethren,"House of the Brethren"
+Sainte-Foy,"Sainte-Foy"
+Jeanne DArc,"Jeanne DArc"
+Orleans,"Orleans"
+Salliere,"Salliere"
+Le Rocher,"Le Rocher"
+Salliere Asteroid Cluster,"Salliere Asteroid Cluster"
+Verchere,"Verchere"
+Pompadour,"Pompadour"
+Saint-Charles,"Saint-Charles"
+Sainte-Croix,"Sainte-Croix"
+Sainte-Croix Asteroid Cluster,"Sainte-Croix Asteroid Cluster"
+Salliere Lpoint,"Salliere Lpoint"
+Sainte-Foy Lpoint,"Sainte-Foy Lpoint"
+Pompadour Lpoint,"Pompadour Lpoint"

@@ -1,79 +1,40 @@
-Center,al43844_center,0,0,0,1,0,0,0,0,,,end,
-
-;Star, name, parent, distance, rotation, elevation, magnitude, end,
-Star,AL43844,al43844_center,0,0,0,9,end,
-;Belt, name, parent, distance, rotation, elevation, field size, end,
-Belt,BeltA,AL43844,3000000000.000000,0.000000,0,40000000.000000,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Raeeq Asteroid Zone,BeltA,18000000.000000,0.000000,0,1,0,0,47,6,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Noodeerah Asteroid Zone,BeltA,18000000.000000,127.000000,0,1,0,0,47,6,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Raneem Asteroid Zone,BeltA,18000000.000000,254.000000,0,1,0,0,57,6,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Bufeer Asteroid Zone,BeltA,18000000.000000,21.000000,0,1,0,0,55,53,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Yoosef Asteroid Zone,BeltA,18000000.000000,148.000000,0,1,0,0,47,6,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Thaleem Asteroid Zone,BeltA,18000000.000000,275.000000,0,1,0,0,47,6,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Mumtah Asteroid Zone,BeltA,18000000.000000,42.000000,0,1,0,0,47,6,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Shaghmeen Asteroid Zone,BeltA,18000000.000000,169.000000,0,1,0,0,55,53,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Wahmer Asteroid Zone,BeltA,18000000.000000,296.000000,0,1,0,0,47,6,0,0,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (giant),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,GasA Zurisrah,AL43844,4500000000.000000,140.000000,0,1,0,0,0,86111941.892758,4,2,3,0,200,200,200,149,138,114,127,116,96,0,5,255,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonA Saneem,GasA Zurisrah,400000000.000000,140.000000,0,1,0,0,0,10516502.883999,3,1,7,19,147,138,125,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Saneem Asteroid Cluster,MoonA Saneem,42066011.535997,0.000000,0,1,0,0,55,53,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonB Quheer,GasA Zurisrah,480000000.000000,290.000000,0,1,0,0,0,6388027.588733,3,1,0,19,121,140,113,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Quheer Asteroid Cluster,MoonB Quheer,25552110.354930,0.000000,0,1,0,0,65,53,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonC Shafeer,GasA Zurisrah,576000000.000000,80.000000,0,1,0,0,0,7118480.483413,3,1,8,17,146,136,119,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Shafeer Asteroid Cluster,MoonC Shafeer,28473921.933653,0.000000,0,1,0,0,48,7,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonD Akhteeq,GasA Zurisrah,691200000.000000,230.000000,0,1,0,0,0,4629131.443220,3,1,9,15,138,109,116,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Akhteeq Asteroid Cluster,MoonD Akhteeq,18516525.772881,0.000000,0,1,0,0,48,7,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonE Riqq,GasA Zurisrah,829440000.000000,20.000000,0,1,0,0,0,6660557.878353,3,1,1,14,117,112,117,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Riqq Asteroid Cluster,MoonE Riqq,26642231.513413,0.000000,0,1,0,0,55,53,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonF Bileesah,GasA Zurisrah,995328000.000000,170.000000,0,1,0,0,0,5680524.613178,3,1,12,20,122,119,136,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonG Noomah,GasA Zurisrah,1194393600.000000,320.000000,0,1,0,0,0,7532296.212653,3,1,5,14,107,109,106,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonH Ahteeq,GasA Zurisrah,1433272320.000000,110.000000,0,1,0,0,0,1808442.945647,3,1,5,14,138,140,124,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Ahteeq Asteroid Cluster,MoonH Ahteeq,7233771.782586,0.000000,0,1,0,0,48,7,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonI Imeelam,GasA Zurisrah,1719926784.000000,260.000000,0,1,0,0,0,6558000.427259,3,1,1,20,109,125,148,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Imeelam Asteroid Cluster,MoonI Imeelam,26232001.709037,0.000000,0,1,0,0,47,6,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonJ Itee,GasA Zurisrah,2063912140.800000,50.000000,0,1,0,0,0,10050332.651753,3,1,12,18,126,112,121,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Itee Asteroid Cluster Alpha,MoonJ Itee,40201330.607013,0.000000,0,1,0,0,55,53,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Itee Asteroid Cluster Beta,MoonJ Itee,40201330.607013,127.000000,0,1,0,0,55,53,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonK Sateer,GasA Zurisrah,2476694568.960000,200.000000,0,1,0,0,0,8898174.993133,3,1,0,18,102,102,109,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonL Risnah,GasA Zurisrah,2972033482.751999,350.000000,0,1,0,0,0,8091341.898862,3,1,3,21,142,121,127,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Risnah Asteroid Cluster,MoonL Risnah,32365367.595447,0.000000,0,1,0,0,55,53,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonM Raddeel,GasA Zurisrah,3566440179.302399,140.000000,0,1,0,0,0,4374889.370403,3,1,11,15,102,138,108,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Raddeel Asteroid Cluster,MoonM Raddeel,17499557.481613,0.000000,0,1,0,0,55,53,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,MoonO Shunaid,GasA Zurisrah,4279728215.162879,290.000000,0,1,0,0,0,10434743.797113,3,1,2,18,143,123,112,15,15,15,127,44,34,255,0,0,end,
-Lpoint,MoonO Shunaid Lpoint,GasA Zurisrah,MoonO Shunaid,0.500000,0,end,
-Lpoint,MoonK Sateer Lpoint,GasA Zurisrah,MoonK Sateer,0.500000,0,end,
+al43844_center,"al43844"
+AL43844,"AL43844"
+BeltA,"BeltA"
+Raeeq Asteroid Zone,"Raeeq Asteroid Zone"
+Noodeerah Asteroid Zone,"Noodeerah Asteroid Zone"
+Raneem Asteroid Zone,"Raneem Asteroid Zone"
+Bufeer Asteroid Zone,"Bufeer Asteroid Zone"
+Yoosef Asteroid Zone,"Yoosef Asteroid Zone"
+Thaleem Asteroid Zone,"Thaleem Asteroid Zone"
+Mumtah Asteroid Zone,"Mumtah Asteroid Zone"
+Shaghmeen Asteroid Zone,"Shaghmeen Asteroid Zone"
+Wahmer Asteroid Zone,"Wahmer Asteroid Zone"
+GasA Zurisrah,"GasA Zurisrah"
+MoonA Saneem,"MoonA Saneem"
+Saneem Asteroid Cluster,"Saneem Asteroid Cluster"
+MoonB Quheer,"MoonB Quheer"
+Quheer Asteroid Cluster,"Quheer Asteroid Cluster"
+MoonC Shafeer,"MoonC Shafeer"
+Shafeer Asteroid Cluster,"Shafeer Asteroid Cluster"
+MoonD Akhteeq,"MoonD Akhteeq"
+Akhteeq Asteroid Cluster,"Akhteeq Asteroid Cluster"
+MoonE Riqq,"MoonE Riqq"
+Riqq Asteroid Cluster,"Riqq Asteroid Cluster"
+MoonF Bileesah,"MoonF Bileesah"
+MoonG Noomah,"MoonG Noomah"
+MoonH Ahteeq,"MoonH Ahteeq"
+Ahteeq Asteroid Cluster,"Ahteeq Asteroid Cluster"
+MoonI Imeelam,"MoonI Imeelam"
+Imeelam Asteroid Cluster,"Imeelam Asteroid Cluster"
+MoonJ Itee,"MoonJ Itee"
+Itee Asteroid Cluster Alpha,"Itee Asteroid Cluster Alpha"
+Itee Asteroid Cluster Beta,"Itee Asteroid Cluster Beta"
+MoonK Sateer,"MoonK Sateer"
+MoonL Risnah,"MoonL Risnah"
+Risnah Asteroid Cluster,"Risnah Asteroid Cluster"
+MoonM Raddeel,"MoonM Raddeel"
+Raddeel Asteroid Cluster,"Raddeel Asteroid Cluster"
+MoonO Shunaid,"MoonO Shunaid"
+MoonO Shunaid Lpoint,"MoonO Shunaid Lpoint"
+MoonK Sateer Lpoint,"MoonK Sateer Lpoint"

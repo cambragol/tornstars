@@ -1,123 +1,60 @@
-Center,lombard_center,0,0,0,1,0,0,0,0,,,end,
-
-;Star, name, parent, distance, rotation, elevation, magnitude, end,
-Star,Lombard Alpha,lombard_center,0,0,0,5,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Shapiro,Lombard Alpha,3000000000.000000,0.000000,0,1,0,0,0,5255989.257485,2,1,4,3,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Shapiro Exotics Outpost Alpha,Shapiro,21023957.029939,0.000000,0,1,0,0,49,8,27,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,CMC Lombard Security,Shapiro,21023957.029939,127.000000,0,1,0,0,15,54,27,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Shapiro Exotics Outpost Beta,Shapiro,21023957.029939,254.000000,0,1,0,0,49,8,27,4,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Vogel,Lombard Alpha,4500000000.000000,140.000000,0,1,0,0,0,1796899.319437,2,1,1,9,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Dunlop,Vogel,400000000.000000,140.000000,0,1,0,0,0,797165.887678,3,1,9,20,100,124,130,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Dunlop Minerals Mine,Dunlop,3188663.550714,0.000000,0,1,0,0,46,5,27,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Dorie,Vogel,480000000.000000,290.000000,0,1,0,0,0,856515.249216,3,1,4,18,137,143,145,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Dorie Mine,Dorie,3426060.996863,0.000000,0,1,0,0,46,5,27,4,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Laswintha,Lombard Alpha,6750000000.000000,280.000000,0,1,0,0,0,7640827.661977,2,1,8,4,200,200,200,55,55,55,127,44,34,255,0,0,end,
-;Belt, name, parent, distance, rotation, elevation, field size, end,
-Belt,Inner Belt,Lombard Alpha,10125000000.000000,60.000000,0,40000000.000000,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Asteroid Base Donnor,Inner Belt,18000000.000000,60.000000,0,1,0,0,52,3,40,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Asteroid Base Hunter,Inner Belt,18000000.000000,187.000000,0,1,0,0,46,5,40,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Asteroid Base Feilmen,Inner Belt,18000000.000000,314.000000,0,1,0,0,52,3,40,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Dominator Station,Inner Belt,18000000.000000,81.000000,0,1,0,0,26,103,19,4,end,
-;Belt, name, parent, distance, rotation, elevation, field size, end,
-Belt,Middle Belt,Lombard Alpha,15187500000.000000,200.000000,0,40000000.000000,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Middle Belt Asteroid Zone One,Middle Belt,18000000.000000,200.000000,0,1,0,0,52,3,40,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Middle Belt Bay,Middle Belt,18000000.000000,327.000000,0,1,0,0,39,102,19,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Middle Belt Asteroid Zone Two,Middle Belt,18000000.000000,94.000000,0,1,0,0,62,3,0,0,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (giant),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Lombardi,Lombard Alpha,22781250000.000000,340.000000,0,1,0,0,0,74896389.660329,4,2,1,0,200,200,200,149,138,114,127,116,96,0,5,255,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Morel,Lombardi,400000000.000000,340.000000,0,1,0,0,0,6625774.407178,3,1,9,17,149,105,120,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Morel Asteroid Cluster,Morel,26503097.628712,0.000000,0,1,0,0,52,3,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Opaline,Lombardi,480000000.000000,130.000000,0,1,0,0,0,572374.645222,3,1,9,16,108,111,109,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Opaline Consumer Products Factory,Opaline,2289498.580889,0.000000,0,1,0,0,5,29,44,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Opaline Luxuries Production,Opaline,2289498.580889,127.000000,0,1,0,0,5,33,44,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Salvatore,Lombardi,576000000.000000,280.000000,0,1,0,0,0,10380954.924162,3,1,10,14,124,102,148,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Archer,Lombardi,691200000.000000,70.000000,0,1,0,0,0,1248680.074465,3,1,7,21,128,143,120,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Archer Pleasure Palace,Archer,4994720.297861,0.000000,0,1,0,0,11,106,19,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Lombard Station,Archer,4994720.297861,127.000000,0,1,0,0,15,36,40,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Lombard STC,Archer,4994720.297861,254.000000,0,1,0,0,15,54,44,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Lombard Government Center,Archer,4994720.297861,21.000000,0,1,0,0,9,94,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Universal Consumer Products Headquarters,Archer,4994720.297861,148.000000,0,1,0,0,9,47,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,UCP Plastics Processing,Archer,4994720.297861,275.000000,0,1,0,0,5,29,44,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Archer Waystation,Archer,4994720.297861,42.000000,0,1,0,0,15,36,44,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Remy,Lombardi,829440000.000000,220.000000,0,1,0,0,0,4987006.744591,3,1,5,19,141,147,114,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Foreman,Lombardi,995328000.000000,10.000000,0,1,0,0,0,276177.251503,3,1,8,14,132,121,147,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Foreman Military Base,Foreman,1104709.006012,0.000000,0,1,0,0,7,71,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Segal,Lombardi,1194393600.000000,160.000000,0,1,0,0,0,7346545.304727,3,1,2,17,117,131,140,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Aikenites HQ,Segal,29386181.218909,0.000000,0,1,0,0,9,67,40,4,end,
-;Belt, name, parent, distance, rotation, elevation, field size, end,
-Belt,Lombards Outer Belt,Lombard Alpha,34171875000.000000,120.000000,0,40000000.000000,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Imp Rock,Lombards Outer Belt,18000000.000000,120.000000,0,1,0,0,39,102,17,4,end,
-
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (giant),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Samarra,Lombard Alpha,51257812500.000000,260.000000,0,1,0,0,0,20339671.010468,4,2,0,0,200,200,200,149,138,114,127,116,96,0,5,255,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Fallon,Samarra,400000000.000000,260.000000,0,1,0,0,0,4162593.587135,3,1,3,16,141,142,115,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Fallon Asteroid Cluster,Fallon,16650374.348539,0.000000,0,1,0,0,46,5,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Strong Hand,Fallon,16650374.348539,127.000000,0,1,0,0,16,101,19,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Fallon Asteroid Cluster Beta,Fallon,16650374.348539,254.000000,0,1,0,0,46,5,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Brammell,Samarra,480000000.000000,50.000000,0,1,0,0,0,2210837.872475,3,1,7,17,149,121,118,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Brammell Asteroid Cluster,Brammell,8843351.489901,0.000000,0,1,0,0,52,3,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Tappin,Samarra,576000000.000000,200.000000,0,1,0,0,0,4404178.985040,3,1,5,18,143,116,119,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Tappin Base,Tappin,17616715.940162,0.000000,0,1,0,0,26,104,35,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Bentley,Samarra,691200000.000000,350.000000,0,1,0,0,0,9684242.800672,3,1,7,17,130,138,104,15,15,15,127,44,34,255,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Bentley CMC HQ,Bentley,38736971.202686,0.000000,0,1,0,0,9,47,0,0,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Bentley Processing Facility,Bentley,38736971.202686,127.000000,0,1,0,0,1,15,40,4,end,
-;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,
-Station,Bentley Consumer Products Production,Bentley,38736971.202686,254.000000,0,1,0,0,5,29,44,4,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Turner,Samarra,829440000.000000,140.000000,0,1,0,0,0,1749766.994016,3,1,2,14,115,123,131,15,15,15,127,44,34,255,0,0,end,
-;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),	Texture Type, Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end,
-Body,Eisen,Samarra,995328000.000000,290.000000,0,1,0,0,0,3551061.627524,3,1,1,18,107,114,141,15,15,15,127,44,34,255,0,0,end,
-Lpoint,Salvatore Lpoint,Lombardi,Salvatore,0.500000,0,end,
-Lpoint,Brammell Lpoint,Samarra,Brammell,0.500000,0,end,
+lombard_center,"lombard"
+Lombard Alpha,"Lombard Alpha"
+Shapiro,"Shapiro"
+Shapiro Exotics Outpost Alpha,"Shapiro Exotics Outpost Alpha"
+CMC Lombard Security,"CMC Lombard Security"
+Shapiro Exotics Outpost Beta,"Shapiro Exotics Outpost Beta"
+Vogel,"Vogel"
+Dunlop,"Dunlop"
+Dunlop Minerals Mine,"Dunlop Minerals Mine"
+Dorie,"Dorie"
+Dorie Mine,"Dorie Mine"
+Laswintha,"Laswintha"
+Inner Belt,"Inner Belt"
+Asteroid Base Donnor,"Asteroid Base Donnor"
+Asteroid Base Hunter,"Asteroid Base Hunter"
+Asteroid Base Feilmen,"Asteroid Base Feilmen"
+Dominator Station,"Dominator Station"
+Middle Belt,"Middle Belt"
+Middle Belt Asteroid Zone One,"Middle Belt Asteroid Zone One"
+Middle Belt Bay,"Middle Belt Bay"
+Middle Belt Asteroid Zone Two,"Middle Belt Asteroid Zone Two"
+Lombardi,"Lombardi"
+Morel,"Morel"
+Morel Asteroid Cluster,"Morel Asteroid Cluster"
+Opaline,"Opaline"
+Opaline Consumer Products Factory,"Opaline Consumer Products Factory"
+Opaline Luxuries Production,"Opaline Luxuries Production"
+Salvatore,"Salvatore"
+Archer,"Archer"
+Archer Pleasure Palace,"Archer Pleasure Palace"
+Lombard Station,"Lombard Station"
+Lombard STC,"Lombard STC"
+Lombard Government Center,"Lombard Government Center"
+Universal Consumer Products Headquarters,"Universal Consumer Products Headquarters"
+UCP Plastics Processing,"UCP Plastics Processing"
+Archer Waystation,"Archer Waystation"
+Remy,"Remy"
+Foreman,"Foreman"
+Foreman Military Base,"Foreman Military Base"
+Segal,"Segal"
+Aikenites HQ,"Aikenites HQ"
+Lombards Outer Belt,"Lombards Outer Belt"
+Imp Rock,"Imp Rock"
+Samarra,"Samarra"
+Fallon,"Fallon"
+Fallon Asteroid Cluster,"Fallon Asteroid Cluster"
+Strong Hand,"Strong Hand"
+Fallon Asteroid Cluster Beta,"Fallon Asteroid Cluster Beta"
+Brammell,"Brammell"
+Brammell Asteroid Cluster,"Brammell Asteroid Cluster"
+Tappin,"Tappin"
+Tappin Base,"Tappin Base"
+Bentley,"Bentley"
+Bentley CMC HQ,"Bentley CMC HQ"
+Bentley Processing Facility,"Bentley Processing Facility"
+Bentley Consumer Products Production,"Bentley Consumer Products Production"
+Turner,"Turner"
+Eisen,"Eisen"
+Salvatore Lpoint,"Salvatore Lpoint"
+Brammell Lpoint,"Brammell Lpoint"
