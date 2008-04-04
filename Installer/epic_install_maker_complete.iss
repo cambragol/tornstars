@@ -59,6 +59,7 @@ Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\metalasteroid
 Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\neutroniumasteroids\*; DestDir: {app}\mods\MS_Mod_Main\avatars\epicasteroids\neutroniumasteroids; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\redasteroids\*; DestDir: {app}\mods\MS_Mod_Main\avatars\epicasteroids\redasteroids; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\epicasteroids\softasteroids\*; DestDir: {app}\mods\MS_Mod_Main\avatars\epicasteroids\softasteroids; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\freighter\*; DestDir: {app}\mods\MS_Mod_Main\avatars\freighter; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\MS_Mod_ClusterModels\collisionhulls\*; DestDir: {app}\mods\MS_Mod_Main\collisionhulls; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\MS_Mod_ClusterModels\sims\stations\*; DestDir: {app}\mods\MS_Mod_Main\sims\stations; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\MS_Mod_ClusterModels\sims\epicasteroids\*; DestDir: {app}\mods\MS_Mod_Main\sims\epicasteroids; Flags: skipifsourcedoesntexist
