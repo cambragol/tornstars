@@ -197,6 +197,7 @@ Source: .\..\EpicSource\MS_Mod_Ships\avatars\beam\*; DestDir: {app}\mods\MS_Mod_
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\capital_beam_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\capital_beam_bolt;
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\cutting_beam_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\cutting_beam_bolt;
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\cutting_beam_projector\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\cutting_beam_projector;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\mining_beam\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\mining_beam;
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\disruptor\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\disruptor;
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\eamp\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\eamp;
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\edrone\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\edrone;
