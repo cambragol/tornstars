@@ -5,18 +5,18 @@ ECHO off
 (SET drvltr=ND)
 (SET choix=Y)
 
-(SET /P src_data=Path to all_systems.csv file ^[c:\iwar2\bin\^]: )
-IF %src_data% == ND SET src_data=c:\iwar2\bin\
+(SET /P src_data=Path to all_systems.csv file ^[e:\iwar2\bin\^]: )
+IF %src_data% == ND SET src_data=e:\iwar2\bin\
 ECHO %src_data%
 IF not exist %src_data%\all_systems.csv (GOTO :Exit1)
 
-(SET /P bingeog=Path to the geog executable ^[c:\iwar2\bin\^]: )
-IF %bingeog% == ND SET bingeog=c:\iwar2\bin\
+(SET /P bingeog=Path to the geog executable ^[e:\iwar2\bin\^]: )
+IF %bingeog% == ND SET bingeog=e:\iwar2\bin\
 ECHO %bingeog%
 IF not exist %bingeog%\geog.exe (GOTO :Exit1)
 
-(SET /P binjump=Path to the jump_cluster executable ^[c:\iwar2\bin\^]: )
-IF %binjump% == ND SET binjump=c:\iwar2\bin\
+(SET /P binjump=Path to the jump_cluster executable ^[e:\iwar2\bin\^]: )
+IF %binjump% == ND SET binjump=e:\iwar2\bin\
 ECHO %binjump%
 IF not exist %binjump%\jump_cluster.exe (GOTO :Exit1)
 
