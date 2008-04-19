@@ -4,37 +4,35 @@ LWSC
 FirstFrame 1
 LastFrame 100
 FrameStep 1
-PreviewFirstFrame 1
+PreviewFirstFrame 0
 PreviewLastFrame 100
 PreviewFrameStep 1
-FramesPerSecond 25.000000
-
-
+FramesPerSecond 25
 
 AddNullObject dockport_rear
-ShowObject 4 7
+ShowObject 5 7
 ObjectMotion (unnamed)
   9
   1
-  0 -2.249995 -6.0 0 106.5 0 1 1 1
+  0 -2.224996 -7.500003 0 106.5 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 41
 ShadowOptions 7
 
 AddNullObject heatsink
-ShowObject 4 7
+ShowObject 5 7
 ObjectMotion (unnamed)
   9
   1
-  0 -2.249995 -4.0 0 0 0 1 1 1
+  0 -2.249995 -4 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
 LockedChannels 5
 ShadowOptions 7
 
 AddNullObject crew
-ShowObject 4 7
+ShowObject 5 7
 ObjectMotion (unnamed)
   9
   1
@@ -45,7 +43,7 @@ LockedChannels 1
 ShadowOptions 7
 
 AddNullObject active_sensors
-ShowObject 4 7
+ShowObject 5 7
 ObjectMotion (unnamed)
   9
   1
@@ -56,7 +54,7 @@ LockedChannels 1
 ShadowOptions 7
 
 AddNullObject passive_sensors
-ShowObject 4 7
+ShowObject 5 7
 ObjectMotion (unnamed)
   9
   1
@@ -67,7 +65,7 @@ LockedChannels 1
 ShadowOptions 7
 
 AddNullObject autorepair
-ShowObject 4 7
+ShowObject 5 7
 ObjectMotion (unnamed)
   9
   1
@@ -78,7 +76,7 @@ LockedChannels 1
 ShadowOptions 7
 
 AddNullObject cpu
-ShowObject 4 7
+ShowObject 5 7
 ObjectMotion (unnamed)
   9
   1
@@ -89,7 +87,7 @@ LockedChannels 1
 ShadowOptions 7
 
 AddNullObject left_wing_hardpoint
-ShowObject 4 7
+ShowObject 5 7
 ObjectMotion (unnamed)
   9
   1
@@ -99,9 +97,8 @@ EndBehavior 1
 LockedChannels 5
 ShadowOptions 7
 
-
 AddNullObject right_wing_hardpoint
-ShowObject 4 7
+ShowObject 5 7
 ObjectMotion (unnamed)
   9
   1
@@ -125,12 +122,12 @@ ShowObject 8 7
 ObjectMotion (unnamed)
   9
   1
-  0 11.1 -4 0 0 -90 1 1 1
+  0 11.1 -4 0 0 -89.99999 1 1 1
   0 0 0 0 0
 EndBehavior 1
 ShadowOptions 7
 
-LoadObject Objects_IW2\Ships\MarauderFighter\RTO\MF0_RTO.lwo
+LoadObject G:\resource\avatars\marauderfighter\MF0_RTO_T.lwo
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -170,9 +167,8 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
-
 AmbientColor 255 255 255
-AmbIntensity 0.250000
+AmbIntensity 0.25
 
 AddLight
 LightName Light
@@ -184,7 +180,7 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LightColor 255 255 255
-LgtIntensity 1.000000
+LgtIntensity 1
 LightType 0
 ShadowType 1
 
@@ -195,17 +191,19 @@ CameraMotion (unnamed)
   0 0.5266764 -40.54919 0 0 0 1 1 1
   0 0 0 0 0
 EndBehavior 1
-ZoomFactor 3.200000
+ZoomFactor 3.2
 Resolution 1
-PixelAspectRatio 3
-SegmentMemory 10500000
+CustomSize 752 576
+PixelAspectRatio -1
+CustomPixelRatio 1.0186
+MaskPosition 0 0 752 576
+MotionBlur 0
+FieldRendering 0
+SegmentMemory 8000000
+ApertureHeight 0.015
 Antialiasing 0
 AdaptiveSampling 1
 AdaptiveThreshold 16
-FilmSize 2
-FieldRendering 0
-MotionBlur 0
-DepthOfField 0
 
 SolidBackdrop 1
 BackdropColor 0 0 0
@@ -219,18 +217,21 @@ AnimatedDither 0
 
 RenderMode 2
 RayTraceEffects 0
+RayTraceOptimization 1
 DataOverlayLabel  
-FullSceneParamEval 0
+SaveRGB 0
+SaveAlpha 0
 
-ViewMode 3
-ViewAimpoint -14.000000 -2.500000 6.500000
-ViewDirection -2.371900 -0.165806 0.000000
-ViewZoomFactor 3.152270
+ViewType 7
+ViewAimpoint -14 -2.5 6.5
+ViewDirection -2.3719 -0.165806 0
+ViewZoomFactor 3.15227
+
 GridNumber 40
-GridSize 5.000000
+GridSize 5
+CameraViewBG 0
 ShowMotionPath 1
-ShowBGImage 0
 ShowFogRadius 0
-ShowRedraw 0
+ShowFogEffect 0
 ShowSafeAreas 0
 ShowFieldChart 0
