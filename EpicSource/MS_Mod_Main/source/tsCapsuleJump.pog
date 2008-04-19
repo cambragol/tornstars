@@ -195,6 +195,13 @@ init_system(string system_name)
     list route_list;
     hsim route;
 
+    debug {
+        Debug.PrintString("tsCapsuleJump.init_system Start\n");
+        Debug.PrintString("tsCapsuleJump.init_system System = ");
+        Debug.PrintString(system_name);
+        Debug.PrintString("\n");
+    }
+
     // Mark all the lpoints hidden to start.
 
 //   global_name = String.Join("gt_found", system_name);
@@ -214,8 +221,24 @@ init_system(string system_name)
 
         // Set every lpoint invisible. 
         iMapEntity.SetMapVisibility(lpoint, false);
+        
+        // also set every lpoint as unusable to ensure it does not appear in ps nav inappropriately
+        iLagrangePoint.SetUsable( lpoint, false );
+            
+        debug {
+            Debug.PrintString("tsCapsuleJump.init_system set invivisble --> ");
+            Debug.PrintString( iMapEntity.Name( lpoint ) );
+            Debug.PrintString("\n");
+            
+        }
+        
     }
-
+    
+    debug {
+        Debug.PrintString("tsCapsuleJump.init_system total number LPoints set visible = false: ");
+        Debug.PrintInt(i);
+        Debug.PrintString("\n");
+    }
 
     system_file = INIFile.Create(system_file_name);
 
@@ -238,12 +261,18 @@ init_system(string system_name)
 
             if (1 == difficulty) {
                 iMapEntity.SetMapVisibility(lpoint, true);
+                iLagrangePoint.SetUsable( lpoint, true );
 
                 Object.AddBoolProperty(lpoint,"standard_route", true);
+                
+                debug  Debug.PrintString(String.FormatStrStr("tsCapsuleJump.init_system make %s visible, hase lvl 1 route to %s\n", start_lpoint, end_lpoint));
             }
 
             if (is_known(start_lpoint, end_lpoint)) {
                 iMapEntity.SetMapVisibility(lpoint, true);
+                iLagrangePoint.SetUsable( lpoint, true );
+                
+                debug  Debug.PrintString(String.FormatStrStr("tsCapsuleJump.init_system make %s%s visible, its known\n", start_lpoint, ""));
             }
 
             // Put the route into the lpoints route list.
@@ -310,6 +339,7 @@ init_system(string system_name)
         }
     }
     */
+    debug Debug.PrintString("tsCapsuleJump.init_system End\n");
 }
 //[cf]
 
