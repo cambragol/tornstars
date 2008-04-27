@@ -213,9 +213,10 @@ CreateMessageView()
    string body;
    string sdelete;
 
-   debug Debug.PrintString("Create Message View\n");
+   debug Debug.PrintString("tsShipMail.CreateMessageView: Start\n");
    if (none == mail) {
       // no mail to display, so don't.
+      debug Debug.PrintString("tsShipMail.CreateMessageView: No mail - End\n");
       return;
    }
 
@@ -229,7 +230,9 @@ CreateMessageView()
 
    // delete the old window
 
+   debug Debug.PrintString("old_view handle to delete: ");
    debug Debug.PrintHandle(old_view);
+   debug Debug.PrintString("/n");
    GUI.DeleteWindow(old_view);
 
    // create a parent window we can build all the others upon. For easy delete.
@@ -245,7 +248,7 @@ CreateMessageView()
                                -Global.Int("GUI_fancybutton_height"),
                                parent_win);
 
-   // Save this new parent window, so we can delete the message view easy.
+   // Save this new parent window, so we can delete the message-view easy.
    Global.SetHandle("g_trout_shipmail_message_view_parent", parent_win);
 
    email_win = iGUI.CreateTitledTextBox( pane_win,
@@ -278,6 +281,7 @@ CreateMessageView()
 
    if (tsMail.HasReply(mail)) {
       // If the mail has an accept task.
+      debug Debug.PrintString("tsShipMail.CreateMessageView: there is an accept task link./n");
       accept_button = iGUI.CreateAndInitialiseRectangularInverseButton( parent_win, 
                                                                   GUI.WindowCanvasWidth(parent_win)/3,
                                                                   GUI.WindowCanvasHeight(parent_win) 
@@ -286,7 +290,7 @@ CreateMessageView()
                                                                   "Accept", 
                                                                   "tsShipMail.MailAcceptButtonPressed");    
    }
-   debug Debug.PrintString("End Create Message View\n");
+   debug Debug.PrintString("tsShipMail.CreateMessageView: End\n");
 }
 //[cf]
 
@@ -299,22 +303,26 @@ DeleteButtonPress()
    hwindow button;
    hsim mail = Sim.Cast(Global.Handle("g_trout_shipmail_current_mail"));
    
-   debug Debug.PrintString("Delete Press\n");
+   debug Debug.PrintString("tsShipMail.DeleteButtonPress: Start\n");
 
    button = GUI.FocusedWindow();
    debug Debug.PrintHandle(button);
+   debug Debug.PrintString("/n");
 
    // Toggle the mail state. Change the button text to opposite of state.
    if (tsMail.isDeleted(mail)) {
+      debug Debug.PrintString("tsShipMail.DeleteButtonPress: set deleted = false\n");
       tsMail.DeleteMail(mail,false);
       GUI.SetWindowTitle(button,"Delete");
    }else {
+      debug Debug.PrintString("tsShipMail.DeleteButtonPress: set deleted = true\n");
       tsMail.DeleteMail(mail,true);
       GUI.SetWindowTitle(button,"Save");
    }
 
    debug Debug.PrintHandle(mail);
-   debug Debug.PrintString("  End Delete\n");
+   debug Debug.PrintString("/n");
+   debug Debug.PrintString("tsShipMail.DeleteButtonPress: End\n");
 }
 //[cf]
 

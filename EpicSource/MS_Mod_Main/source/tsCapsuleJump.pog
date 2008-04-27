@@ -1387,7 +1387,7 @@ hship create_player(hship player, hinifile jump_file)
 }
 //[cf]
 
-
+// Create the core simulation i.e. the tube we fly through plus other stuff
 //[of]:bool create_simulation(hmapentity center, int difficulty, hship player, hgroup cull_group, hinifile jump_file)
 bool create_simulation(hmapentity center, int difficulty, hship player, hgroup cull_group, hinifile jump_file)
 {
@@ -1509,6 +1509,11 @@ bool create_simulation(hmapentity center, int difficulty, hship player, hgroup c
       do {
          top = iDockport.Cast(Sim.FindSubsimByName( tube2, "top_connect_port" ));
       } while (top == none);
+      
+      // before docking apply some random orientation change to tube1's
+      // docking port.
+      debug Debug.PrintString("tsCapsuleJump.jump_simulation Randomise tube1's dockport orientation.\n");
+      Subsim.OrientateEuler( bottom, 0.0, 0.0, Math.Random(-180.0,180.0));
 
       do {
          docked = iDockport.Dock( bottom, top );
