@@ -739,7 +739,7 @@ task select_dialog()
            // ejump_unknown_cancel_say, "Cancel that, it is too dangerous"
             iConversation.AddResponse(
                "ejump_cancel",
-               "ejump_uknown_cancel_say");
+               "ejump_unknown_cancel_say");
 
 
 
@@ -765,7 +765,7 @@ task select_dialog()
            // ejump_unknown_cancel_say, "Cancel that, it is too dangerous"
            iConversation.AddResponse(
               "ejump_cancel",
-              "ejump_uknown_cancel_say");
+              "ejump_unknown_cancel_say");
 
 
            // ejump_unstable_ask, "The lpoint is unstable and could damage us?"
