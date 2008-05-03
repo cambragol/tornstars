@@ -124,7 +124,7 @@ string StationIntToString(int type)
    case ept_BlackMarket : return "HT_BlackMarket"; break;
    case ept_DryDock : return "HT_DryDock"; break;
    case ept_DockingStation : return "HT_DockingStation"; break;
-   case ept_EntertainmentStation : return "HT_EntertainmentsStation"; break;
+   case ept_EntertainmentStation : return "HT_EntertainmentStation"; break;
    case ept_Settlement : return "HT_Settlement"; break;
    case ept_PoliceBase : return "HT_PoliceBase"; break;
    case ept_PoliceOutpost : return "HT_PoliceOutpost"; break;
