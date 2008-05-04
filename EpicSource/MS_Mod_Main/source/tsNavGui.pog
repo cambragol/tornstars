@@ -2741,6 +2741,9 @@ bool has_science(hmapentity location)
    {
    case ept_CentralHQ:
    case ept_ResearchStation:
+   case ept_RegionalDepartment:
+   case ept_SystemAdministration:
+   case ept_ClusterAdministration:
       return true;
       break;
    default:
@@ -2793,7 +2796,15 @@ bool has_rumors(hmapentity location)
    case ept_Resort:
    case ept_EntertainmentStation:
    case ept_Casino:
+
+   case ept_RegionalDepartment:
+   case ept_SystemAdministration:
+   case ept_ClusterAdministration:
+   case ept_GangsterHideout:
+
    case ept_Habitat:
+   case ept_Settlement:
+   case ept_AgriculturalSettlement:
       return true;
       break;
    default:
@@ -2832,14 +2843,19 @@ bool has_warships(hmapentity location)
    switch( habtype )
    {
    case ept_MercenaryBase:
+   case ept_GangsterHideout:
+   case ept_Fortress:
+
 
    case ept_PirateBase:
    case ept_PirateCove:
    case ept_PirateOutpost:
 
-   case ept_DefenceStation:
-   case ept_PoliceBase:
    case ept_SecurityStation:
+   case ept_WeaponsManufacturingPlant:
+   case ept_Casino:
+   case ept_Resort:
+   case ept_EntertainmentStation:
       return true;
       break;
    default:
@@ -2856,8 +2872,6 @@ bool has_transports(hmapentity location)
 
    switch( habtype )
    {
-   case ept_MercenaryBase:
-
    case ept_PirateBase:
    case ept_PirateCove:
    case ept_PirateOutpost:
@@ -2865,8 +2879,11 @@ bool has_transports(hmapentity location)
    case ept_Casino:
    case ept_EntertainmentStation:
    case ept_Resort:
+   case ept_Settlement:
+
 
    case ept_Waystation:
+   case ept_Beanstalk:
    case ept_Shipyard:
    case ept_TransferStation:
    case ept_Warehousing:
@@ -2891,17 +2908,45 @@ bool has_fuel(hmapentity location)
    case ept_Shipyard:
    case ept_TransferStation:
    case ept_Warehousing:
+   case ept_Beanstalk:
+   case ept_CentralHQ:
 
    case ept_Casino:
    case ept_EntertainmentStation:
    case ept_Resort:
    case ept_Habitat:
+   case ept_Settlement:
+   case ept_AgriculturalSettlement:
+   case ept_Habitat:
+
+   case ept_WeaponsManufacturingPlant:
+   case ept_OrganicsProcessingPlant:
+   case ept_NeutroniumProcessingPlant:
+   case ept_FusionableGasesProcessingPlant:
+   case ept_RadioactivesProcessingPlant:
+   case ept_ExoticMetalsProcessingPlant:
+   case ept_RareMetalsProcessingPlant:
+   case ept_CommonMetalsProcessingPlant:
+   case ept_BiomassProcessingPlant:
+   case ept_InorganicsProcessingPlant:
+   case ept_WaterProcessingPlant:
+
+
+   case ept_MercenaryBase:
+   case ept_Fortress:
+   case ept_GangsterHideout:
 
    case ept_PirateBase:
+   case ept_PirateCove:
+   case ept_PirateOutpost:
       
    case ept_DefenceStation:
+   case ept_RegionalDepartment:
+   case ept_SystemAdministration:
+   case ept_ClusterAdministration:
    case ept_PoliceBase:
    case ept_SecurityStation:
+
 
       return true;
       break;
@@ -2936,13 +2981,16 @@ bool has_weapons(hmapentity location)
    switch( habtype )
    {
    case ept_MercenaryBase:
+   case ept_Fortress:
 
    case ept_Shipyard:
    case ept_WeaponsManufacturingPlant:
+   case ept_SystemAdministration:
+   case ept_ClusterAdministration:
+   case ept_BlackBudgetResearchStation:
 
    case ept_PirateBase:
    case ept_PirateCove:
-   case ept_PirateOutpost:
 
    case ept_DefenceStation:
    case ept_PoliceBase:
@@ -2967,12 +3015,15 @@ bool has_scrapper(hmapentity location)
    switch( habtype )
    {
    case ept_Shipyard:
-   case ept_TransferStation:
-   case ept_Warehousing:
+   case ept_Settlement:
+   case ept_AgriculturalSettlement:
 
    case ept_PirateBase:
    case ept_PirateCove:
    case ept_PirateOutpost:
+
+   case ept_GangsterHideout:
+
       return true;
       break;
    default:
@@ -2991,14 +3042,20 @@ bool has_tanker(hmapentity location)
    switch( habtype )
    {
    case ept_Waystation:
+   case ept_Beanstalk:
    case ept_Shipyard:
    case ept_TransferStation:
    case ept_Warehousing:
+
+   case ept_MercenaryBase:
+   case ept_Fortress:
 
    case ept_Casino:
    case ept_EntertainmentStation:
    case ept_Resort:
    case ept_Habitat:
+   case ept_Settlement:
+   case ept_AgriculturalSettlement:
 
    case ept_PirateBase:
    case ept_PirateCove:
