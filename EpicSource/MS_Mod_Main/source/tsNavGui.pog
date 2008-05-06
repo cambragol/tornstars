@@ -2917,7 +2917,6 @@ bool has_fuel(hmapentity location)
    case ept_Habitat:
    case ept_Settlement:
    case ept_AgriculturalSettlement:
-   case ept_Habitat:
 
    case ept_WeaponsManufacturingPlant:
    case ept_OrganicsProcessingPlant:
