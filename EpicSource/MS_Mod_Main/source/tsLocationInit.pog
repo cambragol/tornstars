@@ -15,6 +15,7 @@
 package tsLocationInit;
 
 // Imports
+//[of]:Imports
 uses    Sim,
         iShip,
         iSim,
@@ -34,6 +35,7 @@ uses    Sim,
         CargoTypes,
         iCargo,
         iMapEntity,
+        iHabitat,
         tsEconUtil,
         tsStationEnum,
         tsStation,
@@ -41,12 +43,17 @@ uses    Sim,
         tsLCenter,
         tsLProduction,
         tsStationEnv,
-        tsPlayerFleetUpkeep;
+        tsPlayerFleetUpkeep,
+        tsStationAi;
+//[cf]
 
 
 // Exports
+//[of]:Exports
 provides Arrives,
          Leaves;
+//[cf]
+
 
 // Prototypes
 prototype status_setup(hisim producer);
@@ -88,8 +95,11 @@ Arrives(hmapentity location)
 
          // Only stations can have mining rigs attached.
          tsPlayerFleetUpkeep.ProduceCargo(iHabitat.Cast(location));
-
       }
+      
+      // start station watching script
+      tsStationAi.Start(iHabitat.Cast(location));
+
 
       operations_setup(location);
    }
@@ -102,6 +112,9 @@ Leaves(hmapentity location)
 {
    tsLCenter.SetCullMarker(location, false);
    tsStationEnv.LeaveStation(location);
+   
+   // start station watching script
+   tsStationAi.End(iHabitat.Cast(location));
 }
 //[cf]
 
@@ -185,7 +198,7 @@ status_setup(hisim producer)
 //[cf]
 
 
-
+// Setup the operations at the center (in this context it will normally be station or lpoint)
 //[of]:operations_setup(hmapentity center)
 operations_setup(hmapentity center)
 {
@@ -196,13 +209,14 @@ operations_setup(hmapentity center)
    list operations;
    hisim operation;
 
-   debug Debug.PrintString("tsStationInit.operations_setup\n");
+   debug Debug.PrintString("tsLocationInit.operations_setup\n");
 
    if (none == stations_file) {
-      debug Debug.PrintString("Error tsStationInit.operations_setup cannot open station status ini\n");
+      debug Debug.PrintString("Error tsLocationInit.operations_setup cannot open station status ini\n");
       return;
    }
 
+   // list of operations for this map entity
    operations = tsFleetOp.StationOperations(center);
 
    total = List.ItemCount(operations);
@@ -213,7 +227,7 @@ operations_setup(hmapentity center)
 
       tsFleetOp.SetKnown(operation, true);
 
-      debug Debug.PrintString("tsStationInit.op found ");
+      debug Debug.PrintString("tsLocationInit.op found ");
       debug Debug.PrintString(op_type);
       debug Debug.PrintString("\n");
 

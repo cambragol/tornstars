@@ -137,11 +137,15 @@ When a new object is created, an INI file is handed into the create function. Th
 #[l]:	tsPcEmbezzleOp.pog:tsPcEmbezzleOp.pog
 	- Guards -
 	* Guards are used to represent many of the attack and defense fleets. They have complex behavior.
-	* Guards are created based on the number of fleet points in the fleet operation or station. Destroying guard ships subtracts the ships points from the station or operation. The player can hit and run destroy guards.
-	* Guards fly a waypoint route around the station. If they see a dislike or hostile ship, they will attack.
-	* Guards respond to nearby distress calls. Most ships will drop a distress event when attacked. Guards listen for these events. If the sender is close (200km) and is non-dislike then the guards will go after the attacker.
+	* Guards are created based on the number of fleet points in the fleet operation or station. Destroying guard ships
+	* subtracts the ships points from the station or operation. The player can hit and run destroy guards.
+	* Guards fly a waypoint route around the station. If they see a "dislike" or "hostile" ship, they will attack.
+	* Guards respond to nearby distress calls. Most ships will drop a distress event when attacked.
+	* Guards listen for these events. If the sender is close (200km) and is non-dislike then the guards will go after
+	* the attacker.
 	* If a guard ship is attacked, they will all go after the attacker.
-	* If the leader is killed, they keep fighting, but don't patrol. Guards don't attack friendly factions (to avoid stay shots starting wars).
+	* If the leader is killed, they keep fighting, but don't patrol.
+	* Guards don't attack friendly factions (to avoid stay shots starting wars).
 #[l]:	tsPcGuards.pog:tsPcGuards.pog
 	- Hired Ship -
 #[l]:	tsPcHiredShip.pog:tsPcHiredShip.pog

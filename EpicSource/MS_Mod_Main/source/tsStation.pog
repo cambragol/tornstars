@@ -13,6 +13,7 @@
 
 package tsStation;
 
+//[of]:Imports
 uses 
 iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, 
 Task, Debug, iFaction, iSim, iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
@@ -26,10 +27,10 @@ iLagrangePoint,
    iDockport,
    tsFaction,
    tsStationEnum;
+//[cf]
 
 
-
-
+//[of]:Exports
 provides 
    Habitats,
    Nearest,
@@ -73,6 +74,7 @@ provides
    
    String2Category,
    Category2String;
+//[cf]
 
  
 prototype Create(hhabitat station, string faction_name, eStationStatus status, int event_time, 
@@ -136,10 +138,12 @@ bool IsVisibleOnMap(hhabitat station)
    return iMapEntity.IsVisibleOnMap(station);
 }
 
+
 SetMapVisibility(hhabitat station, bool visible)
 {
    iMapEntity.SetMapVisibility(station, visible);
 }
+
 
 SetHidden(hhabitat station, bool hide)
 {
@@ -158,13 +162,14 @@ bool IsHidden(hhabitat station)
    return iMapEntity.IsHidden(station);
 }
 
+
 // This function will set a map entity station to destroyed, and will totally
 // remove a pog created station.
-
 SetDestroyed(hhabitat station, bool destroyed)
 {
    iMapEntity.SetDestroyed(station, destroyed);
 }
+
 
 bool IsDestroyed(hhabitat station)
 {
@@ -283,6 +288,8 @@ Create(hhabitat station,
    hfaction faction;
    hfaction player_faction = tsFaction.PlayerFaction();
 
+   debug Debug.PrintString("tStation.Create: Start\n");
+
    Object.AddIntProperty(station,"gt_station_state", 0);
    Object.AddIntProperty(station,"gt_station_category", 0);
    Object.AddIntProperty(station,"gt_station_event", 0);
@@ -291,6 +298,8 @@ Create(hhabitat station,
    Object.AddIntProperty(station,"gt_station_richness", 0);
    Object.AddBoolProperty(station,"gt_station_known", true);
    Object.AddBoolProperty(station,"gt_station_awake", true);
+   
+   Object.AddHandleProperty(station, "gt_station_watcher", none);
 
    SetStatus(station, status);
    SetChangeTime(station, event_time);
@@ -299,7 +308,6 @@ Create(hhabitat station,
    SetRichness(station, richness);
    SetKnown(station, known);
    SetAwake(station, awake);
-
 
    faction = iFaction.Find(faction_name);
 //   iSim.SetFaction(iSim.Cast(station), faction);
@@ -310,7 +318,12 @@ Create(hhabitat station,
       iSim.SetSensorVisibility(station, true);
    }
    // Commented out until stations can be replaced.
-   //iSim.SetIndestructable(station, false);
+   iSim.SetIndestructable(station, false);
+   
+   // Setup AI - a bit crude at the moment
+   iHabitat.SetArmed(station , true);
+
+   debug Debug.PrintString("tStation.Create: End\n");
 }
 
 string Status2String(eStationStatus status)

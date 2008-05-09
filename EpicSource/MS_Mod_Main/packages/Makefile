@@ -130,6 +130,7 @@ PACKAGES = ECargoTypes.pkg \
 	tsShipName.pkg \
 	tsSpewerOps.pkg \
 	tsStation.pkg \
+	tsStationAi.pkg \
 	tsStationEnv.pkg \
 	tsStationFilter.pkg \
 	tsStationRules.pkg \
@@ -310,7 +311,8 @@ tsSaveGui.pkg : tsSaveGui.pog tsTime.h tsMain.h tsGui.h tsLProduction.h UniGUI.h
 tsShipMail.pkg : tsShipMail.pog UniGUI.h tsGui.h tsMail.h tsNewsNet.h
 tsShipName.pkg : tsShipName.pog
 tsSpewerOps.pkg : tsSpewerOps.pog tsMegaTrucking.h
-tsStation.pkg : tsStation.pog
+tsStation.pkg : tsStation.pog tsFaction.pog tsStationEnum.h
+tsStationAi.pkg : tsStationAi.pog tsFaction.pog tsStationEnum.h
 tsStationEnv.pkg : tsStationEnv.pog tsPogClass.h tsPcOwner.h tsCull.h
 tsStationFilter.pkg : tsStationFilter.pog tsEconUtil.h tsFaction.h tsStation.h tsLRoot.h tsLProduction.h tsLCenter.h tsLTrade.h tsStarSystem.h
 tsStationRules.pkg : tsStationRules.pog tsTime.h tsStation.h tsFleetOp.h tsFleetOpFilter.h tsEconUtil.h tsLProduction.h tsLFleet.h tsFleetOpCall.h tsFaction.h

@@ -1,0 +1,134 @@
+//*******************************************************************************************/
+//
+// tsStationAi
+//
+// This package implements Station AI routines to support:
+//     * Distress call processing
+//     * Station attack response
+//
+// 
+//
+// May 2008, James Walker
+//******************************************************************************************/
+
+package tsStationAi;
+
+//[of]:Imports
+uses 
+iShip,
+Global,
+Object,
+Sim,
+Input,
+iMapEntity,
+Math,
+iAI, 
+Task,
+Debug,
+iFaction,
+iSim,
+iFactionScript,
+iComms,
+INIFile,
+iUtilities,
+iPilotSetup,
+iConversation,
+iFormation,
+Group,
+Text,
+iEmail,
+State,
+iTrafficCreation, 
+iRangeCheck,
+iRemotePilot,
+iRegion,
+iMissionTracker,
+iWingmen,
+iCargoScript,
+iShipCreation,
+iHUD,
+iScriptedOrders,
+iStation, 
+iStartSystem, 
+iLagrangePoint, 
+iGame, 
+Stream, 
+iDockport,
+tsFaction,
+tsStationEnum;
+//[cf]
+
+
+//[of]:Exports
+provides 
+   Reaction,
+   Start,
+   End;
+//[cf]
+
+
+// Prototypes -----------------------------------------------------------------------------------------
+prototype Reaction();
+prototype bool Start(hhabitat station);
+prototype bool End(hhabitat station);
+prototype task station_watcher(hhabitat station);
+
+
+// Functions -------------------------------------------------------------------------------------------
+
+// Call back function used by iHabitate.SetReactiveFunction
+Reaction()
+{
+    debug Debug.PrintString("tsStationAi.Reaction: Start\n");
+    debug Debug.PrintString("tsStationAi.Reaction: End\n");
+}
+
+
+task station_watcher(hhabitat station)
+{
+    while(1)
+    {
+        // has the station been attacked
+        if( iSim.Attacked(station) )
+        {
+            debug Debug.PrintString("tsStationAi.station_watcher: Station attacked!\n");
+        }
+        Task.Sleep(Task.Current(), 3.0);
+    }
+}
+
+bool Start(hhabitat station)
+{
+    htask t;
+    
+    t = start station_watcher(station);
+    Task.Detach(t);
+    Object.SetHandleProperty(station, "gt_station_watcher", t);
+    
+    return false;
+}
+
+
+bool End(hhabitat station)
+{
+    htask t;
+    
+    t = Task.Cast(Object.HandleProperty(station, "gt_station_watcher"));
+    Task.Halt(t);
+    
+    return false;
+}
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+
