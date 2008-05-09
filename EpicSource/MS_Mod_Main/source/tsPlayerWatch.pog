@@ -164,8 +164,8 @@ task watch_task()
                Debug.PrintString(" \n");               
             }
 
-			// activates all the appropriate activity for the location
-			// the player is arriving at.
+            // activates all the appropriate activity for the location
+            // the player is arriving at.
             tsLocationInit.Arrives(location);
 
             // Save if we have approached at least one station. 

@@ -115,7 +115,6 @@ task escort_task(hship escort)
 
 // This task is launched when a cargo ship has
 // been attacked.
-// ToDo - actually used? Jon?
 //[of]:task cargo_task(hship cargo_ship)
 task cargo_task(hship cargo_ship)
 {
@@ -129,8 +128,10 @@ task cargo_task(hship cargo_ship)
       return;
    }
 
+   // set fact that this ship now has a watch task assigned to it
    Object.AddBoolProperty(cargo_ship,"watch_task", true);
 
+   // continuous monitoring loop
    while (1) {
       Task.Sleep(Task.Current(), 1.0);
 
@@ -139,12 +140,14 @@ task cargo_task(hship cargo_ship)
          return;
       }
       
+      // get the hit points and flee points for the cargo ship
       hit_points = Object.FloatProperty(cargo_ship,"hit_points");
       flee_points = Object.FloatProperty(cargo_ship,"flee_hit_points");
 
       if (hit_points < flee_points) {
          // If our orders are not to run, then run.
 
+         // if not already fleeing then make us flee
          if (OT_Flee != iAI.CurrentOrderType(cargo_ship)) {
             last_attacker = iShip.Cast(iShip.LastAttacker(cargo_ship));
 
@@ -153,6 +156,7 @@ task cargo_task(hship cargo_ship)
 
             debug Debug.PrintString("tsPilotSetup.cargo_task giving flee order\n");
             // This is a good place for a distress call.
+            // Joco: The distress call should be in 'CargoSelfPreserve' per the escort pattern.
 
             // Drop all of our cargo and run for it.
             //cargo = tsPodUtil.ShipPods(cargo_ship);
@@ -317,6 +321,7 @@ task CargoSelfPreserve(hship cargo_ship)
    Task.Detach(start cargo_task(cargo_ship));
 
    tsReputationWatch.ShipAttacked(cargo_ship, -2.0);
+   
 
 }
 //[cf]
