@@ -329,13 +329,13 @@ ReadSystemIni(string system_file, string system)
 
    count = 0;
 
-   debug Debug.PrintString("tsStation.ReadSystemIni\n");
+   debug Debug.PrintString("tsStationSave.ReadSystemIni\n");
 
 
 
    debug {
       if (none == sys_info) {
-         Debug.PrintString("tsStation.ReadSystemIni error system file missing\n");
+         Debug.PrintString("tsStationSave.ReadSystemIni error system file missing\n");
          return;
       }
    }
