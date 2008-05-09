@@ -13,6 +13,7 @@
 
 package tsPcGuards;
 
+//[of]:Imports
 uses    Sim,
         iShip,
         iSim,
@@ -59,10 +60,13 @@ tsShipCreation,
         tsDistress,
         tsPcOwner,
         tsShip;
+//[cf]
 
 
+//[of]:Exports
 provides PogCreate,
          PogStart;
+//[cf]
 
 
 enum eCSScriptState
@@ -88,7 +92,6 @@ prototype task guard_controller(hmapentity location,
 prototype hmapentity nearby_location(hisim center);
 
 
-
 prototype hship create_leader (hmapentity location, 
                                hisim operation, 
                                hgroup cull_group,
@@ -108,6 +111,7 @@ prototype set filter_feeling(set ships,
 
 
 prototype bool check_for_attacks(hgroup patrol_group);
+
 
 prototype bool check_for_distress(hgroup patrol_group);
 
@@ -129,6 +133,7 @@ prototype string state2string(eCSScriptState state);
 */
 
 
+//[of]:hsim PogCreate(string template_name, string object_name)
 hsim PogCreate(string template_name, string object_name)
 {
 
@@ -189,12 +194,14 @@ hsim PogCreate(string template_name, string object_name)
       
    return item;
 }
+//[cf]
 
 
 /*
 This function is called after the ship has been placed. 
 
 */
+//[of]:task PogStart(hsim pog_object)
 task PogStart(hsim pog_object)
 {
 
@@ -208,6 +215,8 @@ task PogStart(hsim pog_object)
 
    ///***************************************
 }
+//[cf]
+
 
 /*
 ; 
@@ -225,6 +234,7 @@ template=ini:/sims/ships/navy/patcom
 
 
 // Read the ini file, setup the object. 
+//[of]:setup_guards(hisim marker)
 setup_guards(hisim marker)
 {
    hinifile control_file;
@@ -314,12 +324,14 @@ setup_guards(hisim marker)
    // We can remove the guard mark now.
    Sim.Destroy(marker);
 }
+//[cf]
 
 
 
-// The guard controller flys waypoints around the location.
+// The guard controller task flys waypoints around the location.
 // If the location is culled, the ships are set to allow culling.
 // If a hostile ship is seen, the leader attacks.
+//[of]:task guard_controller(hmapentity location, hgroup patrol_group)
 task guard_controller(hmapentity location, hgroup patrol_group)
 {
    set dislike_set;
@@ -383,6 +395,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
 
       switch (state) {
       case eCS_Init:
+         debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Init\n");
          // Form up the patrol group, start them moving.
 
          spacing = iUtilities.GetLargestShipRadius( patrol_group);
@@ -398,6 +411,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          break;
 
       case eCS_ToDestination:
+         debug Debug.PrintString("tsPcGuards.guard_controller: eCS_ToDestination\n");
          // Send the leader orbiting the station.
 
          Sim.PlaceRelativeTo(marker, location, 
@@ -420,7 +434,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          break;
 
       case eCS_WaitApproach:
-
+         //debug Debug.PrintString("tsPcGuards.guard_controller: eCS_WaitApproach\n");
          // Wait here until the AI has halted, then pick new marker location.
          if (OT_None == iAI.CurrentOrderType(patrol_leader)) {
             state = change_state(state, eCS_CheckNearby, debug_on);
@@ -429,7 +443,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          break;
 
       case eCS_CheckNearby:
-
+         debug Debug.PrintString("tsPcGuards.guard_controller: eCS_CheckNearby\n");
          // Test nearby ships for hostile action.
          dislike_set = filter_feeling(iSim.ShipsInRadius(patrol_leader, 50km), guard_faction, -2.0);
 
@@ -467,6 +481,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          break;
 
       case eCS_Attacked:
+         debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Attack\n");
          // Some we are guarding has been attacked.
          sender = tsEvent.GetSender(patrol_group);
          target = tsEvent.GetTarget(patrol_group);
@@ -517,6 +532,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
 
          break;
       case eCS_Fight:
+         debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Fight\n");
          // A battle has broken out. We wait here.
          if ( (Sim.DistanceBetween(patrol_leader, location) > 100km)){ 
 //             && (OT_Escort != iAI.CurrentOrderType(patrol_leader))) {
@@ -531,6 +547,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
 
          break;
       case eCS_Distress:
+         debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Distress\n");
          // A distress call was signalled, here we choose if we respond, or if
          // we just ignore the event.
 
@@ -583,6 +600,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          break;
 
       case eCS_Dead:
+         debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Dead\n");
          // patrol leader is dead. Select another. No more
          // waypoint chasing, we let the escorts fight without
          // giving more orders.
@@ -600,6 +618,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          break;
 
       case eCS_Cull:
+         debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Cull\n");
          // Player is far, or all the ships are dead. Set the last to allow
          // culling and exit task.
          iAI.PurgeOrders(patrol_group);
@@ -614,6 +633,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          break;
 
       default:
+         debug Debug.PrintString("tsPcGuards.guard_controller: Default\n");
          state = change_state(state, eCS_Init, debug_on);
 
          break;
@@ -623,12 +643,13 @@ task guard_controller(hmapentity location, hgroup patrol_group)
       Task.Sleep(Task.Current(), delay_time);
    }
 }
+//[cf]
 
 
 // This function checks if the patrol
 // group was attacked, or if the station
 // we are guarding was attacked.
-
+//[of]:bool check_for_attacks(hgroup patrol_group)
 bool check_for_attacks(hgroup patrol_group)
 {
    hship new_target = none;
@@ -652,7 +673,10 @@ bool check_for_attacks(hgroup patrol_group)
 
    return false;
 }
+//[cf]
 
+
+//[of]:bool check_for_distress(hgroup patrol_group)
 bool check_for_distress(hgroup patrol_group)
 {
    hship attacker, target;
@@ -673,8 +697,11 @@ bool check_for_distress(hgroup patrol_group)
 
    return false;
 }
+//[cf]
+
 
 // Finds the closest location or station.
+//[of]:hmapentity nearby_location(hisim center)
 hmapentity nearby_location(hisim center)
 {
    hlagrangepoint lpoint;
@@ -689,9 +716,11 @@ hmapentity nearby_location(hisim center)
 
    return lpoint;
 }
+//[cf]
 
 
 
+//[of]:hship create_leader (hmapentity location, hisim operation, hgroup cull_group, string ship_type)
 hship create_leader (hmapentity location, hisim operation, hgroup cull_group, string ship_type)
 {
    float threat;
@@ -739,7 +768,10 @@ hship create_leader (hmapentity location, hisim operation, hgroup cull_group, st
 
    return leader;
 }
+//[cf]
 
+
+//[of]:create_escorts(hisim operation, int fleets, hship leader, hgroup cull_group, string ship_type)
 create_escorts(hisim operation, int fleets, hship leader, hgroup cull_group, string ship_type)
 {
    float threat;
@@ -781,7 +813,10 @@ create_escorts(hisim operation, int fleets, hship leader, hgroup cull_group, str
    }
 
 }
+//[cf]
 
+
+//[of]:set filter_feeling(set ships, hfaction faction, float feeling)
 set filter_feeling(set ships, hfaction faction, float feeling)
 {
    set filtered;
@@ -800,7 +835,10 @@ set filter_feeling(set ships, hfaction faction, float feeling)
 
    return filtered;
 }
+//[cf]
 
+
+//[of]:eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool debug_on)
 eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool debug_on)
 {
    if (debug_on) {
@@ -811,9 +849,10 @@ eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool
 
    return new_state;
 }
+//[cf]
 
 
-
+//[of]:string state2string(eCSScriptState state)
 string state2string(eCSScriptState state)
 {
    switch (state) {
@@ -851,6 +890,7 @@ string state2string(eCSScriptState state)
    return "eCS_Invalid";
 
 }
+//[cf]
 
 
 /*   
