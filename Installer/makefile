@@ -3,21 +3,20 @@
 # NB: pc.exe is in the win32 path so no need to define full path to it
 
 # Variables
-CC=c:/program/files/istool/istool.exe
+# You need to define the path to the ISCC compiler, adjust this if you
+# have not done a default install or are using a version other than v5
+CC="C:/Program Files/Inno Setup 5/ISCC.exe"
 
-# EOCDIR=c:\iwar2
-BUILDDIR=.\EpicSource\Installer
+# Assumes you are running the make file from a command line in the Installer
+# directory.
+BUILDDIR=.
 
-.PHONY : all single parts
+.PHONY : all single
 
 # master "build it all" target
-all: parts single
+all: single
 
+# Executes compiler in verbose mode.
 single:
-	$(CC) -compile $(BUILDDIR)\epic_install_maker.iss
+	$(CC) "$(BUILDDIR)/epic_install_maker_complete.iss"
 
-parts:
-	$(CC) -compile $(BUILDDIR)\epic_install_maker_core.iss
-	$(CC) -compile $(BUILDDIR)\epic_install_maker_music.iss
-	$(CC) -compile $(BUILDDIR)\epic_install_maker_nebula.iss
-	$(CC) -compile $(BUILDDIR)\epic_install_maker_planets.iss
