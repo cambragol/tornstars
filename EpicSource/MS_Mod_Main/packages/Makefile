@@ -288,6 +288,7 @@ tsNewsNet.pkg : tsNewsNet.pog UniGUI.h tsTime.h tsMail.h
 tsOptionsGui.pkg : tsOptionsGui.pog UniGUI.h tsGui.h
 tsClaimGui.pkg : tsOptionsGui.pog UniGUI.h tsGui.h tsFaction.h
 tsStartGui.pkg : tsStartGui.pog UniGUI.h tsGui.h
+
 tsPcAsteroidBelt.pkg : tsPcAsteroidBelt.pog tsCull.h tsLCenter.h
 tsPcCargoShip.pkg : tsPcCargoShip.pog tsEconUtil.h tsEconomy.h tsStation.h tsStationFilter.h tsLRoot.h tsLTrade.h tsLProduction.h tsMoney.h tsTime.h tsFaction.h tsShip.h tsPodUtil.h tsSpewerOps.h tsPilotSetup.h tsShipCreation.h tsShipName.h tsString.h tsShip.h tsShipCreationEnum.h
 tsPcConstructionShip.pkg : tsPcConstructionShip.pog tsShipComms.h tsShip.h tsLRoot.h tsLCenter.h tsLTrade.h tsFaction.h tsTradeSell.h tsMoney.h tsShipName.h tsPcOwner.h tsCull.h tsShip.h tsShipCreationEnum.h
@@ -303,6 +304,7 @@ tsPcRumorSeller.pkg : tsPcRumorSeller.pog tsTime.h tsEconUtil.h tsStationFilter.
 tsPcTankerShip.pkg : tsPcTankerShip.pog tsShipComms.h tsShip.h tsFaction.h tsMoney.h tsShipName.h tsPcOwner.h tsCull.h tsShip.h tsShipCreationEnum.h
 tsPcWeaponSeller.pkg : tsPcWeaponSeller.pog tsPcOwner.h tsShipComms.h tsShip.h tsLRoot.h tsLTrade.h tsFaction.h tsTradeBuy.h tsMoney.h tsShipName.h tsCull.h tsShip.h tsShipCreationEnum.h
 tsPcWreckBelt.pkg : tsPcWreckBelt.pog tsCull.h tsFaction.h tsLCenter.h tsLFleet.h tsPodUtil.h
+
 tsPodUtil.pkg : tsPodUtil.pog tsFaction.h
 tsPogClass.pkg : tsPogClass.pog tsPcFenceShip.h tsPcAsteroidBelt.h tsPcConstructionShip.h tsPcCustomsToll.h tsPcPirateToll.h tsPcGuards.h tsPcHiredShip.h tsPcOwner.h tsPcPirateToll.h tsPcPodScrapper.h tsPcRumorSeller.h tsPcTankerShip.h tsPcWeaponSeller.h tsPcEmbezzleOp.h tsPcWreckBelt.h tsPcCargoShip.h
 tsReputationUpdate.pkg : tsReputationUpdate.pog tsFaction.h
@@ -311,8 +313,10 @@ tsSaveGui.pkg : tsSaveGui.pog tsTime.h tsMain.h tsGui.h tsLProduction.h UniGUI.h
 tsShipMail.pkg : tsShipMail.pog UniGUI.h tsGui.h tsMail.h tsNewsNet.h
 tsShipName.pkg : tsShipName.pog
 tsSpewerOps.pkg : tsSpewerOps.pog tsMegaTrucking.h
+
+
 tsStation.pkg : tsStation.pog tsFaction.pog tsStationEnum.h
-tsStationAi.pkg : tsStationAi.pog tsFaction.pog tsStationEnum.h
+tsStationAi.pkg : tsStationAi.pog tsFaction.pog tsStationEnum.h tsDistress.pog
 tsStationEnv.pkg : tsStationEnv.pog tsPogClass.h tsPcOwner.h tsCull.h
 tsStationFilter.pkg : tsStationFilter.pog tsEconUtil.h tsFaction.h tsStation.h tsLRoot.h tsLProduction.h tsLCenter.h tsLTrade.h tsStarSystem.h
 tsStationRules.pkg : tsStationRules.pog tsTime.h tsStation.h tsFleetOp.h tsFleetOpFilter.h tsEconUtil.h tsLProduction.h tsLFleet.h tsFleetOpCall.h tsFaction.h

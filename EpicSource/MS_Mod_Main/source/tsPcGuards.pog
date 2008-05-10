@@ -395,7 +395,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
 
       switch (state) {
       case eCS_Init:
-         debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Init\n");
+         //debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Init\n");
          // Form up the patrol group, start them moving.
 
          spacing = iUtilities.GetLargestShipRadius( patrol_group);
@@ -411,7 +411,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          break;
 
       case eCS_ToDestination:
-         debug Debug.PrintString("tsPcGuards.guard_controller: eCS_ToDestination\n");
+         //debug Debug.PrintString("tsPcGuards.guard_controller: eCS_ToDestination\n");
          // Send the leader orbiting the station.
 
          Sim.PlaceRelativeTo(marker, location, 
@@ -443,7 +443,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          break;
 
       case eCS_CheckNearby:
-         debug Debug.PrintString("tsPcGuards.guard_controller: eCS_CheckNearby\n");
+         //debug Debug.PrintString("tsPcGuards.guard_controller: eCS_CheckNearby\n");
          // Test nearby ships for hostile action.
          dislike_set = filter_feeling(iSim.ShipsInRadius(patrol_leader, 50km), guard_faction, -2.0);
 
@@ -481,7 +481,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          break;
 
       case eCS_Attacked:
-         debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Attack\n");
+         //debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Attack\n");
          // Some we are guarding has been attacked.
          sender = tsEvent.GetSender(patrol_group);
          target = tsEvent.GetTarget(patrol_group);
@@ -532,7 +532,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
 
          break;
       case eCS_Fight:
-         debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Fight\n");
+         //debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Fight\n");
          // A battle has broken out. We wait here.
          if ( (Sim.DistanceBetween(patrol_leader, location) > 100km)){ 
 //             && (OT_Escort != iAI.CurrentOrderType(patrol_leader))) {
@@ -547,7 +547,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
 
          break;
       case eCS_Distress:
-         debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Distress\n");
+         //debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Distress\n");
          // A distress call was signalled, here we choose if we respond, or if
          // we just ignore the event.
 
@@ -600,7 +600,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          break;
 
       case eCS_Dead:
-         debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Dead\n");
+         //debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Dead\n");
          // patrol leader is dead. Select another. No more
          // waypoint chasing, we let the escorts fight without
          // giving more orders.
@@ -618,7 +618,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          break;
 
       case eCS_Cull:
-         debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Cull\n");
+         //debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Cull\n");
          // Player is far, or all the ships are dead. Set the last to allow
          // culling and exit task.
          iAI.PurgeOrders(patrol_group);
@@ -633,7 +633,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          break;
 
       default:
-         debug Debug.PrintString("tsPcGuards.guard_controller: Default\n");
+         //debug Debug.PrintString("tsPcGuards.guard_controller: Default\n");
          state = change_state(state, eCS_Init, debug_on);
 
          break;

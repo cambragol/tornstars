@@ -55,7 +55,9 @@ iGame,
 Stream, 
 iDockport,
 tsFaction,
-tsStationEnum;
+tsStationEnum,
+tsDistress,
+tEpicEventEnum;
 //[cf]
 
 
@@ -86,14 +88,61 @@ Reaction()
 
 task station_watcher(hhabitat station)
 {
+    float pause_time = 2.0;            // loop pause in seconds
+    int allowed_attacks = 3;           // number of allowed attacks on station before it takes steps
+    int attack_count = 0;
+    hisim our_attacker;
+    float first_attack_time = 0;       // game time of first attack event. Look for multiple in x seconds before resetting
+    float attack_reset_time = 60.0;    // time to allow before restting first_attack_time to 0
+    
+    // ensure stations attacked flag has been cleared before we start checking
+    iSim.Attacked(station);
+    
     while(1)
     {
-        // has the station been attacked
+        // In this loop we check for all the events of interest to the station AI
+        
+        // Attacked Event
+        if( (first_attack_time > 0) && (iGame.GameTime()-first_attack_time) > attack_reset_time )
+        {
+            // rest checks
+            debug Debug.PrintString("tsStationAi.station_watcher: Attack status rest.\n");
+            first_attack_time = 0;
+            attack_count = 0;
+        }
         if( iSim.Attacked(station) )
         {
             debug Debug.PrintString("tsStationAi.station_watcher: Station attacked!\n");
+            our_attacker = iSim.LastAttacker( iSim.Cast(station) );
+            // Determine if this was a stray shot or a deliberate attack.
+            // We will use a 3 strikes type model with a timed reset
+            if( first_attack_time == 0 )
+            {
+                debug Debug.PrintString("tsStationAi.station_watcher: First attack.\n");
+                first_attack_time = iGame.GameTime();
+                ++attack_count;
+            } else
+            {
+                ++attack_count;
+                debug {
+                Debug.PrintString("tsStationAi.station_watcher: Attack count increased to: ");
+                Debug.PrintInt(attack_count);
+                Debug.PrintString("\n");
+                }
+            }
+            
+            // Now check the attack_count and react if it is past the threshold
+            if( attack_count > allowed_attacks)
+            {
+                // 1st send a distress event with priority=1, event=etShipAttacked
+                tsDistress.Send(1, eseStationAttack, iSim.Cast(station), our_attacker, iSim.Cast(station), 200km);
+                debug Debug.PrintString("tsStationAi.station_watcher: Distress call sent!\n");
+            }
         }
-        Task.Sleep(Task.Current(), 3.0);
+        
+        
+        // Put some wait time into the loop.
+        Task.Sleep(Task.Current(), pause_time);
     }
 }
 
@@ -101,6 +150,7 @@ bool Start(hhabitat station)
 {
     htask t;
     
+    debug Debug.PrintString("tsStationAi.Start: Start station_watcher task.\n");
     t = start station_watcher(station);
     Task.Detach(t);
     Object.SetHandleProperty(station, "gt_station_watcher", t);
@@ -113,6 +163,7 @@ bool End(hhabitat station)
 {
     htask t;
     
+    debug Debug.PrintString("tsStationAi.End: End station_watcher task.\n");
     t = Task.Cast(Object.HandleProperty(station, "gt_station_watcher"));
     Task.Halt(t);
     
