@@ -45,7 +45,8 @@ uses	Sim,
 		tsPodUtil,
 		tsReputationWatch,
 		tEpicEventEnum,
-		tsEvent;
+		tsEvent,
+		tsDistress;
 //[cf]
 
 
@@ -311,7 +312,7 @@ SetupCargo(hship cargo_ship, float notice_level, float flee_level)
 //[of]:task CargoSelfPreserve(hship cargo_ship)
 task CargoSelfPreserve(hship cargo_ship)
 {
-   hisim last_attacker;
+   hisim last_attacker = iSim.LastAttacker( iSim.Cast(cargo_ship) );
    hfaction empty_faction = tsFaction.EmptyFaction();
    bool guilty = true;
 
@@ -320,8 +321,11 @@ task CargoSelfPreserve(hship cargo_ship)
    // Launch the watch task that will set this ship to run.
    Task.Detach(start cargo_task(cargo_ship));
 
+   // Adjust the attacking ships reputation
    tsReputationWatch.ShipAttacked(cargo_ship, -2.0);
-   
+
+  // make a distress call for help, some bugger attacked us!
+  tsDistress.Send(espDistress, eseDistress,  iSim.Cast(cargo_ship), last_attacker, iSim.Cast(cargo_ship), 50km);   
 
 }
 //[cf]

@@ -135,7 +135,7 @@ task station_watcher(hhabitat station)
             if( attack_count > allowed_attacks)
             {
                 // 1st send a distress event with priority=1, event=etShipAttacked
-                tsDistress.Send(1, eseStationAttack, iSim.Cast(station), our_attacker, iSim.Cast(station), 200km);
+                tsDistress.Send(espStationAttack, eseStationAttack, iSim.Cast(station), our_attacker, iSim.Cast(station), 200km);
                 debug Debug.PrintString("tsStationAi.station_watcher: Distress call sent!\n");
             }
         }

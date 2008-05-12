@@ -35,6 +35,8 @@ provides Send;
 //SendEvent(hobject listener, int priority, int event_type, hisim location, hisim target, hisim sender)
 
 // Send this event to all groups of ships within specified distance.
+// priority is of type enum eShipEventPriority
+// event_type is of type enum eEpicShipEvent
 Send(int priority, int event_type, hisim location, hisim target, hisim sender, float distance)
 {
    set ships, groups;
