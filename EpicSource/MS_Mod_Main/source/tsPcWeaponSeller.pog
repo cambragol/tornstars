@@ -10,6 +10,7 @@
 
 package tsPcWeaponSeller;
 
+//[of]:Imports
 uses    Sim,
         iShip,
         iSim,
@@ -39,18 +40,23 @@ uses    Sim,
         tsFaction,
         tsEquipBuy,
         tsMoney,
+		tsShipCreationEnum,
+		tsShipCreation,
         tsShipName,
         tsCull;
+//[cf]
 
 
+//[of]:Exports
 provides PogCreate,
          PogStart,
          Comms,
          CriminalComms;
+//[cf]
 
 
 
-prototype setup_trade_ship(hship ship);
+prototype setup_trade_ship(hisim marker);
 
 prototype string type2comms(string seller_type);
 
@@ -86,15 +92,14 @@ hsim PogCreate(string template_name, string object_name)
    // This block of code is class dependent. The rest must be done to adhere
    // to the pog object calling conventions.
 
-   name = tsShipName.ShipName( "general", Math.RandomInt(0, 343));
-
-   item_template = INIFile.String(object_file, "Properties","template","none");
-
+   //name = tsShipName.ShipName( "general", Math.RandomInt(0, 343));
+   //item_template = INIFile.String(object_file, "Properties","template","none");
    INIFile.Destroy(object_file);
 
+   item = Sim.Create("ini:/sims/nav/waypoint","weapon_script_marker");
+   Sim.SetCullable(item, false);
 
-
-   item = Sim.Create(item_template, name);
+   //item = Sim.Create(item_template, name);
 
    if (none == item) {
       debug {
@@ -125,7 +130,7 @@ task PogStart(hsim pog_object)
    // This part of the start code is object dependent. The prior pieces must
    // be done to adhere to the pog class calling convention.
 
-   setup_trade_ship(iShip.Cast(pog_object));
+   setup_trade_ship(iSim.Cast(pog_object));
 
    ///***************************************
 }
@@ -170,17 +175,33 @@ comm_type=legal
 
 
 // Read the ini file, setup the object. 
-setup_trade_ship(hship ship)
+setup_trade_ship(hisim marker)
 {
    hinifile control_file;
    string template_file_name, comm_function;
-   string seller_file, seller_type, station_string, comms;
+   string seller_file, seller_type, station_string, comms, faction_ship_class;
+   string name, ship_template;
    float faction_standing;
-   hfaction faction;
+   set habitats;
+   hfaction faction, station_faction;
    hsim owner;
-   hhabitat station;
+   hhabitat station, start_station;
+   hship ship;
+   
 
-   template_file_name = Object.StringProperty(ship, "gt_pog_object_template");
+   debug Debug.PrintString("tsPcWeaponSeller.setup_trade_ship: Start\n");
+   
+   // since the marker has been placed in space we use it as a focus
+   // to gather information
+   habitats = iMapEntity.SystemHabitats();
+   start_station = iHabitat.Nearest(habitats, marker);
+   station_faction = iSim.Faction(start_station);
+   
+   station = start_station;
+   
+   
+   // get the ini file from the waypoint
+   template_file_name = Object.StringProperty(marker, "gt_pog_object_template");
    control_file = INIFile.Create(template_file_name);
 
    if (none == control_file) {
@@ -192,12 +213,29 @@ setup_trade_ship(hship ship)
    // Read in the weapon seller control properties
    seller_file = INIFile.String(control_file, "Properties", "trade_file", "ini:/weapon_cargo");
    seller_type = INIFile.String(control_file, "Properties", "seller_type", "Civilian");
+   faction_ship_class = INIFile.String(control_file, "Properties", "faction_ship_class", "EST_FreightAll");
 
    comms = INIFile.String(control_file, "Properties", "comm_type", "legal");
 
    INIFile.Destroy(control_file);
 
-   // Setup the later comms task.
+
+   // Get a ship name and template name
+   name = tsShipName.ShipName( "general", Math.RandomInt(0, 343));
+   ship_template = tsShipCreation.GetShip(station_faction, tsShipCreation.String2ShipType(faction_ship_class));
+
+   // create a ship sim
+   ship = tsShip.Create(ship_template, name);
+
+   if (ship == none) {
+      debug Debug.PrintString("tsPcWeaponSeller.setup_trade_ship: ship failed to create\n");
+      debug Debug.PrintString(ship_template);
+      debug Debug.PrintString(" template\n");
+      return;
+   }
+
+
+   // Setup the comms tasks
    tsShipComms.AddComms(ship, type2comms(comms));
    tsShipComms.DisplayComms(ship, true);
 
@@ -229,6 +267,13 @@ setup_trade_ship(hship ship)
 
    }
    */
+   
+   // finally place the sim in space
+   Sim.PlaceAt(ship, marker);
+   
+   // We don't need the marker anymore
+   Sim.Destroy(marker);
+   debug Debug.PrintString("tsPcWeaponSeller.setup_trade_ship: End\n");
 }
 
 
