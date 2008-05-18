@@ -720,6 +720,7 @@ hmapentity nearby_location(hisim center)
 
 
 
+// Create a fleet leader using the tsShipCreation system
 //[of]:hship create_leader (hmapentity location, hisim operation, hgroup cull_group, string ship_type)
 hship create_leader (hmapentity location, hisim operation, hgroup cull_group, string ship_type)
 {
@@ -771,6 +772,7 @@ hship create_leader (hmapentity location, hisim operation, hgroup cull_group, st
 //[cf]
 
 
+// Create escorts in the fleet using the tsShipCreation system
 //[of]:create_escorts(hisim operation, int fleets, hship leader, hgroup cull_group, string ship_type)
 create_escorts(hisim operation, int fleets, hship leader, hgroup cull_group, string ship_type)
 {

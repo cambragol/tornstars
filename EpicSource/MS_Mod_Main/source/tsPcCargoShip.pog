@@ -11,6 +11,7 @@
 
 package tsPcCargoShip;
 
+//[of]:Imports
 uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, 
    iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
    iConversation, iFormation, Group, Text, iEmail, State, 
@@ -40,11 +41,14 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    tsShipName,
    tsString,
    tsShip;
+//[cf]
 
 
 
+//[of]:Exports
 provides PogCreate,
          PogStart;
+//[cf]
 
 
 enum eCSScriptState
@@ -92,7 +96,13 @@ prototype string state2string(eCSScriptState state);
 prototype eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool debug_on);
 
 
-
+/*
+General pattern for this package is:
+1. Create a waypoint item
+2. Attach attributes to waypoint item
+3. Return the waypoint item
+*/
+//[of]:hsim PogCreate(string template_name, string object_name)
 hsim PogCreate(string template_name, string object_name)
 {
 
@@ -145,12 +155,13 @@ hsim PogCreate(string template_name, string object_name)
       
    return item;
 }
+//[cf]
 
 
 /*
-This function is called after the ship has been placed. 
-
+Pass the pog_object hsim to the setup_ship function
 */
+//[of]:task PogStart(hsim pog_object)
 task PogStart(hsim pog_object)
 {
 
@@ -164,8 +175,10 @@ task PogStart(hsim pog_object)
 
    ///***************************************
 }
+//[cf]
 
 
+//[of]:setup_ship(hisim marker)
 setup_ship(hisim marker)
 {
    hship ship, escort;
@@ -186,7 +199,7 @@ setup_ship(hisim marker)
 
    station = start_station;
 
-   // Get a ship name and teamplate name
+   // Get a ship name and template name
    name = tsShipName.ShipName( "general", Math.RandomInt(0, 343));
    ship_template = tsShipCreation.GetShip(station_faction, EST_FreightAll);
 
@@ -257,6 +270,7 @@ setup_ship(hisim marker)
 
    Task.Detach(start TradeWander(trade_group, iHabitat.Cast(start_station)));
 }
+//[cf]
 
 
 // This function will take the current cargo fleet and start trading
@@ -266,6 +280,7 @@ setup_ship(hisim marker)
 // the script should not be called until the fleet is placed into the game.
 // It will move the the start station and unload an cargo it is currently
 // carrying.
+//[of]:task TradeWander(hgroup cargo_fleet, hhabitat start_station)
 task TradeWander(hgroup cargo_fleet, hhabitat start_station)
 {
    eCSScriptState state = eCS_Init;
@@ -504,8 +519,10 @@ task TradeWander(hgroup cargo_fleet, hhabitat start_station)
       Task.Sleep(Task.Current(), delay_time);
    }
 }
+//[cf]
 
 
+//[of]:eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool debug_on)
 eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool debug_on)
 {
    if (debug_on) {
@@ -516,9 +533,11 @@ eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool
 
    return new_state;
 }
+//[cf]
 
 
 
+//[of]:bool dock_freighter(hship cargo_ship, hhabitat station)
 bool dock_freighter(hship cargo_ship, hhabitat station)
 {
    hdockport station_dock, ship_dock;
@@ -556,9 +575,11 @@ bool dock_freighter(hship cargo_ship, hhabitat station)
 
    return true;
 }
+//[cf]
 
 
 // Returns all cargo pods docked to a ship.
+//[of]:set ShipPodList(hsim ship)
 set ShipPodList(hsim ship)
 {
    set pods;
@@ -580,10 +601,12 @@ set ShipPodList(hsim ship)
 
    return docked_pods;
 }
+//[cf]
+
 
 // Picks out a number random cargo from the stations production list and returns
 // those pods
-
+//[of]:set create_output_cargo(hhabitat station, hship cargo_ship, int number_of_pods)
 set create_output_cargo(hhabitat station, hship cargo_ship, int number_of_pods)
 {
    list cargo_list;
@@ -597,8 +620,10 @@ set create_output_cargo(hhabitat station, hship cargo_ship, int number_of_pods)
 
    return create_cargo(cargo_list, iFaction.Name(iSim.Faction(cargo_ship)), number_of_pods);
 }
+//[cf]
 
 
+//[of]:set create_input_cargo(hhabitat station, hship cargo_ship, int number_of_pods)
 set create_input_cargo(hhabitat station, hship cargo_ship, int number_of_pods)
 {
    list cargo_list;
@@ -612,8 +637,10 @@ set create_input_cargo(hhabitat station, hship cargo_ship, int number_of_pods)
 
    return create_cargo(cargo_list, iFaction.Name(iSim.Faction(cargo_ship)), number_of_pods);
 }
+//[cf]
 
 
+//[of]:set create_supply_cargo(hhabitat station, hship cargo_ship, int number_of_pods)
 set create_supply_cargo(hhabitat station, hship cargo_ship, int number_of_pods)
 {
    list cargo_list;
@@ -627,9 +654,10 @@ set create_supply_cargo(hhabitat station, hship cargo_ship, int number_of_pods)
 
    return create_cargo(cargo_list, iFaction.Name(iSim.Faction(cargo_ship)), number_of_pods);
 }
+//[cf]
 
 
-
+//[of]:set create_cargo(list cargo_list, string faction_name, int number_of_pods)
 set create_cargo(list cargo_list, string faction_name, int number_of_pods)
 {
    int total, i;
@@ -651,8 +679,10 @@ set create_cargo(list cargo_list, string faction_name, int number_of_pods)
 
    return pods;
 }
+//[cf]
 
 
+//[of]:int read_next_station(hhabitat station)
 int read_next_station(hhabitat station)
 {
    hinifile econ_file = INIFile.Create("ini:/station_cargo");
@@ -666,6 +696,7 @@ int read_next_station(hhabitat station)
 
    return tsEconUtil.StationStringToEnum(next_station);
 }
+//[cf]
 
 
 // This function will always return a station. If it cannot find a station of the 
@@ -675,7 +706,7 @@ int read_next_station(hhabitat station)
 // The stations should be filtered first on not destroyed and not hidden.
 // Then they should be filtered on type. If none of those exist, then use them all.
 // Then they should be filtered on faction, to weed out hostile factions.
-
+//[of]:hhabitat find_station(hhabitat current_station, int type)
 hhabitat find_station(hhabitat current_station, int type)
 {
    set habitats;
@@ -692,11 +723,10 @@ hhabitat find_station(hhabitat current_station, int type)
 
    return station;
 }
+//[cf]
 
 
-
-
-
+//[of]:string state2string(eCSScriptState state)
 string state2string(eCSScriptState state)
 {
    switch (state) {
@@ -758,6 +788,7 @@ string state2string(eCSScriptState state)
    return "eCS_Invalid";
 
 }
+//[cf]
 
 /* 
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
