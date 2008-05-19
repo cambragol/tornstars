@@ -198,6 +198,7 @@ setup_trade_ship(hisim marker)
    station_faction = iSim.Faction(start_station);
    
    station = start_station;
+   faction = station_faction;
    
    
    // get the ini file from the waypoint
@@ -219,6 +220,14 @@ setup_trade_ship(hisim marker)
 
    INIFile.Destroy(control_file);
 
+   // debug display what faction are we using
+   debug {
+   Debug.PrintString("tsPcWeaponSeller.setup_trade_ship: fation = ");
+   Debug.PrintHandle(station_faction);
+   Debug.PrintString(" <-- ");
+   Debug.PrintString(tsFaction.EName(station_faction));
+   Debug.PrintString("\n");
+   }
 
    // Get a ship name and template name
    name = tsShipName.ShipName( "general", Math.RandomInt(0, 343));
@@ -241,10 +250,10 @@ setup_trade_ship(hisim marker)
 
 
    // Find the owner ship.
-   station = iHabitat.Nearest(iMapEntity.SystemHabitats(),ship);
+   //station = iHabitat.Nearest(iMapEntity.SystemHabitats(),marker);
 
-   owner = Sim.Cast(tsPcOwner.Owner(ship));
-   faction = iSim.Faction(iSim.Cast(owner));
+   //owner = Sim.Cast(tsPcOwner.Owner(ship));
+   //faction = iSim.Faction(iSim.Cast(owner));
 
    iSim.SetFaction(iSim.Cast(ship), faction);
 
