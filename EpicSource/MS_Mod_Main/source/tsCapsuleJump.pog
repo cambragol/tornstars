@@ -1377,6 +1377,18 @@ hship create_player(hship player, hinifile jump_file)
    case T_Corvette:
       old_ship = Subsim.Create("ini:/subsims/systems/nonplayer/heavy_corvette_capsule");
       break;
+   case T_Utility:
+      old_ship = Subsim.Create("ini:/subsims/systems/nonplayer/truck_capsule");
+      break;
+   case T_Destroyer:
+      old_ship = Subsim.Create("ini:/subsims/systems/nonplayer/destroyer_capsule");
+      break;
+   case T_Fighter:
+      old_ship = Subsim.Create("ini:/subsims/systems/nonplayer/bandit_fighter_capsule");
+      break;
+   case T_Cruiser:
+      old_ship = Subsim.Create("ini:/subsims/systems/nonplayer/corvette_capsule");
+      break;
    }
 
    if (none != old_ship) {
