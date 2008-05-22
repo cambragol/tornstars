@@ -125,8 +125,10 @@ To add in a file put the cursor where you want to insert it, Ctrl+Shift+L to cre
 #[l]:	tsFleetOpCombat.pog:tsFleetOpCombat.pog
 
 --- Pog Classes ---
-Pog object classes are a way of createing iSim.pog object constructions when the native POG language does not support defining new classes. These objects are typically used to create objects around stations that the player will see during the game, such as pirates, asteroid belts, rumor sellers, etc.
-When a new object is created, an INI file is handed into the create function. This allows customizing the object. And it allows non-programmers a technique for modifying the game (such as placing unique asteroid belts etc.)
+Pog object classes are a way of createing iSim.pog object constructions when the native POG language does not support defining new classes.
+These objects are typically used to create objects around stations that the player will see during the game, such as pirates, asteroid belts, rumor sellers, etc.
+When a new object is created, an INI file is handed into the create function. This allows customizing the object.
+And it allows non-programmers a technique for modifying the game (such as placing unique asteroid belts etc.)
 	- Asteroid Belt -
 #[l]:	tsPcAsteroidBelt.pog:tsPcAsteroidBelt.pog
 	- Cargo Ship -
