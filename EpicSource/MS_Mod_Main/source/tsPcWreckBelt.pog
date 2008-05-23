@@ -210,6 +210,9 @@ setup_wreck_belt(hisim pog_object)
 
       item = tsPodUtil.CreateCargoPodCustom(CT_BattleScrap,"Neutral", "Neutral", item_template);
 
+      // No hacking needed.
+      tsPodUtil.SetHackLevel(item, 0);
+
       if (none == item) {
          debug Debug.PrintString("ERROR tsPcWreckBelt.setup_wreck_belt invalid item\n");
       }
@@ -244,6 +247,12 @@ setup_wreck_belt(hisim pog_object)
 // This allows wrecks to be cleared by the player or AI.
 task dock_watch(hship wreck, hmapentity location, int value)
 {
+   list ship_list;
+   int i, ship_list_size;
+   hship ship;
+   hfaction player_faction = tsFaction.PlayerFaction();
+
+
    while (1) {
       Task.Sleep(Task.Current(), 1);
 
@@ -252,8 +261,34 @@ task dock_watch(hship wreck, hmapentity location, int value)
       }
 
       if (iSim.IsDocked(wreck)) {
-         tsLFleet.ChangeWrecks(location, -1*value);
          debug Debug.PrintString("tsPcWreckBelt.dock_watch ship docked to scrap, removing from wreck count\n");
+
+         tsLFleet.ChangeWrecks(location, -1*value);
+
+         // we need to know if this pod docked to a player ship. If so, we need to give over the
+         // pod to the player faction. 
+         ship_list = List.FromSet(iSim.SimsInRadius(wreck, 1km, TM_Ship));
+         ship_list_size = List.ItemCount(ship_list);
+
+         for(i = 0; i < ship_list_size; ++i)
+         {
+            ship = iShip.Cast(List.GetNth(ship_list, i));
+
+            if (iSim.IsDockedTo(wreck, ship)) {
+               
+               // if this is a player ship, remove the pod from the culling list and
+               // change it to be the player faction. Set it not to cull. 
+               if (iSim.Faction(ship) == player_faction) {
+                  tsCull.RemoveSim(location, wreck);
+                  Sim.SetCullable(wreck, false);
+                  iSim.SetFaction(wreck, player_faction);
+
+                  Object.AddIntProperty(wreck,"cargo_faction",iFaction.Allegiance(player_faction));
+               }
+            }
+         }
+
+         // sim has been taken by someone. only decrement once.
          return;
       }
    }
