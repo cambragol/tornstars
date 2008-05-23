@@ -449,6 +449,9 @@ ReadSystemIni(string system_file, string system)
       // Setup the trade interface for this station.
       tsLTrade.Create(iSim.Cast(station), "ini:/station_cargo", tsEconUtil.StationIntToString(type)); 
 
+      // ?? added for testing. Put 10 ships worth of wrecks around each station.
+      tsLFleet.ChangeWrecks(station, 1000);
+ 
       // We only do the build when the station is operational.
 
       tsStation.SetDestroyed(station, destroyed);

@@ -105,6 +105,8 @@ Create(hisim producer, int fleets, int supplies, int max_fleets, int max_supplie
    SetSupplies(producer, supplies);
    SetFleets(producer, fleets);
 
+   SetWrecks(producer, 0);
+
    add(producer);
 }
 
@@ -279,7 +281,7 @@ SetWrecks(hisim producer, int wrecks)
 int ChangeWrecks(hisim producer, int amount)
 {
    int fleets;
-   int max = 1000;
+   int max = 10000;
    
    atomic {
       fleets = Object.IntProperty(producer,"gtsLFleetWrecks");

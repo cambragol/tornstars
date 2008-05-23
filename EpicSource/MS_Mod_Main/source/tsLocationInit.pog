@@ -44,7 +44,8 @@ uses    Sim,
         tsLProduction,
         tsStationEnv,
         tsPlayerFleetUpkeep,
-        tsStationAi;
+        tsStationAi,
+        tsPogClass;
 //[cf]
 
 
@@ -65,6 +66,7 @@ prototype operations_setup(hmapentity center);
 //[of]:Arrives(hmapentity location)
 Arrives(hmapentity location)
 {
+   hisim wreck_belt;
 
    if (!tsLCenter.GetCullMarker(location)) {
       tsLCenter.SetCullMarker(location, true);
@@ -100,10 +102,14 @@ Arrives(hmapentity location)
       // start station watching script
       tsStationAi.Start(iHabitat.Cast(location));
 
+      // Create the wrecks that were destroyed at this location.
+      wreck_belt = iSim.Cast(tsPogClass.Create("ini:/wreck_belt_field", "wreck_belt"));
+      Sim.PlaceNear(wreck_belt, location, 1km);
+      tsPogClass.Start(wreck_belt);
 
       operations_setup(location);
    }
-}
+} 
 //[cf]
 
 

@@ -275,7 +275,7 @@ tsLInventory.pkg : tsLInventory.pog tsTime.h tsLRoot.h tsEconUtil.h tsStation.h
 tsLProduction.pkg : tsLProduction.pog tsLRoot.h
 tsLRoot.pkg : tsLRoot.pog
 tsLTrade.pkg : tsLTrade.pog tsLRoot.h
-tsLocationInit.pkg : tsLocationInit.pog tsEconUtil.h tsStation.h tsFleetOp.h tsLCenter.h tsLProduction.h tsStationEnv.h 
+tsLocationInit.pkg : tsLocationInit.pog tsEconUtil.h tsStation.h tsFleetOp.h tsLCenter.h tsLProduction.h tsStationEnv.h tsPogClass.h
 
 tLock.pkg : tLock.pog
 tsMail.pkg : tsMail.pog
