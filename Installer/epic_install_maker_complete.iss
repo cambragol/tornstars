@@ -43,6 +43,7 @@ Source: .\..\EpicArt\movies\*; DestDir: {app}\movies
 Source: .\..\EpicSource\MS_Mod_ClusterModels\*; DestDir: {app}\mods\MS_Mod_Main; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\*; DestDir: {app}\mods\MS_Mod_Main\avatars; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\planets\*; DestDir: {app}\mods\MS_Mod_Main\avatars\planets; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\debris\*; DestDir: {app}\mods\MS_Mod_Main\avatars\debris; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\asteroids\*; DestDir: {app}\mods\MS_Mod_Main\avatars\asteroids; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\ModularStations\*; DestDir: {app}\mods\MS_Mod_Main\avatars\ModularStations; Flags: skipifsourcedoesntexist
 ;Source: .\..\EpicSource\MS_Mod_ClusterModels\avatars\ModularStations\chenyuang\*; DestDir: {app}\mods\MS_Mod_Main\avatars\ModularStations\chenyuang; Flags: skipifsourcedoesntexist
