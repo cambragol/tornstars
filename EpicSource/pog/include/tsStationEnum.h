@@ -369,6 +369,8 @@ enum eProductionType
 
    ept_StationConstructionOp = 144,
 
-   ept_StationRepairOp = 145
+   ept_StationRepairOp = 145,
+   
+   ept_TankerOp = 146
 
 };	

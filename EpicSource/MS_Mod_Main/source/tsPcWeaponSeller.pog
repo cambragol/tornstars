@@ -6,6 +6,10 @@
 // 
 //
 // June 2005, Jon Freise
+//
+// Updates:
+// 20-May-08 JW: Changed to pick ship template using tsShipCreation
+//
 //******************************************************************************************/
 
 package tsPcWeaponSeller;
@@ -113,6 +117,9 @@ hsim PogCreate(string template_name, string object_name)
    // All 
    Object.AddStringProperty(item, "gt_pog_object_class", pog_class);
    Object.AddStringProperty(item, "gt_pog_object_template", template_name);
+   
+   // finally mark this sim as an internal sim, i.e. created through an internal PogCreate process,
+   Object.AddBoolProperty(item, "gt_pog_internal", true);
 
    return item;
 }
@@ -174,53 +181,65 @@ comm_type=legal
 
 
 
-// Read the ini file, setup the object. 
+/*
+This code needs to be able to differentiate between being  called by
+with being passed a waypoint coming from this packages PogCreate
+or from an operation creation facility. The difference being we
+do NOT want to delete the operation waypoint.
+We use the 'internal' property existence to make that determination.
+
+Read the ini file, setup the object.
+*/
 setup_trade_ship(hisim marker)
 {
    hinifile control_file;
+   bool is_internal;
    string template_file_name, comm_function;
    string seller_file, seller_type, station_string, comms, faction_ship_class;
    string name, ship_template;
-   float faction_standing;
+   //float faction_standing;
    set habitats;
-   hfaction faction, station_faction;
+   hfaction station_faction;
    hsim owner;
-   hhabitat station, start_station;
+   hhabitat start_station;
    hship ship;
-   
+
 
    debug Debug.PrintString("tsPcWeaponSeller.setup_trade_ship: Start\n");
-   
+
+   // is  the marker from this packages internal source
+   is_internal = Object.PropertyExists(marker, "gt_pog_internal");
+
    // since the marker has been placed in space we use it as a focus
-   // to gather information
+   // to gather information: Nearby habitats, closest habitat to marker and faction of that closest habitat
    habitats = iMapEntity.SystemHabitats();
    start_station = iHabitat.Nearest(habitats, marker);
+   owner = start_station;
    station_faction = iSim.Faction(start_station);
-   
-   station = start_station;
-   faction = station_faction;
-   
-   
-   // get the ini file from the waypoint
+
+   // get the ini file from the waypoint and open it
    template_file_name = Object.StringProperty(marker, "gt_pog_object_template");
    control_file = INIFile.Create(template_file_name);
 
+   // check for no ini file available
    if (none == control_file) {
       debug Debug.PrintString("ERROR tsPcWeaponSeller. invalid template_file\n");
       debug Debug.PrintString(template_file_name);
       debug Debug.PrintString("\n");
    }
 
-   // Read in the weapon seller control properties
+   // Read in the weapon seller control properties and the ship class to be created
    seller_file = INIFile.String(control_file, "Properties", "trade_file", "ini:/weapon_cargo");
    seller_type = INIFile.String(control_file, "Properties", "seller_type", "Civilian");
    faction_ship_class = INIFile.String(control_file, "Properties", "faction_ship_class", "EST_FreightAll");
 
+   // get the comms attribute
    comms = INIFile.String(control_file, "Properties", "comm_type", "legal");
 
+   // close ini file
    INIFile.Destroy(control_file);
 
-   // debug display what faction are we using
+   // debug display what faction we will set the ship to
    debug {
    Debug.PrintString("tsPcWeaponSeller.setup_trade_ship: fation = ");
    Debug.PrintHandle(station_faction);
@@ -229,7 +248,7 @@ setup_trade_ship(hisim marker)
    Debug.PrintString("\n");
    }
 
-   // Get a ship name and template name
+   // Get a ship name and template name using tsShipCreation
    name = tsShipName.ShipName( "general", Math.RandomInt(0, 343));
    ship_template = tsShipCreation.GetShip(station_faction, tsShipCreation.String2ShipType(faction_ship_class));
 
@@ -249,20 +268,23 @@ setup_trade_ship(hisim marker)
    tsShipComms.DisplayComms(ship, true);
 
 
-   // Find the owner ship.
-   //station = iHabitat.Nearest(iMapEntity.SystemHabitats(),marker);
+   // Set the owner for this ship and faction
+   if(is_internal) {
+       tsPcOwner.SetOwner(ship, start_station);
+       iSim.SetFaction(iSim.Cast(ship), station_faction);
+   } else
+   {
+       tsPcOwner.SetOwner(ship, marker);
+	   iSim.SetFaction(iSim.Cast(ship), iSim.Faction(marker));
+   }
 
-   //owner = Sim.Cast(tsPcOwner.Owner(ship));
-   //faction = iSim.Faction(iSim.Cast(owner));
 
-   iSim.SetFaction(iSim.Cast(ship), faction);
-
-
-   // Setup the trade properties for the seller.
+   // Setup the trade properties for the seller. NB in this case owner = start_station
    tsLRoot.SetId(ship, tsLRoot.GetId(owner));
    tsLTrade.Create(ship, seller_file, seller_type);
 
-   tsCull.AddSim(iSim.Cast(station), ship);
+   // Add the ship to the global cull list
+   tsCull.AddSim(iSim.Cast(start_station), ship);
 
    /*
    debug{
@@ -277,11 +299,13 @@ setup_trade_ship(hisim marker)
    }
    */
    
-   // finally place the sim in space
+   // finally place the sim in space at our marker
    Sim.PlaceAt(ship, marker);
    
-   // We don't need the marker anymore
-   Sim.Destroy(marker);
+   // We don't need the marker anymore if it is an internal on
+   if(is_internal)
+       Sim.Destroy(marker);
+   
    debug Debug.PrintString("tsPcWeaponSeller.setup_trade_ship: End\n");
 }
 

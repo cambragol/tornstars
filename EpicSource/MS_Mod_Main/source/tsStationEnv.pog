@@ -120,11 +120,10 @@ SetupObjects(hmapentity station, hisim owner, string filename, float center_x, f
    htask effect_task;
    int place_close, random;
 
-   /*
    debug Debug.PrintString("StationEnv.SetupObjects:");
    debug Debug.PrintString(filename);
    debug Debug.PrintString("\n");
-*/
+
    if (none == env_file) {
       // No file specified. Bail.
       debug {

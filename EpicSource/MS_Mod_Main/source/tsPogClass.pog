@@ -11,6 +11,8 @@
 
 package tsPogClass;
 
+// Make sure all tsPc packages the game uses as pog clases are included 
+//[of]:Imports
 uses    Sim,
         iShip,
         iSim,
@@ -41,11 +43,15 @@ uses    Sim,
         tsPcWeaponSeller,
         tsPcEmbezzleOp,
         tsPcWreckBelt,
-        tsPcCargoShip;
+        tsPcCargoShip,
+        tsPcTankerOp;
+//[cf]
 
 
+//[of]:Exports
 provides Create,
          Start;
+//[cf]
 
 
 
@@ -142,6 +148,8 @@ hsim Create(string template_name, string object_name)
       item = iSim.Cast(tsPcWeaponSeller.PogCreate(template_name, object_name));
    }else if ("tsPcEmbezzleOp" == pog_function){
       item = iSim.Cast(tsPcEmbezzleOp.PogCreate(template_name, object_name));
+   }else if ("tsPcTankerOp" == pog_function){
+      item = iSim.Cast(tsPcTankerOp.PogCreate(template_name, object_name));
    }else if ("tsPcCargoShip" == pog_function){
       item = iSim.Cast(tsPcCargoShip.PogCreate(template_name, object_name));
    }else if ("none" == pog_function){
@@ -202,6 +210,8 @@ Start(hsim pog_object)
       Task.Detach(start tsPcWeaponSeller.PogStart(pog_object));
    }else if ("tsPcEmbezzleOp" == pog_start){
       Task.Detach(start tsPcEmbezzleOp.PogStart(pog_object));
+   }else if ("tsPcTankerOp" == pog_start){
+      Task.Detach(start tsPcTankerOp.PogStart(pog_object));
    }else if ("tsPcCargoShip" == pog_start){
       Task.Detach(start tsPcCargoShip.PogStart(pog_object));
    }else {

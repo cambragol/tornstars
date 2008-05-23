@@ -378,12 +378,10 @@ bool select_operation(hhabitat station, hinifile prod_data_file)
    station_type = tsLProduction.GetType(station);
    station_type_string = tsEconUtil.StationIntToString(station_type);
 
-/*
-   debug Debug.PrintString(station_type_string);
-   debug Debug.PrintString(" type\n");
-   debug Debug.PrintHandle(station);
-   debug Debug.PrintString(" \n");
-*/
+   //debug Debug.PrintString(station_type_string);
+   //debug Debug.PrintString(" type\n");
+   //debug Debug.PrintHandle(station);
+   //debug Debug.PrintString(" \n");
 
    max_ops = INIFile.Int(prod_data_file, station_type_string, "max_ops", 0);
 
@@ -407,12 +405,11 @@ bool select_operation(hhabitat station, hinifile prod_data_file)
          if (!have_required(operations, op_type)) {
 
             // Found one we need. Create it and exit.
-            /*
-            debug Debug.PrintString(op_type_string);
-            debug Debug.PrintString(" spawning required op\n");
-            debug Debug.PrintHandle(station);
-            debug Debug.PrintString(" \n");
-            */
+            //debug Debug.PrintString(op_type_string);
+            //debug Debug.PrintString(" spawning required op\n");
+            //debug Debug.PrintHandle(station);
+            //debug Debug.PrintString(" \n");
+            
             if (spawn_operation(station, op_type)){
                return true;
             }

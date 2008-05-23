@@ -1,16 +1,18 @@
 //*******************************************************************************************/
 //
-// tsPcEmbezzleOp
+// tsPcTankerOp
 //
-// This pog object is the physical representation of a Embezzle Operation.
-// It requires an embezzle operation to appear in game.
-// The embezzle operation is a ship that acts as a fence,
-// surrounded by escorts. It runs from fights and moves the operation with it.
+// This pog object is the physical representation of a Tanker Operation.
+// It requires an tanker operation to appear in game.
+// The tanker operation is a ship that supports player refuel,
+// It runs from fights and moves the operation with it.
 //
-// March 2006, Jon Freise
+// Template defined:- March 2006, Jon Freise
+// Implementaion:- May 2008, JW
+//
 //******************************************************************************************/
 
-package tsPcEmbezzleOp;
+package tsPcTankerOp;
 
 //[of]:Imports
 uses    Sim,
@@ -56,14 +58,15 @@ uses    Sim,
         tsDistance,
         tsCapsuleJump,
         tsCull,
-        tsShip;
+        tsShip,
+        tsPlayerFleet;
 //[cf]
 
 
 //[of]:Exports
 provides PogCreate,
          PogStart,
-         FenceComms;
+         TankerComms;
 //[cf]
 
 
@@ -81,17 +84,20 @@ enum eCSScriptState
 
 
 
-prototype setup_fence_ship(hisim marker);
+prototype setup_tanker_ship(hisim marker);
 
 
 prototype string Station2Fence(int type);
 
 prototype string Station2FenceAsk(int type);
 
-prototype task fence_watch(hgroup fence_fleet);
+prototype task tanker_watch(hgroup tanker_fleet);
+
+// Fuel the ships the player has commanded.
+prototype task fuel_list(hship ship, float fuel_cost, list target_list);
 
 
-prototype create_escorts(hisim operation, hship fence, hgroup cull_group);
+prototype create_escorts(hisim operation, hship tanker, hgroup cull_group);
 
 prototype eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool debug_on);
 
@@ -99,6 +105,7 @@ prototype string state2string(eCSScriptState state);
 
 
 
+//[of]:hsim PogCreate(string template_name, string object_name)
 hsim PogCreate(string template_name, string object_name)
 {
    hinifile object_file;
@@ -106,13 +113,13 @@ hsim PogCreate(string template_name, string object_name)
    hsim item;
 
 
-   debug Debug.PrintString("tsPcEmbezzleOp.PogCreate\n");
+   debug Debug.PrintString("tsPcTankerOp.PogCreate\n");
 
    object_file = INIFile.Create(template_name);
 
    if (none == object_file) {
       debug {
-         Debug.PrintString("tsPcEmbezzleOp.PogCreate, failed to find object file\n");
+         Debug.PrintString("tsPcTankerOp.PogCreate, failed to find object file\n");
          Debug.PrintString(template_name);
          Debug.PrintString("\n");
       }
@@ -132,11 +139,11 @@ hsim PogCreate(string template_name, string object_name)
 
    INIFile.Destroy(object_file);
 
-   item = Sim.Create("ini:/sims/nav/waypoint", "embezzle marker");
+   item = Sim.Create("ini:/sims/nav/waypoint", "tanker marker");
 
    if (none == item) {
       debug {
-         Debug.PrintString("tsPcEmbezzleOp.PogCreate, bad object template\n");
+         Debug.PrintString("tsPcTankerOp.PogCreate, bad object template\n");
       }
       return none;
    }
@@ -148,26 +155,29 @@ hsim PogCreate(string template_name, string object_name)
 
    return item;
 }
+//[cf]
 
 
 /*
 This function is called after the ship has been placed. 
 
 */
+//[of]:task PogStart(hobject pog_object)
 task PogStart(hobject pog_object)
 {
 
-   debug Debug.PrintString("tsPcEmbezzleOp: starting\n");
+   debug Debug.PrintString("tsPcTankerOp.PogStart\n");
 
 
    ///***************************************
    // This part of the start code is object dependent. The prior pieces must
    // be done to adhere to the pog class calling convention.
 
-   setup_fence_ship(iSim.Cast(pog_object));
+   setup_tanker_ship(iSim.Cast(pog_object));
 
    ///***************************************
 }
+//[cf]
 
 /*
 ; 
@@ -180,7 +190,6 @@ task PogStart(hobject pog_object)
 name=tsPcEmbezzleOp
 
 [Properties]
-
 template=ini:/sims/ships/utility/freighter
 
 
@@ -188,37 +197,37 @@ template=ini:/sims/ships/utility/freighter
 ; It will check to see if the player has a high enough standing to hire the ship.
 ; Then it will offer the player the choice of hiring. It will display fee info.
 ; 
-comm_start_function="tsPcEmbezzleOp.FenceComm"
-
+comm_start_function="tsPcTankerOp.TankerComm"
 */
 
 
 
 // Read the ini file, setup the object. 
-setup_fence_ship(hisim marker)
+//[of]:setup_tanker_ship(hisim marker)
+setup_tanker_ship(hisim marker)
 {
    hinifile control_file;
    string template_file_name, comm_function;
-   string fence_file, fence_type, station_string;
+   string tanker_file, fence_type, station_string;
    string ship_template, ship_name;
    float faction_standing;
    hfaction faction;
    hisim owner;
    hhabitat station;
-   hship fence_ship;
+   hship tanker_ship;
    hgroup cull_group;
 
    template_file_name = Object.StringProperty(marker, "gt_pog_object_template");
    control_file = INIFile.Create(template_file_name);
 
    if (none == control_file) {
-      debug Debug.PrintString("ERROR tsPcEmbezzleOp. invalid template_file\n");
+      debug Debug.PrintString("ERROR tsPcTankerOp. invalid template_file\n");
       debug Debug.PrintString(template_file_name);
       debug Debug.PrintString("\n");
    }
 
-   fence_file = INIFile.String(control_file, "Properties", "trade_file", "ini:\fence_cargo");
-   fence_type = INIFile.String(control_file, "Properties", "fence_type", "none");
+   //tanker_file = INIFile.String(control_file, "Properties", "trade_file", "ini:\fence_cargo");
+   //fence_type = INIFile.String(control_file, "Properties", "fence_type", "none");
 
    INIFile.Destroy(control_file);
 
@@ -232,7 +241,7 @@ setup_fence_ship(hisim marker)
       // This pog object can only represent operations. 
       // So we destroy the marker and bail out.
       
-      debug Debug.PrintString("tsPcEmbezzleOp error no operation set as owner\n");
+      debug Debug.PrintString("tsPcTankerOp error no operation set as owner\n");
 
       Sim.Destroy(marker);
       return;
@@ -240,12 +249,12 @@ setup_fence_ship(hisim marker)
 
    // If this operation already has an in game representation, get rid of ourselves.
    if (tsFleetOp.IsCreated(owner)) {
-      debug Debug.PrintString("tsPcEmbezzleOp physical already exists.\n");
+      debug Debug.PrintString("tsPcTankerOp physical already exists.\n");
       Sim.Destroy(marker);
       return;
    }
       
-   debug Debug.PrintString("tsPcEmbezzleOp operation fence creating\n");
+   debug Debug.PrintString("tsPcTankerOp.setup_tanker_ship: operation tanker creating\n");
 
    // Set the operation to already have a physical representation.
    tsFleetOp.SetCreated(owner, true);
@@ -253,11 +262,13 @@ setup_fence_ship(hisim marker)
    ship_template = tsFleetOp.ShipTemplate(owner);
    ship_name = tsFleetOp.Name(owner);
 
-   fence_ship = tsShip.Create(ship_template, ship_name);
+   tanker_ship = tsShip.Create(ship_template, ship_name);
 
-   if (none == fence_ship) {
+   if (none == tanker_ship) {
       debug {
-         Debug.PrintString("tsPcEmbezzleOp.PogCreate error operation ship template invalid\n");
+         Debug.PrintString("tsPcTankerOp.PogCreate: error operation ship template invalid:\n");
+         Debug.PrintString(ship_template);
+         Debug.PrintString("\n");
       }
       Sim.Destroy(marker);
 
@@ -268,77 +279,85 @@ setup_fence_ship(hisim marker)
 
    cull_group = Group.Create();
 
-   Group.AddSim(cull_group, fence_ship);
+   Group.AddSim(cull_group, tanker_ship);
 
-   tsPcOwner.SetOwner(fence_ship, owner);
+   tsPcOwner.SetOwner(tanker_ship, owner);
 
-   iSim.SetFaction(iSim.Cast(fence_ship), faction);
+   iSim.SetFaction(iSim.Cast(tanker_ship), faction);
 
    // Notice attacks fast, and flee quickly.
-   tsPilotSetup.SetupOperation(fence_ship, 0.9, 0.75);
+   tsPilotSetup.SetupOperation(tanker_ship, 0.9, 0.75);
 
-   Sim.SetCullable(fence_ship, false);
+   Sim.SetCullable(tanker_ship, false);
 
-   Sim.PlaceNear(fence_ship, marker, 1km);
+   Sim.PlaceNear(tanker_ship, marker, 1km);
 
    // Now we get rid of the prior created marker.
    Sim.Destroy(marker);
 
-   create_escorts(owner, fence_ship, cull_group);
+   // create any escort if we need it
+   //create_escorts(owner, tanker_ship, cull_group);
 
-   comm_function = "tsPcEmbezzleOp.FenceComms";
+   // Define the comms function
+   comm_function = "tsPcTankerOp.TankerComms";
 
    // Setup the later comms task.
-   tsShipComms.AddComms(fence_ship, comm_function);
-   tsShipComms.DisplayComms(fence_ship, true);
+   tsShipComms.AddComms(tanker_ship, comm_function);
+   tsShipComms.DisplayComms(tanker_ship, true);
 
 
-   station = iHabitat.Nearest(iMapEntity.SystemHabitats(),fence_ship);
+   station = iHabitat.Nearest(iMapEntity.SystemHabitats(),tanker_ship);
    station_string = Station2Fence(tsLProduction.GetType(station));
 
    // If the INI file did not specify a type of fence, then
    // use the nearby station to set one. This will default
    // to MineGoods if the station is not a production station.
-
+/*
    if ("none" == fence_type) {
       fence_type = station_string;
    }
 
    // Setup the trade properties for the fence.
-   tsLRoot.SetId(fence_ship, tsLRoot.GetId(owner));
-   tsLTrade.Create(fence_ship, fence_file, fence_type);
-
-   Task.Detach(start fence_watch( cull_group));
+   tsLRoot.SetId(tanker_ship, tsLRoot.GetId(owner));
+   tsLTrade.Create(tanker_ship, tanker_file, fence_type);
+*/
+   Task.Detach(start tanker_watch( cull_group));
 }
+//[cf]
 
 
-task fence_watch(hgroup fence_fleet)
+// AI Watch function for physical Tanker Operation
+//[of]:task tanker_watch(hgroup tanker_fleet)
+task tanker_watch(hgroup tanker_fleet)
 {
    set nearby_ships, nearby_locations;
    hship ship;
    hship player;
-   hship fence;
+   hship tanker;
    hisim operation;
    hmapentity station, new_station;
    int timer;
    eCSScriptState state;
    float spacing;
-   hfaction fence_faction, ship_faction;
+   hfaction tanker_faction, ship_faction;
    bool nearby_hostile;
    bool debug_on = true;
 
-   fence = iShip.Cast(Group.Leader(fence_fleet));
-   operation = iSim.Cast(tsPcOwner.Owner(fence));
 
-   fence_faction = iSim.Faction(fence);
+   // Get handles to the actual tanker and the operation
+   tanker = iShip.Cast(Group.Leader(tanker_fleet));
+   operation = iSim.Cast(tsPcOwner.Owner(tanker));
+
+   // tanker faction and set initial state
+   tanker_faction = iSim.Faction(tanker);
    state = eCS_Idle;
 
    // Put the ships into formation. And give them guard orders.
    // Any hostiles inside of 25km get shot. We use a smaller
    // value than normal, because fences lurk on the edges of other
    // stations. They don't like trouble.
-   spacing = iUtilities.GetLargestShipRadius( fence_fleet);
-   iEscort.Wedge( fence_fleet, spacing, 25km, true );
+   spacing = iUtilities.GetLargestShipRadius( tanker_fleet);
+   iEscort.Wedge( tanker_fleet, spacing, 25km, true );
 
    // Have any ships that dislike us come within 50km? Flee to a nearby non-dislike 
    // station. Our escorts will tail along.
@@ -353,11 +372,11 @@ task fence_watch(hgroup fence_fleet)
 
          player = iShip.FindPlayerShip();
 
-         if (Sim.IsDead(fence)) {
+         if (Sim.IsDead(tanker)) {
             if (eCS_Cull != state) {
                state = change_state(state, eCS_Dead, debug_on);
             }
-         }else if (Sim.DistanceBetween(iShip.Cast(Group.Leader(fence_fleet)), player) > 
+         }else if (Sim.DistanceBetween(iShip.Cast(Group.Leader(tanker_fleet)), player) > 
                    tsDistance.CullingDistance()) {
 
             ++timer;
@@ -371,13 +390,13 @@ task fence_watch(hgroup fence_fleet)
 
       switch (state) {
       case eCS_Init:
-         station = iHabitat.Nearest(iMapEntity.SystemHabitats(), fence);
+         station = iHabitat.Nearest(iMapEntity.SystemHabitats(), tanker);
          state = change_state(state, eCS_Idle, debug_on);
          break;
       case eCS_Idle:
 
          // Check for nearby ships. Are any of them dislike or lower?
-         nearby_ships = iSim.ShipsInRadius(fence, 50km);
+         nearby_ships = iSim.ShipsInRadius(tanker, 50km);
          nearby_hostile = false;
 
          while (!Set.IsEmpty(nearby_ships)) {
@@ -386,7 +405,7 @@ task fence_watch(hgroup fence_fleet)
             ship_faction = iSim.Faction(ship);
 
             // Are any of these ships dislike or lower?
-            if (iFaction.Feeling(ship_faction, fence_faction) < -0.2) {
+            if (iFaction.Feeling(ship_faction, tanker_faction) < -0.2) {
                nearby_hostile = true;
             }
          }
@@ -401,16 +420,16 @@ task fence_watch(hgroup fence_fleet)
 
          // Pick a non-hostile station that is near.
          nearby_locations = iMapEntity.SystemHabitats();
-         station = iHabitat.Nearest(nearby_locations, fence);
+         station = iHabitat.Nearest(nearby_locations, tanker);
          Set.Remove(nearby_locations, station);
 
          new_station = iHabitat.Nearest(tsStationFilter.OnGreaterFeeling(nearby_locations,
-                                                                        fence_faction, 
+                                                                        tanker_faction, 
                                                                         -0.2), 
-                                        fence);
+                                                                 tanker);
 
          if (none == new_station) {
-            new_station = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), fence);
+            new_station = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), tanker);
          }
 
          debug {
@@ -418,8 +437,8 @@ task fence_watch(hgroup fence_fleet)
             Debug.PrintString(" flee station target\n");
          }
 
-         iAI.PurgeOrders(fence);
-         iAI.GiveApproachOrderAdvanced( fence,
+         iAI.PurgeOrders(tanker);
+         iAI.GiveApproachOrderAdvanced( tanker,
                                         new_station,
                                         75km,
                                         80km,
@@ -435,7 +454,7 @@ task fence_watch(hgroup fence_fleet)
       case eCS_WaitApproach:
          // We are now running. If we return to no orders, we must be there.
          // Go back to idle.
-         if (OT_None == iAI.CurrentOrderType(fence)) {
+         if (OT_None == iAI.CurrentOrderType(tanker)) {
             state = change_state(state, eCS_Idle, debug_on);
          }
 
@@ -446,13 +465,13 @@ task fence_watch(hgroup fence_fleet)
 
          break;
       case eCS_Dead:
-         if (Sim.IsDead(fence)) {
-            Group.RemoveSim(fence_fleet, fence);
+         if (Sim.IsDead(tanker)) {
+            Group.RemoveSim(tanker_fleet, tanker);
          }
 
-         fence = iShip.Cast(Group.Leader(fence_fleet));
+         tanker = iShip.Cast(Group.Leader(tanker_fleet));
 
-         if (none == fence) {
+         if (none == tanker) {
             state = change_state(state, eCS_Cull, debug_on);
          }else {
             state = change_state(state, eCS_EscortOnly, debug_on);
@@ -462,11 +481,11 @@ task fence_watch(hgroup fence_fleet)
       case eCS_Cull:
          // Player is far, or all the ships are dead. Set the last to allow
          // culling and exit task.
-         iAI.PurgeOrders(fence_fleet);
-         ABB_Common.SetCullableGroup(fence_fleet, true);
-         Group.Destroy(fence_fleet, false);
+         iAI.PurgeOrders(tanker_fleet);
+         ABB_Common.SetCullableGroup(tanker_fleet, true);
+         Group.Destroy(tanker_fleet, false);
          debug atomic {
-            Debug.PrintString("tsPcEmbezzleOp all ships culled, exit\n");
+            Debug.PrintString("tsPcTankerOp all ships culled, exit\n");
          }
 
          // Allow this operation to be physically created again.
@@ -480,15 +499,26 @@ task fence_watch(hgroup fence_fleet)
       }
    }
 }
+//[cf]
 
-task FenceComms()
+
+//[of]:task TankerComms()
+task TankerComms()
 {
    hship ship;
+   hship wingman;
    string ask_string;
    bool start_deal;
+   hfaction player = tsFaction.PlayerFaction();
    hfaction player_faction, source_faction;
    hhabitat station;
    string station_string;
+   string response_string;
+   hinifile tanker_file;
+   int fleet_total, i, answer, ship_number, level;
+   float fuel_cost;
+   list player_fleet = tsPlayerFleet.PlayerFleet();
+   list target_fleet;
 
    ship = iShip.Cast(tsShipComms.CommsSource());
 
@@ -497,71 +527,170 @@ task FenceComms()
    tsShipComms.DisplayComms(ship, false);
 
    station = iHabitat.Nearest(iMapEntity.SystemHabitats(),ship);
-   
-        // Start the conversation.
-    iConversation.Begin();
-
-    // pcfs_introduction, "Looking to unload any illegal cargo?"
-    iConversation.Say(ship,"", "pcfs_introduction");
-
-    // Response 1
-    // pcfs_player_agrees, "I do have a few cargo pods I.. found."
-    iConversation.AddResponse(
-        "pcfs_player_agrees",
-        "pcfs_player_agrees");
-
-    // Response 2
-    // pcfs_player_refuses, "No thanks. I only do legal trade."
-    iConversation.AddResponse(
-        "pcfs_player_refuses",
-        "pcfs_player_refuses");
+   source_faction = iSim.Faction(ship);
 
 
-    // pcfs_ask_player, "is the kind of thing we handle."
-    ask_string = Station2FenceAsk(tsLProduction.GetType(station));
-    ask_string = String.Join(ask_string," ");
-    ask_string = String.Join(ask_string,Text.Field("pcfs_ask_player",FT_Text));
+   // Restrict ships to those near the target fleet.
+   player_fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(player_fleet), 
+                                                        ship, Global.Float("gt_distance_wakeup"), TM_Ship));
+   List.Remove(player_fleet, iShip.FindPlayerShip());
+   fleet_total = List.ItemCount(player_fleet);
+
+
+   // Open up the tanker INI file and read the fuel cost.
+   // We do this at the moment of purchase, just in case the player has
+   // increased standing while at the station and expects a discount.
+   tanker_file = INIFile.Create(Object.StringProperty(ship, "gt_pog_object_template"));
+
+   level = iFaction.FeelingType(iFaction.Feeling(source_faction, player));
+
+   fuel_cost = INIFile.Float(tanker_file, "FuelCost", tsFaction.Level2String(level), 1.0);
+
+   INIFile.Destroy(tanker_file);
+
+
+   // Start the conversation.
+   iConversation.Begin();
+
+   // pcts_player_refuses, "No, Thank you."
+   iConversation.AddResponse(
+       "pcts_player_refuses",       
+       "pcts_player_refuses");
+
+
+   // pcts_yes_fuel_fleet, "Yes, fuel the whole fleet"
+   iConversation.AddResponse(
+       "pcts_yes_fuel_fleet", 
+       "pcts_yes_fuel_fleet"); 
+
+
+   // pcts_yes_fuel_me, "Yes, fuel just my ship"
+   iConversation.AddResponse(
+      "pcts_yes_fuel_me",
+      "pcts_yes_fuel_me");
+
+
+
+   // Add a response for each wingman in the player fleet.
+    for (i=0;i<fleet_total;++i)
+    {
+       wingman = iShip.Cast(List.GetNth(player_fleet,i));
+
+       ask_string = String.Join("Fuel ", Text.Field(Sim.Name(wingman),FT_Text));
+       response_string = String.Join("Fuel only ", Text.Field(Sim.Name(wingman),FT_Text));
+
+       iConversation.AddResponse(
+          ask_string,
+          response_string);
+    }
+
+    // pcts_ask_player, "Do you need to refuel your ships?"
 
     // Ask the player a question and switch on their response.
-    switch ( iConversation.Ask( ship, "", ask_string ) )
+    answer = iConversation.Ask( ship, "", "pcts_ask_player" );
+
+    switch ( answer)
     {
     case 1 :
-       player_faction = tsFaction.PlayerFaction();
-       source_faction = iSim.Faction(iSim.Cast(ship));
 
-       if (FT_Hate == iFaction.FeelingType(iFaction.Feeling(source_faction, player_faction))) {
-
-          // Player standing is too low. Tell off the player.
-          // pcfs_player_low, "We don't trust you. You smell like the law."
-          iConversation.Say(ship,"", "pcfs_player_low");
-          start_deal = false;
-       }else {
-          start_deal = true;
-       }
-
+        // pcts_player_refuse_reply, "Maybe Next Time"
+       iConversation.Say(ship,"", "pcts_player_refuse_reply");
        break;
 
     case 2 :
-       // Player said no.
-       // pcfs_player_refuse_reply, "If you... find anything, stop back."
-       iConversation.Say(ship,"", "pcfs_player_refuse_reply");
-       start_deal = false;
+        // pcts_player_fuel_all, "Fueling All Ships"
+       iConversation.Say(ship,"", "pcts_player_fuel_all");
+
+       List.AddHead(player_fleet, iShip.FindPlayerShip());
+       Task.Detach( start fuel_list(ship, fuel_cost, player_fleet));
+       break;
+    case 3:
+        // pcts_player_fuel_you, "Fueling You"
+       iConversation.Say(ship,"", "pcts_player_fuel_you");
+
+       List.AddHead(target_fleet, iShip.FindPlayerShip());
+       Task.Detach( start fuel_list(ship, fuel_cost, target_fleet));
        break;
 
     default :
-       // Player selected "Nothing"
-       start_deal = false;
-       iConversation.Say(ship,"", "..." );
+       // Player said Fuel Specific wingman
+       
+       ship_number = answer - 4;
+
+       // Check the answer is less than the number of wingmen.
+       if (ship_number < fleet_total)
+       {
+          wingman = iShip.Cast(List.GetNth(player_fleet, ship_number));
+
+          List.AddHead(target_fleet, wingman);
+          Task.Detach(start fuel_list(ship, fuel_cost, target_fleet));
+
+          // pcts_fueling, "Fueling "
+          response_string = Text.Field("pcts_fueling", FT_Text);
+          response_string = String.Join(response_string, Text.Field(Sim.Name(wingman),FT_Text));
+
+          // Announce that we are fueling that ship.
+          iConversation.Say(ship,"", response_string );          
+       }else {
+           // pcts_invalid_value, "Tanker Invalid Ship Specified"
+          iConversation.Say(ship,"", "pcts_invalid_value" );          
+       }
+       break;
     }
+
+  
 
     // Finish the conversation.
     iConversation.End();
-
-    if (start_deal) {
-       tsTradeSell.TradeObjectStart(ship);
-    }
-
 }
+
+
+// this task will attempt to fuel each of the ships in the target list.
+task fuel_list(hship ship, float fuel_cost, list target_list)
+{
+   hship target;
+   int total, i, cost;
+   float max_fuel, fuel_needed;
+   bool failed = false;
+
+   Task.Sleep(Task.Current(), 2.0);
+
+   total = List.ItemCount(target_list);
+
+   for (i=0;i<total;++i)
+   {
+      target = iShip.Cast(List.GetNth(target_list, i));
+      
+      max_fuel = tsShip.FuelMax(target);
+
+      atomic {
+         fuel_needed = max_fuel - tsShip.Fuel(target);
+         
+         cost = fuel_needed * fuel_cost;
+
+         if (cost < tsMoney.ShipAccount())
+         {
+            // Player can afford transfer, fill up wingman
+            tsShip.SetFuel(target, max_fuel );
+            tsMoney.ChangeShipAccount(-1*cost);
+         }else {
+            failed = true;
+         }
+      }
+   }
+
+   if (failed)
+   {
+       // pcts_player_low_credits, "You don't have enough credits to finish fueling"
+      iComms.Shout(ship, "", "pcts_player_low_credits");
+   }else {
+       // pcts_fueling_complete, "Fueling complete"
+      iComms.Shout(ship, "", "pcts_fueling_complete");
+   }
+
+   Task.Sleep(Task.Current(), 2.0);
+}
+//[cf]
 
 
 string Station2Fence(int type)
@@ -669,12 +798,12 @@ string Station2FenceAsk(int type)
 
 
 
-// Don't call this until the fence has been placed into the game.
-create_escorts(hisim operation, hship fence, hgroup cull_group)
+// Don't call this until the tanker has been placed into the game.
+create_escorts(hisim operation, hship tanker, hgroup cull_group)
 {
    int threat, fleets;
    string escort_template;
-   hfaction faction = iSim.Faction(fence);
+   hfaction faction = iSim.Faction(tanker);
    hinifile escort_file;
    int i, total;
    hship escort;
@@ -683,7 +812,7 @@ create_escorts(hisim operation, hship fence, hgroup cull_group)
    escort_file = INIFile.Create(escort_template);
 
    if (none == escort_file) {
-      debug Debug.PrintString("tsPcEmbezzleOp.create_escort error escort ini file invalid\n");
+      debug Debug.PrintString("tsPcTankerOp.create_escort error escort ini file invalid\n");
       return;
    }
 
@@ -710,14 +839,14 @@ create_escorts(hisim operation, hship fence, hgroup cull_group)
    }
 
    for (i=0;i<total;++i) {
-      escort = tsShip.Create(escort_template, tsShipName.ShipName("underworld",10000));
+      escort = tsShip.Create(escort_template, tsShipName.ShipName("general",10000));
 
       tsPilotSetup.SetupEscort(escort, 0.9, 0.5);
 
       iSim.SetFaction(escort, faction);
       Sim.SetCullable(escort, false);
 
-      Sim.PlaceRelativeTo(escort, fence, 2km, 0, 0);
+      Sim.PlaceRelativeTo(escort, tanker, 2km, 0, 0);
 
       iShip.Attacked(escort);
       iShip.LastAttacker(escort);
@@ -732,7 +861,7 @@ create_escorts(hisim operation, hship fence, hgroup cull_group)
 eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool debug_on)
 {
    if (debug_on) {
-      debug Debug.PrintString(String.FormatStrStr("tsPcEmbezzleOp state change %s->%s\n",
+      debug Debug.PrintString(String.FormatStrStr("tsPcTankerOp state change %s->%s\n",
                                                   state2string(state),
                                                   state2string(new_state)));
    }

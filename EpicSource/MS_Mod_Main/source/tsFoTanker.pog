@@ -1,16 +1,18 @@
 /*******************************************************************************************/
 //
-// tsFoEmbezzle.pog
+// tsFoTanker.pog
 // 
-// Torn Stars Fleet Operation Embezzle
+// Torn Stars Fleet Operation Tanker
 // 
-// This function implements the decision making intellegence of an
-// Embezzle type of Fleet Operation.
+// This function implements the decision making intellegence of a
+// Tanker type of Fleet Operation.
 // 
-// Jon - March 2006
+// Template defined:- March 2006, Jon Freise
+// Implementaion:- May 2008, JW
+//
 //******************************************************************************************/
 
-package tsFoEmbezzle;
+package tsFoTanker;
 
 
 //[of]:Impports
@@ -73,31 +75,36 @@ prototype hhabitat find_non_dislike_station(hisim operation, hmapentity center, 
 
 
 // Create the new FO and perform any property setups
+//[of]:New(hisim operation)
 New(hisim operation)
 {
    string ship_name, ship_template;
    hfaction faction;
 
+   debug Debug.PrintString("tsFoTanker.New\n");
+
    faction = iSim.Faction(operation);
 
-   // We pick an underworld name for ourselves. 
+   // We pick a general name for ourselves. 
    // using a large number means we get a random name.
-   ship_name = tsShipName.ShipName("underworld", 10000);
+   ship_name = tsShipName.ShipName("general", 10000);
 
-   // Also pick a large freighter for collecting player sales.
-   ship_template = tsShipCreation.GetShip(faction, EST_FreightHeavy);
+   // Pick a generic tanker to allow for some level of randomness
+   ship_template = tsShipCreation.GetShip(faction, EST_TankerAll);
 
    tsFleetOp.SetName(operation, ship_name);
    tsFleetOp.SetShipTemplate(operation, ship_template);
 
-   // Embezzle ops are special in that they want people to find them.
+   // Tanker ops are special in that they want people to find them.
+   // They are trying to make sales after all.
    tsFleetOp.SetKnown(operation, true);
 
-   // This is an embezzle op, so we set enough fleets for the 
-   // freighter and 2 tugs escort. Fleets use threat value for points.
-   tsLFleet.SetFleets(operation, 200);
-   tsLFleet.SetMaxFleets(operation, 200);
+   // This is a Tanker op, so we set enough fleets for the 
+   // freighter and 0 tug escort. Fleets use threat value for points.
+   tsLFleet.SetFleets(operation, 50);
+   tsLFleet.SetMaxFleets(operation, 50);
 }
+//[cf]
 
 
 
@@ -115,6 +122,7 @@ Restore(hisim operation)
 
 
 // The FO's behaviour function
+//[of]:Update(hisim operation)
 Update(hisim operation)
 {
    hmapentity center = tsLCenter.GetCenter(operation);
@@ -126,7 +134,7 @@ Update(hisim operation)
    int fleets, i, total;
    int update_delay = 1;
 
-   debug tsDebug.PrintString("tsfoembezzle_debug","tsFoEmbezzle.Update\n");
+   debug Debug.PrintString("tsFoTanker.Update\n");
 
    
    faction = iSim.Faction(operation);
@@ -135,7 +143,7 @@ Update(hisim operation)
    // If hostiles nearby flee, no matter what.
    // If we are wounded, stay at home.
    // If we are wounded, and not at home, move home, turn hidden.
-   // If we are at home, and not wounded, move to a production station.
+   // If we are at home, and not wounded, stay there
 
    // Here we look up what other operations are nearby. 
    // Any combat between this and other operations happens here.
@@ -144,31 +152,32 @@ Update(hisim operation)
    List.Remove(local_operations, operation);
    total = List.ItemCount(local_operations);
 
-   hostiles = false;
 
+   // Any hostiles about?
+   hostiles = false;
    for (i=0;i<total;++i) {
       visitor = iSim.Cast(List.GetNth(local_operations,i));
       visitor_faction = iSim.Faction(visitor);
 
       if (iFaction.Feeling(visitor_faction, faction) < -0.2) {
-         // Embezzle always evades.
+         // Tanker always evades.
          tsFleetOpCombat.Defense(center, operation, visitor);
 
          hostiles = true;
       }
    }
 
-   fleets = tsLFleet.Fleets(operation);
 
+   fleets = tsLFleet.Fleets(operation);
    if (fleets == 0) {
       // Ouch, we died.
-      debug tsDebug.PrintString("tsfoembezzle_debug","tsFoEmbezzle lost fleets and died\n");
+      debug Debug.PrintString("tsFoTanker.Update:  tsFoEmbezzle lost fleets and died\n");
 
       tsFleetOp.DestroyOp(operation);
       return;
    }
 
-   // Are we damaged? Embezzle operations are wimpy.
+   // Are we damaged? Tanker operations are wimpy.
    // They assume any damage is wounded.
    if (fleets < tsLFleet.MaxFleets(operation)) {
       wounded = true;
@@ -176,19 +185,19 @@ Update(hisim operation)
       wounded = false;
    }
 
-   supporter_station = tsFleetOp.Supporter(operation);
 
    // Are we home?
+   supporter_station = tsFleetOp.Supporter(operation);
    if (center == iMapEntity.Cast(supporter_station)) {
       home = true;
    }else {
       home = false;
    }
 
+
+   // Determine what operations move will be
    move_home = false;
    move_production = false;
-
-
    if (hostiles && !wounded) {
       // if we are just scared, find another station.
       move_production = true;
@@ -197,18 +206,15 @@ Update(hisim operation)
       move_home = true;
    }else if (wounded && !home) {
       move_home = true;
-   }else if (!wounded && !is_production(center)){
-      move_production = true;
    }
    // Otherwise, just park here and enjoy making lots of cash
-   // fenceing cargo throught the station.
+   // selling fuel.
 
 
    // If we are at home, repair some fleets.
    if (home) {
       tsLFleet.ChangeFleets(operation, 10 * update_delay);
-
-      debug tsDebug.PrintString("tsfoembezzle_debug",String.FormatInt("tsFoEmbezzle repairing at home %d fleets\n", 
+      debug Debug.PrintString(String.FormatInt("tsFoTanker.Update: repairing at home %d fleets\n", 
                                                tsLFleet.Fleets(operation)));
    }
 
@@ -251,13 +257,18 @@ Update(hisim operation)
    // Next update, tomorrow.
    tsFleetOp.SetWakeTimer(operation, tsTime.GetDay() + update_delay);
 }
+//[cf]
 
 
 // Return true is this location is an operating production station.
+//[of]:bool is_production(hmapentity center)
 bool is_production(hmapentity center)
 {
+   // its a station
    if (T_Station == iSim.Type(center)) {
+      // the station is in normal condition (i.e. not building or destroyed etc)
       if (ESS_Normal == tsStation.Status(iHabitat.Cast(center))) {
+         // the map entity is something that can produce things
          if ( (ESC_Mine|ESC_Process|ESC_Manufacture) & tsStation.Category(iHabitat.Cast(center))){
             return true;
          }
@@ -265,7 +276,9 @@ bool is_production(hmapentity center)
    }
    return false;
 }
+//[cf]
 
+//[of]:hhabitat find_production_station(hisim operation, hmapentity center, string system_name)
 hhabitat find_production_station(hisim operation, hmapentity center, string system_name)
 {
    set habitats;
@@ -284,7 +297,9 @@ hhabitat find_production_station(hisim operation, hmapentity center, string syst
 
    return iHabitat.Random(habitats);
 }
+//[cf]
 
+//[of]:hhabitat find_non_dislike_station(hisim operation, hmapentity center, string system_name)
 hhabitat find_non_dislike_station(hisim operation, hmapentity center, string system_name)
 {
    set habitats;
@@ -298,6 +313,7 @@ hhabitat find_non_dislike_station(hisim operation, hmapentity center, string sys
 
    return iHabitat.Random(habitats);
 }
+//[cf]
 
 /*  
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES

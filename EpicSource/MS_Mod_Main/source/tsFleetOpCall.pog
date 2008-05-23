@@ -48,7 +48,8 @@ uses  Sim,
 	tsFoRaider,
 	tsFoCustoms,
 	tsFoPatrol,
-   tsFoConstruction;
+    tsFoConstruction,
+    tsFoTanker;
 
 
 // Exports
@@ -80,6 +81,7 @@ hisim New(int operation_type, hfaction faction, hmapentity center)
 
    case ept_EmbezzleOp: tsFoEmbezzle.New(operation); break;
    case ept_CustomsOp: tsFoCustoms.New(operation);break;
+   case ept_TankerOp: tsFoTanker.New(operation); break;
 
    case ept_ThugsOp: tsFoThugs.New(operation);break;
    case ept_PatrolOp: tsFoPatrol.New(operation);break;
@@ -94,7 +96,7 @@ hisim New(int operation_type, hfaction faction, hmapentity center)
 
    default:
       debug {
-         Debug.PrintString(String.FormatInt("tFleetOperation.Create invalid op type %d\n", operation_type));
+         Debug.PrintString(String.FormatInt("tsFleetOpCall.New invalid op type %d\n", operation_type));
       }
       break;
    }
@@ -113,6 +115,7 @@ Save(hisim operation)
 
    case ept_EmbezzleOp: tsFoEmbezzle.Save(operation);break;
    case ept_CustomsOp: tsFoCustoms.Save(operation);break;
+   case ept_TankerOp: tsFoTanker.Save(operation); break;
 
    case ept_ThugsOp: tsFoThugs.Save(operation);break;
    case ept_PatrolOp: tsFoPatrol.Save(operation);break;
@@ -146,6 +149,7 @@ Restore(hisim operation)
    switch (operation_type) {
    case ept_EmbezzleOp: tsFoEmbezzle.Restore(operation);break;
    case ept_CustomsOp: tsFoCustoms.Restore(operation);break;
+   case ept_TankerOp: tsFoTanker.Restore(operation); break;
 
    case ept_ThugsOp: tsFoThugs.Restore(operation);break;
    case ept_PatrolOp: tsFoPatrol.Restore(operation);break;
@@ -178,6 +182,7 @@ Update(hisim operation)
    switch (operation_type) {
    case ept_EmbezzleOp: tsFoEmbezzle.Update(operation);break;
    case ept_CustomsOp: tsFoCustoms.Update(operation);break;
+   case ept_TankerOp: tsFoTanker.Update(operation); break;
 
    case ept_ThugsOp: tsFoThugs.Update(operation);break;
    case ept_PatrolOp: tsFoPatrol.Update(operation);break;

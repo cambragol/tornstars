@@ -484,6 +484,10 @@ string Operation2String(int op_type)
    case ept_EmbezzleOp:
       return "Embezzling Operation";
       break;
+   // Designed to support the player so they can refuel their ships
+   case ept_TankerOp:
+      return "Tanker Operation";
+      break;
    // Planted on entertainment stations and habitats to generate funds for pirates.
    case ept_ViceDenOp:
       return "Vice Den Operation";
