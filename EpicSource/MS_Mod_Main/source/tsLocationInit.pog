@@ -103,7 +103,7 @@ Arrives(hmapentity location)
       tsStationAi.Start(iHabitat.Cast(location));
 
       // Create the wrecks that were destroyed at this location.
-      wreck_belt = iSim.Cast(tsPogClass.Create("ini:/wreck_belt_field", "wreck_belt"));
+      wreck_belt = iSim.Cast(tsPogClass.Create("ini:/pc_wreck_belt_field", "wreck_belt"));
       Sim.PlaceNear(wreck_belt, location, 1km);
       tsPogClass.Start(wreck_belt);
 

@@ -253,7 +253,7 @@ task dock_watch(hship wreck, hmapentity location, int value)
 
       if (iSim.IsDocked(wreck)) {
          tsLFleet.ChangeWrecks(location, -1*value);
-
+         debug Debug.PrintString("tsPcWreckBelt.dock_watch ship docked to scrap, removing from wreck count\n");
          return;
       }
    }
