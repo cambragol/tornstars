@@ -70,6 +70,7 @@ provides New,
 // Sets up the information that is needed by each type of operation.
 // This is done once at creation time.
 // After this, all information should be recovered in save and restore.
+// Note: operation_type is of enum eProductionType
 //[of]:hisim New(int operation_type, hfaction faction, hmapentity center)
 hisim New(int operation_type, hfaction faction, hmapentity center)
 {

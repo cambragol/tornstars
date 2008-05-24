@@ -221,13 +221,12 @@ setup_tanker_ship(hisim marker)
    control_file = INIFile.Create(template_file_name);
 
    if (none == control_file) {
-      debug Debug.PrintString("ERROR tsPcTankerOp. invalid template_file\n");
-      debug Debug.PrintString(template_file_name);
-      debug Debug.PrintString("\n");
+      Debug.PrintString("tsPcTankerOp.setup_tanker: ERROR: invalid pog_object_template\n");
+      Debug.PrintString(template_file_name);
+      Debug.PrintString("\n");
+      Sim.Destroy(marker);
+      return;
    }
-
-   //tanker_file = INIFile.String(control_file, "Properties", "trade_file", "ini:\fence_cargo");
-   //fence_type = INIFile.String(control_file, "Properties", "fence_type", "none");
 
    INIFile.Destroy(control_file);
 
@@ -296,7 +295,7 @@ setup_tanker_ship(hisim marker)
    Sim.Destroy(marker);
 
    // create any escort if we need it
-   //create_escorts(owner, tanker_ship, cull_group);
+   create_escorts(owner, tanker_ship, cull_group);
 
    // Define the comms function
    comm_function = "tsPcTankerOp.TankerComms";
@@ -812,7 +811,7 @@ create_escorts(hisim operation, hship tanker, hgroup cull_group)
    escort_file = INIFile.Create(escort_template);
 
    if (none == escort_file) {
-      debug Debug.PrintString("tsPcTankerOp.create_escort error escort ini file invalid\n");
+      debug Debug.PrintString("tsPcTankerOp.create_escort: ERROR: escort ini file invalid\n");
       return;
    }
 

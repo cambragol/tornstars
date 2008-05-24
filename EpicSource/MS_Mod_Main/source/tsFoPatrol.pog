@@ -95,14 +95,14 @@ New(hisim operation)
 
    fleets = INIFile.Int(op_data, op_type, "max_fleets", 200);
 
-   ship_class = INIFile.String(op_data, op_type, "ship_class", "EST_CombatLight");
+   ship_class = INIFile.String(op_data, op_type, "ship_class", "EST_CombatHeavy");
 
    INIFile.Destroy(op_data);
 
 
    faction = iSim.Faction(operation);
 
-   // We pick an underworld name for ourselves. 
+   // We pick an polic name for ourselves. 
    // using a large number means we get a random name.
    ship_name = tsShipName.ShipName("police", 10000);
 

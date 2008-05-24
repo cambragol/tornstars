@@ -874,7 +874,7 @@ CopyPricing()
 
    if (none == system) {
       debug {
-         Debug.PrintString("tsEconomy.CopyPricing error to find the players current system\n");
+         Debug.PrintString("tsEconomy.CopyPricing: ERROR: failed to find the players current system: ");
          Debug.PrintString(iSim.ActiveWorld());
          Debug.PrintString("\n");
       }

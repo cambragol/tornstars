@@ -24,6 +24,8 @@ prototype tsFleetOp.DestroyOp( hisim operation );
 
 prototype bool tsFleetOp.IsOperation( hisim operation );
 
+prototype int tsFleetOp.GetOperationType(hisim operation);
+
 prototype hisim tsFleetOp.Find( int operation_id );
 
 prototype tsFleetOp.SetKnown( hisim operation, bool known );

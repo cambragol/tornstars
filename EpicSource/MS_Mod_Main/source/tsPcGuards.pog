@@ -49,7 +49,7 @@ uses    Sim,
         tsLCenter,
         tsLFleet,
         tsShipCreationEnum,
-tsShipCreation,
+        tsShipCreation,
         tsPilotSetup,
         tsCapsuleJump,
         tsDistance,
@@ -177,7 +177,7 @@ hsim PogCreate(string template_name, string object_name)
 
    if (none == item) {
       debug {
-         Debug.PrintString("tsPcGuards.PogCreate, error bad object template\n");
+         Debug.PrintString("tsPcGuards.PogCreate: ERROR: bad object template\n");
       }
       return item;
    }
@@ -252,8 +252,9 @@ setup_guards(hisim marker)
    hship patrol_ship;
    hgroup patrol_group = Group.Create();
 
+
    if (none == marker) {
-      debug Debug.PrintString("ERROR tsPcGuards.setup_toll_marker invalid sim\n");
+      debug Debug.PrintString("tsPcGuards.setup_guards: ERROR: invalid marker sim\n");
       return;
    }
 
@@ -261,31 +262,36 @@ setup_guards(hisim marker)
    control_file = INIFile.Create(template_file_name);
 
    if (none == control_file) {
-      debug Debug.PrintString("ERROR tsPcGuards error invalid template_file\n");
+      debug Debug.PrintString("tsPcGuards.setup_guards: ERROR: invalid template_file\n");
       debug Debug.PrintString(template_file_name);
       debug Debug.PrintString("\n");
+      Sim.Destroy(marker);
       return;
    }
 
+   // Get the ship types from the ini file for leader and escort.
    leader_type = INIFile.String(control_file,"Properties","leader_ship_type","EST_CombatLight");
-
    escort_type = INIFile.String(control_file,"Properties","escort_ship_type","EST_CombatFighter");
-
+   // close ini file
    INIFile.Destroy(control_file);
 
    location = nearby_location(marker);
 
    if (none == location) {
-      debug Debug.PrintString("ERROR tsPcGuards error no nearby location\n");
+      debug Debug.PrintString("tsPcGuards.setup_guards: ERROR: no nearby location\n");
+      Sim.Destroy(marker);
       return;
    }
-
-   // Find the operation owner of the toll.
+   
+   // The first thing we do is learn if this marker is to represent an operation.
+   // If we do, then we handle some things differently.
    owner = iSim.Cast(tsPcOwner.Owner(marker));
    guard_faction = iSim.Faction(iSim.Cast(owner));
 
+   // We must have an owner, either operation or station.
    if (none == owner) {
-      debug Debug.PrintString("ERROR tsPcGuards error no owning station or operation\n");
+      debug Debug.PrintString("tsPcGuards.setup_guards: ERROR: no owning station or operation\n");
+      Sim.Destroy(marker);
       return;
    }
 
@@ -294,6 +300,7 @@ setup_guards(hisim marker)
    if (tsFleetOp.IsOperation(owner)) {
       if (tsFleetOp.IsCreated(owner)){
          debug Debug.PrintString("tsPcGuards operation already physical.\n");
+         Sim.Destroy(marker);
          return;
       }
    }
@@ -302,15 +309,24 @@ setup_guards(hisim marker)
    fleets = tsLFleet.Fleets(owner);
 
    if (fleets < 40) {
-      debug Debug.PrintString("tsPcGuards no fleets remain, exiting.\n");
+      debug Debug.PrintString("tsPcGuards.setup_guards: no fleets remain, exiting.\n");
+      Sim.Destroy(marker);
       return;
    }
 
+   // If we are working with an operation let the operation
+   // know we have gone "physical"
    if (tsFleetOp.IsOperation(owner)) {
       tsFleetOp.SetCreated(owner, true);
    }
 
-   patrol_ship = create_leader (location, owner, patrol_group, leader_type);
+   // create the leader for this patrol.
+   patrol_ship = create_leader(location, owner, patrol_group, leader_type);
+   if (none == patrol_ship) {
+      Debug.PrintString("tsPcGuards.setup_guards: ERROR: failed to create patrol leader.");
+      Sim.Destroy(marker);
+      return;
+   }
 
    // Subtract off the fleets that are needed for the patrol ship.
    fleets = fleets - Object.FloatProperty(patrol_ship, "threat");
@@ -743,7 +759,7 @@ hship create_leader (hmapentity location, hisim operation, hgroup cull_group, st
    leader_file = INIFile.Create(leader_template);
 
    if (none == leader_file) {
-      debug Debug.PrintString("tsPcGuards.create_leader error leader ini file invalid\n");
+      Debug.PrintString("tsPcGuards.create_leader: ERROR: patrol leader ini file invalid\n");
       return none;
    }
 
@@ -787,7 +803,7 @@ create_escorts(hisim operation, int fleets, hship leader, hgroup cull_group, str
    escort_file = INIFile.Create(escort_template);
 
    if (none == escort_file) {
-      debug Debug.PrintString("tsPcGuards.create_escort error escort ini file invalid\n");
+      Debug.PrintString("tsPcGuards.create_escort: ERROR: escort ini file invalid\n");
       return;
    }
 
