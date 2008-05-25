@@ -240,6 +240,7 @@ Update(hisim operation)
 
       tsLCenter.SetCenter(operation, supporter_station);
       tsFleetOpCombat.SetDistressFlags(supporter_station);
+      tsFleetOpCombat.SetDistressFlags(center);
 
       tsDebug.PrintString("tsfofleetattack_debug","tsFoFleetAttack moving home\n");
       tsDebug.PrintHandle("tsfofleetattack_debug",supporter_station);
@@ -266,7 +267,8 @@ Update(hisim operation)
          if (none != target_station) {
 
             tsLCenter.SetCenter(operation, target_station);
-            tsFleetOpCombat.SetDistressFlags(target_station);            
+            tsFleetOpCombat.SetDistressFlags(target_station);  
+            tsFleetOpCombat.SetDistressFlags(center);
 
             tsDebug.PrintString("tsfofleetattack_debug","tsFoFleetAttack new patrol\n");
             tsDebug.PrintHandle("tsfofleetattack_debug",target_station);
