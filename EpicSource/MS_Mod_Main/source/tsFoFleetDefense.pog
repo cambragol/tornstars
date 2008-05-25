@@ -246,6 +246,7 @@ Update(hisim operation)
    if (move_home) {
 
       tsLCenter.SetCenter(operation, supporter_station);
+      tsFleetOpCombat.SetDistressFlags(supporter_station);
 
       tsDebug.PrintString("tsfofleetdefense_debug",
                           String.FormatStrStr("tsFoFleetDefense %s moving home\n%s",
@@ -276,6 +277,7 @@ Update(hisim operation)
 
          if (none != target_lpoint) {
             tsLCenter.SetCenter(operation, target_lpoint);
+            tsFleetOpCombat.SetDistressFlags(target_lpoint);
 
             tsDebug.PrintString("tsfofleetdefense_debug",
                           String.FormatStrStr("tsFoFleetDefense %s new lpoint\n%s",
@@ -286,6 +288,8 @@ Update(hisim operation)
 
          }else if (none != target_station) {
             tsLCenter.SetCenter(operation, target_station);
+            tsFleetOpCombat.SetDistressFlags(target_station);            
+
 
             tsDebug.PrintString("tsfofleetdefense_debug",
                           String.FormatStrStr("tsFoFleetDefense %s new station\n%s",

@@ -139,7 +139,6 @@ PACKAGES = ECargoTypes.pkg \
 	tsTime.pkg \
 	tsTimeAdvance.pkg \
 	tsFleetOp.pkg \
-	tsFleetOperation \
 	tsFleetOpFilter.pkg \
 	tsFleetOpGui.pkg \
 	tsFleetOpSave.pkg \
@@ -331,7 +330,6 @@ tsStationSave.pkg : tsStationSave.pog tsEconUtil.h tsFaction.h tsStation.h tsSta
 tsTime.pkg : tsTime.pog
 tsTimeAdvance.pkg : tsTimeAdvance.pog tsPodUtil.h tsStation.h tsTime.h tsShip.h
 tsFleetOp.pkg : tsFleetOp.pog tsFaction.h tsStation.h tsLRoot.h tsLProduction.h tsLCenter.h tsLFleet.h
-tsFleetOperation: tsFleetOperation.pog tsFaction.h tsStation.h tsLRoot.h tsLProduction.h tsLCenter.h tsLFleet.h
 tsFleetOpFilter.pkg : tsFleetOpFilter.pog tsFleetOp.h tsLProduction.h tsLCenter.h
 tsFleetOpGui.pkg : tsFleetOpGui.pog tsTime.h tsGui.h UniGUI.h tsLRoot.h tsLCenter.h tsFaction.h tsEconUtil.h tsLProduction.h tsLFleet.h tsFleetOp.h tsFleetOpFilter.h
 tsFleetOpSave.pkg : tsFleetOpSave.pog tsFaction.h tsEconUtil.h tsFleetOp.h tsLRoot.h tsLProduction.h tsLCenter.h tsLFleet.h tsFleetOpCall.h

@@ -50,7 +50,10 @@ provides Init,
    
          Wrecks,
          SetWrecks,
-         ChangeWrecks;
+         ChangeWrecks,
+
+         Distress,
+         SetDistress;
 
 
 
@@ -85,6 +88,10 @@ prototype SetWrecks(hisim producer, int wrecks);
 prototype int ChangeWrecks(hisim producer, int amount);
 
 
+prototype bool Distress(hisim producer);
+
+prototype SetDistress(hisim producer, bool distressed);
+
 // Session init this layer.
 Init()
 {
@@ -107,6 +114,8 @@ Create(hisim producer, int fleets, int supplies, int max_fleets, int max_supplie
 
    SetWrecks(producer, 0);
 
+   SetDistress(producer, false);
+
    add(producer);
 }
 
@@ -120,6 +129,7 @@ Save(hisim producer)
    int supplies, max_supplies;
    int fleets, max_fleets, wrecks;
    bool active;
+   bool distress;
 
    supplies = Supplies(producer);
    max_supplies = MaxSupplies(producer);
@@ -127,12 +137,14 @@ Save(hisim producer)
    fleets = Fleets(producer);
    max_fleets = MaxFleets(producer);
    wrecks = Wrecks(producer);
+   distress = Distress(producer);
 
    Global.CreateInt(String.FormatInt("gt_LFleet%d_supplies",id),GA_Write, supplies);
    Global.CreateInt(String.FormatInt("gt_LFleet%d_fleets",id),GA_Write, fleets);
    Global.CreateInt(String.FormatInt("gt_LFleet%d_maxsupplies",id),GA_Write, max_supplies);
    Global.CreateInt(String.FormatInt("gt_LFleet%d_maxfleets",id),GA_Write, max_fleets);
    Global.CreateInt(String.FormatInt("gt_LFleet%d_wrecks",id),GA_Write, wrecks);
+   Global.CreateBool(String.FormatInt("gt_LFleet%d_distress",id),GA_Write, distress);
 }
 
 
@@ -144,6 +156,7 @@ Restore(hisim producer)
    int supplies, maxsupplies;
    int fleets, maxfleets, wrecks;
    bool active;
+   bool distress;
 
 
    supplies = Global.Int(String.FormatInt("gt_LFleet%d_supplies",id));
@@ -161,9 +174,14 @@ Restore(hisim producer)
    wrecks = Global.Int(String.FormatInt("gt_LFleet%d_wrecks",id));
    Global.Destroy(String.FormatInt("gt_LFleet%d_wrecks",id));
 
+   distress = Global.Bool(String.FormatInt("gt_LFleet%d_distress",id));
+   Global.Destroy(String.FormatInt("gt_LFleet%d_distress",id));
+
    Create(producer, fleets, supplies, maxfleets, maxsupplies);
 
    SetWrecks(producer, wrecks);
+   
+   SetDistress(producer, distress);
 }
 
 
@@ -297,7 +315,16 @@ int ChangeWrecks(hisim producer, int amount)
    return fleets;
 }
 
+bool Distress(hisim producer)
+{
+   return Object.BoolProperty(producer, "gtsLFleetDistress");
+}
 
+SetDistress(hisim producer, bool distressed)
+{
+
+   Object.AddBoolProperty(producer, "gtsLFleetDistress", distressed);
+}
 
 /*  
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES

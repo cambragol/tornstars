@@ -256,6 +256,7 @@ Update(hisim operation)
    if (move_home) {
 
       tsLCenter.SetCenter(operation, supporter_station);
+      tsFleetOpCombat.SetDistressFlags(supporter_station);
 
       tsDebug.PrintString("tsfothugs_debug","tsFoThugs moving home\n");
       tsDebug.PrintHandle("tsfothugs_debug",supporter_station);
@@ -269,9 +270,11 @@ Update(hisim operation)
       if (none != target_station) {
          // To move an operation, we just move the center.
          tsLCenter.SetCenter(operation, target_station);
+         tsFleetOpCombat.SetDistressFlags(target_station);
       }else {
          // If there are no other stations, move home.
          tsLCenter.SetCenter(operation, supporter_station);
+         tsFleetOpCombat.SetDistressFlags(supporter_station);
       }
 
       tsDebug.PrintString("tsfothugs_debug","tsFoThugs moving to safety\n");

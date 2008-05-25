@@ -264,6 +264,7 @@ Update(hisim operation)
    if (move_home) {
 
       tsLCenter.SetCenter(operation, supporter_station);
+      tsFleetOpCombat.SetDistressFlags(supporter_station);
 
       tsDebug.PrintString("tsforaider_debug",
                           String.FormatStrStr("tsFoRaider %s moving home\n%s",
@@ -280,9 +281,11 @@ Update(hisim operation)
       if (none != target_station) {
          // To move an operation, we just move the center.
          tsLCenter.SetCenter(operation, target_station);
+         tsFleetOpCombat.SetDistressFlags(target_station);
       }else {
          // If there are no other stations, move home.
          tsLCenter.SetCenter(operation, supporter_station);
+         tsFleetOpCombat.SetDistressFlags(supporter_station);
       }
       tsDebug.PrintString("tsforaider_debug",
                           String.FormatStrStr("tsFoRaider %s moving home\n%s",
@@ -317,6 +320,7 @@ Update(hisim operation)
 
          if (none != target_station) {
             tsLCenter.SetCenter(operation, target_station);
+            tsFleetOpCombat.SetDistressFlags(target_station);
 
             tsDebug.PrintString("tsforaider_debug",
                           String.FormatStrStr("tsFoRaider %s new raid station\n%s",

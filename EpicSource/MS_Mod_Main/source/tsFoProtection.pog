@@ -244,6 +244,7 @@ Update(hisim operation)
    if (move_home) {
 
       tsLCenter.SetCenter(operation, supporter_station);
+      tsFleetOpCombat.SetDistressFlags(supporter_station);
 
       debug {
          tsDebug.PrintString("tsfoprotection_debug",
@@ -261,6 +262,7 @@ Update(hisim operation)
       if (none != target_station) {
          // To move an operation, we just move the center.
          tsLCenter.SetCenter(operation, target_station);
+         tsFleetOpCombat.SetDistressFlags(target_station);
 
          debug {
             tsDebug.PrintString("tsfoprotection_debug",
@@ -283,6 +285,7 @@ Update(hisim operation)
          if (none != lpoint) {
             // If there is an empty lpoint, take it.
             tsLCenter.SetCenter(operation, lpoint);
+            tsFleetOpCombat.SetDistressFlags(lpoint);
 
             debug {
                tsDebug.PrintString("tsfoprotection_debug",
@@ -299,6 +302,7 @@ Update(hisim operation)
             if (none != target_station) {
                // To move an operation, we just move the center.
                tsLCenter.SetCenter(operation, target_station);
+               tsFleetOpCombat.SetDistressFlags(target_station);
 
                debug {
                   tsDebug.PrintString("tsfoprotection_debug",

@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/tsFleetOpCombat.h,v 1.2 2006/04/16 20:53:02 Owner Exp $
+// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////
@@ -21,6 +21,8 @@ prototype tsFleetOpCombat.Offense( hmapentity location, hisim attacking_op, hisi
 prototype tsFleetOpCombat.Defense( hmapentity location, hisim defending_op, hisim hostile_op );
 
 prototype bool tsFleetOpCombat.Station( hisim attacking_op, hhabitat station );
+
+prototype bool tsFleetOpCombat.SetDistressFlags( hmapentity location );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

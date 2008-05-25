@@ -46,12 +46,13 @@ iMapEntity,
    tsLProduction;
 
 
-
+ 
 
 
 provides Offense,
          Defense,
-         Station;
+         Station,
+         SetDistressFlags;
 
 
 //*******************************************************************************************/         
@@ -142,6 +143,93 @@ bool Station(hisim attacking_op, hhabitat station)
    }
 
    return false;
+}
+
+
+// This function is used 
+bool SetDistressFlags(hmapentity location)
+{
+   set fleets, remaining, hostile, cleared;
+   hisim first_fleet, second_fleet;
+   hfaction first_faction, second_faction;
+   bool any_hostiles;
+
+   // Get the set of operations at this location
+
+   // Check each operation against the station and the others.
+   // if dislike or lower, put in the distress set.
+   // if not ever distresse, put in the clear set.
+
+   // set all distressed stations and operations to distress.
+   // set all clear stations and operations to clear.
+
+   fleets = Set.FromList(tsFleetOp.StationOperations(location));
+   // Put the station into consideration.
+   Set.Add(fleets, location);
+
+   cleared = fleets;
+
+   while (!Set.IsEmpty(fleets)) {
+      first_fleet = iSim.Cast(Set.FirstElement(fleets));
+      Set.Remove(fleets, first_fleet);
+
+      first_faction = iSim.Faction(first_fleet);
+
+      remaining = fleets;
+
+      // Compare this fleet against the rest. If any are hostile, 
+      // remember both.
+      while (!Set.IsEmpty(remaining)) {
+         second_fleet = iSim.Cast(Set.FirstElement(remaining));
+         Set.Remove(remaining, second_fleet);
+
+         second_faction = iSim.Faction(second_fleet);
+
+         if ((iFaction.Feeling(first_faction, second_faction) < -0.2) ||
+             (iFaction.Feeling(second_faction, first_faction) < -0.2)){
+
+            Set.Add(hostile, first_fleet);
+            Set.Add(hostile, second_fleet);            
+         }
+      }
+   }
+
+   any_hostiles = Set.IsEmpty(hostile);
+
+   // Cleared fleets are any not set to hostile.
+   Set.Difference(cleared, hostile);
+
+   while (!Set.IsEmpty(hostile)) {
+      first_fleet = iSim.Cast(Set.FirstElement(hostile));
+      Set.Remove(hostile, first_fleet);
+
+      tsLFleet.SetDistress(first_fleet, true);
+
+      /*
+      debug {
+         Debug.PrintHandle(first_fleet);
+         Debug.PrintString(" hostile found");
+         Debug.PrintString("\n");
+      }
+      */
+   }
+
+   while (!Set.IsEmpty(cleared)) {
+      first_fleet = iSim.Cast(Set.FirstElement(cleared));
+      Set.Remove(cleared, first_fleet);
+
+      tsLFleet.SetDistress(first_fleet, false);
+
+      /*
+      debug {
+         Debug.PrintHandle(first_fleet);
+         Debug.PrintString(" clear found");
+         Debug.PrintString("\n");
+      }
+      */
+   }
+
+   return any_hostiles;
 }
 
 

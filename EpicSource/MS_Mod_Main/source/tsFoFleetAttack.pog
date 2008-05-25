@@ -142,9 +142,13 @@ Update(hisim operation)
    int patrol_day;
    int update_delay = 1;
 
+   debug atomic {
    tsDebug.PrintString("tsfofleetattack_debug","tsFoFleetAttack.Update\n");
-
-   
+   tsDebug.PrintString("tsfofleetattack_debug",Text.Field(tsFleetOp.Name(operation), FT_Text));
+   tsDebug.PrintString("tsfofleetattack_debug"," at ");
+   tsDebug.PrintString("tsfofleetattack_debug",Text.Field(Sim.Name(center), FT_Text));
+   tsDebug.PrintString("tsfofleetattack_debug","\n");
+   }
    faction = iSim.Faction(operation);
 
    // Here we look up what other operations are nearby. 
@@ -233,7 +237,9 @@ Update(hisim operation)
 
    if (move_home) {
 
+
       tsLCenter.SetCenter(operation, supporter_station);
+      tsFleetOpCombat.SetDistressFlags(supporter_station);
 
       tsDebug.PrintString("tsfofleetattack_debug","tsFoFleetAttack moving home\n");
       tsDebug.PrintHandle("tsfofleetattack_debug",supporter_station);
@@ -241,11 +247,11 @@ Update(hisim operation)
 
    }else if (!stay_still) {
 
-
       // Move every week, patrolling near our patrol station.
       patrol_day = tsFleetOp.EventTimer(operation);
       if (patrol_day == 0) {
-         patrol_day = Math.RandomInt(1,7);
+//         patrol_day = Math.RandomInt(1,7);
+         patrol_day = Math.RandomInt(1,2);
          tsFleetOp.SetEventTimer(operation, patrol_day);
       }
 
@@ -258,7 +264,9 @@ Update(hisim operation)
          target_station = find_patrol_station(operation, center, iSim.WorldName(center));
 
          if (none != target_station) {
+
             tsLCenter.SetCenter(operation, target_station);
+            tsFleetOpCombat.SetDistressFlags(target_station);            
 
             tsDebug.PrintString("tsfofleetattack_debug","tsFoFleetAttack new patrol\n");
             tsDebug.PrintHandle("tsfofleetattack_debug",target_station);
@@ -288,7 +296,8 @@ hhabitat find_patrol_station(hisim operation, hmapentity center, string system_n
    Set.Remove(habitats, center);
 
    // Patrols neutral or better stations.
-   habitats = tsStationFilter.OnGreaterFeeling(habitats,
+//   habitats = tsStationFilter.OnGreaterFeeling(habitats,
+   habitats = tsStationFilter.OnLowerFeeling(habitats,
                                               iSim.Faction(operation),
                                               tsFaction.Type2LowerLevel(FT_Neutral));
 

@@ -257,6 +257,7 @@ Update(hisim operation)
    if (move_home) {
 
       tsLCenter.SetCenter(operation, supporter_station);
+      tsFleetOpCombat.SetDistressFlags(supporter_station);
 
       debug {
          tsDebug.PrintString("tsFoConstruction_debug","tsFoConstruction moving home\n");
@@ -271,6 +272,7 @@ Update(hisim operation)
       if (none != target_station) {
          // To move an operation, we just move the center.
          tsLCenter.SetCenter(operation, target_station);
+      tsFleetOpCombat.SetDistressFlags(target_station);         
       }else {
          // We must be running, so pick any nearby non-hostile station.
          target_station = find_non_dislike_station(operation, center, iSim.WorldName(center));
@@ -278,8 +280,10 @@ Update(hisim operation)
          if (none != target_station) {
             // To move an operation, we just move the center.
             tsLCenter.SetCenter(operation, target_station);
+            tsFleetOpCombat.SetDistressFlags(target_station);
          }else {
             tsLCenter.SetCenter(operation, supporter_station);
+            tsFleetOpCombat.SetDistressFlags(supporter_station);            
          }
       }
 

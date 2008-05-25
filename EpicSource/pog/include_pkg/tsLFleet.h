@@ -52,5 +52,9 @@ prototype tsLFleet.SetWrecks( hisim producer, int wrecks );
 
 prototype int tsLFleet.ChangeWrecks( hisim producer, int amount );
 
+prototype bool tsLFleet.Distress( hisim producer );
+
+prototype tsLFleet.SetDistress( hisim producer, bool distressed );
+
 // EOF /////////////////////////////////////////////////////////////////////////
 
