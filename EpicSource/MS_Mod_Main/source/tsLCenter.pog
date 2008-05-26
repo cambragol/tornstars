@@ -139,7 +139,7 @@ SetCenter(hisim producer, hmapentity center)
 
    if (none != old_center) {
       if (Object.PropertyExists(old_center,"gtsLCenterAttachList")) {
-         Object.ListProperty(old_center,"gtsLCenterAttachList");
+         attach_list = Object.ListProperty(old_center,"gtsLCenterAttachList");
          List.Remove(attach_list, producer);
          Object.SetListProperty(old_center,"gtsLCenterAttachList", attach_list);
       }
