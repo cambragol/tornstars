@@ -1598,7 +1598,9 @@ hwindow create_location_sublist_window()
 
          if (T_Station == iSim.Type(current_location)) {
             // The list is operations, so report the type.
-            item_name = Text.Field(tsEconUtil.StationIntToString(tsLProduction.GetType(item)), FT_Text);
+            item_name = Text.Field(tsFleetOp.Name(item), FT_Text);
+            item_name = String.Join(item_name, " ");
+            item_name = String.Join(item_name, Text.Field(tsEconUtil.StationIntToString(tsLProduction.GetType(item)), FT_Text));
          }else if (T_LagrangePoint == iSim.Type(current_location)) {
             // The list is lpoint routes, so report the target system.
             // This allows the player to plan a path through the cluster.
