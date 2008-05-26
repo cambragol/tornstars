@@ -119,9 +119,9 @@ update_distress_calls()
          center = tsLCenter.GetCenter(operation);
          if (iSim.WorldName(center) == iSim.ActiveWorld()) {
 
-            // if the op has a neutral or better standing to the player.
+            // if the op has a friendly or better standing to the player.
             op_faction = iSim.Faction(operation);
-            if (iFaction.Feeling(player_faction, op_faction) > -0.2){
+            if (iFaction.Feeling(player_faction, op_faction) > 0.2){
 
                // Found an operation in distress
                debug {
