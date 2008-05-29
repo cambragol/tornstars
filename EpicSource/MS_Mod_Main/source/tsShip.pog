@@ -50,7 +50,9 @@ uses	 Sim,
 		tsPodUtil,
 		tsShipComms,
 		tsFormation,
-		tsFaction; 
+		tsFaction,
+		tsDebug;
+		
 //[cf]
 
 
@@ -64,6 +66,9 @@ provides
 
         FuelPerJump,
         SetFuelPerJump,
+
+        CanJump,
+        DeductFuelPerJump,
 
         DailyFuel,
         SetDailyFuel,
@@ -118,6 +123,7 @@ prototype add_hardpoints(hship ship, hinifile ship_file);
 
 prototype null_subsims(hship ship);
 
+prototype float DailyFuel(hship ship);
 
 
 int float2int(float number)
@@ -205,7 +211,56 @@ float FuelPerJump(hship ship)
    return Object.FloatProperty(ship, "jump_fuel");
 }
 
+// cost is the percent modifier for the jump
+/*
+ * We make sure there is a DailyFuel's worth in excess of the jump 
+ * because ships always(?) have the daily fuel use deducted during a 
+ * jump, which can end up with them stuck on 0 fuel at the other side.
+ */
+bool CanJump(hship ship, float cost)
+{
+  atomic debug {
+    tsDebug.PrintString("tsjump_debug", "checking jump: ship fuel: ");
+    tsDebug.PrintString("tsjump_debug", String.FromFloat(Fuel(ship)));
+    tsDebug.PrintString("tsjump_debug", "\n");
+    tsDebug.PrintString("tsjump_debug", "route cost: ");
+    tsDebug.PrintString("tsjump_debug", String.FromFloat(cost));
+    tsDebug.PrintString("tsjump_debug", "\n");
+    tsDebug.PrintString("tsjump_debug", "total jump cost: ");
+    tsDebug.PrintString("tsjump_debug", String.FromFloat(cost * FuelPerJump(ship)));
+    tsDebug.PrintString("tsjump_debug", "\n");
+  }
+  if ((FuelPerJump(ship) * cost) + DailyFuel(ship) < Fuel(ship))
+  {
+    return true;
+  }
+  return false;
+}
 
+// cost is the percent modifier for the jump
+// assumption: we've got enough fuel to jump, callers beware!
+DeductFuelPerJump(hship ship, float cost)
+{
+  float amount;
+
+  atomic debug {
+    tsDebug.PrintString("tsjump_debug", "about to deduct fuel for jump: ship fuel: ");
+    tsDebug.PrintString("tsjump_debug", String.FromFloat(Fuel(ship)));
+    tsDebug.PrintString("tsjump_debug", "\n");
+    tsDebug.PrintString("tsjump_debug", "route cost: ");
+    tsDebug.PrintString("tsjump_debug", String.FromFloat(cost));
+    tsDebug.PrintString("tsjump_debug", "\n");
+    tsDebug.PrintString("tsjump_debug", "total jump cost: ");
+    tsDebug.PrintString("tsjump_debug", String.FromFloat(cost * FuelPerJump(ship)));
+    tsDebug.PrintString("tsjump_debug", "\n");
+  }
+  // not sure that this really has to be atomic, but wth.
+  atomic {
+    amount = FuelPerJump(ship) * cost;
+    amount = Fuel(ship) - amount;
+    SetFuel(ship, amount);
+  }
+}
 
 // This is the amount of fuel a ship burns for reactor power and
 // using thrusters to move around.

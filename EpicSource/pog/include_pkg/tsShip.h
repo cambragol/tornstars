@@ -28,6 +28,10 @@ prototype float tsShip.FuelPerJump( hship ship );
 
 prototype tsShip.SetFuelPerJump( hship ship, float fuel_per_jump );
 
+prototype bool tsShip.CanJump( hship ship, float cost );
+
+prototype tsShip.DeductFuelPerJump( hship ship, float cost );
+
 prototype float tsShip.DailyFuel( hship ship );
 
 prototype tsShip.SetDailyFuel( hship ship, float fuel_amount );
