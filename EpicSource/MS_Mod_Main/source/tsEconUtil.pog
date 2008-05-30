@@ -655,6 +655,7 @@ int StationStringToEnum(string instring)
    }
    if ( "HT_TradeOp" == instring ) {
       return ept_TradeOp;
+   }
 
    debug Debug.PrintString("tsEconUtil.StationStringToEnum Invalid string :");
    debug Debug.PrintString(instring);
@@ -664,9 +665,7 @@ int StationStringToEnum(string instring)
 }
 
 
-eCargoType        String2CargoType
-( string          to_cast
-)
+eCargoType String2CargoType(string to_cast)
 {
 
   if(to_cast == "CT_Invalid")

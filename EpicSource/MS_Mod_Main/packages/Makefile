@@ -26,6 +26,8 @@ MOD_PATH= $(EPIC_INSTALL)/mods/$(MODULE)
 
 POG_COMPILER = $(EPIC_INSTALL)/bin/release/pc.exe
 
+FLAGS = --quiet
+
 .PHONY: all clean
 
 #.SUFFIXES:
@@ -39,7 +41,7 @@ vpath %.pog ../source
 
 # Pattern rule
 %.pkg: %.pog
-	$(POG_COMPILER) -q -i $(INCLUDE_PATH) -i $(PS_INCLUDE_PATH) -i $(INCLUDE_PKG) -hp $(INCLUDE_PKG) -pp $(PACKAGE_PATH) $<
+	$(POG_COMPILER) $(FLAGS) -i $(INCLUDE_PATH) -i $(PS_INCLUDE_PATH) -i $(INCLUDE_PKG) -hp $(INCLUDE_PKG) -pp $(PACKAGE_PATH) $<
 	cp $(PACKAGE_PATH)/$@ $(MOD_PATH)/packages
 	
 # copy the target to the iwar mod directory (to save a manual copy for the programmer which keeps all files up to date).

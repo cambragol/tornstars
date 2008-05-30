@@ -373,6 +373,6 @@ enum eProductionType
    
    ept_TankerOp = 146,
    
-   ept_TankerOp = 147
+   ept_TradeOp = 147
 
 };	

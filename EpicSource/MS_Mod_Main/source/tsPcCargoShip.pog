@@ -30,6 +30,7 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    tsLRoot,
    tsLTrade,
    tsLProduction,
+   tsFleetOp,
    tsMoney,
    tsTime,
    tsFaction,
@@ -39,6 +40,7 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    tsShipCreationEnum,
    tsShipCreation,
    tsShipName,
+   tsPcOwner,
    tsString,
    tsShip;
 //[cf]
@@ -191,9 +193,11 @@ setup_ship(hisim marker)
    hgroup escort_group = Group.Create();
    hgroup pod_group = Group.Create();
    hfaction station_faction;
+   hfaction faction;
+   hisim owner;
    int station_type, i, total_escort, pod_count;
    set habitats, cargo_set;
-   string name, ship_template;
+   string name, ship_template, template_file_name, ship_name;
 
    habitats = iMapEntity.SystemHabitats();
    start_station = iHabitat.Nearest(habitats, marker);
