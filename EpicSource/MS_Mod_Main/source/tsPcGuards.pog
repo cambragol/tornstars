@@ -131,8 +131,6 @@ prototype string state2string(eCSScriptState state);
    back.
 
 */
-
-
 //[of]:hsim PogCreate(string template_name, string object_name)
 hsim PogCreate(string template_name, string object_name)
 {
@@ -156,12 +154,11 @@ hsim PogCreate(string template_name, string object_name)
    }
 
    // Pull needed items out of template file. Create the object.
-   // Attach them
-
+   // Attach them.
    pog_class = INIFile.String(object_file, "PogClass","name","none");
 
 
-   ///********************
+   //********************
    // This block of code is class dependent. The rest must be done to adhere
    // to the pog otbject calling conventions.
 
@@ -170,7 +167,6 @@ hsim PogCreate(string template_name, string object_name)
    INIFile.Destroy(object_file);
 
 //   name = tsShipName.ShipName( "underworld", Math.RandomInt(0, 222));
-
 //   item = Sim.Create(item_template, name);
 
    item = Sim.Create("ini:/sims/nav/waypoint","guard_mark");
@@ -322,6 +318,8 @@ setup_guards(hisim marker)
 
    // create the leader for this patrol.
    patrol_ship = create_leader(location, owner, patrol_group, leader_type);
+   
+   // If not leader ship then we abort
    if (none == patrol_ship) {
       Debug.PrintString("tsPcGuards.setup_guards: ERROR: failed to create patrol leader.");
       Sim.Destroy(marker);
@@ -748,11 +746,13 @@ hship create_leader (hmapentity location, hisim operation, hgroup cull_group, st
 
 
    if (tsFleetOp.IsOperation(operation)) {
+      // if using an operation to generate this then collect leader
+      // template and name from the operation object
       leader_template = tsFleetOp.ShipTemplate(operation);
       leader_name = tsFleetOp.Name(operation);
    }else {
-      leader_template = tsShipCreation.GetShip(faction, 
-                                               tsShipCreation.String2ShipType(ship_type));
+      // otherwise get the leader template from pog class file
+      leader_template = tsShipCreation.GetShip(faction, tsShipCreation.String2ShipType(ship_type));
       leader_name = tsShipName.ShipName("govornment",10000);
    }
 
@@ -789,6 +789,7 @@ hship create_leader (hmapentity location, hisim operation, hgroup cull_group, st
 
 
 // Create escorts in the fleet using the tsShipCreation system
+// The escrot ship class type is always taken from the pog class ini file
 //[of]:create_escorts(hisim operation, int fleets, hship leader, hgroup cull_group, string ship_type)
 create_escorts(hisim operation, int fleets, hship leader, hgroup cull_group, string ship_type)
 {
@@ -811,6 +812,12 @@ create_escorts(hisim operation, int fleets, hship leader, hgroup cull_group, str
    INIFile.Destroy(escort_file);
 
    total = fleets/threat;
+
+   if(total < 1) {
+      debug Debug.PrintString("tsPcGuards.create_escort: (fleets / threat) < 1, no escorts created\n");
+      debug Debug.PrintString(String.FormatInt("Fleets = %d   ", fleets));
+      debug Debug.PrintString(String.FormatInt("Threat = %d\n", threat));
+   }
 
    for (i=0;i<total;++i) {
       escort = tsShip.Create(escort_template, tsShipName.ShipName("govornment",10000));

@@ -202,9 +202,7 @@ setup_hired_ship(hship ship)
 
    // Pull in the one line ship description string.
    ship_file = INIFile.Create(ship_template);
-
    ship_desc = INIFile.String(ship_file, "Properties", "text", "Nothing Special.");
-
    INIFile.Destroy(ship_file);
 
 

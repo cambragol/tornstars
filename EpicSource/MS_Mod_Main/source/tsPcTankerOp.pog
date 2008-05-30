@@ -218,6 +218,8 @@ setup_tanker_ship(hisim marker)
    hgroup cull_group;
 
    template_file_name = Object.StringProperty(marker, "gt_pog_object_template");
+   
+   /* Not currently used so comment out.
    control_file = INIFile.Create(template_file_name);
 
    if (none == control_file) {
@@ -229,6 +231,7 @@ setup_tanker_ship(hisim marker)
    }
 
    INIFile.Destroy(control_file);
+   */
 
    // The first thing we do is learn if this marker is to represent an operation.
    // If we do, then we handle some things differently.

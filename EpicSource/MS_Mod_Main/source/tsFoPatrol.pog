@@ -102,7 +102,7 @@ New(hisim operation)
 
    faction = iSim.Faction(operation);
 
-   // We pick an polic name for ourselves. 
+   // We pick a polic name for ourselves. 
    // using a large number means we get a random name.
    ship_name = tsShipName.ShipName("police", 10000);
 

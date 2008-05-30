@@ -156,6 +156,7 @@ PACKAGES = ECargoTypes.pkg \
 	tsFoCustoms.pkg \
 	tsFoEmbezzle.pkg \
 	tsFoTanker.pkg \
+	tsFoTrade.pkg \
 	tsFoFleetAttack.pkg \
 	tsFoFleetDefense.pkg \
 	tsFoPatrol.pkg \
@@ -352,6 +353,7 @@ tsFoConstruction.pkg : tsFoConstruction.pog tsStation.h tsFaction.h tsTime.h tsF
 tsFoCustoms.pkg : tsFoCustoms.pog tsStation.h tsFaction.h tsTime.h tsFleetOp.h tsLCenter.h tsLProduction.h tsLFleet.h tsStationFilter.h tsShipName.h tsShipCreation.h tsFleetOpCombat.h tsDebug.h
 tsFoEmbezzle.pkg : tsFoEmbezzle.pog tsStation.h tsFaction.h tsTime.h tsFleetOp.h tsLCenter.h tsLProduction.h tsLFleet.h tsStationFilter.h tsShipName.h tsShipCreation.h tsFleetOpCombat.h tsDebug.h
 tsFoTanker.pkg : tsFoTanker.pog tsStation.h tsFaction.h tsTime.h tsFleetOp.h tsLCenter.h tsLProduction.h tsLFleet.h tsStationFilter.h tsShipName.h tsShipCreation.h tsFleetOpCombat.h tsDebug.h
+tsFoTrade.pkg : tsFoTrade.pog tsStation.h tsFaction.h tsTime.h tsFleetOp.h tsLCenter.h tsLProduction.h tsLFleet.h tsStationFilter.h tsShipName.h tsShipCreation.h tsFleetOpCombat.h tsDebug.h
 tsFoFleetAttack.pkg : tsFoFleetAttack.pog tsStation.h tsFaction.h tsTime.h tsFleetOp.h tsLRoot.h tsLCenter.h tsLProduction.h tsLFleet.h tsStationFilter.h tsEconUtil.h tsShipName.h tsShipCreation.h tsFleetOpCombat.h tsDebug.h
 tsFoFleetDefense.pkg : tsFoFleetDefense.pog tsStation.h tsFaction.h tsTime.h tsFleetOp.h tsLRoot.h tsLCenter.h tsLProduction.h tsLFleet.h tsStationFilter.h tsEconUtil.h tsShipName.h tsShipCreation.h tsFleetOpCombat.h tsDebug.h
 tsFoPatrol.pkg : tsFoPatrol.pog tsStation.h tsFaction.h tsTime.h tsFleetOp.h tsLRoot.h tsLCenter.h tsLProduction.h tsLFleet.h tsStationFilter.h tsEconUtil.h tsShipName.h tsShipCreation.h tsFleetOpCombat.h tsDebug.h
