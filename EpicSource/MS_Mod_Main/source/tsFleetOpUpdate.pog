@@ -32,6 +32,7 @@ iMapEntity,
    iHUD,
    iComms,
    tsStationEnum,
+   tsStationFilter,
    tsFaction,
    tsTime,
    tsFleetOp,
@@ -94,6 +95,7 @@ update_distress_calls()
    hfaction player_faction = tsFaction.PlayerFaction();
    hfaction op_faction;
    string name;
+   set station_set;
 
 
    old_distress_list = Global.List("tsfleetopupdate_distress_list");
@@ -155,7 +157,11 @@ update_distress_calls()
    // Now iterate through all the stations in the current system and update the distress levels of those as well.
 
    // objects for the player to see.
-   op_list = List.FromSet(iMapEntity.SystemHabitatsInSystem(iSim.ActiveWorld()));
+
+   station_set = iMapEntity.SystemHabitatsInSystem(iSim.ActiveWorld());
+   station_set = tsStationFilter.OnStatus(station_set, ESS_Normal|ESS_Building|ESS_Leaving|ESS_Fleeing);
+
+   op_list = List.FromSet(station_set);
    op_count = List.ItemCount(op_list);
 
    for (opnum=0;opnum<op_count;++opnum) {
