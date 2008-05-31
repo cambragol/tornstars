@@ -360,7 +360,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
    string speech_style;
    float delay_time = 3.0; // Allow some pause between state changes.
    int timer = 0;
-   float spacing, radius, rotation, distance;
+   float spacing, radius, rotation, distance, patrol_radius;
    float sender_feeling, target_feeling;
    int event_type;
    bool do_rescue;
@@ -375,6 +375,8 @@ task guard_controller(hmapentity location, hgroup patrol_group)
    tsEvent.SetListenType(patrol_group, eseDistress | eseSelfAttacked | eseStationAttack);
 
    speech_style = tsFaction.SpeechStyle(guard_faction);
+
+   patrol_radius = Sim.DistanceBetween(patrol_leader, location);
 
    while (1) {
 
@@ -419,8 +421,6 @@ task guard_controller(hmapentity location, hgroup patrol_group)
 
          rotation = Math.Random(0,360);
 
-         distance = Sim.DistanceBetween(patrol_leader, location);
-
          state = change_state(state, eCS_ToDestination, debug_on);
          break;
 
@@ -429,9 +429,9 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          // Send the leader orbiting the station.
 
          Sim.PlaceRelativeTo(marker, location, 
-                             Math.Sin(rotation) * distance, 
+                             Math.Sin(rotation) * patrol_radius, 
                              0, 
-                             Math.Cos(rotation)* distance);
+                             Math.Cos(rotation)* patrol_radius);
 
          rotation = rotation + 120;
          if (rotation > 720) {
@@ -441,25 +441,20 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          }
 
          iAI.PurgeOrders(patrol_leader);
-         iAI.GiveApproachOrder( patrol_leader, marker);
+         // We use an escort order so the patrol leader will attack
+         // any hostile factions that show up nearby.
+         iAI.GiveEscortOrder( patrol_leader, marker, 0, 0, 0, 50km);
 
-         state = change_state(state, eCS_WaitApproach, debug_on);
-
-         break;
-
-      case eCS_WaitApproach:
-         //debug Debug.PrintString("tsPcGuards.guard_controller: eCS_WaitApproach\n");
-         // Wait here until the AI has halted, then pick new marker location.
-         if (OT_None == iAI.CurrentOrderType(patrol_leader)) {
-            state = change_state(state, eCS_CheckNearby, debug_on);
-         }
+         state = change_state(state, eCS_CheckNearby, debug_on);
 
          break;
 
       case eCS_CheckNearby:
          //debug Debug.PrintString("tsPcGuards.guard_controller: eCS_CheckNearby\n");
          // Test nearby ships for hostile action.
-         dislike_set = filter_feeling(iSim.ShipsInRadius(patrol_leader, 50km), guard_faction, -2.0);
+
+         // Look for hostile ships, or because this is getting used for attack fleets and raiders, hostile stations.
+         dislike_set = filter_feeling(iSim.SimsInRadius(patrol_leader, 100km, TM_Ship|T_Station), guard_faction, -2.0);
 
          if (!Set.IsEmpty(dislike_set)) {
 
@@ -487,9 +482,10 @@ task guard_controller(hmapentity location, hgroup patrol_group)
 
          }else {
 
-            iComms.Shout(patrol_leader,"",tsString.CommsStringRandom("pcgs_guard_sweep_finished",speech_style,5));
-            state = change_state(state, eCS_ToDestination, debug_on);
-
+            if (Sim.DistanceBetween(patrol_leader, marker) < 500){
+               iComms.Shout(patrol_leader,"",tsString.CommsStringRandom("pcgs_guard_sweep_finished",speech_style,5));
+               state = change_state(state, eCS_ToDestination, debug_on);
+            }
          }
 
          break;
@@ -548,15 +544,12 @@ task guard_controller(hmapentity location, hgroup patrol_group)
       case eCS_Fight:
          //debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Fight\n");
          // A battle has broken out. We wait here.
-         if ( (Sim.DistanceBetween(patrol_leader, location) > 100km)){ 
+         if ( (Sim.DistanceBetween(patrol_leader, location) > 300km)){ 
 //             && (OT_Escort != iAI.CurrentOrderType(patrol_leader))) {
             // Station guards do not chase down targets. Instead,
-            // if the patrol leader is chasing, give an escort order.
+            // if the patrol leader is chasing, restart the patrol orders
             // This will bring the patrol group back to the station.
-
-            iAI.PurgeOrders(patrol_leader);
-            radius = iAI.AvoidanceRadius( iSim.Cast(location), patrol_leader );
-            iAI.GiveEscortOrder(patrol_leader, location, radius, 0, 0, 50km);
+            state = change_state(state, eCS_Init, debug_on);
          }
 
          break;
