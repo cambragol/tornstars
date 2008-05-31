@@ -45,7 +45,8 @@ uses    Sim,
         tsStationEnv,
         tsPlayerFleetUpkeep,
         tsStationAi,
-        tsPogClass;
+        tsPogClass,
+        tsBaseNet;
 //[cf]
 
 
@@ -97,6 +98,9 @@ Arrives(hmapentity location)
 
          // Only stations can have mining rigs attached.
          tsPlayerFleetUpkeep.ProduceCargo(iHabitat.Cast(location));
+
+         // Create the missions the player can hire into this station.
+         tsBaseNet.StartBaseNet(); 
       }
       
       // start station watching script

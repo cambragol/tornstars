@@ -66,6 +66,7 @@ PACKAGES = ECargoTypes.pkg \
 	UniGUI.pkg \
 	UniGUIBase.pkg \
 	UniGUIMisc.pkg \
+	tsBaseNet.pkg \
 	tsChangeIdGui.pkg \
 	tsPlayerShipPurGui.pkg \
 	tsClaimGui.pkg \
@@ -202,6 +203,8 @@ clean:
 # MUST BE UPDATED FOR NEW PACKAGES AND IMPORT CHANGES!
 #
 
+
+
 tsSystemDamage.pkg : tsSystemDamage.pog
 tssdGUI.pkg : tssdGUI.pog tsSystemDamage.h
 
@@ -212,6 +215,7 @@ UniGUI.pkg : UniGUI.pog
 UniGUIBase.pkg : UniGUIBase.pog
 UniGUIMisc.pkg : UniGUIMisc.pog
 
+tsBaseNet.pkg : tsBaseNet.pog tsMail.h
 
 tsChangeIdGui.pkg : tsChangeIdGui.pog UniGUI.h tsGui.h tsSaveGui.h tsEconUtil.h tsShip.h tsMoney.h tsFaction.h
 tsPlayerShipPurGui.pkg : tsPlayerShipPurGui.pog UniGUI.h tsFaction.h tsGui.h tsSaveGui.h tsMoney.h

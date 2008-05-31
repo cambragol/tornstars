@@ -1,0 +1,347 @@
+//*******************************************************************************************/
+//
+// tsBaseNet.pog
+//
+// This file is the application that uses the tMail archives to form a station job board 
+// and rumor mill. Unlike most email programs, the mails are deleted each time the 
+// player docks to a station. The mods that create new mails are then called to refill
+// the station job board. This makes it possible for every station to have unique 
+// job offerings.
+//
+// April 2002, Jon Freise
+// June 2008, rewritten for Torn Stars jf.
+//******************************************************************************************/
+
+package tsBaseNet;
+
+// Dependencies ////////////////////////////////////////////////////////////////
+
+uses  Sim,
+Debug,
+Global,
+GUI,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+Text,
+Math,
+iShip,
+iSim,
+iGame,
+iHabitat,
+iMapEntity,
+iUtilities,
+iMod,
+iHUD,
+   iCargo,
+   CargoTypes,
+   tsString,
+   tsMail,
+   tsStationEnum,
+   tsFleetOpEnum,
+   tsEconUtil,
+   tsLProduction,
+   tsFleetOp,
+   tsFleetOpFilter;
+
+
+
+provides SendBase,
+         GetReplyId,
+         BaseNetAr,
+         StartBaseNet,
+         GenerateMissions,
+         SendSelf,
+         PlayerAccept;
+
+
+// Enumerated types ////////////////////////////////////////////////////////////
+
+
+// Functions ///////////////////////////////////////////////////////////////////
+
+prototype StartBaseNet();
+
+prototype call_mods();
+
+prototype hsim BaseNetAr();
+
+prototype GenerateMissions();
+
+//*******************************************************************************************/
+//
+// SendBase posts an item to the station board.
+//
+//  sender - is a normal string "Crosspoint Minerals".
+//  subject - is a normal string "Cargo Hauling Job".
+//  body - has two forms
+//  1. a HTML resource string - "ini:/html/first_email" 
+//  2. a string with a HTML wrapper -  <html><body>Welcome to ShipMail</html></body>"
+//  reply_function - the mail accept button callback function: "tAssassin.Accept"
+//     the function must be exported.
+//  html_body - set this true if the body string is an HTML resource string.
+// 
+// It returns the email id number. This number is useful when the player accepts an job
+//     
+//******************************************************************************************/
+
+int SendBase(string sender,
+             string subject,
+             string body,
+             string reply_function,
+             hobject reply_object,
+             bool html_body)
+{
+   hsim archive = tsMail.FindArchive("BaseNet");
+   int id;
+   id = tsMail.SendMail(archive,
+                       sender, 
+                       subject, 
+                       body, 
+                       reply_function, 
+                       reply_object,
+                       "Date",
+                       false, // save
+                       false,
+                       html_body);
+   return id;
+}
+
+//*******************************************************************************************/
+//
+// Use GetReplyId this function as the very first call inside your accept function. 
+//   It will get the email id number of the email that the player accepted. Do not delay. 
+//   The email id is stored in an unprotected global, and will be 
+//   overwritten the next time the player presses accept. 
+// 
+// This is very helpful if the same mission posts many offers. Each one will have 
+// a unique email id.
+//
+// returns, unique email id.
+//******************************************************************************************/
+
+int GetReplyId()
+{
+   return tsMail.GetReplyId();
+}
+
+//*******************************************************************************************/
+//
+//  Allows mods to get the archive handle for BaseNet. Useful for testing.
+//
+//******************************************************************************************/
+hsim BaseNetAr()
+{
+   hsim archive = tsMail.FindArchive("BaseNet");
+   return archive;
+}
+
+
+
+//*******************************************************************************************/
+//
+//  Local functions that run the BaseNet application. Not to be called by outside missions.
+//
+//******************************************************************************************/
+
+//*******************************************************************************************/
+//
+// Creates the BaseNet archive the very first time. Starts the task that watches for 
+// the player to move near stations.
+// 
+//******************************************************************************************/
+
+StartBaseNet()
+{
+   hsim archive;
+
+   debug Debug.PrintString("BaseNet Starting\n");
+
+   // look for the archive, if it does not exist, make one.
+   archive = tsMail.FindArchive("BaseNet");
+   if (archive == none){
+      debug Debug.PrintString("ShipMail: Creating Archive BaseNet\n");
+      archive = tsMail.CreateArchive("BaseNet",
+                                    "BaseNet",
+                                    "Station posting board. Here you will find job offers, rumors, hints. Each station has a different selection. Only available when docked at a station.",
+                                    true,  // true, base only.
+                                    true); // true, player can view.
+   }else {
+      tsMail.DeleteArchiveMail(archive);
+   }
+
+   call_mods();
+}
+
+
+//*******************************************************************************************/
+//
+// CallMods scans the mod directory for BaseNetMod fields. It calls them to let them know 
+// the player has docked and might look in the job board.
+//
+//******************************************************************************************/
+
+call_mods()
+{
+   int i,j, count;
+   string name;
+   hinifile modini;
+   string modstart;
+
+   count = iMod.Count();
+
+   for (i=0;i<count;++i) {
+      name = iMod.Name(i);
+      modini = INIFile.Create(String.Join("ini:/",name));
+
+      debug Debug.PrintHandle(modini);
+      debug Debug.PrintString(String.FormatStrStr("Bnet Seeking %s %s \n",name,""));
+
+      if (none != modini) {
+         if (INIFile.Exists(modini,"BaseNetMod","start")){
+
+            modstart = INIFile.String(modini,"BaseNetMod","start","none");
+            debug Debug.PrintString(String.FormatStrStr("Mod Start %s %s\n",modstart,""));
+            // Launch the mod
+            Task.Call(modstart);
+         }
+      }
+
+      INIFile.Destroy(modini);
+   }
+} 
+
+//*******************************************************************************************/
+//
+/// These are unit test functions.
+//******************************************************************************************/
+
+SendSelf()
+{
+   hsim archive;
+   int id;
+   archive = tsMail.FindArchive("BaseNet");
+
+   debug Debug.PrintString("Shipmail: BaseNet\n");
+
+   if (archive == none) {
+      debug Debug.PrintString("ShipMail: BaseNet could not find the archive!\n");
+   }
+
+   id = tsMail.SendMail(archive,
+                       "Anon",
+                       "Pirate Wanted",
+                       "<HTML><BODY>*This is only a Test*<p>*Press accept for bell*<p>Adventure! Excitement! A chance to see the Worlds! Great lateral thruster skills a must. High radiation resistance a plus. Apply at Twinkle astroid base in Hoffer's Wake.</HTML></BODY>",
+                       "tBaseNet.PlayerAccept",
+                       none,
+                       "Date",
+                       false, 
+                       false,
+                       false);
+
+   debug Debug.PrintString(String.FormatInt("ShipMail: Id returned: %d \n",id));
+}
+
+PlayerAccept()
+{
+   int mail_id;
+
+   mail_id = GetReplyId();
+
+   debug Debug.PrintString( "tsBaseNet.PlayerAccept player accepted " ); 
+   debug Debug.PrintString(String.FormatInt("Mail Id %d\n",mail_id));
+
+   iHUD.PlayAudioCue(AC_SonarPing);
+}
+
+
+
+// Should be called when the player arrives near a habitat.
+GenerateMissions()
+{
+   hship player = iShip.FindPlayerShip();
+   hhabitat station = iHabitat.Nearest(iMapEntity.SystemHabitats(), player);
+   hfaction station_faction = iSim.Faction(iSim.Cast(station));
+   hisim operation;
+   hfaction op_faction;
+   int i, total;
+   list operation_list;
+
+   string sender;
+   string subject;
+   string body;
+
+   debug Debug.PrintString( "tsBaseNet.GenerateMissions\n" ); 
+
+   operation_list = tsFleetOpFilter.FilterSystem(tsFleetOp.OperationList(), iSim.ActiveWorld());
+
+   total = List.ItemCount(operation_list);
+   for (i=0;i<total;++i) {
+      operation = iSim.Cast(List.GetNth(operation_list, i));
+
+      op_faction = iSim.Faction(operation);
+
+      // Check if they don't like each other. Then create email.
+      if (iFaction.Feeling(station_faction, op_faction) < -0.2){
+
+         sender = Text.Field(Sim.Name(station),FT_Text);
+
+         subject = "Bounty Hunt Mission on ";
+         subject = String.Join(subject, Text.Field(tsFleetOp.Name(operation),FT_Text));
+         
+         body = "The ";
+         body = String.Join(body, Text.Field(tsEconUtil.StationIntToString(tsLProduction.GetType(operation)), FT_Text));
+         body = String.Join(body, " named ");
+         body = String.Join(body, Text.Field(tsFleetOp.Name(operation),FT_Text));
+         body = String.Join(body, " of the faction ");
+         body = String.Join(body, Text.Field(iFaction.Name(op_faction),FT_Text));
+         body = String.Join(body, " is operating in this system. We want it eliminated.");
+         body = String.Join(body, "<br>We are willing to pay $100,000.00 credits if you can do this within 10 days time.");
+         body = String.Join(body, "<br>Press accept to take the mission.");
+         body = tsString.Htmlize(body);
+
+         SendBase(sender,
+                  subject,
+                  body,
+                  "tsBaseNet.PlayerAccept",
+                  operation,
+                  false);
+
+         debug Debug.PrintString( "tsBaseNet.GenerateMissions creating mission for " ); 
+         debug Debug.PrintString( Text.Field(tsFleetOp.Name(operation),FT_Text));
+         debug Debug.PrintString( "\n");
+      }
+   }
+}
+
+
+
+
+/*
+
+Get the faction of the current station. 
+
+Find all operations that are dislike or hostile to this faction.
+
+Create a message giving payment for the destruction of any of these operations.
+
+Accepting creates a state object that follows the player around for the set time frame
+and looks for the destruction of the operation.
+
+If the operation dies without the player currently present, the player is notified, but
+not paid.
+
+If the operation does not die in the time frame, the player is notified.
+
+If the operation dies and the player is present at the time, the player is credited with the kill. 
+
+State wakes up and tries to find the operation. If the operation no longer exists, it is dead.
+It checks the operation handle. If the handle sim is dead, the operation is dead. 
+
+It is up to the type of operation to know if it is dead. Meaning it might take killing all members
+of an operation to kill it.
+
+*/
