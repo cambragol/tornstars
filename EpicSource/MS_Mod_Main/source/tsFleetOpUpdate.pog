@@ -155,7 +155,7 @@ update_distress_calls()
    // Now iterate through all the stations in the current system and update the distress levels of those as well.
 
    // objects for the player to see.
-   op_list = List.FromSet(iMapEntity.SystemHabitats());
+   op_list = List.FromSet(iMapEntity.SystemHabitatsInSystem(iSim.ActiveWorld()));
    op_count = List.ItemCount(op_list);
 
    for (opnum=0;opnum<op_count;++opnum) {
@@ -168,7 +168,7 @@ update_distress_calls()
          op_faction = iSim.Faction(operation);
          if (iFaction.Feeling(player_faction, op_faction) > -0.2){
 
-            // Found an operation in distress
+            // Found a station in distress
             debug {
                Debug.PrintString("Station Distress ");               
                Debug.PrintString(Sim.Name(operation));
@@ -179,7 +179,7 @@ update_distress_calls()
             // put it near the station giving the mayday.
                
             name = "SoS Station: ";
-            name = String.Join(name,Text.Field(Sim.Name(center), FT_Text));
+            name = String.Join(name,Text.Field(Sim.Name(operation), FT_Text));
 
             waypoint = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint", name));
             Sim.SetCullable(waypoint, false);

@@ -820,6 +820,7 @@ read_factions(string file_name)
    float level_value;
    bool known, secret;
    hfaction faction, feelee;
+   hfaction empty;
    list faction_list;
    int total, j, adjust_count;
 
@@ -879,6 +880,8 @@ read_factions(string file_name)
    // Now we are ready to revisit the factions and read in the relationships between 
    // those factions.
 
+   empty = iFaction.Find("Neutral");
+
    for (i=0;i<=faction_total;++i) {
       key_name = String.FormatInt("Faction%d",i);
 
@@ -905,6 +908,10 @@ read_factions(string file_name)
          faction_list = iFaction.All();
 
          List.Remove(faction_list, faction);
+
+         // Never adjust the faction standing versus neutral.
+         List.Remove(faction_list, empty);
+
          total = List.ItemCount(faction_list);
          for (j=0;j<total;++j) {
             feelee = iFaction.Cast(List.GetNth(faction_list, j));
