@@ -131,98 +131,96 @@ task watch_task()
          }
          */
 
-      ++two_counter;
-      player = iShip.FindPlayerShip();
-      system = iSim.ActiveWorld();
+         ++two_counter;
+         player = iShip.FindPlayerShip();
+         system = iSim.ActiveWorld();
 
-      // Check if the player is near any stations or lpoints
-      nearby_stations = iMapEntity.SystemLagrangePoints();
-      near_lpoint = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), player);
+         // Check if the player is near any stations or lpoints
+         nearby_stations = iMapEntity.SystemLagrangePoints();
+         near_lpoint = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), player);
 
-      Set.Union(nearby_stations, iMapEntity.SystemHabitats());
+         Set.Union(nearby_stations, iMapEntity.SystemHabitats());
 
-      nearby_stations = iSim.SimsInRadiusFromSet(nearby_stations, 
-                                                 player, 
-                                                 Global.Float("gt_distance_culling"), 
-                                                 T_Station|T_LagrangePoint);
+         nearby_stations = iSim.SimsInRadiusFromSet(nearby_stations, 
+                                                    player, 
+                                                    Global.Float("gt_distance_culling"), 
+                                                    T_Station|T_LagrangePoint);
 
-      nearest_station = iHabitat.Nearest(nearby_stations, player);
+         nearest_station = iHabitat.Nearest(nearby_stations, player);
 
 
-      location_list = List.FromSet(nearby_stations);
-      total = List.ItemCount(location_list);
+         location_list = List.FromSet(nearby_stations);
+         total = List.ItemCount(location_list);
 
-      for (i=0;i<total;++i) {
-         location = iMapEntity.Cast(List.GetNth(location_list,i));
+         for (i=0;i<total;++i) {
+            location = iMapEntity.Cast(List.GetNth(location_list,i));
 
-         // If the station has already been culled, we 
-         // restart the objects around the station.
-         if (!tsLCenter.GetCullMarker(iSim.Cast(location))) {
-            debug {
-               Debug.PrintString(" PlayerWatch: Waking ");
-               Debug.PrintHandle(location);
-               Debug.PrintString(" \n");               
+            // If the station has already been culled, we 
+            // restart the objects around the station.
+            if (!tsLCenter.GetCullMarker(iSim.Cast(location))) {
+
+               debug {
+                  Debug.PrintString(" PlayerWatch: Waking ");
+                  Debug.PrintHandle(location);
+                  Debug.PrintString(" \n");               
+               }
+
+               // Save if we have approached at least one station. 
+               // This protects from saving directly after a restore.
+               if (save_count > 0 ){
+                  arrive_save(location);
+               }
+               ++save_count;
+
+               // activates all the appropriate activity for the location
+               // the player is arriving at.
+               tsLocationInit.Arrives(location);
+
+               Task.Detach(start location_watch(location));
             }
 
-            // activates all the appropriate activity for the location
-            // the player is arriving at.
-            tsLocationInit.Arrives(location);
+         }//For each station less than culling distance away, check if warned.
 
-            // Save if we have approached at least one station. 
-            // This protects from saving directly after a restore.
-            if (save_count > 0 ){
-               arrive_save(location);
+         // Check player docking status.
+         if (iSim.IsDockedToStructure(player, iSim.Cast(nearest_station)) ) {
+            if (!docked) {
+               debug Debug.PrintString("EPlayerWatch player just docked to station\n");
+               // player just docked, report
+               Task.Call("tsMain.PlayerDocked");
+               docked = true;
+
+               // Unhide the faction where the player has docked.
+               faction = iSim.Faction(iSim.Cast(nearest_station));
+               tsFaction.SetKnown(faction, true);
             }
-            ++save_count;
-
-            Task.Detach(start location_watch(location));
+         } else {
+            if (docked) {
+               debug Debug.PrintString("EPlayerWatch player just docked to station\n");
+               // player just undocked, report.
+               Task.Call("tsMain.PlayerUndocked");
+               docked = false;
+            }
          }
 
-      }//For each station less than culling distance away, check if warned.
+         // Check if the player has been shooting LDSI missiles. Create the fields and timers.
+         ldsi_drop(player);
 
-      // Check player docking status.
-      if (iSim.IsDockedToStructure(player, iSim.Cast(nearest_station)) ) {
-         if (!docked) {
-            debug Debug.PrintString("EPlayerWatch player just docked to station\n");
-            // player just docked, report
-            Task.Call("tsMain.PlayerDocked");
-            docked = true;
+         if (two_counter > 1) {
+            two_counter = 0;
 
-            // Unhide the faction where the player has docked.
-            faction = iSim.Faction(iSim.Cast(nearest_station));
-            tsFaction.SetKnown(faction, true);
-         }
-      } else {
-         if (docked) {
-            debug Debug.PrintString("EPlayerWatch player just docked to station\n");
-            // player just undocked, report.
-            Task.Call("tsMain.PlayerUndocked");
-            docked = false;
-         }
-      }
+            tsMusic.SoundNear();
+         
+            // Check if a day has passed. Check all waiting actions for update.
+            if (tsTime.GetDay() > current_day) {
+               current_day = tsTime.GetDay();
+               // Tell all other scripts that the day has passed.
+               Task.Call("tsMain.DayUpdate");
+            }
+         }// every 2 loops
 
-      // Check if the player has been shooting LDSI missiles. Create the fields and timers.
-      ldsi_drop(player);
-
-      if (two_counter > 1) {
-         two_counter = 0;
-
-         // Checks if the player or his fleet have been attacking factions.
-         // updates faction standing to match.
-         // tsReputationWatch.CheckForAttacks();
-
-         tsMusic.SoundNear();
-
-         // Check if a day has passed. Check all waiting actions for update.
-         if (tsTime.GetDay() > current_day) {
-            current_day = tsTime.GetDay();
-            // Tell all other scripts that the day has passed.
-            Task.Call("tsMain.DayUpdate");
-         }
-      }// every 2 seconds
       }//If not capsule jumping.
 
-      Task.Sleep(Task.Current(), 1.0);
+      Task.Sleep(Task.Current(), 0.5);
    }// While forever
 }
 //[cf]
@@ -396,9 +394,9 @@ arrive_save(hmapentity location)
 
          atomic {
             Task.Call("tsMain.SaveGame");
-         }
 
-         iGame.SaveGame( 1, String.Join(name, " Arrive Station" ));   
+            iGame.SaveGame( 1, String.Join(name, " Arrive Station" ));   
+         }
 
          iHUD.SetPrompt("", "");
       }

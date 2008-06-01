@@ -18,6 +18,8 @@
 
 prototype tsDistance.Init();
 
+prototype float tsDistance.VisibleDistance();
+
 prototype float tsDistance.CullingDistance();
 
 prototype float tsDistance.WakingDistance();

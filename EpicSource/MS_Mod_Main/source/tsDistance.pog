@@ -19,6 +19,7 @@ uses Global,
 
 
 provides Init,
+         VisibleDistance,
          CullingDistance,
          WakingDistance,
          TradeDistance,
@@ -33,7 +34,6 @@ Init()
    float distance, cull;
 
 
-  
    debug atomic {
       if (none == flux_init) {
          Debug.PrintString("tsDistance error cannot open flux file\n");
@@ -45,17 +45,22 @@ Init()
    debug atomic {
       if (distance < 1) {
          Debug.PrintString("tsDistance error invalid far_clip value\n");
+
+         // Set a default value.
+         distance = 200km;
       }
-   }
+   } 
 
    INIFile.Destroy(flux_init);
 
 
+   Global.CreateFloat("gt_distance_visible", GA_NoSave|GA_Write, distance);
+
    // Global.Float("gt_distance_wakeup")
-   Global.CreateFloat("gt_distance_wakeup", GA_NoSave|GA_Write, distance);
+   Global.CreateFloat("gt_distance_wakeup", GA_NoSave|GA_Write, distance*2);
 
    // Culling distance is twice far clip distance, which is the sight range.
-   cull = distance * 2;
+   cull = distance * 4;
 
    // Global.Float("gt_distance_culling")
    Global.CreateFloat("gt_distance_culling", GA_NoSave|GA_Write, cull);
@@ -75,6 +80,12 @@ Init()
    Global.CreateFloat("gt_distance_planet_system_diameter", GA_NoSave|GA_Write, 5000000km);
 }
 
+
+
+float VisibleDistance()
+{
+   return Global.Float("gt_distance_visible");
+}
 
 
 float CullingDistance()
