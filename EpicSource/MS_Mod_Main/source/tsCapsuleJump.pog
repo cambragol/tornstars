@@ -937,7 +937,8 @@ jump_ship(hship ship, hisim lpoint, int difficulty)
 
 
     // Cancel the disrupt.
-    iShip.CancelDisrupt(ship);
+    iShip.SetAIDisabled(ship, false);
+    //iShip.CancelDisrupt(ship);
 
 
 
@@ -1605,7 +1606,8 @@ bool jump_simulation(hship player, list player_fleet,  hisim target_lpoint, int 
       if (!Sim.IsDead(wingman)){
          // stop the wingmen for moving for 5 min while simulation is running
          // sometimes cancel fails and this won't trap player for long
-         iShip.Disrupt(wingman, false, 300);
+         //iShip.Disrupt(wingman, false, 300);
+         iShip.SetAIDisabled(wingman, true);
          Sim.PlaceNear(wingman, wingman_mark, 5km);
       }
    }
