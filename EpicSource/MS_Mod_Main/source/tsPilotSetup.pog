@@ -312,9 +312,7 @@ SetupCargo(hship cargo_ship, float notice_level, float flee_level)
 //[of]:task CargoSelfPreserve(hship cargo_ship)
 task CargoSelfPreserve(hship cargo_ship, hship agressor_ship)
 {
-   hisim last_attacker = iSim.LastAttacker( iSim.Cast(cargo_ship) );
    hfaction empty_faction = tsFaction.EmptyFaction();
-   bool guilty = true;
 
    debug Debug.PrintString("tsPilotSetup.CargoSelfPreserve\n");
 
@@ -324,9 +322,25 @@ task CargoSelfPreserve(hship cargo_ship, hship agressor_ship)
    // Adjust the attacking ships reputation
    tsReputationWatch.ShipAttacked(cargo_ship, -2.0);
 
-  // make a distress call for help, some bugger attacked us!
-  tsDistress.Send(espDistress, eseDistress,  iSim.Cast(cargo_ship), last_attacker, iSim.Cast(cargo_ship), 50km);   
+   if (none == agressor_ship) {
+      debug Debug.PrintString("tsPilotSetup.CargoSelfPreserve no attacker\n");
+      return;
+   }
 
+   // Mistaken shot.
+   if (iSim.Faction(cargo_ship) == iSim.Faction(agressor_ship)) {
+      debug Debug.PrintString("tsPilotSetup.CargoSelfPreserve friendly fire\n");
+      return;
+   }
+
+   // Empty faction, junk should be ignored.
+   if (iSim.Faction(agressor_ship) == empty_faction) {
+      debug Debug.PrintString("tsPilotSetup.CargoSelfPreserve empty faction attack\n");
+      return;
+   }
+
+  // make a distress call for help, some bugger attacked us!
+  tsDistress.Send(espDistress, eseDistress,  iSim.Cast(cargo_ship), agressor_ship, iSim.Cast(cargo_ship), 50km);   
 }
 //[cf]
 
