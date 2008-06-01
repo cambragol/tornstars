@@ -69,22 +69,18 @@ LightMotion (unnamed)
   0 0 0 0 0
 EndBehavior 1
 LightColor 255 202 91
-LgtIntensity (envelope)
-  1
-  1
-  1
-  0 0 0 0 0
+LgtIntensity 5
 EndBehavior 1
 LightType 1
 LightFalloff 1
-LightRange 2000
+LightRange 12500
 LensFlare 1
-FlareIntensity 5
+FlareIntensity 35
 EndBehavior 1
 FlareNominalDistance 25
 FlareDissolve 0
 LensFlareFade 14
-LensFlareOptions 53
+LensFlareOptions 37
 FlareStarFilter 5
 ShadowType 1
 
