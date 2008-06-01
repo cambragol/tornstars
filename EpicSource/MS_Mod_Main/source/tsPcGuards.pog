@@ -359,12 +359,13 @@ task guard_controller(hmapentity location, hgroup patrol_group)
    hisim marker;
    string speech_style;
    float delay_time = 3.0; // Allow some pause between state changes.
-   int timer = 0;
+   float cull_timer = 0;
+   float fight_timer =0;
    float spacing, radius, rotation, distance, patrol_radius;
    float sender_feeling, target_feeling;
    int event_type;
    bool do_rescue;
-   bool debug_on = Global.Bool("gt_tpcguards_debug");
+   bool debug_on;
    eCSScriptState state = eCS_Init;
 
 
@@ -380,6 +381,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
 
    while (1) {
 
+      debug_on = Global.Bool("gt_tpcguards_debug");
       // Handle the outside cases. The player changing systems.
       // The ships getting killed.
       // Culling needing to happen.
@@ -397,15 +399,15 @@ task guard_controller(hmapentity location, hgroup patrol_group)
                    tsDistance.CullingDistance()) {
 
             // Station guards cull fast to allow player to return quick.
-            ++timer;
-            if (timer > (6/delay_time)) {
+            cull_timer = cull_timer + delay_time;
+            if (cull_timer > 6) {
                state = change_state(state, eCS_Cull, debug_on);
             }
          }else if (check_for_attacks(patrol_group)){
-            timer = 0;
+            cull_timer = 0;
             state = change_state(state, eCS_Attacked, debug_on);
          }else {
-            timer = 0;
+            cull_timer = 0;
          }
       }
 
@@ -433,7 +435,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
                              0, 
                              Math.Cos(rotation)* patrol_radius);
 
-         rotation = rotation + 120;
+         rotation = rotation + 60;
          if (rotation > 720) {
             rotation = 0;
          }else if (rotation > 360) {
@@ -443,7 +445,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
          iAI.PurgeOrders(patrol_leader);
          // We use an escort order so the patrol leader will attack
          // any hostile factions that show up nearby.
-         iAI.GiveEscortOrder( patrol_leader, marker, 0, 0, 0, 50km);
+         iAI.GiveEscortOrder( patrol_leader, marker, 100, 0, 0, 50km);
 
          state = change_state(state, eCS_CheckNearby, debug_on);
 
@@ -470,6 +472,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
                iAI.GiveSpecificAttackOrder(patrol_group, target_ship, AS_Strafe);
             }
 
+            fight_timer =0;
             state = change_state(state, eCS_Fight, debug_on);
 
          }else if (check_for_attacks(patrol_group)){
@@ -481,8 +484,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
             state = change_state(state, eCS_Distress, debug_on);
 
          }else {
-
-            if (Sim.DistanceBetween(patrol_leader, marker) < 500){
+            if (Sim.DistanceBetween(patrol_leader, marker) < 1km){
                iComms.Shout(patrol_leader,"",tsString.CommsStringRandom("pcgs_guard_sweep_finished",speech_style,5));
                state = change_state(state, eCS_ToDestination, debug_on);
             }
@@ -522,6 +524,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
             }
 
             //iAI.GiveAttackOrder(patrol_leader, target);
+            fight_timer =0;
             state = change_state(state, eCS_Fight, debug_on);
 
 
@@ -544,13 +547,19 @@ task guard_controller(hmapentity location, hgroup patrol_group)
       case eCS_Fight:
          //debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Fight\n");
          // A battle has broken out. We wait here.
+         fight_timer = fight_timer + delay_time;
          if ( (Sim.DistanceBetween(patrol_leader, location) > 300km)){ 
 //             && (OT_Escort != iAI.CurrentOrderType(patrol_leader))) {
             // Station guards do not chase down targets. Instead,
             // if the patrol leader is chasing, restart the patrol orders
             // This will bring the patrol group back to the station.
             state = change_state(state, eCS_Init, debug_on);
+         }else if (fight_timer > 180) {
+            // If the fighting has gone on for 3 min, then resume patrol
+            // We assume that the fighting has actually ended, and the attackers have fled.
+            state = change_state(state, eCS_CheckNearby, debug_on);
          }
+
 
          break;
       case eCS_Distress:
@@ -577,7 +586,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
             target_faction = iSim.Faction(target);
 
             sender_feeling = iFaction.Feeling(guard_faction, sender_faction);
-            target_feeling = iFaction.Feeling(guard_faction, sender_faction);
+            target_feeling = iFaction.Feeling(guard_faction, target_faction);
 
             if (sender_feeling > -0.2 ){
                if (sender_feeling >= target_feeling) {
@@ -608,9 +617,7 @@ task guard_controller(hmapentity location, hgroup patrol_group)
 
       case eCS_Dead:
          //debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Dead\n");
-         // patrol leader is dead. Select another. No more
-         // waypoint chasing, we let the escorts fight without
-         // giving more orders.
+         // patrol leader is dead. Select another. 
          Group.RemoveSim(patrol_group, patrol_leader);
          patrol_leader = iShip.Cast(Group.Leader(patrol_group));
          if (none == patrol_leader) {
@@ -618,8 +625,9 @@ task guard_controller(hmapentity location, hgroup patrol_group)
             state = change_state(state, eCS_Cull, debug_on);
          }else {
             // Give another escort order, on the new leader.
+            // Restart the patrol and attack orders.
             iEscort.Wedge( patrol_group, spacing, 50km, true );
-            state = change_state(state, eCS_Fight, debug_on);
+            state = change_state(state, eCS_CheckNearby, debug_on);
          }
 
          break;
@@ -649,6 +657,8 @@ task guard_controller(hmapentity location, hgroup patrol_group)
 
       Task.Sleep(Task.Current(), delay_time);
    }
+
+   debug Debug.PrintString("tsPcGuards.guard_controller: While Loop Broken.\n");
 }
 //[cf]
 
@@ -838,15 +848,15 @@ create_escorts(hisim operation, int fleets, hship leader, hgroup cull_group, str
 set filter_feeling(set ships, hfaction faction, float feeling)
 {
    set filtered;
-   hship ship;
+   hisim ship;
    hfaction ship_faction;
 
    while (!Set.IsEmpty(ships)) {
-      ship = iShip.Cast(Set.FirstElement(ships));
+      ship = iSim.Cast(Set.FirstElement(ships));
       Set.Remove(ships, ship);
       ship_faction = iSim.Faction(ship);
 
-      if (iFaction.Feeling(ship_faction, faction) < feeling) {
+      if (iFaction.Feeling(faction, ship_faction) < feeling) {
          Set.Add(filtered, ship);
       }
    }

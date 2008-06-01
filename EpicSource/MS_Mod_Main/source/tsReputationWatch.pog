@@ -336,17 +336,19 @@ ShipAttacked(hship target_ship, float penalty)
             // The player is guilty, apply the penalty.
             apply_penalty(target_ship, penalty);
          }
-      }
-
-      if (List.Contains(fleet, last_attacker)) {
+      }else if (List.Contains(fleet, last_attacker)) {
          // A player wingman is the culprit, check if the player
          // ordered this attack.
 
          if (target_ship == iShip.Cast(tsWingman.OrderTarget(last_attacker))){
             // Yes, the attack was ordered, apply the penalty.
             apply_penalty(target_ship, penalty);
+         }else{
+            debug Debug.PrintString("tsReputationWatch.ShipAttacked wingman, but no player order\n");
          }
       }
+   }else {
+      debug Debug.PrintString("tsReputationWatch.ShipAttacked no attacker\n");
    }
 
 }
