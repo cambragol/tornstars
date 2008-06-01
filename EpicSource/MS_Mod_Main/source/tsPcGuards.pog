@@ -486,7 +486,12 @@ task guard_controller(hmapentity location, hisim owner, hgroup patrol_group)
 
          }else {
             if (Sim.DistanceBetween(patrol_leader, marker) < 1km){
-               iComms.Shout(patrol_leader,"",tsString.CommsStringRandom("pcgs_guard_sweep_finished",speech_style,5));
+
+               // Give a shout 1/3 of the time. (it gets old quick).
+               if (Math.RandomInt(1,100) > 66) {
+                  iComms.Shout(patrol_leader,"",tsString.CommsStringRandom("pcgs_guard_sweep_finished",speech_style,5));
+               }
+               
                state = change_state(state, eCS_ToDestination, debug_on);
             }
          }
@@ -549,7 +554,7 @@ task guard_controller(hmapentity location, hisim owner, hgroup patrol_group)
          //debug Debug.PrintString("tsPcGuards.guard_controller: eCS_Fight\n");
          // A battle has broken out. We wait here.
          fight_timer = fight_timer + delay_time;
-         if ( (Sim.DistanceBetween(patrol_leader, location) > 300km)){ 
+         if ( (Sim.DistanceBetween(patrol_leader, location) > tsDistance.VisibleDistance())){ 
 //             && (OT_Escort != iAI.CurrentOrderType(patrol_leader))) {
             // Station guards do not chase down targets. Instead,
             // if the patrol leader is chasing, restart the patrol orders
@@ -581,7 +586,7 @@ task guard_controller(hmapentity location, hisim owner, hgroup patrol_group)
          tsEvent.RemoveEvent(patrol_group);
 
          // We only do short range rescue missions.
-         if (Sim.DistanceBetween(sender, patrol_leader) < 200km) {
+         if (Sim.DistanceBetween(sender, patrol_leader) < tsDistance.VisibleDistance()) {
 
             sender_faction = iSim.Faction(sender);
             target_faction = iSim.Faction(target);
