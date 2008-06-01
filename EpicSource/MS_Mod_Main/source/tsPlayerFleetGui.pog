@@ -126,6 +126,7 @@ update_wingman_info(hship wingman)
    int scan_range, prospector, survey_days, mining_cost, percent_hits;
    float efficiency;
    int group;
+   hship player = iShip.FindPlayerShip();
 
    upkeep = tsShip.DailyUpkeep(wingman);
    jump_fuel = float2int(tsShip.FuelPerJump(wingman));
@@ -133,7 +134,9 @@ update_wingman_info(hship wingman)
    max_fuel = float2int(tsShip.FuelMax(wingman));
    current_fuel = float2int(tsShip.Fuel(wingman));
 
-
+   if (wingman == player) {
+      upkeep = 0;
+   }
 
    text = "Wingman Status <hr>";
 
