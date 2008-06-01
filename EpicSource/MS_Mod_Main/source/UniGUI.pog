@@ -27,7 +27,8 @@ uses    Sim,
       iMod,
       tsCapsuleJump,
       tsGuiEnum,
-      tsGui;
+      tsGui,
+      tsTime;
 
 
 provides Initialise,
@@ -381,6 +382,8 @@ UniGUIScreen()
 
    htask unigui_monitor_task;
 
+   string date_string;
+
    GUI.StopAllMovies();
 
    GUI.SetDefaultFont( Global.String( "GUI_title_font" ) );
@@ -393,13 +396,17 @@ UniGUIScreen()
 
    station = is_docked();
 
+   date_string = String.FormatInt("Day %d",tsTime.GetDay());
+
    if (none != station) {
       tsGui.CreateTitle(shady_bar, Text.Field( "zz_ug_title_dock", FT_Text ) );
       //tsGui.CreateSubtitle(shady_bar, Text.Field( "zz_ug_subtitle_docked", FT_Text ) );
-      tsGui.CreateSubtitle(shady_bar, Sim.Name(station));
+      date_string = String.Join(" ", date_string);
+      date_string = String.Join(Text.Field(Sim.Name(station), FT_Text), date_string);
+      tsGui.CreateSubtitle(shady_bar, date_string);
    }else {
       tsGui.CreateTitle(shady_bar, Text.Field( "zz_ug_title", FT_Text ) );
-      tsGui.CreateSubtitle(shady_bar, Text.Field( "zz_ug_subtitle", FT_Text ) );
+      tsGui.CreateSubtitle(shady_bar, date_string);
    }
 
    height = GUI.WindowCanvasHeight( shady_bar);
