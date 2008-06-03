@@ -48,8 +48,9 @@ uses  Sim,
 	tsFoRaider,
 	tsFoCustoms,
 	tsFoPatrol,
-    tsFoConstruction,
-    tsFoTanker;
+   tsFoConstruction,
+   tsFoTanker,
+   tsFoTrade;
 
 
 // Exports
@@ -83,6 +84,7 @@ hisim New(int operation_type, hfaction faction, hmapentity center)
    case ept_EmbezzleOp: tsFoEmbezzle.New(operation); break;
    case ept_CustomsOp: tsFoCustoms.New(operation);break;
    case ept_TankerOp: tsFoTanker.New(operation); break;
+   case ept_TradeOp: tsFoTrade.New(operation); break;
 
    case ept_ThugsOp: tsFoThugs.New(operation);break;
    case ept_PatrolOp: tsFoPatrol.New(operation);break;

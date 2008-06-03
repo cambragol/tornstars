@@ -233,7 +233,7 @@ setup_ship(hisim marker)
       // This pog object can only represent operations. 
       // So we destroy the marker and bail out.
       
-      debug Debug.PrintString("tsPcTankerOp error no operation set as owner\n");
+      debug Debug.PrintString("tsPcCargoShip.setup_ship: ERROR: No operation set as owner\n");
 
       Sim.Destroy(marker);
       return;
@@ -241,7 +241,7 @@ setup_ship(hisim marker)
 
    // If this operation already has an in game representation, get rid of ourselves.
    if (tsFleetOp.IsCreated(owner)) {
-      debug Debug.PrintString("tsPcTankerOp physical already exists.\n");
+      debug Debug.PrintString("tsPcCargoShip.setup_ship: physical already exists.\n");
       Sim.Destroy(marker);
       return;
    }
@@ -264,7 +264,7 @@ setup_ship(hisim marker)
    ship = tsShip.Create(ship_template, name);
 
    if (ship == none) {
-      debug Debug.PrintString("tsCargoShip.TestScript ship failed to create\n");
+      debug Debug.PrintString("tsPcCargoShip.setup_ship: ERROR: Ship failed to create\n");
       debug Debug.PrintString(ship_template);
       debug Debug.PrintString(" template\n");
       Sim.Destroy(marker);
@@ -283,6 +283,7 @@ setup_ship(hisim marker)
 
    // Place the sim
    Sim.PlaceNear(ship, station, Math.Random(10km, Global.Float("gt_distance_culling")));
+   debug Debug.PrintString("tsPcCargoShip.setup_ship: Placing cargo ship in space.\n");
 
    // Add to the trade group
    Group.AddSim(trade_group, ship);
@@ -297,10 +298,12 @@ setup_ship(hisim marker)
 
       iSim.Dock(pod, ship);
    }
+   debug Debug.PrintString("tsPcCargoShip.setup_ship: Cargo created and docked.\n");
 
 
 
    // Now create the escort ships. One escort for every 6 pods.
+   debug Debug.PrintString("tsPcCargoShip.setup_ship: Create the escorts - one for every 6 pods\n");
    total_escort = (pod_count+3)/6;
 
    for (i=0;i<total_escort;++i) {
