@@ -9,7 +9,12 @@ dump-maps.py			dumps all the .map files it can find, not
 				really needed now
 tornstars-to-graphviz.py	converts the Tornstars cluster into dot
 
-the dot format is used by a suite of programs called graphviz.
+the dot format is used by a suite of programs called graphviz. Which i
+thought shipped with cygwin, but don't seem to :(
+
+You can get Windows binaries here:
+
+http://www.graphviz.org/Download_windows.php
 
 To create a png map:
 
