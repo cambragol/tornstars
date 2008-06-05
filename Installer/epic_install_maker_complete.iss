@@ -230,6 +230,7 @@ Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_a\*; DestDir: {app}\mods\MS_
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_b\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\turret_b;
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_c\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\turret_c;
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_d\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\turret_d;
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\freighter\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\freighter;
 
 
 Source: .\..\EpicSource\MS_Mod_Ships\images\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\images\sfx; Flags: skipifsourcedoesntexist
