@@ -46,7 +46,7 @@ uses  Sim,
       UniGUI,
       tsTime,
       tsShipEnum,
-      tsPlayerFleet,
+      tsShip,
       tsFaction,
       tsStarSystem,
       tsWingman;
@@ -212,7 +212,7 @@ CheckForAttacks()
 
    // Find all the player wingmen within Global.Float("gt_distance_culling") of the player.
    // And check if they have been ordered to shoot people.
-   player_fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tsPlayerFleet.PlayerFleet()),
+   player_fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tsShip.PlayerFleet()),
                                                         player,
                                                         Global.Float("gt_distance_culling"),
                                                         TM_Ship));
@@ -320,7 +320,7 @@ ShipAttacked(hship target_ship, float penalty)
    hship player = iShip.FindPlayerShip();
    hship last_attacker;
 
-   list fleet = tsPlayerFleet.PlayerFleet();
+   list fleet = tsShip.PlayerFleet();
 
    debug Debug.PrintString("tsReputationWatch.ShipAttacked\n");
 

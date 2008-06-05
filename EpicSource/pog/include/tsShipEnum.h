@@ -9,6 +9,7 @@
 
 // Enumerated types ////////////////////////////////////////////////////////////
 enum eefOwnership {
+   efoNotPlayer = 0,
    efoOwned,
    efoHired,
    efoCaptured

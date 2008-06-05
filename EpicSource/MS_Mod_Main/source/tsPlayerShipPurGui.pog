@@ -480,7 +480,7 @@ task change_ship(string template_name)
 
    if (none != new_ship) {
       // Take the player ship out of the player fleet.
-      tsPlayerFleet.RemoveFleetShip(player_ship);
+      tsShip.RemoveFleetShip(player_ship);
 
       // put the new ship in the players fleet
       tsPlayerFleet.NewPlayerShip(new_ship);

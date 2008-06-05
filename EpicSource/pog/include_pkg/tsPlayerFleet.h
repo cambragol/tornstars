@@ -16,15 +16,11 @@
 
 // Functions ///////////////////////////////////////////////////////////////////
 
-prototype bool tsPlayerFleet.IsPlayerFleetShip( hsim ship );
-
-prototype list tsPlayerFleet.PlayerFleet();
-
-prototype tsPlayerFleet.RemoveFleetShip( hship ship );
-
 prototype tsPlayerFleet.SetupPlayerWingman( hship ship );
 
 prototype tsPlayerFleet.NewPlayerShip( hship ship );
+
+prototype tsPlayerFleet.SetupPlayer( hship ship );
 
 prototype task tsPlayerFleet.WingmanComms();
 

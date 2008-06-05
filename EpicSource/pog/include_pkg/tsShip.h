@@ -60,6 +60,18 @@ prototype bool tsShip.IsTanker( hship ship );
 
 prototype bool tsShip.IsWarship( hship ship );
 
+prototype int tsShip.Owner( hship ship );
+
+prototype tsShip.SetOwner( hship ship, int owner );
+
+prototype bool tsShip.IsPlayerFleetShip( hsim ship );
+
+prototype list tsShip.PlayerFleet();
+
+prototype tsShip.AddNewShip( hship ship );
+
+prototype tsShip.RemoveFleetShip( hship ship );
+
 prototype tsShip.ReadIniFile( hship ship );
 
 prototype hship tsShip.Create( string ini_file, string name );

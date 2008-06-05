@@ -82,7 +82,7 @@ RunUpkeep()
    bool deserted = false;
 
    // Get list of player ships
-   player_fleet = tsPlayerFleet.PlayerFleet();
+   player_fleet = tsShip.PlayerFleet();
 
    total = List.ItemCount(player_fleet);
    for (i=0;i<total;++i) {

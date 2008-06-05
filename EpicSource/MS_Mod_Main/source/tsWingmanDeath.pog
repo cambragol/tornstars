@@ -63,7 +63,7 @@ task Death(hship wingman)
 {
    hisim waypoint;
 
-   tsPlayerFleet.RemoveFleetShip(wingman);
+   tsShip.RemoveFleetShip(wingman);
 
    tsWingComm.GroupRemoveShip(wingman);
 

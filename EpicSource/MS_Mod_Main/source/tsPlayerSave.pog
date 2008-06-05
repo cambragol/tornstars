@@ -91,7 +91,7 @@ Save()
    id = tsShipSave.Save(player);
    Global.CreateInt("ts_player_save",GA_Write, id);
 
-   player_fleet = tsPlayerFleet.PlayerFleet();
+   player_fleet = tsShip.PlayerFleet();
    List.Remove(player_fleet, player);
 
    total = List.ItemCount(player_fleet);
@@ -167,7 +167,8 @@ Restore()
       }
    }
 
-   tsPlayerFleet.NewPlayerShip(player);
+   iShip.InstallPlayerPilot(player);
+   tsPlayerFleet.SetupPlayer(player);
 
    // Player fleet goes in this combat group, when near the player.
    Group.AddSim(combat_group, player);
@@ -196,7 +197,7 @@ RestoreOrders()
    list player_fleet;
    int i, total;
 
-   player_fleet = tsPlayerFleet.PlayerFleet();
+   player_fleet = tsShip.PlayerFleet();
    List.Remove(player_fleet, player);
 
    total = List.ItemCount(player_fleet);
@@ -249,7 +250,7 @@ set locate_free_pods()
    // for each wingman, gather a list of pods that are nearby that
    // belong to the player faction.
 
-   player_fleet = tsPlayerFleet.PlayerFleet();
+   player_fleet = tsShip.PlayerFleet();
 
    // process the set of pods, and remove all the docked ones.
    total_wingmen = List.ItemCount(player_fleet);

@@ -1178,7 +1178,7 @@ create_player_fleet_list()
 
 
    // Find all the player fleet ships that are nearby.
-   fleet_list = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tsPlayerFleet.PlayerFleet()), player, 20km, TM_Ship));
+   fleet_list = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tsShip.PlayerFleet()), player, 20km, TM_Ship));
    List.AddHead(fleet_list, player);
 
 

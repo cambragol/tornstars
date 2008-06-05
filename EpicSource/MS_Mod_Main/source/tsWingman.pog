@@ -2057,7 +2057,7 @@ eShipState int2state (int state)
 //[cf]
 
 
-// tsPlayerFleet.PlayerFleet()
+// tsShip.PlayerFleet()
 // We access this global directly because otherwise we lock up the linker.
 //[of]:set player_fleet()
 set player_fleet()

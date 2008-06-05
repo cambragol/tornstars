@@ -47,7 +47,6 @@ uses	Sim,
       tsMoney,
       tsShipEnum,
       tsShip,
-      tsPlayerFleet,
       tsWingComm,
       tsEconUtil,
       tsString;
@@ -280,7 +279,7 @@ create_wingman_list()
    int button_width, height, list_x, list_y;
 
    string name;
-   list wingman_list = tsPlayerFleet.PlayerFleet();
+   list wingman_list = tsShip.PlayerFleet();
    list filtered_wingmen;
 
 

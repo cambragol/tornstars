@@ -214,7 +214,7 @@ task TankerComms()
    int fleet_total, i, answer, ship_number;
    float fuel_cost;
    hhabitat station;
-   list player_fleet = tsPlayerFleet.PlayerFleet();
+   list player_fleet = tsShip.PlayerFleet();
    list target_fleet;
    int level;
    hinifile tanker_file;

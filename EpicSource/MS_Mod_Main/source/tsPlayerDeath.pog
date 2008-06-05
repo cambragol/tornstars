@@ -73,11 +73,21 @@ task final_view(hship escape_pod, hship ex_player)
 task Death( hship ship )
 {
    hship escape_pod;
+   hinifile player_ship_ini = INIFile.Create(Sim.TemplateName(ship));
+   string comsec_ini;
+   
+   // Lookup the comsec that belongs to this kind of player ship.
+   if (none != player_ship_ini) {
+      comsec_ini = INIFile.String(player_ship_ini, "Properties", "comsec_ini","ini:/sims/ships/player/comsec_prefitted");
+      INIFile.Destroy(player_ship_ini);
+   }else {
+      comsec_ini = "ini:/sims/ships/player/comsec_prefitted";
+   }
 
    // This ship has left the player fleet in a real way.
-   tsPlayerFleet.RemoveFleetShip(ship);
+   tsShip.RemoveFleetShip(ship);
 
-   escape_pod = tsShip.Create("ini:/sims/ships/player/comsec_prefitted", "Escape Pod");
+   escape_pod = tsShip.Create(comsec_ini, "Escape Pod");
 
    tsPlayerFleet.NewPlayerShip(escape_pod);
 

@@ -43,6 +43,7 @@ uses	Sim,
 		
 		tsDebug,
 		tsPosition,
+      tsShipEnum,
 		tsShip;
 //[cf]
 
@@ -170,7 +171,9 @@ int Save(hship ship)
 
    Global.CreateString(String.Join(save_key,"template"),GA_Write, Sim.TemplateName(ship));
    Global.CreateString(String.Join(save_key,"name"),GA_Write, Sim.Name(ship));
-   Global.CreateString(String.Join(save_key,"faction"),GA_Write, iFaction.Name(iSim.Faction(ship)));            
+   Global.CreateString(String.Join(save_key,"faction"),GA_Write, iFaction.Name(iSim.Faction(ship)));     
+
+   Global.CreateInt(String.Join(save_key,"owner"),GA_Write, tsShip.Owner(ship));
    
    if (T_CargoPod == ship_type) {
       Global.CreateInt(String.Join(save_key,"cargo"),GA_Write, Object.IntProperty(ship,"cargo"));
@@ -249,6 +252,8 @@ hship Restore(int id)
 
    int cargo, cargo_faction_id;
 
+   eefOwnership owner;
+
    debug Debug.PrintString("tsShipSave.Restore\n");
 
 
@@ -304,6 +309,10 @@ hship Restore(int id)
    Object.SetFloatProperty(ship, "hit_points", hit_points);
 
 
+   owner = Global.Int(String.Join(save_key,"owner"));
+   Global.Destroy(String.Join(save_key,"owner"));
+   
+   tsShip.SetOwner(ship, owner);
 
    // Restore ship to proper location
    system = Global.String(String.Join(save_key,"system"));

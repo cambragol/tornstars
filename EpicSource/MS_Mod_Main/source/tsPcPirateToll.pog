@@ -785,7 +785,7 @@ int cargo_pod_value(hmapentity location)
    set pod_set;
 
    // Build a set of all pods near player ships
-   fleet_list = tsPlayerFleet.PlayerFleet();
+   fleet_list = tsShip.PlayerFleet();
    total = List.ItemCount(fleet_list);
    for (i=0;i<total;++i) {
       ship = iSim.Cast(List.GetNth(fleet_list,i));

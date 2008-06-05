@@ -48,7 +48,6 @@ uses    Sim,
         tsPodUtil,
         tsShipEnum,
         tsShip,
-        tsPlayerFleet,
         tsWingman,
         tsCapsuleJump;
 
@@ -169,6 +168,9 @@ prototype string group_name(int group);
 
 // Numbered keypresses. Numbers select groups.
 // ~ is the clear command key.
+
+
+
 
 Setup()
 {
@@ -1180,7 +1182,7 @@ bool GroupMoveShip(hship ship, int group)
       return false;
    }
 
-   if (!tsPlayerFleet.IsPlayerFleetShip(ship)){
+   if (!tsShip.IsPlayerFleetShip(ship)){
       debug Debug.PrintString("EpicFleet Move Ship not player ship\n");
       return false;
    }

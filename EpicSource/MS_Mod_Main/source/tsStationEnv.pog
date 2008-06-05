@@ -324,7 +324,7 @@ SetupNebulaAndFields(hisim station, string filename, float center_x, float cente
    if (none == env_file) {
       // No file specified. Bail.
       debug {
-         Debug.PrintString("StationEnv: INI file missing:");
+         Debug.PrintString("StationEnv.SetupNebulaAndFields: INI file missing:");
          Debug.PrintString(filename);
          Debug.PrintString("\n");
       }
@@ -337,11 +337,6 @@ SetupNebulaAndFields(hisim station, string filename, float center_x, float cente
          Debug.PrintString("StationEnv: station missing:");
          Debug.PrintString("\n");
       }
-      return;
-   }
-
-   if (true == Object.PropertyExists(station,"gt_station_env_started")) {
-      // Already setup, so don't 
       return;
    }
 
@@ -360,8 +355,8 @@ SetupNebulaAndFields(hisim station, string filename, float center_x, float cente
    // Read the nebula list, create
    // Nebula have an extra sim for outside view
    count = 0;
-   while (INIFile.NumberedExists(env_file,"Nebula","nebula_file",count)){
-      nebula = INIFile.NumberedString(env_file,"Nebula","nebula_file",count,"none");
+   while (INIFile.NumberedExists(env_file,"Nebula","item",count)){
+      nebula = INIFile.NumberedString(env_file,"Nebula","item",count,"none");
       name = INIFile.NumberedString(env_file,"Nebula","name",count,"unnamed");
       effect = INIFile.NumberedString(env_file,"Nebula","effect",count,"none");
       xpos = INIFile.NumberedVectorX(env_file,"Nebula","location",count);
@@ -391,13 +386,11 @@ SetupNebulaAndFields(hisim station, string filename, float center_x, float cente
 
       item = Sim.Create(field,"sta_env_field");
 
-/*
+
       debug Debug.PrintString("StationEnv: Field ");
-      debug Debug.PrintString(object_type);
-      debug Debug.PrintString("\n");
       debug Debug.PrintHandle(item);
       debug Debug.PrintString("\n");
-*/
+
       if (none != item) {
          Sim.PlaceRelativeToInside(item, station, xpos +center_x, ypos+center_y, zpos+center_z);
 //         Sim.PlaceRelativeToInside(item, station, xpos, ypos, zpos);
@@ -505,7 +498,9 @@ SystemSetup()
 
    // Player has already visited this system, so don't recreate
    // the fields and nebula.
+   debug Debug.PrintString("StationEnv.SystemSetup\n");
 
+   
    // If the player just exited the base, set everything back up.
    if (Global.String("t_station_env_sys") != iSim.ActiveWorld()){
       Global.CreateString("t_station_env_sys",GA_Write|GA_NoSave,iSim.ActiveWorld());

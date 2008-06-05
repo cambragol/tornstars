@@ -45,7 +45,9 @@ uses	 Sim,
 		CargoTypes,
 		iMultiplay,
 		
+
 		tsStationEnum,
+      tsShipEnum,
 		tsEconUtil,
 		tsPodUtil,
 		tsShipComms,
@@ -89,6 +91,14 @@ provides
         IsTanker,
         IsWarship,
 
+        Owner,
+        SetOwner,
+
+        IsPlayerFleetShip,
+        PlayerFleet,
+        AddNewShip,
+        RemoveFleetShip,
+        
         ReadIniFile,
     
         Create,
@@ -98,7 +108,8 @@ provides
         FindSubsimByTemplateNumber,
         ReplaceSubsim,
         PlaceSubsim,
-        LinkPlayerWeapons;
+        LinkPlayerWeapons; 
+
 //[cf]
 
 
@@ -314,6 +325,18 @@ string World(hship ship)
 }
 
 
+
+SetOwner(hship ship, int owner)
+{
+   Object.AddIntProperty(ship, "EpicFleetOwner", owner);
+}
+
+int Owner(hship ship)
+{
+   return Object.IntProperty(ship, "EpicFleetOwner");
+}
+
+
 // Returns all cargo pods docked to a ship.
 list ShipPodList(hsim ship)
 {
@@ -422,7 +445,6 @@ ReadIniFile(hship ship)
    Object.AddIntProperty(ship, "scan_range", scan_range);
 
    Object.AddBoolProperty(ship, "fuel_locked", false);
-
 
    // Attach the template numbers and location properties to the subsims
    // for saving and loadout.
@@ -975,6 +997,115 @@ LinkPlayerWeapons(hship ship)
 
    attach_beams(ship, beams);
 }
+
+
+
+
+
+//******************************************************************************************/
+// Player Fleet handling routines. They end up here because POG cannot 
+// handle circular dependency and they need to be at the bottom of the hierarcy.
+//******************************************************************************************/
+
+
+//[of]:add_ship_to_list(hship ship)
+add_ship_to_list(hship ship)
+{
+   set fleet;
+    
+   if (none == ship) {
+      return;
+   }
+   atomic {
+      if (Global.Exists("g_epic_fleet_player_list")) {
+         fleet = Global.Set("g_epic_fleet_player_list");
+         Set.Add(fleet, ship);
+         Global.SetSet("g_epic_fleet_player_list", fleet);
+      }else {
+         Set.Add(fleet, ship);
+         Global.CreateSet("g_epic_fleet_player_list", GA_Write|GA_NoSave, fleet);
+      }
+   }
+}
+//[cf]
+
+
+//[of]:remove_ship_from_list(hship ship)
+remove_ship_from_list(hship ship)
+{
+   set fleet;
+    
+   if (none == ship) {
+      return;
+   }
+
+   if (!Global.Exists("g_epic_fleet_player_list")) {
+      return;
+   }
+
+   atomic {
+      fleet = Global.Set("g_epic_fleet_player_list");
+      Set.Remove(fleet,ship);
+      Global.SetSet("g_epic_fleet_player_list",fleet);
+   }
+}
+
+
+//[of]:AddNewShip(hship ship)
+AddNewShip(hship ship)
+{
+   add_ship_to_list(ship);
+
+}
+//[cf]
+
+
+//[of]:RemoveFleetShip(hship ship)
+RemoveFleetShip(hship ship)
+{
+   remove_ship_from_list(ship);
+}
+//[cf]
+
+
+//[of]:list PlayerFleet()
+list PlayerFleet()
+{
+   list fleet;
+   hship player = iShip.FindPlayerShip();
+
+   fleet = List.FromSet(Global.Set("g_epic_fleet_player_list"));
+
+   List.AddHead(fleet, player);
+
+   return fleet;
+}
+//[cf]
+
+
+//[of]:bool IsPlayerFleetShip(hsim ship)
+bool IsPlayerFleetShip(hsim ship)
+{
+   set fleet = Global.Set("g_epic_fleet_player_list");
+   hship player = iShip.FindPlayerShip();
+
+   Set.Add(fleet, player);
+
+   if (Set.Contains(fleet, ship)) {
+      return true;
+   }
+
+   return false;
+}
+//[cf]
+
+
+
+//[cf]
+
+
+
+
 
 
 /*  

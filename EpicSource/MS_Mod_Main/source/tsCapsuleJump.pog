@@ -1810,7 +1810,7 @@ set find_following_ships(hship ship)
 
     // Find all player fleet ships that are formated to the player
     // and jump them to the players current Lpoint.
-    player_ships = tsPlayerFleet.PlayerFleet();
+    player_ships = tsShip.PlayerFleet();
     total = List.ItemCount(player_ships);
 
     for (i=0;i<total;++i) {

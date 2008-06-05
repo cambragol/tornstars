@@ -238,7 +238,7 @@ task Comms() {
     float standing;
     hhabitat station;
     hgroup station_cull;
-    list player_fleet = tsPlayerFleet.PlayerFleet();
+    list player_fleet = tsShip.PlayerFleet();
     bool finished;
 
     fleet_total = List.ItemCount(player_fleet);

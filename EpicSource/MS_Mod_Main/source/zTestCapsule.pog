@@ -36,7 +36,7 @@ task jump_task()
    target = iShip.CurrentTarget(player);
 
    if (T_Station == iSim.Type(target)) {
-      player_fleet = Group.FromList(tsPlayerFleet.PlayerFleet());
+      player_fleet = Group.FromList(tsShip.PlayerFleet());
 
       waypoint = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint","jump target"));
 

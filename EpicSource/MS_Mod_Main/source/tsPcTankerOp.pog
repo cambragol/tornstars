@@ -519,7 +519,7 @@ task TankerComms()
    hinifile tanker_file;
    int fleet_total, i, answer, ship_number, level;
    float fuel_cost;
-   list player_fleet = tsPlayerFleet.PlayerFleet();
+   list player_fleet = tsShip.PlayerFleet();
    list target_fleet;
 
    ship = iShip.Cast(tsShipComms.CommsSource());
