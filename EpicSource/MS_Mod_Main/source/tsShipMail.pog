@@ -206,19 +206,23 @@ CreateMessageView()
    }
 
 
+   // Do not allow the player to delete email that is critical to a mission.
    // If the mail is deleted, change this to save.
-   if (tsMail.isDeleted(mail)) {
-      sdelete = "Save";
-   }else {
-      sdelete = "Delete";
+   if (!tsMail.isCritical(mail)) {
+
+      if (tsMail.isDeleted(mail)) {
+         sdelete = "Save";
+      }else {
+         sdelete = "Delete";
+      }
+      del_button = iGUI.CreateAndInitialiseRectangularInverseButton( parent_win, 
+                                                                     0,
+                                                                     GUI.WindowCanvasHeight(parent_win) 
+                                                                     -Global.Int("GUI_fancybutton_height"), 
+                                                                     GUI.WindowCanvasWidth(parent_win)/3-10, 
+                                                                     sdelete, 
+                                                                     "tsShipMail.DeleteButtonPress");    
    }
-   del_button = iGUI.CreateAndInitialiseRectangularInverseButton( parent_win, 
-                                                                  0,
-                                                                  GUI.WindowCanvasHeight(parent_win) 
-                                                                  -Global.Int("GUI_fancybutton_height"), 
-                                                                  GUI.WindowCanvasWidth(parent_win)/3-10, 
-                                                                  sdelete, 
-                                                                  "tsShipMail.DeleteButtonPress");    
 
    if (tsMail.HasReply(mail)) {
       // If the mail has an accept task.

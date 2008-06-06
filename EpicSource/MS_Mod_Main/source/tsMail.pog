@@ -55,6 +55,8 @@ provides       ReadArchives,
                MailId,
                SetDate,
                Date,
+               isCritical,
+               SetCritical,
 
                HasReply,
                RunReply,
@@ -348,6 +350,17 @@ bool isHtml(hsim mail)
 {
    return Object.BoolProperty(mail,"MailHtml");
 }
+
+bool isCritical(hsim mail)
+{
+   return Object.BoolProperty(mail,"MailCritical"); 
+}
+
+SetCritical(hsim mail, bool critical)
+{
+   Object.AddBoolProperty(mail,"MailCritical",critical);
+}
+
 
 // Used by a mail browser to signal the player has accepted a mail
 // offer.

@@ -58,6 +58,10 @@ prototype tsMail.SetDate( hsim mail, string date );
 
 prototype string tsMail.Date( hsim mail );
 
+prototype bool tsMail.isCritical( hsim mail );
+
+prototype tsMail.SetCritical( hsim mail, bool critical );
+
 prototype bool tsMail.HasReply( hsim mail );
 
 prototype tsMail.RunReply( hsim mail );
