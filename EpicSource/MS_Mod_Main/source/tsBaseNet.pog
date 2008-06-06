@@ -38,6 +38,8 @@ iMod,
 iHUD,
    iCargo,
    CargoTypes,
+
+   tsTime,
    tsString,
    tsMail,
    tsStationEnum,
@@ -49,9 +51,7 @@ iHUD,
 
 
 
-provides SendBase,
-         GetReplyId,
-         BaseNetAr,
+provides BaseNetAr,
          StartBaseNet,
          GenerateMissions,
          SendSelf,
@@ -70,63 +70,6 @@ prototype call_mods();
 prototype hsim BaseNetAr();
 
 prototype GenerateMissions();
-
-//*******************************************************************************************/
-//
-// SendBase posts an item to the station board.
-//
-//  sender - is a normal string "Crosspoint Minerals".
-//  subject - is a normal string "Cargo Hauling Job".
-//  body - has two forms
-//  1. a HTML resource string - "ini:/html/first_email" 
-//  2. a string with a HTML wrapper -  <html><body>Welcome to ShipMail</html></body>"
-//  reply_function - the mail accept button callback function: "tAssassin.Accept"
-//     the function must be exported.
-//  html_body - set this true if the body string is an HTML resource string.
-// 
-// It returns the email id number. This number is useful when the player accepts an job
-//     
-//******************************************************************************************/
-
-int SendBase(string sender,
-             string subject,
-             string body,
-             string reply_function,
-             hobject reply_object,
-             bool html_body)
-{
-   hsim archive = tsMail.FindArchive("BaseNet");
-   int id;
-   id = tsMail.SendMail(archive,
-                       sender, 
-                       subject, 
-                       body, 
-                       reply_function, 
-                       reply_object,
-                       "Date",
-                       false, // save
-                       false,
-                       html_body);
-   return id;
-}
-
-//*******************************************************************************************/
-//
-// Use GetReplyId this function as the very first call inside your accept function. 
-//   It will get the email id number of the email that the player accepted. Do not delay. 
-//   The email id is stored in an unprotected global, and will be 
-//   overwritten the next time the player presses accept. 
-// 
-// This is very helpful if the same mission posts many offers. Each one will have 
-// a unique email id.
-//
-// returns, unique email id.
-//******************************************************************************************/
-
-int GetReplyId()
-{
-   return tsMail.GetReplyId();
-}
 
 //*******************************************************************************************/
 //
@@ -222,37 +165,40 @@ call_mods()
 SendSelf()
 {
    hsim archive;
-   int id;
+   hsim mail;
    archive = tsMail.FindArchive("BaseNet");
 
-   debug Debug.PrintString("Shipmail: BaseNet\n");
+   debug Debug.PrintString("tsBaseNet.SendSelf\n");
 
    if (archive == none) {
-      debug Debug.PrintString("ShipMail: BaseNet could not find the archive!\n");
+      debug Debug.PrintString("tsBaseNet.SendSelf BaseNet archive not found\n");
    }
 
-   id = tsMail.SendMail(archive,
+   mail = tsMail.SendMail(archive,
                        "Anon",
                        "Pirate Wanted",
                        "<HTML><BODY>*This is only a Test*<p>*Press accept for bell*<p>Adventure! Excitement! A chance to see the Worlds! Great lateral thruster skills a must. High radiation resistance a plus. Apply at Twinkle astroid base in Hoffer's Wake.</HTML></BODY>",
-                       "tBaseNet.PlayerAccept",
-                       none,
-                       "Date",
+                       "tsBaseNet.PlayerAccept",
+                        String.FormatInt("Day %d", tsTime.GetDay()),
                        false, 
                        false,
                        false);
 
-   debug Debug.PrintString(String.FormatInt("ShipMail: Id returned: %d \n",id));
+
+   if (none==mail) {
+      debug Debug.PrintString("tsBaseNet.SendSelf mail handle was none\n");
+   }
 }
 
-PlayerAccept()
+task PlayerAccept()
 {
    int mail_id;
+   hsim mail;
 
-   mail_id = GetReplyId();
+   mail = tsMail.GetReplyMail();
 
    debug Debug.PrintString( "tsBaseNet.PlayerAccept player accepted " ); 
-   debug Debug.PrintString(String.FormatInt("Mail Id %d\n",mail_id));
+   debug Debug.PrintString(String.FormatInt("Mail Id %d\n",tsMail.MailId(mail)));
 
    iHUD.PlayAudioCue(AC_SonarPing);
 }
@@ -303,12 +249,16 @@ GenerateMissions()
          body = String.Join(body, "<br>Press accept to take the mission.");
          body = tsString.Htmlize(body);
 
-         SendBase(sender,
-                  subject,
-                  body,
-                  "tsBaseNet.PlayerAccept",
-                  operation,
-                  false);
+         tsMail.SendMail(tsMail.FindArchive("BaseNet"),
+                         sender,
+                         subject,
+                         body,
+                         "tsBaseNet.PlayerAccept",
+                         String.FormatInt("Day %d", tsTime.GetDay()),
+                         false, // autodelete
+                         false, // mission email (this is just offer
+                         false); // html body
+
 
          debug Debug.PrintString( "tsBaseNet.GenerateMissions creating mission for " ); 
          debug Debug.PrintString( Text.Field(tsFleetOp.Name(operation),FT_Text));

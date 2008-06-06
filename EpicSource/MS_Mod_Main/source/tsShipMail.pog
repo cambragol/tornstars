@@ -5,9 +5,8 @@
 // This file is the application that uses the tsMail archives to form an email system.
 // It is also the root for The BaseNet job board and the NewsNet info service.
 //
-// SendEmail and Read are the primary interfaces to the ShipMail Inbox.
-//
 // April 2002, Jon Freise
+// June 2008, jf TS rework
 //******************************************************************************************/
 
 package tsShipMail;
@@ -28,7 +27,7 @@ uses	Sim,
 		iShip,
 		iSim,
 		iGame,
-		iGUI,
+		iGUI, 
 		iHUD,
 		iHabitat,
 		iMapEntity,
@@ -38,6 +37,8 @@ uses	Sim,
 		iComms,
 		iMod,
 		UniGUI,
+
+      tsTime,
 		tsGuiEnum,
 		tsGui,
 		tsMail,
@@ -49,8 +50,6 @@ uses	Sim,
 //[of]:Exports
 provides StartScreen,
          RunCheck,
-         SendEmail,
-         Read,
          OnQuit,
          ShipMailScreen,
          StartMyMod,
@@ -74,64 +73,6 @@ prototype MailAcceptButtonPressed();
 prototype DeleteButtonPress();
 prototype bool player_docked();
 
-
-//*******************************************************************************************/
-//
-// SendEmail puts mail in the players Inbox. 
-//
-//  sender - is a normal string "Jose Whetherspoon".
-//  subject - is a normal string "Hey Cal, send me those spare parts".
-//  body - has two forms
-//  1. a HTML resource string - "ini:/html/first_email" 
-//  2. a string with a HTML wrapper -  <html><body>Welcome to ShipMail</html></body>"
-//  reply_function - use this to give your mission a callback function "tAssassin.Accept"
-//     the function must be exported.
-//  critical - when set true it stops the player from deleting the mail until the mission 
-//     has checked if the mail has been read. Set true for all critical mission emails.
-//  html_body - set this true if the body string is an HTML resource string.
-// 
-// It returns the email id number. This number is needed to test if an email has been 
-//     read by the player.
-//******************************************************************************************/
-//[of]:int SendEmail(string sender, string subject, string body, string reply_function, bool critical, bool html_body)
-int SendEmail(string sender, string subject, string body, string reply_function, bool critical, bool html_body)
-{
-   hsim archive = tsMail.FindArchive("ShipMail");
-   int id;
-   id = tsMail.SendMail(archive,
-                         sender, 
-                         subject, 
-                         body, 
-                         reply_function, 
-                         none,
-                         "Date",
-                         false, // save
-                         critical,
-                         html_body);
-
-   iHUD.PlayAudioCue(AC_SonarPing);
-
-   return id;
-}
-//[cf]
-
-
-//*******************************************************************************************/
-//
-// Give this function a valid mail id, and it will test if your mail has been read by the 
-// player. Because the player can delete mail at any time, it is recommended that you 
-// act on the first time this returns true.
-//
-// returns true if the mail has been read. returns false if mail unread or deleted.
-//******************************************************************************************/
-//[of]:bool Read(int mail_id)
-bool Read(int mail_id)
-{
-   hsim archive = tsMail.FindArchive("ShipMail");
-
-   return tsMail.isRead(archive, mail_id);
-}
-//[cf]
 
 
 //*******************************************************************************************/
@@ -332,14 +273,35 @@ DeleteButtonPress()
 //[of]:MailAcceptButtonPressed()
 MailAcceptButtonPressed()
 {  
+   hwindow main;
+   hwindow button;
    hsim mail = Sim.Cast(Global.Handle("g_trout_shipmail_current_mail"));
 
-   debug atomic{
+   debug {
       Debug.PrintHandle(mail);
       Debug.PrintString(": accept button press\n");
    }
 
-   tsMail.RunReply(mail);
+   // Stop multiple presses on this email by makeing sure
+   // that the email has a reply function.
+   if (tsMail.HasReply(mail)) {
+
+      tsMail.RunReply(mail);
+
+      // clear the reply function so it cannot be
+      // run again on this email.
+      tsMail.SetReply(mail, "");
+   }
+
+   main = GUI.Cast(Global.Handle("g_trout_shipmail_mail_view"));
+
+   GUI.DeleteWindow(main);
+
+   button = GUI.Cast(Global.Handle("g_trout_shipmail_back_button"));
+
+   GUI.DeleteWindow(button);
+
+   CreateMailView();
 }
 //[cf]
 
@@ -979,18 +941,14 @@ StartMyMod()
                      "Welcome",
                      "html:/html/welcome",
                      "tsShipMail.Register",
-                     none, //no reply object.
-                     "",   //no date
+                     String.FormatInt("Day %d", tsTime.GetDay()),
                      true,  //autodelete
-                     false, //critical    
+                     false, //mission email
                      true);//html
    }
 
    // tell player they have mail.
    start ShipMailWatch();
-
-   // the station job board.
-//   tBaseNet.StartBaseNet();
 
    // the news and info service.
    tsNewsNet.StartsNewsNet();
@@ -1007,11 +965,14 @@ StartMyMod()
 Register()
 {
    
-      SendEmail("Von Schelling",
+      tsMail.SendMail(tsMail.FindArchive("ShipMail"),
+                       "Von Schelling",
                "Hello Caljo Hnston",
                "html:/html/register",
-               "",    //no reply function
-               false, //critical    
+               "",    // no reply function
+               String.FormatInt("Day %d", tsTime.GetDay()),
+               false, // autodelete   
+               false, // mission email.
                true);//html 
 }
 //[cf]

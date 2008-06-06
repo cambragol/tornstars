@@ -42,7 +42,7 @@ prototype string tsMail.ScreenName( hsim archive );
 
 prototype string tsMail.Desc( hsim archive );
 
-prototype int tsMail.SendMail( hsim archive, string sender, string subj, string body, string reply, hobject reply_obj, string date, bool no_save, bool critical, bool html );
+prototype hsim tsMail.SendMail( hsim archive, string sender, string subj, string body, string reply, string date, bool no_save, bool critical, bool html );
 
 prototype string tsMail.Sender( hsim mail );
 
@@ -50,15 +50,23 @@ prototype string tsMail.Subject( hsim mail );
 
 prototype string tsMail.Body( hsim mail );
 
-prototype tsMail.SetRead( hsim mail );
+prototype bool tsMail.isHtml( hsim mail );
+
+prototype int tsMail.MailId( hsim mail );
+
+prototype tsMail.SetDate( hsim mail, string date );
+
+prototype string tsMail.Date( hsim mail );
 
 prototype bool tsMail.HasReply( hsim mail );
 
 prototype tsMail.RunReply( hsim mail );
 
-prototype int tsMail.GetReplyId();
+prototype tsMail.SetReply( hsim mail, string reply_function );
 
-prototype hobject tsMail.GetReplyObject();
+prototype int tsMail.GetReplyMailId();
+
+prototype hsim tsMail.GetReplyMail();
 
 prototype bool tsMail.isDeleted( hsim mail );
 
@@ -68,7 +76,7 @@ prototype bool tsMail.Read( hsim mail );
 
 prototype bool tsMail.isRead( hsim archive, int mail_id );
 
-prototype bool tsMail.isHtml( hsim mail );
+prototype tsMail.SetRead( hsim mail );
 
 prototype tsMail.MoveMail( hsim mail, hsim old_archive, hsim new_archive );
 

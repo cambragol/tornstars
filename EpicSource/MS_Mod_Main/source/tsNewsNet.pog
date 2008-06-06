@@ -85,8 +85,7 @@ SendNews(string sender, string subject, string body, bool html_body)
                   subject, 
                   body, 
                   "",      //never a return function
-                  none,
-                  "Date",
+                   String.FormatInt("Day %d", tsTime.GetDay()),
                   true,    //starts deleted
                   false,   //not critical
                   html_body);
@@ -196,6 +195,7 @@ ReadNewsMods()
    int html;
    bool html_body;
    hsim archive = tsMail.FindArchive("NewsNetSubmit");
+   hsim mail;
 
    count = iMod.Count();
 
@@ -233,13 +233,12 @@ ReadNewsMods()
                   html_body = false;
                }
 
-               id = tsMail.SendMail(archive, 
+               mail = tsMail.SendMail(archive, 
                                    sender, 
                                    subj, 
                                    body, 
                                    "",      //no accept function.
-                                   none,
-                                   "Date", 
+                                    String.FormatInt("Day %d", tsTime.GetDay()),
                                    false,    // save
                                    false,   //not critical
                                    html_body);  
@@ -290,6 +289,8 @@ task NewsUpdate()
             }
          }
 
+         tsMail.SetDate(mail, String.FormatInt("Day %d", tsTime.GetDay()));
+
          debug {
             Debug.PrintString("Moving Mail Item");
             Debug.PrintHandle(mail);
@@ -326,7 +327,7 @@ DayUpdate()
    int id;
 
    string item_name, news_filename, subject, sender;
-   hsim news_archive;
+   hsim news_archive, mail;
 
 
    if (none == news_data)
@@ -376,13 +377,12 @@ DayUpdate()
             sender = INIFile.String(news_data, item_name, "sender", "MissingSender");
             news_filename = INIFile.String(news_data, item_name, "html_file", "html:/html/news/missing");
 
-            id = tsMail.SendMail(news_archive, 
+            mail = tsMail.SendMail(news_archive, 
                                 sender, 
                                 subject, 
                                 news_filename, 
                                 "",      //no accept function.
-                                none,
-                                "Date", 
+                                 String.FormatInt("Day %d", tsTime.GetDay()),
                                 false,   //save
                                 false,  //not critical
                                 true);  //always html 

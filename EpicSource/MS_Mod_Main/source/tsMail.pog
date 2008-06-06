@@ -39,6 +39,7 @@ provides       ReadArchives,
                NewArchiveMail,
                GetArchiveMail,
                DeleteArchiveMail,
+
                isArViewable,
                isArBaseOnly,
                SetArViewable,
@@ -46,19 +47,29 @@ provides       ReadArchives,
                ScreenName,
                Desc,
                SendMail,
+
                Sender,
                Subject,
                Body,
-               SetRead,
+               isHtml,
+               MailId,
+               SetDate,
+               Date,
+
                HasReply,
                RunReply,
-               GetReplyId,
-               GetReplyObject,
+               SetReply,
+               GetReplyMailId,
+               GetReplyMail,
+
+
                isDeleted,
                DeleteMail,
+
                Read,
                isRead,
-               isHtml,
+               SetRead,
+
                MoveMail;
 
 /*
@@ -170,12 +181,11 @@ hsim FindArchive(string name)
    return none;
 }
 
-int SendMail(hsim archive,
+hsim SendMail(hsim archive,
              string sender,
              string subj,
              string body,
              string reply,
-             hobject reply_obj,
              string date,
              bool no_save,
              bool critical,
@@ -189,7 +199,7 @@ int SendMail(hsim archive,
 
    if (archive == none) {
       // no archive, bail out.
-      return 0;
+      return none;
    }
    mail = Sim.Create("ini:/sims/nav/waypoint",sender);
    Sim.SetCullable(mail,false);
@@ -208,10 +218,7 @@ int SendMail(hsim archive,
 
    Object.AddStringProperty(mail,"MailDate",date);
 
-   Object.AddStringProperty(mail,"MailReturn",reply);
-
-   Object.AddHandleProperty(mail,"MailReturnObj",reply_obj);
-
+   Object.AddStringProperty(mail,"MailReply",reply);
 
    Object.AddIntProperty(mail, "MailId", mail_id);
 
@@ -229,7 +236,7 @@ int SendMail(hsim archive,
       Object.SetListProperty(archive,"MailList",mail_list);
    }
 
-   return mail_id;
+   return mail;
 }
 
 // Returns true if there is any unread mail
@@ -304,13 +311,22 @@ DeleteMail(hsim mail, bool check)
 
 bool HasReply(hsim mail)
 {
-   string reply = Object.StringProperty(mail,"MailReturn");
+   string reply = Object.StringProperty(mail,"MailReply");
 
-   // check if a function has been passed as a return property
-   if (0<String.Length(reply)) {
-      return true;
+   if ("" == reply) {
+      return false;
    }
-   return false;
+   return true;
+}
+
+SetReply(hsim mail, string reply_function)
+{
+   Object.AddStringProperty(mail,"MailReply", reply_function);
+}
+
+int MailId(hsim mail)
+{
+   return Object.IntProperty(mail,"MailId");
 }
 
 string Sender(hsim mail)
@@ -346,60 +362,49 @@ RunReply(hsim mail)
       debug Debug.PrintString("Archive: Invalid mail handle in run reply task\n");
    }
 
-   reply_fun = Object.StringProperty(mail, "MailReturn");
+   reply_fun = Object.StringProperty(mail, "MailReply");
    mail_id = Object.IntProperty(mail, "MailId");
-   mail_obj = Object.HandleProperty(mail,"MailReturnObj");
 
    // Set up the mailbox
-   Global.CreateInt("g_trout_marchive_reply_id", GA_Write|GA_NoSave, mail_id);
-   Global.CreateHandle("g_trout_marchive_reply_obj", GA_Write|GA_NoSave, mail_obj);
-   Global.CreateBool("g_trout_marchive_reply_flag", GA_Write|GA_NoSave, false);
-
    debug atomic{
-      Debug.PrintString("Archive: Trying this reply function:" );
+      Debug.PrintString("tsMail.RunReply Trying this reply function:" );
       Debug.PrintString(reply_fun);
       Debug.PrintString("\n" );
    }
+
    // Run the function.
    atomic {
       reply_task = Task.Start(reply_fun);
-      Object.AddHandleProperty(reply_task,"MailReturnObj",mail_obj);
+      Object.AddHandleProperty(reply_task,"ReplyMail",mail);
       Object.AddIntProperty(reply_task,"MailId",mail_id);
+      Task.Detach(reply_task);
    }
-
 }
 
-
-
-// Should be called by a reply accept task on first line to release the mail program ASAP.
-int GetReplyId()
+// Gets the id of the mail object which had the accep button pressed.
+// Use this for a fast rejection of multiple button presses.
+int GetReplyMailId()
 {
-   int mail_id = 0; 
 
-   Global.SetBool("g_trout_marchive_reply_flag",true);
+   return Object.IntProperty(Task.Current(),"MailId");   
 
-   if (Global.Exists("g_trout_marchive_reply_id")) {
-      mail_id = Global.Int("g_trout_marchive_reply_id");
-   }
-
-   return mail_id;
 }
 
-// Call this function first, before getting the reply id.
-hobject GetReplyObject()
+// Gets the mail object which had the accept button pressed.
+hsim GetReplyMail()
 {
-   hobject mail_obj;
-
-   if (Global.Exists("g_trout_marchive_reply_obj")) {
-      mail_obj = Global.Handle("g_trout_marchive_reply_obj");
-   }
-
-   return mail_obj;
+   return Sim.Cast(Object.HandleProperty(Task.Current(),"ReplyMail"));
 }
-
+ 
+ 
 string Date(hsim mail)
 {
    return Object.StringProperty(mail, "MailDate");
+}
+
+SetDate(hsim mail, string date)
+{
+   Object.AddStringProperty(mail,"MailDate", date);
 }
 
 // mark this message as read
@@ -588,7 +593,7 @@ ReadArchives()
                                   Global.String(String.FormatStrStr("g_trout_marchive_%s_%s_date",
                                                                     aname,String.FormatInt("%d",mcount))));
 
-         Object.AddStringProperty(mail,"MailReturn",
+         Object.AddStringProperty(mail,"MailReply",
                                   Global.String(String.FormatStrStr("g_trout_marchive_%s_%s_return",
                                                                     aname,String.FormatInt("%d",mcount))));
 
@@ -732,7 +737,7 @@ SaveArchives()
          Global.CreateString(String.FormatStrStr("g_trout_marchive_%s_%s_date",
                                                  aname,String.FormatInt("%d",mcount)),GA_Write,sproperty);
 
-         sproperty = Object.StringProperty(mail,"MailReturn");
+         sproperty = Object.StringProperty(mail,"MailReply");
          Global.CreateString(String.FormatStrStr("g_trout_marchive_%s_%s_return",
                                                  aname,String.FormatInt("%d",mcount)),GA_Write,sproperty);
 

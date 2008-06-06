@@ -20,6 +20,8 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
    iEscort, iLagrangePoint, iMusic, iGame, Stream, 
    iGUI,
+
+   tsTime,
    tsStationEnum,
    tsStation,
    tsFaction,
@@ -32,8 +34,7 @@ uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFac
    tsEconUtil,
    tsEconomy,
    tsPodUtil,
-   tsShipMail;
-
+   tsMail;
 
 provides Setup,
          RunUpkeep,
@@ -356,12 +357,15 @@ mining_rig_upkeep(hship rig)
                      email_body = String.Join(email_body, ". Please return ASAP.");
                      email_body = String.Join(email_body, "</body></html>");
 
-                     tsShipMail.SendEmail(email_sender,
-                                         email_subject,
-                                         email_body,
-                                         "",
-                                         false,
-                                         false);  
+                     tsMail.SendMail(tsMail.FindArchive("ShipMail"),
+                                                        email_sender,
+                                                        email_subject,
+                                                        email_body,
+                                                        "",
+                                                        String.FormatInt("Day %d", tsTime.GetDay()),
+                                                        false, //autodelete
+                                                        false,// mission critical
+                                                        false);  //html
                   }
                }// mining rig was out of fuel.
             }// if station is a mine
@@ -512,12 +516,16 @@ prospector_upkeep(hship explorer) {
                      email_body = String.Join(email_body, " quality of ore.");
                      email_body = String.Join(email_body, "</body></html>");
 
-                     tsShipMail.SendEmail(email_sender,
-                                         email_subject,
-                                         email_body,
-                                         "",
-                                         false,
-                                         false);
+
+                   tsMail.SendMail(tsMail.FindArchive("ShipMail"),
+                                                        email_sender,
+                                                        email_subject,
+                                                        email_body,
+                                                        "",
+                                                        String.FormatInt("Day %d", tsTime.GetDay()),
+                                                        false, //autodelete
+                                                        false,// mission critical
+                                                        false);  //html
 
 
                      // The standard economy should no longer grow pods in this
