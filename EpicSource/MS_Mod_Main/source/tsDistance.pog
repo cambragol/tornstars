@@ -56,11 +56,13 @@ Init()
 
    Global.CreateFloat("gt_distance_visible", GA_NoSave|GA_Write, distance);
 
+   // Wakeup distance is meant to be just inside the culling radius. A place where
+   // objects can be placed that will not cull.
    // Global.Float("gt_distance_wakeup")
-   Global.CreateFloat("gt_distance_wakeup", GA_NoSave|GA_Write, distance*2);
+   Global.CreateFloat("gt_distance_wakeup", GA_NoSave|GA_Write, 2*distance/3);
 
    // Culling distance is twice far clip distance, which is the sight range.
-   cull = distance * 4;
+   cull = distance * 2;
 
    // Global.Float("gt_distance_culling")
    Global.CreateFloat("gt_distance_culling", GA_NoSave|GA_Write, cull);

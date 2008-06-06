@@ -383,7 +383,7 @@ task jump_watch()
         }
 
         // if the player has moved out of range, get rid of this task.
-        if (Sim.DistanceBetween(player, jump_point) > Global.Float("gt_distance_culling")) {
+        if (Sim.DistanceBetween(player, jump_point) > tsDistance.CullingDistance()) {
             // Remove this handle so another task can be started later.
             Object.RemoveProperty(jump_point,"tsCapsuleJumpDest");
             Object.RemoveProperty(jump_point,"tsCapsuleJumpDiff");
@@ -1073,7 +1073,7 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty, fl
         destination = none;
 
         if (jump_success) {
-           Sim.PlaceNear(player, target_lpoint, tsDistance.WakingDistance() - 10km);
+           Sim.PlaceNear(player, target_lpoint, tsDistance.VisibleDistance() );
            destination = target_lpoint;
         } else {
            // Jump failed to reach 50%, toss player back 1000km from starting jump point.
@@ -1082,7 +1082,7 @@ bool jump_player_fleet(hisim jump_point, hisim target_lpoint, int difficulty, fl
            Sim.PlaceNear(destination, jump_point, Math.RandomInt(100,1000));
            // put the player near the jump point to wake it while waiting for the 
            // fancy jump arrival move.
-           Sim.PlaceNear(player, jump_point, tsDistance.WakingDistance() -10km);
+           Sim.PlaceNear(player, jump_point, tsDistance.VisibleDistance());
         }
 
         // Give the lpoint time to wake up and place all objects. And give the day update
@@ -1579,7 +1579,7 @@ bool jump_simulation(hship player, list player_fleet,  hisim target_lpoint, int 
    iAI.ClearAutopilot();
 
    // Put the player safely within culling distance. We need this for proper setup.
-   Sim.PlaceNear(player, center, Global.Float("gt_distance_wakeup"));
+   Sim.PlaceNear(player, center, tsDistance.VisibleDistance());
 
    // Hide the player ship from sensors.
    iSim.SetStandardSensorVisibility(player, false);
