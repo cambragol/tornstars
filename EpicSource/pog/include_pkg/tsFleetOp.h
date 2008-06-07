@@ -24,7 +24,11 @@ prototype tsFleetOp.DestroyOp( hisim operation );
 
 prototype bool tsFleetOp.IsOperation( hisim operation );
 
-prototype int tsFleetOp.GetOperationType(hisim operation);
+prototype int tsFleetOp.GetOperationType( hisim operation );
+
+prototype string tsFleetOp.GetOperationPog( hisim operation );
+
+prototype string tsFleetOp.GetOperationEnvFoTemplate( hisim operation );
 
 prototype hisim tsFleetOp.Find( int operation_id );
 

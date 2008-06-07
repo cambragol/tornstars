@@ -24,5 +24,8 @@ prototype tsFoTanker.Restore( hisim operation );
 
 prototype tsFoTanker.Update( hisim operation );
 
+prototype tsFoTanker.PlayerNear( hisim operation );
+
+
 // EOF /////////////////////////////////////////////////////////////////////////
 

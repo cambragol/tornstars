@@ -1,0 +1,164 @@
+/*******************************************************************************************/
+//
+// tsFleetOpPhysical
+//
+//	
+// 
+//
+//******************************************************************************************/
+
+package tsFleetOpPhysical;
+
+// Imports
+uses  Sim,
+   iSim,
+   Debug,
+   Global,
+   iGame,
+   iFaction,
+   INIFile,
+   Input,
+   List,
+   Object,
+   String,
+   Task,
+   State,
+   Text,
+   Math,
+   iShip,
+   iHabitat,
+   iMapEntity,
+//   iCargo,
+//   CargoTypes,
+   
+//   tsFleetOpEnum,
+//   tsFaction,
+//   tsStationEnum,
+//   tsStation,
+//   tsEconUtil,
+   
+   tsPogClass,
+   tsPcOwner,
+   
+//   tsLRoot,
+//   tsLProduction,
+   tsLCenter,
+//   tsLFleet,
+   
+   tsFleetOp;
+
+
+// Exports
+provides
+   MakeOpPhysical;
+
+
+
+
+
+/*******************************************************************************************\
+
+\*******************************************************************************************/
+MakeOpPhysical(hisim operation)
+{
+   int count;
+   float xpos, ypos, zpos;
+   float yaw, pitch, roll;
+   float yaw_vel, pitch_vel, roll_vel;
+   hsim item = none;
+   string object_type, name, effect;
+   int place_close, random;
+
+   string env_file = tsFleetOp.GetOperationEnvFoTemplate(operation);
+   hinifile env_file_handle = INIFile.Create( env_file );
+   hmapentity station = tsLCenter.GetCenter(operation);
+
+   
+   // Read the item list, create. These are pog objects.
+   debug Debug.PrintString("tsFleetOp.MakeOpPhysical: Process operation.\n");
+   if(none == env_file_handle) {
+      debug Debug.PrintString("tsFleetOp.MakeOpPhysical: ERROR: Failed to open the operations env_fo file.\n");
+      return;
+   }
+
+   debug {
+   Debug.PrintString("tsFleetOp.MakeOpPhysical: Using ini file: ");
+   Debug.PrintString(env_file);
+   Debug.PrintString("\n");
+   }
+
+   count = 0;
+   while (INIFile.NumberedExists(env_file_handle,"Items","item",count)){
+
+      object_type = INIFile.NumberedString(env_file_handle,"Items","item",count,"none");
+      name = INIFile.NumberedString(env_file_handle,"Items","name",count,"unnamed");
+      effect = INIFile.NumberedString(env_file_handle,"Items","effect",count,"none");
+
+      xpos = INIFile.NumberedVectorX(env_file_handle,"Items","location",count);
+      ypos = INIFile.NumberedVectorY(env_file_handle,"Items","location",count);
+      zpos = INIFile.NumberedVectorZ(env_file_handle,"Items","location",count);
+
+
+      //yaw = INIFile.NumberedVectorX(env_file,"Items","angle",count);
+      //pitch = INIFile.NumberedVectorY(env_file,"Items","angle",count);
+      //roll = INIFile.NumberedVectorZ(env_file,"Items","angle",count);
+
+      yaw_vel = INIFile.NumberedVectorX(env_file_handle,"Items","rotation",count);
+      pitch_vel = INIFile.NumberedVectorY(env_file_handle,"Items","rotation",count);
+      roll_vel = INIFile.NumberedVectorZ(env_file_handle,"Items","rotation",count);
+
+      random = INIFile.NumberedInt(env_file_handle,"Items","random",count, 0);
+      place_close = INIFile.NumberedInt(env_file_handle,"Items","place_close",count, 0);
+
+      ++count;
+
+ 
+      item = tsPogClass.Create(object_type, name);
+
+      if (none == item) {
+          debug Debug.PrintString("tsFleetOp.MakeOpPhysical: Item ");
+          debug Debug.PrintString(object_type);
+          debug Debug.PrintString("\n");
+          debug Debug.PrintString("Error failed to create\n");
+      }
+      
+      if (none != item) {
+
+         if (0 == random) {
+            if (0 == place_close) {
+               // Standard placement will move colliding objects to safe distances.
+               Sim.PlaceRelativeTo(item, station, xpos, ypos, zpos);
+            }else {
+               // place_close allows placement inside of collision boundries, something
+               // normally not allowed.
+               Sim.PlaceRelativeToInside(item, station, xpos, ypos, zpos);
+            }
+         }else {
+            // Uses the Xpos value as a distance.
+            Sim.PlaceNear(item, station, xpos);
+         }
+
+         // Sim.SetOrientationEuler( item, yaw, pitch, roll );
+         Sim.SetAngularVelocityEuler( item, yaw_vel, pitch_vel, roll_vel );
+
+         // Set any customized properties here. They just have to match name from
+         // the environment file and the pog object.
+         tsPcOwner.SetOwner(item, operation);
+         tsPogClass.Start(item);
+      }
+   }
+   
+   INIFile.Destroy(env_file_handle);
+
+}
+
+
+/*
+   Finding Operations:
+
+   Recruiting Operations:
+   
+   Some operations require finding a willing accomplice high 
+   up inside the station management. These operations
+   require extensive recruiting steps as the first part of setup.
+*/

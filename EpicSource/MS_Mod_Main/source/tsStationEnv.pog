@@ -166,6 +166,7 @@ SetupObjects(hmapentity station, hisim owner, string filename, float center_x, f
    // Inert items have no code or name. They are just large asteroids and other
    // objects that are scattered near the station. They don't have to be inert
    // sims, but they tend to be.
+   debug Debug.PrintString("StationEnv.SetupObjects: Process inert items.\n");
    count = 0;
    while (INIFile.NumberedExists(env_file,"Inert","item",count)){
 
@@ -230,6 +231,7 @@ SetupObjects(hmapentity station, hisim owner, string filename, float center_x, f
 
 
    // Read the item list, create. These are pog objects.
+   debug Debug.PrintString("StationEnv.SetupObjects: Process pog items.\n");
    count = 0;
    while (INIFile.NumberedExists(env_file,"Items","item",count)){
 

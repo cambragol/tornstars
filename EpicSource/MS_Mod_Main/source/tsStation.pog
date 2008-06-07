@@ -288,7 +288,7 @@ Create(hhabitat station,
    hfaction faction;
    hfaction player_faction = tsFaction.PlayerFaction();
 
-   debug Debug.PrintString("tStation.Create: Start\n");
+   //debug Debug.PrintString("tStation.Create: Start\n");
 
    Object.AddIntProperty(station,"gt_station_state", 0);
    Object.AddIntProperty(station,"gt_station_category", 0);
@@ -323,7 +323,7 @@ Create(hhabitat station,
    // Setup AI - a bit crude at the moment
    iHabitat.SetArmed(station , true);
 
-   debug Debug.PrintString("tStation.Create: End\n");
+   //debug Debug.PrintString("tStation.Create: End\n");
 }
 
 string Status2String(eStationStatus status)

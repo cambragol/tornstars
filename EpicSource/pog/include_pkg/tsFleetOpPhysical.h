@@ -1,9 +1,9 @@
 //
 // (c) 1998-9 Particle Systems Ltd. All Rights Reserved
 //
-// tsFleetOpCall.h
+// tsFleetOpPhysical.h
 //
-// Compiler-generated export header for package "tsFleetOpCall"
+// Compiler-generated export header for package "tsFleetOpPhysical"
 //
 // Revision control information:
 //
@@ -16,15 +16,7 @@
 
 // Functions ///////////////////////////////////////////////////////////////////
 
-prototype hisim tsFleetOpCall.New( int operation_type, hfaction faction, hmapentity center );
-
-prototype tsFleetOpCall.Save( hisim operation );
-
-prototype tsFleetOpCall.Restore( hisim operation );
-
-prototype tsFleetOpCall.Update( hisim operation );
-
-prototype tsFleetOpCall.PlayerNear( hisim operation );
+prototype tsFleetOpPhysical.MakeOpPhysical( hisim operation );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

@@ -53,6 +53,7 @@ iCargo,
    tsShipCreationEnum,
    tsShipCreation,
    tsFleetOpCombat,
+   tsFleetOpPhysical,
    tsDebug;
 //[cf]
 
@@ -61,7 +62,8 @@ iCargo,
 provides New,
          Save,
          Restore,
-         Update;
+         Update,
+         PlayerNear;
 //[cf]
 
 
@@ -288,6 +290,13 @@ Update(hisim operation)
    tsFleetOp.SetWakeTimer(operation, tsTime.GetDay() + update_delay);
 }
 
+
+// Called when the player is near the operation
+PlayerNear(hisim operation)
+{
+   debug Debug.PrintString("tsFoTrade.PlayerNear: Player near operation, instantiate physical sims.\n");
+   tsFleetOpPhysical.MakeOpPhysical(operation);
+}
 
 // Return true if this location is an operating production station.
 bool is_production(hmapentity center)

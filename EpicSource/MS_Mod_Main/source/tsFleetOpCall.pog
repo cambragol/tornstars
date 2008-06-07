@@ -57,7 +57,8 @@ uses  Sim,
 provides New,
          Save,
          Restore,
-         Update;
+         Update,
+         PlayerNear;
 
 
  
@@ -119,6 +120,7 @@ Save(hisim operation)
    case ept_EmbezzleOp: tsFoEmbezzle.Save(operation);break;
    case ept_CustomsOp: tsFoCustoms.Save(operation);break;
    case ept_TankerOp: tsFoTanker.Save(operation); break;
+   case ept_TradeOp: tsFoTrade.Save(operation); break;
 
    case ept_ThugsOp: tsFoThugs.Save(operation);break;
    case ept_PatrolOp: tsFoPatrol.Save(operation);break;
@@ -135,7 +137,7 @@ Save(hisim operation)
 
    default:
       debug {
-         Debug.PrintString(String.FormatInt("tFleetOperation.Save invalid op type %d\n", operation_type));
+         Debug.PrintString(String.FormatInt("tsFleetOpCall.Save invalid op type %d\n", operation_type));
       }
       break;
    }
@@ -153,6 +155,7 @@ Restore(hisim operation)
    case ept_EmbezzleOp: tsFoEmbezzle.Restore(operation);break;
    case ept_CustomsOp: tsFoCustoms.Restore(operation);break;
    case ept_TankerOp: tsFoTanker.Restore(operation); break;
+   case ept_TradeOp: tsFoTrade.Restore(operation); break;
 
    case ept_ThugsOp: tsFoThugs.Restore(operation);break;
    case ept_PatrolOp: tsFoPatrol.Restore(operation);break;
@@ -168,7 +171,7 @@ Restore(hisim operation)
 
    default:
       debug {
-         Debug.PrintString(String.FormatInt("tFleetOperation.Restore invalid op type %d\n", operation_type));
+         Debug.PrintString(String.FormatInt("tsFleetOpCall.Restore invalid op type %d\n", operation_type));
       }
       break;
    }
@@ -186,6 +189,7 @@ Update(hisim operation)
    case ept_EmbezzleOp: tsFoEmbezzle.Update(operation);break;
    case ept_CustomsOp: tsFoCustoms.Update(operation);break;
    case ept_TankerOp: tsFoTanker.Update(operation); break;
+   case ept_TradeOp: tsFoTrade.Update(operation); break;
 
    case ept_ThugsOp: tsFoThugs.Update(operation);break;
    case ept_PatrolOp: tsFoPatrol.Update(operation);break;
@@ -202,7 +206,39 @@ Update(hisim operation)
    default:
       
       debug {
-         Debug.PrintString(String.FormatInt("tFleetOperation.Update invalid op type %d\n", operation_type));
+         Debug.PrintString(String.FormatInt("tsFleetOpCall.Update invalid op type %d\n", operation_type));
+      }
+      break;
+   }
+}
+
+
+PlayerNear(hisim operation)
+{
+   int operation_type = tsLProduction.GetType(operation);
+   
+   switch (operation_type) {
+   case ept_EmbezzleOp: tsFoEmbezzle.PlayerNear(operation);break;
+   //case ept_CustomsOp: tsFoCustoms.PlayerNear(operation);break;
+   case ept_TankerOp: tsFoTanker.PlayerNear(operation); break;
+   case ept_TradeOp: tsFoTrade.PlayerNear(operation); break;
+
+   //case ept_ThugsOp: tsFoThugs.PlayerNear(operation);break;
+   //case ept_PatrolOp: tsFoPatrol.PlayerNear(operation);break;
+
+   //case ept_RaiderOp: tsFoRaider.PlayerNear(operation);break;
+   //case ept_ProtectionOp: tsFoProtection.PlayerNear(operation);break;
+
+   //case ept_FleetAttackOp: tsFoFleetAttack.PlayerNear(operation);break;
+   //case ept_FleetDefenseOp: tsFoFleetDefense.PlayerNear(operation);break;
+
+   //case ept_StationConstructionOp: tsFoConstruction.PlayerNear(operation);break;
+   //case ept_StationRepairOp: tsFoConstruction.PlayerNear(operation);break;
+
+   default:
+      
+      debug {
+         Debug.PrintString(String.FormatInt("tsFleetOpCall.PlayerNear invalid op type %d\n", operation_type));
       }
       break;
    }

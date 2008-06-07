@@ -329,8 +329,15 @@ ReadSystemIni(string system_file, string system)
 
    count = 0;
 
-   debug Debug.PrintString("tsStationSave.ReadSystemIni\n");
-
+   debug {
+      Debug.PrintString("tsStationSave.ReadSystemIni\n");
+      Debug.PrintString("System ini file: ");
+      Debug.PrintString(system_file);
+      Debug.PrintString("\n");
+      Debug.PrintString("System: ");
+      Debug.PrintString(system);
+      Debug.PrintString("\n");
+   }
 
 
    debug {

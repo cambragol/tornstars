@@ -24,5 +24,7 @@ prototype tsFoEmbezzle.Restore( hisim operation );
 
 prototype tsFoEmbezzle.Update( hisim operation );
 
+prototype tsFoEmbezzle.PlayerNear( hisim operation );
+
 // EOF /////////////////////////////////////////////////////////////////////////
 

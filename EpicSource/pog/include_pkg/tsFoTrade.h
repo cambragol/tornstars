@@ -24,5 +24,7 @@ prototype tsFoTrade.Restore( hisim operation );
 
 prototype tsFoTrade.Update( hisim operation );
 
+prototype tsFoTrade.PlayerNear( hisim operation );
+
 // EOF /////////////////////////////////////////////////////////////////////////
 

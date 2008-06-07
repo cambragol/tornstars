@@ -121,7 +121,7 @@ prototype PlayerUndocked();
 //[of]:GameEnter()
 GameEnter()
 {
-   atomic debug Debug.PrintString("tsMain.GameEnter\n");
+   atomic debug Debug.PrintString("tsMain.GameEnter ----------------Start----------------\n");
 
    tsDebug.NewGame();
 
@@ -138,6 +138,8 @@ GameEnter()
    tsStartGui.NewGame();
 
    tsFaction.NewGame();
+   
+   atomic debug Debug.PrintString("tsMain.GameEnter ----------------End----------------\n");
 }
 //[cf]
 
@@ -145,7 +147,7 @@ GameEnter()
 //[of]:SessionEnter()
 SessionEnter()
 {
-   atomic debug Debug.PrintString("tsMain.SessionEnter\n");
+   atomic debug Debug.PrintString("tsMain.SessionEnter ----------------Start----------------\n");
 
    Text.Add("csv:/text/gt_station_types");
    Text.Add("csv:/text/gt_pc_objects");
@@ -181,6 +183,8 @@ SessionEnter()
 
    tsEquipBuy.SessionStart();
    tsEquipSell.SessionStart();   
+   
+   atomic debug Debug.PrintString("tsMain.SessionEnter ----------------End----------------\n");
 }
 //[cf]
 
@@ -188,7 +192,7 @@ SessionEnter()
 //[of]:SessionExit()
 SessionExit()
 {
-   atomic debug Debug.PrintString("tsMain.SessionExit\n");
+   atomic debug Debug.PrintString("tsMain.SessionExit ----------------Start----------------\n");
 
    Text.Remove("csv:/text/gt_station_types");
    Text.Remove("csv:/text/gt_pc_objects");
@@ -206,6 +210,8 @@ SessionExit()
 
    tsEquipBuy.SessionEnd();
    tsEquipSell.SessionEnd();
+   
+   atomic debug Debug.PrintString("tsMain.SessionExit ----------------End----------------\n");
 }
 //[cf]
 
@@ -213,7 +219,7 @@ SessionExit()
 //[of]:BaseEnter()
 BaseEnter()
 {
-   atomic debug Debug.PrintString("tsMain.BaseEnter\n");
+   atomic debug Debug.PrintString("tsMain.BaseEnter ----------------Start----------------\n");
 
    tsFleetOpSave.BaseEnter();
 
@@ -227,6 +233,7 @@ BaseEnter()
    iBaseGUI.SetStatisticsScreenEnabled( false );
    iBaseGUI.SetTriangulationScreenEnabled( false );
 
+   atomic debug Debug.PrintString("tsMain.BaseEnter ----------------End----------------\n");
 }
 //[cf]
 
@@ -234,13 +241,15 @@ BaseEnter()
 //[of]:BaseExit()
 BaseExit()
 {
-   atomic debug Debug.PrintString("tsMain.BaseExit\n");
+   atomic debug Debug.PrintString("tsMain.BaseExit ----------------Start----------------\n");
 
    tsStationSave.BaseExit();
    tsFleetOpSave.BaseExit();
 
    tsStationEnv.EnterBase();
    tsEconomy.ExitBase();
+
+   atomic debug Debug.PrintString("tsMain.BaseExit ----------------End----------------\n");
 }
 //[cf]
 
@@ -248,13 +257,15 @@ BaseExit()
 //[of]:SpaceEnter()
 SpaceEnter()
 {
-   atomic debug Debug.PrintString("tsMain.SpaceEnter\n");
+   atomic debug Debug.PrintString("tsMain.SpaceEnter ----------------Start----------------\n");
 
    UniGUIBase.EnterSpace();
 
    tsEconomy.EnterSpace();
 
    tsNavGui.Initialise();
+
+   atomic debug Debug.PrintString("tsMain.SpaceEnter ----------------End----------------\n");
 }
 //[cf]
 
@@ -262,9 +273,11 @@ SpaceEnter()
 //[of]:SpaceExit()
 SpaceExit()
 {
-   atomic debug Debug.PrintString("tsMain.SpaceExit\n");
+   atomic debug Debug.PrintString("tsMain.SpaceExit ----------------Start----------------\n");
 
    tsNavGui.ExitSpace();
+
+   atomic debug Debug.PrintString("tsMain.SpaceExit ----------------End----------------\n");
 }
 //[cf]
 
@@ -272,7 +285,7 @@ SpaceExit()
 //[of]:FinalSetup()
 FinalSetup()
 {
-   atomic debug Debug.PrintString("tsMain.FinalSetup\n");
+   atomic debug Debug.PrintString("tsMain.FinalSetup ----------------Start----------------\n");
 
    tsPlayerWatch.PlayerWatch();
    tsPlayerSave.Restore();
@@ -296,6 +309,8 @@ FinalSetup()
    tsCrewSpeak.Init();
 
    tsStartGui.FinalSetup();
+
+   atomic debug Debug.PrintString("tsMain.FinalSetup ----------------End----------------\n");
 }
 //[cf]
 
@@ -303,7 +318,7 @@ FinalSetup()
 //[of]:SystemEnter()
 SystemEnter()
 {
-   atomic debug Debug.PrintString("tsMain.SystemEnter\n");
+   atomic debug Debug.PrintString("tsMain.SystemEnter ----------------Start----------------\n");
 
    tsFaction.Init();
 
@@ -322,6 +337,8 @@ SystemEnter()
    tsPlayerWatch.SystemEnter();
 
    tsMusic.NewSystem();
+
+   atomic debug Debug.PrintString("tsMain.SystemEnter ----------------End----------------\n");
 }
 //[cf]
 
@@ -337,7 +354,7 @@ SystemExit()
 //[of]:SaveGame()
 SaveGame()
 {
-   atomic debug Debug.PrintString("tsMain.SaveGame\n");
+   atomic debug Debug.PrintString("tsMain.SaveGame ----------------Start----------------\n");
 
    tsTime.SaveTime();
 
@@ -354,6 +371,8 @@ SaveGame()
    tsNavGui.ExitSpace();
 
    tMultimod.SaveGame();
+
+   atomic debug Debug.PrintString("tsMain.SaveGame ----------------End----------------\n");
 }
 //[cf]
 
@@ -361,7 +380,7 @@ SaveGame()
 //[of]:DayUpdate()
 DayUpdate()
 {
-   atomic debug Debug.PrintString("tsMain.DayUpdate\n");
+   atomic debug Debug.PrintString("tsMain.DayUpdate ----------------Start----------------\n");
 
    tsStationRules.UpdateAllStations();
    tsFleetOpUpdate.UpdateAll();
@@ -371,6 +390,8 @@ DayUpdate()
 
    tsReputationUpdate.Update();
    tMultimod.DayUpdate();
+
+   atomic debug Debug.PrintString("tsMain.DayUpdate ----------------End----------------\n");
 }
 //[cf]
 

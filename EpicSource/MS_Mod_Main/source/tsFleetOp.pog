@@ -33,11 +33,18 @@ uses  Sim,
 	iShip,
 	iHabitat,
 	iMapEntity,
+   iCargo,
+   CargoTypes,
+   
 	tsFleetOpEnum,
 	tsFaction,
 	tsStationEnum,
 	tsStation,
+   tsEconUtil,
 	
+   tsPogClass,
+   tsPcOwner,
+   
 	tsLRoot,
 	tsLProduction,
 	tsLCenter,
@@ -51,6 +58,8 @@ provides
 	DestroyOp,
 	IsOperation,
    GetOperationType,
+   GetOperationPog,
+   GetOperationEnvFoTemplate,
 	Find,
 	SetKnown,
 	IsKnown,
@@ -402,12 +411,35 @@ int GetOperationType(hisim operation)
    return Object.IntProperty(operation, "gtsOperationType");
 }
 
+string GetOperationEnvFoTemplate(hisim operation)
+{
+   return Object.StringProperty(operation, "gtOpEnvFoTemplate");
+}
+
+string GetOperationPog(hisim operation)
+{
+   return Object.StringProperty(operation, "gtOpPog");
+}
+
+
+// Create a new operation of the specified type, of a faction at a map location.
 hisim NewOp(int op_type,
             hfaction faction,
             hmapentity center)
 {
    int id = tsLRoot.NewId();
    hisim operation;
+   hinifile operation_defn_file;
+   string env_fo_template;
+   string operation_pog;
+
+
+   operation_defn_file = INIFile.Create("ini:/station_status_env");
+   if( none == operation_defn_file) {
+      debug Debug.PrintString("tsFleetOp.NewOp: ERROR: unable to open station_status_env.ini\n");
+      return none;
+   }
+
 
    operation = Create(id, faction, false, 1);
 
@@ -415,8 +447,19 @@ hisim NewOp(int op_type,
 
    tsLFleet.Create(operation, 200, 200, 200, 200);
    
+   
    // Add any key properties to the operation
    Object.AddIntProperty(operation, "gtsOperationType", op_type);
+   
+   // get specific details on the operation to be used consistently later
+   env_fo_template = INIFile.NumberedString( operation_defn_file, tsEconUtil.StationIntToString(op_type), "ESS_Normal", 0, "ERROR");
+   operation_pog = INIFile.NumberedString( operation_defn_file, tsEconUtil.StationIntToString(op_type), "operation_pog", 0, "none");   
+   Object.AddStringProperty(operation, "gtOpEnvFoTemplate", env_fo_template);
+   Object.AddStringProperty(operation, "gtOpPog", operation_pog);
+   
+   // finish with the ini file.
+   INIFile.Destroy(operation_defn_file);
+
 
    // New operations are created at thier owner station.
    SetSupporter(operation, iHabitat.Cast(center));
@@ -428,7 +471,7 @@ hisim NewOp(int op_type,
 }
 
 
-
+// Create the actual operation sim
 hisim Create(int op_id,
              hfaction faction,
              bool known,
@@ -577,7 +620,7 @@ DisplayOps()
    int iproperty;
    string sproperty;
 
-   debug Debug.PrintString("UnderOp.DisplayOps\n");
+   debug Debug.PrintString("tsFleetOp.DisplayOps\n");
    // Get list of operations
    // Get count of operations
    op_list = OperationList();

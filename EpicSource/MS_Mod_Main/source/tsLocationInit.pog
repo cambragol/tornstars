@@ -40,6 +40,7 @@ uses    Sim,
         tsStationEnum,
         tsStation,
         tsFleetOp,
+        tsFleetOpCall,
         tsLCenter,
         tsLProduction,
         tsStationEnv,
@@ -221,6 +222,7 @@ operations_setup(hmapentity center)
    int count, total, i;
    list operations;
    hisim operation;
+  
 
    debug Debug.PrintString("tsLocationInit.operations_setup\n");
 
@@ -243,7 +245,11 @@ operations_setup(hmapentity center)
       debug Debug.PrintString("tsLocationInit.op found ");
       debug Debug.PrintString(op_type);
       debug Debug.PrintString("\n");
+      
+      // Call the operation via the tsFleetOpCall switching model
+      tsFleetOpCall.PlayerNear(operation);
 
+      /*  Superceded by PlayerNear model
       count = 0;
       while (INIFile.NumberedExists(stations_file, op_type, "ESS_Normal", count)){
          env_file = INIFile.NumberedString(stations_file, op_type, "ESS_Normal", count, "none");
@@ -253,6 +259,7 @@ operations_setup(hmapentity center)
             tsStationEnv.SetupObjects(center, operation, env_file, 0, 0, 0);
          }
       }
+      */
    }
 
    INIFile.Destroy(stations_file);
