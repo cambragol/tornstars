@@ -21,6 +21,7 @@ INCLUDE_PKG= $(CODE_PATH)/include_pkg
 
 PACKAGE_PATH= $(MODULE_PATH)/packages
 
+DEPEND_TOOL= $(SOURCE_PATH)/python/pogmkdep/pogmkdep.py
 DEPEND=pogdepend
 
 MOD_PATH= $(EPIC_INSTALL)/mods/$(MODULE)
@@ -29,7 +30,7 @@ POG_COMPILER = $(EPIC_INSTALL)/bin/release/pc.exe
 
 FLAGS = --quiet
 
-.PHONY: all clean clean-headers
+.PHONY: all clean clean-headers depends
 
 .SUFFIXES:
 .SUFFIXES: .pkg .pog .h
@@ -149,6 +150,7 @@ PACKAGES = ECargoTypes.pkg \
 	tsFleetOp.pkg \
 	tsFleetOpFilter.pkg \
 	tsFleetOpGui.pkg \
+	tsFleetOpPhysical.pkg \
 	tsFleetOpSave.pkg \
 	tsViewDock.pkg \
 	tsCrewSpeak.pkg \
@@ -202,6 +204,9 @@ all: $(PACKAGESLC)
 
 clean:
 	rm -v *.pkg 
+
+depends:
+	$(DEPEND_TOOL) > $(PACKAGE_PATH)/pogdepend
 
 #
 # The compiler dumps generated header files in here

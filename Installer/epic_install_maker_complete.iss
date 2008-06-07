@@ -116,17 +116,17 @@ Source: .\..\EpicSource\MS_Mod_Main\cfg\*; DestDir: {app}\mods\MS_Mod_Main\cfg
 
 
 ; jump sim
-Source: .\..\EpicSource\US_Mod_JumpTube\*; DestDir: {app}\mods\MS_Mod_Main;
-Source: .\..\EpicSource\US_Mod_JumpTube\avatars\*; DestDir: {app}\mods\MS_Mod_Main\avatars;Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\US_Mod_JumpTube\avatars\jumptube\*; DestDir: {app}\mods\MS_Mod_Main\avatars\jumptube;
-Source: .\..\EpicSource\US_Mod_JumpTube\collisionhulls\*; DestDir: {app}\mods\MS_Mod_Main\collisionhulls;
+Source: .\..\EpicSource\US_Mod_JumpTube\*; DestDir: {app}\mods\MS_Mod_Main
+Source: .\..\EpicSource\US_Mod_JumpTube\avatars\*; DestDir: {app}\mods\MS_Mod_Main\avatars; Flags: skipifsourcedoesntexist
+Source: .\..\EpicSource\US_Mod_JumpTube\avatars\jumptube\*; DestDir: {app}\mods\MS_Mod_Main\avatars\jumptube
+Source: .\..\EpicSource\US_Mod_JumpTube\collisionhulls\*; DestDir: {app}\mods\MS_Mod_Main\collisionhulls
 Source: .\..\EpicSource\US_Mod_JumpTube\sims\*; DestDir: {app}\mods\MS_Mod_Main\sims; Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\US_Mod_JumpTube\sims\ships\*; DestDir: {app}\mods\MS_Mod_Main\sims\ships;
-Source: .\..\EpicSource\US_Mod_JumpTube\sims\regions\*; DestDir: {app}\mods\MS_Mod_Main\sims\regions;
+Source: .\..\EpicSource\US_Mod_JumpTube\sims\ships\*; DestDir: {app}\mods\MS_Mod_Main\sims\ships
+Source: .\..\EpicSource\US_Mod_JumpTube\sims\regions\*; DestDir: {app}\mods\MS_Mod_Main\sims\regions
 Source: .\..\EpicSource\US_Mod_JumpTube\subsims\*; DestDir: {app}\mods\MS_Mod_Main\subsims; Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\US_Mod_JumpTube\subsims\dockports\*; DestDir: {app}\mods\MS_Mod_Main\subsims\dockports;
+Source: .\..\EpicSource\US_Mod_JumpTube\subsims\dockports\*; DestDir: {app}\mods\MS_Mod_Main\subsims\dockports
 Source: .\..\EpicSource\US_Mod_JumpTube\subsims\systems\*; DestDir: {app}\mods\MS_Mod_Main\subsims\systems; Flags: skipifsourcedoesntexist
-Source: .\..\EpicSource\US_Mod_JumpTube\subsims\systems\nonplayer\*; DestDir: {app}\mods\MS_Mod_Main\subsims\systems\nonplayer;
+Source: .\..\EpicSource\US_Mod_JumpTube\subsims\systems\nonplayer\*; DestDir: {app}\mods\MS_Mod_Main\subsims\systems\nonplayer
 
 ; music
 Source: .\..\EpicArt\MS_Mod_Music\*; DestDir: {app}\mods\MS_Mod_Main; Flags: skipifsourcedoesntexist
@@ -191,46 +191,46 @@ Source: .\..\EpicSource\MS_Mod_Reference\html\encyclopedia\images\maps\*; DestDi
 Source: .\..\EpicSource\MS_Mod_Reference\TEXT\*; DestDir: {app}\mods\MS_Mod_Main\TEXT; Flags: skipifsourcedoesntexist
 
 ; ships
-Source: .\..\EpicSource\MS_Mod_Ships\*; DestDir: {app}\mods\MS_Mod_Ships;
-Source: .\..\EpicSource\MS_Mod_Ships\collisionhulls\*; DestDir: {app}\mods\MS_Mod_Ships\collisionhulls;
-Source: .\..\EpicSource\MS_Mod_Ships\audio\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\audio\sfx;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\assault_cannon\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\assault_cannon;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\assault_cannon_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\assault_cannon_bolt;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\cutting_beam\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\cutting_beam;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\beam\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\beam;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\capital_beam_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\capital_beam_bolt;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\cutting_beam_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\cutting_beam_bolt;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\cutting_beam_projector\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\cutting_beam_projector;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\mining_beam\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\mining_beam;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\disruptor\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\disruptor;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\eamp\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\eamp;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\edrone\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\edrone;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\heavy_pbc_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\heavy_pbc_bolt;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\light_pbc\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\light_pbc;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\light_pbc_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\light_pbc_bolt;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\missile_magazine\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\missile_magazine;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\neutron_pbc\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\neutron_pbc;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\old_corvette\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\old_corvette;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\pbc_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\pbc_bolt;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\pbc_bolt_neutron\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\pbc_bolt_neutron;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\quad_pbc\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\quad_pbc;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\standard_pbc\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\standard_pbc;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\standard_pbc_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\standard_pbc_bolt;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_e\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\turret_e;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\pulsar\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\pulsar;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\tug_hull\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\tug_hull;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\us_capital_beam_turret\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\us_capital_beam_turret;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\us_mining_beam_turret\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\us_mining_beam_turret;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\interceptor\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\interceptor;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\marauderfighter\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\marauderfighter;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\old_destroyer\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\old_destroyer;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\stormpetrel\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\stormpetrel;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\truck\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\truck;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_a\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\turret_a;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_b\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\turret_b;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_c\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\turret_c;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_d\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\turret_d;
-Source: .\..\EpicSource\MS_Mod_Ships\avatars\freighter\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\freighter;
+Source: .\..\EpicSource\MS_Mod_Ships\*; DestDir: {app}\mods\MS_Mod_Ships
+Source: .\..\EpicSource\MS_Mod_Ships\collisionhulls\*; DestDir: {app}\mods\MS_Mod_Ships\collisionhulls
+Source: .\..\EpicSource\MS_Mod_Ships\audio\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\audio\sfx
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\assault_cannon\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\assault_cannon
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\assault_cannon_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\assault_cannon_bolt
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\cutting_beam\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\cutting_beam
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\beam\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\beam
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\capital_beam_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\capital_beam_bolt
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\cutting_beam_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\cutting_beam_bolt
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\cutting_beam_projector\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\cutting_beam_projector
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\mining_beam\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\mining_beam
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\disruptor\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\disruptor
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\eamp\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\eamp
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\edrone\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\edrone
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\heavy_pbc_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\heavy_pbc_bolt
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\light_pbc\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\light_pbc
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\light_pbc_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\light_pbc_bolt
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\missile_magazine\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\missile_magazine
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\neutron_pbc\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\neutron_pbc
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\old_corvette\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\old_corvette
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\pbc_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\pbc_bolt
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\pbc_bolt_neutron\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\pbc_bolt_neutron
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\quad_pbc\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\quad_pbc
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\standard_pbc\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\standard_pbc
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\standard_pbc_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\standard_pbc_bolt
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_e\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\turret_e
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\pulsar\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\pulsar
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\tug_hull\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\tug_hull
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\us_capital_beam_turret\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\us_capital_beam_turret
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\us_mining_beam_turret\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\us_mining_beam_turret
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\interceptor\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\interceptor
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\marauderfighter\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\marauderfighter
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\old_destroyer\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\old_destroyer
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\stormpetrel\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\stormpetrel
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\truck\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\truck
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_a\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\turret_a
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_b\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\turret_b
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_c\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\turret_c
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_d\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\turret_d
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\freighter\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\freighter
 
 
 Source: .\..\EpicSource\MS_Mod_Ships\images\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\images\sfx; Flags: skipifsourcedoesntexist
@@ -343,33 +343,33 @@ var
   copy_str: String;
 begin
 	// determine if at step just before the install starts
-	if CurStep=ssInstall then
-		begin
-
-		//MsgBox(ExpandConstant('{app}'), mbInformation, MB_OK);
-
-		// backup the mods dir
-		copy_str := ExpandConstant('/Y /E /I "{app}\mods" "{app}\mods-backup_') + GetDateTimeString('yyyy/mm/dd_hh:nn:ss', '-', '-') + '"';
-		//MsgBox(copy_str, mbInformation, MB_OK);
-		Exec(ExpandConstant('{win}\system32\xcopy.exe'), copy_str, '', SW_SHOW, ewWaitUntilTerminated, ResultCode);
-
-		// backup a movies dir if there
-		copy_str := ExpandConstant('/Y /E /I "{app}\movies" "{app}\movies-backup_') + GetDateTimeString('yyyy/mm/dd_hh:nn:ss', '-', '-') + '"';
-		//MsgBox(copy_str, mbInformation, MB_OK);
-		Exec(ExpandConstant('{win}\system32\xcopy.exe'), copy_str, '', SW_SHOW, ewWaitUntilTerminated, ResultCode);
-
-		// backup the planet texture dir in resources
-		copy_str := ExpandConstant('/Y /E /I "{app}\resource\images\planets" "{app}\resource\images\planets-backup_') + GetDateTimeString('yyyy/mm/dd_hh:nn:ss', '-', '-') + '"';
-		Exec(ExpandConstant('{win}\system32\xcopy.exe'), copy_str, '', SW_SHOW, ewWaitUntilTerminated, ResultCode);
-		// delete all files inside this resource dir but leave the dir
-		DelTree(ExpandConstant('{app}\resource\images\planets\*'), False, True, True);
-
-		// backup flux ini
-		FileCopy(ExpandConstant('{app}\flux.ini'), ExpandConstant('{app}\flux_') + GetDateTimeString('yyyy/mm/dd_hh:nn:ss', '-', '-')+'.ini', False);
-		// Delete all files and directories inside mods\
-		// but leave the directory itself
-		DelTree(ExpandConstant('{app}\mods\*'), False, True, True);	
-    end;	
+//	if CurStep=ssInstall then
+//		begin
+//
+//		//MsgBox(ExpandConstant('{app}'), mbInformation, MB_OK);
+//
+//		// backup the mods dir
+//		copy_str := ExpandConstant('/Y /E /I "{app}\mods" "{app}\mods-backup_') + GetDateTimeString('yyyy/mm/dd_hh:nn:ss', '-', '-') + '"';
+//		//MsgBox(copy_str, mbInformation, MB_OK);
+//		Exec(ExpandConstant('{win}\system32\xcopy.exe'), copy_str, '', SW_SHOW, ewWaitUntilTerminated, ResultCode);
+//
+//		// backup a movies dir if there
+//		copy_str := ExpandConstant('/Y /E /I "{app}\movies" "{app}\movies-backup_') + GetDateTimeString('yyyy/mm/dd_hh:nn:ss', '-', '-') + '"';
+//		//MsgBox(copy_str, mbInformation, MB_OK);
+//		Exec(ExpandConstant('{win}\system32\xcopy.exe'), copy_str, '', SW_SHOW, ewWaitUntilTerminated, ResultCode);
+//
+//		// backup the planet texture dir in resources
+//		copy_str := ExpandConstant('/Y /E /I "{app}\resource\images\planets" "{app}\resource\images\planets-backup_') + GetDateTimeString('yyyy/mm/dd_hh:nn:ss', '-', '-') + '"';
+//		Exec(ExpandConstant('{win}\system32\xcopy.exe'), copy_str, '', SW_SHOW, ewWaitUntilTerminated, ResultCode);
+//		// delete all files inside this resource dir but leave the dir
+//		DelTree(ExpandConstant('{app}\resource\images\planets\*'), False, True, True);
+//
+//		// backup flux ini
+//		FileCopy(ExpandConstant('{app}\flux.ini'), ExpandConstant('{app}\flux_') + GetDateTimeString('yyyy/mm/dd_hh:nn:ss', '-', '-')+'.ini', False);
+//		// Delete all files and directories inside mods\
+//		// but leave the directory itself
+//		DelTree(ExpandConstant('{app}\mods\*'), False, True, True);
+//    end;
 end;
 
 function InitializeSetup(): Boolean;
@@ -392,5 +392,6 @@ begin
 	if not FileExists(ini_path+'\flux.ini') then Result:= false;
 	if not FileExists(ini_path+'\EdgeOfChaos.exe') then	Result:= false;
 	if not FileExists(ini_path+'\bin\release\loader.exe') then Result:= false;
-	
+
 end;
+

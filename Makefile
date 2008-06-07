@@ -9,7 +9,7 @@ MODULE_PATH= $(SOURCE_PATH)/$(MODULE)
 PACKAGE_PATH= $(MODULE_PATH)/packages
 MOD_PATH= $(EPIC_INSTALL)/mods/$(MODULE)
 
-.PHONY: all clean
+.PHONY: all clean depends
 
 all:
 	$(MAKE) -C $(PACKAGE_PATH)
@@ -17,4 +17,5 @@ all:
 clean:
 	$(MAKE) -C $(PACKAGE_PATH) clean
 
-
+depends:
+	$(MAKE) -C $(PACKAGE_PATH) depends
