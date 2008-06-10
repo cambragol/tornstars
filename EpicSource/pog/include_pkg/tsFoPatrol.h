@@ -24,5 +24,7 @@ prototype tsFoPatrol.Restore( hisim operation );
 
 prototype tsFoPatrol.Update( hisim operation );
 
+prototype tsFoPatrol.PlayerNear( hisim operation );
+
 // EOF /////////////////////////////////////////////////////////////////////////
 

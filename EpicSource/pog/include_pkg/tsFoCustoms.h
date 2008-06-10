@@ -24,5 +24,7 @@ prototype tsFoCustoms.Restore( hisim operation );
 
 prototype tsFoCustoms.Update( hisim operation );
 
+prototype tsFoCustoms.PlayerNear( hisim operation );
+
 // EOF /////////////////////////////////////////////////////////////////////////
 

@@ -75,9 +75,9 @@ MakeOpPhysical(hisim operation)
 
    
    // Read the item list, create. These are pog objects.
-   debug Debug.PrintString("tsFleetOp.MakeOpPhysical: Process operation.\n");
+   debug Debug.PrintString("tsFleetOpPhysical.MakeOpPhysical: Process operation.\n");
    if(none == env_file_handle) {
-      debug Debug.PrintString("tsFleetOp.MakeOpPhysical: ERROR: Failed to open the operations env_fo file.\n");
+      debug Debug.PrintString("tsFleetOpPhysical.MakeOpPhysical: ERROR: Failed to open the operations env_fo file.\n");
       return;
    }
 

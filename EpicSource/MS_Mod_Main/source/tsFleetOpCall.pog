@@ -213,25 +213,30 @@ Update(hisim operation)
 }
 
 
+//[cf]
+
+// Called when the player is near an operation center
+//[of]:PlayerNear(hisim operation)
 PlayerNear(hisim operation)
 {
    int operation_type = tsLProduction.GetType(operation);
    
    switch (operation_type) {
    case ept_EmbezzleOp: tsFoEmbezzle.PlayerNear(operation);break;
-   //case ept_CustomsOp: tsFoCustoms.PlayerNear(operation);break;
+   case ept_CustomsOp: tsFoCustoms.PlayerNear(operation);break;
    case ept_TankerOp: tsFoTanker.PlayerNear(operation); break;
    case ept_TradeOp: tsFoTrade.PlayerNear(operation); break;
 
-   //case ept_ThugsOp: tsFoThugs.PlayerNear(operation);break;
-   //case ept_PatrolOp: tsFoPatrol.PlayerNear(operation);break;
+   case ept_ThugsOp: tsFoThugs.PlayerNear(operation);break;
+   case ept_PatrolOp: tsFoPatrol.PlayerNear(operation);break;
 
-   //case ept_RaiderOp: tsFoRaider.PlayerNear(operation);break;
-   //case ept_ProtectionOp: tsFoProtection.PlayerNear(operation);break;
+   case ept_RaiderOp: tsFoRaider.PlayerNear(operation);break;
+   case ept_ProtectionOp: tsFoProtection.PlayerNear(operation);break;
 
-   //case ept_FleetAttackOp: tsFoFleetAttack.PlayerNear(operation);break;
-   //case ept_FleetDefenseOp: tsFoFleetDefense.PlayerNear(operation);break;
+   case ept_FleetAttackOp: tsFoFleetAttack.PlayerNear(operation);break;
+   case ept_FleetDefenseOp: tsFoFleetDefense.PlayerNear(operation);break;
 
+   // Are these actually used now that stations are not destructable?
    //case ept_StationConstructionOp: tsFoConstruction.PlayerNear(operation);break;
    //case ept_StationRepairOp: tsFoConstruction.PlayerNear(operation);break;
 

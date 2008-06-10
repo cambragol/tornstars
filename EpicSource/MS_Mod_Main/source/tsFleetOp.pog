@@ -354,6 +354,7 @@ SetCreated(hisim operation, bool existing)
    Object.AddBoolProperty(operation,"gtsFleetOpExists", existing);
 }
 
+
 bool IsCreated(hisim operation)
 {
    return Object.BoolProperty(operation,"gtsFleetOpExists");
@@ -408,7 +409,7 @@ bool IsOperation(hisim operation)
 
 int GetOperationType(hisim operation)
 {
-   return Object.IntProperty(operation, "gtsOperationType");
+   return tsLProduction.GetType(operation);
 }
 
 string GetOperationEnvFoTemplate(hisim operation)
@@ -419,6 +420,11 @@ string GetOperationEnvFoTemplate(hisim operation)
 string GetOperationPog(hisim operation)
 {
    return Object.StringProperty(operation, "gtOpPog");
+}
+
+string GetOperationShipClass(hisim operation)
+{
+   return Object.StringProperty(operation, "gtOpShipClass");
 }
 
 
@@ -432,30 +438,37 @@ hisim NewOp(int op_type,
    hinifile operation_defn_file;
    string env_fo_template;
    string operation_pog;
+   string main_ship_class;
+   int max_fleets;
 
 
-   operation_defn_file = INIFile.Create("ini:/station_status_env");
+   operation_defn_file = INIFile.Create("ini:/metagame_production");
    if( none == operation_defn_file) {
-      debug Debug.PrintString("tsFleetOp.NewOp: ERROR: unable to open station_status_env.ini\n");
+      debug Debug.PrintString("tsFleetOp.NewOp: ERROR: unable to open metagame_production.ini\n");
       return none;
    }
 
 
    operation = Create(id, faction, false, 1);
 
-   tsLProduction.Create(operation, op_type, 100, 0, 0, true);
-
-   tsLFleet.Create(operation, 200, 200, 200, 200);
-   
-   
-   // Add any key properties to the operation
-   Object.AddIntProperty(operation, "gtsOperationType", op_type);
-   
-   // get specific details on the operation to be used consistently later
+   // get/set specific details on the operation to be used consistently later
    env_fo_template = INIFile.NumberedString( operation_defn_file, tsEconUtil.StationIntToString(op_type), "ESS_Normal", 0, "ERROR");
-   operation_pog = INIFile.NumberedString( operation_defn_file, tsEconUtil.StationIntToString(op_type), "operation_pog", 0, "none");   
+   operation_pog = INIFile.NumberedString( operation_defn_file, tsEconUtil.StationIntToString(op_type), "operation_pog", 0, "none");
+   main_ship_class = INIFile.String( operation_defn_file, tsEconUtil.StationIntToString(op_type), "ship_class", "none");
    Object.AddStringProperty(operation, "gtOpEnvFoTemplate", env_fo_template);
    Object.AddStringProperty(operation, "gtOpPog", operation_pog);
+   Object.AddStringProperty(operation, "gtOpShipClass", main_ship_class);
+
+   max_fleets = INIFile.Int(operation_defn_file, tsEconUtil.StationIntToString(op_type), "max_fleets",0);
+
+   // sets up the production center and sets some key values against it e.g. operation type
+   // tsLProduction.Create(hisim producer, int type, int funds, int loss, int loans, bool active)
+   tsLProduction.Create(operation, op_type, 100, 0, 0, true);
+
+   // tsLFleet.Create(hisim producer, int fleets, int supplies, int max_fleets, int max_supplies)
+   tsLFleet.Create(operation, max_fleets, 200, max_fleets, 200);
+   
+   
    
    // finish with the ini file.
    INIFile.Destroy(operation_defn_file);

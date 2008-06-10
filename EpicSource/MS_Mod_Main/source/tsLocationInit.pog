@@ -216,7 +216,7 @@ status_setup(hisim producer)
 //[of]:operations_setup(hmapentity center)
 operations_setup(hmapentity center)
 {
-   hinifile stations_file = INIFile.Create("ini:/station_status_env");
+   hinifile stations_file = INIFile.Create("ini:/metagame_production");
    string op_type;
    string env_file;
    int count, total, i;

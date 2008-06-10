@@ -24,5 +24,7 @@ prototype tsFoRaider.Restore( hisim operation );
 
 prototype tsFoRaider.Update( hisim operation );
 
+prototype tsFoRaider.PlayerNear( hisim operation );
+
 // EOF /////////////////////////////////////////////////////////////////////////
 

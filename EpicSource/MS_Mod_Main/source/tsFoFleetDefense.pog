@@ -56,8 +56,9 @@ iMapEntity,
    tsEconUtil,
    tsShipName,
    tsShipCreationEnum,
-tsShipCreation,
+   tsShipCreation,
    tsFleetOpCombat,
+   tsFleetOpPhysical,
    tsDebug;
 
 
@@ -66,7 +67,8 @@ tsShipCreation,
 provides New,
          Save,
          Restore,
-         Update;
+         Update,
+         PlayerNear;
 
 
 prototype hhabitat find_patrol_station(hisim operation, hmapentity center, string system_name, float distance);
@@ -311,6 +313,16 @@ Update(hisim operation)
 }
 
 
+
+
+
+
+// Called when the player is near the operation
+PlayerNear(hisim operation)
+{
+   debug Debug.PrintString("tsFoFleetDefence.PlayerNear: Player near operation, instantiate physical sims.\n");
+   tsFleetOpPhysical.MakeOpPhysical(operation);
+}
 
 
 // patrol the neutral or better stations at close distance to thier home station.

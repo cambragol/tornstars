@@ -100,17 +100,8 @@ New(hisim operation)
    // using a large number means we get a random name.
    ship_name = tsShipName.ShipName("general", 10000);
 
-   // get the operation type as a string
-   op_type_str = tsEconUtil.StationIntToString( tsFleetOp.GetOperationType(operation) );
-   
-   // hook into station_status_env.ini and get the appropriate ini
-   // file which will hold the ship faction template
-   ini_file = INIFile.Create("ini:/station_status_env");
-   if(none == ini_file) {
-      Debug.PrintString("tsFoTanker.New: ERROR: station_status_env.ini not opened. Defaults taken.");
-   }
-   env_file_name = INIFile.NumberedString(ini_file, op_type_str, "ESS_Normal", 0, "ini:/env_fo_tanker");
-   INIFile.Destroy(ini_file);
+   // Get the ship faction template
+   env_file_name = tsFleetOp.GetOperationEnvFoTemplate(operation);
 
    ini_file = INIFile.Create(env_file_name);
    if(none == ini_file) {

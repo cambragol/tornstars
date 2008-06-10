@@ -24,5 +24,7 @@ prototype tsFoThugs.Restore( hisim operation );
 
 prototype tsFoThugs.Update( hisim operation );
 
+prototype tsFoThugs.PlayerNear( hisim operation );
+
 // EOF /////////////////////////////////////////////////////////////////////////
 

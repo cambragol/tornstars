@@ -45,8 +45,9 @@ iMapEntity,
    tsStationFilter,
    tsShipName,
    tsShipCreationEnum,
-tsShipCreation,
+   tsShipCreation,
    tsFleetOpCombat,
+   tsFleetOpPhysical,
    tsDebug;
 
 
@@ -55,7 +56,8 @@ tsShipCreation,
 provides New,
          Save,
          Restore,
-         Update;
+         Update,
+         PlayerNear;
 
 
 
@@ -323,6 +325,15 @@ Update(hisim operation)
 
    // Next update, tomorrow.
    tsFleetOp.SetWakeTimer(operation, tsTime.GetDay() + update_delay);
+}
+
+
+
+// Called when the player is near the operation
+PlayerNear(hisim operation)
+{
+   debug Debug.PrintString("tsFoCustoms.PlayerNear: Player near operation, instantiate physical sims.\n");
+   tsFleetOpPhysical.MakeOpPhysical(operation);
 }
 
 

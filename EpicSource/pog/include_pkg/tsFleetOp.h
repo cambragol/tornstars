@@ -30,6 +30,8 @@ prototype string tsFleetOp.GetOperationPog( hisim operation );
 
 prototype string tsFleetOp.GetOperationEnvFoTemplate( hisim operation );
 
+prototype string tsFleetOp.GetOperationShipClass(hisim operation);
+
 prototype hisim tsFleetOp.Find( int operation_id );
 
 prototype tsFleetOp.SetKnown( hisim operation, bool known );

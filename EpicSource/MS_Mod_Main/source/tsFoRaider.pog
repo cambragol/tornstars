@@ -58,8 +58,9 @@ iMapEntity,
    tsEconUtil,
    tsShipName,
    tsShipCreationEnum,
-tsShipCreation,
+   tsShipCreation,
    tsFleetOpCombat,
+   tsFleetOpPhysical,
    tsDebug;
 
 
@@ -68,7 +69,8 @@ tsShipCreation,
 provides New,
          Save,
          Restore,
-         Update;
+         Update,
+         PlayerNear;
 
 
 prototype hhabitat find_raiding_station(hisim operation, hmapentity center, string system_name);
@@ -340,6 +342,16 @@ Update(hisim operation)
 
 
 
+
+
+
+
+// Called when the player is near the operation
+PlayerNear(hisim operation)
+{
+   debug Debug.PrintString("tsFoRaider.PlayerNear: Player near operation, instantiate physical sims.\n");
+   tsFleetOpPhysical.MakeOpPhysical(operation);
+}
 
 
 // Return true is this location is an operating production station.

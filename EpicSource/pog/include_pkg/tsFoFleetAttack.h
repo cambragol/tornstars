@@ -24,5 +24,7 @@ prototype tsFoFleetAttack.Restore( hisim operation );
 
 prototype tsFoFleetAttack.Update( hisim operation );
 
+prototype tsFoFleetAttack.PlayerNear( hisim operation );
+
 // EOF /////////////////////////////////////////////////////////////////////////
 
