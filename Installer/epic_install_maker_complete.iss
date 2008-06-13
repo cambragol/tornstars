@@ -211,6 +211,7 @@ Source: .\..\EpicSource\MS_Mod_Ships\avatars\light_pbc_bolt\*; DestDir: {app}\mo
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\missile_magazine\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\missile_magazine
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\neutron_pbc\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\neutron_pbc
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\old_corvette\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\old_corvette
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\heavy_corvette\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\heavy_corvette
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\pbc_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\pbc_bolt
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\pbc_bolt_neutron\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\pbc_bolt_neutron
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\quad_pbc\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\quad_pbc
