@@ -44,8 +44,8 @@ uses    Sim,
         tsFaction,
         tsEquipBuy,
         tsMoney,
-		tsShipCreationEnum,
-		tsShipCreation,
+        tsShipCreationEnum,
+        tsShipCreation,
         tsShipName,
         tsCull;
 //[cf]
@@ -275,7 +275,7 @@ setup_trade_ship(hisim marker)
    } else
    {
        tsPcOwner.SetOwner(ship, marker);
-	   iSim.SetFaction(iSim.Cast(ship), iSim.Faction(marker));
+      iSim.SetFaction(iSim.Cast(ship), iSim.Faction(marker));
    }
 
 

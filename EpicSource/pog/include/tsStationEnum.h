@@ -373,6 +373,8 @@ enum eProductionType
    
    ept_TankerOp = 146,
    
-   ept_TradeOp = 147
+   ept_TradeOp = 147,
+	
+	ept_ArmsDealerOp = 148 
 
 };	

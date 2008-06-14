@@ -604,6 +604,11 @@ string Operation2String(int op_type)
       return "Rebel Recruitment";
       break;
 
+   // Designed to support the player so they can buy weapons for their ships
+   case ept_ArmsDealerOp:
+      return "Arms Dealer Operation";
+      break;
+
    // Creates a black market importer/exporter into the station.
    // Hides just outside of station range, and deals in goods with
    // the criminal element at marked up prices.

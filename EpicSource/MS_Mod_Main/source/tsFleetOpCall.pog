@@ -50,7 +50,8 @@ uses  Sim,
 	tsFoPatrol,
    tsFoConstruction,
    tsFoTanker,
-   tsFoTrade;
+   tsFoTrade,
+   tsFoArmsDealer;
 
 
 // Exports
@@ -97,6 +98,8 @@ hisim New(int operation_type, hfaction faction, hmapentity center)
    case ept_FleetDefenseOp: tsFoFleetDefense.New(operation);break;
    case ept_StationConstructionOp: tsFoConstruction.New(operation);break;
    case ept_StationRepairOp: tsFoConstruction.New(operation);break;
+   
+   case ept_ArmsDealerOp: tsFoArmsDealer.New(operation);break;
 
    default:
       debug {
@@ -134,6 +137,8 @@ Save(hisim operation)
    case ept_StationConstructionOp: tsFoConstruction.Save(operation);break;
    case ept_StationRepairOp: tsFoConstruction.Save(operation);break;
 
+   case ept_ArmsDealerOp: tsFoArmsDealer.Save(operation);break;
+
 
    default:
       debug {
@@ -169,6 +174,9 @@ Restore(hisim operation)
    case ept_StationConstructionOp: tsFoConstruction.Restore(operation);break;
    case ept_StationRepairOp: tsFoConstruction.Restore(operation);break;
 
+   case ept_ArmsDealerOp: tsFoArmsDealer.Restore(operation);break;
+
+
    default:
       debug {
          Debug.PrintString(String.FormatInt("tsFleetOpCall.Restore invalid op type %d\n", operation_type));
@@ -202,6 +210,9 @@ Update(hisim operation)
 
    case ept_StationConstructionOp: tsFoConstruction.Update(operation);break;
    case ept_StationRepairOp: tsFoConstruction.Update(operation);break;
+
+   case ept_ArmsDealerOp: tsFoArmsDealer.Update(operation);break;
+
 
    default:
       
@@ -239,6 +250,9 @@ PlayerNear(hisim operation)
    // Are these actually used now that stations are not destructable?
    //case ept_StationConstructionOp: tsFoConstruction.PlayerNear(operation);break;
    //case ept_StationRepairOp: tsFoConstruction.PlayerNear(operation);break;
+
+   case ept_ArmsDealerOp: tsFoArmsDealer.PlayerNear(operation);break;
+
 
    default:
       

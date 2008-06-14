@@ -173,6 +173,7 @@ PACKAGES = ECargoTypes.pkg \
 	tsFoProtection.pkg \
 	tsFoRaider.pkg \
 	tsFoThugs.pkg \
+	tsFoArmsDealer.pkg \
 	tsPilotSetup.pkg \
 	tsPlayerDeath.pkg \
 	tsPlayerSave.pkg \
