@@ -554,7 +554,7 @@ DisplayWindow()
    GUI.SetWindowClientArea( shady_bar, 
                             0,
                             0,
-                            500,
+                            600,
                             GUI.WindowCanvasHeight( shady_bar));
    
 
@@ -564,7 +564,7 @@ DisplayWindow()
    height = height - Global.Int("EpicGui_content_footer");
 
 
-   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   width = 600; //GUI.WindowCanvasWidth( shady_bar);
    width = width/2;
    width = width - Global.Int("EpicGui_content_indent");
    width = width - Global.Int("EpicGui_content_indent");
@@ -599,7 +599,7 @@ DisplayWindow()
 
    button_height = (height/2) + Global.Int("EpicGui_content_drop");
 
-   button_base = GUI.CreateWindow(250+ Global.Int("EpicGui_content_indent"),
+   button_base = GUI.CreateWindow(280+ Global.Int("EpicGui_content_indent"),
                                   button_height,
                                   120, 
                                   30, 
@@ -611,7 +611,7 @@ DisplayWindow()
 
 
 
-   button_base = GUI.CreateWindow(250+ Global.Int("EpicGui_content_indent"),
+   button_base = GUI.CreateWindow(280+ Global.Int("EpicGui_content_indent"),
                                   button_height + 60,
                                   120, 
                                   30, 
@@ -915,7 +915,7 @@ hwindow create_faction_detail()
    // If there was a prior detail window, destroy it.
    GUI.DeleteWindow(detail_window);
 
-   width = 500; //GUI.WindowCanvasWidth( shady_bar);
+   width = 600; //GUI.WindowCanvasWidth( shady_bar);
    width = width /2;
 
 
