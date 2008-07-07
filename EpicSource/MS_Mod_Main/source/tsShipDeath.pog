@@ -1,0 +1,89 @@
+//*******************************************************************************************/
+//
+// tsShipDeath.pog
+//
+// 
+//
+// June 2008, James Walker
+//
+//******************************************************************************************/
+
+package tsShipDeath;
+
+//[of]:Import
+uses
+   Sim,
+   //iShip,
+   iSim,
+   //iPilotSetup,
+   //Debug,
+   //Global,
+   //GUI,
+   //iDirector,
+   //iGUI,
+   //iHUD,
+   //iHabitat,
+   //iMapEntity,
+   //INIFile,
+   //Input,
+   //List,
+   //Object,
+   //String,
+   //Task,
+   //Text,
+   //iUtilities,
+   //iCargo,
+   //iInventory,
+   //iComms, 
+   //iAi,
+   //iWingmen,
+   //iRemotePilot,
+   //iDeathScript,
+   //iGame,
+   //Math,
+   //iInventory,
+   //iConversation,
+   //CargoTypes,
+   //iMultiplay,
+
+
+   //tsStationEnum,
+   // tsShipEnum,
+   //tsEconUtil,
+   //tsPodUtil,
+   //tsShipComms,
+   //tsFormation,
+   //tsFaction,
+   tsDebug;
+
+//[cf]
+
+
+//[of]:Export
+provides 
+   WithWreckage;
+
+//[cf]
+
+
+task WithWreckage( hisim sim )
+{
+   hisim wreck;
+
+
+   iSim.Kill(sim);
+   
+   // create and place wreckage sim
+	//hisim wreck = 
+	//Sim.PlaceAt ( wreck, sim );
+   
+}
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

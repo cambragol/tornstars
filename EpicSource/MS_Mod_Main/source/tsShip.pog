@@ -388,6 +388,7 @@ ReadIniFile(hship ship)
    int tanker, miner, prospector, study_days, scan_range;
    float mining_efficiency;
    string template_name;
+   string death_script;
 
    template_name = Sim.TemplateName(ship);
 
@@ -428,6 +429,8 @@ ReadIniFile(hship ship)
    prospector = INIFile.Int(ship_file,"Properties","prospector", 0);
    study_days = INIFile.Int(ship_file,"Properties","study_days", 0);
    scan_range = INIFile.Int(ship_file,"Properties","scan_range", 0);
+   // allow default PS death script override
+   death_script = INIFile.String(ship_file,"Properties","death_script", "");
 
 
    // Attach the properties to the ship.
@@ -445,6 +448,11 @@ ReadIniFile(hship ship)
    Object.AddIntProperty(ship, "scan_range", scan_range);
 
    Object.AddBoolProperty(ship, "fuel_locked", false);
+   
+   // only set the death script if we found one.
+   if(death_script != "")
+      Object.SetStringProperty ( ship, "death_script", death_script );
+
 
    // Attach the template numbers and location properties to the subsims
    // for saving and loadout.

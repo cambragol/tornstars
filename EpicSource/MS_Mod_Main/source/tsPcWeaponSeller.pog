@@ -35,19 +35,31 @@ uses    Sim,
         iComms,
         iConversation,
         iAI,
+        iEscort,
+        ABB_Common,
 
-        tsPcOwner,
+        tsLCenter,
+        tsEquipBuy,
         tsShipComms,
-        tsShip,
         tsLRoot,
         tsLTrade,
         tsFaction,
-        tsEquipBuy,
+        tsTradeSell,
         tsMoney,
+        tsShipName,
+        tsPcOwner,
+        tsLProduction,
+        tsFleetOp,
+        tsDistance,
         tsShipCreationEnum,
         tsShipCreation,
-        tsShipName,
-        tsCull;
+        tsLFleet,
+        tsPilotSetup,
+        tsStationFilter,
+        tsDistance,
+        tsCapsuleJump,
+        tsCull,
+        tsShip;
 //[cf]
 
 
@@ -58,11 +70,29 @@ provides PogCreate,
          CriminalComms;
 //[cf]
 
+enum eCSScriptState
+{
+   eCS_Init,
+   eCS_Idle,
+   eCS_Flee,
+   eCS_WaitApproach,
+   eCS_EscortOnly,
+   eCS_Dead,
+   eCS_Cull
+};
 
 
 prototype setup_trade_ship(hisim marker);
 
 prototype string type2comms(string seller_type);
+
+prototype task ship_watch(hgroup seller_fleet);
+
+prototype create_escorts(hisim operation, hship fence, hgroup cull_group);
+
+prototype eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool debug_on);
+
+prototype string state2string(eCSScriptState state);
 
 
 
@@ -200,9 +230,11 @@ setup_trade_ship(hisim marker)
    //float faction_standing;
    set habitats;
    hfaction station_faction;
-   hsim owner;
+   hfaction faction;
+   hisim owner;
    hhabitat start_station;
    hship ship;
+   hgroup cull_group;
 
 
    debug Debug.PrintString("tsPcWeaponSeller.setup_trade_ship: Start\n");
@@ -212,10 +244,12 @@ setup_trade_ship(hisim marker)
 
    // since the marker has been placed in space we use it as a focus
    // to gather information: Nearby habitats, closest habitat to marker and faction of that closest habitat
+   // ?????????????????????????????????????????????????????
    habitats = iMapEntity.SystemHabitats();
    start_station = iHabitat.Nearest(habitats, marker);
-   owner = start_station;
    station_faction = iSim.Faction(start_station);
+   // ?????????????????????????????????????????????????????
+
 
    // get the ini file from the waypoint and open it
    template_file_name = Object.StringProperty(marker, "gt_pog_object_template");
@@ -248,10 +282,43 @@ setup_trade_ship(hisim marker)
    Debug.PrintString("\n");
    }
 
-   // Get a ship name and template name using tsShipCreation
-   name = tsShipName.ShipName( "general", Math.RandomInt(0, 343));
-   ship_template = tsShipCreation.GetShip(station_faction, tsShipCreation.String2ShipType(faction_ship_class));
 
+
+
+
+   // The first thing we do is learn if this marker is to represent an operation.
+   // If we do, then we handle some things differently.
+   owner = iSim.Cast(tsPcOwner.Owner(marker));
+
+   faction = iSim.Faction(iSim.Cast(owner));
+
+
+   if (!tsFleetOp.IsOperation(owner)){
+      // This pog object can only represent operations. 
+      // So we destroy the marker and bail out.
+      
+      debug Debug.PrintString("tsPcTankerOp error no operation set as owner\n");
+
+      Sim.Destroy(marker);
+      return;
+   }
+
+   // If this operation already has an in game representation, get rid of ourselves.
+   if (tsFleetOp.IsCreated(owner)) {
+      debug Debug.PrintString("tsPcTankerOp physical already exists.\n");
+      Sim.Destroy(marker);
+      return;
+   }
+
+
+
+  debug Debug.PrintString("tsPcTankerOp.setup_tanker_ship: operation tanker creating\n");
+
+   // Set the operation to already have a physical representation.
+   tsFleetOp.SetCreated(owner, true);
+
+   ship_template = tsFleetOp.ShipTemplate(owner);
+   name = tsFleetOp.Name(owner);
    // create a ship sim
    ship = tsShip.Create(ship_template, name);
 
@@ -259,32 +326,58 @@ setup_trade_ship(hisim marker)
       debug Debug.PrintString("tsPcWeaponSeller.setup_trade_ship: ship failed to create\n");
       debug Debug.PrintString(ship_template);
       debug Debug.PrintString(" template\n");
+      Sim.Destroy(marker);
+
+      tsFleetOp.SetCreated(owner, false);
       return;
    }
 
+
+
+
+   // Set the owner for this ship and faction
+   //if(is_internal) {
+   //    tsPcOwner.SetOwner(ship, start_station);
+   //    iSim.SetFaction(iSim.Cast(ship), station_faction);
+   //} else
+   //{
+   //    tsPcOwner.SetOwner(ship, marker);
+   //   iSim.SetFaction(iSim.Cast(ship), iSim.Faction(marker));
+   //}
+
+
+   // create the cull group
+   cull_group = Group.Create();
+   // add ship to cull group
+   Group.AddSim(cull_group, ship);
+   // set the owner of the ship
+   tsPcOwner.SetOwner(ship, owner);
+   // set the faction of the ship
+   iSim.SetFaction(iSim.Cast(ship), faction);
+
+   // Notice attacks fast, and flee quickly.
+   tsPilotSetup.SetupOperation(ship, 0.9, 0.75);
+   // mark the ship as not cullable
+   Sim.SetCullable(ship, false);
+   // place the ship near the marker
+   Sim.PlaceNear(ship, marker, 1km);
+
+   // We have placed the ship so remove the marker
+   Sim.Destroy(marker);
+
+   // create any escort if we need it
+   create_escorts(owner, ship, cull_group);
 
    // Setup the comms tasks
    tsShipComms.AddComms(ship, type2comms(comms));
    tsShipComms.DisplayComms(ship, true);
 
-
-   // Set the owner for this ship and faction
-   if(is_internal) {
-       tsPcOwner.SetOwner(ship, start_station);
-       iSim.SetFaction(iSim.Cast(ship), station_faction);
-   } else
-   {
-       tsPcOwner.SetOwner(ship, marker);
-      iSim.SetFaction(iSim.Cast(ship), iSim.Faction(marker));
-   }
-
-
-   // Setup the trade properties for the seller. NB in this case owner = start_station
+   // Setup the trade properties for the seller. NB in this case owner = start_station/operation
    tsLRoot.SetId(ship, tsLRoot.GetId(owner));
    tsLTrade.Create(ship, seller_file, seller_type);
 
    // Add the ship to the global cull list
-   tsCull.AddSim(iSim.Cast(start_station), ship);
+   //tsCull.AddSim(iSim.Cast(start_station), ship);
 
    /*
    debug{
@@ -300,13 +393,188 @@ setup_trade_ship(hisim marker)
    */
    
    // finally place the sim in space at our marker
-   Sim.PlaceAt(ship, marker);
+   //Sim.PlaceAt(ship, marker);
    
    // We don't need the marker anymore if it is an internal on
-   if(is_internal)
-       Sim.Destroy(marker);
+   //if(is_internal)
+   //    Sim.Destroy(marker);
+   
+   Task.Detach(start ship_watch( cull_group ));
    
    debug Debug.PrintString("tsPcWeaponSeller.setup_trade_ship: End\n");
+}
+
+
+task ship_watch(hgroup seller_fleet)
+{
+   set nearby_ships, nearby_locations;
+   hship player;
+   hship seller;
+   hship ship;
+   hisim operation;
+   hmapentity station, new_station;
+   int timer;
+   eCSScriptState state;
+   float spacing;
+   hfaction seller_faction, ship_faction;
+   bool nearby_hostile;
+   bool debug_on = true;
+
+
+   // Get handles to the actual tanker and the operation
+   seller = iShip.Cast(Group.Leader(seller_fleet));
+   operation = iSim.Cast(tsPcOwner.Owner(seller));
+
+   // tanker faction and set initial state
+   seller_faction = iSim.Faction(seller);
+   state = eCS_Idle;
+
+   // Put the ships into formation. And give them guard orders.
+   // Any hostiles inside of 25km get shot. We use a smaller
+   // value than normal, because fences lurk on the edges of other
+   // stations. They don't like trouble.
+   spacing = iUtilities.GetLargestShipRadius( seller_fleet);
+   iEscort.Wedge( seller_fleet, spacing, 25km, true );
+
+   // Have any ships that dislike us come within 50km? Flee to a nearby non-dislike 
+   // station. Our escorts will tail along.
+
+   while (1) {
+      Task.Sleep(Task.Current(), 1.0);
+
+
+      if (tsCapsuleJump.IsCapsuleJumping()) {
+         state = change_state(state, eCS_Cull, debug_on);
+      }else {
+
+         player = iShip.FindPlayerShip();
+
+         if (Sim.IsDead(seller)) {
+            if (eCS_Cull != state) {
+               state = change_state(state, eCS_Dead, debug_on);
+            }
+         }else if (Sim.DistanceBetween(iShip.Cast(Group.Leader(seller_fleet)), player) > 
+                   tsDistance.CullingDistance()) {
+
+            ++timer;
+            if (timer > 30) {
+               state = change_state(state, eCS_Cull, debug_on);
+            }
+         }else {
+            timer = 0;
+         }
+      }
+
+      switch (state) {
+      case eCS_Init:
+         station = iHabitat.Nearest(iMapEntity.SystemHabitats(), seller);
+         state = change_state(state, eCS_Idle, debug_on);
+         break;
+      case eCS_Idle:
+
+         // Check for nearby ships. Are any of them dislike or lower?
+         nearby_ships = iSim.ShipsInRadius(seller, 50km);
+         nearby_hostile = false;
+
+         while (!Set.IsEmpty(nearby_ships)) {
+            ship = iShip.Cast(Set.FirstElement(nearby_ships));
+            Set.Remove(nearby_ships, ship);
+            ship_faction = iSim.Faction(ship);
+
+            // Are any of these ships dislike or lower?
+            if (iFaction.Feeling(ship_faction, seller_faction) < -0.2) {
+               nearby_hostile = true;
+            }
+         }
+
+         if (nearby_hostile) {
+            // Some bad guys have arrived, Run.
+            state = change_state(state, eCS_Flee, debug_on);
+         }
+
+         break;
+      case eCS_Flee:
+
+         // Pick a non-hostile station that is near.
+         nearby_locations = iMapEntity.SystemHabitats();
+         station = iHabitat.Nearest(nearby_locations, seller);
+         Set.Remove(nearby_locations, station);
+
+         new_station = iHabitat.Nearest(tsStationFilter.OnGreaterFeeling(nearby_locations,
+                                                                        seller_faction, 
+                                                                        -0.2), 
+                                                                 seller);
+
+         if (none == new_station) {
+            new_station = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), seller);
+         }
+
+         debug {
+            Debug.PrintHandle(new_station);
+            Debug.PrintString(" flee station target\n");
+         }
+
+         iAI.PurgeOrders(seller);
+         iAI.GiveApproachOrderAdvanced( seller,
+                                        new_station,
+                                        75km,
+                                        80km,
+                                        true);
+
+
+         // Move the operation to the target station.
+         tsLCenter.SetCenter(operation, new_station);
+
+         state = change_state(state, eCS_WaitApproach, debug_on);
+
+         break;
+      case eCS_WaitApproach:
+         // We are now running. If we return to no orders, we must be there.
+         // Go back to idle.
+         if (OT_None == iAI.CurrentOrderType(seller)) {
+            state = change_state(state, eCS_Idle, debug_on);
+         }
+
+         break;
+      case eCS_EscortOnly:
+         // We were attacked and lost the leader. Now we just wait here for the 
+         // fighting to end. The escorts have thier own orders.
+
+         break;
+      case eCS_Dead:
+         if (Sim.IsDead(seller)) {
+            Group.RemoveSim(seller_fleet, seller);
+         }
+
+         seller = iShip.Cast(Group.Leader(seller_fleet));
+
+         if (none == seller) {
+            state = change_state(state, eCS_Cull, debug_on);
+         }else {
+            state = change_state(state, eCS_EscortOnly, debug_on);
+         }
+         break;
+
+      case eCS_Cull:
+         // Player is far, or all the ships are dead. Set the last to allow
+         // culling and exit task.
+         iAI.PurgeOrders(seller_fleet);
+         ABB_Common.SetCullableGroup(seller_fleet, true);
+         Group.Destroy(seller_fleet, false);
+         debug atomic {
+            Debug.PrintString("tsPcWeaponSeller all ships culled, exit\n");
+         }
+
+         // Allow this operation to be physically created again.
+         tsFleetOp.SetCreated(operation, false);
+         return;
+
+         break;
+      default:
+         state = eCS_Init;
+         break;
+      }
+   }
 }
 
 
@@ -442,6 +710,110 @@ string type2comms(string seller_type)
 
     return "tsPcWeaponSeller.Comms";
 }
+
+
+
+
+
+/*
+
+The creation of escorts should be a utility function in tsShip
+as the base pattern repeats. Only have a special version where
+a special/non-standard escort is needed.
+
+*/
+// Don't call this until the fence has been placed into the game.
+create_escorts(hisim operation, hship fence, hgroup cull_group)
+{
+   float fleets, threat;
+   string escort_template;
+   hfaction faction = iSim.Faction(fence);
+   hinifile escort_file;
+   int i, total;
+   hship escort;
+
+   escort_template = tsShipCreation.GetShip(faction, EST_CombatLight);
+   escort_file = INIFile.Create(escort_template);
+
+   if (none == escort_file) {
+      debug Debug.PrintString("tsPcWaeponSeller.create_escort error escort ini file invalid\n");
+      return;
+   }
+
+   threat = INIFile.Float(escort_file,"Properties","threat", 40);
+   INIFile.Destroy(escort_file);
+
+   fleets = tsLFleet.Fleets(operation);
+
+   total = fleets/threat;
+
+   for (i=0;i<total;++i) {
+      escort = tsShip.Create(escort_template, tsShipName.ShipName("underworld",10000));
+
+      tsPilotSetup.SetupEscort(escort, 0.9, 0.5);
+
+      iSim.SetFaction(escort, faction);
+      Sim.SetCullable(escort, false);
+
+      Sim.PlaceRelativeTo(escort, fence, 2km, 0, 0);
+
+      iShip.Attacked(escort);
+      iShip.LastAttacker(escort);
+
+      tsPcOwner.SetOwner(escort, operation);
+
+      Group.AddSim(cull_group, escort);
+   }
+
+}
+
+
+eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool debug_on)
+{
+   if (debug_on) {
+      debug Debug.PrintString(String.FormatStrStr("tsPcTankerOp state change %s->%s\n",
+                                                  state2string(state),
+                                                  state2string(new_state)));
+   }
+
+   return new_state;
+}
+
+
+
+string state2string(eCSScriptState state)
+{
+   switch (state) {
+   case eCS_Init:
+      return "eCS_Init";
+      break;
+   case eCS_Idle:   
+      return "eCS_Idle";
+      break;
+   case eCS_Flee:   
+      return "eCS_Flee";
+      break;
+   case eCS_WaitApproach:   
+      return "eCS_WaitApproach";
+      break;
+   case eCS_EscortOnly:   
+      return "eCS_EscortOnly";
+      break;
+   case eCS_Dead:   
+      return "eCS_Dead";
+      break;
+   case eCS_Cull:   
+      return "eCS_Cull";
+      break;
+   default:
+      break;
+   }
+
+   return "eCS_Invalid";
+
+}
+
+
 
 /*   
 

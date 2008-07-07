@@ -44,7 +44,7 @@ uses    Sim,
         tsFleetOp,
         tsDistance,
         tsShipCreationEnum,
-tsShipCreation,
+        tsShipCreation,
         tsLFleet,
         tsPilotSetup,
         tsStationFilter,
@@ -76,6 +76,7 @@ prototype string Station2FenceAsk(int type);
 
 prototype create_escorts(hisim operation, hship fence, hgroup cull_group);
 
+prototype task fence_watch(hgroup fence_fleet);
 
 
 hsim PogCreate(string template_name, string object_name)
@@ -281,6 +282,8 @@ setup_fence_ship(hship ship)
    tsLRoot.SetId(fence_ship, tsLRoot.GetId(owner));
    tsLTrade.Create(fence_ship, fence_file, fence_type);
 
+   // watch the group created
+   Task.Detach(start fence_watch( cull_group ));
 
 }
 
@@ -381,8 +384,6 @@ task fence_watch(hgroup fence_fleet)
                                            75km,
                                            80km,
                                            true);
-
-
 
             state = EFS_Fleeing;
          }else {
