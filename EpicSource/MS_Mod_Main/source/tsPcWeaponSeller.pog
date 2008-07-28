@@ -9,6 +9,7 @@
 //
 // Updates:
 // 20-May-08 JW: Changed to pick ship template using tsShipCreation
+// 28-Jun-08 JW: Updated to use utility escort creation, tsFleetOp getter attribute functions
 //
 //******************************************************************************************/
 
@@ -20,11 +21,11 @@ uses    Sim,
         iSim,
         Debug,
         Global,
-        GUI,
-        iGUI,
-        iHUD,
+//        GUI,
+//        iGUI,
+//        iHUD,
         INIFile,
-        Input,
+//        Input,
         List,
         Object,
         String,
@@ -59,7 +60,8 @@ uses    Sim,
         tsDistance,
         tsCapsuleJump,
         tsCull,
-        tsShip;
+        tsShip,
+        tsShipEscort;
 //[cf]
 
 
@@ -87,8 +89,6 @@ prototype setup_trade_ship(hisim marker);
 prototype string type2comms(string seller_type);
 
 prototype task ship_watch(hgroup seller_fleet);
-
-prototype create_escorts(hisim operation, hship fence, hgroup cull_group);
 
 prototype eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool debug_on);
 
@@ -155,10 +155,9 @@ hsim PogCreate(string template_name, string object_name)
 }
 
 
-/*
-This function is called after the ship has been placed. 
-
-*/
+//
+//This function is called after the ship has been placed. 
+//
 task PogStart(hsim pog_object)
 {
    debug Debug.PrintString("tsPcWeaponSeller: starting\n");
@@ -211,15 +210,15 @@ comm_type=legal
 
 
 
-/*
-This code needs to be able to differentiate between being  called by
-with being passed a waypoint coming from this packages PogCreate
-or from an operation creation facility. The difference being we
-do NOT want to delete the operation waypoint.
-We use the 'internal' property existence to make that determination.
-
-Read the ini file, setup the object.
-*/
+//
+// This code needs to be able to differentiate between being  called by
+// with being passed a waypoint coming from this packages PogCreate
+// or from an operation creation facility. The difference being we
+// do NOT want to delete the operation waypoint.
+// We use the 'internal' property existence to make that determination.
+//
+// Read the ini file, setup the object.
+//
 setup_trade_ship(hisim marker)
 {
    hinifile control_file;
@@ -265,7 +264,7 @@ setup_trade_ship(hisim marker)
    // Read in the weapon seller control properties and the ship class to be created
    seller_file = INIFile.String(control_file, "Properties", "trade_file", "ini:/weapon_cargo");
    seller_type = INIFile.String(control_file, "Properties", "seller_type", "Civilian");
-   faction_ship_class = INIFile.String(control_file, "Properties", "faction_ship_class", "EST_FreightAll");
+   //faction_ship_class = INIFile.String(control_file, "Properties", "faction_ship_class", "EST_FreightAll");
 
    // get the comms attribute
    comms = INIFile.String(control_file, "Properties", "comm_type", "legal");
@@ -317,17 +316,18 @@ setup_trade_ship(hisim marker)
    // Set the operation to already have a physical representation.
    tsFleetOp.SetCreated(owner, true);
 
+   // determine what the ship template and name to use is.
    ship_template = tsFleetOp.ShipTemplate(owner);
    name = tsFleetOp.Name(owner);
    // create a ship sim
    ship = tsShip.Create(ship_template, name);
 
+   // if the ship creation failed then we destroy marker, set op to not created and bail
    if (ship == none) {
       debug Debug.PrintString("tsPcWeaponSeller.setup_trade_ship: ship failed to create\n");
       debug Debug.PrintString(ship_template);
       debug Debug.PrintString(" template\n");
       Sim.Destroy(marker);
-
       tsFleetOp.SetCreated(owner, false);
       return;
    }
@@ -366,7 +366,7 @@ setup_trade_ship(hisim marker)
    Sim.Destroy(marker);
 
    // create any escort if we need it
-   create_escorts(owner, ship, cull_group);
+   tsShipEscort.CreateStandardEscort(owner, ship, cull_group, "underworld", "EST_CombatLight");
 
    // Setup the comms tasks
    tsShipComms.AddComms(ship, type2comms(comms));
@@ -392,8 +392,6 @@ setup_trade_ship(hisim marker)
    }
    */
    
-   // finally place the sim in space at our marker
-   //Sim.PlaceAt(ship, marker);
    
    // We don't need the marker anymore if it is an internal on
    //if(is_internal)
@@ -404,7 +402,9 @@ setup_trade_ship(hisim marker)
    debug Debug.PrintString("tsPcWeaponSeller.setup_trade_ship: End\n");
 }
 
-
+//
+// Task to watch/manage the seller fleet.
+//
 task ship_watch(hgroup seller_fleet)
 {
    set nearby_ships, nearby_locations;
@@ -419,52 +419,61 @@ task ship_watch(hgroup seller_fleet)
    hfaction seller_faction, ship_faction;
    bool nearby_hostile;
    bool debug_on = true;
+   int react_distance = 25km;
 
 
    // Get handles to the actual tanker and the operation
    seller = iShip.Cast(Group.Leader(seller_fleet));
    operation = iSim.Cast(tsPcOwner.Owner(seller));
 
-   // tanker faction and set initial state
+   // seller faction and set initial state
    seller_faction = iSim.Faction(seller);
    state = eCS_Idle;
 
    // Put the ships into formation. And give them guard orders.
    // Any hostiles inside of 25km get shot. We use a smaller
-   // value than normal, because fences lurk on the edges of other
-   // stations. They don't like trouble.
+   // value than normal, because weapon sellers lurk on the edges of other
+   // stations. They don't like trouble. This makes it easier for them to flee
+   // without getting hung up on the stations FLT dampening field.
    spacing = iUtilities.GetLargestShipRadius( seller_fleet);
    iEscort.Wedge( seller_fleet, spacing, 25km, true );
 
-   // Have any ships that dislike us come within 50km? Flee to a nearby non-dislike 
+   // Have any ships that dislike us come within react_distance? Flee to a nearby non-dislike 
    // station. Our escorts will tail along.
 
    while (1) {
+      // pasue a second between situation checks
       Task.Sleep(Task.Current(), 1.0);
 
 
+      // Set-state processing logic
       if (tsCapsuleJump.IsCapsuleJumping()) {
+         // in capsule jump
          state = change_state(state, eCS_Cull, debug_on);
       }else {
-
+         // in normal space, get handle to player ship
          player = iShip.FindPlayerShip();
 
          if (Sim.IsDead(seller)) {
+            // trade ship (the leader) is dead
             if (eCS_Cull != state) {
+               // not in cull state so set state to dead
                state = change_state(state, eCS_Dead, debug_on);
             }
          }else if (Sim.DistanceBetween(iShip.Cast(Group.Leader(seller_fleet)), player) > 
                    tsDistance.CullingDistance()) {
-
+            // distance between player and fleet > culling distance for more than 30 secs
             ++timer;
             if (timer > 30) {
                state = change_state(state, eCS_Cull, debug_on);
             }
          }else {
+            // inside culling distance limit to set timer to 0
             timer = 0;
          }
       }
 
+      // State engine proper.  React to differnt states and move state on if needed
       switch (state) {
       case eCS_Init:
          station = iHabitat.Nearest(iMapEntity.SystemHabitats(), seller);
@@ -473,9 +482,10 @@ task ship_watch(hgroup seller_fleet)
       case eCS_Idle:
 
          // Check for nearby ships. Are any of them dislike or lower?
-         nearby_ships = iSim.ShipsInRadius(seller, 50km);
+         nearby_ships = iSim.ShipsInRadius(seller, react_distance);
          nearby_hostile = false;
 
+         // process through the set of ships witin react_distance
          while (!Set.IsEmpty(nearby_ships)) {
             ship = iShip.Cast(Set.FirstElement(nearby_ships));
             Set.Remove(nearby_ships, ship);
@@ -500,11 +510,15 @@ task ship_watch(hgroup seller_fleet)
          station = iHabitat.Nearest(nearby_locations, seller);
          Set.Remove(nearby_locations, station);
 
-         new_station = iHabitat.Nearest(tsStationFilter.OnGreaterFeeling(nearby_locations,
-                                                                        seller_faction, 
-                                                                        -0.2), 
-                                                                 seller);
+         // find a station to flee to
+         new_station = iHabitat.Nearest(
+                           tsStationFilter.OnGreaterFeeling(
+                                 nearby_locations,
+                                 seller_faction, 
+                                 -0.2), 
+                           seller);
 
+         // if we couldn't find a station to flee to then go to nearest L-point
          if (none == new_station) {
             new_station = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), seller);
          }
@@ -529,7 +543,7 @@ task ship_watch(hgroup seller_fleet)
 
          break;
       case eCS_WaitApproach:
-         // We are now running. If we return to no orders, we must be there.
+         // We are now running. If we return "no orders", we must be there.
          // Go back to idle.
          if (OT_None == iAI.CurrentOrderType(seller)) {
             state = change_state(state, eCS_Idle, debug_on);
@@ -715,57 +729,6 @@ string type2comms(string seller_type)
 
 
 
-/*
-
-The creation of escorts should be a utility function in tsShip
-as the base pattern repeats. Only have a special version where
-a special/non-standard escort is needed.
-
-*/
-// Don't call this until the fence has been placed into the game.
-create_escorts(hisim operation, hship fence, hgroup cull_group)
-{
-   float fleets, threat;
-   string escort_template;
-   hfaction faction = iSim.Faction(fence);
-   hinifile escort_file;
-   int i, total;
-   hship escort;
-
-   escort_template = tsShipCreation.GetShip(faction, EST_CombatLight);
-   escort_file = INIFile.Create(escort_template);
-
-   if (none == escort_file) {
-      debug Debug.PrintString("tsPcWaeponSeller.create_escort error escort ini file invalid\n");
-      return;
-   }
-
-   threat = INIFile.Float(escort_file,"Properties","threat", 40);
-   INIFile.Destroy(escort_file);
-
-   fleets = tsLFleet.Fleets(operation);
-
-   total = fleets/threat;
-
-   for (i=0;i<total;++i) {
-      escort = tsShip.Create(escort_template, tsShipName.ShipName("underworld",10000));
-
-      tsPilotSetup.SetupEscort(escort, 0.9, 0.5);
-
-      iSim.SetFaction(escort, faction);
-      Sim.SetCullable(escort, false);
-
-      Sim.PlaceRelativeTo(escort, fence, 2km, 0, 0);
-
-      iShip.Attacked(escort);
-      iShip.LastAttacker(escort);
-
-      tsPcOwner.SetOwner(escort, operation);
-
-      Group.AddSim(cull_group, escort);
-   }
-
-}
 
 
 eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool debug_on)
