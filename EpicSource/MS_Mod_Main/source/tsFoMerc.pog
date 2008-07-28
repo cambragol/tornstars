@@ -82,22 +82,9 @@ New(hisim operation)
 {
    string ship_name, ship_template, op_type, ship_class;
    hfaction faction;
-   hinifile op_data = INIFile.Create("ini:/metagame_production");
-   int fleets;
 
-   if (none == op_data) {
-      debug Debug.PrintString("tsFoMerc.New error cannot open metagame_production.ini\n");
-      return;
-   }
 
-   op_type = tsEconUtil.StationIntToString(tsLProduction.GetType(operation));
-
-   fleets = INIFile.Int(op_data, op_type, "max_fleets", 200);
-
-   ship_class = INIFile.String(op_data, op_type, "ship_class", "EST_CombatHeavy");
-
-   INIFile.Destroy(op_data);
-
+   ship_class = tsFleetOp.GetOperationShipClass(operation);
 
    faction = iSim.Faction(operation);
 
@@ -111,8 +98,8 @@ New(hisim operation)
    tsFleetOp.SetName(operation, ship_name);
    tsFleetOp.SetShipTemplate(operation, ship_template);
 
-   tsLFleet.SetMaxFleets(operation, fleets);
-   tsLFleet.SetFleets(operation, fleets);
+   tsLFleet.SetMaxFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
+   tsLFleet.SetFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
 
 }
 

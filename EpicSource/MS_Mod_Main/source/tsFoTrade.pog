@@ -98,15 +98,7 @@ New(hisim operation)
    // using a large number means we get a random name.
    ship_name = tsShipName.ShipName("general", 10000);
 
-   // Get the ship faction template
-   env_file_name = tsFleetOp.GetOperationEnvFoTemplate(operation);
-
-   ini_file = INIFile.Create(env_file_name);
-   if(none == ini_file) {
-      Debug.PrintString(  String.FormatStrStr("tsFoTanker.New: ERROR: %s not opened. Defaults taken.\n",env_file_name,"") );
-   }
-   ship_class = INIFile.NumberedString(ini_file, "Items", "faction_ship_class", 0, "EST_FreightAll");
-   INIFile.Destroy(ini_file);
+   ship_class = tsFleetOp.GetOperationShipClass(operation);
 
    // Get the ship template based on faction
    ship_template = tsShipCreation.GetShip(faction, tsShipCreation.String2ShipType(ship_class));
@@ -119,8 +111,8 @@ New(hisim operation)
 
    // This is a Trade op, so we set enough fleets for the 
    // freighter and 'x' tug escorts. Fleets use threat value for points.
-   tsLFleet.SetFleets(operation, 200);
-   tsLFleet.SetMaxFleets(operation, 200);
+   tsLFleet.SetFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
+   tsLFleet.SetMaxFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
 }
 
 

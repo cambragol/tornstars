@@ -95,8 +95,8 @@ New(hisim operation)
 
    // This is an protection op, so we set enough fleets for the 
    // freighter and 2 tugs escort. Fleets use threat value for points.
-   tsLFleet.SetFleets(operation, 400);
-   tsLFleet.SetMaxFleets(operation, 400);
+   tsLFleet.SetFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
+   tsLFleet.SetMaxFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
 }
 
 

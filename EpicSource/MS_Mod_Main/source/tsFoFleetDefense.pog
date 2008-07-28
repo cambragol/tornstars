@@ -83,22 +83,9 @@ New(hisim operation)
 {
    string ship_name, ship_template, op_type, ship_class;
    hfaction faction;
-   hinifile op_data = INIFile.Create("ini:/metagame_production");
-   int fleets;
 
-   if (none == op_data) {
-      debug Debug.PrintString("tsFoFleetDefense.New error cannot open metagame_production.ini\n");
-      return;
-   }
 
-   op_type = tsEconUtil.StationIntToString(tsLProduction.GetType(operation));
-
-   fleets = INIFile.Int(op_data, op_type, "max_fleets", 600);
-
-   ship_class = INIFile.String(op_data, op_type, "ship_class", "EST_CombatHeavy");
-
-   INIFile.Destroy(op_data);
-
+   ship_class = tsFleetOp.GetOperationShipClass(operation);
 
    faction = iSim.Faction(operation);
 
@@ -115,8 +102,8 @@ New(hisim operation)
    // The defense forces want to be found. Flashing red lights and all.
    tsFleetOp.SetKnown(operation, true);
 
-   tsLFleet.SetFleets(operation, fleets);
-   tsLFleet.SetMaxFleets(operation, fleets);
+   tsLFleet.SetFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
+   tsLFleet.SetMaxFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
 }
 
 

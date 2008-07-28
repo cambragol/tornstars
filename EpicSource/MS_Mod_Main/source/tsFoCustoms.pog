@@ -93,8 +93,8 @@ New(hisim operation)
    tsFleetOp.SetName(operation, ship_name);
    tsFleetOp.SetShipTemplate(operation, ship_template);
 
-   tsLFleet.SetMaxFleets(operation, 200);
-   tsLFleet.SetFleets(operation, 200);
+   tsLFleet.SetMaxFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
+   tsLFleet.SetFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
 }
 
 

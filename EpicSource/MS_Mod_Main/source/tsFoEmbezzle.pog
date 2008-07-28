@@ -97,8 +97,8 @@ New(hisim operation)
 
    // This is an embezzle op, so we set enough fleets for the 
    // freighter and 2 tugs escort. Fleets use threat value for points.
-   tsLFleet.SetFleets(operation, 200);
-   tsLFleet.SetMaxFleets(operation, 200);
+   tsLFleet.SetFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
+   tsLFleet.SetMaxFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
 }
 
 
