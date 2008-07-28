@@ -98,13 +98,13 @@ prototype hship create_leader (hmapentity location,
                                hgroup cull_group,
                                string ship_type);
 
-
+/*
 prototype create_escorts(hisim operation, 
                           int fleets, 
                           hship leader, 
                           hgroup cull_group,
                           string ship_type);
-
+*/
 
 prototype set filter_feeling(set ships, 
                              hfaction faction, 
@@ -331,7 +331,8 @@ setup_guards(hisim marker)
    fleets = fleets - Object.FloatProperty(patrol_ship, "threat");
 
    // Create escorts with the remaining fleet value.
-   create_escorts(owner, fleets, patrol_ship, patrol_group, escort_type);
+   //create_escorts(owner, fleets, patrol_ship, patrol_group, escort_type);
+   //tsShip.CreateEscorts(owner, patrol_ship, patrol_group, "government", escort_type);
 
    // Launch the toll controller task.
    Task.Detach(start guard_controller(location, owner, patrol_group));
@@ -806,7 +807,7 @@ hship create_leader (hmapentity location, hisim operation, hgroup cull_group, st
 // Create escorts in the fleet using the tsShipCreation system
 // The escrot ship class type is always taken from the pog class ini file
 //[of]:create_escorts(hisim operation, int fleets, hship leader, hgroup cull_group, string ship_type)
-create_escorts(hisim operation, int fleets, hship leader, hgroup cull_group, string ship_type)
+/*create_escorts(hisim operation, int fleets, hship leader, hgroup cull_group, string ship_type)
 {
    float threat;
    string escort_template;
@@ -852,7 +853,7 @@ create_escorts(hisim operation, int fleets, hship leader, hgroup cull_group, str
       Group.AddSim(cull_group, escort);
    }
 
-}
+}*/
 //[cf]
 
 

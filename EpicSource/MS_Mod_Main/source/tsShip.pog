@@ -45,7 +45,13 @@ uses	 Sim,
 		CargoTypes,
 		iMultiplay,
 		
-
+      //tsShipCreationEnum,
+      //tsShipCreation,
+      //tsLFleet,
+      //tsShipName,
+      //tsPilotSetup,
+      //tsPcOwner,
+      
 		tsStationEnum,
       tsShipEnum,
 		tsEconUtil,
@@ -374,6 +380,8 @@ hship Create(string ini_file, string name)
 
    return ship; 
 }
+
+
 
 // Read in the INI file, attach the properties to the ship.
 ReadIniFile(hship ship)
