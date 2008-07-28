@@ -60,6 +60,8 @@ provides
    GetOperationType,
    GetOperationPog,
    GetOperationEnvFoTemplate,
+   GetOperationMaxFleets,
+   GetOperationShipClass,
 	Find,
 	SetKnown,
 	IsKnown,
@@ -407,24 +409,35 @@ bool IsOperation(hisim operation)
 }
 
 
+// Return the operation type
 int GetOperationType(hisim operation)
 {
    return tsLProduction.GetType(operation);
 }
 
+// Return the environment template name associated with the operation
 string GetOperationEnvFoTemplate(hisim operation)
 {
    return Object.StringProperty(operation, "gtOpEnvFoTemplate");
 }
 
+// Return the operation pog as a string
 string GetOperationPog(hisim operation)
 {
    return Object.StringProperty(operation, "gtOpPog");
 }
 
+// Return the primary ship class for the operations lead ship
 string GetOperationShipClass(hisim operation)
 {
    return Object.StringProperty(operation, "gtOpShipClass");
+}
+
+// Return the max fleet value for the operation as defined
+// for the operation in the metagame_production.ini
+int GetOperationMaxFleets(hisim operation)
+{
+   return Object.IntProperty(operation, "gtOpMaxFleets");
 }
 
 
@@ -451,15 +464,16 @@ hisim NewOp(int op_type,
 
    operation = Create(id, faction, false, 1);
 
-   // get/set specific details on the operation to be used consistently later
+   // get & set specific details on the operation to be used consistently later
    env_fo_template = INIFile.NumberedString( operation_defn_file, tsEconUtil.StationIntToString(op_type), "ESS_Normal", 0, "ERROR");
    operation_pog = INIFile.NumberedString( operation_defn_file, tsEconUtil.StationIntToString(op_type), "operation_pog", 0, "none");
    main_ship_class = INIFile.String( operation_defn_file, tsEconUtil.StationIntToString(op_type), "ship_class", "none");
+   max_fleets = INIFile.Int(operation_defn_file, tsEconUtil.StationIntToString(op_type), "max_fleets",0);
    Object.AddStringProperty(operation, "gtOpEnvFoTemplate", env_fo_template);
    Object.AddStringProperty(operation, "gtOpPog", operation_pog);
    Object.AddStringProperty(operation, "gtOpShipClass", main_ship_class);
+   Object.AddIntProperty(operation, "gtOpMaxFleets", max_fleets);
 
-   max_fleets = INIFile.Int(operation_defn_file, tsEconUtil.StationIntToString(op_type), "max_fleets",0);
 
    // sets up the production center and sets some key values against it e.g. operation type
    // tsLProduction.Create(hisim producer, int type, int funds, int loss, int loans, bool active)
@@ -468,11 +482,8 @@ hisim NewOp(int op_type,
    // tsLFleet.Create(hisim producer, int fleets, int supplies, int max_fleets, int max_supplies)
    tsLFleet.Create(operation, max_fleets, 200, max_fleets, 200);
    
-   
-   
    // finish with the ini file.
    INIFile.Destroy(operation_defn_file);
-
 
    // New operations are created at thier owner station.
    SetSupporter(operation, iHabitat.Cast(center));
