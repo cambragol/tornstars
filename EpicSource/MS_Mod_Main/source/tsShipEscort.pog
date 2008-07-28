@@ -1,0 +1,110 @@
+//*****************************************************************************/
+//
+// tsShipEscort.pog
+//
+// This module also provides utility functions for the creation of
+// ship escort groups. From basic form to more complex.
+// 
+//
+// July 2008, James Walker
+//****************************************************************************/
+
+package	tsShipEscort;
+
+
+uses
+	Debug,
+//	String,
+	INIFile,
+//	List,
+//	Set,
+//	Global,
+   Sim,
+   iSim,
+	iShip,
+	iFaction,
+//	Math,
+	Group,
+   tsShipCreationEnum,
+//   iUtilities,
+//   tsFaction,
+   tsShip,
+   tsShipName,
+   tsPcOwner,
+   tsLFleet,
+   tsPilotSetup,
+   tsShipCreation;
+
+
+	
+provides CreateStandardEscort;
+
+
+
+
+//
+// Prototypes
+//
+
+
+
+/*
+operation: owning object for this escort.
+leader: the lead ship in the group.
+cull_group: the group the escort is added to.
+ship_name_group: the naming group to use for random name generation
+*/
+CreateStandardEscort(hisim operation, hship leader, hgroup cull_group, string ship_name_group, string ship_type)
+{
+   float fleets, threat;
+   string escort_template;
+   hinifile escort_file;
+   int i, total;
+   hship escort;
+   hfaction faction = iSim.Faction(leader);
+   
+   debug Debug.PrintString("tsShip.CreateEscorts: Start\n");
+   escort_template = tsShipCreation.GetShip(faction, tsShipCreation.String2ShipType(ship_type));
+   escort_file = INIFile.Create(escort_template);
+
+   if (none == escort_file) {
+      debug Debug.PrintString("tsShip.CreateEscorts error escort ini file invalid\n");
+      return;
+   }
+
+   threat = INIFile.Float(escort_file,"Properties","threat", 40);
+   INIFile.Destroy(escort_file);
+
+   fleets = tsLFleet.Fleets(operation);
+
+   total = fleets/threat;
+   
+   debug {
+   Debug.PrintString("tsShip.CreateEscorts: fleets=");
+   Debug.PrintFloat(fleets);
+   Debug.PrintString("\n");
+   Debug.PrintString("tsShip.CreateEscorts: threat=");
+   Debug.PrintFloat(threat);
+   Debug.PrintString("\n");   
+   }
+
+   for (i=0;i<total;++i) {
+      escort = tsShip.Create(escort_template, tsShipName.ShipName(ship_name_group,10000));
+
+      tsPilotSetup.SetupEscort(escort, 0.9, 0.5);
+
+      iSim.SetFaction(escort, faction);
+      Sim.SetCullable(escort, false);
+
+      Sim.PlaceRelativeTo(escort, leader, 2km, 0, 0);
+
+      iShip.Attacked(escort);
+      iShip.LastAttacker(escort);
+
+      tsPcOwner.SetOwner(escort, operation);
+      
+      Group.AddSim(cull_group, escort);
+   }
+
+   debug Debug.PrintString("tsShip.CreateEscorts: End\n");
+}

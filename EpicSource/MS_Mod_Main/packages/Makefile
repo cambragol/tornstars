@@ -95,6 +95,7 @@ PACKAGES = ECargoTypes.pkg \
 	tsFactionGui.pkg \
 	tsShip.pkg \
 	tsShipDeath.pkg \
+	tsShipEscort.pkg \
 	tsGui.pkg \
 	tsNavGui.pkg \
 	tsMoney.pkg \
