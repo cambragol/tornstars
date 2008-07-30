@@ -59,7 +59,8 @@ uses    Sim,
         tsEvent,
         tsDistress,
         tsPcOwner,
-        tsShip;
+        tsShip,
+        tsShipEscort;
 //[cf]
 
 
@@ -333,6 +334,9 @@ setup_guards(hisim marker)
    // Create escorts with the remaining fleet value.
    //create_escorts(owner, fleets, patrol_ship, patrol_group, escort_type);
    //tsShip.CreateEscorts(owner, patrol_ship, patrol_group, "government", escort_type);
+   // create any escort if we need it
+   tsShipEscort.CreateStandardEscort(owner, patrol_ship, patrol_group, "government", escort_type);
+
 
    // Launch the toll controller task.
    Task.Detach(start guard_controller(location, owner, patrol_group));

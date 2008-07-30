@@ -59,7 +59,8 @@ uses    Sim,
         tsCapsuleJump,
         tsCull,
         tsShip,
-        tsPlayerFleet;
+        tsPlayerFleet,
+        tsShipEscort;
 //[cf]
 
 
@@ -97,7 +98,7 @@ prototype task tanker_watch(hgroup tanker_fleet);
 prototype task fuel_list(hship ship, float fuel_cost, list target_list);
 
 
-prototype create_escorts(hisim operation, hship tanker, hgroup cull_group);
+//prototype create_escorts(hisim operation, hship tanker, hgroup cull_group);
 
 prototype eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool debug_on);
 
@@ -298,8 +299,10 @@ setup_tanker_ship(hisim marker)
    Sim.Destroy(marker);
 
    // create any escort if we need it
-   create_escorts(owner, tanker_ship, cull_group);
-
+   //create_escorts(owner, tanker_ship, cull_group);
+   // create any escort if we need it
+   tsShipEscort.CreateStandardEscort(owner, tanker_ship, cull_group, "general", "EST_CombatLight");
+   
    // Define the comms function
    comm_function = "tsPcTankerOp.TankerComms";
 
@@ -801,6 +804,7 @@ string Station2FenceAsk(int type)
 
 
 // Don't call this until the tanker has been placed into the game.
+/*
 create_escorts(hisim operation, hship tanker, hgroup cull_group)
 {
    int threat, fleets;
@@ -858,7 +862,7 @@ create_escorts(hisim operation, hship tanker, hgroup cull_group)
       Group.AddSim(cull_group, escort);
    }
 }
-
+*/
 
 eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool debug_on)
 {

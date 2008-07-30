@@ -51,7 +51,8 @@ uses    Sim,
         tsDistance,
         tsCapsuleJump,
         tsCull,
-        tsShip;
+        tsShip,
+        tsShipEscort;
 
 
 provides PogCreate,
@@ -248,7 +249,9 @@ setup_fence_ship(hship ship)
       // Now we get rid of the prior created ship.
       Sim.Destroy(ship);
 
-      create_escorts(owner, fence_ship, cull_group);
+      //create_escorts(owner, fence_ship, cull_group);
+      // create any escort if we need it
+      tsShipEscort.CreateStandardEscort(owner, fence_ship, cull_group, "underworld", "EST_CombatLight");
 
    }else {
       fence_ship = ship;
