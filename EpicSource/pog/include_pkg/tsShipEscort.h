@@ -18,5 +18,7 @@
 
 prototype tsShipEscort.CreateStandardEscort( hisim operation, hship leader, hgroup cull_group, string ship_name_group, string ship_type );
 
+prototype tsShipEscort.CreateMixedEscort( hisim operation, hship leader, hgroup cull_group, string ship_name_group, int fighter_ships, int light_ships, int heavy_ships, int capital_ships );
+
 // EOF /////////////////////////////////////////////////////////////////////////
 

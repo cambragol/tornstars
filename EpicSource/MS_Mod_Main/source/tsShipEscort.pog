@@ -36,8 +36,9 @@ uses
    tsShipCreation;
 
 
-	
-provides CreateStandardEscort;
+
+provides
+   CreateStandardEscort;
 
 
 
@@ -54,7 +55,13 @@ leader: the lead ship in the group.
 cull_group: the group the escort is added to.
 ship_name_group: the naming group to use for random name generation
 */
-CreateStandardEscort(hisim operation, hship leader, hgroup cull_group, string ship_name_group, string ship_type)
+CreateStandardEscort(
+                     hisim    operation,
+                     hship    leader,
+                     hgroup   cull_group,
+                     string   ship_name_group,
+                     string   ship_type
+                     )
 {
    float fleets, threat;
    string escort_template;
@@ -108,3 +115,112 @@ CreateStandardEscort(hisim operation, hship leader, hgroup cull_group, string sh
 
    debug Debug.PrintString("tsShip.CreateEscorts: End\n");
 }
+
+
+
+/*
+CreateMixedEscort :- Used to create custom escort groups in a standard way.
+
+operation: owning object for this escort.
+leader: the lead ship in the group.
+cull_group: the group the escort is added to.
+ship_name_group: the naming group to use for random name generation
+fighter_ships: number of fighters to create
+light_ships: number of light ships to create
+heavy_ships: number of heavy ships to create
+capital_ships: number of capital ships to create
+*/
+CreateMixedEscort(
+                  hisim    operation,
+                  hship    leader,
+                  hgroup   cull_group,
+                  string   ship_name_group,
+                  int      fighter_ships,
+                  int      light_ships,
+                  int      heavy_ships,
+                  int      capital_ships
+                  )
+ {
+   float fleets, threat;
+   string escort_template;
+   string ship_type;
+   hinifile escort_file;
+   int i, sizeloop, total, try_to_make_num_ships;
+   hship escort;
+   hfaction faction = iSim.Faction(leader);
+   
+   debug Debug.PrintString("tsShip.CreateMixedEscort: Start\n");
+
+   for(sizeloop=0;sizeloop<4;++sizeloop)
+   {
+      // Determine ship type to use for this loop
+      switch(sizeloop)
+      {
+         case 0:
+            ship_type = "EST_CombatFighter";
+            try_to_make_num_ships = fighter_ships;
+            break;
+         case 1:
+            ship_type = "EST_CombatLight";
+            try_to_make_num_ships = light_ships;
+            break;
+         case 2:
+            ship_type = "EST_CombatHeavy";
+            try_to_make_num_ships = heavy_ships;
+            break;
+         case 3:
+            ship_type = "EST_CombatCaptial";
+            try_to_make_num_ships = capital_ships;
+            break;
+      }
+      
+      if(try_to_make_num_ships > 0 )
+      {
+         // for the ship type and if number to make > 0 determine
+         // template file, threat and total to make based on available fleets on the operation
+         escort_template = tsShipCreation.GetShip(faction, tsShipCreation.String2ShipType(ship_type));
+         escort_file = INIFile.Create(escort_template);
+
+         if (none == escort_file) {
+            debug Debug.PrintString("tsShip.CreateMixedEscort error escort ini file invalid\n");
+            return;
+         }
+
+         threat = INIFile.Float(escort_file,"Properties","threat", 40);
+         INIFile.Destroy(escort_file);
+
+         fleets = tsLFleet.Fleets(operation);
+         total = fleets/threat;
+         
+         debug {
+            Debug.PrintString("tsShip.CreateMixedEscort: fleets=");
+            Debug.PrintFloat(fleets);
+            Debug.PrintString("\n");
+            Debug.PrintString("tsShip.CreateMixedEscort: threat=");
+            Debug.PrintFloat(threat);
+            Debug.PrintString("\n");   
+         }
+         
+         for (i=0;i<total;++i) {
+            escort = tsShip.Create(escort_template, tsShipName.ShipName(ship_name_group,10000));
+
+            tsPilotSetup.SetupEscort(escort, 0.9, 0.5);
+
+            iSim.SetFaction(escort, faction);
+            Sim.SetCullable(escort, false);
+
+            Sim.PlaceRelativeTo(escort, leader, 2km, 0, 0);
+
+            iShip.Attacked(escort);
+            iShip.LastAttacker(escort);
+
+            tsPcOwner.SetOwner(escort, operation);
+            
+            Group.AddSim(cull_group, escort);
+         }
+      }
+   }
+
+   debug Debug.PrintString("tsShip.CreateMixedEscort: End\n");
+ }
+
