@@ -1,9 +1,9 @@
 //
 // (c) 1998-9 Particle Systems Ltd. All Rights Reserved
 //
-// tsShipCreation.h
+// tsPcMerc.h
 //
-// Compiler-generated export header for package "tsShipCreation"
+// Compiler-generated export header for package "tsPcMerc"
 //
 // Revision control information:
 //
@@ -16,9 +16,9 @@
 
 // Functions ///////////////////////////////////////////////////////////////////
 
-prototype tsShipEscort.CreateStandardEscort( hisim operation, hship leader, hgroup cull_group, string ship_name_group, string ship_type );
+prototype hsim tsPcMerc.PogCreate( string template_name, string object_name );
 
-prototype tsShipEscort.CreateMixedEscort( hisim operation, hship leader, hgroup cull_group, string ship_name_group, bool use_maxfleets, int fighter_ships, int light_ships, int heavy_ships, int capital_ships );
+prototype task tsPcMerc.PogStart( hsim pog_object );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

@@ -51,7 +51,8 @@ uses  Sim,
    tsFoConstruction,
    tsFoTanker,
    tsFoTrade,
-   tsFoArmsDealer;
+   tsFoArmsDealer,
+   tsFoMerc;
 
 
 // Exports
@@ -100,6 +101,8 @@ hisim New(int operation_type, hfaction faction, hmapentity center)
    case ept_StationRepairOp: tsFoConstruction.New(operation);break;
    
    case ept_ArmsDealerOp: tsFoArmsDealer.New(operation);break;
+   case ept_MercOp: tsFoMerc.New(operation);break;
+
 
    default:
       debug {
@@ -138,6 +141,7 @@ Save(hisim operation)
    case ept_StationRepairOp: tsFoConstruction.Save(operation);break;
 
    case ept_ArmsDealerOp: tsFoArmsDealer.Save(operation);break;
+   case ept_MercOp: tsFoMerc.Save(operation);break;
 
 
    default:
@@ -175,6 +179,7 @@ Restore(hisim operation)
    case ept_StationRepairOp: tsFoConstruction.Restore(operation);break;
 
    case ept_ArmsDealerOp: tsFoArmsDealer.Restore(operation);break;
+   case ept_MercOp: tsFoMerc.Restore(operation);break;
 
 
    default:
@@ -212,6 +217,7 @@ Update(hisim operation)
    case ept_StationRepairOp: tsFoConstruction.Update(operation);break;
 
    case ept_ArmsDealerOp: tsFoArmsDealer.Update(operation);break;
+   case ept_MercOp: tsFoMerc.Update(operation);break;
 
 
    default:
@@ -252,6 +258,7 @@ PlayerNear(hisim operation)
    //case ept_StationRepairOp: tsFoConstruction.PlayerNear(operation);break;
 
    case ept_ArmsDealerOp: tsFoArmsDealer.PlayerNear(operation);break;
+   case ept_MercOp: tsFoMerc.PlayerNear(operation);break;
 
 
    default:

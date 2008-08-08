@@ -1,9 +1,9 @@
 //
 // (c) 1998-9 Particle Systems Ltd. All Rights Reserved
 //
-// tsShipCreation.h
+// tsFoMerc.h
 //
-// Compiler-generated export header for package "tsShipCreation"
+// Compiler-generated export header for package "tsFoMerc"
 //
 // Revision control information:
 //
@@ -16,9 +16,15 @@
 
 // Functions ///////////////////////////////////////////////////////////////////
 
-prototype tsShipEscort.CreateStandardEscort( hisim operation, hship leader, hgroup cull_group, string ship_name_group, string ship_type );
+prototype tsFoMerc.New( hisim operation );
 
-prototype tsShipEscort.CreateMixedEscort( hisim operation, hship leader, hgroup cull_group, string ship_name_group, bool use_maxfleets, int fighter_ships, int light_ships, int heavy_ships, int capital_ships );
+prototype tsFoMerc.Save( hisim operation );
+
+prototype tsFoMerc.Restore( hisim operation );
+
+prototype tsFoMerc.Update( hisim operation );
+
+prototype tsFoMerc.PlayerNear( hisim operation );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

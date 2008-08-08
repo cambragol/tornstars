@@ -38,7 +38,8 @@ uses
 
 
 provides
-   CreateStandardEscort;
+   CreateStandardEscort,
+   CreateMixedEscort;
 
 
 
@@ -125,6 +126,7 @@ operation: owning object for this escort.
 leader: the lead ship in the group.
 cull_group: the group the escort is added to.
 ship_name_group: the naming group to use for random name generation
+use_maxfleets: boolean to honour the use of fleets/threats ratio
 fighter_ships: number of fighters to create
 light_ships: number of light ships to create
 heavy_ships: number of heavy ships to create
@@ -135,6 +137,7 @@ CreateMixedEscort(
                   hship    leader,
                   hgroup   cull_group,
                   string   ship_name_group,
+                  bool     use_maxfleets,
                   int      fighter_ships,
                   int      light_ships,
                   int      heavy_ships,
@@ -174,6 +177,12 @@ CreateMixedEscort(
             break;
       }
       
+      debug {
+      Debug.PrintString("Creating ship type: ");
+      Debug.PrintString(ship_type);
+      Debug.PrintString("/n");
+      }
+      
       if(try_to_make_num_ships > 0 )
       {
          // for the ship type and if number to make > 0 determine
@@ -190,7 +199,10 @@ CreateMixedEscort(
          INIFile.Destroy(escort_file);
 
          fleets = tsLFleet.Fleets(operation);
-         total = fleets/threat;
+         if(use_maxfleets)
+            total = fleets/threat;
+         else
+            total = try_to_make_num_ships;
          
          debug {
             Debug.PrintString("tsShip.CreateMixedEscort: fleets=");

@@ -375,6 +375,8 @@ enum eProductionType
    
    ept_TradeOp = 147,
 	
-	ept_ArmsDealerOp = 148 
+	ept_ArmsDealerOp = 148,
+	
+	ept_MercOp = 149 
 
 };	

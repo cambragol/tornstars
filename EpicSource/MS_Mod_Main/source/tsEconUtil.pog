@@ -207,6 +207,7 @@ string StationIntToString(int type)
    case ept_TankerOp : return "HT_TankerOp"; break;
    case ept_TradeOp : return "HT_TradeOp"; break;
    case ept_ArmsDealerOp : return "HT_ArmsDealerOp"; break;
+   case ept_MercOp : return "HT_MercOp"; break;
 
    default:
       debug Debug.PrintString("tsEconUtil.StationIntToString Invalid station type ");
@@ -659,6 +660,9 @@ int StationStringToEnum(string instring)
    }
    if ( "HT_ArmsDealerOp" == instring ) {
       return ept_ArmsDealerOp;
+   }
+   if ( "HT_MercOp" == instring ) {
+      return ept_MercOp;
    }
 
    debug Debug.PrintString("tsEconUtil.StationStringToEnum Invalid string :");

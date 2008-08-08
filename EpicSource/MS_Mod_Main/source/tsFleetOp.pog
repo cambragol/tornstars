@@ -620,6 +620,12 @@ string Operation2String(int op_type)
       return "Arms Dealer Operation";
       break;
 
+   // Designed to support the player so they can hire wingmen
+   case ept_MercOp:
+      return "Mercenary Operation";
+      break;
+
+
    // Creates a black market importer/exporter into the station.
    // Hides just outside of station range, and deals in goods with
    // the criminal element at marked up prices.

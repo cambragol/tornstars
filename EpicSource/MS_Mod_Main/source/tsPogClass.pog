@@ -44,7 +44,8 @@ uses    Sim,
         tsPcEmbezzleOp,
         tsPcWreckBelt,
         tsPcCargoShip,
-        tsPcTankerOp;
+        tsPcTankerOp,
+        tsPcMerc;
 //[cf]
 
 
@@ -152,6 +153,8 @@ hsim Create(string template_name, string object_name)
       item = iSim.Cast(tsPcTankerOp.PogCreate(template_name, object_name));
    }else if ("tsPcCargoShip" == pog_function){
       item = iSim.Cast(tsPcCargoShip.PogCreate(template_name, object_name));
+   }else if ("tsPcMerc" == pog_function){
+      item = iSim.Cast(tsPcMerc.PogCreate(template_name, object_name));
    }else if ("none" == pog_function){
       item = Sim.Create(template_name, object_name);
    }else {
@@ -214,6 +217,8 @@ Start(hsim pog_object)
       Task.Detach(start tsPcTankerOp.PogStart(pog_object));
    }else if ("tsPcCargoShip" == pog_start){
       Task.Detach(start tsPcCargoShip.PogStart(pog_object));
+   }else if ("tsPcMerc" == pog_start){
+      Task.Detach(start tsPcMerc.PogStart(pog_object));
    }else {
       debug {
          Debug.PrintString("tsPogClass.Start Error pog class invalid\n");

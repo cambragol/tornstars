@@ -124,6 +124,7 @@ PACKAGES = ECargoTypes.pkg \
 	tsPcFenceShip.pkg \
 	tsPcGuards.pkg \
 	tsPcHiredShip.pkg \
+	tsPcMerc.pkg \
 	tsPcOwner.pkg \
 	tsPcPirateToll.pkg \
 	tsPcPodScrapper.pkg \

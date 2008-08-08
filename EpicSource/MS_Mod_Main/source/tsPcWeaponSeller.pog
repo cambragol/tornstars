@@ -274,15 +274,12 @@ setup_trade_ship(hisim marker)
 
    // debug display what faction we will set the ship to
    debug {
-   Debug.PrintString("tsPcWeaponSeller.setup_trade_ship: fation = ");
+   Debug.PrintString("tsPcWeaponSeller.setup_trade_ship: faction = ");
    Debug.PrintHandle(station_faction);
    Debug.PrintString(" <-- ");
    Debug.PrintString(tsFaction.EName(station_faction));
    Debug.PrintString("\n");
    }
-
-
-
 
 
    // The first thing we do is learn if this marker is to represent an operation.
@@ -366,8 +363,8 @@ setup_trade_ship(hisim marker)
    Sim.Destroy(marker);
 
    // create any escort if we need it
-   tsShipEscort.CreateStandardEscort(owner, ship, cull_group, "underworld", "EST_CombatLight");
- /*
+//   tsShipEscort.CreateStandardEscort(owner, ship, cull_group, "underworld", "EST_CombatLight");
+/*
    tsShipEscort.CreateMixedEscort(
                   hisim    operation,
                   hship    leader,
@@ -379,6 +376,20 @@ setup_trade_ship(hisim marker)
                   int      capital_ships
                   );
 */
+   tsShipEscort.CreateMixedEscort(
+                  owner,
+                  ship,
+                  cull_group,
+                  "underworld",
+                  false,          // use maxfleets
+                  4,             //fighter_ships
+                  3,             // light_ships
+                  2,             // heavy_ships
+                  1              // capital_ships
+                  );
+
+
+
    // Setup the comms tasks
    tsShipComms.AddComms(ship, type2comms(comms));
    tsShipComms.DisplayComms(ship, true);

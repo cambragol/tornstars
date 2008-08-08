@@ -1,0 +1,884 @@
+//*******************************************************************************************/
+//
+// tsPcMerc
+//
+// This pog object implements a mercenary group. They patrol around stations and 
+// attack dislike and hostile ships. They respond to local distress calls and move
+// to protect the station. The number of ships is driven by the merc operation definiton
+// with some level of randomness.
+//
+// March 2005, Jon Freise
+// March 2006, jf major rewrite supporting station guards, and improved AI behavior.
+// August 2008, James Walker - rewrite of the original tsPcGuard code to support Merc Op
+//******************************************************************************************/
+
+package tsPcMerc;
+
+//[of]:Imports
+uses    Sim,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        GUI,
+        iGUI,
+        iHUD,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        Math,
+        iShipCreation,
+        iComms,
+        iConversation,
+        iMapEntity,
+        iLagrangePoint,
+        iAI,
+        iPilotSetup,
+        iShipCreation,
+        iEscort,
+        ABB_Common,
+
+        tsPodUtil,
+        tsShipComms,
+        tsFaction,
+        tsMoney,
+        tsShipName,
+        tsLCenter,
+        tsLFleet,
+        tsShipCreationEnum,
+        tsShipCreation,
+        tsPilotSetup,
+        tsCapsuleJump,
+        tsDistance,
+        tsFleetOp,
+        tsString,
+        tEpicEventEnum,
+        tsEvent,
+        tsDistress,
+        tsPcOwner,
+        tsShip,
+        tsShipEscort;
+//[cf]
+
+
+//[of]:Exports
+provides PogCreate,
+         PogStart;
+//[cf]
+
+
+enum eCSScriptState
+{
+   eCS_Init,
+   eCS_ToDestination,
+   eCS_WaitApproach,
+   eCS_CheckNearby,
+   eCS_Attacked,
+   eCS_Fight,
+   eCS_Distress,
+   eCS_Dead,
+   eCS_Cull
+};
+
+prototype setup_merc(hisim marker);
+
+
+prototype task merc_controller(hmapentity location, 
+                                hisim owner,
+                                hgroup patrol_group);
+
+
+prototype hmapentity nearby_location(hisim center);
+
+
+prototype hship create_leader (hmapentity location, 
+                               hisim operation, 
+                               hgroup cull_group,
+                               string ship_type);
+
+
+prototype set filter_feeling(set ships, 
+                             hfaction faction, 
+                             float feeling);
+
+
+prototype bool check_for_attacks(hgroup patrol_group);
+
+
+prototype bool check_for_distress(hgroup patrol_group);
+
+
+prototype eCSScriptState change_state(eCSScriptState state, 
+                                      eCSScriptState new_state, 
+                                      bool debug_on);
+
+
+prototype string state2string(eCSScriptState state);
+
+
+
+/*
+   Test code just looks up a sim type from the properties section of 
+   the class instance INI file. It creates that Sim and passes it 
+   back.
+
+*/
+//[of]:hsim PogCreate(string template_name, string object_name)
+hsim PogCreate(string template_name, string object_name)
+{
+
+   hinifile object_file;
+   string name;
+   string item_template, pog_class, start_function;
+   hsim item;
+
+
+   debug Debug.PrintString("tsPcMerc.PogCreate\n");
+
+   object_file = INIFile.Create(template_name);
+
+   if (none == object_file) {
+      debug {
+         Debug.PrintString("tsPcMerc.PogCreate, failed to find object file\n");
+      }
+
+      return item;
+   }
+
+   // Pull needed items out of template file. Create the object.
+   // Attach them.
+   pog_class = INIFile.String(object_file, "PogClass","name","none");
+
+
+   //********************
+   // This block of code is class dependent. The rest must be done to adhere
+   // to the pog otbject calling conventions.
+
+//   item_template = INIFile.String(object_file, "Properties","template","none");
+
+   INIFile.Destroy(object_file);
+
+//   name = tsShipName.ShipName( "underworld", Math.RandomInt(0, 222));
+//   item = Sim.Create(item_template, name);
+
+   item = Sim.Create("ini:/sims/nav/waypoint","merc_mark");
+
+   if (none == item) {
+      debug {
+         Debug.PrintString("tsPcMerc.PogCreate: ERROR: bad object template\n");
+      }
+      return item;
+   }
+
+   Sim.SetCullable(item, false);
+
+   // All 
+   Object.AddStringProperty(item, "gt_pog_object_class", pog_class);
+   Object.AddStringProperty(item, "gt_pog_object_template", template_name);
+
+      
+   return item;
+}
+//[cf]
+
+
+/*
+This function is called after the ship has been placed. 
+
+*/
+//[of]:task PogStart(hsim pog_object)
+task PogStart(hsim pog_object)
+{
+
+   debug Debug.PrintString("tsPcMerc: starting\n");
+
+   ///***************************************
+   // This part of the start code is object dependent. The prior pieces must
+   // be done to adhere to the pog class calling convention.
+
+   setup_merc(iSim.Cast(pog_object));
+
+   ///***************************************
+}
+//[cf]
+
+
+/*
+
+[PogClass]
+name=tsPcGuards
+
+[Properties]
+
+template=ini:/sims/ships/navy/patcom
+
+*/
+
+
+
+// Read the ini file, setup the object. 
+//[of]:setup_merc(hisim marker)
+setup_merc(hisim marker)
+{
+   hinifile control_file;
+   string template_file_name;
+   hmapentity location;
+   hfaction merc_faction;
+   hfaction player_faction = tsFaction.PlayerFaction();
+   hisim owner;
+
+   string leader_type, escort_type;
+   int i, total;
+   float threat;
+   int fleets;
+
+   hship patrol_ship;
+   hgroup patrol_group = Group.Create();
+
+
+   if (none == marker) {
+      debug Debug.PrintString("tsPcMerc.setup_merc: ERROR: invalid marker sim\n");
+      return;
+   }
+
+   template_file_name = Object.StringProperty(marker, "gt_pog_object_template");
+   control_file = INIFile.Create(template_file_name);
+
+   if (none == control_file) {
+      debug Debug.PrintString("tsPcMerc.setup_merc: ERROR: invalid template_file\n");
+      debug Debug.PrintString(template_file_name);
+      debug Debug.PrintString("\n");
+      Sim.Destroy(marker);
+      return;
+   }
+
+   // Get the ship types from the ini file for leader and escort.
+   leader_type = INIFile.String(control_file,"Properties","leader_ship_type","EST_CombatLight");
+   escort_type = INIFile.String(control_file,"Properties","escort_ship_type","EST_CombatFighter");
+   
+   // close ini file
+   INIFile.Destroy(control_file);
+
+   location = nearby_location(marker);
+
+   if (none == location) {
+      debug Debug.PrintString("tsPcMerc.setup_merc: ERROR: no nearby location\n");
+      Sim.Destroy(marker);
+      return;
+   }
+   
+   // The first thing we do is learn if this marker is to represent an operation.
+   // If we do, then we handle some things differently.
+   owner = iSim.Cast(tsPcOwner.Owner(marker));
+   merc_faction = iSim.Faction(iSim.Cast(owner));
+
+   // We must have an owner, either operation or station.
+   if (none == owner) {
+      debug Debug.PrintString("tsPcMerc.setup_merc: ERROR: no owning station or operation\n");
+      Sim.Destroy(marker);
+      return;
+   }
+
+   // Block the operation from spawning guards twice. Happens when player chases
+   // an operation from one location to another.
+   if (tsFleetOp.IsOperation(owner)) {
+      if (tsFleetOp.IsCreated(owner)){
+         debug Debug.PrintString("tsPcMerc operation already physical.\n");
+         Sim.Destroy(marker);
+         return;
+      }
+   }
+
+   // How many ships are supported by this operation/station?
+   fleets = tsLFleet.Fleets(owner);
+
+   if (fleets < 40) {
+      debug Debug.PrintString("tsPcMerc.setup_merc: no fleets remain, exiting.\n");
+      Sim.Destroy(marker);
+      return;
+   }
+
+   // If we are working with an operation let the operation
+   // know we have gone "physical"
+   if (tsFleetOp.IsOperation(owner)) {
+      tsFleetOp.SetCreated(owner, true);
+   }
+
+   // create the leader for this patrol.
+   patrol_ship = create_leader(location, owner, patrol_group, leader_type);
+   
+   // If not leader ship then we abort
+   if (none == patrol_ship) {
+      Debug.PrintString("tsPcMerc.setup_merc: ERROR: failed to create patrol leader.");
+      Sim.Destroy(marker);
+      return;
+   }
+
+   // Subtract off the fleets that are needed for the patrol ship.
+   fleets = fleets - Object.FloatProperty(patrol_ship, "threat");
+
+   // Create escorts with the remaining fleet value.
+   //create_escorts(owner, fleets, patrol_ship, patrol_group, escort_type);
+   //tsShip.CreateEscorts(owner, patrol_ship, patrol_group, "government", escort_type);
+   // create any escort if we need it
+   tsShipEscort.CreateStandardEscort(owner, patrol_ship, patrol_group, "general", escort_type);
+
+
+   // Launch the toll controller task.
+   Task.Detach(start merc_controller(location, owner, patrol_group));
+
+   // We can remove the guard mark now.
+   Sim.Destroy(marker);
+}
+//[cf]
+
+
+
+// The guard controller task flys waypoints around the location.
+// If the location is culled, the ships are set to allow culling.
+// If a hostile ship is seen, the leader attacks.
+//[of]:task merc_controller(hmapentity location, hgroup patrol_group)
+task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
+{
+   set dislike_set;
+   hship player;
+   hfaction player_faction = tsFaction.PlayerFaction();
+   hfaction merc_faction;
+   hfaction sender_faction, target_faction;
+   hship patrol_leader;
+   hship target_ship;
+   hisim sender, target;
+   hisim marker;
+   string speech_style;
+   float delay_time = 3.0; // Allow some pause between state changes.
+   float cull_timer = 0;
+   float fight_timer = 0;
+   float spacing, radius, rotation, distance, patrol_radius;
+   float sender_feeling, target_feeling;
+   int event_type;
+   bool do_rescue;
+   bool debug_on;
+   eCSScriptState state = eCS_Init;
+
+
+   patrol_leader = iShip.Cast(Group.Leader(patrol_group));
+   merc_faction = iSim.Faction(patrol_leader);
+
+   tsEvent.InitReciever(patrol_group);
+   tsEvent.SetListenType(patrol_group, eseDistress | eseSelfAttacked | eseStationAttack);
+
+   speech_style = tsFaction.SpeechStyle(merc_faction);
+
+   patrol_radius = Sim.DistanceBetween(patrol_leader, location);
+
+   while (1) {
+
+      debug_on = Global.Bool("gt_tpcguards_debug");
+      // Handle the outside cases. The player changing systems.
+      // The ships getting killed.
+      // Culling needing to happen.
+      if (tsCapsuleJump.IsCapsuleJumping()) {
+         state = change_state(state, eCS_Cull, debug_on);
+      }else {
+
+         player = iShip.FindPlayerShip();
+
+         if (Sim.IsDead(patrol_leader)) {
+            if (eCS_Cull != state) {
+               state = change_state(state, eCS_Dead, debug_on);
+            }
+         }else if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) > 
+                   tsDistance.CullingDistance()) {
+
+            // Station guards cull fast to allow player to return quick.
+            cull_timer = cull_timer + delay_time;
+            if (cull_timer > 6) {
+               state = change_state(state, eCS_Cull, debug_on);
+            }
+         }else if (check_for_attacks(patrol_group)){
+            cull_timer = 0;
+            state = change_state(state, eCS_Attacked, debug_on);
+         }else {
+            cull_timer = 0;
+         }
+      }
+
+      switch (state) {
+      case eCS_Init:
+         //debug Debug.PrintString("tsPcGuards.merc_controller: eCS_Init\n");
+         // Form up the patrol group, start them moving.
+
+         spacing = iUtilities.GetLargestShipRadius( patrol_group);
+         iEscort.Wedge( patrol_group, spacing, 50km, true );
+
+         marker = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint", "patrol mark"));
+
+         rotation = Math.Random(0,360);
+
+         state = change_state(state, eCS_ToDestination, debug_on);
+         break;
+
+      case eCS_ToDestination:
+         //debug Debug.PrintString("tsPcGuards.merc_controller: eCS_ToDestination\n");
+         // Send the leader orbiting the station.
+
+         Sim.PlaceRelativeTo(marker, location, 
+                             Math.Sin(rotation) * patrol_radius, 
+                             0, 
+                             Math.Cos(rotation)* patrol_radius);
+
+         rotation = rotation + 60;
+         if (rotation > 720) {
+            rotation = 0;
+         }else if (rotation > 360) {
+            rotation = rotation - 360;
+         }
+
+         iAI.PurgeOrders(patrol_leader);
+         // We use an escort order so the patrol leader will attack
+         // any hostile factions that show up nearby.
+         iAI.GiveEscortOrder( patrol_leader, marker, 100, 0, 0, 50km);
+
+         state = change_state(state, eCS_CheckNearby, debug_on);
+
+         break;
+
+      case eCS_CheckNearby:
+         //debug Debug.PrintString("tsPcGuards.merc_controller: eCS_CheckNearby\n");
+         // Test nearby ships for hostile action.
+
+         // Look for hostile ships, or because this is getting used for attack fleets and raiders, hostile stations.
+         dislike_set = filter_feeling(iSim.SimsInRadius(patrol_leader, 100km, TM_Ship|T_Station), merc_faction, -2.0);
+
+         if (!Set.IsEmpty(dislike_set)) {
+
+            iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcgs_guard_hostile_spotted",speech_style, 5));
+
+            // Pick the first one, attack.
+            target_ship = iShip.Cast(Set.FirstElement(dislike_set));
+            iAI.PurgeOrders(patrol_leader);
+
+            if (none != Sim.Group(target_ship)) {
+               iAI.GiveSpecificAttackOrder(patrol_group, Sim.Group(target_ship), AS_Strafe);
+            }else {
+               iAI.GiveSpecificAttackOrder(patrol_group, target_ship, AS_Strafe);
+            }
+
+            fight_timer =0;
+            state = change_state(state, eCS_Fight, debug_on);
+
+         }else if (check_for_attacks(patrol_group)){
+
+            state = change_state(state, eCS_Attacked, debug_on);
+
+         }else if (check_for_distress(patrol_group)){
+
+            state = change_state(state, eCS_Distress, debug_on);
+
+         }else {
+            if (Sim.DistanceBetween(patrol_leader, marker) < 1km){
+
+               // Give a shout 1/3 of the time. (it gets old quick).
+               if (Math.RandomInt(1,100) > 66) {
+                  iComms.Shout(patrol_leader,"",tsString.CommsStringRandom("pcgs_guard_sweep_finished",speech_style,5));
+               }
+               
+               state = change_state(state, eCS_ToDestination, debug_on);
+            }
+         }
+
+         break;
+
+      case eCS_Attacked:
+         //debug Debug.PrintString("tsPcGuards.merc_controller: eCS_Attack\n");
+         // Some we are guarding has been attacked.
+         sender = tsEvent.GetSender(patrol_group);
+         target = tsEvent.GetTarget(patrol_group);
+         event_type = tsEvent.GetEventType(patrol_group);
+
+         tsEvent.RemoveEvent(patrol_group);
+
+         sender_faction = iSim.Faction(sender);
+         target_faction = iSim.Faction(target);
+
+         // Make sure it was not friendly fire, then attack the attacker.
+         if (merc_faction != target_faction) {
+            
+            // Answer the stations distress call.
+            if (event_type == eseStationAttack ) {
+               iComms.Shout(patrol_leader,"",tsString.CommsStringRandom("pcgs_answering_distress_call",speech_style, 5));
+            }else {
+               iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcgs_guard_hostile_spotted",speech_style, 5));
+            }
+
+            iAI.PurgeOrders(patrol_leader);
+
+            // We order the patrol group to attack the targets group.
+            if (none != Sim.Group(target)) {
+               iAI.GiveSpecificAttackOrder(Sim.Group(patrol_leader), Sim.Group(target), AS_Strafe);
+            }else {
+               iAI.GiveSpecificAttackOrder(Sim.Group(patrol_leader), target, AS_Strafe);
+            }
+
+            //iAI.GiveAttackOrder(patrol_leader, target);
+            fight_timer =0;
+            state = change_state(state, eCS_Fight, debug_on);
+
+
+            // Issue a distress call to all nearby groups. This opens the 
+            // Event up to wider audience.
+            tsDistress.Send(espDistress,
+                            eseDistress,
+                            patrol_leader,
+                            target,
+                            patrol_leader,
+                            200km);
+
+         }else {
+            // Friendly fire, with the event cleared, check for 
+            // hostiles again.
+            state = change_state(state, eCS_CheckNearby, debug_on);
+         }
+
+         break;
+      case eCS_Fight:
+         //debug Debug.PrintString("tsPcGuards.merc_controller: eCS_Fight\n");
+         // A battle has broken out. We wait here.
+         fight_timer = fight_timer + delay_time;
+         if ( (Sim.DistanceBetween(patrol_leader, location) > tsDistance.VisibleDistance())){ 
+//             && (OT_Escort != iAI.CurrentOrderType(patrol_leader))) {
+            // Station guards do not chase down targets. Instead,
+            // if the patrol leader is chasing, restart the patrol orders
+            // This will bring the patrol group back to the station.
+            state = change_state(state, eCS_Init, debug_on);
+         }else if (fight_timer > 180) {
+            // If the fighting has gone on for 3 min, then resume patrol
+            // We assume that the fighting has actually ended, and the attackers have fled.
+            state = change_state(state, eCS_CheckNearby, debug_on);
+         }
+
+
+         break;
+      case eCS_Distress:
+         //debug Debug.PrintString("tsPcGuards.merc_controller: eCS_Distress\n");
+         // A distress call was signalled, here we choose if we respond, or if
+         // we just ignore the event.
+
+         // If we are Neutral or better with the defender, and
+         // if we are equal or higher feeling with the defender,
+         // we respond. Give attack order and go to fight state.
+         // Shout we are responding.
+         
+         do_rescue = false;
+
+         sender = tsEvent.GetSender(patrol_group);
+         target = tsEvent.GetTarget(patrol_group);
+
+         tsEvent.RemoveEvent(patrol_group);
+
+         // We only do short range rescue missions.
+         if (Sim.DistanceBetween(sender, patrol_leader) < tsDistance.VisibleDistance()) {
+
+            sender_faction = iSim.Faction(sender);
+            target_faction = iSim.Faction(target);
+
+            sender_feeling = iFaction.Feeling(merc_faction, sender_faction);
+            target_feeling = iFaction.Feeling(merc_faction, target_faction);
+
+            if (sender_feeling > -0.2 ){
+               if (sender_feeling >= target_feeling) {
+                  do_rescue = true;
+               }
+            }// if we like these people.
+         }// if close.
+
+         if (do_rescue) {
+            iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcgs_answering_distress_call",speech_style, 5));
+
+            iAI.PurgeOrders(patrol_leader);
+
+            // We order the patrol group to attack the targets group.
+            if (none != Sim.Group(target)) {
+               iAI.GiveAttackOrder(Sim.Group(patrol_leader), Sim.Group(target));
+            }else {
+               iAI.GiveAttackOrder(Sim.Group(patrol_leader), target);
+            }
+
+            state = change_state(state, eCS_Fight, debug_on);
+         }else {
+            // Not interested in helping, keep looking for trouble.
+            state = change_state(state, eCS_CheckNearby, debug_on);
+         }
+
+         break;
+
+      case eCS_Dead:
+         //debug Debug.PrintString("tsPcGuards.merc_controller: eCS_Dead\n");
+         // patrol leader is dead. Select another. 
+         Group.RemoveSim(patrol_group, patrol_leader);
+         patrol_leader = iShip.Cast(Group.Leader(patrol_group));
+         if (none == patrol_leader) {
+            // If all the escorts are dead, we cull.
+            state = change_state(state, eCS_Cull, debug_on);
+         }else {
+            // Give another escort order, on the new leader.
+            // Restart the patrol and attack orders.
+            iEscort.Wedge( patrol_group, spacing, 50km, true );
+            state = change_state(state, eCS_CheckNearby, debug_on);
+         }
+
+         break;
+
+      case eCS_Cull:
+         //debug Debug.PrintString("tsPcGuards.merc_controller: eCS_Cull\n");
+         // Player is far, or all the ships are dead. Set the last to allow
+         // culling and exit task.
+         iAI.PurgeOrders(patrol_group);
+         ABB_Common.SetCullableGroup(patrol_group, true);
+         Group.Destroy(patrol_group, false);
+
+         // Clear the operation for recreation if the 
+         // player approaches again.
+         if (tsFleetOp.IsOperation(owner)) {
+            tsFleetOp.SetCreated(owner, false);
+         }
+
+         debug atomic {
+            Debug.PrintString("tsPcMerc all ships culled, exit\n");
+         }
+
+         return;
+         break;
+
+      default:
+         //debug Debug.PrintString("tsPcGuards.merc_controller: Default\n");
+         state = change_state(state, eCS_Init, debug_on);
+
+         break;
+      }
+
+
+      Task.Sleep(Task.Current(), delay_time);
+   }
+
+   debug Debug.PrintString("tsPcMerc.merc_controller: While Loop Broken.\n");
+}
+//[cf]
+
+
+// This function checks if the patrol
+// group was attacked, or if the station
+// we are guarding was attacked.
+//[of]:bool check_for_attacks(hgroup patrol_group)
+bool check_for_attacks(hgroup patrol_group)
+{
+   hship new_target = none;
+   int event_type;
+
+   if (tsEvent.IsNewEvent(patrol_group)) {
+
+      event_type = tsEvent.GetEventType(patrol_group);
+      switch (event_type) {
+      case eseSelfAttacked:
+      case eseStationAttack:
+         // One of our guys was attacked.
+         // Get the attacking ship.
+         return true;
+         break;
+      default:
+         // We ignore other events to let other handlers take them.
+         break;
+      }
+   }
+
+   return false;
+}
+//[cf]
+
+
+//[of]:bool check_for_distress(hgroup patrol_group)
+bool check_for_distress(hgroup patrol_group)
+{
+   hship attacker, target;
+   hship new_target = none;
+   int event_type;
+
+   if (tsEvent.IsNewEvent(patrol_group)) {
+      event_type = tsEvent.GetEventType(patrol_group);
+
+      if (eseDistress == event_type) {
+         // We don't clear the event, so that the 
+         // handler code can read the attacker and location
+         // information.
+
+         return true;
+      }
+   }
+
+   return false;
+}
+//[cf]
+
+
+// Finds the closest location or station.
+//[of]:hmapentity nearby_location(hisim center)
+hmapentity nearby_location(hisim center)
+{
+   hlagrangepoint lpoint;
+   hhabitat habitat;
+
+   lpoint = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), center);
+   habitat = iHabitat.Nearest(iMapEntity.SystemHabitats(), center);
+
+   if (Sim.DistanceBetween(habitat, center) < Sim.DistanceBetween(lpoint, center)) {
+      return habitat;
+   }
+
+   return lpoint;
+}
+//[cf]
+
+
+
+// Create a fleet leader using the tsShipCreation system
+//[of]:hship create_leader (hmapentity location, hisim operation, hgroup cull_group, string ship_type)
+hship create_leader (hmapentity location, hisim operation, hgroup cull_group, string ship_type)
+{
+   float threat;
+   string leader_template, leader_name;
+   hfaction faction = iSim.Faction(operation);
+   hinifile leader_file;
+   hship leader;
+
+
+   if (tsFleetOp.IsOperation(operation)) {
+      // if using an operation to generate this then collect leader
+      // template and name from the operation object
+      leader_template = tsFleetOp.ShipTemplate(operation);
+      leader_name = tsFleetOp.Name(operation);
+   }else {
+      // otherwise get the leader template from pog class file
+      leader_template = tsShipCreation.GetShip(faction, tsShipCreation.String2ShipType(ship_type));
+      leader_name = tsShipName.ShipName("govornment",10000);
+   }
+
+   leader_file = INIFile.Create(leader_template);
+
+   if (none == leader_file) {
+      Debug.PrintString("tsPcMerc.create_leader: ERROR: patrol leader ini file invalid\n");
+      return none;
+   }
+
+   threat = INIFile.Float(leader_file,"Properties","threat", 40);
+
+   INIFile.Destroy(leader_file);
+
+   leader = tsShip.Create(leader_template, leader_name);
+
+   tsPilotSetup.SetupEscort(leader, 0.9, 0.5);
+
+   iSim.SetFaction(leader, faction);
+   Sim.SetCullable(leader, false);
+
+   Sim.PlaceRelativeTo(leader, location, 10km, 0, 0);
+
+   iShip.Attacked(leader);
+   iShip.LastAttacker(leader);
+
+   tsPcOwner.SetOwner(leader, operation);
+
+   Group.AddSim(cull_group, leader);
+
+   return leader;
+}
+//[cf]
+
+
+//[of]:set filter_feeling(set ships, hfaction faction, float feeling)
+set filter_feeling(set ships, hfaction faction, float feeling)
+{
+   set filtered;
+   hisim ship;
+   hfaction ship_faction;
+
+   while (!Set.IsEmpty(ships)) {
+      ship = iSim.Cast(Set.FirstElement(ships));
+      Set.Remove(ships, ship);
+      ship_faction = iSim.Faction(ship);
+
+      if (iFaction.Feeling(faction, ship_faction) < feeling) {
+         Set.Add(filtered, ship);
+      }
+   }
+
+   return filtered;
+}
+//[cf]
+
+
+//[of]:eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool debug_on)
+eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool debug_on)
+{
+   if (debug_on) {
+      debug Debug.PrintString(String.FormatStrStr("tsPcMerc state change %s->%s\n",
+                                                  state2string(state),
+                                                  state2string(new_state)));
+   }
+
+   return new_state;
+}
+//[cf]
+
+
+//[of]:string state2string(eCSScriptState state)
+string state2string(eCSScriptState state)
+{
+   switch (state) {
+   case eCS_Init:
+      return "eCS_Init";
+      break;
+   case eCS_ToDestination:   
+      return "eCS_ToDestination";
+      break;
+   case eCS_WaitApproach:   
+      return "eCS_WaitApproach";
+      break;
+   case eCS_CheckNearby:   
+      return "eCS_CheckNearby";
+      break;
+   case eCS_Attacked:   
+      return "eCS_Attacked";
+      break;
+   case eCS_Fight:   
+      return "eCS_Fight";
+      break;
+   case eCS_Distress:   
+      return "eCS_Distress";
+      break;
+   case eCS_Dead:   
+      return "eCS_Dead";
+      break;
+   case eCS_Cull:   
+      return "eCS_Cull";
+      break;
+   default:
+      break;
+   }
+
+   return "eCS_Invalid";
+
+}
+//[cf]
+
+
+/*   
+
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

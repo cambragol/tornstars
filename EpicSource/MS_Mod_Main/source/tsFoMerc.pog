@@ -90,7 +90,7 @@ New(hisim operation)
 
    // We pick a police name for ourselves. 
    // using a large number means we get a random name.
-   ship_name = tsShipName.ShipName("police", 10000);
+   ship_name = tsShipName.ShipName("general", 10000);
 
    // We pick a warship for center vessel.
    ship_template = tsShipCreation.GetShip(faction, tsShipCreation.String2ShipType(ship_class));
@@ -287,7 +287,7 @@ PlayerNear(hisim operation)
 }
 
 
-// patrol the neutral or better stations at close distance to thier home station.
+// patrol the neutral or better stations at close distance to their home station.
 hhabitat find_patrol_station(hisim operation, hmapentity center, string system_name, float distance)
 {
    set habitats;
