@@ -52,81 +52,15 @@ provides
 
 
 
-/*
-; 
-; Example INI file for setting up a hired ship.
-; One of these template files should be created
-; for each kind of ship that can be hired.
-; Freighter, warship, etc.
-
-[Properties]
-
-hiring_fee=integer one time hiring fee
-faction_standing=float, minimum faction standing the player must have
-
-
-ship_type = freighter
-;ship_type = warship
-;ship_type = tanker
-;ship_type = prospector
-;ship_type = miner
-
-*/
-
-
-
-
-// Read the ini files, setup the ship for hiring. 
-InitShipHire(hship ship, string pog_object_template)
+// Setup the ship for hiring using the supplied info
+InitShipHire(hship ship)
 {
-   hinifile control_file, ship_file;
-   int hiring_fee, daily_upkeep, fuel_per_jump;
-   string template_file_name, ship_template, ship_type, ship_desc;
-   float faction_standing;
-   hfaction faction;
-   hmapentity location;
-   hisim owner;
-
-   //template_file_name = Object.StringProperty(ship, "gt_pog_object_template");
-   control_file = INIFile.Create(pog_object_template);
-
-   if (none == control_file) {
-      debug Debug.PrintString("ERROR tsShipHire.InitShipHire. invalid pog_object_template\n");
-      debug Debug.PrintString(template_file_name);
-      debug Debug.PrintString("\n");
-      return;
+   // Determine if ship can be hired. Must have key hire attributes loaded
+   if(Object.PropertyExists(ship, "gtHiredShipFee"))
+   {
+      tsShipComms.AddComms(ship, "tsShipHire.Comms");
+      tsShipComms.DisplayComms(ship, true);
    }
-
-   // Read in hiring details for this ship
-   hiring_fee = INIFile.Int(control_file, "Properties", "hiring_fee", 10000);
-   ship_template = INIFile.String(control_file, "Properties", "template", "none");
-   faction_standing = tsFaction.String2LowerLevel(INIFile.String(control_file, 
-                                                                 "Properties", 
-                                                                 "faction_standing",
-                                                                 "FT_Neutral"));
-   ship_type = INIFile.String(control_file, "Properties", "ship_type", "freighter");
-   
-   // add the attributes to the ship object
-   Object.AddIntProperty(ship, "gtHiredShipFee", hiring_fee);
-   Object.AddFloatProperty(ship, "gtHiredShipStanding", faction_standing);
-   
-   // close the ini file
-   INIFile.Destroy(control_file);
-
-   // Pull in the one line ship description string.
-   ship_file = INIFile.Create(ship_template);
-   ship_desc = INIFile.String(ship_file, "Properties", "text", "Nothing Special.");
-   INIFile.Destroy(ship_file);
-
-
-
-   Object.AddStringProperty(ship, "gtHiredShipDesc", ship_desc);   
-   Object.AddStringProperty(ship, "gtHiredShipType", ship_type);   
-
-
-   tsShipComms.AddComms(ship, "tsShipHire.Comms");
-   tsShipComms.DisplayComms(ship, true);
-
 }
 
 
@@ -144,12 +78,14 @@ task Comms() {
     list player_fleet = tsShip.PlayerFleet();
     bool finished;
 
+   // get the total fleet value for the players fleet
     fleet_total = List.ItemCount(player_fleet);
 
-
+   // get the ship the comms is with
     ship = iShip.Cast(tsShipComms.CommsSource());
+    
+    // get the station closest to the ship we are talking to
     station = iHabitat.Nearest(iMapEntity.SystemHabitats(),ship);
-
 
     // Turn off the comms display, now that the player knows he can talk to this ship.
     tsShipComms.DisplayComms(ship, false);
@@ -237,15 +173,18 @@ task Comms() {
                 finished = true;
 
             } else {
-
                 // pchs_join_fleet, "Glad to join you. What are your orders?"
                 iConversation.Say(ship,"", "pchs_join_fleet");
 
                 tsMoney.ChangeShipAccount(-1*hire_fee);
+                
+                // remove the ship from its existing Group
+                Group.RemoveSim(Sim.Group(ship), ship);
+                
+                // hire the ship into the players wingmen which deals with cullable false
                 tsPlayerFleet.HireShip(ship);
 
-
-                // Prevent this sim from culling!
+                // prevent this sim from culling! -- only applicable if ship not part of an Operation
                 tsCull.RemoveSim(iSim.Cast(station), ship);
 
                 finished = true;

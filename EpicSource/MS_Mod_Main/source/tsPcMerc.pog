@@ -61,7 +61,8 @@ uses    Sim,
         tsDistress,
         tsPcOwner,
         tsShip,
-        tsShipEscort;
+        tsShipEscort,
+        tsShipHire;
 //[cf]
 
 
@@ -81,6 +82,7 @@ enum eCSScriptState
    eCS_Fight,
    eCS_Distress,
    eCS_Dead,
+   eCS_Removed,
    eCS_Cull
 };
 
@@ -313,7 +315,7 @@ setup_merc(hisim marker)
    
    // If not leader ship then we abort
    if (none == patrol_ship) {
-      Debug.PrintString("tsPcMerc.setup_merc: ERROR: failed to create patrol leader.");
+      debug Debug.PrintString("tsPcMerc.setup_merc: ERROR: failed to create patrol leader.");
       Sim.Destroy(marker);
       return;
    }
@@ -326,6 +328,12 @@ setup_merc(hisim marker)
    //tsShip.CreateEscorts(owner, patrol_ship, patrol_group, "government", escort_type);
    // create any escort if we need it
    tsShipEscort.CreateStandardEscort(owner, patrol_ship, patrol_group, "general", escort_type);
+
+
+   // make ships hireable
+   for(i=0; i<Group.SimCount(patrol_group); ++i) {
+      tsShipHire.InitShipHire(iShip.Cast(Group.NthSim(patrol_group, i)));
+   }
 
 
    // Launch the toll controller task.
@@ -391,7 +399,10 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
             if (eCS_Cull != state) {
                state = change_state(state, eCS_Dead, debug_on);
             }
-         }else if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) > 
+         } else if(Sim.Group(patrol_leader) != patrol_group) {
+            // if the patrol leader has been removed from the group
+            state = change_state(state, eCS_Removed, debug_on);
+         } else if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) > 
                    tsDistance.CullingDistance()) {
 
             // Station guards cull fast to allow player to return quick.
@@ -617,9 +628,12 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
          break;
 
       case eCS_Dead:
+      case eCS_Removed:
          //debug Debug.PrintString("tsPcGuards.merc_controller: eCS_Dead\n");
          // patrol leader is dead. Select another. 
-         Group.RemoveSim(patrol_group, patrol_leader);
+         if(state == eCS_Dead)
+            Group.RemoveSim(patrol_group, patrol_leader);
+         
          patrol_leader = iShip.Cast(Group.Leader(patrol_group));
          if (none == patrol_leader) {
             // If all the escorts are dead, we cull.
@@ -769,7 +783,7 @@ hship create_leader (hmapentity location, hisim operation, hgroup cull_group, st
    leader_file = INIFile.Create(leader_template);
 
    if (none == leader_file) {
-      Debug.PrintString("tsPcMerc.create_leader: ERROR: patrol leader ini file invalid\n");
+      debug Debug.PrintString("tsPcMerc.create_leader: ERROR: patrol leader ini file invalid\n");
       return none;
    }
 

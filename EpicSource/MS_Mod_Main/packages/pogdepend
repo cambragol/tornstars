@@ -743,7 +743,7 @@ tspcguards.pkg : tsPcGuards.pog ABB_Common.h Debug.h GUI.h Global.h INIFile.h In
 
 tspchiredship.pkg : tsPcHiredShip.pog Debug.h GUI.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h String.h Task.h Text.h iAI.h iComms.h iConversation.h iGUI.h iHUD.h iLagrangePoint.h iShip.h iShipCreation.h iSim.h tsCull.h tsFaction.h tsMoney.h tsPcOwner.h tsPlayerFleet.h tsShip.h tsShipComms.h tsShipEnum.h tsShipName.h
 
-tspcmerc.pkg : tsPcMerc.pog ABB_Common.h Debug.h GUI.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h String.h Task.h Text.h iAI.h iComms.h iConversation.h iEscort.h iGUI.h iHUD.h iLagrangePoint.h iMapEntity.h iPilotSetup.h iShip.h iShipCreation.h iShipCreation.h iSim.h tEpicEventEnum.h tsCapsuleJump.h tsDistance.h tsDistress.h tsEvent.h tsFaction.h tsFleetOp.h tsLCenter.h tsLFleet.h tsMoney.h tsPcOwner.h tsPilotSetup.h tsPodUtil.h tsShip.h tsShipComms.h tsShipCreation.h tsShipCreationEnum.h tsShipEscort.h tsShipName.h tsString.h
+tspcmerc.pkg : tsPcMerc.pog ABB_Common.h Debug.h GUI.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h String.h Task.h Text.h iAI.h iComms.h iConversation.h iEscort.h iGUI.h iHUD.h iLagrangePoint.h iMapEntity.h iPilotSetup.h iShip.h iShipCreation.h iShipCreation.h iSim.h tEpicEventEnum.h tsCapsuleJump.h tsDistance.h tsDistress.h tsEvent.h tsFaction.h tsFleetOp.h tsLCenter.h tsLFleet.h tsMoney.h tsPcOwner.h tsPilotSetup.h tsPodUtil.h tsShip.h tsShipComms.h tsShipCreation.h tsShipCreationEnum.h tsShipEscort.h tsShipHire.h tsShipName.h tsString.h
 
 tspcowner.pkg : tsPcOwner.pog Debug.h GUI.h Global.h INIFile.h Input.h List.h Object.h Sim.h String.h Task.h Text.h iGUI.h iHUD.h iShip.h iSim.h
 
@@ -779,7 +779,7 @@ tsplayerwatch.pkg : tsPlayerWatch.pog Debug.h GUI.h Global.h INIFile.h Input.h L
 
 tspodutil.pkg : tsPodUtil.pog Debug.h ECargoTypes.h Global.h INIFile.h Input.h List.h Object.h Sim.h String.h Task.h Text.h iAI.h iAI.h iCargo.h iHUD.h iInventory.h iRemotePilot.h iShip.h iSim.h iUtilities.h tsFaction.h tsShip.h
 
-tspogclass.pkg : tsPogClass.pog Debug.h GUI.h Global.h INIFile.h Input.h List.h Object.h Sim.h String.h Task.h Text.h iGUI.h iHUD.h iShip.h iSim.h tsPcAsteroidBelt.h tsPcCargoShip.h tsPcConstructionShip.h tsPcCustomsToll.h tsPcEmbezzleOp.h tsPcFenceShip.h tsPcGuards.h tsPcHiredShip.h tsPcOwner.h tsPcPirateToll.h tsPcPirateToll.h tsPcPodScrapper.h tsPcRumorSeller.h tsPcTankerOp.h tsPcTankerShip.h tsPcWeaponSeller.h tsPcWreckBelt.h
+tspogclass.pkg : tsPogClass.pog Debug.h GUI.h Global.h INIFile.h Input.h List.h Object.h Sim.h String.h Task.h Text.h iGUI.h iHUD.h iShip.h iSim.h tsPcAsteroidBelt.h tsPcCargoShip.h tsPcConstructionShip.h tsPcCustomsToll.h tsPcEmbezzleOp.h tsPcFenceShip.h tsPcGuards.h tsPcHiredShip.h tsPcMerc.h tsPcOwner.h tsPcPirateToll.h tsPcPirateToll.h tsPcPodScrapper.h tsPcRumorSeller.h tsPcTankerOp.h tsPcTankerShip.h tsPcWeaponSeller.h tsPcWreckBelt.h
 
 tsposition.pkg : tsPosition.pog Debug.h GUI.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h String.h Task.h Text.h iAI.h iCargo.h iComms.h iConversation.h iDirector.h iGUI.h iHUD.h iHabitat.h iInventory.h iMapEntity.h iPilotSetup.h iShip.h iSim.h iUtilities.h
 

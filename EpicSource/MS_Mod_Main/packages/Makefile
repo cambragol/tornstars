@@ -141,6 +141,7 @@ PACKAGES = ECargoTypes.pkg \
 	tsSaveGui.pkg \
 	tsShipMail.pkg \
 	tsShipName.pkg \
+	tsShipHire.pkg \
 	tsSpewerOps.pkg \
 	tsStation.pkg \
 	tsStationAi.pkg \
@@ -177,6 +178,7 @@ PACKAGES = ECargoTypes.pkg \
 	tsFoRaider.pkg \
 	tsFoThugs.pkg \
 	tsFoArmsDealer.pkg \
+	tsFoMerc.pkg \
 	tsPilotSetup.pkg \
 	tsPlayerDeath.pkg \
 	tsPlayerSave.pkg \
