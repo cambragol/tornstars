@@ -42,7 +42,8 @@ uses    Sim,
         tsShipName,
         tsPcOwner,
         tsShip,
-        tsCull;
+        tsCull,
+        tsString;
 
 
 
@@ -77,6 +78,7 @@ task Comms() {
     hgroup station_cull;
     list player_fleet = tsShip.PlayerFleet();
     bool finished;
+    string text_token;
 
    // get the total fleet value for the players fleet
     fleet_total = List.ItemCount(player_fleet);
@@ -110,8 +112,8 @@ task Comms() {
     do {
 
         // pchs_player_refuses, "No, Thanks."
-        iConversation.AddResponse("pchs_player_refuses",
-                                  "pchs_player_refuses");
+        text_token = tsString.CommsStringRandom("pchs_player_refuses", "", 5);
+        iConversation.AddResponse(text_token, text_token);
 
 
         // pchs_player_info, "Tell me about your ship"
@@ -120,8 +122,8 @@ task Comms() {
 
 
         // pchs_player_accepts, "Yes, I will hire you"
-        iConversation.AddResponse("pchs_player_accepts",
-                                  "pchs_player_accepts");
+        text_token = tsString.CommsStringRandom("pchs_player_accepts", "", 5);
+        iConversation.AddResponse(text_token, text_token);
 
 
 

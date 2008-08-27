@@ -204,15 +204,13 @@ string CommsString(string key_string, string style, int index)
    returned_string = Text.Field(full_key, FT_Text);
 
 
-   if ("*"==String.Left(returned_string,1)) {
+   if (("*"==String.Left(returned_string,1)) || (String.Length(returned_string)<1)) {
       // Numbered string failed to translate, fall back on style.
-
       returned_string = Text.Field(style_key, FT_Text);
 
-      if ("*"==String.Left(returned_string,1)) {
+      if (("*"==String.Left(returned_string,1)) || (String.Length(returned_string)<1)) {
          // Style string failed to translate, fall back on default.
-
-         return key_string;
+        return key_string;
       }
       
       return style_key;
