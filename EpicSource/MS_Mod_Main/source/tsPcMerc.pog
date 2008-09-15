@@ -328,7 +328,19 @@ setup_merc(hisim marker)
    //tsShip.CreateEscorts(owner, patrol_ship, patrol_group, "government", escort_type);
    // create any escort if we need it
    tsShipEscort.CreateStandardEscort(owner, patrol_ship, patrol_group, "general", escort_type);
-
+/*
+   tsShipEscort.CreateMixedEscort(
+                     owner,
+                     patrol_ship,
+                     patrol_group,
+                     "general",
+                     true,
+                     4,    // fighters
+                     1,      // light ships
+                     1,      // heavy ships
+                     1     // captial ships
+                  );
+*/
 
    // make ships hireable
    for(i=0; i<Group.SimCount(patrol_group); ++i) {

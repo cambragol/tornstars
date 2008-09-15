@@ -66,7 +66,7 @@ InitShipHire(hship ship)
 
 
 
-// This is the new combined hired ship comm task.
+// This is the new combined hired ship comms task.
 task Comms() {
     hship ship;
     hfaction player = iFaction.Find("Player");

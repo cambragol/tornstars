@@ -1,10 +1,10 @@
 [Setup]
 UseSetupLdr=true
-OutputBaseFilename=unstable_space_11_5
+OutputBaseFilename=unstable_space_11_6
 ;OutputDir=D:\Documents and Settings\Mourfin\My Documents\Unstable_Space_11_9
 AppCopyright=Epic Team
 AppName=Unstable Space
-AppVerName=Unstable Space 11.5
+AppVerName=Unstable Space 11.6
 DisableProgramGroupPage=true
 UsePreviousGroup=false
 AlwaysShowDirOnReadyPage=true
@@ -19,8 +19,8 @@ Uninstallable=false
 DisableStartupPrompt=true
 DirExistsWarning=no
 SolidCompression=true
-VersionInfoVersion=11.5
-VersionInfoTextVersion=Epic 11.5
+VersionInfoVersion=11.6
+VersionInfoTextVersion=Epic 11.6
 UsePreviousAppDir=false
 WizardImageFile=.\Left_Install3.bmp
 WizardSmallImageFile=.\install_small.bmp
@@ -38,6 +38,7 @@ Source: .\..\EpicSource\ExtraMods\no_launch_sequence.zip; DestDir: {app}\mods
 
 ; movies
 Source: .\..\EpicArt\movies\*; DestDir: {app}\movies
+
 
 ; cluster models
 Source: .\..\EpicSource\MS_Mod_ClusterModels\*; DestDir: {app}\mods\MS_Mod_Main; Flags: skipifsourcedoesntexist
@@ -76,16 +77,15 @@ Source: .\..\EpicSource\MS_Mod_ClusterModels\sfx\asteroid_impact\*; DestDir: {ap
 Source: .\..\EpicSource\MS_Mod_ClusterModels\sfx\kibble\*; DestDir: {app}\mods\MS_Mod_Main\sfx\kibble; Flags: skipifsourcedoesntexist
 
 
-
 ; debug
 Source: .\..\EpicSource\MS_Mod_Debug\*; DestDir: {app}\mods\MS_Mod_Debug
 Source: .\..\EpicSource\MS_Mod_Debug\html\*; DestDir: {app}\mods\MS_Mod_Debug\html
 
 
-
 ; econ
 Source: .\..\EpicSource\MS_Mod_Econ\*; DestDir: {app}\mods\MS_Mod_Main; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\MS_Mod_Econ\TEXT\*; DestDir: {app}\mods\MS_Mod_Main\TEXT; Flags: skipifsourcedoesntexist
+
 
 ; environ
 Source: .\..\EpicSource\MS_Mod_Environ\*; DestDir: {app}\mods\MS_Mod_Main; Flags: skipifsourcedoesntexist
@@ -100,6 +100,7 @@ Source: .\..\EpicSource\clusters\US_Mod_Geog\geog\middle\*; DestDir: {app}\mods\
 Source: .\..\EpicSource\clusters\US_Mod_Geog\source\*; DestDir: {app}\mods\US_Mod_Geog\source; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\clusters\US_Mod_Geog\TEXT\*; DestDir: {app}\mods\US_Mod_Geog\TEXT
 Source: .\..\EpicSource\clusters\US_Mod_Geog\TEXT\geog\*; DestDir: {app}\mods\US_Mod_Geog\TEXT\geog
+
 
 ; main
 Source: .\..\EpicSource\MS_Mod_Main\*; DestDir: {app}\mods\MS_Mod_Main
@@ -128,6 +129,7 @@ Source: .\..\EpicSource\US_Mod_JumpTube\subsims\dockports\*; DestDir: {app}\mods
 Source: .\..\EpicSource\US_Mod_JumpTube\subsims\systems\*; DestDir: {app}\mods\MS_Mod_Main\subsims\systems; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\US_Mod_JumpTube\subsims\systems\nonplayer\*; DestDir: {app}\mods\MS_Mod_Main\subsims\systems\nonplayer
 
+
 ; music
 Source: .\..\EpicArt\MS_Mod_Music\*; DestDir: {app}\mods\MS_Mod_Main; Flags: skipifsourcedoesntexist
 Source: .\..\EpicArt\MS_Mod_Music\audio\*; DestDir: {app}\mods\MS_Mod_Main\audio; Flags: skipifsourcedoesntexist
@@ -149,6 +151,7 @@ Source: .\..\EpicArt\MS_Mod_Music\avatars\station_sound\*; DestDir: {app}\mods\M
 Source: .\..\EpicArt\MS_Mod_Music\avatars\sultan_sound\*; DestDir: {app}\mods\MS_Mod_Main\avatars\sultan_sound; Flags: skipifsourcedoesntexist
 Source: .\..\EpicArt\MS_Mod_Music\avatars\sun_sound\*; DestDir: {app}\mods\MS_Mod_Main\avatars\sun_sound; Flags: skipifsourcedoesntexist
 Source: .\..\EpicArt\MS_Mod_Music\sims\*; DestDir: {app}\mods\MS_Mod_Main\sims; Flags: skipifsourcedoesntexist
+
 
 ; nebula
 Source: .\..\EpicArt\MS_Mod_Nebula\*; DestDir: {app}\mods\MS_Mod_Main; Flags: skipifsourcedoesntexist
@@ -173,6 +176,7 @@ Source: .\..\EpicArt\MS_Mod_Nebula\models\ripon\*; DestDir: {app}\mods\MS_Mod_Ma
 Source: .\..\EpicArt\MS_Mod_Nebula\models\x472\*; DestDir: {app}\mods\MS_Mod_Main\models\x472; Flags: skipifsourcedoesntexist
 Source: .\..\EpicArt\MS_Mod_Nebula\models\xu_xuan\*; DestDir: {app}\mods\MS_Mod_Main\models\xu_xuan; Flags: skipifsourcedoesntexist
 
+
 ; planets
 Source: .\..\EpicArt\MS_Mod_Planets\*; DestDir: {app}\mods\MS_Mod_Main; Flags: skipifsourcedoesntexist
 Source: .\..\EpicArt\MS_Mod_Planets\images\*; DestDir: {app}\mods\MS_Mod_Main\images; Flags: skipifsourcedoesntexist
@@ -189,6 +193,7 @@ Source: .\..\EpicSource\MS_Mod_Reference\html\encyclopedia\geography\*; DestDir:
 Source: .\..\EpicSource\MS_Mod_Reference\html\encyclopedia\images\*; DestDir: {app}\mods\MS_Mod_Main\html\encyclopedia\images; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\MS_Mod_Reference\html\encyclopedia\images\maps\*; DestDir: {app}\mods\MS_Mod_Main\html\encyclopedia\images\maps; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\MS_Mod_Reference\TEXT\*; DestDir: {app}\mods\MS_Mod_Main\TEXT; Flags: skipifsourcedoesntexist
+
 
 ; ships
 Source: .\..\EpicSource\MS_Mod_Ships\*; DestDir: {app}\mods\MS_Mod_Ships
@@ -234,7 +239,6 @@ Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_d\*; DestDir: {app}\mods\MS_
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\freighter\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\freighter
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\command_section\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\command_section
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\flitter\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\flitter
-
 
 Source: .\..\EpicSource\MS_Mod_Ships\images\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\images\sfx; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\MS_Mod_Ships\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\sfx; Flags: skipifsourcedoesntexist
