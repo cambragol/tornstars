@@ -153,8 +153,8 @@ task Comms() {
         case 3 :
             // Player wants to hire us.
 
-            // First we find out if the player has a high enough standing to hire this
-            // ship.
+            // First we find out if the player has a high enough
+            // standing to hire this ship.
             standing = Object.FloatProperty(ship, "gtHiredShipStanding");
             source_faction = iSim.Faction(iSim.Cast(ship));
 
@@ -181,7 +181,12 @@ task Comms() {
                 tsMoney.ChangeShipAccount(-1*hire_fee);
                 
                 // remove the ship from its existing Group
-                Group.RemoveSim(Sim.Group(ship), ship);
+                atomic {
+                  // make sure that nothing interfers with this
+                  iAI.PurgeOrders( ship );
+                  iShip.RemovePilot( ship );
+                  Group.RemoveSim(Sim.Group(ship), ship);
+                }
                 
                 // hire the ship into the players wingmen which deals with cullable false
                 tsPlayerFleet.HireShip(ship);
