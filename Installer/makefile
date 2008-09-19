@@ -20,3 +20,5 @@ all: single
 single:
 	$(CC) "$(BUILDDIR)/epic_install_maker_complete.iss"
 
+noart:
+	$(CC) "$(BUILDDIR)/epic_install_maker_no_art.iss"
