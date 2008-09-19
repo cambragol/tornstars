@@ -799,9 +799,9 @@ tsshipcreation.pkg : tsShipCreation.pog Debug.h Global.h Group.h INIFile.h List.
 
 tsshipdeath.pkg : tsShipDeath.pog Sim.h iSim.h tsDebug.h
 
-tsshipescort.pkg : tsShipEscort.pog Debug.h Group.h INIFile.h Sim.h iFaction.h iShip.h iSim.h tsLFleet.h tsPcOwner.h tsPilotSetup.h tsShip.h tsShipCreation.h tsShipCreationEnum.h tsShipName.h
+tsshipescort.pkg : tsShipEscort.pog Debug.h Group.h INIFile.h Sim.h iFaction.h iShip.h iSim.h tsFleetOp.h tsLFleet.h tsPcOwner.h tsPilotSetup.h tsShip.h tsShipCreation.h tsShipCreationEnum.h tsShipName.h
 
-tsshiphire.pkg : tsShipHire.pog Debug.h GUI.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h String.h Task.h Text.h iAI.h iComms.h iConversation.h iGUI.h iHUD.h iLagrangePoint.h iShip.h iShipCreation.h iSim.h tsCull.h tsFaction.h tsMoney.h tsPcOwner.h tsPlayerFleet.h tsShip.h tsShipComms.h tsShipEnum.h tsShipName.h
+tsshiphire.pkg : tsShipHire.pog Debug.h GUI.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h String.h Task.h Text.h iAI.h iComms.h iConversation.h iGUI.h iHUD.h iLagrangePoint.h iShip.h iShipCreation.h iSim.h tsCull.h tsFaction.h tsLFleet.h tsMoney.h tsPcOwner.h tsPlayerFleet.h tsShip.h tsShipComms.h tsShipEnum.h tsShipName.h tsString.h
 
 tsshipmail.pkg : tsShipMail.pog Debug.h GUI.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h String.h Task.h Text.h UniGUI.h iCargo.h iComms.h iGUI.h igame.h iHUD.h iHabitat.h iInventory.h iMapEntity.h iMod.h iShip.h iSim.h iUtilities.h tsGui.h tsGuiEnum.h tsMail.h tsNewsNet.h tsTime.h
 

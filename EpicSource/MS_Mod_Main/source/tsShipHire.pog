@@ -38,6 +38,7 @@ uses    Sim,
         tsShipEnum,
         tsPlayerFleet,
         tsFaction,
+        tsLFleet,
         tsMoney,
         tsShipName,
         tsPcOwner,
@@ -79,6 +80,8 @@ task Comms() {
     list player_fleet = tsShip.PlayerFleet();
     bool finished;
     string text_token;
+    hisim owner;
+    
 
    // get the total fleet value for the players fleet
     fleet_total = List.ItemCount(player_fleet);
@@ -160,42 +163,51 @@ task Comms() {
 
             if (standing > iFaction.Feeling(source_faction, player)) {
 
-                // pchs_rep_low, "Sorry, your reputation is not good enough to trust you."
-                iConversation.Say(ship,"", "pchs_rep_low");
-                finished = true;
+               // pchs_rep_low, "Sorry, your reputation is not good enough to trust you."
+               iConversation.Say(ship,"", "pchs_rep_low");
+               finished = true;
 
             } else if (hire_fee >= tsMoney.ShipAccount()) {
-                // pchs_credits_low, "Sorry, you do not have enough funds to afford our services."
-                iConversation.Say(ship,"","pchs_credits_low");
-                finished = true;
+               // pchs_credits_low, "Sorry, you do not have enough funds to afford our services."
+               iConversation.Say(ship,"","pchs_credits_low");
+               finished = true;
 
             } else if (fleet_total > 9) {
-                // pchs_max_wingmen, "Sorry, You already have enough wingmen." 
-                iConversation.Say(ship,"", "pchs_max_wingmen");
-                finished = true;
+               // pchs_max_wingmen, "Sorry, You already have enough wingmen." 
+               iConversation.Say(ship,"", "pchs_max_wingmen");
+               finished = true;
 
             } else {
-                // pchs_join_fleet, "Glad to join you. What are your orders?"
-                iConversation.Say(ship,"", "pchs_join_fleet");
+               // pchs_join_fleet, "Glad to join you. What are your orders?"
+               iConversation.Say(ship,"", "pchs_join_fleet");
 
-                tsMoney.ChangeShipAccount(-1*hire_fee);
+               tsMoney.ChangeShipAccount(-1*hire_fee);
+               
+               // remove the ship from its existing Group
+               atomic {
+                 // make sure that nothing interfers with this - needed?
+                 debug Debug.PrintString("tsShipHire.Comms: purge orders, remove AI, remove from any group\n");
+                 iAI.PurgeOrders( ship );
+                 iShip.RemovePilot( ship );
+                 Group.RemoveSim(Sim.Group(ship), ship);
+               }
                 
-                // remove the ship from its existing Group
-                atomic {
-                  // make sure that nothing interfers with this
-                  iAI.PurgeOrders( ship );
-                  iShip.RemovePilot( ship );
-                  Group.RemoveSim(Sim.Group(ship), ship);
-                }
+               // adjust the fleet value for the operation to account for the ship hired away
+               owner = iSim.Cast(tsPcOwner.Owner(ship));
+               if( none != owner )
+               {
+                  debug Debug.PrintString("tsShipHire.Comms: reduce owners fleets\n");
+                  tsLFleet.ChangeFleets(owner, -1*Object.FloatProperty(ship, "threat"));
+               }
                 
-                // hire the ship into the players wingmen which deals with cullable false
-                tsPlayerFleet.HireShip(ship);
+               // hire the ship into the players wingmen which deals with cullable false
+               tsPlayerFleet.HireShip(ship);
 
-                // prevent this sim from culling! -- only applicable if ship not part of an Operation
-                tsCull.RemoveSim(iSim.Cast(station), ship);
+               // prevent this sim from culling! -- only applicable if ship not part of an Operation
+               tsCull.RemoveSim(iSim.Cast(station), ship);
 
-                finished = true;
-                debug Debug.PrintString(String.FormatInt("Ship account %d\n",tsMoney.ShipAccount()));
+               finished = true;
+               debug Debug.PrintString(String.FormatInt("Ship account %d\n",tsMoney.ShipAccount()));
 
             }
             break;

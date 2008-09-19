@@ -156,8 +156,8 @@ Update(hisim operation)
 
       if (iFaction.Feeling(visitor_faction, faction) < -0.2) {
          // There are hostile forces at this station
-         fleets = tsLFleet.Fleets(operation);
-         hostile_fleets = tsLFleet.Fleets(operation);
+         fleets = tsLFleet.Fleets(operation);            // our fleet size
+         hostile_fleets = tsLFleet.Fleets(visitor);      // hostiles fleet size
 
          if (fleets > hostile_fleets) {
             // We have the advantage, pound them.
@@ -172,6 +172,8 @@ Update(hisim operation)
       }
    }
 
+   // get the updated fleets value after damage has been done from
+   // any hostile visitors
    fleets = tsLFleet.Fleets(operation);
 
    if (fleets == 0) {

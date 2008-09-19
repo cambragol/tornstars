@@ -32,6 +32,7 @@ uses
    tsShipName,
    tsPcOwner,
    tsLFleet,
+   tsFleetOp,
    tsPilotSetup,
    tsShipCreation;
 
@@ -47,6 +48,27 @@ provides
 //
 // Prototypes
 //
+
+
+
+task DeathScript(hship ship)
+{
+   hisim owner;
+
+
+   owner = iSim.Cast(tsPcOwner.Owner(ship));
+
+   if (none != owner) {
+      if (tsFleetOp.IsOperation(owner)){
+
+         // Reduce the operations fleet value as it has lost a ship
+         tsLFleet.ChangeFleets(owner, - Object.FloatProperty(ship, "threat"));
+      }
+   }
+
+   // Utter death threats and explode ...
+   iSim.Kill(ship);
+}
 
 
 
@@ -83,8 +105,12 @@ CreateStandardEscort(
    threat = INIFile.Float(escort_file,"Properties","threat", 40);
    INIFile.Destroy(escort_file);
 
+   // get the total fleet operation is currently capable of supporting
    fleets = tsLFleet.Fleets(operation);
-
+   // we already have a leader for the group so take off its threat from
+   // the available total we can fill
+   fleets = fleets - Object.FloatProperty(leader, "threat");
+   // work out how many of the escorts we can create
    total = fleets/threat;
    
    debug {

@@ -411,7 +411,9 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
             if (eCS_Cull != state) {
                state = change_state(state, eCS_Dead, debug_on);
             }
-         } else if(Sim.Group(patrol_leader) != patrol_group) {
+         } else if(Group.Leader(patrol_group) != Sim.Cast(patrol_leader)) {
+            // Sim.Group(patrol_leader) != patrol_group
+            // or Group.Leader(patrol_group) != Sim.Cast(patrol_leader)
             // if the patrol leader has been removed from the group
             state = change_state(state, eCS_Removed, debug_on);
          } else if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) > 
