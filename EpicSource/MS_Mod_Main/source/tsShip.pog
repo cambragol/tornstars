@@ -538,7 +538,7 @@ bool IsCapsuleJumping(hship ship)
 // Is this an armed ship? Transports and utility vessels are excluded.
 bool IsWarship(hship ship)
 {
-   if (iSim.Type(ship) & (T_Fighter | T_Tug | T_Patcom | T_Interceptor | T_Corvette | T_Destroyer | T_Cruiser | T_Carrier)) {
+   if (iSim.Type(ship) & (T_Fighter | T_Tug | T_Patcom | T_Utility | T_Interceptor | T_Corvette | T_Destroyer | T_Cruiser | T_Carrier)) {
       return true;
    }
    return false;
