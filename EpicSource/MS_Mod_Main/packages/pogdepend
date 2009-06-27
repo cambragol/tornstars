@@ -19,6 +19,10 @@ tmultimod.pkg : tMultimod.pog
 	$(POG_COMPILER) -q -i $(INCLUDE_PATH) -i $(PS_INCLUDE_PATH) -i $(INCLUDE_PKG) -hp $(CODE_PATH)/include_tmp -pp $(PACKAGE_PATH) $<
 	cp $(PACKAGE_PATH)/$@ $(MOD_PATH)/packages
 
+tsarray.pkg : tsArray.pog
+	$(POG_COMPILER) -q -i $(INCLUDE_PATH) -i $(PS_INCLUDE_PATH) -i $(INCLUDE_PKG) -hp $(CODE_PATH)/include_tmp -pp $(PACKAGE_PATH) $<
+	cp $(PACKAGE_PATH)/$@ $(MOD_PATH)/packages
+
 tsbasenet.pkg : tsBaseNet.pog
 	$(POG_COMPILER) -q -i $(INCLUDE_PATH) -i $(PS_INCLUDE_PATH) -i $(INCLUDE_PKG) -hp $(CODE_PATH)/include_tmp -pp $(PACKAGE_PATH) $<
 	cp $(PACKAGE_PATH)/$@ $(MOD_PATH)/packages
@@ -606,6 +610,8 @@ uniguibase.pkg : UniGUIBase.pog GUI.h UniGUI.h UniGUIMisc.h
 uniguimisc.pkg : UniGUIMisc.pog Debug.h GUI.h Global.h INIFile.h Input.h List.h Object.h Sim.h String.h Task.h Text.h UniGUI.h iGUI.h iHUD.h iMod.h iShip.h iSim.h iUtilities.h
 
 tmultimod.pkg : tMultimod.pog Debug.h INIFile.h String.h Task.h iMod.h
+
+tsarray.pkg : tsArray.pog List.h Object.h String.h
 
 tsbasenet.pkg : tsBaseNet.pog CargoTypes.h Debug.h GUI.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h String.h Task.h Text.h iCargo.h igame.h iHUD.h iHabitat.h iMapEntity.h iMod.h iShip.h iSim.h iUtilities.h tsEconUtil.h tsFleetOp.h tsFleetOpEnum.h tsFleetOpFilter.h tsLProduction.h tsMail.h tsStationEnum.h tsString.h tsTime.h
 
