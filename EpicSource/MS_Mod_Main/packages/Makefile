@@ -72,6 +72,7 @@ PACKAGES = ECargoTypes.pkg \
 	UniGUI.pkg \
 	UniGUIBase.pkg \
 	UniGUIMisc.pkg \
+	tsArray.pkg \
 	tsBaseNet.pkg \
 	tsChangeIdGui.pkg \
 	tsPlayerShipPurGui.pkg \
