@@ -30,9 +30,9 @@ prototype string tsFleetOp.GetOperationPog( hisim operation );
 
 prototype string tsFleetOp.GetOperationEnvFoTemplate( hisim operation );
 
-prototype int tsFleetOp.GetOperationMaxFleets(hisim operation);
+prototype int tsFleetOp.GetOperationMaxFleets( hisim operation );
 
-prototype string tsFleetOp.GetOperationShipClass(hisim operation);
+prototype string tsFleetOp.GetOperationShipClass( hisim operation );
 
 prototype hisim tsFleetOp.Find( int operation_id );
 
@@ -73,6 +73,10 @@ prototype tsFleetOp.SetSupporter( hisim operation, hhabitat station );
 prototype hhabitat tsFleetOp.Supporter( hisim operation );
 
 prototype tsFleetOp.DisplayOps();
+
+prototype tsFleetOp.KillShipOnOp( hisim operation, hship ship );
+
+prototype tsFleetOp.SetShipOnOp( hisim operation, hship ship, int index );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 
