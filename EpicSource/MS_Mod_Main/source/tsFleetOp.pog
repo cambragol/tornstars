@@ -26,7 +26,7 @@ uses  Sim,
 	List,
 	Object,
 	String,
-	Task,
+//	Task,
 	State,
 	Text,
 	Math,
@@ -36,6 +36,8 @@ uses  Sim,
    iCargo,
    CargoTypes,
    
+	tsArray,
+	
 	tsFleetOpEnum,
 	tsFaction,
 	tsStationEnum,
@@ -81,7 +83,9 @@ provides
 	SupportedOperations,
 	SetSupporter,
 	Supporter,
-	DisplayOps;
+	DisplayOps,
+	KillShipOnOp,
+	SetShipOnOp;
 
 
 
@@ -441,7 +445,17 @@ int GetOperationMaxFleets(hisim operation)
 }
 
 
-// Create a new operation of the specified type, of a faction at a map location.
+/* Create a new operation of the specified type, of a faction at a map location.
+
+Desc:
+- The operation defn file is loaded and the required operation sim created.
+- A set of specific details are loaded and set against the operation Sim as follows
+	* environment FO template
+	* operation pog
+	* main operation ship class - this is the primary ship that represents this operation
+	* escort ship class - the class used for any escorts created
+	* max fleet value
+*/
 hisim NewOp(int op_type,
             hfaction faction,
             hmapentity center)
@@ -449,6 +463,8 @@ hisim NewOp(int op_type,
    int id = tsLRoot.NewId();
    hisim operation;
    hinifile operation_defn_file;
+	hinifile operation_env_file;
+	hinifile operation_pc_file;
    string env_fo_template;
    string operation_pog;
    string main_ship_class;
@@ -464,15 +480,21 @@ hisim NewOp(int op_type,
 
    operation = Create(id, faction, false, 1);
 
-   // get & set specific details on the operation to be used consistently later
+   // get specific details for the operation to be used consistently later
    env_fo_template = INIFile.NumberedString( operation_defn_file, tsEconUtil.StationIntToString(op_type), "ESS_Normal", 0, "ERROR");
    operation_pog = INIFile.NumberedString( operation_defn_file, tsEconUtil.StationIntToString(op_type), "operation_pog", 0, "none");
    main_ship_class = INIFile.String( operation_defn_file, tsEconUtil.StationIntToString(op_type), "ship_class", "none");
    max_fleets = INIFile.Int(operation_defn_file, tsEconUtil.StationIntToString(op_type), "max_fleets",0);
+	
+	
+	// set the values on the object
    Object.AddStringProperty(operation, "gtOpEnvFoTemplate", env_fo_template);
    Object.AddStringProperty(operation, "gtOpPog", operation_pog);
    Object.AddStringProperty(operation, "gtOpShipClass", main_ship_class);
    Object.AddIntProperty(operation, "gtOpMaxFleets", max_fleets);
+
+	// finish with the ini file.
+   INIFile.Destroy(operation_defn_file);
 
 
    // sets up the production center and sets some key values against it e.g. operation type
@@ -481,9 +503,6 @@ hisim NewOp(int op_type,
 
    // tsLFleet.Create(hisim producer, int fleets, int supplies, int max_fleets, int max_supplies)
    tsLFleet.Create(operation, max_fleets, 200, max_fleets, 200);
-   
-   // finish with the ini file.
-   INIFile.Destroy(operation_defn_file);
 
    // New operations are created at thier owner station.
    SetSupporter(operation, iHabitat.Cast(center));
@@ -671,6 +690,94 @@ DisplayOps()
    }
 }
 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+//
+// 'Ship on Pog' Object management
+//
+///////////////////////////////////////////////////////////////////////////////////////////
+
+
+//
+// Set a ship on object to 'killed'
+// Finds based on handle. Handle of 'none' is not valid.
+//
+KillShipOnOp(hisim operation, hship ship)
+{
+   int index, size;
+   
+	// make sure is a valid handle
+	if(operation == none || ship == none)
+	{
+		debug Debug.PrintString("tsFleetOp.KillShipOnOp: operation or ship was none\n");
+		return;
+	}
+	
+   // find the ship in the operation ship array using handle as a key,
+   // when found set handle to none, mark as dead
+   size = tsArray.ArraySize(operation, "ts_ShipHandle");
+   
+   for(index=0; index < size; ++index)
+   {
+      if( tsArray.GetArrayHandle(operation, "ts_ShipHandle", index) == ship )
+      {
+         debug Debug.PrintString("tsFleetOp.KillShipOnOp: Ship killed off from op\n");
+         tsArray.SetArrayHandle(operation, "ts_ShipHandle", index, none);
+         tsArray.SetArrayBool(operation, "ts_ShipAlive", index, false);
+         break;
+      }
+   }
+}
+
+//
+// Add/set a ship detail to the operation
+//
+SetShipOnOp(hisim operation, hship ship, int index)
+{
+	// make sure is a valid handle
+	if(operation == none || ship == none)
+	{
+		debug Debug.PrintString("tsFleetOp.SetShipOnOp: operation or ship was none\n");
+		return;
+	}
+	
+	string ship_template = Sim.TemplateName( Sim.Cast(ship) );
+	int threat =  Object.FloatProperty(ship, "threat");
+   
+	tsArray.SetArrayString(operation, "ts_ShipTemplates", index, ship_template);
+	tsArray.SetArrayBool(operation, "ts_ShipAlive", index, true);
+	tsArray.SetArrayHandle(operation, "ts_ShipHandle", index, ship);
+	tsArray.SetArrayInt(operation, "ts_ShipThreat", index, threat);
+}
+
+//
+// Find the next ship in a Live or Dead state starting from an index
+//
+int FindShipOnOp(hsim operation, bool state, int start_index)
+{
+	int index, size, found;
+
+	// make sure is a valid handle
+	if(operation == none)
+	{
+		debug Debug.PrintString("tsFleetOp.FindShipOnOp: operation was none\n");
+		return -1;
+	}
+	
+	found = -1;
+	size = tsArray.ArraySize(operation, "ts_ShipHandle");
+	for(index=start_index; index < size; ++index)
+	{
+		if(tsArray.GetArrayBool(operation, "ts_ShipAlive", index) == state)
+		{
+			found = index;
+			break;
+		}
+	}
+
+	return found;
+}
 
 
 /*
