@@ -735,6 +735,9 @@ KillShipOnOp(hisim operation, hship ship)
 //
 SetShipOnOp(hisim operation, hship ship, int index)
 {
+	string ship_template;
+	int threat;
+	
 	// make sure is a valid handle
 	if(operation == none || ship == none)
 	{
@@ -742,8 +745,8 @@ SetShipOnOp(hisim operation, hship ship, int index)
 		return;
 	}
 	
-	string ship_template = Sim.TemplateName( Sim.Cast(ship) );
-	int threat =  Object.FloatProperty(ship, "threat");
+	ship_template = Sim.TemplateName( Sim.Cast(ship) );
+	threat =  Object.FloatProperty(ship, "threat");
    
 	tsArray.SetArrayString(operation, "ts_ShipTemplates", index, ship_template);
 	tsArray.SetArrayBool(operation, "ts_ShipAlive", index, true);
