@@ -155,6 +155,10 @@ tsfofleetdefense.pkg : tsFoFleetDefense.pog
 	$(POG_COMPILER) -q -i $(INCLUDE_PATH) -i $(PS_INCLUDE_PATH) -i $(INCLUDE_PKG) -hp $(CODE_PATH)/include_tmp -pp $(PACKAGE_PATH) $<
 	cp $(PACKAGE_PATH)/$@ $(MOD_PATH)/packages
 
+tsfofreetrader.pkg : tsFoFreeTrader.pog
+	$(POG_COMPILER) -q -i $(INCLUDE_PATH) -i $(PS_INCLUDE_PATH) -i $(INCLUDE_PKG) -hp $(CODE_PATH)/include_tmp -pp $(PACKAGE_PATH) $<
+	cp $(PACKAGE_PATH)/$@ $(MOD_PATH)/packages
+
 tsfomerc.pkg : tsFoMerc.pog
 	$(POG_COMPILER) -q -i $(INCLUDE_PATH) -i $(PS_INCLUDE_PATH) -i $(INCLUDE_PKG) -hp $(CODE_PATH)/include_tmp -pp $(PACKAGE_PATH) $<
 	cp $(PACKAGE_PATH)/$@ $(MOD_PATH)/packages
@@ -284,6 +288,10 @@ tspcembezzleop.pkg : tsPcEmbezzleOp.pog
 	cp $(PACKAGE_PATH)/$@ $(MOD_PATH)/packages
 
 tspcfenceship.pkg : tsPcFenceShip.pog
+	$(POG_COMPILER) -q -i $(INCLUDE_PATH) -i $(PS_INCLUDE_PATH) -i $(INCLUDE_PKG) -hp $(CODE_PATH)/include_tmp -pp $(PACKAGE_PATH) $<
+	cp $(PACKAGE_PATH)/$@ $(MOD_PATH)/packages
+
+tspcfreetrader.pkg : tsPcFreeTrader.pog
 	$(POG_COMPILER) -q -i $(INCLUDE_PATH) -i $(PS_INCLUDE_PATH) -i $(INCLUDE_PKG) -hp $(CODE_PATH)/include_tmp -pp $(PACKAGE_PATH) $<
 	cp $(PACKAGE_PATH)/$@ $(MOD_PATH)/packages
 
@@ -611,7 +619,7 @@ uniguimisc.pkg : UniGUIMisc.pog Debug.h GUI.h Global.h INIFile.h Input.h List.h 
 
 tmultimod.pkg : tMultimod.pog Debug.h INIFile.h String.h Task.h iMod.h
 
-tsarray.pkg : tsArray.pog List.h Object.h String.h
+tsarray.pkg : tsArray.pog Debug.h List.h Object.h String.h
 
 tsbasenet.pkg : tsBaseNet.pog CargoTypes.h Debug.h GUI.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h String.h Task.h Text.h iCargo.h igame.h iHUD.h iHabitat.h iMapEntity.h iMod.h iShip.h iSim.h iUtilities.h tsEconUtil.h tsFleetOp.h tsFleetOpEnum.h tsFleetOpFilter.h tsLProduction.h tsMail.h tsStationEnum.h tsString.h tsTime.h
 
@@ -651,7 +659,7 @@ tsfaction.pkg : tsFaction.pog Debug.h Global.h Group.h INIFile.h Input.h Math.h 
 
 tsfactiongui.pkg : tsFactionGui.pog Debug.h GUI.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h String.h Task.h Text.h UniGUI.h iCargo.h iComms.h iDirector.h iGUI.h igame.h iHUD.h iHabitat.h iInventory.h iMapEntity.h iShip.h iSim.h iUtilities.h tsFaction.h tsFactionEnum.h tsGui.h tsGuiEnum.h tsMoney.h
 
-tsfleetop.pkg : tsFleetOp.pog CargoTypes.h Debug.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h State.h String.h Task.h Text.h iCargo.h iFaction.h igame.h iHabitat.h iMapEntity.h iShip.h iSim.h tsEconUtil.h tsFaction.h tsFleetOpEnum.h tsLCenter.h tsLFleet.h tsLProduction.h tsLRoot.h tsPcOwner.h tsPogClass.h tsStation.h tsStationEnum.h
+tsfleetop.pkg : tsFleetOp.pog CargoTypes.h Debug.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h State.h String.h Text.h iCargo.h iFaction.h igame.h iHabitat.h iMapEntity.h iShip.h iSim.h tsArray.h tsEconUtil.h tsFaction.h tsFleetOpEnum.h tsLCenter.h tsLFleet.h tsLProduction.h tsLRoot.h tsPcOwner.h tsPogClass.h tsStation.h tsStationEnum.h
 
 tsfleetopcall.pkg : tsFleetOpCall.pog Debug.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h State.h String.h Task.h Text.h iComms.h iFaction.h igame.h iHUD.h iHabitat.h iMapEntity.h iShip.h iSim.h tsFaction.h tsFleetOp.h tsFoArmsDealer.h tsFoConstruction.h tsFoCustoms.h tsFoEmbezzle.h tsFoFleetAttack.h tsFoFleetDefense.h tsFoMerc.h tsFoPatrol.h tsFoProtection.h tsFoRaider.h tsFoTanker.h tsFoThugs.h tsFoTrade.h tsLCenter.h tsLProduction.h tsStation.h tsStationEnum.h tsTime.h
 
@@ -678,6 +686,8 @@ tsfoembezzle.pkg : tsFoEmbezzle.pog Debug.h Global.h INIFile.h Input.h List.h Ma
 tsfofleetattack.pkg : tsFoFleetAttack.pog Debug.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h State.h String.h Task.h Text.h iCargo.h iCargoScript.h iComms.h iFaction.h igame.h iHUD.h iHabitat.h iMapEntity.h iShip.h iSim.h tsDebug.h tsEconUtil.h tsFaction.h tsFleetOp.h tsFleetOpCombat.h tsFleetOpPhysical.h tsLCenter.h tsLFleet.h tsLProduction.h tsLRoot.h tsShipCreation.h tsShipCreationEnum.h tsShipName.h tsStation.h tsStationEnum.h tsStationFilter.h tsTime.h
 
 tsfofleetdefense.pkg : tsFoFleetDefense.pog Debug.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h State.h String.h Task.h Text.h iCargo.h iCargoScript.h iComms.h iFaction.h igame.h iHUD.h iHabitat.h iLagrangePoint.h iMapEntity.h iShip.h iSim.h tsDebug.h tsEconUtil.h tsFaction.h tsFleetOp.h tsFleetOpCombat.h tsFleetOpPhysical.h tsLCenter.h tsLFleet.h tsLProduction.h tsLRoot.h tsShipCreation.h tsShipCreationEnum.h tsShipName.h tsStation.h tsStationEnum.h tsStationFilter.h tsTime.h
+
+tsfofreetrader.pkg : tsFoFreeTrader.pog Debug.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h State.h String.h Task.h Text.h iCargo.h iCargoScript.h iComms.h iFaction.h igame.h iHUD.h iHabitat.h iMapEntity.h iShip.h iSim.h tsDebug.h tsEconUtil.h tsFaction.h tsFleetOp.h tsFleetOpCombat.h tsFleetOpPhysical.h tsLCenter.h tsLFleet.h tsLProduction.h tsLRoot.h tsShipCreation.h tsShipCreationEnum.h tsShipName.h tsStation.h tsStationEnum.h tsStationFilter.h tsTime.h
 
 tsfomerc.pkg : tsFoMerc.pog Debug.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h State.h String.h Task.h Text.h iCargo.h iCargoScript.h iComms.h iFaction.h igame.h iHUD.h iHabitat.h iMapEntity.h iShip.h iSim.h tsDebug.h tsEconUtil.h tsFaction.h tsFleetOp.h tsFleetOpCombat.h tsFleetOpPhysical.h tsLCenter.h tsLFleet.h tsLProduction.h tsLRoot.h tsShipCreation.h tsShipCreationEnum.h tsShipName.h tsStation.h tsStationEnum.h tsStationFilter.h tsTime.h
 
@@ -745,11 +755,13 @@ tspcembezzleop.pkg : tsPcEmbezzleOp.pog ABB_Common.h Debug.h GUI.h Global.h INIF
 
 tspcfenceship.pkg : tsPcFenceShip.pog Debug.h GUI.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h String.h Task.h Text.h iAI.h iComms.h iConversation.h iEscort.h iGUI.h iHUD.h iShip.h iShipCreation.h iSim.h tsCapsuleJump.h tsCull.h tsDistance.h tsDistance.h tsFaction.h tsFleetOp.h tsLFleet.h tsLProduction.h tsLRoot.h tsLTrade.h tsMoney.h tsPcOwner.h tsPilotSetup.h tsShip.h tsShipComms.h tsShipCreation.h tsShipCreationEnum.h tsShipEscort.h tsShipName.h tsStationFilter.h tsTradeSell.h
 
+tspcfreetrader.pkg : tsPcFreeTrader.pog ABB_Common.h Debug.h GUI.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h String.h Task.h Text.h iAI.h iComms.h iConversation.h iEscort.h iGUI.h iHUD.h iLagrangePoint.h iMapEntity.h iPilotSetup.h iShip.h iShipCreation.h iShipCreation.h iSim.h tEpicEventEnum.h tsArray.h tsCapsuleJump.h tsDistance.h tsDistress.h tsEvent.h tsFaction.h tsFleetOp.h tsLCenter.h tsLFleet.h tsMoney.h tsPcOwner.h tsPilotSetup.h tsPodUtil.h tsShip.h tsShipComms.h tsShipCreation.h tsShipCreationEnum.h tsShipEscort.h tsShipHire.h tsShipName.h tsString.h
+
 tspcguards.pkg : tsPcGuards.pog ABB_Common.h Debug.h GUI.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h String.h Task.h Text.h iAI.h iComms.h iConversation.h iEscort.h iGUI.h iHUD.h iLagrangePoint.h iMapEntity.h iPilotSetup.h iShip.h iShipCreation.h iShipCreation.h iSim.h tEpicEventEnum.h tsCapsuleJump.h tsDistance.h tsDistress.h tsEvent.h tsFaction.h tsFleetOp.h tsLCenter.h tsLFleet.h tsMoney.h tsPcOwner.h tsPilotSetup.h tsPodUtil.h tsShip.h tsShipComms.h tsShipCreation.h tsShipCreationEnum.h tsShipEscort.h tsShipName.h tsString.h
 
 tspchiredship.pkg : tsPcHiredShip.pog Debug.h GUI.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h String.h Task.h Text.h iAI.h iComms.h iConversation.h iGUI.h iHUD.h iLagrangePoint.h iShip.h iShipCreation.h iSim.h tsCull.h tsFaction.h tsMoney.h tsPcOwner.h tsPlayerFleet.h tsShip.h tsShipComms.h tsShipEnum.h tsShipName.h
 
-tspcmerc.pkg : tsPcMerc.pog ABB_Common.h Debug.h GUI.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h String.h Task.h Text.h iAI.h iComms.h iConversation.h iEscort.h iGUI.h iHUD.h iLagrangePoint.h iMapEntity.h iPilotSetup.h iShip.h iShipCreation.h iShipCreation.h iSim.h tEpicEventEnum.h tsCapsuleJump.h tsDistance.h tsDistress.h tsEvent.h tsFaction.h tsFleetOp.h tsLCenter.h tsLFleet.h tsMoney.h tsPcOwner.h tsPilotSetup.h tsPodUtil.h tsShip.h tsShipComms.h tsShipCreation.h tsShipCreationEnum.h tsShipEscort.h tsShipHire.h tsShipName.h tsString.h
+tspcmerc.pkg : tsPcMerc.pog ABB_Common.h Debug.h GUI.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h String.h Task.h Text.h iAI.h iComms.h iConversation.h iEscort.h iGUI.h iHUD.h iLagrangePoint.h iMapEntity.h iPilotSetup.h iShip.h iShipCreation.h iShipCreation.h iSim.h tEpicEventEnum.h tsArray.h tsCapsuleJump.h tsDistance.h tsDistress.h tsEvent.h tsFaction.h tsFleetOp.h tsLCenter.h tsLFleet.h tsMoney.h tsPcOwner.h tsPilotSetup.h tsPodUtil.h tsShip.h tsShipComms.h tsShipCreation.h tsShipCreationEnum.h tsShipEscort.h tsShipHire.h tsShipName.h tsString.h
 
 tspcowner.pkg : tsPcOwner.pog Debug.h GUI.h Global.h INIFile.h Input.h List.h Object.h Sim.h String.h Task.h Text.h iGUI.h iHUD.h iShip.h iSim.h
 
@@ -805,7 +817,7 @@ tsshipcreation.pkg : tsShipCreation.pog Debug.h Global.h Group.h INIFile.h List.
 
 tsshipdeath.pkg : tsShipDeath.pog Sim.h iSim.h tsDebug.h
 
-tsshipescort.pkg : tsShipEscort.pog Debug.h Group.h INIFile.h Sim.h iFaction.h iShip.h iSim.h tsFleetOp.h tsLFleet.h tsPcOwner.h tsPilotSetup.h tsShip.h tsShipCreation.h tsShipCreationEnum.h tsShipName.h
+tsshipescort.pkg : tsShipEscort.pog Debug.h Group.h INIFile.h Sim.h iFaction.h iShip.h iSim.h tsArray.h tsFleetOp.h tsLFleet.h tsPcOwner.h tsPilotSetup.h tsShip.h tsShipCreation.h tsShipCreationEnum.h tsShipName.h
 
 tsshiphire.pkg : tsShipHire.pog Debug.h GUI.h Global.h INIFile.h Input.h List.h Math.h Object.h Sim.h String.h Task.h Text.h iAI.h iComms.h iConversation.h iGUI.h iHUD.h iLagrangePoint.h iShip.h iShipCreation.h iSim.h tsCull.h tsFaction.h tsLFleet.h tsMoney.h tsPcOwner.h tsPlayerFleet.h tsShip.h tsShipComms.h tsShipEnum.h tsShipName.h tsString.h
 

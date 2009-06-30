@@ -126,6 +126,7 @@ PACKAGES = ECargoTypes.pkg \
 	tsPcGuards.pkg \
 	tsPcHiredShip.pkg \
 	tsPcMerc.pkg \
+	tsPcFreeTrader.pkg \
 	tsPcOwner.pkg \
 	tsPcPirateToll.pkg \
 	tsPcPodScrapper.pkg \
@@ -180,6 +181,7 @@ PACKAGES = ECargoTypes.pkg \
 	tsFoThugs.pkg \
 	tsFoArmsDealer.pkg \
 	tsFoMerc.pkg \
+	tsFoFreeTrader.pkg \
 	tsPilotSetup.pkg \
 	tsPlayerDeath.pkg \
 	tsPlayerSave.pkg \

@@ -1,0 +1,320 @@
+/*******************************************************************************************/
+//
+// tsFoFreeTrader.pog
+// 
+// Torn Stars Fleet Operation Free Trader Wandering Group
+// 
+// The Merc operation moves around stations looking for hire.
+// It will align and protect its supporting station until hired.
+// 
+// The Patrol behavior is to move often around the neutral or better stations 
+// within the same planet as its home station. The Merc group is not looking to attack
+// hostile stations or visit hostile stations.
+//
+// If the FreeTrader Group is outnumbered, it will flee home.
+// If the FreeTrader Group is wounded half it will flee home.
+//
+// March 2006
+// June 2009 - Created from a modified from the Merc base
+//******************************************************************************************/
+
+package tsFoFreeTrader;
+
+
+uses  Sim,
+   iSim,
+   Debug,
+   Global,
+   iGame,
+   iFaction,
+   INIFile,
+   Input,
+   List,
+   Object,
+   String,
+   Task,
+   State,
+   Text,
+   Math,
+   iShip,
+   iHabitat,
+   iMapEntity,
+   iCargo,
+   iCargoScript,
+   iHUD,
+   iComms,
+   
+   tsStationEnum,
+   tsStation,
+   tsFaction,
+   tsTime,
+   tsFleetOp,
+   tsLRoot,
+   tsLCenter,
+   tsLProduction,
+   tsLFleet,
+   tsStationFilter,
+   tsEconUtil,
+   tsShipName,
+   tsShipCreationEnum,
+   tsShipCreation,
+   tsFleetOpCombat,
+   tsFleetOpPhysical,
+   tsDebug;
+
+
+
+
+provides New,
+         Save,
+         Restore,
+         Update,
+         PlayerNear;
+
+
+prototype hhabitat find_patrol_station(hisim operation, hmapentity center, string system_name, float distance);
+
+prototype hhabitat find_safe_station(hisim operation, hmapentity center, string system_name);
+
+//*******************************************************************************************/         
+//
+//*******************************************************************************************/
+
+New(hisim operation)
+{
+   string ship_name, ship_template, op_type, ship_class;
+   hfaction faction;
+
+
+   ship_class = tsFleetOp.GetOperationShipClass(operation);
+
+   faction = iSim.Faction(operation);
+
+   // We pick a police name for ourselves. 
+   // using a large number means we get a random name.
+   ship_name = tsShipName.ShipName("general", 10000);
+
+   // We pick a warship for center vessel.
+   ship_template = tsShipCreation.GetShip(faction, tsShipCreation.String2ShipType(ship_class));
+
+   tsFleetOp.SetName(operation, ship_name);
+   tsFleetOp.SetShipTemplate(operation, ship_template);
+
+   tsLFleet.SetMaxFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
+   tsLFleet.SetFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
+
+}
+
+
+
+Save(hisim operation)
+{
+
+}
+
+
+
+Restore(hisim operation)
+{
+   
+}
+
+
+
+Update(hisim operation)
+{
+   hmapentity center = tsLCenter.GetCenter(operation);
+   hhabitat target_station, supporter_station;
+   bool hostiles, wounded, dying, home, out_gunned, need_patrol;
+   bool move_home, stay_still, move_safe;
+   list local_operations;
+   hisim visitor;
+   hfaction faction, visitor_faction;
+   int fleets, hostile_fleets, total_hostiles;
+   int i, total;
+   int current_day = tsTime.GetDay();
+   int patrol_day;
+   int update_delay = 1;
+
+   tsDebug.PrintString("tsFoFreeTrader_debug","tsFoFreeTrader.Update\n");
+
+   
+   faction = iSim.Faction(operation);
+
+   // Here we look up what other operations are nearby. 
+   // Any combat between this and other operations happens here.
+
+   local_operations = tsFleetOp.StationOperations(center);
+   List.Remove(local_operations, operation);
+   total = List.ItemCount(local_operations);
+
+   hostiles = false;
+   total_hostiles = 0;
+
+   for (i=0;i<total;++i) {
+      visitor = iSim.Cast(List.GetNth(local_operations,i));
+      visitor_faction = iSim.Faction(visitor);
+
+      if (iFaction.Feeling(visitor_faction, faction) < -0.2) {
+         // There are hostile forces at this station
+         fleets = tsLFleet.Fleets(operation);            // our fleet size
+         hostile_fleets = tsLFleet.Fleets(visitor);      // hostiles fleet size
+
+         if (fleets > hostile_fleets) {
+            // We have the advantage, pound them.
+            tsFleetOpCombat.Offense(center, operation, visitor);
+         }else {
+            // We are outnumbered, so switch to evasive tactics.
+            tsFleetOpCombat.Defense(center, operation, visitor);
+         }
+         // Remember this total, so we can choose to flee later.
+         total_hostiles += hostile_fleets;
+         hostiles = true;
+      }
+   }
+
+   // get the updated fleets value after damage has been done from
+   // any hostile visitors
+   fleets = tsLFleet.Fleets(operation);
+
+   if (fleets == 0) {
+      // Ouch, we died.
+      tsDebug.PrintString("tsFoFreeTrader_debug","tsFoMFreeTrader lost fleets and died\n");
+
+      tsFleetOp.DestroyOp(operation);
+      return;
+   }
+
+   // Check if we are outnumbered.
+   if (fleets < total_hostiles) {
+      out_gunned = true;
+   }else {
+      out_gunned = false;
+   }
+
+
+   if (fleets < (tsLFleet.MaxFleets(operation))) {
+      wounded = true;
+   }else {
+      wounded = false;
+   }
+
+   // dying when half damaged
+   if (fleets < (tsLFleet.MaxFleets(operation)/2)) {
+      dying = true;
+   }else {
+      dying = false;
+   }
+
+   supporter_station = tsFleetOp.Supporter(operation);
+
+   // Are we home?
+   if (center == iMapEntity.Cast(supporter_station)) {
+      home = true;
+   }else {
+      home = false;
+   }
+
+   move_home = false; // Move to home base
+   move_safe = false; // Move to safe location (for repair)
+   stay_still = false;
+
+   // 
+   if ((dying || wounded) && !home) {
+      move_home = true;
+   }else if (wounded && home) {
+      // Stay right here.
+      stay_still = true;
+   }else if (out_gunned) {
+      move_home = true;
+   }
+
+   // Repair some fleets. Double rate if at home.
+   if (home) {
+      tsLFleet.ChangeFleets(operation, 20 * update_delay);
+   }else {
+      tsLFleet.ChangeFleets(operation, 10 * update_delay);
+   }
+
+   if (move_home) {
+
+      tsLCenter.SetCenter(operation, supporter_station);
+      tsFleetOpCombat.SetDistressFlags(supporter_station);
+
+      tsDebug.PrintString("tsFoFreeTrader_debug","tsFoFreeTrader moving home\n");
+      tsDebug.PrintHandle("tsFoFreeTrader_debug",supporter_station);
+      tsDebug.PrintString("tsFoFreeTrader_debug"," supporter station\n");
+
+   }else if (!stay_still) {
+
+      // Move every week, patrolling near our patrol station.
+      patrol_day = tsFleetOp.EventTimer(operation);
+      if (patrol_day == 0) {
+         patrol_day = Math.RandomInt(1,7);
+         tsFleetOp.SetEventTimer(operation, patrol_day);
+      }
+
+      if (current_day > patrol_day) {
+
+         // Move to another station near our station.
+         tsFleetOp.SetEventTimer(operation, current_day + 7);
+
+         // Patrol stations near our own, avoiding dislike or lower stations.
+         target_station = find_patrol_station(operation, center, iSim.WorldName(center), 500000km);
+
+         if (none != target_station) {
+            tsLCenter.SetCenter(operation, target_station);
+            tsFleetOpCombat.SetDistressFlags(target_station);
+
+            tsDebug.PrintString("tsFoFreeTrader_debug","tsFoFreeTrader new patrol\n");
+            tsDebug.PrintHandle("tsFoFreeTrader_debug",target_station);
+            tsDebug.PrintString("tsFoFreeTrader_debug"," new station\n");
+         }
+      }
+   }else {
+      tsDebug.PrintString("tsFoFreeTrader_debug","tsFoFreeTrader stay still\n");
+   }
+
+   // Set next wakeup date.
+   tsFleetOp.SetWakeTimer(operation, current_day + update_delay);
+}
+
+
+
+
+
+// Called when the player is near the operation
+PlayerNear(hisim operation)
+{
+   debug Debug.PrintString("tsFoFreeTrader.PlayerNear: Player near operation, instantiate physical sims.\n");
+   tsFleetOpPhysical.MakeOpPhysical(operation);
+}
+
+
+// patrol the neutral or better stations at close distance to their home station.
+hhabitat find_patrol_station(hisim operation, hmapentity center, string system_name, float distance)
+{
+   set habitats;
+
+   // Search system stations and find a normal status station where we can live.
+   habitats = tsStationFilter.OnStatus(iSim.SimsInRadius( center,
+                                                         distance,
+                                                         T_Station),
+																			ESS_Normal);
+                                     
+   Set.Remove(habitats, center);
+   // We can hang out at neutral or better stations. We avoid people trying to
+   // kill us.
+   habitats = tsStationFilter.OnGreaterFeeling(habitats,
+                                              iSim.Faction(operation),
+                                              tsFaction.Type2LowerLevel(FT_Neutral));
+
+   return iHabitat.Random(habitats);
+}
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
