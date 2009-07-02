@@ -42,6 +42,7 @@ uses    Sim,
         iEscort,
         ABB_Common,
 
+        tsArray,
         tsPodUtil,
         tsShipComms,
         tsFaction,
@@ -181,6 +182,14 @@ hsim PogCreate(string template_name, string object_name)
    // All 
    Object.AddStringProperty(item, "gt_pog_object_class", pog_class);
    Object.AddStringProperty(item, "gt_pog_object_template", template_name);
+	debug {
+		Debug.PrintString("tsPcMerc.PogCreate, pog_class = ");
+		Debug.PrintString(pog_class);
+		Debug.PrintString("\n");
+		Debug.PrintString("tsPcMerc.PogCreate, template_name = ");
+		Debug.PrintString(template_name);
+		Debug.PrintString("\n");
+	}
 
       
    return item;
@@ -261,6 +270,14 @@ setup_merc(hisim marker)
    // Get the ship types from the ini file for leader and escort.
    leader_type = INIFile.String(control_file,"Properties","leader_ship_type","EST_CombatLight");
    escort_type = INIFile.String(control_file,"Properties","escort_ship_type","EST_CombatFighter");
+	debug {
+		Debug.PrintString("tsPcMerc.PogCreate, leader_ship_type = ");
+		Debug.PrintString(leader_type);
+		Debug.PrintString("\n");
+		Debug.PrintString("tsPcMerc.PogCreate, escort_ship_type = ");
+		Debug.PrintString(escort_type);
+		Debug.PrintString("\n");
+	}
    
    // close ini file
    INIFile.Destroy(control_file);
@@ -348,7 +365,7 @@ setup_merc(hisim marker)
    }
 
 
-   // Launch the toll controller task.
+   // Launch the controller task.
    Task.Detach(start merc_controller(location, owner, patrol_group));
 
    // We can remove the guard mark now.
@@ -794,6 +811,13 @@ hship create_leader (hmapentity location, hisim operation, hgroup cull_group, st
       leader_name = tsShipName.ShipName("govornment",10000);
    }
 
+	debug {
+		Debug.PrintString("tsPcMerc.create_leader, leader_template = ");
+		Debug.PrintString(leader_template);
+		Debug.PrintString("\n");
+	}
+
+
    leader_file = INIFile.Create(leader_template);
 
    if (none == leader_file) {
@@ -820,6 +844,9 @@ hship create_leader (hmapentity location, hisim operation, hgroup cull_group, st
    tsPcOwner.SetOwner(leader, operation);
 
    Group.AddSim(cull_group, leader);
+   
+   // add leader template to operation
+   tsFleetOp.SetShipOnOp(operation, leader, 0);
 
    return leader;
 }

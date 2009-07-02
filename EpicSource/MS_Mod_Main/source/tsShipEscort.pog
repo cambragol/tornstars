@@ -28,6 +28,7 @@ uses
    tsShipCreationEnum,
 //   iUtilities,
 //   tsFaction,
+   tsArray,
    tsShip,
    tsShipName,
    tsPcOwner,
@@ -40,7 +41,8 @@ uses
 
 provides
    CreateStandardEscort,
-   CreateMixedEscort;
+   CreateMixedEscort,
+   DeathScript;
 
 
 
@@ -50,19 +52,27 @@ provides
 //
 
 
-
+/*
+Escort death script
+Will deal with operation specific details on ship deatth
+*/
 task DeathScript(hship ship)
 {
    hisim owner;
+   int index;
 
 
    owner = iSim.Cast(tsPcOwner.Owner(ship));
 
    if (none != owner) {
-      if (tsFleetOp.IsOperation(owner)){
+      // we have an owner
+      if (tsFleetOp.IsOperation(owner)) {
+         // owner is an operation
 
          // Reduce the operations fleet value as it has lost a ship
          tsLFleet.ChangeFleets(owner, - Object.FloatProperty(ship, "threat"));
+         // find this ship on the operation ship list and set to dead
+         tsFleetOp.KillShipOnOp(owner, ship);
       }
    }
 
@@ -124,6 +134,9 @@ CreateStandardEscort(
 
    for (i=0;i<total;++i) {
       escort = tsShip.Create(escort_template, tsShipName.ShipName(ship_name_group,10000));
+      
+      // set our custom death script
+      Object.SetStringProperty ( escort, "death_script", "tsShipEscort.DeathScript" );
 
       tsPilotSetup.SetupEscort(escort, 0.9, 0.5);
 
@@ -138,6 +151,10 @@ CreateStandardEscort(
       tsPcOwner.SetOwner(escort, operation);
       
       Group.AddSim(cull_group, escort);
+      
+      // add the ships details to the operation ship list
+		// Note: this list is indexed from 1
+      tsFleetOp.SetShipOnOp(operation, escort, i+1);
    }
 
    debug Debug.PrintString("tsShip.CreateEscorts: End\n");
@@ -177,6 +194,7 @@ CreateMixedEscort(
    int i, sizeloop, total, try_to_make_num_ships;
    hship escort;
    hfaction faction = iSim.Faction(leader);
+	int available_fleets = tsLFleet.Fleets(operation);
    
    debug Debug.PrintString("tsShip.CreateMixedEscort: Start\n");
 
@@ -224,9 +242,8 @@ CreateMixedEscort(
          threat = INIFile.Float(escort_file,"Properties","threat", 40);
          INIFile.Destroy(escort_file);
 
-         fleets = tsLFleet.Fleets(operation);
          if(use_maxfleets)
-            total = fleets/threat;
+            total = available_fleets/threat;
          else
             total = try_to_make_num_ships;
          
@@ -255,6 +272,12 @@ CreateMixedEscort(
             tsPcOwner.SetOwner(escort, operation);
             
             Group.AddSim(cull_group, escort);
+				
+				// add the ships details to the operation ship list
+				// Note: this list is indexed from 1
+				tsFleetOp.SetShipOnOp(operation, escort, i+1);
+				
+				available_fleets -= threat;
          }
       }
    }

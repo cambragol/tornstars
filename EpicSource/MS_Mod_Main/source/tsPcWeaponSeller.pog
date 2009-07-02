@@ -381,13 +381,12 @@ setup_trade_ship(hisim marker)
                   ship,
                   cull_group,
                   "underworld",
-                  false,          // use maxfleets
+                  true,          // use maxfleets
                   4,             //fighter_ships
-                  3,             // light_ships
-                  2,             // heavy_ships
-                  1              // capital_ships
+                  2,             // light_ships
+                  1,             // heavy_ships
+                  0              // capital_ships
                   );
-
 
 
    // Setup the comms tasks

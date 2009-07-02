@@ -643,6 +643,10 @@ string Operation2String(int op_type)
    case ept_MercOp:
       return "Mercenary Operation";
       break;
+		
+	case ept_FreeTraderOp:
+		return "Free Trader Operation";
+		break;
 
 
    // Creates a black market importer/exporter into the station.
