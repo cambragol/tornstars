@@ -394,8 +394,11 @@ string Category2String(eStationCategory category)
    case ESC_Process : return "ESC_Process"; break;
    case ESC_Manufacture : return "ESC_Manufacture"; break; 
    case ESC_Research : return "ESC_Research"; break;
-   case ESC_Habitat : return "ESC_Habitat"; break;
    case ESC_Headquarters : return "ESC_Headquarters"; break;
+   case ESC_Transport : return "ESC_Transport"; break;
+   case ESC_Habitat : return "ESC_Habitat"; break;
+   case ESC_Government : return "ESC_Government"; break;
+   case ESC_Military : return "ESC_Military"; break;
    case ESC_Pirate : return "ESC_Pirate"; break;
    default:
 
