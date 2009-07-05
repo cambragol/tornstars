@@ -840,7 +840,7 @@ create_patrol(hisim operation, hisim waypoint, hgroup cull_group, string ship_ty
    total = float2int(int2float(fleets)/threat);
 
    for (i=0;i<total;++i) {
-      escort = tsShip.Create(escort_template, tsShipName.ShipName("government",10000));
+      escort = tsShip.Create(escort_template, tsShipName.ShipName("govornment",10000));
 
       tsPilotSetup.SetupEscort(escort, 0.9, 0.5);
 

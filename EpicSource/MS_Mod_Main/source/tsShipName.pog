@@ -31,7 +31,7 @@ int RandomNumber(string name_type)
    if ("underworld" == name_type) {
       value = Math.RandomInt(0,222);
 
-   }else if ("government" == name_type) {
+   }else if ("govornment" == name_type) {
       value = Math.RandomInt(0,420);
 
    }else if ("von_schelling" == name_type) {
@@ -86,7 +86,7 @@ string ShipName(string name_type, int number)
       if (value > 222) {
          value = Math.RandomInt(0,222);
       }
-   }else if ("government" == name_type) {
+   }else if ("govornment" == name_type) {
       if (value > 420) {
          value = Math.RandomInt(0,420);
       }
