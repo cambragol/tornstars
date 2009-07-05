@@ -808,7 +808,7 @@ hship create_leader (hmapentity location, hisim operation, hgroup cull_group, st
    }else {
       // otherwise get the leader template from pog class file
       leader_template = tsShipCreation.GetShip(faction, tsShipCreation.String2ShipType(ship_type));
-      leader_name = tsShipName.ShipName("govornment",10000);
+      leader_name = tsShipName.ShipName("government",10000);
    }
 
 	debug {
