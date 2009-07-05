@@ -251,6 +251,7 @@ setup_ship(hisim marker)
    // Set the operation to already have a physical representation.
    tsFleetOp.SetCreated(owner, true);
 
+	// get the template and ship name from the operation.
    ship_template = tsFleetOp.ShipTemplate(owner);
    ship_name = tsFleetOp.Name(owner);
 
