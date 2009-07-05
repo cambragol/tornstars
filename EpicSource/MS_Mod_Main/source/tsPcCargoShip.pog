@@ -261,7 +261,7 @@ setup_ship(hisim marker)
 
 
     // create a ship sim
-   ship = tsShip.Create(ship_template, name);
+   ship = tsShip.Create(ship_template, ship_name);
 
    if (ship == none) {
       debug Debug.PrintString("tsPcCargoShip.setup_ship: ERROR: Ship failed to create\n");
