@@ -81,6 +81,18 @@ enum eCSScriptState
    eCS_Attacked,
    eCS_Fight,
    eCS_Distress,
+   eCS_WaitQueue,
+   eCS_ToDock,
+   eCS_WaitDocking,
+   eCS_Docked,
+   eCS_Unload,
+   eCS_WaitUnload,
+   eCS_Load,
+   eCS_WaitLoad,
+   eCS_ChooseCargo,
+   eCS_ChooseDestination,
+   eCS_AbandonStation,
+   eCS_Escort,
    eCS_Dead,
    eCS_Removed,
    eCS_Cull
@@ -233,7 +245,7 @@ setup_merc(hisim marker)
    hfaction player_faction = tsFaction.PlayerFaction();
    hisim owner;
 
-   string leader_type, escort_type;
+   string leader_type, escort_type, merchant_type;
    int i, total;
    float threat;
    int fleets;
@@ -258,9 +270,11 @@ setup_merc(hisim marker)
       return;
    }
 
-   // Get the ship types from the ini file for leader and escort.
+   // Get the ship types from the ini file for leader, escort, merchant.
    leader_type = INIFile.String(control_file,"Properties","leader_ship_type","EST_CombatLight");
    escort_type = INIFile.String(control_file,"Properties","escort_ship_type","EST_CombatFighter");
+	merchant_type = INIFile.String(control_file,"Properties","merchant_ship_type","EST_FreightAll");
+	
    
    // close ini file
    INIFile.Destroy(control_file);
@@ -310,7 +324,7 @@ setup_merc(hisim marker)
       tsFleetOp.SetCreated(owner, true);
    }
 
-   // create the leader for this patrol.
+   // create the leader for this enterprise.
    patrol_ship = create_leader(location, owner, patrol_group, leader_type);
    
    // If not leader ship then we abort
@@ -322,6 +336,35 @@ setup_merc(hisim marker)
 
    // Subtract off the fleets that are needed for the patrol ship.
    fleets = fleets - Object.FloatProperty(patrol_ship, "threat");
+
+	// calc number of merchants to be created. Based on a portion of available fleets
+	total_escort = 
+
+	// create the merchants next
+	for (i=0;i<total_escort;++i) {
+      name = tsShipName.ShipName( "general", 10000);
+      ship_template = tsShipCreation.GetShip(station_faction, merchant_type);
+
+      escort = tsShip.Create(ship_template, name);
+
+      tsPilotSetup.SetupCargo(escort, 0.9, 0.7);
+
+      iSim.SetFaction(escort, station_faction);
+      Sim.SetCullable(escort, false);
+
+      // Let us see this escort far away.
+      //iSim.SetSensorVisibility(escort, true);
+
+      Sim.PlaceRelativeTo(escort, ship, 2km, 0, 0);
+
+      iShip.Attacked(escort);
+      iShip.LastAttacker(escort);
+		
+		fleets = fleets - Object.FloatProperty(escort, "threat");
+
+      Group.AddSim(patrol_group, escort);
+   }
+	
 
    // Create escorts with the remaining fleet value.
    //create_escorts(owner, fleets, patrol_ship, patrol_group, escort_type);
@@ -865,6 +908,7 @@ eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool
 //[cf]
 
 
+
 //[of]:string state2string(eCSScriptState state)
 string state2string(eCSScriptState state)
 {
@@ -890,6 +934,42 @@ string state2string(eCSScriptState state)
    case eCS_Distress:   
       return "eCS_Distress";
       break;
+    case eCS_WaitQueue:
+		return "eCS_WaitQueue";
+		break;
+   case eCS_ToDock:
+		return "eCS_ToDock";
+		break;
+   case eCS_WaitDocking:
+		return "eCS_WaitDocking";
+		break;
+   case eCS_Docked:
+		return "eCS_Docked";
+		break;
+   case eCS_Unload:
+		return "eCS_Unload";
+		break;
+   case eCS_WaitUnload:
+		return "eCS_WaitUnload";
+		break;
+   case eCS_Load:
+		return "eCS_Load";
+		break;
+   case eCS_WaitLoad:
+		return "eCS_WaitLoad";
+		break;
+   case eCS_ChooseCargo:
+		return "eCS_ChooseCargo";
+		break;
+   case eCS_ChooseDestination:
+		return "eCS_ChooseDestination";
+		break;
+   case eCS_AbandonStation:
+		return "eCS_AbandonStation";
+		break;
+   case eCS_Escort:
+		return "eCS_Escort";
+		break;
    case eCS_Dead:   
       return "eCS_Dead";
       break;
@@ -897,6 +977,7 @@ string state2string(eCSScriptState state)
       return "eCS_Cull";
       break;
    default:
+		debug Debug.PrintString("tsPcFreeTrader.state2string - ERROR: state not mapped\n");
       break;
    }
 
