@@ -148,11 +148,12 @@ hsim PogCreate(string template_name, string object_name)
    hinifile object_file;
    string name;
    string item_template, pog_class, start_function;
-   hsim item;
+   hsim item = none;
 
 
    debug Debug.PrintString("tsPcFreeTrader.PogCreate\n");
 
+	// open init file
    object_file = INIFile.Create(template_name);
 
    if (none == object_file) {
@@ -170,7 +171,7 @@ hsim PogCreate(string template_name, string object_name)
 
    //********************
    // This block of code is class dependent. The rest must be done to adhere
-   // to the pog otbject calling conventions.
+   // to the pog object calling conventions.
 
 //   item_template = INIFile.String(object_file, "Properties","template","none");
 
@@ -179,7 +180,7 @@ hsim PogCreate(string template_name, string object_name)
 //   name = tsShipName.ShipName( "underworld", Math.RandomInt(0, 222));
 //   item = Sim.Create(item_template, name);
 
-   item = Sim.Create("ini:/sims/nav/waypoint","merc_mark");
+   item = Sim.Create("ini:/sims/nav/waypoint","freetrader_mark");
 
    if (none == item) {
       debug {
@@ -241,17 +242,23 @@ setup_merc(hisim marker)
    hinifile control_file;
    string template_file_name;
    hmapentity location;
-   hfaction merc_faction;
+   hfaction station_faction;
    hfaction player_faction = tsFaction.PlayerFaction();
    hisim owner;
 
-   string leader_type, escort_type, merchant_type;
+   string leader_type, escort_type, merchant_type_str;
+	etsShipType merchant_type;
    int i, total;
    float threat;
    int fleets;
 
    hship patrol_ship;
    hgroup patrol_group = Group.Create();
+	
+	int total_escort;
+	string name;
+	string ship_template;
+	hship escort;
 
 
    if (none == marker) {
@@ -273,7 +280,8 @@ setup_merc(hisim marker)
    // Get the ship types from the ini file for leader, escort, merchant.
    leader_type = INIFile.String(control_file,"Properties","leader_ship_type","EST_CombatLight");
    escort_type = INIFile.String(control_file,"Properties","escort_ship_type","EST_CombatFighter");
-	merchant_type = INIFile.String(control_file,"Properties","merchant_ship_type","EST_FreightAll");
+	merchant_type_str = INIFile.String(control_file,"Properties","merchant_ship_type","EST_FreightAll");
+	merchant_type = tsShipCreation.String2ShipType(merchant_type_str);
 	
    
    // close ini file
@@ -290,7 +298,7 @@ setup_merc(hisim marker)
    // The first thing we do is learn if this marker is to represent an operation.
    // If we do, then we handle some things differently.
    owner = iSim.Cast(tsPcOwner.Owner(marker));
-   merc_faction = iSim.Faction(iSim.Cast(owner));
+   station_faction = iSim.Faction(iSim.Cast(owner));
 
    // We must have an owner, either operation or station.
    if (none == owner) {
@@ -338,10 +346,10 @@ setup_merc(hisim marker)
    fleets = fleets - Object.FloatProperty(patrol_ship, "threat");
 
 	// calc number of merchants to be created. Based on a portion of available fleets
-	total_escort = 
+	total_escort = 2;
 
 	// create the merchants next
-	for (i=0;i<total_escort;++i) {
+	for (i=0; i<total_escort; ++i) {
       name = tsShipName.ShipName( "general", 10000);
       ship_template = tsShipCreation.GetShip(station_faction, merchant_type);
 
@@ -355,7 +363,7 @@ setup_merc(hisim marker)
       // Let us see this escort far away.
       //iSim.SetSensorVisibility(escort, true);
 
-      Sim.PlaceRelativeTo(escort, ship, 2km, 0, 0);
+      Sim.PlaceRelativeTo(escort, escort, 2km, 0, 0);
 
       iShip.Attacked(escort);
       iShip.LastAttacker(escort);
