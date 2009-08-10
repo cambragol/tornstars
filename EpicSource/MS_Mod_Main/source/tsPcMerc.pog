@@ -361,7 +361,9 @@ setup_merc(hisim marker)
 
    // make ships hireable
    for(i=0; i<Group.SimCount(patrol_group); ++i) {
-      tsShipHire.InitShipHire(iShip.Cast(Group.NthSim(patrol_group, i)));
+		if(patrol_ship != iShip.Cast(Group.NthSim(patrol_group, i))) {
+			tsShipHire.InitShipHire(iShip.Cast(Group.NthSim(patrol_group, i)));
+		}
    }
 
 
