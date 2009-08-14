@@ -452,7 +452,7 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
 
    speech_style = tsFaction.SpeechStyle(merc_faction);
 
-   patrol_radius = Sim.DistanceBetween(patrol_leader, location);
+   patrol_radius = 15km;
 
 	for(i=0;i<Group.SimCount(patrol_group); ++i) {
 		if(Object.BoolProperty(Group.NthSim(patrol_group, i), "gt_isMerchant")) {
@@ -514,17 +514,30 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
 
       case eCS_ToDestination:
          debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_ToDestination\n");
-         // Send the leader orbiting the station.
+
 
 ///////////////////
-         // Send the cargo ship to the current station.
+         // Send the cargo ship to a makker near the current station.
 			//debug Debug.PrintHandle(patrol_leader);
+         rotation = rotation + 60;
+         if (rotation > 720) {
+            rotation = 0;
+         }else if (rotation > 360) {
+            rotation = rotation - 360;
+         }
+         Sim.PlaceRelativeTo(marker, location, 
+                             Math.Sin(rotation) * patrol_radius, 
+                             0, 
+                             Math.Cos(rotation)* patrol_radius);
+			
          iAI.PurgeOrders(patrol_leader);
-         iAI.GiveApproachOrderAdvanced( patrol_leader,
-                                        location,
-                                        10km,
-                                        11km,
-                                        true);
+//         iAI.GiveApproachOrderAdvanced( patrol_leader,
+//                                        marker,
+//                                        10km,
+//                                        11km,
+//                                        true);
+			iAI.GiveApproachOrder( patrol_leader, marker );
+
 
          state = change_state(state, eCS_WaitApproach, debug_on);
 ///////////////////
@@ -556,20 +569,34 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
          // Wait here until the AI has halted.
          if (OT_None == iAI.CurrentOrderType(patrol_leader)) {
             // Requesting docking clearance.
-            iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pccgo_cargoship_requesting_cargo_dock","",5));
+            iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_freetrader_approach","",1));
             state = change_state(state, eCS_WaitQueue, debug_on);
             wait_count = 0;
-         }
+         } else if (check_for_attacks(patrol_group)){
+
+            state = change_state(state, eCS_Attacked, debug_on);
+
+         } else if (check_for_distress(patrol_group)){
+
+            state = change_state(state, eCS_Distress, debug_on);
+			}
 			break;
 
       case eCS_WaitQueue:
-		debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_WaitQueue\n");
+			debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_WaitQueue\n");
          if (wait_count > 30) {
 
-            iComms.Shout(location, "", tsString.CommsStringRandom("pccgo_cargoship_docking_cleared","",5));
+            iComms.Shout(location, "", tsString.CommsStringRandom("pcft_freetrader_looking_for_work","",1));
             // Wait here for a chance to use the freight port.
             state = change_state(state, eCS_CheckNearby, debug_on);
-         }
+         } else if (check_for_attacks(patrol_group)){
+
+            state = change_state(state, eCS_Attacked, debug_on);
+
+         } else if (check_for_distress(patrol_group)){
+
+            state = change_state(state, eCS_Distress, debug_on);
+			}
          ++wait_count;
          break;
 
