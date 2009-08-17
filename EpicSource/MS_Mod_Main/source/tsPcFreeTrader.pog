@@ -438,7 +438,7 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
    float spacing, radius, rotation, distance, patrol_radius;
    float sender_feeling, target_feeling;
    int event_type;
-	int i, wait_count;
+   int i, wait_count, max_request_for_business_count;
    bool do_rescue;
    bool debug_on;
    eCSScriptState state = eCS_Init;
@@ -508,12 +508,15 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
          marker = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint", "patrol mark"));
 
          rotation = Math.Random(0,360);
+		 
+		 max_request_for_business_count = 2;
 
          state = change_state(state, eCS_ToDestination, debug_on);
          break;
 
       case eCS_ToDestination:
-         debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_ToDestination\n");
+        debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_ToDestination\n");
+        iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_freetrader_approach","",1));
 
 
 ///////////////////
@@ -569,7 +572,6 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
          // Wait here until the AI has halted.
          if (OT_None == iAI.CurrentOrderType(patrol_leader)) {
             // Requesting docking clearance.
-            iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_freetrader_approach","",1));
             state = change_state(state, eCS_WaitQueue, debug_on);
             wait_count = 0;
          } else if (check_for_attacks(patrol_group)){
@@ -583,20 +585,24 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
 			break;
 
       case eCS_WaitQueue:
-			debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_WaitQueue\n");
-         if (wait_count > 30) {
+		debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_WaitQueue\n");
+        iComms.Shout(location, "", tsString.CommsStringRandom("pcft_freetrader_looking_for_work","",1));
+        if (wait_count > 30) {
 
-            iComms.Shout(location, "", tsString.CommsStringRandom("pcft_freetrader_looking_for_work","",1));
-            // Wait here for a chance to use the freight port.
-            state = change_state(state, eCS_CheckNearby, debug_on);
-         } else if (check_for_attacks(patrol_group)){
+			--max_request_for_business_count;
+            // Wait here for a chance for a player to hire any ships
+			if(max_request_for_business_count > 0)
+				state = change_state(state, eCS_CheckNearby, debug_on);
+			else
+				state = change_state(state, eCS_ToDock, debug_on);
+        } else if (check_for_attacks(patrol_group)){
 
             state = change_state(state, eCS_Attacked, debug_on);
 
-         } else if (check_for_distress(patrol_group)){
+        } else if (check_for_distress(patrol_group)){
 
             state = change_state(state, eCS_Distress, debug_on);
-			}
+		}
          ++wait_count;
          break;
 
@@ -645,7 +651,23 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
             }
          }
 
-         break;
+        break;
+		 
+	  case eCS_ToDock:
+		debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_ToDock\n");
+		break;
+
+	  case eCS_WaitDocking:
+		debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_WaitDocking\n");
+		break;
+
+	  case eCS_Docked:
+		debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_Docked\n");
+		break;
+
+	  case eCS_AbandonStation:
+		debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_AbandonStation\n");
+		break;
 
       case eCS_Attacked:
          //debug Debug.PrintString("tsPcGuards.merc_controller: eCS_Attack\n");
