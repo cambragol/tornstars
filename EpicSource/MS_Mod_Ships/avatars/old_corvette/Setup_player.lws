@@ -196,7 +196,7 @@ ShadowOptions 7
 
 
 AddNullObject ComSecThruster_Null
-ShowObject 8 7
+ShowObject 8 a
 ObjectMotion (unnamed)
   9
   1
@@ -206,7 +206,7 @@ EndBehavior 1
 ParentObject 3
 ShadowOptions 7
 
-AddNullObject <anim channel="RR?+j(0.1) RY?-j(0.1) LX?+j(0.1)">
+AddNullObject <anim channel="RR?+ RY?- LX?+">
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -220,7 +220,7 @@ LockedChannels 216
 ParentObject 17
 ShadowOptions 7
 
-AddNullObject <anim channel="RR?-j(0.1) RY?+j(0.1) LX?-j(0.1)">
+AddNullObject <anim channel="RR?- RY?+ LX?-">
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -234,7 +234,7 @@ LockedChannels 5
 ParentObject 17
 ShadowOptions 7
 
-AddNullObject <anim channel="RR?-j(0.1) RY?-j(0.1) LX?+j(0.1)">
+AddNullObject <anim channel="RR?- RY?- LX?+">
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -247,7 +247,7 @@ EndBehavior 1
 ParentObject 17
 ShadowOptions 7
 
-AddNullObject <anim channel="RR?+j(0.1) RY?+j(0.1) LX?-j(0.1)">
+AddNullObject <anim channel="RR?+ RY?+ LX?-">
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -261,7 +261,7 @@ LockedChannels 5
 ParentObject 17
 ShadowOptions 7
 
-AddNullObject <anim channel="RP?-j(0.1) LY?-j(0.1)">
+AddNullObject <anim channel="RP?- LY?-">
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -275,7 +275,7 @@ LockedChannels 24
 ParentObject 17
 ShadowOptions 7
 
-AddNullObject <anim channel="RP?+j(0.1) LY?+j(0.1)">
+AddNullObject <anim channel="RP?+ LY?+">
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -289,7 +289,7 @@ LockedChannels 24
 ParentObject 17
 ShadowOptions 7
 
-AddNullObject <anim channel="RR?+j(0.1) LY?-j(0.1) RP?+j(0.1)">
+AddNullObject <anim channel="RR?+ LY?- RP?+">
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -303,7 +303,7 @@ LockedChannels 24
 ParentObject 17
 ShadowOptions 7
 
-AddNullObject <anim channel="RR?-j(0.1) LY?-j(0.1) RP?+j(0.1)">
+AddNullObject <anim channel="RR?- LY?- RP?+">
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -317,7 +317,7 @@ LockedChannels 24
 ParentObject 17
 ShadowOptions 7
 
-AddNullObject <anim channel="RR?-j(0.1) LY?+j(0.1) RP?-j(0.1)">
+AddNullObject <anim channel="RR?- LY?+ RP?-">
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -331,7 +331,7 @@ LockedChannels 24
 ParentObject 17
 ShadowOptions 7
 
-AddNullObject <anim channel="RR?+j(0.1) LY?+j(0.1) RP?-j(0.1)">
+AddNullObject <anim channel="RR?+ LY?+ RP?-">
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -345,7 +345,7 @@ LockedChannels 24
 ParentObject 17
 ShadowOptions 7
 
-AddNullObject <anim channel="RY?+j(0.1) LX?+j(0.1) LZ?-j(0.1)">
+AddNullObject <anim channel="RY?+ LX?+ LZ?-">
 ShowObject 8 7
 ObjectMotion (unnamed)
   9
@@ -359,7 +359,7 @@ LockedChannels 48
 ParentObject 17
 ShadowOptions 7
 
-AddNullObject <anim channel="RY?-j(0.1) LX?-j(0.1) LZ?-j(0.1)">
+AddNullObject <anim channel="RY?- LX?- LZ?-">
 ShowObject 8 7
 ObjectMotion (unnamed)
   9

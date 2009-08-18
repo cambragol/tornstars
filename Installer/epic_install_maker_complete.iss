@@ -200,6 +200,7 @@ Source: .\..\EpicSource\MS_Mod_Ships\*; DestDir: {app}\mods\MS_Mod_Ships
 Source: .\..\EpicSource\MS_Mod_Ships\collisionhulls\*; DestDir: {app}\mods\MS_Mod_Ships\collisionhulls
 Source: .\..\EpicSource\MS_Mod_Ships\audio\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\audio\sfx
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\assault_cannon\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\assault_cannon
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\fastattackship\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\fastattackship
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\assault_cannon_bolt\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\assault_cannon_bolt
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\cutting_beam\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\cutting_beam
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\beam\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\beam
