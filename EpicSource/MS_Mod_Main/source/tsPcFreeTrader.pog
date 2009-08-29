@@ -59,6 +59,7 @@ uses    Sim,
         tEpicEventEnum,
         tsEvent,
         tsDistress,
+		  tsStationFilter,
         tsPcOwner,
         tsShip,
         tsShipEscort,
@@ -71,10 +72,37 @@ provides PogCreate,
          PogStart;
 //[cf]
 
-
+/*
+		1.  init
+		2.  LocationApproach -- approach the location (i.e. station or l-point). Wait in this state until at marker
+		3.  AskForBusiness -- shout to the area asking if there is any business. Wait for xx iterations
+		4.  SetNewMarker -- pick a new position, place marker
+		5.  MoveToMarker -- give move orders
+		6.  InFlight -- wait while moving to marker. Do 'check nearby' logic while waiting to get to destination
+		7.  SelectShipToDock -- pick one of the ships to doc to station, set bool on ship that has been processed, set docking ship handle, give dock order
+		8.  Docking -- wait while ship is docking
+		9.  Docked -- wait a while then leave
+		10. Undock -- undock and return to group location
+		11. LeaveArea -- pic a new station and head for it
+*/
 enum eCSScriptState
 {
    eCS_Init,
+
+   eCS_LocationApproach,
+	eCS_AskForBusiness,
+	eCS_SetNewMarker,
+	eCS_MoveToMarker,
+	eCS_InFlight,
+	eCS_SelectShipToDock,
+	eCS_Docking,
+	eCS_Docked,
+	eCS_Undock,
+	eCS_LeaveArea,
+	eCS_Flee,
+
+
+
    eCS_ToDestination,
    eCS_WaitApproach,
    eCS_CheckNearby,
@@ -84,7 +112,6 @@ enum eCSScriptState
    eCS_WaitQueue,
    eCS_ToDock,
    eCS_WaitDocking,
-   eCS_Docked,
    eCS_Unload,
    eCS_WaitUnload,
    eCS_Load,
@@ -98,10 +125,10 @@ enum eCSScriptState
    eCS_Cull
 };
 
-prototype setup_merc(hisim marker);
+prototype setup_ship(hisim marker);
 
 
-prototype task merc_controller(hmapentity location, 
+prototype task ship_controller(hmapentity location, 
                                 hisim owner,
                                 hgroup patrol_group);
 
@@ -113,6 +140,9 @@ prototype hship create_leader (hmapentity location,
                                hisim operation, 
                                hgroup cull_group,
                                string ship_type);
+
+
+prototype bool dock_ship(hship docking_ship, hhabitat station);
 
 
 prototype set filter_feeling(set ships, 
@@ -215,7 +245,7 @@ task PogStart(hsim pog_object)
    // This part of the start code is object dependent. The prior pieces must
    // be done to adhere to the pog class calling convention.
 
-   setup_merc(iSim.Cast(pog_object));
+   setup_ship(iSim.Cast(pog_object));
 
    ///***************************************
 }
@@ -236,8 +266,8 @@ template=ini:/sims/ships/navy/patcom
 
 
 // Read the ini file, setup the object. 
-//[of]:setup_merc(hisim marker)
-setup_merc(hisim marker)
+//[of]:setup_ship(hisim marker)
+setup_ship(hisim marker)
 {
    hinifile control_file;
    string template_file_name;
@@ -262,7 +292,7 @@ setup_merc(hisim marker)
 
 
    if (none == marker) {
-      debug Debug.PrintString("tsPcFreeTrader.setup_merc: ERROR: invalid marker sim\n");
+      debug Debug.PrintString("tsPcFreeTrader.setup_ship: ERROR: invalid marker sim\n");
       return;
    }
 
@@ -270,7 +300,7 @@ setup_merc(hisim marker)
    control_file = INIFile.Create(template_file_name);
 
    if (none == control_file) {
-      debug Debug.PrintString("tsPcFreeTrader.setup_merc: ERROR: invalid template_file\n");
+      debug Debug.PrintString("tsPcFreeTrader.setup_ship: ERROR: invalid template_file\n");
       debug Debug.PrintString(template_file_name);
       debug Debug.PrintString("\n");
       Sim.Destroy(marker);
@@ -291,7 +321,7 @@ setup_merc(hisim marker)
    location = nearby_location(marker);
 
    if (none == location) {
-      debug Debug.PrintString("tsPcFreeTrader.setup_merc: ERROR: no nearby location\n");
+      debug Debug.PrintString("tsPcFreeTrader.setup_ship: ERROR: no nearby location\n");
       Sim.Destroy(marker);
       return;
    }
@@ -303,7 +333,7 @@ setup_merc(hisim marker)
 
    // We must have an owner, either operation or station.
    if (none == owner) {
-      debug Debug.PrintString("tsPcFreeTrader.setup_merc: ERROR: no owning station or operation\n");
+      debug Debug.PrintString("tsPcFreeTrader.setup_ship: ERROR: no owning station or operation\n");
       Sim.Destroy(marker);
       return;
    }
@@ -322,7 +352,7 @@ setup_merc(hisim marker)
    fleets = tsLFleet.Fleets(owner);
 
    if (fleets < 40) {
-      debug Debug.PrintString("tsPcFreeTrader.setup_merc: no fleets remain, exiting.\n");
+      debug Debug.PrintString("tsPcFreeTrader.setup_ship: no fleets remain, exiting.\n");
       Sim.Destroy(marker);
       return;
    }
@@ -338,7 +368,7 @@ setup_merc(hisim marker)
    
    // If not leader ship then we abort
    if (none == patrol_ship) {
-      debug Debug.PrintString("tsPcFreeTrader.setup_merc: ERROR: failed to create patrol leader.");
+      debug Debug.PrintString("tsPcFreeTrader.setup_ship: ERROR: failed to create patrol leader.");
       Sim.Destroy(marker);
       return;
    }
@@ -406,7 +436,7 @@ setup_merc(hisim marker)
 
 
    // Launch the controller task.
-   Task.Detach(start merc_controller(location, owner, patrol_group));
+   Task.Detach(start ship_controller(location, owner, patrol_group));
 
    // We can remove the guard mark now.
    Sim.Destroy(marker);
@@ -418,8 +448,8 @@ setup_merc(hisim marker)
 // The guard controller task flys waypoints around the location.
 // If the location is culled, the ships are set to allow culling.
 // If a hostile ship is seen, the leader attacks.
-//[of]:task merc_controller(hmapentity location, hgroup patrol_group)
-task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
+//[of]:task ship_controller(hmapentity location, hgroup patrol_group)
+task ship_controller(hmapentity location, hisim owner, hgroup patrol_group)
 {
    set dislike_set;
    hship player;
@@ -439,13 +469,22 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
    float sender_feeling, target_feeling;
    int event_type;
    int i, wait_count, max_request_for_business_count;
+	int max_request_for_business = 5;
+	int wait_limit = 2;		// set between 5 and 20
    bool do_rescue;
    bool debug_on;
+	
+   set nearby_locations;
+	hmapentity station, new_station;
+	hisim operation;
+	
    eCSScriptState state = eCS_Init;
+	eCSScriptState next_state = eCS_Init;
 
 
    patrol_leader = iShip.Cast(Group.Leader(patrol_group));
    merc_faction = iSim.Faction(patrol_leader);
+	operation = iSim.Cast(tsPcOwner.Owner(patrol_leader));
 
    tsEvent.InitReciever(patrol_group);
    tsEvent.SetListenType(patrol_group, eseDistress | eseSelfAttacked | eseStationAttack);
@@ -468,7 +507,8 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
       // Culling needing to happen.
       if (tsCapsuleJump.IsCapsuleJumping()) {
          state = change_state(state, eCS_Cull, debug_on);
-      }else {
+      }
+		else {
 
          player = iShip.FindPlayerShip();
 
@@ -476,12 +516,14 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
             if (eCS_Cull != state) {
                state = change_state(state, eCS_Dead, debug_on);
             }
-         } else if(Group.Leader(patrol_group) != Sim.Cast(patrol_leader)) {
+         }
+			else if(Group.Leader(patrol_group) != Sim.Cast(patrol_leader)) {
             // Sim.Group(patrol_leader) != patrol_group
             // or Group.Leader(patrol_group) != Sim.Cast(patrol_leader)
             // if the patrol leader has been removed from the group
             state = change_state(state, eCS_Removed, debug_on);
-         } else if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) > 
+         }
+			else if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) > 
                    tsDistance.CullingDistance()) {
 
             // Station guards cull fast to allow player to return quick.
@@ -489,39 +531,129 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
             if (cull_timer > 6) {
                state = change_state(state, eCS_Cull, debug_on);
             }
-         }else if (check_for_attacks(patrol_group)){
+         }
+			else if (check_for_attacks(patrol_group)){
             cull_timer = 0;
             state = change_state(state, eCS_Attacked, debug_on);
-         }else {
+         }
+			else {
             cull_timer = 0;
          }
       }
 
+		/*
+		Order of actions ...
+		
+		During all movement check for hostiles and distress calls. Punch out to appropriate state
+		if either is detected.
+		
+		1.  init
+		2.  LocationApproach -- approach the location (i.e. station or l-point). Wait in this state until at marker
+		3.  AskForBusiness -- shout to the area asking if there is any business. Wait for xx iterations
+		4.  SetNewMarker -- pick a new position, place marker
+		5.  MoveToMarker -- give move orders
+		6.  InFlight -- wait while moving to marker. Do 'check nearby' logic while waiting to get to destination
+		7.  SelectShipToDock -- pick one of the ships to doc to station, set bool on ship that has been processed, set docking ship handle, give dock order
+		8.  Docking -- wait while ship is docking
+		9.  Docked -- wait a while then leave
+		10. Undock -- undock and return to group location
+		11. LeaveArea -- pic a new station and head for it
+		*/
+
       switch (state) {
       case eCS_Init:
-         debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_Init\n");
+         debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_Init\n");
          // Form up the patrol group, start them moving.
+			wait_count = 0;
 
          spacing = iUtilities.GetLargestShipRadius( patrol_group);
          iEscort.Wedge( patrol_group, spacing, 50km, true );
 
          marker = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint", "patrol mark"));
+			Sim.SetCullable( marker, false );
 
          rotation = Math.Random(0,360);
 		 
-		 max_request_for_business_count = 2;
+			max_request_for_business_count = max_request_for_business;
 
          state = change_state(state, eCS_ToDestination, debug_on);
          break;
 
       case eCS_ToDestination:
-        debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_ToDestination\n");
-        iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_freetrader_approach","",1));
+			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_ToDestination\n");
+			iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_freetrader_approach","",1));
 
 
-///////////////////
          // Send the cargo ship to a makker near the current station.
 			//debug Debug.PrintHandle(patrol_leader);
+         rotation = rotation + 60;
+         if (rotation > 720) {
+            rotation = 0;
+         }
+			else if (rotation > 360) {
+            rotation = rotation - 360;
+         }
+         Sim.PlaceRelativeTo(marker, location, 
+                             Math.Sin(rotation) * patrol_radius, 
+                             0, 
+                             Math.Cos(rotation)* patrol_radius);
+			
+         iAI.PurgeOrders(patrol_leader);
+//         iAI.GiveApproachOrderAdvanced( patrol_leader,
+//                                        marker,
+//                                        10km,
+//                                        11km,
+//                                        true);
+			iAI.GiveApproachOrder( patrol_leader, marker );
+
+         state = change_state(state, eCS_LocationApproach, debug_on);
+         break;
+
+
+		// LocationApproach -- approach the location (i.e. station or l-point). Wait in this state until at marker
+		case eCS_LocationApproach:
+		debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_LocationApproach\n");
+         // Wait here until the AI has halted.
+         if (OT_None == iAI.CurrentOrderType(patrol_leader)) {
+            // Requesting docking clearance.
+            state = change_state(state, eCS_AskForBusiness, debug_on);
+            wait_count = 0;
+         }
+			else if (check_for_attacks(patrol_group)){
+            state = change_state(state, eCS_Attacked, debug_on);
+         }
+			else if (check_for_distress(patrol_group)){
+            state = change_state(state, eCS_Distress, debug_on);
+			}
+			break;
+		
+		// AskForBusiness -- shout to the area asking if there is any business. Wait for xx iterations
+		case eCS_AskForBusiness:
+			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_AskForBusiness\n");
+			if(wait_count == 0) {
+				iComms.Shout(location, "", tsString.CommsStringRandom("pcft_freetrader_looking_for_work","",1));
+			}
+			else if(wait_count > wait_limit) {
+				--max_request_for_business_count;
+            // Wait here for a chance for a player to hire any ships
+				if(max_request_for_business_count > 0)
+					state = change_state(state, eCS_SetNewMarker, debug_on);
+				else
+					state = change_state(state, eCS_SelectShipToDock, debug_on);
+				wait_count = 0;
+			}
+			else if (check_for_attacks(patrol_group)) {
+				state = change_state(state, eCS_Attacked, debug_on);
+			}
+			else if (check_for_distress(patrol_group)) {
+				state = change_state(state, eCS_Distress, debug_on);
+			}
+			++wait_count;
+			break;
+		
+		// SetNewMarker -- pick a new position, place marker
+		case eCS_SetNewMarker:
+			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_SetNewMarker\n");
          rotation = rotation + 60;
          if (rotation > 720) {
             rotation = 0;
@@ -539,53 +671,174 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
 //                                        10km,
 //                                        11km,
 //                                        true);
+			state = change_state(state, eCS_MoveToMarker, debug_on);
+			break;
+		
+		// MoveToMarker -- give move orders
+		case eCS_MoveToMarker:
+			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_MOveToMarker\n");
 			iAI.GiveApproachOrder( patrol_leader, marker );
+			state = change_state(state, eCS_InFlight, debug_on);
+			next_state = change_state(state, eCS_AskForBusiness, debug_on);
+			break;
 
+		
+		case eCS_InFlight:
+         debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_InFLight\n");
+         // Test nearby ships for hostile action.
 
-         state = change_state(state, eCS_WaitApproach, debug_on);
-///////////////////
+         // Look for hostile ships, or because this is getting used for attack fleets and raiders, hostile stations.
+         dislike_set = filter_feeling(iSim.SimsInRadius(patrol_leader, 100km, TM_Ship|T_Station), merc_faction, -2.0);
 
-			/*
-         Sim.PlaceRelativeTo(marker, location, 
-                             Math.Sin(rotation) * patrol_radius, 
-                             0, 
-                             Math.Cos(rotation)* patrol_radius);
+         if (!Set.IsEmpty(dislike_set)) {
 
-         rotation = rotation + 60;
-         if (rotation > 720) {
-            rotation = 0;
-         }else if (rotation > 360) {
-            rotation = rotation - 360;
+            iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcgs_guard_hostile_spotted",speech_style, 5));
+
+            // Pick the first one, attack.
+            target_ship = iShip.Cast(Set.FirstElement(dislike_set));
+            iAI.PurgeOrders(patrol_leader);
+
+            if (none != Sim.Group(target_ship)) {
+               iAI.GiveSpecificAttackOrder(patrol_group, Sim.Group(target_ship), AS_Strafe);
+            }
+				else {
+               iAI.GiveSpecificAttackOrder(patrol_group, target_ship, AS_Strafe);
+            }
+
+            fight_timer =0;
+            state = change_state(state, eCS_Fight, debug_on);
+
          }
-
-         iAI.PurgeOrders(patrol_leader);
-         // We use an escort order so the patrol leader will attack
-         // any hostile factions that show up nearby.
-         iAI.GiveEscortOrder( patrol_leader, marker, 100, 0, 0, 50km);
-
-         state = change_state(state, eCS_CheckNearby, debug_on);
-			*/
-         break;
-
-		case eCS_WaitApproach:
-		debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_WaitApproach\n");
-         // Wait here until the AI has halted.
-         if (OT_None == iAI.CurrentOrderType(patrol_leader)) {
-            // Requesting docking clearance.
-            state = change_state(state, eCS_WaitQueue, debug_on);
-            wait_count = 0;
-         } else if (check_for_attacks(patrol_group)){
+			else if (check_for_attacks(patrol_group)){
 
             state = change_state(state, eCS_Attacked, debug_on);
 
-         } else if (check_for_distress(patrol_group)){
+         }
+			else if (check_for_distress(patrol_group)){
 
             state = change_state(state, eCS_Distress, debug_on);
-			}
+
+         }
+			else {
+            if (Sim.DistanceBetween(patrol_leader, marker) < 1km){
+
+               // Give a shout 1/3 of the time. (it gets old quick).
+               if (Math.RandomInt(1,100) > 66) {
+                  iComms.Shout(patrol_leader,"",tsString.CommsStringRandom("pcgs_guard_sweep_finished",speech_style,5));
+               }
+               
+               state = change_state(state, next_state, debug_on);
+            }
+         }
+			break;
+		
+		case eCS_SelectShipToDock:
+			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_SelectShipToDock\n");
+			state = change_state(state, eCS_Docking, debug_on);
+			break;
+		
+		case eCS_Docking:
+			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_Docking\n");
+			state = change_state(state, eCS_Docked, debug_on);
+			break;
+		
+		case eCS_Docked:
+			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_Docked\n");
+			state = change_state(state, eCS_Undock, debug_on);
+			break;
+		
+		case eCS_Undock:
+			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_Undocked\n");
+			state = change_state(state, eCS_LeaveArea, debug_on);
+			break;
+		
+		case eCS_LeaveArea:
+			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_LeaveArea\n");
+         // Pick a non-hostile station that is near.
+         nearby_locations = iMapEntity.SystemHabitats();
+         station = iHabitat.Nearest(nearby_locations, patrol_leader);
+         Set.Remove(nearby_locations, station);
+
+         new_station = iHabitat.Nearest(
+										tsStationFilter.OnGreaterFeeling(nearby_locations,
+                                                                        merc_faction, 
+                                                                        -0.2), 
+										patrol_leader);
+
+         if (none == new_station) {
+				debug Debug.PrintString("tsPcFreeTrader.ship_controller: new_station == none\n");
+            new_station = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), patrol_leader);
+         }
+
+         debug {
+            Debug.PrintHandle(new_station);
+            Debug.PrintString(" flee station target\n");
+         }
+			
+			// place the marker near the target station
+			Sim.PlaceNear(marker, new_station, 15km);
+
+         iAI.PurgeOrders(patrol_leader);
+         //iAI.GiveApproachOrderAdvanced( patrol_leader,
+         //                               marker,
+         //                               0km,
+         //                               0km,
+         //                               true);
+
+			iAI.GiveApproachOrder( patrol_leader, marker );
+
+
+         // Move the operation to the target station.
+         tsLCenter.SetCenter(operation, new_station);
+
+         state = change_state(state, eCS_InFlight, debug_on);
+			next_state = change_state(state, eCS_ToDestination, debug_on);
+			max_request_for_business_count = max_request_for_business;
 			break;
 
+
+      case eCS_Flee:
+			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_Flee\n");
+         // Pick a non-hostile station that is near.
+         nearby_locations = iMapEntity.SystemHabitats();
+         station = iHabitat.Nearest(nearby_locations, patrol_leader);
+         Set.Remove(nearby_locations, station);
+
+         new_station = iHabitat.Nearest(
+										tsStationFilter.OnGreaterFeeling(nearby_locations,
+                                                                        merc_faction, 
+                                                                        -0.2), 
+										patrol_leader);
+
+         if (none == new_station) {
+            new_station = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), patrol_leader);
+         }
+
+         debug {
+            Debug.PrintHandle(new_station);
+            Debug.PrintString(" flee station target\n");
+         }
+
+         iAI.PurgeOrders(patrol_leader);
+         iAI.GiveApproachOrderAdvanced( patrol_leader,
+                                        new_station,
+                                        75km,
+                                        80km,
+                                        true);
+
+
+         // Move the operation to the target station.
+         tsLCenter.SetCenter(operation, new_station);
+
+         state = change_state(state, eCS_WaitApproach, debug_on);
+
+         break;
+
+
+
+
       case eCS_WaitQueue:
-		debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_WaitQueue\n");
+		debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_WaitQueue\n");
         iComms.Shout(location, "", tsString.CommsStringRandom("pcft_freetrader_looking_for_work","",1));
         if (wait_count > 30) {
 
@@ -606,9 +859,9 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
          ++wait_count;
          break;
 
-
+/*
       case eCS_CheckNearby:
-         debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_CheckNearby\n");
+         debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_CheckNearby\n");
          // Test nearby ships for hostile action.
 
          // Look for hostile ships, or because this is getting used for attack fleets and raiders, hostile stations.
@@ -652,25 +905,10 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
          }
 
         break;
-		 
-	  case eCS_ToDock:
-		debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_ToDock\n");
-		break;
-
-	  case eCS_WaitDocking:
-		debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_WaitDocking\n");
-		break;
-
-	  case eCS_Docked:
-		debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_Docked\n");
-		break;
-
-	  case eCS_AbandonStation:
-		debug Debug.PrintString("tsPcFreeTrader.merc_controller: eCS_AbandonStation\n");
-		break;
+*/		 
 
       case eCS_Attacked:
-         //debug Debug.PrintString("tsPcGuards.merc_controller: eCS_Attack\n");
+         //debug Debug.PrintString("tsPcGuards.ship_controller: eCS_Attack\n");
          // Some we are guarding has been attacked.
          sender = tsEvent.GetSender(patrol_group);
          target = tsEvent.GetTarget(patrol_group);
@@ -722,7 +960,7 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
 
          break;
       case eCS_Fight:
-         //debug Debug.PrintString("tsPcGuards.merc_controller: eCS_Fight\n");
+         //debug Debug.PrintString("tsPcGuards.ship_controller: eCS_Fight\n");
          // A battle has broken out. We wait here.
          fight_timer = fight_timer + delay_time;
          if ( (Sim.DistanceBetween(patrol_leader, location) > tsDistance.VisibleDistance())){ 
@@ -740,7 +978,7 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
 
          break;
       case eCS_Distress:
-         //debug Debug.PrintString("tsPcGuards.merc_controller: eCS_Distress\n");
+         //debug Debug.PrintString("tsPcGuards.ship_controller: eCS_Distress\n");
          // A distress call was signalled, here we choose if we respond, or if
          // we just ignore the event.
 
@@ -794,7 +1032,7 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
 
       case eCS_Dead:
       case eCS_Removed:
-         //debug Debug.PrintString("tsPcGuards.merc_controller: eCS_Dead\n");
+         //debug Debug.PrintString("tsPcGuards.ship_controller: eCS_Dead\n");
          // patrol leader is dead. Select another. 
          if(state == eCS_Dead)
             Group.RemoveSim(patrol_group, patrol_leader);
@@ -813,7 +1051,7 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
          break;
 
       case eCS_Cull:
-         //debug Debug.PrintString("tsPcGuards.merc_controller: eCS_Cull\n");
+         //debug Debug.PrintString("tsPcGuards.ship_controller: eCS_Cull\n");
          // Player is far, or all the ships are dead. Set the last to allow
          // culling and exit task.
          iAI.PurgeOrders(patrol_group);
@@ -834,7 +1072,7 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
          break;
 
       default:
-         //debug Debug.PrintString("tsPcGuards.merc_controller: Default\n");
+         //debug Debug.PrintString("tsPcGuards.ship_controller: Default\n");
          state = change_state(state, eCS_Init, debug_on);
 
          break;
@@ -844,7 +1082,8 @@ task merc_controller(hmapentity location, hisim owner, hgroup patrol_group)
       Task.Sleep(Task.Current(), delay_time);
    }
 
-   debug Debug.PrintString("tsPcFreeTrader.merc_controller: While Loop Broken.\n");
+   debug Debug.PrintString("tsPcFreeTrader.ship_controller: While Loop Broken.\n");
+	Sim.SetCullable( marker, true );
 }
 //[cf]
 
@@ -901,6 +1140,51 @@ bool check_for_distress(hgroup patrol_group)
    return false;
 }
 //[cf]
+
+
+//[of]:bool dock_ship(hship docking_ship, hhabitat station)
+bool dock_ship(hship docking_ship, hhabitat station)
+{
+   hdockport station_dock, ship_dock;
+
+   set dockports;
+
+   // We just skip over stations that have no pod handling facility.
+   if (!iHabitat.HasSpewer(station)) {
+      debug Debug.PrintString("habitat has no spewer\n");
+      return false;
+   }
+
+   // Find the stations main freight port
+   dockports = iDockport.DockportsCompatibleWith( iSim.Cast(station),
+                                                  DT_Freight,
+                                                  DS_Free);
+   station_dock = iDockport.Cast(Set.FirstElement(dockports));
+
+   dockports = iDockport.DockportsCompatibleWith( iSim.Cast(docking_ship),
+                                                  DT_Freight,
+                                                  DS_Free);
+
+   ship_dock = iDockport.Cast(Set.FirstElement(dockports));
+
+
+   if ((none == station_dock)||(none == ship_dock)) {
+      debug Debug.PrintString("dock_freighter no docks found\n");
+      return false;
+   }
+
+   // Give the ship the order to dock.
+
+   iAI.PurgeOrders(docking_ship);
+   iAI.GiveDockOrderWithDockport( ship_dock, station_dock );
+
+   return true;
+}
+//[cf]
+
+
+
+
 
 
 // Finds the closest location or station.
