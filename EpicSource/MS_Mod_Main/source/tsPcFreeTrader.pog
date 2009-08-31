@@ -458,6 +458,7 @@ task ship_controller(hmapentity location, hisim owner, hgroup patrol_group)
    hfaction sender_faction, target_faction;
    hship patrol_leader;
    hship target_ship;
+	hship merchant_ship;
    hisim sender, target;
    hisim marker;
 	list merchant_list;
@@ -471,6 +472,7 @@ task ship_controller(hmapentity location, hisim owner, hgroup patrol_group)
    int i, wait_count, max_request_for_business_count;
 	int max_request_for_business = 5;
 	int wait_limit = 2;		// set between 5 and 20
+	int merchant_list_size;
    bool do_rescue;
    bool debug_on;
 	
@@ -734,11 +736,24 @@ task ship_controller(hmapentity location, hisim owner, hgroup patrol_group)
 		
 		case eCS_SelectShipToDock:
 			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_SelectShipToDock\n");
-			state = change_state(state, eCS_Docking, debug_on);
+			// we pick a ship from the merchant list
+			merchant_list_size = List.ItemCount(merchant_list);
+			if(merchant_list_size > 0) {
+				// get a random merchant
+				merchant_ship = iShip.Cast(List.GetNth(merchant_list, Math.RandomInt(0, merchant_list_size-1)));
+				state = change_state(state, eCS_Docking, debug_on);
+			}
+			else {
+				// nothing to do here so move on
+				merchant_ship = none;
+				debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_SelectShipToDock - no merchant ship\n");
+				state = change_state(state, eCS_LeaveArea, debug_on);
+			}
 			break;
 		
 		case eCS_Docking:
 			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_Docking\n");
+			dock_ship(merchant_ship, iHabitat.Cast(location));
 			state = change_state(state, eCS_Docked, debug_on);
 			break;
 		
@@ -777,6 +792,9 @@ task ship_controller(hmapentity location, hisim owner, hgroup patrol_group)
 			
 			// place the marker near the target station
 			Sim.PlaceNear(marker, new_station, 15km);
+			
+			// set 'location' to the new station
+			location = new_station;
 
          iAI.PurgeOrders(patrol_leader);
          //iAI.GiveApproachOrderAdvanced( patrol_leader,
@@ -1149,20 +1167,28 @@ bool dock_ship(hship docking_ship, hhabitat station)
 
    set dockports;
 
-   // We just skip over stations that have no pod handling facility.
-   if (!iHabitat.HasSpewer(station)) {
-      debug Debug.PrintString("habitat has no spewer\n");
-      return false;
-   }
+	// dump out the handles
+	debug {
+	Debug.PrintHandle(docking_ship);
+	Debug.PrintString("\n");
+	Debug.PrintHandle(station);
+	Debug.PrintString("\n");
+	}
+	
 
    // Find the stations main freight port
    dockports = iDockport.DockportsCompatibleWith( iSim.Cast(station),
-                                                  DT_Freight,
+                                                  DT_Universal,
                                                   DS_Free);
+	// make sure there is something to dock with
+	if(Set.IsEmpty(dockports)) {
+      debug Debug.PrintString("habitat has no compatible dock ports\n");
+      return false;
+	}	
    station_dock = iDockport.Cast(Set.FirstElement(dockports));
 
    dockports = iDockport.DockportsCompatibleWith( iSim.Cast(docking_ship),
-                                                  DT_Freight,
+                                                  DT_Ship,
                                                   DS_Free);
 
    ship_dock = iDockport.Cast(Set.FirstElement(dockports));
