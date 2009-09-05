@@ -42,6 +42,7 @@ uses    Sim,
         ABB_Common,
 
         tsArray,
+		  tsDebug,
         tsPodUtil,
         tsShipComms,
         tsFaction,
@@ -387,7 +388,9 @@ setup_ship(hisim marker)
       escort = tsShip.Create(ship_template, name);
 		
 		// tag this ship as a merchant so we can find it easily later
-		Object.AddBoolProperty(escort, "gt_isMerchant", true);
+		if(iDockport.Count( escort, DT_All, DS_Free ) > 0) {
+			Object.AddBoolProperty(escort, "gt_isMerchant", true);
+		}
 
       tsPilotSetup.SetupCargo(escort, 0.9, 0.7);
 
@@ -470,8 +473,8 @@ task ship_controller(hmapentity location, hisim owner, hgroup patrol_group)
    float sender_feeling, target_feeling;
    int event_type;
    int i, wait_count, max_request_for_business_count;
-	int max_request_for_business = 5;
-	int wait_limit = 2;		// set between 5 and 20
+	int max_request_for_business = 1;	// should be 5
+	int wait_limit = 1;		// set between 5 and 20
 	int merchant_list_size;
    bool do_rescue;
    bool debug_on;
@@ -495,6 +498,7 @@ task ship_controller(hmapentity location, hisim owner, hgroup patrol_group)
 
    patrol_radius = 15km;
 
+	// find and mark the merchant ships
 	for(i=0;i<Group.SimCount(patrol_group); ++i) {
 		if(Object.BoolProperty(Group.NthSim(patrol_group, i), "gt_isMerchant")) {
 			List.AddTail(merchant_list, Group.NthSim(patrol_group, i));
@@ -1169,6 +1173,11 @@ bool dock_ship(hship docking_ship, hhabitat station)
 
 	// dump out the handles
 	debug {
+	Debug.PrintString("------------------- fn Dock Ship -------------------\n");
+	Debug.PrintString("Handles for dock_ship, station:\n");
+	Debug.PrintString("Ship name: ");
+	Debug.PrintString(Sim.Name(Sim.Cast(docking_ship)));
+	Debug.PrintString("\n");
 	Debug.PrintHandle(docking_ship);
 	Debug.PrintString("\n");
 	Debug.PrintHandle(station);
@@ -1187,11 +1196,21 @@ bool dock_ship(hship docking_ship, hhabitat station)
 	}	
    station_dock = iDockport.Cast(Set.FirstElement(dockports));
 
+	// dump out the key handles
+	debug Debug.PrintString("Handles for station dock set\n");
+	debug tsDebug.DumpSetHandles(dockports);
+
+
    dockports = iDockport.DockportsCompatibleWith( iSim.Cast(docking_ship),
-                                                  DT_Ship,
+                                                  DT_All,
                                                   DS_Free);
 
    ship_dock = iDockport.Cast(Set.FirstElement(dockports));
+
+
+	// dump out the key handles
+	debug Debug.PrintString("Handles for ship dock set\n");
+	debug tsDebug.DumpSetHandles(dockports);
 
 
    if ((none == station_dock)||(none == ship_dock)) {
@@ -1203,6 +1222,8 @@ bool dock_ship(hship docking_ship, hhabitat station)
 
    iAI.PurgeOrders(docking_ship);
    iAI.GiveDockOrderWithDockport( ship_dock, station_dock );
+
+	debug Debug.PrintString("------------------- fn Dock Ship End -------------------\n");
 
    return true;
 }

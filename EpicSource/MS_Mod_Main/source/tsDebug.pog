@@ -32,6 +32,8 @@ uses	Sim,
 
 provides PrintString,
          PrintHandle,
+			DumpSetHandles,
+			DumpListHandles,
          NewGame;
          
 
@@ -68,6 +70,7 @@ PrintString(string flag, string info)
  
 
 
+
 PrintHandle(string flag, hobject item)
 {
    debug {
@@ -75,6 +78,28 @@ PrintHandle(string flag, hobject item)
          atomic Debug.PrintHandle(item);
       }
    }
+}
+
+
+
+
+DumpListHandles(ref list a_list) {
+	int index;
+	
+	Debug.PrintString("----- Start Handles Dump -----\n");
+	for(index=0; index < List.ItemCount(a_list); ++index) {
+		Debug.PrintHandle(List.GetNth(a_list, index));
+		Debug.PrintString("\n");
+	}
+	Debug.PrintString("----- End Handles Dump -----\n");
+}
+
+DumpSetHandles(ref set a_set) {
+	list as_a_list;
+	
+	as_a_list = List.FromSet( a_set );
+	
+	DumpListHandles(as_a_list);
 }
 
 
