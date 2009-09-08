@@ -475,6 +475,8 @@ task ship_controller(hmapentity location, hisim owner, hgroup patrol_group)
    int i, wait_count, max_request_for_business_count;
 	int max_request_for_business = 1;	// should be 5
 	int wait_limit = 1;		// set between 5 and 20
+	int dock_wait_limit = 1;
+	int dock_wait_count;
 	int merchant_list_size;
    bool do_rescue;
    bool debug_on;
@@ -621,7 +623,6 @@ task ship_controller(hmapentity location, hisim owner, hgroup patrol_group)
 		debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_LocationApproach\n");
          // Wait here until the AI has halted.
          if (OT_None == iAI.CurrentOrderType(patrol_leader)) {
-            // Requesting docking clearance.
             state = change_state(state, eCS_AskForBusiness, debug_on);
             wait_count = 0;
          }
@@ -757,18 +758,56 @@ task ship_controller(hmapentity location, hisim owner, hgroup patrol_group)
 		
 		case eCS_Docking:
 			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_Docking\n");
-			dock_ship(merchant_ship, iHabitat.Cast(location));
-			state = change_state(state, eCS_Docked, debug_on);
+			// wait until ship has docked.  Keep an eye out for bad guys and attacks.
+			
+         if (iSim.IsDockedToStructure(merchant_ship, iSim.Cast(location))) {
+				state = change_state(state, eCS_Docked, debug_on);
+         }
+			else if (OT_Dock != iAI.CurrentOrderType( merchant_ship )) {
+            // Reissue the order, if the ship fails to dock.
+            dock_ship(merchant_ship, iHabitat.Cast(location));
+            // if this happens several times, the dockports are broken,
+            // just abandon the station.
+         }
+			dock_wait_count = dock_wait_limit;
 			break;
 		
 		case eCS_Docked:
 			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_Docked\n");
-			state = change_state(state, eCS_Undock, debug_on);
+			// Ship is docked. Now do whatever you want to do for ambience
+			
+			
+			// reduce doc waiting timer
+			--dock_wait_count;
+			if( dock_wait_count < 0 ) {
+				state = change_state(state, eCS_Undock, debug_on);
+			}
+			else if (check_for_attacks(patrol_group)){
+            state = change_state(state, eCS_Attacked, debug_on);
+         }
+			else if (check_for_distress(patrol_group)){
+            state = change_state(state, eCS_Distress, debug_on);
+			}
 			break;
 		
 		case eCS_Undock:
 			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_Undocked\n");
-			state = change_state(state, eCS_LeaveArea, debug_on);
+			if( iSim.IsDockedToStructure(merchant_ship, location) ) {
+				// if docked then undock and reformat
+				iShip.UndockSelf( merchant_ship );
+				//iAI.GiveApproachOrder( merchant_ship, patrol_leader );
+				iAI.GiveApproachOrderAdvanced( merchant_ship, patrol_leader, 1km, 2km, true );
+			}
+         else if (OT_None == iAI.CurrentOrderType(merchant_ship)) {
+				iEscort.Wedge( patrol_group, spacing, 50km, false );
+				state = change_state(state, eCS_LeaveArea, debug_on);
+         }
+			else if (check_for_attacks(patrol_group)){
+            state = change_state(state, eCS_Attacked, debug_on);
+         }
+			else if (check_for_distress(patrol_group)){
+            state = change_state(state, eCS_Distress, debug_on);
+			}
 			break;
 		
 		case eCS_LeaveArea:
@@ -1202,7 +1241,7 @@ bool dock_ship(hship docking_ship, hhabitat station)
 
 
    dockports = iDockport.DockportsCompatibleWith( iSim.Cast(docking_ship),
-                                                  DT_All,
+                                                  DT_Universal,
                                                   DS_Free);
 
    ship_dock = iDockport.Cast(Set.FirstElement(dockports));
