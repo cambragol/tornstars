@@ -135,6 +135,8 @@ Update(hisim operation)
    int current_day = tsTime.GetDay();
    int patrol_day;
    int update_delay = 1;
+	int max_days_to_stay_at_station = 7;
+	float whimp_adjustment = 1.25;
 
    tsDebug.PrintString("tsFoFreeTrader_debug","tsFoFreeTrader.Update\n");
 
@@ -160,7 +162,8 @@ Update(hisim operation)
          fleets = tsLFleet.Fleets(operation);            // our fleet size
          hostile_fleets = tsLFleet.Fleets(visitor);      // hostiles fleet size
 
-         if (fleets > hostile_fleets) {
+			// Free Traders are basically whimps. Only fight if have a massive advantage
+         if (fleets > (hostile_fleets * whimp_adjustment)) {
             // We have the advantage, pound them.
             tsFleetOpCombat.Offense(center, operation, visitor);
          }else {
@@ -186,7 +189,7 @@ Update(hisim operation)
    }
 
    // Check if we are outnumbered.
-   if (fleets < total_hostiles) {
+   if (fleets < (total_hostiles * whimp_adjustment)) {
       out_gunned = true;
    }else {
       out_gunned = false;
@@ -247,17 +250,17 @@ Update(hisim operation)
 
    }else if (!stay_still) {
 
-      // Move every week, patrolling near our patrol station.
+      // Move every X days, patrolling near our patrol station.
       patrol_day = tsFleetOp.EventTimer(operation);
       if (patrol_day == 0) {
-         patrol_day = Math.RandomInt(1,7);
+         patrol_day = Math.RandomInt(1,max_days_to_stay_at_station);
          tsFleetOp.SetEventTimer(operation, patrol_day);
       }
 
       if (current_day > patrol_day) {
 
          // Move to another station near our station.
-         tsFleetOp.SetEventTimer(operation, current_day + 7);
+         tsFleetOp.SetEventTimer(operation, current_day + max_days_to_stay_at_station);
 
          // Patrol stations near our own, avoiding dislike or lower stations.
          target_station = find_patrol_station(operation, center, iSim.WorldName(center), 500000km);

@@ -131,7 +131,10 @@ prototype setup_ship(hisim marker);
 
 prototype task ship_controller(hmapentity location, 
                                 hisim owner,
-                                hgroup patrol_group);
+                                hgroup patrol_group,
+										  int max_request_for_business,
+										  int wait_limit,
+										  int dock_wait_limit);
 
 
 prototype hmapentity nearby_location(hisim center);
@@ -277,6 +280,12 @@ setup_ship(hisim marker)
    hfaction player_faction = tsFaction.PlayerFaction();
    hisim owner;
 
+	int max_request_for_business;	// normally about 5
+	int wait_limit;		// normally set between 5 and 20
+	int dock_wait_limit;	// how long to wait while docked
+
+
+
    string leader_type, escort_type, merchant_type_str;
 	etsShipType merchant_type;
    int i, total;
@@ -313,6 +322,10 @@ setup_ship(hisim marker)
    escort_type = INIFile.String(control_file,"Properties","escort_ship_type","EST_CombatFighter");
 	merchant_type_str = INIFile.String(control_file,"Properties","merchant_ship_type","EST_FreightAll");
 	merchant_type = tsShipCreation.String2ShipType(merchant_type_str);
+
+	max_request_for_business = INIFile.Int(control_file,"Properties","request_business_limit",1);
+	wait_limit = INIFile.Int(control_file,"Properties","wait_limit",1);
+	dock_wait_limit = INIFile.Int(control_file,"Properties","dock_wait_limit",1);
 	
    
    // close ini file
@@ -439,7 +452,7 @@ setup_ship(hisim marker)
 
 
    // Launch the controller task.
-   Task.Detach(start ship_controller(location, owner, patrol_group));
+   Task.Detach(start ship_controller(location, owner, patrol_group, max_request_for_business, wait_limit, dock_wait_limit));
 
    // We can remove the guard mark now.
    Sim.Destroy(marker);
@@ -448,11 +461,21 @@ setup_ship(hisim marker)
 
 
 
-// The guard controller task flys waypoints around the location.
+// The freetrader group moves around the station a number of times
+// looking for business. After that it will dock a ship to station
+// for some shore leave. Then leaves the station for a new location.
 // If the location is culled, the ships are set to allow culling.
 // If a hostile ship is seen, the leader attacks.
+//	max_request_for_business	-- should be about 5
+//	wait_limit						--set between 5 and 20
+//	dock_wait_limit				--how long to wait while docked
 //[of]:task ship_controller(hmapentity location, hgroup patrol_group)
-task ship_controller(hmapentity location, hisim owner, hgroup patrol_group)
+task ship_controller(hmapentity location,
+							hisim owner,
+							hgroup patrol_group,
+							int max_request_for_business,
+							int wait_limit,
+							int dock_wait_limit)
 {
    set dislike_set;
    hship player;
@@ -473,9 +496,6 @@ task ship_controller(hmapentity location, hisim owner, hgroup patrol_group)
    float sender_feeling, target_feeling;
    int event_type;
    int i, wait_count, max_request_for_business_count;
-	int max_request_for_business = 1;	// should be 5
-	int wait_limit = 1;		// set between 5 and 20
-	int dock_wait_limit = 1;
 	int dock_wait_count;
 	int merchant_list_size;
    bool do_rescue;
@@ -761,6 +781,7 @@ task ship_controller(hmapentity location, hisim owner, hgroup patrol_group)
 			// wait until ship has docked.  Keep an eye out for bad guys and attacks.
 			
          if (iSim.IsDockedToStructure(merchant_ship, iSim.Cast(location))) {
+				// shout something on docking??
 				state = change_state(state, eCS_Docked, debug_on);
          }
 			else if (OT_Dock != iAI.CurrentOrderType( merchant_ship )) {
@@ -796,7 +817,7 @@ task ship_controller(hmapentity location, hisim owner, hgroup patrol_group)
 				// if docked then undock and reformat
 				iShip.UndockSelf( merchant_ship );
 				//iAI.GiveApproachOrder( merchant_ship, patrol_leader );
-				iAI.GiveApproachOrderAdvanced( merchant_ship, patrol_leader, 1km, 2km, true );
+				iAI.GiveApproachOrderAdvanced( merchant_ship, patrol_leader, 500, 600, true );
 			}
          else if (OT_None == iAI.CurrentOrderType(merchant_ship)) {
 				iEscort.Wedge( patrol_group, spacing, 50km, false );
