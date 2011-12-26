@@ -855,7 +855,7 @@ task ship_controller(hmapentity location,
          }
 			
 			// place the marker near the target station
-			Sim.PlaceNear(marker, new_station, 15km);
+			Sim.PlaceNear(marker, new_station, 75km);
 			
 			// set 'location' to the new station
 			location = new_station;
@@ -912,7 +912,9 @@ task ship_controller(hmapentity location,
          // Move the operation to the target station.
          tsLCenter.SetCenter(operation, new_station);
 
-         state = change_state(state, eCS_WaitApproach, debug_on);
+         state = change_state(state, eCS_InFlight, debug_on);
+			next_state = change_state(state, eCS_ToDestination, debug_on);
+			max_request_for_business_count = max_request_for_business;
 
          break;
 
