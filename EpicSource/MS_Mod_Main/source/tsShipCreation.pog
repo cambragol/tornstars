@@ -10,6 +10,7 @@
 //
 // June 2004, James Walker
 // Dec 2006, Jon Freise, rewritten to use caching to avoid timeout failure.
+// Nov 2011, Jesse Dallin, modified to add category specific cargo pods.
 //****************************************************************************/
 
 package	tsShipCreation;
@@ -176,6 +177,66 @@ string ShipType2String(etsShipType ship_type)
    case EST_Flitter: return "EST_Flitter";break; 
    case EST_Recovery: return "EST_Recovery";break;
 	case EST_DemoShips: return "EST_DemoShips";break; 
+	case ECC_CommonElementsA: return "ECC_CommonElementsA";break; 
+	case ECC_CommonElementsB: return "ECC_CommonElementsB";break; 
+	case ECC_CommonElementsC: return "ECC_CommonElementsC";break; 
+	case ECC_CommonGasses: return "ECC_CommonGasses";break; 
+	case ECC_RareElementsA: return "ECC_RareElementsA";break; 
+	case ECC_RareElementsB : return "ECC_RareElementsB ";break; 
+	case ECC_RareGasses: return "ECC_RareGasses";break; 
+	case ECC_ExoticElementsA: return "ECC_ExoticElementsA";break; 
+	case ECC_ExoticElementsB : return "ECC_ExoticElementsB ";break; 
+	case ECC_ExoticElementsC : return "ECC_ExoticElementsC ";break; 
+	case ECC_ExoticElementsD : return "ECC_ExoticElementsD ";break; 
+	case ECC_ExoticElementsE: return "ECC_ExoticElementsE";break; 
+	case ECC_Sulfides: return "ECC_Sulfides";break; 
+	case ECC_Oxides: return "ECC_Oxides";break; 
+	case ECC_Halides: return "ECC_Halides";break; 
+	case ECC_Anonates : return "ECC_Anonates ";break; 
+	case ECC_Silicates: return "ECC_Silicates";break; 
+	case ECC_NeutroniumOre: return "ECC_NeutroniumOre";break; 
+	case ECC_SyntheticElementsA: return "ECC_SyntheticElementsA";break; 
+	case ECC_SyntheticElementsB: return "ECC_SyntheticElementsB";break; 
+	case ECC_SyntheticElementsC: return "ECC_SyntheticElementsC";break; 
+	case ECC_NanoFibres: return "ECC_NanoFibres";break; 
+	case ECC_NanoSubstrates: return "ECC_NanoSubstrates";break; 
+	case ECC_NanoAlloys: return "ECC_NanoAlloys";break; 
+	case ECC_NanoFluids: return "ECC_NanoFluids";break; 
+	case ECC_SelfAssemblingCompounds: return "ECC_SelfAssemblingCompounds";break; 
+	case ECC_SelfAssemblingAlloys: return "ECC_SelfAssemblingAlloys";break; 
+	case ECC_SelfReplicatingCompounds: return "ECC_SelfReplicatingCompounds";break; 
+	case ECC_SelfReplicatingAlloys: return "ECC_SelfReplicatingAlloys";break; 
+	case ECC_IntelligentCompounds: return "ECC_IntelligentCompounds";break; 
+	case ECC_AdvancedNanoCompounds: return "ECC_AdvancedNanoCompounds";break; 
+	case ECC_StarShip: return "ECC_StarShip";break; 
+	case ECC_MiningEquipment: return "ECC_MiningEquipment";break; 
+	case ECC_Robotics: return "ECC_Robotics";break; 
+	case ECC_Nanotechnology: return "ECC_Nanotechnology";break; 
+	case ECC_Computers: return "ECC_Computers";break; 
+	case ECC_SpacecraftWeapons: return "ECC_SpacecraftWeapons";break; 
+	case ECC_Pharmaceuticals: return "ECC_Pharmaceuticals";break; 
+	case ECC_ConsumerGoods: return "ECC_ConsumerGoods";break; 
+	case ECC_FusionReactors: return "ECC_FusionReactors";break; 
+	case ECC_PowerSystems: return "ECC_PowerSystems";break; 
+	case ECC_Environmental: return "ECC_Environmental";break; 
+	case ECC_LuxuryConsumerGoods: return "ECC_LuxuryConsumerGoods";break; 
+	case ECC_FoodProducts: return "ECC_FoodProducts";break; 
+	case ECC_SyntheticFoodProducts: return "ECC_SyntheticFoodProducts";break; 
+	case ECC_LuxuryFoodProducts: return "ECC_LuxuryFoodProducts";break; 
+	case ECC_LDSSystems: return "ECC_LDSSystems";break; 
+	case ECC_ElectronicSystems: return "ECC_ElectronicSystems";break; 
+	case ECC_MemorySystems: return "ECC_MemorySystems";break; 
+	case ECC_MedicalSystems: return "ECC_MedicalSystems";break; 
+	case ECC_AgriculturalSystems: return "ECC_AgriculturalSystems";break; 
+	case ECC_ConsumerTransport: return "ECC_ConsumerTransport";break; 
+	case ECC_ConsumerEquipment: return "ECC_ConsumerEquipment";break; 
+	case ECC_WasteProduct: return "ECC_WasteProduct";break; 
+	case ECC_HeavyMaterials: return "ECC_HeavyMaterials";break; 
+	case ECC_MilitaryEquipment: return "ECC_MilitaryEquipment";break; 
+	case ECC_ReactorFuel: return "ECC_ReactorFuel";break; 
+	case ECC_Neutronium: return "ECC_Neutronium";break; 
+
+
    case EST_Taxi: return "EST_Taxi";break;
    default:
       debug {
@@ -237,6 +298,66 @@ etsShipType String2ShipType(string type_name)
    else if ("EST_Flitter"==type_name) { return EST_Flitter; } 
    else if ("EST_Recovery"==type_name) { return EST_Recovery; }
 	else if ("EST_DemoShips"==type_name) { return EST_DemoShips; } 
+	else if ("ECC_CommonElementsA"==type_name) { return ECC_CommonElementsA; } 
+	else if ("ECC_CommonElementsB"==type_name) { return ECC_CommonElementsB; } 
+	else if ("ECC_CommonElementsC"==type_name) { return ECC_CommonElementsC; } 
+	else if ("ECC_CommonGasses"==type_name) { return ECC_CommonGasses; } 
+	else if ("ECC_RareElementsA"==type_name) { return ECC_RareElementsA; } 
+	else if ("ECC_RareElementsB"==type_name) { return ECC_RareElementsB; } 
+	else if ("ECC_RareGasses"==type_name) { return ECC_RareGasses; } 
+	else if ("ECC_ExoticElementsA"==type_name) { return ECC_ExoticElementsA; } 
+	else if ("ECC_ExoticElementsB"==type_name) { return ECC_ExoticElementsB; } 
+	else if ("ECC_ExoticElementsC"==type_name) { return ECC_ExoticElementsC; } 
+	else if ("ECC_ExoticElementsD"==type_name) { return ECC_ExoticElementsD; } 
+	else if ("ECC_ExoticElementsE"==type_name) { return ECC_ExoticElementsE; } 
+	else if ("ECC_Sulfides"==type_name) { return ECC_Sulfides; } 
+	else if ("ECC_Oxides"==type_name) { return ECC_Oxides; } 
+	else if ("ECC_Halides"==type_name) { return ECC_Halides; } 
+	else if ("ECC_Anonates"==type_name) { return ECC_Anonates; } 
+	else if ("ECC_Silicates"==type_name) { return ECC_Silicates; } 
+	else if ("ECC_NeutroniumOre"==type_name) { return ECC_NeutroniumOre; } 
+	else if ("ECC_SyntheticElementsA"==type_name) { return ECC_SyntheticElementsA; } 
+	else if ("ECC_SyntheticElementsB"==type_name) { return ECC_SyntheticElementsB; } 
+	else if ("ECC_SyntheticElementsC"==type_name) { return ECC_SyntheticElementsC; } 
+	else if ("ECC_NanoFibres"==type_name) { return ECC_NanoFibres; } 
+	else if ("ECC_NanoSubstrates"==type_name) { return ECC_NanoSubstrates; } 
+	else if ("ECC_NanoAlloys"==type_name) { return ECC_NanoAlloys; } 
+	else if ("ECC_NanoFluids"==type_name) { return ECC_NanoFluids; } 
+	else if ("ECC_SelfAssemblingCompounds"==type_name) { return ECC_SelfAssemblingCompounds; } 
+	else if ("ECC_SelfAssemblingAlloys"==type_name) { return ECC_SelfAssemblingAlloys; } 
+	else if ("ECC_SelfReplicatingCompounds"==type_name) { return ECC_SelfReplicatingCompounds; } 
+	else if ("ECC_SelfReplicatingAlloys"==type_name) { return ECC_SelfReplicatingAlloys; } 
+	else if ("ECC_IntelligentCompounds"==type_name) { return ECC_IntelligentCompounds; } 
+	else if ("ECC_AdvancedNanoCompounds"==type_name) { return ECC_AdvancedNanoCompounds; } 
+	else if ("ECC_StarShip"==type_name) { return ECC_StarShip; } 
+	else if ("ECC_MiningEquipment"==type_name) { return ECC_MiningEquipment; } 
+	else if ("ECC_Robotics"==type_name) { return ECC_Robotics; } 
+	else if ("ECC_Nanotechnology"==type_name) { return ECC_Nanotechnology; } 
+	else if ("ECC_Computers"==type_name) { return ECC_Computers; } 
+	else if ("ECC_SpacecraftWeapons"==type_name) { return ECC_SpacecraftWeapons; } 
+	else if ("ECC_Pharmaceuticals"==type_name) { return ECC_Pharmaceuticals; } 
+	else if ("ECC_ConsumerGoods"==type_name) { return ECC_ConsumerGoods; } 
+	else if ("ECC_FusionReactors"==type_name) { return ECC_FusionReactors; } 
+	else if ("ECC_PowerSystems"==type_name) { return ECC_PowerSystems; } 
+	else if ("ECC_Environmental"==type_name) { return ECC_Environmental; } 
+	else if ("ECC_LuxuryConsumerGoods"==type_name) { return ECC_LuxuryConsumerGoods; } 
+	else if ("ECC_FoodProducts "==type_name) { return ECC_FoodProducts ; } 
+	else if ("ECC_SyntheticFoodProducts "==type_name) { return ECC_SyntheticFoodProducts ; } 
+	else if ("ECC_LuxuryFoodProducts "==type_name) { return ECC_LuxuryFoodProducts ; } 
+	else if ("ECC_LDSSystems"==type_name) { return ECC_LDSSystems ; } 
+	else if ("ECC_ElectronicSystems"==type_name) { return ECC_ElectronicSystems; } 
+	else if ("ECC_MemorySystems"==type_name) { return ECC_MemorySystems; } 
+	else if ("ECC_MedicalSystems"==type_name) { return ECC_MedicalSystems; } 
+	else if ("ECC_AgriculturalSystems"==type_name) { return ECC_AgriculturalSystems; } 
+	else if ("ECC_ConsumerTransport"==type_name) { return ECC_ConsumerTransport; } 
+	else if ("ECC_ConsumerEquipment"==type_name) { return ECC_ConsumerEquipment; } 
+	else if ("ECC_WasteProduct"==type_name) { return ECC_WasteProduct; } 
+	else if ("ECC_HeavyMaterials"==type_name) { return ECC_HeavyMaterials; } 
+	else if ("ECC_MilitaryEquipment "==type_name) { return ECC_MilitaryEquipment ; } 
+	else if ("ECC_ReactorFuel"==type_name) { return ECC_ReactorFuel; } 
+	else if ("ECC_Neutronium"==type_name) { return ECC_Neutronium; } 
+
+
    else if ("EST_Taxi"==type_name) { return EST_Taxi; }
 
    debug {

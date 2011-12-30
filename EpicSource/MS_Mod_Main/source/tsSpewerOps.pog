@@ -8,7 +8,7 @@
 // 
 //
 // October 2005, Kevin Baxter
-//
+// November 2011, Modified to support Cargo Hacking for piracy, Jesse Dallin
 //*******************************************************************************************/
 
 package tsSpewerOps;
@@ -91,8 +91,8 @@ hship ShipDocked(hhabitat station, bool lock)
 bool IsFinished(hship ship)
 {
 	if(!Object.PropertyExists(ship, "md_epic_spewdone"))	// If the ship isn't initialized, it's done.
-		return true;
-
+	{	return true;
+}
 	return Object.BoolProperty(ship, "md_epic_spewdone");
 }
 
@@ -252,7 +252,7 @@ LoadShip(hship ship, hhabitat station, set pods)
 task spew_and_dock_pod(hship pod, hship ship, hhabitat station, int delay)
 {
 	bool goodtospew = false;
-
+	 
 	// Spew phase
 
 	Task.Sleep(Task.Current(), delay);
@@ -267,6 +267,15 @@ task spew_and_dock_pod(hship pod, hship ship, hhabitat station, int delay)
 				iHabitat.Spew(station,pod);
 				Object.SetIntProperty(station, "md_epic_spewerslotsfree", Object.IntProperty(station, "md_epic_spewerslotsfree") - 1);
 				Object.SetIntProperty(ship, "md_epic_freeports", Object.IntProperty(ship, "md_epic_freeports") - 1);
+
+
+// Added to make the cargo match the faction of ship to allow cargo-hacking
+
+	iSim.SetFaction(pod,iSim.Faction(ship));
+
+// Added to make the cargo match the faction of ship to allow cargo-hacking
+
+
 			}
 		}
 		Task.Sleep(Task.Current(), 0.1);
@@ -279,6 +288,8 @@ task spew_and_dock_pod(hship pod, hship ship, hhabitat station, int delay)
 		Task.Sleep(Task.Current(), 0.1);
 	}
 	Object.SetIntProperty(station, "md_epic_spewerslotsfree", Object.IntProperty(station, "md_epic_spewerslotsfree") + 1);
+
+
 
 
 	// Dock phase
@@ -308,7 +319,7 @@ task spew_and_dock_pod(hship pod, hship ship, hhabitat station, int delay)
 	}
 	
 	// Once docked, update the properties and lock it down.
-
+	
 	Object.SetIntProperty(ship, "md_epic_podstogo", Object.IntProperty(ship, "md_epic_podstogo") - 1);
 	iShip.RemovePilot(pod);
 	iSim.SetDockingLock(pod, ship, true);

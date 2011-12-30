@@ -8,6 +8,7 @@
 // 
 //
 // Jan 2003, Jon Freise
+// Nov 2011, Jesse Dallin - modified to add category based pod creation
 
 // Notes:
 // What we know about cargo pods:
@@ -56,7 +57,10 @@ uses    Sim,
 //        CargoTypes,
         tsFaction,
         tsShip,
-        ECargoTypes;
+	  tsShipCreationEnum,
+	  tsShipCreation,
+        ECargoTypes,
+	  tsEconomy;
 //        ECargoScript;
 
         
@@ -111,15 +115,21 @@ hsim CreateCargoPod(int cargo_enum, string owner_faction, string cargo_faction)
 {
    hsim pod;
    hcargo cargo;
-   string cargo_name;
+   string cargo_name, category_name;
+   hinifile category_file = INIFile.Create("ini:/cargo_category");
+
 
    cargo = iCargo.Find(cargo_enum);
-
    cargo_name = ECargoTypes.CargoString2DBKey(ECargoTypes.CargoType2String(cargo_enum));
 
-   pod = Sim.Create("ini:/sims/ships/utility/freightpod", cargo_name);
+	category_name = tsEconomy.CategoryName(cargo);
 
-   iSim.SetFaction(iSim.Cast(pod), iFaction.Find(owner_faction));
+	if ("" == category_name) {
+		pod = Sim.Create("ini:/sims/ships/utility/containerpod", cargo_name);
+	}
+	else {	
+		pod = Sim.Create(tsShipCreation.GetShip(iFaction.Find(owner_faction), tsShipCreation.String2ShipType(category_name)), cargo_name);
+	}
    Object.AddIntProperty(pod,"cargo", cargo_enum);
    Object.AddIntProperty(pod,"cargo_faction",iFaction.Allegiance(iFaction.Find(cargo_faction)));
 
