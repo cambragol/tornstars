@@ -36,6 +36,7 @@ uses    Sim,
 
 provides DisplayComms,
          AddComms,
+	   RemoveComms,
          CommsSource,
          Keypress,
          Setup;
@@ -89,6 +90,7 @@ hsim CommsSource()
 // Add a visible comms marker to this sim.
 // (might not want this to be added to a station or other obvious 
 // comm targets).
+
 DisplayComms(hsim source, bool visible)
 {
    iSim.SetMissionCritical( iSim.Cast(source), visible );   
@@ -105,6 +107,13 @@ AddComms(hsim target, string task_name)
    }else {
       Object.AddStringProperty(target, "tsShipCommsFunction",task_name);
    }
+}
+
+
+// Remove the comms interface for hostile ships
+RemoveComms(hsim target)
+{
+	Object.RemoveProperty(target, "tsShipCommsFunction"); 
 }
 
 

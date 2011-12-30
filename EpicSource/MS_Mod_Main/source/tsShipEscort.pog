@@ -216,7 +216,7 @@ CreateMixedEscort(
             try_to_make_num_ships = heavy_ships;
             break;
          case 3:
-            ship_type = "EST_CombatCaptial";
+            ship_type = "EST_CombatCapital";
             try_to_make_num_ships = capital_ships;
             break;
       }
@@ -277,6 +277,7 @@ CreateMixedEscort(
 				// Note: this list is indexed from 1
 				tsFleetOp.SetShipOnOp(operation, escort, i+1);
 				
+				//commented out to make fleet composition easier to predict
 				available_fleets -= threat;
          }
       }

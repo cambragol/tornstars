@@ -253,6 +253,19 @@ setup_fence_ship(hship ship)
       // create any escort if we need it
       tsShipEscort.CreateStandardEscort(owner, fence_ship, cull_group, "underworld", "EST_CombatLight");
 
+/*tsShipEscort.CreateMixedEscort(
+                     owner,
+                     fence_ship,
+                     cull_group,
+                     "underworld",
+                     true,
+                     1,    // fighters
+                     1,      // light ships
+                     1,      // heavy ships
+                     1     // captial ships
+                  );*/
+
+
    }else {
       fence_ship = ship;
       iSim.SetFaction(fence_ship, faction);

@@ -28,20 +28,20 @@ uses  Sim,
    iShip,
    iHabitat,
    iMapEntity,
-//   iCargo,
-//   CargoTypes,
+   iCargo,
+   CargoTypes,
    
 //   tsFleetOpEnum,
 //   tsFaction,
 //   tsStationEnum,
 //   tsStation,
-//   tsEconUtil,
+   tsEconUtil,
    
    tsPogClass,
    tsPcOwner,
    
 //   tsLRoot,
-//   tsLProduction,
+   tsLProduction,
    tsLCenter,
 //   tsLFleet,
    
@@ -69,7 +69,14 @@ MakeOpPhysical(hisim operation)
    string object_type, name, effect;
    int place_close, random;
 
-   string env_file = tsFleetOp.GetOperationEnvFoTemplate(operation);
+//added to make tsFleetOpPhysical restore ops from save.  also added tsEconUtil, iCargo, CargoTypes as imports
+	hinifile stations_file = INIFile.Create("ini:/metagame_production");
+	string op_type = tsEconUtil.StationIntToString(tsLProduction.GetType(operation));
+	string env_file = INIFile.NumberedString(stations_file, op_type, "ESS_Normal", 0, "none");
+//////////////
+
+   //commented this string out to use the one added above
+   //string env_file = tsFleetOp.GetOperationEnvFoTemplate(operation);
    hinifile env_file_handle = INIFile.Create( env_file );
    hmapentity station = tsLCenter.GetCenter(operation);
 
@@ -78,6 +85,7 @@ MakeOpPhysical(hisim operation)
    debug Debug.PrintString("tsFleetOpPhysical.MakeOpPhysical: Process operation.\n");
    if(none == env_file_handle) {
       debug Debug.PrintString("tsFleetOpPhysical.MakeOpPhysical: ERROR: Failed to open the operations env_fo file.\n");
+	debug Debug.PrintString(env_file);
       return;
    }
 

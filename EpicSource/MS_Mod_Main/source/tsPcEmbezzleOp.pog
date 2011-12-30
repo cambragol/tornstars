@@ -289,6 +289,18 @@ setup_fence_ship(hisim marker)
    // create any escort if we need it
    tsShipEscort.CreateStandardEscort(owner, fence_ship, cull_group, "underworld", "EST_CombatLight");
 
+/*tsShipEscort.CreateMixedEscort(
+                     owner,
+                     fence_ship,
+                     cull_group,
+                     "underworld",
+                     true,
+                     1,    // fighters
+                     1,      // light ships
+                     1,      // heavy ships
+                     1     // captial ships
+                  );  */
+
    comm_function = "tsPcEmbezzleOp.FenceComms";
 
    // Setup the later comms task.

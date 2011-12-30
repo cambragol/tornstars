@@ -302,6 +302,19 @@ setup_tanker_ship(hisim marker)
    //create_escorts(owner, tanker_ship, cull_group);
    // create any escort if we need it
    tsShipEscort.CreateStandardEscort(owner, tanker_ship, cull_group, "general", "EST_CombatLight");
+
+   /*tsShipEscort.CreateMixedEscort(
+                     owner,
+                     tanker_ship,
+                     cull_group,
+                     "general",
+                     true,
+                     1,    // fighters
+                     1,      // light ships
+                     1,      // heavy ships
+                     1     // captial ships
+                  );*/
+
    
    // Define the comms function
    comm_function = "tsPcTankerOp.TankerComms";

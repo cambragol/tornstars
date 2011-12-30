@@ -65,6 +65,10 @@ provides SetupOperation,
 
 prototype drop_cargo(hship freighter);
 
+prototype SetupCargo(hship cargo_ship, float notice_level, float flee_level);
+
+prototype SetupEscort(hship escort, float notice_level, float flee_level);
+
 // This task is launched when an escort ship 
 // has been attacked. It watches the ship and tells it when
 // to stop fighting and flee.
@@ -73,6 +77,11 @@ task escort_task(hship escort)
 {
    float hit_points, flee_points;
    hship last_attacker;
+	float notice_level, flee_level;
+	int recover_timer;
+
+	notice_level = Object.FloatProperty(escort,"notice_level");
+	flee_level = Object.FloatProperty(escort,"flee_level");
 
 
    if (Object.BoolProperty(escort,"watch_task")) {
@@ -80,10 +89,19 @@ task escort_task(hship escort)
       return;
    }
 
-   Object.AddBoolProperty(escort,"watch_task", true);
+   // Set that the ship has a watch task assigned, or is being reactivated
+   if (Object.PropertyExists(escort, "watch_task")) {
+      Object.SetBoolProperty(escort,"watch_task", true);
+   }else {
+      Object.AddBoolProperty(escort,"watch_task", true);
+   }
 
    while (1) {
       Task.Sleep(Task.Current(), 1.0);
+
+	recover_timer = recover_timer + 1;
+		debug Debug.PrintString("tsPilotSetup.escort_task Checking actual recover times\n");
+		debug Debug.PrintInt(recover_timer);
 
       if (Sim.IsDead(escort)) {
          // our ship is dead, bail.
@@ -93,11 +111,33 @@ task escort_task(hship escort)
       hit_points = Object.FloatProperty(escort,"hit_points");
       flee_points = Object.FloatProperty(escort,"flee_hit_points");
 
-      if (hit_points < flee_points) {
+	if (recover_timer > 180) {
+
+	// We are okay, return and turn off task
+
+	Object.SetBoolProperty(escort,"watch_task", false);
+	recover_timer = 0;
+	return;
+	}
+
+	else if (recover_timer == 180) {
+
+		iShip.RemovePilot(escort);
+		SetupCargo(escort, notice_level, flee_level);
+
+		debug Debug.PrintString("tsPilotSetup.escort_task setting up flee and notice levels\n");
+		debug Debug.PrintFloat(notice_level);
+		debug Debug.PrintString("\n");
+		debug Debug.PrintFloat(flee_level);
+
+
+	}
+      else if (hit_points < flee_points) {
          // If our orders are not to run, then run.
 
          if (OT_Flee != iAI.CurrentOrderType(escort)) {
             last_attacker = iShip.Cast(iShip.LastAttacker(escort));
+
 
             iAI.PurgeOrders(escort);
             iAI.GiveFleeOrder(escort, last_attacker);
@@ -109,6 +149,9 @@ task escort_task(hship escort)
             tsPodUtil.DropCargo(escort);
          }
       }
+	else {
+
+	}
    }
 }
 //[cf]
@@ -119,10 +162,16 @@ task escort_task(hship escort)
 //[of]:task cargo_task(hship cargo_ship)
 task cargo_task(hship cargo_ship)
 {
-   float hit_points, flee_points;
+   float hit_points, flee_points, spacing;
    hship last_attacker;
    set cargo;
+	float notice_level, flee_level;
+	int recover_timer, do_once;
 
+	notice_level = Object.FloatProperty(cargo_ship,"notice_level");
+	flee_level = Object.FloatProperty(cargo_ship,"flee_level");
+
+	//spacing = iUtilities.GetLargestShipRadius( Sim.Group(cargo_ship)) * 2;
 
    if (Object.BoolProperty(cargo_ship,"watch_task")) {
       // this ship has a watch task already.
@@ -130,32 +179,71 @@ task cargo_task(hship cargo_ship)
    }
 
    // set fact that this ship now has a watch task assigned to it
-   Object.AddBoolProperty(cargo_ship,"watch_task", true);
+      if (Object.PropertyExists(cargo_ship, "watch_task")) {
+      Object.SetBoolProperty(cargo_ship,"watch_task", true);
+   }else {
+      Object.AddBoolProperty(cargo_ship,"watch_task", true);
+   }
 
    // continuous monitoring loop
    while (1) {
       Task.Sleep(Task.Current(), 1.0);
 
+
+	recover_timer = recover_timer + 1;
+		debug Debug.PrintString("\n");
+		debug Debug.PrintString("tsPilotSetup.cargo_task recover timer = ");
+		debug Debug.PrintInt(recover_timer);
+		debug Debug.PrintString("\n");
+
       if (Sim.IsDead(cargo_ship)) {
          // our ship is dead, bail.
          return;
       }
+
+	
       
       // get the hit points and flee points for the cargo ship
       hit_points = Object.FloatProperty(cargo_ship,"hit_points");
       flee_points = Object.FloatProperty(cargo_ship,"flee_hit_points");
 
-      if (hit_points < flee_points) {
+	if (recover_timer > 180) {
+
+	// We are okay, return and turn off task
+
+	Object.SetBoolProperty(cargo_ship,"watch_task", false);
+	recover_timer = 0;
+	return;
+	}
+
+	else if (recover_timer == 180) {
+
+		iShip.RemovePilot(cargo_ship);
+		SetupCargo(cargo_ship, notice_level, flee_level);
+
+		debug Debug.PrintString("tsPilotSetup.cargo_task setting up flee and notice levels\n");
+		debug Debug.PrintFloat(notice_level);
+		debug Debug.PrintString("\n");
+		debug Debug.PrintFloat(flee_level);
+
+
+	}
+      else if (hit_points < flee_points) {
          // If our orders are not to run, then run.
 
          // if not already fleeing then make us flee
          if (OT_Flee != iAI.CurrentOrderType(cargo_ship)) {
-            last_attacker = iShip.Cast(iShip.LastAttacker(cargo_ship));
 
+            last_attacker = iShip.Cast(iShip.LastAttacker(cargo_ship));
             iAI.PurgeOrders(cargo_ship);
+		
+		// No group orders here as it will conflict with the operation states
+		//iAI.GiveEscortOrder(Sim.Group(cargo_ship), cargo_ship, spacing, spacing, spacing, 4500);
+
             iAI.GiveFleeOrder(cargo_ship, last_attacker);
 
             debug Debug.PrintString("tsPilotSetup.cargo_task giving flee order\n");
+
             // This is a good place for a distress call.
             // Joco: The distress call should be in 'CargoSelfPreserve' per the escort pattern.
 
@@ -164,8 +252,12 @@ task cargo_task(hship cargo_ship)
             //Task.Detach(start iUtilities.JettisonCargo( List.FromSet(cargo), cargo_ship ));
             
             tsPodUtil.DropCargo(cargo_ship);
+
          }
       }
+	else {
+
+	}
    }
 }
 //[cf]
@@ -186,6 +278,9 @@ SetupEscort(hship escort, float notice_level, float flee_level)
    // Set the level of hit points when we should run for it.
    Object.AddFloatProperty(escort,"flee_hit_points", 
                            Object.FloatProperty(escort,"hit_points") * flee_level);
+
+   Object.AddFloatProperty(escort,"notice_level", notice_level);
+   Object.AddFloatProperty(escort,"flee_level", flee_level);
 
    Object.SetStringProperty(escort,"death_script", "tsPilotSetup.EscortDeath");
 }
@@ -291,7 +386,7 @@ SetupCargo(hship cargo_ship, float notice_level, float flee_level)
 {
    
    // Setup the pilot so that it turns hostile very quickly.
-   iShip.InstallAIPilot(cargo_ship, 0.1, 4.0,
+   iShip.InstallAIPilot(cargo_ship, 0.1, 1.0,
                         notice_level,
                         "tsPilotSetup.CargoSelfPreserve",
                         "tsPilotSetup.CargoSelfPreserve",
@@ -301,6 +396,10 @@ SetupCargo(hship cargo_ship, float notice_level, float flee_level)
    // Set the level of hit points when we should run for it.
    Object.AddFloatProperty(cargo_ship,"flee_hit_points", 
                            Object.FloatProperty(cargo_ship,"hit_points") * flee_level);
+
+	//Added to allow proper set up of AI restarts in cargo_task
+   	Object.AddFloatProperty(cargo_ship,"notice_level", notice_level);
+   	Object.AddFloatProperty(cargo_ship,"flee_level", flee_level);
 
    Object.SetStringProperty(cargo_ship,"death_script", "tsPilotSetup.CargoDeath");
 }
@@ -339,8 +438,21 @@ task CargoSelfPreserve(hship cargo_ship, hship agressor_ship)
       return;
    }
 
-  // make a distress call for help, some bugger attacked us!
-  tsDistress.Send(espDistress, eseDistress,  iSim.Cast(cargo_ship), agressor_ship, iSim.Cast(cargo_ship), 50km);   
+  	// make a distress call for help, some bugger attacked us!
+  	tsDistress.Send(espDistress, eseDistress,  iSim.Cast(cargo_ship), agressor_ship, iSim.Cast(cargo_ship), 50km);  
+
+   	debug Debug.PrintString("tsPilotSetup.CargoSelfPreserve sending distress call\n");
+   	// Let our patrol group know we were fired upon.
+   	tsEvent.SendEvent(Sim.Group(cargo_ship),
+                     espSelfAttacked,
+                     eseSelfAttacked,
+                     cargo_ship,
+                     agressor_ship,
+                     cargo_ship);
+ 	// Added because some cargo ships have turrets?
+ 	iAI.PurgeOrders(cargo_ship);
+ 	iAI.GiveSpecificAttackOrder(cargo_ship, agressor_ship, AS_GunStation); 
+
 }
 //[cf]
 
@@ -374,7 +486,7 @@ task CargoDeath(hship cargo_ship)
 SetupOperation(hship ship, float notice_level, float flee_level)
 {
    // Setup the pilot so that it turns hostile very quickly.
-   iShip.InstallAIPilot(ship, 0.1, 4.0,
+   iShip.InstallAIPilot(ship, 0.1, 2.0,
                         notice_level,
                         "tsPilotSetup.CargoSelfPreserve",
                         "tsPilotSetup.CargoSelfPreserve",
@@ -384,6 +496,9 @@ SetupOperation(hship ship, float notice_level, float flee_level)
    // Set the level of hit points when we should run for it.
    Object.AddFloatProperty(ship,"flee_hit_points", 
                            Object.FloatProperty(ship,"hit_points") * flee_level);
+
+   Object.AddFloatProperty(ship,"notice_level", notice_level);
+   Object.AddFloatProperty(ship,"flee_level", flee_level);
 
    Object.SetStringProperty(ship,"death_script", "tsPilotSetup.OperationDeath");
 }

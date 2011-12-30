@@ -94,6 +94,14 @@ Restore(hisim producer)
 
    center = iMapEntity.FindByNameInSystem(station_name, system_name);
 
+      debug {
+         Debug.PrintString("tsCenter.Restoring Operation Center at\n");
+         Debug.PrintString(station_name);
+         Debug.PrintString(" ");
+         Debug.PrintString(system_name);
+         Debug.PrintString("\n");
+      }
+
    Create(producer, center);
 
    SetCullMarker(center, false);

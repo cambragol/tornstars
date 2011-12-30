@@ -240,6 +240,8 @@ Source: .\..\EpicSource\MS_Mod_Ships\avatars\turret_d\*; DestDir: {app}\mods\MS_
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\freighter\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\freighter
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\command_section\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\command_section
 Source: .\..\EpicSource\MS_Mod_Ships\avatars\flitter\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\flitter
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\temp_cargopod\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\temp_cargopod
+Source: .\..\EpicSource\MS_Mod_Ships\avatars\freightpod\*; DestDir: {app}\mods\MS_Mod_Ships\avatars\freightpod
 
 Source: .\..\EpicSource\MS_Mod_Ships\images\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\images\sfx; Flags: skipifsourcedoesntexist
 Source: .\..\EpicSource\MS_Mod_Ships\sfx\*; DestDir: {app}\mods\MS_Mod_Ships\sfx; Flags: skipifsourcedoesntexist

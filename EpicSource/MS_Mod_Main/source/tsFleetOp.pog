@@ -50,6 +50,7 @@ uses  Sim,
 	tsLRoot,
 	tsLProduction,
 	tsLCenter,
+	tsFleetOpPhysical,
 	tsLFleet;
 
 
@@ -116,6 +117,8 @@ prototype string Name(hisim operation);
 prototype add_list(hisim operation);
 
 prototype hhabitat Supporter(hisim operation);
+
+prototype string GetOperationEnvFoTemplate(hisim operation);
 
 /* 
 Operation Notes:
@@ -393,9 +396,6 @@ string ShipTemplate(hisim operation)
    return Object.StringProperty(operation,"gtsFleetOpTemplate");
 }
 
-
-
-
 bool IsOperation(hisim operation)
 {
    if (none == operation) {
@@ -648,6 +648,21 @@ string Operation2String(int op_type)
 		return "Free Trader Operation";
 		break;
 
+	case ept_FreeMinerOp:
+		return "Free Miner Operation";
+		break;
+
+	case ept_FreeTankerOp:
+		return "Free Tanker Operation";
+		break;
+
+	case ept_FreeScienceOp:
+		return "Free Science Operation";
+		break;
+
+	case ept_FreeMerchantOp:
+		return "Free Merchant Operation";
+		break;
 
    // Creates a black market importer/exporter into the station.
    // Hides just outside of station range, and deals in goods with

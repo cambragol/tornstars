@@ -20,6 +20,8 @@ prototype tsShipComms.DisplayComms( hsim source, bool visible );
 
 prototype tsShipComms.AddComms( hsim target, string task_name );
 
+prototype tsShipComms.RemoveComms( hsim target );
+
 prototype hsim tsShipComms.CommsSource();
 
 prototype tsShipComms.Keypress();

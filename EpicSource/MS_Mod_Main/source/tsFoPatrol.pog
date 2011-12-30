@@ -100,8 +100,17 @@ New(hisim operation)
    tsFleetOp.SetName(operation, ship_name);
    tsFleetOp.SetShipTemplate(operation, ship_template);
 
-   tsLFleet.SetMaxFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
-   tsLFleet.SetFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
+   tsLFleet.SetMaxFleets(operation, Math.RandomInt(50,(tsFleetOp.GetOperationMaxFleets(operation))));
+
+
+   tsLFleet.SetFleets(operation, tsLFleet.MaxFleets(operation));
+
+debug Debug.PrintString("tsFoPatrol.New: Max Fleets =.\n");
+debug Debug.PrintInt(tsLFleet.MaxFleets(operation));
+debug Debug.PrintString("\n");
+debug Debug.PrintString("tsFoPatrol.New: Random Fleets =.\n");
+debug Debug.PrintInt(tsLFleet.Fleets(operation));
+debug Debug.PrintString("\n");
 
 }
 

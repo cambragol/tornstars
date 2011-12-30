@@ -249,8 +249,8 @@ operations_setup(hmapentity center)
       // Call the operation via the tsFleetOpCall switching model
       tsFleetOpCall.PlayerNear(operation);
 
-      /*  Superceded by PlayerNear model
-      count = 0;
+      /*  Superceded by PlayerNear model but removed because it doesn't work */
+     /* count = 0;
       while (INIFile.NumberedExists(stations_file, op_type, "ESS_Normal", count)){
          env_file = INIFile.NumberedString(stations_file, op_type, "ESS_Normal", count, "none");
          ++count;
@@ -258,8 +258,8 @@ operations_setup(hmapentity center)
          if ("none" != env_file) {
             tsStationEnv.SetupObjects(center, operation, env_file, 0, 0, 0);
          }
-      }
-      */
+      }*/
+      
    }
 
    INIFile.Destroy(stations_file);

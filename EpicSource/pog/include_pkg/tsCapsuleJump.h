@@ -30,5 +30,7 @@ prototype bool tsCapsuleJump.IsCapsuleSpace( string system );
 
 prototype bool tsCapsuleJump.IsCapsuleJumping();
 
+prototype list tsCapsuleJump.gen_route_list(hlagrangepoint lpoint);
+
 // EOF /////////////////////////////////////////////////////////////////////////
 

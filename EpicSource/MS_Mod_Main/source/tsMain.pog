@@ -29,7 +29,7 @@ uses
    iBaseGUI,
    iLagrangePoint,
    iAI,
-
+Global,
 
    tsTime,
    tsDistance,
@@ -152,6 +152,10 @@ SessionEnter()
    Text.Add("csv:/text/gt_station_types");
    Text.Add("csv:/text/gt_pc_objects");
    Text.Add("csv:/text/player_ship_name");
+
+	if (Global.Exists("g_trout_old_mission_time")) {
+		Global.SetInt("g_trout_old_mission_time", 0);
+	}
 
    tsDistance.Init();
 
@@ -382,7 +386,7 @@ DayUpdate()
 {
    atomic debug Debug.PrintString("tsMain.DayUpdate ----------------Start----------------\n");
 
-   tsStationRules.UpdateAllStations();
+   //tsStationRules.UpdateAllStations();
    tsFleetOpUpdate.UpdateAll();
 
    tsNewsNet.DayUpdate();

@@ -50,6 +50,7 @@ uses    Sim,
 
 provides
    InitShipHire,
+   RemoveShipHire,
    Comms;
 
 
@@ -66,6 +67,17 @@ InitShipHire(hship ship)
 }
 
 
+// Remove ship comms for hostile ships
+RemoveShipHire(hship ship)
+{
+   // Determine if ship can be hired. Must have key hire attributes loaded
+   // Redundent, but why not?
+   if(Object.PropertyExists(ship, "gtHiredShipFee"))
+   {
+      tsShipComms.RemoveComms(ship);
+      tsShipComms.DisplayComms(ship, false);
+   }
+}
 
 // This is the new combined hired ship comms task.
 task Comms() {

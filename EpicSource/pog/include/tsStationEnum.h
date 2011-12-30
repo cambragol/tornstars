@@ -379,6 +379,14 @@ enum eProductionType
 	
 	ept_MercOp = 149,
 	
-	ept_FreeTraderOp = 150
+	ept_FreeTraderOp = 150,
+
+	ept_FreeMinerOp = 151,
+
+	ept_FreeTankerOp = 152,
+
+	ept_FreeScienceOp = 153,
+
+	ept_FreeMerchantOp = 154
 
 };	

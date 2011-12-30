@@ -127,6 +127,10 @@ PACKAGES = ECargoTypes.pkg \
 	tsPcHiredShip.pkg \
 	tsPcMerc.pkg \
 	tsPcFreeTrader.pkg \
+	tsPcFreeMiner.pkg \
+	tsPcFreeTanker.pkg \
+	tsPcFreeScience.pkg \
+	tsPcFreeMerchant.pkg \
 	tsPcOwner.pkg \
 	tsPcPirateToll.pkg \
 	tsPcPodScrapper.pkg \
@@ -182,6 +186,10 @@ PACKAGES = ECargoTypes.pkg \
 	tsFoArmsDealer.pkg \
 	tsFoMerc.pkg \
 	tsFoFreeTrader.pkg \
+	tsFoFreeMiner.pkg \
+	tsFoFreeTanker.pkg \
+	tsFoFreeScience.pkg \
+	tsFoFreeMerchant.pkg \
 	tsPilotSetup.pkg \
 	tsPlayerDeath.pkg \
 	tsPlayerSave.pkg \

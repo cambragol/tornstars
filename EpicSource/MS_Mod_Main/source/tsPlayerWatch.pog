@@ -106,6 +106,9 @@ task watch_task()
    int current_day = 0;
    int two_counter = 0;
 
+	//added for lds time advance
+	int current_time, new_time;
+
    bool docked = false;
    bool jumping = false;
    int save_count = 0;
@@ -202,6 +205,28 @@ task watch_task()
             }
          }
 
+	// Check if the player is in LDS and advance time accordingly
+	// Edited out for now.  Maybe implement later
+
+	/*	if (iShip.IsInLDS(player)) {
+			if (Global.Exists("g_trout_mission_time")) {
+				current_time = Global.Int("g_trout_mission_time");
+				new_time = current_time + 1;
+				Global.SetInt("g_trout_mission_time", new_time);
+			}
+			else {
+				current_time = iGame.GameTime();
+				new_time = current_time + 1;
+				Global.CreateInt("g_trout_mission_time", GA_Write, new_time);
+			}
+			iHUD.Print( "LDS Time Compression"); 
+
+			iHUD.FlashElement("icHUDMessage");
+
+
+		}  */
+
+
          // Check if the player has been shooting LDSI missiles. Create the fields and timers.
          ldsi_drop(player);
 
@@ -219,6 +244,26 @@ task watch_task()
          }// every 2 loops
 
       }//If not capsule jumping.
+// Removed for now.  Maybe bring back later
+/*	else {
+	
+
+			// Advance time based on length of Capsule Jump
+
+			if (Global.Exists("g_trout_mission_time")) {
+				current_time = Global.Int("g_trout_mission_time");
+				new_time = current_time + 50;
+				Global.SetInt("g_trout_mission_time", new_time);
+			}
+			else {
+				current_time = iGame.GameTime();
+				new_time = current_time + 50;
+				Global.CreateInt("g_trout_mission_time", GA_Write, new_time);
+			}
+			iHUD.Print( "Capsule Space Time Compression"); 
+
+			iHUD.FlashElement("icHUDMessage");
+	}  */
 
       Task.Sleep(Task.Current(), 0.5);
    }// While forever
@@ -410,3 +455,4 @@ OR PARTICLE SYSTEMS LTD.
 
 ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
 */
+
