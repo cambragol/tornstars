@@ -126,9 +126,11 @@ hsim CreateCargoPod(int cargo_enum, string owner_faction, string cargo_faction)
 
 	if ("" == category_name) {
 		pod = Sim.Create("ini:/sims/ships/utility/containerpod", cargo_name);
+		iSim.SetFaction(iSim.Cast(pod), iFaction.Find(owner_faction));
 	}
 	else {	
 		pod = Sim.Create(tsShipCreation.GetShip(iFaction.Find(owner_faction), tsShipCreation.String2ShipType(category_name)), cargo_name);
+		iSim.SetFaction(iSim.Cast(pod), iFaction.Find(owner_faction));
 	}
    Object.AddIntProperty(pod,"cargo", cargo_enum);
    Object.AddIntProperty(pod,"cargo_faction",iFaction.Allegiance(iFaction.Find(cargo_faction)));

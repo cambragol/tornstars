@@ -268,14 +268,6 @@ task spew_and_dock_pod(hship pod, hship ship, hhabitat station, int delay)
 				Object.SetIntProperty(station, "md_epic_spewerslotsfree", Object.IntProperty(station, "md_epic_spewerslotsfree") - 1);
 				Object.SetIntProperty(ship, "md_epic_freeports", Object.IntProperty(ship, "md_epic_freeports") - 1);
 
-
-// Added to make the cargo match the faction of ship to allow cargo-hacking
-
-	iSim.SetFaction(pod,iSim.Faction(ship));
-
-// Added to make the cargo match the faction of ship to allow cargo-hacking
-
-
 			}
 		}
 		Task.Sleep(Task.Current(), 0.1);
