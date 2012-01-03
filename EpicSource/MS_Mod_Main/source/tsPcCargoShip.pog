@@ -675,6 +675,8 @@ float whimp_adjustment = 1.45;
 // It would be cool to add this to the ini file
 int station_choice = 80;
 
+int wait_load = 0;
+
 	
    eCSScriptState state = eCS_Init;
 	eCSScriptState next_state = eCS_Init;
@@ -1064,8 +1066,8 @@ int station_choice = 80;
 			state = change_state(state, eCS_CheckNearby, debug_on);
 			next_state = change_state(state, eCS_WaitUnload, debug_on);
 			
-		}
-		
+		}	
+
          	break;
 
 		///////////////////////////////////////////////////////////////
@@ -1101,13 +1103,22 @@ int station_choice = 80;
 
          	if (tsSpewerOps.IsFinished(patrol_leader)) {
             		state = change_state(state, eCS_SetNewMarker, debug_on);
-            		
+            		wait_load = 0;
+
+		// added in case tsSpewerOps fails to complete.  
+		} else if (wait_load > 40){
+
+				iSim.SetDockingLock(patrol_leader, station, false);
+				Object.SetBoolProperty(patrol_leader, "md_epic_spewdone", true);
+            		state = change_state(state, eCS_SetNewMarker, debug_on);
+            		wait_load = 0;
+		
          	} else {
 			state = change_state(state, eCS_CheckNearby, debug_on);
 			next_state = change_state(state, eCS_WaitLoad, debug_on);
 			
 		}
-		
+		++wait_load;
          	break;
 
 		///////////////////////////////////////////////////////////////

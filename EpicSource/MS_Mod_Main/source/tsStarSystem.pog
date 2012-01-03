@@ -81,11 +81,41 @@ UpdateSystem()
    string system = iSim.ActiveWorld();
    hregion region;
 
+	set lpoints, local_set;
+	hlagrangepoint lpoint, destination;
+
    FindGovernment(system);
 
    if (!tsCapsuleJump.IsCapsuleSpace(system)) {
       SetKnown(system, true);
    }
+
+	// added the following to totally remove the "Choose Destination" option in the ps NAV
+	// works with some redundency with tsCapsuleJump
+   lpoints = iMapEntity.SystemLagrangePointsInSystem(system);
+
+	while (!Set.IsEmpty(lpoints)) {
+		lpoint = iLagrangePoint.Cast(Set.FirstElement(lpoints));	
+		iLagrangePoint.SetUsable(lpoint, false);
+		local_set = iLagrangePoint.LocalDestinations(lpoint);
+
+		Set.Remove(lpoints, lpoint);
+
+		while (!Set.IsEmpty(local_set)) {
+			destination = iLagrangePoint.Cast(Set.FirstElement(local_set));
+			Set.Remove(local_set, destination);
+
+			Debug.PrintString("tsStarSystem - Lagrange destination being removed: ");
+			Debug.PrintHandle(destination);
+			Debug.PrintString("\n");
+		}
+
+		Debug.PrintString("tsStarSystem - Lagrange being set disabled : ");
+		Debug.PrintHandle(lpoint);
+		Debug.PrintString("\n");
+	}
+
+	
 
 
    // Setup the traffic control fields around all the active stations.
@@ -99,10 +129,15 @@ UpdateSystem()
       // and the right type, 
       // put an Traffic Control field around it.
       if (ESS_Normal == tsStation.Status(station)) {
+	   // removed the exclusion on Mines, as now they have a station component
          if (ESC_Mine != tsStation.Category(station)) {
 
-            region = iRegion.CreateTrafficControl(station, 10km, 500);
-         }
+            region = iRegion.CreateTrafficControl(station, 15km, 500);
+	   // added different LDSIregion for Mines, because of their asteroid fields
+         } else {
+            region = iRegion.CreateTrafficControl(station, 20km, 200);
+
+	   }
       }
    }
 }

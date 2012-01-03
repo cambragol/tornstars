@@ -39,6 +39,36 @@ ObjectMotion (unnamed)
 EndBehavior 1
 ShadowOptions 7
 
+AddNullObject dock_arm_dock04
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  872 2960.89 -3400 180 90 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject dock_arm_dock05
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  732 2960.89 -3600 0 90 0  1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject freighter_dock
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -1800 3000 -3500 -90 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
 AmbientColor 255 255 255
 AmbIntensity 0.25
 

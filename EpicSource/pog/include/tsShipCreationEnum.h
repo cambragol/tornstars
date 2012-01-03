@@ -107,5 +107,7 @@ ECC_HeavyMaterials,
 ECC_MilitaryEquipment,
 ECC_ReactorFuel,
 ECC_Neutronium,
+ECC_Radioactives,
+ECC_RadioactiveOre,
    EST_Max
 };

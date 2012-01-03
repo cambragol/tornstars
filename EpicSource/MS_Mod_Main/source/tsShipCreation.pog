@@ -235,6 +235,9 @@ string ShipType2String(etsShipType ship_type)
 	case ECC_MilitaryEquipment: return "ECC_MilitaryEquipment";break; 
 	case ECC_ReactorFuel: return "ECC_ReactorFuel";break; 
 	case ECC_Neutronium: return "ECC_Neutronium";break; 
+	case ECC_Radioactives: return "ECC_Radioactives";break; 
+	case ECC_RadioactiveOre: return "ECC_RadioactiveOre";break; 
+
 
 
    case EST_Taxi: return "EST_Taxi";break;
@@ -356,7 +359,8 @@ etsShipType String2ShipType(string type_name)
 	else if ("ECC_MilitaryEquipment "==type_name) { return ECC_MilitaryEquipment ; } 
 	else if ("ECC_ReactorFuel"==type_name) { return ECC_ReactorFuel; } 
 	else if ("ECC_Neutronium"==type_name) { return ECC_Neutronium; } 
-
+	else if ("ECC_Radioactives"==type_name) { return ECC_Radioactives; }
+	else if ("ECC_RadioactiveOre"==type_name) { return ECC_RadioactiveOre; }
 
    else if ("EST_Taxi"==type_name) { return EST_Taxi; }
 

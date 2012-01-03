@@ -1582,8 +1582,14 @@ int station_choice = 99;
 						debug Debug.PrintString("tsPcGuards.ship_controller: eCS_CheckNearby MissileBoat Defence against group!\n");  
 					}
 					else {
-						iAI.GiveSpecificAttackOrder(Group.NthSim(patrol_group, i), Sim.Group(target_ship), AS_TailBite);
-						debug Debug.PrintString("tsPcGuards.ship_controller: eCS_CheckNearby TailBite Defence against group!\n");
+						// Added to give some diversity to the guards attacks
+						if (Math.RandomInt(1,100) > 40) {
+							iAI.GiveSpecificAttackOrder(Group.NthSim(patrol_group, i), Sim.Group(target_ship), AS_TailBite);
+							debug Debug.PrintString("tsPcGuards.ship_controller: eCS_CheckNearby TailBite Defence against group!\n");
+						} else {
+							iAI.GiveSpecificAttackOrder(Group.NthSim(patrol_group, i), Sim.Group(target_ship), AS_Strafe);
+							debug Debug.PrintString("tsPcGuards.ship_controller: eCS_CheckNearby Strafe Defence against group!\n");
+						}
 					}   
 				} 
             		}else {
@@ -1594,8 +1600,15 @@ int station_choice = 99;
 						debug Debug.PrintString("tsPcGuards.ship_controller: eCS_CheckNearby MissileBoat Defence against single ship!\n");   
 					}
 					else {
-						iAI.GiveSpecificAttackOrder(Group.NthSim(patrol_group, i), target_ship, AS_TailBite);
-						debug Debug.PrintString("tsPcGuards.ship_controller: eCS_CheckNearby TailBite Defence against single ship!\n");
+						// Added to give some diversity to the guards attacks
+						// Should probably refine this more based on ship class
+						if (Math.RandomInt(1,100) > 40) {
+							iAI.GiveSpecificAttackOrder(Group.NthSim(patrol_group, i), target_ship, AS_TailBite);
+							debug Debug.PrintString("tsPcGuards.ship_controller: eCS_CheckNearby TailBite Defence against single ship!\n");
+						} else {
+							iAI.GiveSpecificAttackOrder(Group.NthSim(patrol_group, i), target_ship, AS_Strafe);
+							debug Debug.PrintString("tsPcGuards.ship_controller: eCS_CheckNearby Strafe Defence against single ship!\n");
+						}
 					}   
 				} 
             		}
@@ -1734,8 +1747,14 @@ int station_choice = 99;
                					debug Debug.PrintString("tsPcGuards.ship_controller: eCS_Attacked MissileBoat Defence against group!\n");
                				}
 					else {
-						iAI.GiveSpecificAttackOrder(Group.NthSim(patrol_group, i), Sim.Group(target), AS_TailBite);
-						debug Debug.PrintString("tsPcGuards.ship_controller: eCS_Attacked TailBite Defence against group!\n");
+						// Added to give some diversity to the guards attacks
+						if (Math.RandomInt(1,100) > 40) {
+							iAI.GiveSpecificAttackOrder(Group.NthSim(patrol_group, i), Sim.Group(target), AS_TailBite);
+							debug Debug.PrintString("tsPcGuards.ship_controller: eCS_Attacked TailBite Defence against group!\n");
+						} else {
+							iAI.GiveSpecificAttackOrder(Group.NthSim(patrol_group, i), Sim.Group(target), AS_Strafe);
+							debug Debug.PrintString("tsPcGuards.ship_controller: eCS_Attacked Strafe Defence against group!\n");
+						}
 					}  
 				} 
 				
@@ -1748,8 +1767,14 @@ int station_choice = 99;
                					debug Debug.PrintString("tsPcGuards.ship_controller: eCS_Attacked MissileBoat Defence against loner!\n");
                				}
 					else {
-						iAI.GiveSpecificAttackOrder(Group.NthSim(patrol_group, i), target, AS_TailBite);
-						debug Debug.PrintString("tsPcGuards.ship_controller: eCS_Attacked TailBite Defence against loner!\n");
+						// Added to give some diversity to the guards attacks
+						if (Math.RandomInt(1,100) > 40) {
+							iAI.GiveSpecificAttackOrder(Group.NthSim(patrol_group, i), target, AS_TailBite);
+							debug Debug.PrintString("tsPcGuards.ship_controller: eCS_Attacked TailBite Defence against loner!\n");
+						} else {
+							iAI.GiveSpecificAttackOrder(Group.NthSim(patrol_group, i), target, AS_Strafe);
+							debug Debug.PrintString("tsPcGuards.ship_controller: eCS_Attacked Strafe Defence against loner!\n");
+						}
 					}  
 				} 
             		}
@@ -1779,9 +1804,17 @@ int station_choice = 99;
 
             			for(i=0;i<Group.SimCount(patrol_group); ++i) {
 					if(!Object.BoolProperty(Group.NthSim(patrol_group, i), "gt_isMerchant")) {
+
+						// Added to give some diversity to the guards attacks
+						if (Math.RandomInt(1,100) > 40) {
                					iAI.GiveSpecificAttackOrder(Group.NthSim(patrol_group, i), Sim.Group(target), AS_TailBite);
                					debug Debug.PrintString("tsPcGuards.ship_controller: eCS_Attacked TailBite offence against group!\n");
-               				}
+						} else {
+               					iAI.GiveSpecificAttackOrder(Group.NthSim(patrol_group, i), Sim.Group(target), AS_Strafe);
+               					debug Debug.PrintString("tsPcGuards.ship_controller: eCS_Attacked Strafe offence against group!\n");
+						}
+
+               			}
 					else {
 						if (Sim.Group(sender) == patrol_group) {
 							iAI.GiveEscortOrder(Group.NthSim(patrol_group, i), sender, spacing, spacing, spacing, 4500);
@@ -1798,8 +1831,15 @@ int station_choice = 99;
             		
             			for(i=0;i<Group.SimCount(patrol_group); ++i) {
 					if(!Object.BoolProperty(Group.NthSim(patrol_group, i), "gt_isMerchant")) {
+						
+						// Added to give some diversity to the guards attacks
+						if (Math.RandomInt(1,100) > 40) {
                					iAI.GiveSpecificAttackOrder(Group.NthSim(patrol_group, i), target, AS_TailBite);
                					debug Debug.PrintString("tsPcGuards.ship_controller: eCS_Attacked TailBite offence against loner!\n");
+						} else {
+               					iAI.GiveSpecificAttackOrder(Group.NthSim(patrol_group, i), target, AS_Strafe);
+               					debug Debug.PrintString("tsPcGuards.ship_controller: eCS_Attacked Strafe offence against loner!\n");
+						}
                					
                					// Added for ships that don't have weapons.  They should flee?  Doesn't work.
                					/*if (!iShip.WeaponsUseExplicitTarget(iShip.Cast(Group.NthSim(patrol_group, i)), target)) {

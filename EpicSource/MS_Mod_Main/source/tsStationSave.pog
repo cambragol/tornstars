@@ -325,6 +325,8 @@ ReadSystemIni(string system_file, string system)
    hbody parent;
 
    hfaction empty_faction = iFaction.Find("Neutral");
+	
+   set switchports;
 
 
    count = 0;
@@ -464,6 +466,34 @@ ReadSystemIni(string system_file, string system)
 
       
       tsStation.SetCategory(station, tsEconUtil.StationType2Category( type));
+
+	//if (tsStation.Category2String(tsStation.Category(station)) == "ESC_Mine") {
+		//if (tsStation.Status2String(tsStation.Status(station)) == "ESS_Empty") {
+
+
+      	if (empty_faction == station_faction) {
+			switchports = iDockport.DockportsOfType(station, DT_Freight, DS_Any);
+			while (!Set.IsEmpty(switchports)) {
+				iDockport.Disable(iDockport.Cast(Set.FirstElement(switchports)));
+				Set.Remove(switchports, Set.FirstElement(switchports));
+			}
+
+			switchports = iDockport.DockportsOfType(station, DT_Universal, DS_Any);
+			while (!Set.IsEmpty(switchports)) {
+				iDockport.Disable(iDockport.Cast(Set.FirstElement(switchports)));
+				Set.Remove(switchports, Set.FirstElement(switchports));
+			}
+
+			switchports = iDockport.DockportsOfType(station, DT_Fuel, DS_Any);
+			while (!Set.IsEmpty(switchports)) {
+				iDockport.Disable(iDockport.Cast(Set.FirstElement(switchports)));
+				Set.Remove(switchports, Set.FirstElement(switchports));
+			}
+
+		}
+	//}
+			
+			
 
       // Turn off the PS traffic if the station is not owned by anyone, or
       // if the station is owned by the player.

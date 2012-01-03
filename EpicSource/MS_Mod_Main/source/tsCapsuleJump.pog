@@ -196,6 +196,10 @@ init_system(string system_name)
     list route_list;
     hsim route;
 
+    set local_set;
+    hlagrangepoint destination;
+
+
     debug {
         Debug.PrintString("tsCapsuleJump.init_system Start\n");
         Debug.PrintString("tsCapsuleJump.init_system System = ");
@@ -211,6 +215,23 @@ init_system(string system_name)
     total = List.ItemCount(lpoints);
     for (i=0;i<total;++i) {
         lpoint = iLagrangePoint.Cast(List.GetNth(lpoints, i));
+
+
+	// added the following to totally remove the "Choose Destination" option in the ps NAV
+	// works with some redundency with tsStarSystem
+	  local_set = iLagrangePoint.LocalDestinations(lpoint);
+
+
+		while (!Set.IsEmpty(local_set)) {
+			destination = iLagrangePoint.Cast(Set.FirstElement(local_set));
+			Set.Remove(local_set, destination);
+
+			Debug.PrintString("tsCapsuleJump - Lagrange destination being removed: ");
+			Debug.PrintHandle(destination);
+			Debug.PrintString("\n");
+		}
+	//
+
 
         // We need to force every route list to be empty, and make sure every lpoint has a list.
         Object.AddListProperty(lpoint,"route_list", route_list);
@@ -262,7 +283,8 @@ init_system(string system_name)
 
             if (1 == difficulty) {
                 iMapEntity.SetMapVisibility(lpoint, true);
-                iLagrangePoint.SetUsable( lpoint, true );
+		    // Comment out as we no longer use "choose destination" in ps NAV
+                //iLagrangePoint.SetUsable( lpoint, true );
 
                 Object.AddBoolProperty(lpoint,"standard_route", true);
                 
@@ -271,7 +293,8 @@ init_system(string system_name)
 
             if (is_known(start_lpoint, end_lpoint)) {
                 iMapEntity.SetMapVisibility(lpoint, true);
-                iLagrangePoint.SetUsable( lpoint, true );
+		    // Comment out as we no longer use "choose destination" in ps NAV
+                //iLagrangePoint.SetUsable( lpoint, true );
                 
                 debug  Debug.PrintString(String.FormatStrStr("tsCapsuleJump.init_system make %s%s visible, its known\n", start_lpoint, ""));
             }
