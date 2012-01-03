@@ -2462,7 +2462,7 @@ hship create_leader (hmapentity location, hisim operation, hgroup cull_group, st
 
    leader = tsShip.Create(leader_template, leader_name);
 
-   tsPilotSetup.SetupCargo(leader, 0.95, 0.95);
+   tsPilotSetup.SetupEscort(leader, 0.95, 0.4);
 
    iSim.SetFaction(leader, faction);
    Sim.SetCullable(leader, false);
