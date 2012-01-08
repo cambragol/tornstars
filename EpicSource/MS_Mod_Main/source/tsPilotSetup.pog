@@ -111,10 +111,12 @@ task escort_task(hship escort)
       hit_points = Object.FloatProperty(escort,"hit_points");
       flee_points = Object.FloatProperty(escort,"flee_hit_points");
 
-	if (recover_timer > 180) {
+	if (recover_timer > 184) {
+	
+	// reset the ai bool back to normal
+	Object.SetBoolProperty(escort,"cam_ai_reset", false);
 
 	// We are okay, return and turn off task
-
 	Object.SetBoolProperty(escort,"watch_task", false);
 	recover_timer = 0;
 	return;
@@ -123,7 +125,10 @@ task escort_task(hship escort)
 	else if (recover_timer == 180) {
 
 		iShip.RemovePilot(escort);
-		SetupCargo(escort, notice_level, flee_level);
+		SetupEscort(escort, notice_level, flee_level);
+		
+		// We set this to let operations know that their ships AI was reset
+		Object.SetBoolProperty(escort,"cam_ai_reset", true);
 
 		debug Debug.PrintString("tsPilotSetup.escort_task setting up flee and notice levels\n");
 		debug Debug.PrintFloat(notice_level);
@@ -281,6 +286,8 @@ SetupEscort(hship escort, float notice_level, float flee_level)
 
    Object.AddFloatProperty(escort,"notice_level", notice_level);
    Object.AddFloatProperty(escort,"flee_level", flee_level);
+
+	Object.AddFloatProperty(escort,"cam_ai_reset", false);
 
    Object.SetStringProperty(escort,"death_script", "tsPilotSetup.EscortDeath");
 }

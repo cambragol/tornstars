@@ -816,6 +816,17 @@ int station_choice = 99;
 	if (max_patrols_at_current_location_count < max_patrols_at_current_location_random){
         	if (Sim.DistanceBetween(patrol_leader, marker) < 3km){
 
+
+			// This helps the operation recover from AI resetting
+	   		for(i=0; i<Group.SimCount(patrol_group); ++i) {
+				if (Object.BoolProperty(iShip.Cast(Group.NthSim(patrol_group, i)), "cam_ai_reset")) {
+
+        				Debug.PrintString("tsPcGuards.ship_controller: eCS_SetNewMarker AiReset\n");
+                 			state = change_state(state, eCS_PlanNewPatrol, debug_on);
+				}
+   			}
+
+
          		rotation = rotation + 60;
          		if (rotation > 720) {
             		rotation = 0;
@@ -1950,17 +1961,35 @@ int station_choice = 99;
 		debug Debug.PrintString("tsPcGuards.Fight fight timer = ");
 		debug Debug.PrintInt(fight_timer);
 		debug Debug.PrintString("\n");
+		
+		// This helps the operation recover from AI restting
+	   	for(i=0; i<Group.SimCount(patrol_group); ++i) {
+			if (Object.BoolProperty(iShip.Cast(Group.NthSim(patrol_group, i)), "cam_ai_reset")) {
+
+        			Debug.PrintString("tsPcGuards.ship_controller: eCS_Fight AiReset, heading for \n");
+        			Debug.PrintHandle(location);
+        			Debug.PrintString("\n");
+
+            		//post_state = change_state(state, eCS_ReGroup, debug_on);
+            		state = change_state(state, eCS_ReGroup, debug_on);
+			}
+   		}
+
 
 
 
          
          nearby_locations = iMapEntity.SystemHabitatsInSystem(current_system); 
          
-         // Look for hostile ships, or because this is getting used for attack fleets and raiders, hostile stations.
+         // Look for hostile ships or last attacker, or because this is getting used for attack fleets and raiders, hostile stations.
          dislike_set = filter_feeling(iSim.SimsInRadius(patrol_leader, 100km, TM_Ship|T_Station), merc_faction, -0.2);
+
+	   attacker_set = check_for_last_attacker(patrol_group);
+	
+	   Set.Union(dislike_set, attacker_set);
       
       // turned this off as it can get operations into a loop if they meet 200km from the station
-         if ( (Sim.DistanceBetween(patrol_leader, location) > tsDistance.VisibleDistance())){ 
+         if ((Sim.DistanceBetween(patrol_leader, location) > tsDistance.VisibleDistance()) && (Set.IsEmpty(dislike_set))){ 
          
          	iShip.UndockSelf( merchant_ship );
          	//iAI.GiveApproachOrder(merchant_ship, patrol_leader);
@@ -2231,7 +2260,7 @@ int station_choice = 99;
                                         true);
                         iEscort.RandomRectangle( patrol_group, spacing, 50km, false );*/
 			
-			state = change_state(state, eCS_ToDestination, debug_on);
+			state = change_state(state, eCS_PlanNewPatrol, debug_on);
 			regroup_timer = 0;
 
 		}
