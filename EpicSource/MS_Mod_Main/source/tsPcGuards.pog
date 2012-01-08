@@ -168,6 +168,9 @@ prototype set filter_feeling(set ships,
 prototype set filter_attackers(set ships, hfaction faction);
 
 
+prototype set check_for_last_attacker(hgroup patrol_group);
+
+
 prototype bool check_for_attacks(hgroup patrol_group);
 
 
@@ -494,7 +497,7 @@ task ship_controller(hmapentity location,
 							int wait_limit,
 							int dock_wait_limit)
 {
-   set dislike_set;
+   set dislike_set, attacker_set;
    hship player;
    hfaction player_faction = tsFaction.PlayerFaction();
    hfaction merc_faction;
@@ -1525,6 +1528,10 @@ int station_choice = 99;
          // Removed stations because this operation is NOT attacking stations
          // dislike_set = filter_feeling(iSim.SimsInRadius(patrol_leader, 100km, TM_Ship|T_Station), merc_faction, -0.2);
          dislike_set = filter_feeling(iSim.SimsInRadius(patrol_leader, 100km, TM_Ship), merc_faction, -0.2);
+
+	   attacker_set = check_for_last_attacker(patrol_group);
+	
+	   Set.Union(dislike_set, attacker_set);
         
 
          if (!Set.IsEmpty(dislike_set)) {
@@ -1943,6 +1950,9 @@ int station_choice = 99;
 		debug Debug.PrintString("tsPcGuards.Fight fight timer = ");
 		debug Debug.PrintInt(fight_timer);
 		debug Debug.PrintString("\n");
+
+
+
          
          nearby_locations = iMapEntity.SystemHabitatsInSystem(current_system); 
          
@@ -1950,7 +1960,7 @@ int station_choice = 99;
          dislike_set = filter_feeling(iSim.SimsInRadius(patrol_leader, 100km, TM_Ship|T_Station), merc_faction, -0.2);
       
       // turned this off as it can get operations into a loop if they meet 200km from the station
-       /*  if ( (Sim.DistanceBetween(patrol_leader, location) > tsDistance.VisibleDistance())){ 
+         if ( (Sim.DistanceBetween(patrol_leader, location) > tsDistance.VisibleDistance())){ 
          
          	iShip.UndockSelf( merchant_ship );
          	//iAI.GiveApproachOrder(merchant_ship, patrol_leader);
@@ -1963,11 +1973,23 @@ int station_choice = 99;
                                         5km,
                                         6km,
                                         true);
-                iEscort.RandomRectangle( patrol_group, spacing, 50km, false );
+         	iAI.GiveApproachOrderAdvanced( patrol_leader,
+                                        location,
+                                        5km,
+                                        6km,
+                                        true);
+            iEscort.RandomRectangle( patrol_group, spacing, 50km, false );
+
+
+        	Debug.PrintString("tsPcGuards.ship_controller: eCS_Fight heading for \n");
+        	Debug.PrintHandle(location);
+        	Debug.PrintString("\n");
+
+
+            post_state = change_state(state, eCS_ReGroup, debug_on);
+            state = change_state(state, eCS_InLDSFlight, debug_on);
             
-            state = change_state(state, eCS_ReGroup, debug_on);
-            
-         }*/
+         }
          
 	// Not working right now...
          //else if (Set.IsEmpty(dislike_set)) {
@@ -1982,14 +2004,21 @@ int station_choice = 99;
          	//iAI.GiveApproachOrder(merchant_ship, patrol_leader);
 
          	iAI.PurgeOrders(patrol_group);
+         	// The operation should follow and regroup with the patrol_leader at this point
          	iAI.GiveApproachOrderAdvanced( patrol_group,
                                         patrol_leader,
                                         5km,
                                         6km,
                                         true);
-                iEscort.RandomRectangle( patrol_group, spacing, 50km, false );
-            
-            state = change_state(state, eCS_ReGroup, debug_on);
+         	iAI.GiveApproachOrderAdvanced( patrol_leader,
+                                        location,
+                                        5km,
+                                        6km,
+                                        true);
+            iEscort.RandomRectangle( patrol_group, spacing, 50km, false );
+
+            post_state = change_state(state, eCS_ReGroup, debug_on);
+            state = change_state(state, eCS_InLDSFlight, debug_on);
          }
 
          break;
@@ -2166,7 +2195,9 @@ int station_choice = 99;
 		if (regroup_timer > 180) {
 		
          		// Pick a non-hostile station that is near.  Any status will do.
-         		nearby_locations = iMapEntity.SystemHabitatsInSystem(current_system);
+
+			// This is all commented out for this operation, as it just returns to the station it was guarding.
+         		/*nearby_locations = iMapEntity.SystemHabitatsInSystem(current_system);
 		
 			// Added to sort out hidden stations for this operation
 			nearby_locations = tsStationFilter.OnMapVisible(nearby_locations, true);
@@ -2198,9 +2229,9 @@ int station_choice = 99;
                                         5km,
                                         6km,
                                         true);
-                        iEscort.RandomRectangle( patrol_group, spacing, 50km, false );
+                        iEscort.RandomRectangle( patrol_group, spacing, 50km, false );*/
 			
-			state = change_state(state, eCS_LocationApproach, debug_on);
+			state = change_state(state, eCS_ToDestination, debug_on);
 			regroup_timer = 0;
 
 		}
@@ -2298,6 +2329,38 @@ int station_choice = 99;
 	
 }*/
 
+//[of]:set check_for_last_attacker(hgroup patrol_group)
+set check_for_last_attacker(hgroup patrol_group)
+{
+	set hostiles, attackers;
+	hship attacker, patrol_ship, patrol_leader;
+	int i, ships;
+
+	patrol_leader = iShip.Cast(Group.Leader(patrol_group));
+
+	hostiles = iSim.ShipsInRadius(patrol_leader, 100km);
+	ships = Group.SimCount(patrol_group);
+
+	while (!Set.IsEmpty(hostiles)) {
+		
+		attacker = iShip.Cast(Set.FirstElement(hostiles));
+		
+		for (i=0; i<ships; ++i) {
+
+			patrol_ship = iShip.Cast(Group.NthSim(patrol_group, i));
+			
+			if (attacker == iShip.LastAttacker(patrol_ship)) {
+				Set.Add(attackers, attacker);
+			}
+		}
+
+		Set.Remove(hostiles, attacker);
+	}
+
+	return attackers;
+}
+//[cf]		
+
 
 // This function checks if the patrol
 // group was attacked, or if the station
@@ -2307,6 +2370,7 @@ bool check_for_attacks(hgroup patrol_group)
 {
    hship new_target = none;
    int event_type;
+
 
    if (tsEvent.IsNewEvent(patrol_group)) {
 
