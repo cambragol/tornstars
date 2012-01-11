@@ -126,7 +126,11 @@ task watch_task()
 
    while (1) {
 
+
       if (!tsCapsuleJump.IsCapsuleJumping()) {
+
+	   iHUD.SetMenuNodeEnabled( "hud_menu_map", 1 ); 
+
 
          /*
          debug atomic {
@@ -264,6 +268,10 @@ task watch_task()
 
 			iHUD.FlashElement("icHUDMessage");
 	}  */
+
+	else {
+		 iHUD.SetMenuNodeEnabled( "hud_menu_map", 0 ); 
+	}
 
       Task.Sleep(Task.Current(), 0.5);
    }// While forever

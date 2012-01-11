@@ -659,17 +659,23 @@ int station_choice = 99;
 		During all movement check for hostiles and distress calls. Punch out to appropriate state
 		if either is detected.
 		
-		1.  init
-		2.  LocationApproach -- approach the location (i.e. station or l-point). Wait in this state until at marker
-		3.  PlanNewPatrol -- shout to the area asking if there is any business. Wait for xx iterations
-		4.  SetNewMarker -- pick a new position, place marker
-		5.  MoveToMarker -- give move orders
-		6.  InFlight -- wait while moving to marker. Do 'check nearby' logic while waiting to get to destination
-		7.  SelectShipToDock -- pick one of the ships to doc to station, set bool on ship that has been processed, set docking ship handle, give dock order
-		8.  Docking -- wait while ship is docking
-		9.  Docked -- wait a while then leave
-		10. Undock -- undock and return to group location
-		11. LeaveArea -- pic a new station and head for it
+		1.  init -- Determines whether the operation is at a station or an l-point then chooses ToDestination or LeaveArea
+		2.  ToDestination -- Sends the operation to a marker at the current station then changes to SetNewMarker
+		3.  SetNewMarker --  Sends the operation to a random number of markers around the station
+		4.  PlanNewPatrol --  Nothing is done here other than to redirect to LeaveArea
+		5.  LeaveArea  --  Not visiting stations for now, so this just leads to NextStation
+		6.  NextStation  --  Here the operation chooses the next station of the same faction, or allied, to patrol
+		7.  InLDSFlight  --  Operation waits in this state until it arrives, checking for danger along way
+		8.  SetNewMarker --  Operation returns to this state and repeats the cycle
+
+		9.  CheckNearby  --  this case is repeatedly entered into while waiting at other states, namely SetNewMarker and InLDSFlight
+		10. Attacked  --  entered into fromm CheckNearby, will lead to either the Fight or Flee case
+		11. Fight  --  Operation waits here for 3 minutes, or until out of range of station, then returns to station to ReGroup via InLDSFlight
+		12. Flee  --  Operation picks a station to flee to then goes to InFleeFlight
+		13. InFleeFlight  --  Alternate to InLDSFlight that gives a "I'm fleeing" shout out.  Next state is ReGroup
+		14. ReGroup  --  Allows operations ships to regather, repair, and to reset the AI?
+		
+
 		*/
 
       switch (state) {
@@ -741,8 +747,6 @@ int station_choice = 99;
          	}
 			
          	iAI.PurgeOrders(patrol_leader);
-		//iAI.GiveApproachOrder( patrol_leader, marker );
-		//iAI.GiveApproachOrderAdvanced( patrol_leader, marker, 500, 2500, true );
          	iAI.GiveEscortOrder( patrol_leader, marker, 100, 0, 0, 50km);
 
 		// This Shout is for ships that are started near the station
@@ -759,6 +763,74 @@ int station_choice = 99;
         	break;
          
 		///////////////////////////////////////////////////////////////
+
+
+	// SetNewMarker -- pick a new position, place marker
+	case eCS_SetNewMarker:
+	
+		debug Debug.PrintString("tsPcGuards.ship_controller: eCS_SetNewMarker\n");
+		debug Debug.PrintString("\n");
+		debug Debug.PrintInt(max_patrols_at_current_location_count);
+		debug Debug.PrintString("\n");
+		debug Debug.PrintInt(max_patrols_at_current_location_random);
+		debug Debug.PrintString("\n");
+
+
+	if (max_patrols_at_current_location_count < max_patrols_at_current_location_random){
+        	if (Sim.DistanceBetween(patrol_leader, marker) < 3km){
+
+
+			// This helps the operation recover from AI resetting
+	   		for(i=0; i<Group.SimCount(patrol_group); ++i) {
+				if (Object.BoolProperty(iShip.Cast(Group.NthSim(patrol_group, i)), "cam_ai_reset")) {
+
+        				Debug.PrintString("tsPcGuards.ship_controller: eCS_SetNewMarker AiReset\n");
+                 			state = change_state(state, eCS_PlanNewPatrol, debug_on);
+				}
+   			}
+
+
+         		rotation = rotation + 60;
+         		if (rotation > 720) {
+            		rotation = 0;
+         		}else if (rotation > 360) {
+            		rotation = rotation - 360;
+         		}
+         		Sim.PlaceRelativeTo(marker, location, 
+                             Math.Sin(rotation) * patrol_radius, 
+                             0, 
+                             Math.Cos(rotation)* patrol_radius);
+
+			
+         		iAI.PurgeOrders(patrol_leader);
+
+			debug Debug.PrintString("tsPcGuards.ship_controller: eCS_SetNewMarker - approaching marker\n");
+
+			iAI.GiveApproachOrderAdvanced( patrol_leader, marker, 500, 750, true );
+			++max_patrols_at_current_location_count;
+
+		}
+	}
+	else if (max_patrols_at_current_location_count >= max_patrols_at_current_location_random) {
+
+		//if (max_patrols_at_current_location_count == max_patrols_at_current_location) {
+
+			switch_state = eCS_PlanNewPatrol;
+			//next_state = change_state(state, eCS_PlanNewPatrol, debug_on);
+			debug Debug.PrintString("tsPcGuards.ship_controller: eCS_SetNewMarker - I changed my state to Plan New Patrol\n");
+
+	}
+
+	debug Debug.PrintString("tsPcGuards.ship_controller: eCS_SetNewMarker - CheckingNearby\n");
+
+	state = change_state(state, eCS_CheckNearby, debug_on);
+	next_state = change_state(state, switch_state, debug_on);
+
+		
+			
+	break;
+
+		///////////////////////////////////////////////////////////////	
 
 
 	// LocationApproach -- approach the location (i.e. station or l-point). Wait in this state until at marker
@@ -801,73 +873,6 @@ int station_choice = 99;
 			
 		///////////////////////////////////////////////////////////////
 			
-		
-	// SetNewMarker -- pick a new position, place marker
-	case eCS_SetNewMarker:
-	
-		debug Debug.PrintString("tsPcGuards.ship_controller: eCS_SetNewMarker\n");
-		debug Debug.PrintString("\n");
-		debug Debug.PrintInt(max_patrols_at_current_location_count);
-		debug Debug.PrintString("\n");
-		debug Debug.PrintInt(max_patrols_at_current_location_random);
-		debug Debug.PrintString("\n");
-
-
-	if (max_patrols_at_current_location_count < max_patrols_at_current_location_random){
-        	if (Sim.DistanceBetween(patrol_leader, marker) < 3km){
-
-
-			// This helps the operation recover from AI resetting
-	   		for(i=0; i<Group.SimCount(patrol_group); ++i) {
-				if (Object.BoolProperty(iShip.Cast(Group.NthSim(patrol_group, i)), "cam_ai_reset")) {
-
-        				Debug.PrintString("tsPcGuards.ship_controller: eCS_SetNewMarker AiReset\n");
-                 			state = change_state(state, eCS_PlanNewPatrol, debug_on);
-				}
-   			}
-
-
-         		rotation = rotation + 60;
-         		if (rotation > 720) {
-            		rotation = 0;
-         		}else if (rotation > 360) {
-            		rotation = rotation - 360;
-         		}
-         		Sim.PlaceRelativeTo(marker, location, 
-                             Math.Sin(rotation) * patrol_radius, 
-                             0, 
-                             Math.Cos(rotation)* patrol_radius);
-
-			
-         		iAI.PurgeOrders(patrol_leader);
-
-			debug Debug.PrintString("tsPcGuards.ship_controller: eCS_SetNewMarker - approaching marker\n");
-
-			iAI.GiveApproachOrderAdvanced( patrol_leader, marker, 500, 2500, true );
-			++max_patrols_at_current_location_count;
-
-		}
-	}
-	else if (max_patrols_at_current_location_count >= max_patrols_at_current_location_random) {
-
-		//if (max_patrols_at_current_location_count == max_patrols_at_current_location) {
-
-			switch_state = eCS_PlanNewPatrol;
-			//next_state = change_state(state, eCS_PlanNewPatrol, debug_on);
-			debug Debug.PrintString("tsPcGuards.ship_controller: eCS_SetNewMarker - I changed my state to Plan New Patrol\n");
-
-	}
-
-	debug Debug.PrintString("tsPcGuards.ship_controller: eCS_SetNewMarker - CheckingNearby\n");
-
-	state = change_state(state, eCS_CheckNearby, debug_on);
-	next_state = change_state(state, switch_state, debug_on);
-
-		
-			
-	break;
-
-		///////////////////////////////////////////////////////////////			
 			
 		
 	// MoveToMarker -- give move orders
@@ -1158,7 +1163,7 @@ int station_choice = 99;
 
 				switch_state = eCS_SetNewMarker;
        			state = change_state(state, eCS_InLDSFlight, debug_on);
-			post_state = change_state(state, eCS_LocationApproach, debug_on);
+			post_state = change_state(state, eCS_SetNewMarker, debug_on);
 			max_patrols_at_current_location_random = Math.Random(1, max_patrols_at_current_location);
 			max_patrols_at_current_location_count = 0;
 
@@ -1989,7 +1994,7 @@ int station_choice = 99;
 	   Set.Union(dislike_set, attacker_set);
       
       // turned this off as it can get operations into a loop if they meet 200km from the station
-         if ((Sim.DistanceBetween(patrol_leader, location) > tsDistance.VisibleDistance()) && (Set.IsEmpty(dislike_set))){ 
+      /* if ((Sim.DistanceBetween(patrol_leader, location) > tsDistance.VisibleDistance()) && (Set.IsEmpty(dislike_set))){ 
          
          	iShip.UndockSelf( merchant_ship );
          	//iAI.GiveApproachOrder(merchant_ship, patrol_leader);
@@ -2018,7 +2023,7 @@ int station_choice = 99;
             post_state = change_state(state, eCS_ReGroup, debug_on);
             state = change_state(state, eCS_InLDSFlight, debug_on);
             
-         }
+         }*/
          
 	// Not working right now...
          //else if (Set.IsEmpty(dislike_set)) {

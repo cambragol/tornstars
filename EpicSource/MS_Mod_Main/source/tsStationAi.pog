@@ -110,7 +110,7 @@ task station_watcher(hhabitat station)
             first_attack_time = 0;
             attack_count = 0;
         }
-        if( iSim.Attacked(station) )
+        if( iSim.Attacked(station) &&  attack_count <= allowed_attacks)
         {
             debug Debug.PrintString("tsStationAi.station_watcher: Station attacked!\n");
             our_attacker = iSim.LastAttacker( iSim.Cast(station) );
@@ -135,7 +135,8 @@ task station_watcher(hhabitat station)
             if( attack_count > allowed_attacks)
             {
                 // 1st send a distress event with priority=1, event=etShipAttacked
-                tsDistress.Send(espStationAttack, eseStationAttack, iSim.Cast(station), our_attacker, iSim.Cast(station), 200km);
+	    	    // Changed the range on this dramatically to pull in allies from stations in the same orbit (that were awoken previously by player)
+                tsDistress.Send(espStationAttack, eseStationAttack, iSim.Cast(station), our_attacker, iSim.Cast(station), 20000000km);
                 debug Debug.PrintString("tsStationAi.station_watcher: Distress call sent!\n");
             }
         }
