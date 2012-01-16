@@ -932,6 +932,10 @@ int station_choice = 85;
 
 					}
 
+				// Added to prevent the ship being hired during docking procedures
+				// It can cause complications if a ships is hired during docking
+				tsShipHire.RemoveShipHire(merchant_ship);
+
 				state = change_state(state, eCS_Docking, debug_on);	
 				}
 
@@ -1034,6 +1038,10 @@ int station_choice = 85;
 
         else if (OT_None == iAI.CurrentOrderType(merchant_ship)) {
 				iEscort.RandomRectangle( patrol_group, spacing, 50km, false );
+
+				// added to restore ship hiring after the ship finishes docking
+				tsShipHire.InitShipHire(merchant_ship);
+
 				state = change_state(state, eCS_LeaveArea, debug_on);
         }
 	else {

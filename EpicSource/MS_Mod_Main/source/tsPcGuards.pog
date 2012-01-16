@@ -497,7 +497,7 @@ task ship_controller(hmapentity location,
 							int wait_limit,
 							int dock_wait_limit)
 {
-   set dislike_set, attacker_set;
+   set dislike_set, attacker_set, like_set;
    hship player;
    hfaction player_faction = tsFaction.PlayerFaction();
    hfaction merc_faction;
@@ -1550,7 +1550,7 @@ int station_choice = 99;
 	   Set.Union(dislike_set, attacker_set);
         
 
-         if (!Set.IsEmpty(dislike_set)) {
+         	if (!Set.IsEmpty(dislike_set)) {
          
                      	// Pick the first one, attack.
             		target_ship = iShip.Cast(Set.FirstElement(dislike_set));
@@ -1567,9 +1567,23 @@ int station_choice = 99;
          		Set.Remove(dislike_set, hostile_ship);
          
          	}
+
+		// Check for allied ships for the attacked ship
+		like_set = filter_attackers(iSim.SimsInRadius(hostile_ship, 100km, TM_Ship), sender_faction);
+
+        	fleets = tsLFleet.Fleets(operation);            // our fleet size
+
+		// This adds allied ships to the operations fleet value
+        	while (!Set.IsEmpty(like_set)) {
          
-         	fleets = tsLFleet.Fleets(operation);            // our fleet size
+         		hostile_ship = iSim.Cast(Set.FirstElement(like_set));
+         
+         		fleets = fleets + Object.FloatProperty(hostile_ship,"threat");
+         		Set.Remove(like_set, hostile_ship);
+         
+        	}
          	
+		// spit out the fleet strengths
  		debug {
         		Debug.PrintString("tsPcGuards.ship_controller: eCS_CheckNearby fleet strength is \n");
         		Debug.PrintFloat(fleets);
@@ -1720,6 +1734,8 @@ int station_choice = 99;
 
 	// Look for hostile ships, or because this is getting used for attack fleets and raiders, hostile stations.
        	dislike_set = filter_attackers(iSim.SimsInRadius(patrol_leader, 100km, TM_Ship), target_faction);
+	// Check for allied ships for the attacked ship
+		like_set = filter_attackers(iSim.SimsInRadius(hostile_ship, 100km, TM_Ship), sender_faction);
 	
 	// This added to give two different responses to noticing hostiles: fight or flee
         while (!Set.IsEmpty(dislike_set)) {
@@ -1730,8 +1746,19 @@ int station_choice = 99;
          	Set.Remove(dislike_set, hostile_ship);
          
         }
-         
+
         fleets = tsLFleet.Fleets(operation);            // our fleet size
+
+	// This adds allied ships to the operations fleet value
+        while (!Set.IsEmpty(like_set)) {
+         
+         	hostile_ship = iSim.Cast(Set.FirstElement(like_set));
+         
+         	fleets = fleets + Object.FloatProperty(hostile_ship,"threat");
+         	Set.Remove(like_set, hostile_ship);
+         
+        }
+         
          	
  	debug {
         	Debug.PrintString("tsPcGuards.ship_controller: eCS_Attacked fleet strength is \n");
@@ -1994,6 +2021,7 @@ int station_choice = 99;
 	   Set.Union(dislike_set, attacker_set);
       
       // turned this off as it can get operations into a loop if they meet 200km from the station
+	// Also for answering distress calls from far away, it doesn't work
       /* if ((Sim.DistanceBetween(patrol_leader, location) > tsDistance.VisibleDistance()) && (Set.IsEmpty(dislike_set))){ 
          
          	iShip.UndockSelf( merchant_ship );
