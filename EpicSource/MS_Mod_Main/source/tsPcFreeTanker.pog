@@ -918,31 +918,43 @@ int station_choice = 85;
 			debug Debug.PrintString("tsPcFreeTanker.ship_controller: eCS_SelectShipToDock\n");
 			
 			// we pick a ship from the merchant list
-			merchant_list_size = List.ItemCount(merchant_list);
+			// merchant_list_size = List.ItemCount(merchant_list);
+			// set the merchant list size to the size of the group
+			merchant_list_size = Group.TotalSimCount(patrol_group);
+
 			if(merchant_list_size > 0) {
 
 				if ((iDockport.Count(location, DT_Fuel, DS_Free)) > 0) {
 
-				// get a random merchant
-				merchant_ship = iShip.Cast(List.GetNth(merchant_list, Math.RandomInt(0, merchant_list_size-1)));
+					// get a random ship
+					merchant_ship = iShip.Cast(Group.NthSim(patrol_group, Math.RandomInt(0, merchant_list_size-1)));
 
- 					if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
-                   		tsDistance.CullingDistance()) {
-            				iComms.Shout(merchant_ship,"", tsString.CommsStringRandom("pcft_FreeTanker_docking","", 1));
+					// get a random merchant
+					// merchant_ship = iShip.Cast(List.GetNth(merchant_list, Math.RandomInt(0, merchant_list_size-1)));
 
+					if (merchant_ship == patrol_leader) {
+						state = change_state(state, eCS_LeaveArea, debug_on);
+					} else {
+						
+ 						if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
+                   			tsDistance.CullingDistance()) {
+            					iComms.Shout(merchant_ship,"", tsString.CommsStringRandom("pcft_FreeTanker_docking","", 1));
+
+						}
+
+						// Added to prevent the ship being hired during docking procedures
+						// It can cause complications if a ships is hired during docking
+						tsShipHire.RemoveShipHire(merchant_ship);
+
+						state = change_state(state, eCS_Docking, debug_on);	
 					}
-
-				// Added to prevent the ship being hired during docking procedures
-				// It can cause complications if a ships is hired during docking
-				tsShipHire.RemoveShipHire(merchant_ship);
-
-				state = change_state(state, eCS_Docking, debug_on);	
 				}
 
 				else {
 					state = change_state(state, eCS_LeaveArea, debug_on);
 				}
 			}
+
 
 
 
