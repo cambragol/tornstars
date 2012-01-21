@@ -102,18 +102,24 @@ ship_was_attacked(hisim target)
       }else {
          // Time must default to a value that always allows an 
          // attack to be recorded.
-         time = -1000;
+         time = -10;
       }
 
       // We only report one attack every 10 mins of elapsed time.
       // This is to prevent lowering the faction standing too quickly.
-      if ((time + 600) < tsTime.GetsTime()) {
+      if (tsTime.GetsTime() > (time + 5)) {
          // Record the current attack time.
-         Global.CreateInt(name,GA_Write| GA_NoSave, tsTime.GetsTime());
+         // Global.CreateInt(name,GA_Write| GA_NoSave, tsTime.GetsTime());
+
+   		if (Global.Exists(name)) {
+      		Global.SetInt(name, tsTime.GetsTime());
+   		}else {
+      		Global.CreateInt(name,GA_Write| GA_NoSave, tsTime.GetsTime());
+   		}
 
          // Knock the player down one level for each attack.
          feeling = iFaction.Feeling(target_faction, player_faction);
-         feeling = feeling - 0.4;
+         feeling = feeling - 0.1;
 
          if (feeling < -1.0) {
             feeling = -1.0;
@@ -145,7 +151,7 @@ ship_was_attacked(hisim target)
                   // Knock the players relationship with the government down
                   // one level for each attack.
                   feeling = iFaction.Feeling(gov_faction, player_faction);
-                  feeling = feeling - 0.4;
+                  feeling = feeling - 0.1;
 
                   if (feeling < -1.0) {
                      feeling = -1.0;
@@ -182,7 +188,7 @@ CheckForAttacks()
 
    int total,i;
 
-   //debug Debug.PrintString("tsReputationWatch.CheckForAttacks\n");
+   debug Debug.PrintString("tsReputationWatch.CheckForAttacks\n");
 
 
    // First check to see if the player has been shooting people.

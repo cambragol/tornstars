@@ -138,6 +138,8 @@ task watch_task()
          }
          */
 
+		tsReputationWatch.CheckForAttacks();
+
          ++two_counter;
          player = iShip.FindPlayerShip();
          system = iSim.ActiveWorld();

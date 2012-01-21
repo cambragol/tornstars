@@ -427,7 +427,7 @@ setup_ship(hisim marker)
 			Object.AddBoolProperty(escort, "gt_isMerchant", true);
 		}
 
-      tsPilotSetup.SetupCargo(escort, 0.95, 0.95);
+      tsPilotSetup.SetupEscort(escort, 0.95, 0.4);
 
       iSim.SetFaction(escort, station_faction);
       Sim.SetCullable(escort, false);

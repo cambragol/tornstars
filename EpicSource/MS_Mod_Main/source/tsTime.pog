@@ -81,12 +81,17 @@ else {
 // Returns seconds since game started.
 int GetsTime()
 {
-   // int mission_time = iGame.GameTime();
-int mission_time = Global.Int("g_trout_mission_time");
+	int mission_time;
 
- /*   if (Global.Exists("g_trout_mission_time")) {
+    if (Global.Exists("g_trout_mission_time")) {
+	mission_time = Global.Int("g_trout_mission_time");
+    } else {
+   	mission_time = iGame.GameTime();
+    }
+
+    if (Global.Exists("g_trout_mission_time")) {
        mission_time = (Global.Int("g_trout_mission_time") + mission_time);
-    }*/
+    }
 
     return mission_time;
 }
