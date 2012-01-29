@@ -295,7 +295,7 @@ hlagrangepoint target_lpoint;
 	if (Math.RandomInt(1,100) > 30) {
          	target_station = find_patrol_station(operation, center, iSim.WorldName(center), 500000000km);
 
- 	   if (none != target_station) {
+ 	   if (target_station) {
             tsLCenter.SetCenter(operation, target_station);
             tsFleetOpCombat.SetDistressFlags(target_station);
 
@@ -406,10 +406,12 @@ hobject lagrange_end_ent;
 		
 		//Make sure we are checking for lpoints in the system that the operation is actually in
 		//Only choose non-hidden, public lpoints
+	while (list_total == 0) {
+
 		lagrange_start = iLagrangePoint.Random(iMapEntity.SystemLagrangePointsInSystem(system));
-					if (true == iMapEntity.IsHidden(lagrange_start)) {
+					/*while (iMapEntity.IsHidden(lagrange_start)) {
 						lagrange_start = iLagrangePoint.Random(iMapEntity.SystemLagrangePointsInSystem(system));
-					}
+					}*/
 		
 		
 		lagrange_destination_list = tsCapsuleJump.KnownList(lagrange_start);  //Interstellar
@@ -417,6 +419,7 @@ hobject lagrange_end_ent;
 		//This is likely unnecessary and reflects my early misunderstand of for statements
 		list_length = List.ItemCount(lagrange_destination_list);
 		list_total = list_length;
+	}
 
 			//Build a list of routes for the lagrange_start
 			//No need to remove later as these are not actually added to the lpoint
@@ -439,9 +442,9 @@ hobject lagrange_end_ent;
 
 		lagrange_local_destination_set = iLagrangePoint.LocalDestinations(lagrange_start);
 		//Remove the starting lagrange point as we are looking for destinations only
-		Set.Remove(lagrange_local_destination_set, lagrange_start);
+		//Set.Remove(lagrange_local_destination_set, lagrange_start);
 			//Makes sure that the local destination set is not empty, only use the interstellar if it is
-			if (true != Set.IsEmpty(lagrange_local_destination_set)) {
+			if (!Set.IsEmpty(lagrange_local_destination_set)) {
 				Set.Union(lagrange_destination_set, lagrange_local_destination_set);
 			}
 

@@ -478,31 +478,11 @@ setup_ship(hisim marker)
    	fleets = tsLFleet.Fleets(owner);
 	
 	// Weird formula to get a nice looking escort based off cargo value
-	fleets = fleets/5 + cargo_price/40 + (Set.ItemCount(tsPodUtil.DockPorts(patrol_ship)))*3;
+	fleets = fleets/6 + cargo_price/35 + (Set.ItemCount(tsPodUtil.DockPorts(patrol_ship)))*3;
 
 
    	// Now create the escort ships. One escort for every 6 pods.
    	debug Debug.PrintString("tsPcCargoShip.setup_ship: Create the escorts - Based off cargo value\n");
-
-
-	//Added to randomize size and composition of escorts
-	fighters = Math.RandomInt(0,fleets/150);
-	light = Math.RandomInt(0,fleets/200);
-	heavy = Math.RandomInt(0,fleets/250);
-	capital = Math.RandomInt(0,fleets/600);
-
-
-   	tsShipEscort.CreateMixedEscort(
-                     owner,
-                     patrol_ship,
-                     patrol_group,
-                     "general",
-                     false,
-                     fighters,    // fighters
-                     light,      // light ships
-                     heavy,      // heavy ships
-                     capital // captial ships
-                  );
 
 
 //////////////////////////////////////////////////////////////////////////   
@@ -798,9 +778,9 @@ int wait_load = 0;
         	spacing = iUtilities.GetLargestShipRadius( patrol_group) * 3;
         
         	// All escort types listed here work.  One type for Freeoperation type would be good for variety
-        	//iEscort.RandomRectangle( patrol_group, spacing, 50km, true );
+        	iEscort.RandomRectangle( patrol_group, spacing, 50km, true );
         	//iEscort.Wedge( patrol_group, spacing, 50km, true ); // Pretty Good
-        	iEscort.Box( patrol_group, spacing, 50km, true );  // Good
+        	//iEscort.Box( patrol_group, spacing, 50km, true );  // Good
         	//iEscort.RandomRectangle( patrol_group, spacing, 50km, true );  // Good        
         	//iEscort.Cross( patrol_group, spacing, 50km, true );
         	//iEscort.Impi( patrol_group, spacing, 50km, true );

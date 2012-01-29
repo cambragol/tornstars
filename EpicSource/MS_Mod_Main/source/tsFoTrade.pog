@@ -295,31 +295,31 @@ hlagrangepoint target_lpoint;
 	if (Math.RandomInt(1,100) > 20) {
          	target_station = find_production_station(operation, center, iSim.WorldName(center));
 
- 	   if (none != target_station) {
+ 	   if (target_station) {
             tsLCenter.SetCenter(operation, target_station);
             tsFleetOpCombat.SetDistressFlags(target_station);
 
-            tsDebug.PrintString("tsFoTrade_debug","tsFoTrade new patrol\n");
-            tsDebug.PrintHandle("tsFoTrade_debug",target_station);
-            tsDebug.PrintString("tsFoTrade_debug"," new station\n");
+            debug Debug.PrintString("tsFoTrade new patrol\n");
+            debug Debug.PrintHandle(target_station);
+            debug Debug.PrintString("new station\n");
          }
-		else {
+	   else {
 		target_lpoint = find_patrol_lpoint(operation, iSim.WorldName(center));
 		tsLCenter.SetCenter(operation, target_lpoint);
 
- 		tsDebug.PrintString("tsFoTrade_debug","tsFoTrade no production station so move to lpoint \n");
-            tsDebug.PrintHandle("tsFoTrade_debug",target_lpoint);
-            tsDebug.PrintString("tsFoTrade_debug","\n");
-		}
+ 		debug Debug.PrintString("tsFoTrade no production station so move to lpoint \n");
+            debug Debug.PrintHandle(target_lpoint);
+            debug Debug.PrintString("\n");
+	   }
 
 	}
 	else {
 		target_lpoint = find_patrol_lpoint(operation, iSim.WorldName(center));
 		tsLCenter.SetCenter(operation, target_lpoint);
 
- 		tsDebug.PrintString("tsFoTrade_debug","tsFoTrade move to lpoint \n");
-            tsDebug.PrintHandle("tsFoTrade_debug",target_lpoint);
-            tsDebug.PrintString("tsFoTrade_debug","\n");
+ 		debug Debug.PrintString("tsFoTrade move to lpoint \n");
+            debug Debug.PrintHandle(target_lpoint);
+            debug Debug.PrintString("\n");
 
 
 	}
@@ -359,8 +359,9 @@ hlagrangepoint lagrange_start, lagrange_end;
 list lagrange_destination_list;
 set lagrange_local_destination_set, lagrange_destination_set;
 string lagrange_end_string, lagrange_end_system_string, system;
-int list_length, list_total, i;
+int list_length, i, lagrangelistcount;
 hobject lagrange_end_ent;
+int list_total = 0;
 
 
 
@@ -374,10 +375,11 @@ hobject lagrange_end_ent;
 		
 		//Make sure we are checking for lpoints in the system that the operation is actually in
 		//Only choose non-hidden, public lpoints
+	while (list_total == 0) {
 		lagrange_start = iLagrangePoint.Random(iMapEntity.SystemLagrangePointsInSystem(system));
-					if (true == iMapEntity.IsHidden(lagrange_start)) {
+					/*while (iMapEntity.IsHidden(lagrange_start)) {
 						lagrange_start = iLagrangePoint.Random(iMapEntity.SystemLagrangePointsInSystem(system));
-					}
+					}*/
 		
 		
 		lagrange_destination_list = tsCapsuleJump.KnownList(lagrange_start);  //Interstellar
@@ -385,6 +387,7 @@ hobject lagrange_end_ent;
 		//This is likely unnecessary and reflects my early misunderstand of for statements
 		list_length = List.ItemCount(lagrange_destination_list);
 		list_total = list_length;
+	}
 
 			//Build a list of routes for the lagrange_start
 			//No need to remove later as these are not actually added to the lpoint
@@ -407,13 +410,14 @@ hobject lagrange_end_ent;
 
 		lagrange_local_destination_set = iLagrangePoint.LocalDestinations(lagrange_start);
 		//Remove the starting lagrange point as we are looking for destinations only
-		Set.Remove(lagrange_local_destination_set, lagrange_start);
+		//Set.Remove(lagrange_local_destination_set, lagrange_start);
 			//Makes sure that the local destination set is not empty, only use the interstellar if it is
-			if (true != Set.IsEmpty(lagrange_local_destination_set)) {
+			if (!Set.IsEmpty(lagrange_local_destination_set)) {
 				Set.Union(lagrange_destination_set, lagrange_local_destination_set);
 			}
 
 	choice = iLagrangePoint.Random(lagrange_destination_set);
+
 
    debug Debug.PrintString("tsFoTrade.Chose to travel to Lpoint .\n");
 	debug Debug.PrintHandle(choice);
