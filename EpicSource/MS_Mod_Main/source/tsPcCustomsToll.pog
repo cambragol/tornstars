@@ -228,7 +228,8 @@ setup_toll_marker(hisim marker)
    INIFile.Destroy(control_file);
 
 
-   create_patrol(owner, marker, patrol_group, "EST_Interceptor");
+   create_patrol(owner, marker, patrol_group, "EST_CombatHeavy");
+
 
 
    // Pull out the leader ship.
@@ -828,7 +829,7 @@ create_patrol(hisim operation, hisim waypoint, hgroup cull_group, string ship_ty
    escort_file = INIFile.Create(escort_template);
 
    if (none == escort_file) {
-      debug Debug.PrintString("tsPcPirateToll.create_escort error escort ini file invalid\n");
+      debug Debug.PrintString("tsPcCustomsToll.create_escort error escort ini file invalid\n");
       return;
    }
 

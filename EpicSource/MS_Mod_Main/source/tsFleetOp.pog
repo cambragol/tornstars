@@ -639,6 +639,11 @@ string Operation2String(int op_type)
       return "Arms Dealer Operation";
       break;
 
+   //Charges the player to operate near certain stations?
+   case ept_CustomsOp:
+      return "Customs Operation";
+      break;
+
    // Designed to support the player so they can hire wingmen
    case ept_MercOp:
       return "Mercenary Operation";
