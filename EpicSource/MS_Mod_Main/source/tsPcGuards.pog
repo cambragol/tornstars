@@ -76,19 +76,31 @@ provides PogCreate,
          PogStart;
 //[cf]
 
-/*
-		1.  init
-		2.  LocationApproach -- approach the location (i.e. station or l-point). Wait in this state until at marker
-		3.  PlanNewPatrol -- shout to the area asking if there is any business. Wait for xx iterations
-		4.  SetNewMarker -- pick a new position, place marker
-		5.  MoveToMarker -- give move orders
-		6.  InFlight -- wait while moving to marker. Do 'check nearby' logic while waiting to get to destination
-		7.  SelectShipToDock -- pick one of the ships to doc to station, set bool on ship that has been processed, set docking ship handle, give dock order
-		8.  Docking -- wait while ship is docking
-		9.  Docked -- wait a while then leave
-		10. Undock -- undock and return to group location
-		11. LeaveArea -- pic a new station and head for it
-*/
+		/*
+		Order of actions ...
+		
+		During all movement check for hostiles and distress calls. Punch out to appropriate state
+		if either is detected.
+		
+		1.  init -- Determines whether the operation is at a station or an l-point then chooses ToDestination or LeaveArea
+		2.  ToDestination -- Sends the operation to a marker at the current station then changes to SetNewMarker
+		3.  SetNewMarker --  Sends the operation to a random number of markers around the station
+		4.  PlanNewPatrol --  Nothing is done here other than to redirect to LeaveArea
+		5.  LeaveArea  --  Not visiting stations for now, so this just leads to NextStation
+		6.  NextStation  --  Here the operation chooses the next station of the same faction, or allied, to patrol
+		7.  InLDSFlight  --  Operation waits in this state until it arrives, checking for danger along way
+		8.  SetNewMarker --  Operation returns to this state and repeats the cycle
+
+		9.  CheckNearby  --  this case is repeatedly entered into while waiting at other states, namely SetNewMarker and InLDSFlight
+		10. Attacked  --  entered into fromm CheckNearby, will lead to either the Fight or Flee case
+		11. Fight  --  Operation waits here for 3 minutes, or until out of range of station, then returns to station to ReGroup via InLDSFlight
+		12. Flee  --  Operation picks a station to flee to then goes to InFleeFlight
+		13. InFleeFlight  --  Alternate to InLDSFlight that gives a "I'm fleeing" shout out.  Next state is ReGroup
+		14. ReGroup  --  Allows operations ships to regather, repair, and to reset the AI?
+		
+
+		*/
+
 enum eCSScriptState
 {
    eCS_Init,
@@ -1131,14 +1143,37 @@ int station_choice = 99;
          			new_station = iHabitat.Random(tsStationFilter.OnGreaterFeeling(nearby_locations, merc_faction, 0.6));
 
 				// Keep the operation at the current station if there are no other destinations
-         			if (none == new_station) {
+         		if (!new_station) {
 					debug Debug.PrintString("tsPcGuards.ship_controller: new_station == none\n");
-					location = iHabitat.Nearest(nearby_locations, patrol_leader);
+					new_station = location;
+                        // set 'location' to the new station
+				location = new_station;
+                                              
+                                debug Debug.PrintString("tsPcGuards.ship_controller: eCS_NextStation staying put at ");
+                                debug Debug.PrintHandle(new_station);
+                                debug Debug.PrintString("\n");
+                                      
+						
+				// place the marker near the target station
+				Sim.PlaceNear(marker, new_station, 5km);
 
-					state = change_state(state, eCS_SetNewMarker, debug_on);
-					switch_state = eCS_SetNewMarker;
+				// Clear out previous orders and send the operation to the new station
+         			iAI.PurgeOrders(patrol_leader);
+				iAI.GiveApproachOrderAdvanced(patrol_leader, marker, 500, 600, true);
 
-        			}
+				// Give a shout that the operation is leaving the area
+				if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
+                   		tsDistance.CullingDistance()) {
+					iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_Guards_new_patrol","",1));
+				}
+
+				switch_state = eCS_SetNewMarker;
+       			state = change_state(state, eCS_SetNewMarker, debug_on);
+				//post_state = change_state(state, eCS_SetNewMarker, debug_on);
+				max_patrols_at_current_location_random = Math.Random(1, max_patrols_at_current_location);
+				max_patrols_at_current_location_count = 0;
+
+        		} else {
                            
                         // set 'location' to the new station
 				location = new_station;
@@ -1155,17 +1190,12 @@ int station_choice = 99;
          			iAI.PurgeOrders(patrol_leader);
 				iAI.GiveApproachOrderAdvanced(patrol_leader, marker, 500, 600, true);
 
-				// Give a shout that the operation is leaving the area
-				if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
-                   		tsDistance.CullingDistance()) {
-					iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_Guards_departing_area","",1));
-				}
-
 				switch_state = eCS_SetNewMarker;
        			state = change_state(state, eCS_InLDSFlight, debug_on);
 			post_state = change_state(state, eCS_SetNewMarker, debug_on);
 			max_patrols_at_current_location_random = Math.Random(1, max_patrols_at_current_location);
 			max_patrols_at_current_location_count = 0;
+			}
 
 
 	break;
