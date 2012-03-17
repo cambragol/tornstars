@@ -764,7 +764,7 @@ int station_choice = 99;
 		// This Shout is for ships that are started near the station
  		if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    tsDistance.CullingDistance()) {
-			iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_Guards_approaching_for_patrol","",1));
+			iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_Guards_approaching_for_patrol",speech_style,5));
 		}
 
 		max_patrols_at_current_location_count = 0;
@@ -914,7 +914,7 @@ int station_choice = 99;
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    	tsDistance.CullingDistance()) {
                			if (Math.RandomInt(1,100) > 66) {
-                  			iComms.Shout(patrol_leader,"",tsString.CommsStringRandom("pcft_Guards_vectoring","",1));
+                  			iComms.Shout(patrol_leader,"",tsString.CommsStringRandom("pcft_Guards_vectoring",speech_style,5));
                			}
                		}
                		state = change_state(state, post_state, debug_on);
@@ -982,7 +982,7 @@ int station_choice = 99;
 
  		if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    tsDistance.CullingDistance()) {
-			iComms.Shout(location, "", tsString.CommsStringRandom("pcft_Guards_docking_cleared","",1));
+			iComms.Shout(location, "", tsString.CommsStringRandom("pcft_Guards_docking_cleared",speech_style,5));
 		}
 
 		state = change_state(state, eCS_Docked, debug_on);
@@ -1041,7 +1041,7 @@ int station_choice = 99;
 				
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    tsDistance.CullingDistance()) {
-				iComms.Shout(merchant_ship, "", tsString.CommsStringRandom("pcft_Guards_return_convoy","",1));
+				iComms.Shout(merchant_ship, "", tsString.CommsStringRandom("pcft_Guards_return_convoy",speech_style,5));
 			}
 
 
@@ -1104,7 +1104,7 @@ int station_choice = 99;
 
 			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    	tsDistance.CullingDistance()) {
-				iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_Guards_departing_area","",1));
+				iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_Guards_departing_area",speech_style,5));
 			}
 
               		state = change_state(state, eCS_WaitApproachLPoint, debug_on);
@@ -1164,7 +1164,7 @@ int station_choice = 99;
 				// Give a shout that the operation is leaving the area
 				if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    		tsDistance.CullingDistance()) {
-					iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_Guards_new_patrol","",1));
+					iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_Guards_new_patrol",speech_style,5));
 				}
 
 				switch_state = eCS_SetNewMarker;
@@ -1543,7 +1543,7 @@ int station_choice = 99;
 		debug Debug.PrintString("tsPcGuards.ship_controller: eCS_WaitQueue\n");
  		if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                 tsDistance.CullingDistance()) {
-        		iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_Guards_looking_for_work","",1));
+        		iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_Guards_looking_for_work",speech_style,5));
 		}
 		
         	if (wait_count > 30) {
@@ -2216,7 +2216,7 @@ int station_choice = 99;
 			if (doonce == 0) {
 				if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                 		tsDistance.CullingDistance()) {
-					iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_Guards_approach_LDS","",1));
+					iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_Guards_approach_LDS",speech_style,5));
 				}
 				doonce = 1;
 			}
@@ -2254,7 +2254,7 @@ int station_choice = 99;
 			// Give a shout that the operation is arriving in the area
 			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                 	tsDistance.CullingDistance()) {
-				iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_Guards_fleeing_attackers","",1));
+				iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_Guards_fleeing_attackers",speech_style,5));
 			}
  
             		state = change_state(state, post_state, debug_on);
