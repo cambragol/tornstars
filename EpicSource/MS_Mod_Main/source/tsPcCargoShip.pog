@@ -829,7 +829,7 @@ int wait_load = 0;
 			
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    (tsDistance.CullingDistance() * 2)) {
-			iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_CargoShip_approach","",1));
+			iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_approach","",1));
 			}
 		}*/
 		
@@ -852,7 +852,7 @@ int wait_load = 0;
 		// This Shout is for ships that are started near the station
 		//if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), location) < 195km) {
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < tsDistance.CullingDistance()) {
-				iComms.Shout(location, "", tsString.CommsStringRandom("pcft_CargoShip_in_approach_vector","",1));
+				iComms.Shout(location, "", tsString.CommsStringRandom("pcft_move_along_vector","",1));
 			}
 		//}
 		
@@ -899,7 +899,7 @@ int wait_load = 0;
         	if (OT_None == iAI.CurrentOrderType(patrol_leader)) {
             	// Requesting docking clearance.
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < tsDistance.CullingDistance()) {
-            			iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pccgo_cargoship_requesting_cargo_dock","",5));
+            			iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_cargoship_requesting_cargo_dock","",5));
 			}
             	state = change_state(state, eCS_CargoWaitQueue, debug_on);
             	wait_count = 0;
@@ -924,7 +924,7 @@ int wait_load = 0;
 
         	if (wait_count > 1) {
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < tsDistance.CullingDistance()) {
-            			iComms.Shout(station, "", tsString.CommsStringRandom("pccgo_cargoship_docking_cleared","",5));
+            			iComms.Shout(station, "", tsString.CommsStringRandom("pcft_cargoship_docking_cleared","",5));
 			}
             	// Wait here for a chance to use the freight port.
             	state = change_state(state, eCS_ToDock, debug_on);
@@ -1021,7 +1021,7 @@ int wait_load = 0;
             		
          	} else {
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < tsDistance.CullingDistance()) {
-            			iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pccgo_cargoship_starting_unload","",5));
+            			iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_cargoship_starting_unload","",5));
 			}
 			
             	tsSpewerOps.UnloadShip(patrol_leader, station, cargo_pods);         
@@ -1062,7 +1062,7 @@ int wait_load = 0;
 
          	if (!Set.IsEmpty(cargo_pods)) {
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < tsDistance.CullingDistance()) {
-            			iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pccgo_cargoship_starting_load","",5));
+            			iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_cargoship_starting_load","",5));
 			}
 			
             	tsSpewerOps.LoadShip(patrol_leader, station, cargo_pods);
@@ -1218,7 +1218,7 @@ int wait_load = 0;
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    	tsDistance.CullingDistance()) {
                			if (Math.RandomInt(1,100) > 66) {
-                  			iComms.Shout(patrol_leader,"",tsString.CommsStringRandom("pcft_CargoShip_vectoring","",1));
+                  			iComms.Shout(patrol_leader,"",tsString.CommsStringRandom("pcft_vectoring","",1));
                			}
                		}
                		state = change_state(state, post_state, debug_on);
@@ -1247,7 +1247,7 @@ int wait_load = 0;
 				merchant_ship = iShip.Cast(Group.NthSim(patrol_group, Math.RandomInt(0, merchant_list_size-1)));
 
  				if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < tsDistance.CullingDistance()) {
-            				iComms.Shout(merchant_ship,"", tsString.CommsStringRandom("pcft_CargoShip_docking","", 1));
+            				iComms.Shout(merchant_ship,"", tsString.CommsStringRandom("pcft_docking","", 1));
 
 				}
 
@@ -1280,7 +1280,7 @@ int wait_load = 0;
 				// shout something on docking??
 
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < tsDistance.CullingDistance()) {
-				iComms.Shout(location, "", tsString.CommsStringRandom("pcft_CargoShip_docking_cleared","",1));
+				iComms.Shout(location, "", tsString.CommsStringRandom("pcft_docking_cleared","",1));
 			}
 
 			state = change_state(state, eCS_Docked, debug_on);
@@ -1338,7 +1338,7 @@ int wait_load = 0;
 			iShip.UndockSelf( merchant_ship );
 				
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < tsDistance.CullingDistance()) {
-				iComms.Shout(merchant_ship, "", tsString.CommsStringRandom("pcft_CargoShip_return_convoy","",1));
+				iComms.Shout(merchant_ship, "", tsString.CommsStringRandom("pcft_return_convoy","",1));
 			}
 
 			iAI.GiveApproachOrderAdvanced( merchant_ship, patrol_leader, 500, 600, true );	
@@ -1395,7 +1395,7 @@ int wait_load = 0;
 
 			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    	tsDistance.CullingDistance()) {
-				iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_CargoShip_departing_area","",1));
+				iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_departing_area","",1));
 			}
 
               		state = change_state(state, eCS_WaitApproachLPoint, debug_on);
@@ -1448,7 +1448,7 @@ int wait_load = 0;
 
 		// Give a shout that the operation is leaving the area
 		if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < tsDistance.CullingDistance()) {
-			iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_CargoShip_departing_area","",1));
+			iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_departing_area","",1));
 		}
 
        		state = change_state(state, eCS_InLDSFlight, debug_on);
@@ -1476,7 +1476,7 @@ int wait_load = 0;
             	// Announcing Lpoint Lineup
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < tsDistance.CullingDistance()) {
 
-            		iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_CargoShip_lining_up_for_capsule_jump","",5));
+            		iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_lining_up_for_capsule_jump","",5));
 			}
 
             	state = change_state(state, eCS_UseLaGrange, debug_on);
@@ -1872,7 +1872,7 @@ int wait_load = 0;
          
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    	tsDistance.CullingDistance()) {
-            			iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcft_CargoShip_hostile_spotted_fight","", 1));
+            			iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcft_hostile_spotted_fight","", 1));
 			}
 
             		iAI.PurgeOrders(patrol_leader);
@@ -1923,7 +1923,7 @@ int wait_load = 0;
 	    		
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    	tsDistance.CullingDistance()) {
-            			iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcft_CargoShip_hostile_spotted_flee","", 1));
+            			iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcft_hostile_spotted_flee","", 1));
 			}
 			
 	    		iShip.UndockSelf( merchant_ship );
@@ -2062,7 +2062,7 @@ int wait_load = 0;
  				if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < tsDistance.CullingDistance()) {
  				
                    			debug Debug.PrintString("tsPcCargoShip.ship_controller: eCS_Attacked Answering Distress Call!\n");
-               				iComms.Shout(patrol_leader,"",tsString.CommsStringRandom("pcft_CargoShip_answering_distress_call","", 1));
+               				iComms.Shout(patrol_leader,"",tsString.CommsStringRandom("pcft_answering_distress_call","", 1));
 				}
 				
 				fight_timer =0;	
@@ -2129,7 +2129,7 @@ int wait_load = 0;
             
  		if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < tsDistance.CullingDistance()) {
  				
-               		iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcft_CargoShip_hostile_spotted","", 1));
+               		iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcft_hostile_spotted","", 1));
                				
 		}
 				
@@ -2143,7 +2143,7 @@ int wait_load = 0;
  		//if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
  		if (Sim.DistanceBetween(sender, player) < 
                 tsDistance.CullingDistance()) {
-               		iComms.Shout(sender,"", tsString.CommsStringRandom("pcft_CargoShip_distress_call","", 1));
+               		iComms.Shout(sender,"", tsString.CommsStringRandom("pcft_distress_call","", 1));
 		}
 
 
@@ -2169,7 +2169,7 @@ int wait_load = 0;
  		//if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
  		if (Sim.DistanceBetween(sender, player) < 
                 tsDistance.CullingDistance()) {
-               		iComms.Shout(sender,"", tsString.CommsStringRandom("pcft_CargoShip_distress_call","", 1));
+               		iComms.Shout(sender,"", tsString.CommsStringRandom("pcft_distress_call","", 1));
 		}
 
             	tsDistress.Send(espDistress,
@@ -2223,7 +2223,7 @@ int wait_load = 0;
 
          	iAI.PurgeOrders(patrol_group);
          	// The operation should follow and regroup with the patrol_leader at this point
-         	iAI.GiveApproachOrderAdvanced( patrol_group,
+         	iAI.Give OrderAdvanced( patrol_group,
                                         patrol_leader,
                                         5km,
                                         6km,
@@ -2299,7 +2299,7 @@ int wait_load = 0;
          if (do_rescue) {
  		if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    tsDistance.CullingDistance()) {
-            		iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcft_CargoShip_answering_distress_call","", 1));
+            		iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcft_answering_distress_call","", 1));
             		debug Debug.PrintString("tsPcCargoShip.ship_controller: eCS_Distress Answering someones Distress Call!\n");
 		}
             	iAI.PurgeOrders(patrol_leader);
@@ -2360,7 +2360,7 @@ int wait_load = 0;
 			if (doonce == 0) {
 				if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                 		tsDistance.CullingDistance()) {
-					iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_CargoShip_approach_LDS","",1));
+					iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_approach_LDS","",1));
 				}
 				doonce = 1;
 			}
@@ -2398,7 +2398,7 @@ int wait_load = 0;
 			// Give a shout that the operation is arriving in the area
 			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                 	tsDistance.CullingDistance()) {
-				iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_CargoShip_fleeing_attackers","",1));
+				iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_fleeing_attackers","",1));
 			}
  
             		state = change_state(state, post_state, debug_on);
@@ -2488,7 +2488,7 @@ int wait_load = 0;
          	// An error happened trying to dock or move cargo 
          	// at this station. Move to another station.
  		if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < tsDistance.CullingDistance()) {
-         		iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pccgo_cargoship_abandon_dock","",5));
+         		iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_cargoship_abandon_dock","",5));
 		}
 		
          	// Make sure we are removed from this stations queue.

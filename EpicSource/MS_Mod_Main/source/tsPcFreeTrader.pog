@@ -744,7 +744,7 @@ int station_choice = 75;
 			
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    (tsDistance.CullingDistance() * 2)) {
-			iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_FreeTrader_approach",speech_style,5));
+			iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_approach",speech_style,5));
 			}
 		} */
 		
@@ -774,7 +774,7 @@ int station_choice = 75;
 		//if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), location) < 195km) {
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    tsDistance.CullingDistance()) {
-			iComms.Shout(location, "", tsString.CommsStringRandom("pcft_FreeTrader_move_along_vector",speech_style,5));
+			iComms.Shout(location, "", tsString.CommsStringRandom("pcft_move_along_vector",speech_style,5));
 			}
 		//}
 		
@@ -898,7 +898,7 @@ int station_choice = 75;
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    	tsDistance.CullingDistance()) {
                			if (Math.RandomInt(1,100) > 66) {
-                  			iComms.Shout(patrol_leader,"",tsString.CommsStringRandom("pcft_FreeTrader_vectoring",speech_style,5));
+                  			iComms.Shout(patrol_leader,"",tsString.CommsStringRandom("pcft_vectoring",speech_style,5));
                			}
                		}
                		state = change_state(state, post_state, debug_on);
@@ -928,7 +928,7 @@ int station_choice = 75;
 
  					if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    		tsDistance.CullingDistance()) {
-            				iComms.Shout(merchant_ship,"", tsString.CommsStringRandom("pcft_FreeTrader_docking","", 1));
+            				iComms.Shout(merchant_ship,"", tsString.CommsStringRandom("pcft_docking","", 1));
 
 					}
 
@@ -965,7 +965,7 @@ int station_choice = 75;
 
  		if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    tsDistance.CullingDistance()) {
-			iComms.Shout(location, "", tsString.CommsStringRandom("pcft_FreeTrader_docking_cleared",speech_style,5));
+			iComms.Shout(location, "", tsString.CommsStringRandom("pcft_docking_cleared",speech_style,5));
 		}
 
 		state = change_state(state, eCS_Docked, debug_on);
@@ -1023,7 +1023,7 @@ int station_choice = 75;
 				
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    tsDistance.CullingDistance()) {
-				iComms.Shout(merchant_ship, "", tsString.CommsStringRandom("pcft_FreeTrader_return_convoy",speech_style,5));
+				iComms.Shout(merchant_ship, "", tsString.CommsStringRandom("pcft_return_convoy",speech_style,5));
 			}
 
 
@@ -1082,7 +1082,7 @@ int station_choice = 75;
 
 			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    	tsDistance.CullingDistance()) {
-				iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_FreeTrader_departing_area",speech_style,5));
+				iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_departing_area",speech_style,5));
 			}
 
               		state = change_state(state, eCS_WaitApproachLPoint, debug_on);
@@ -1147,7 +1147,7 @@ int station_choice = 75;
 				// Give a shout that the operation is leaving the area
 				if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    		tsDistance.CullingDistance()) {
-					iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_FreeTrader_departing_area",speech_style,5));
+					iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_departing_area",speech_style,5));
 				}
 
        			state = change_state(state, eCS_InLDSFlight, debug_on);
@@ -1175,7 +1175,7 @@ int station_choice = 75;
             	// Announcing Lpoint Lineup
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < tsDistance.CullingDistance()) {
 
-            		iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_FreeTrader_lining_up_for_capsule_jump","",5));
+            		iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_lining_up_for_capsule_jump","",5));
 			}
 
             	state = change_state(state, eCS_UseLaGrange, debug_on);
@@ -1571,7 +1571,7 @@ int station_choice = 75;
          
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    	tsDistance.CullingDistance()) {
-            			iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcft_FreeTrader_hostile_spotted_fight","", 1));
+            			iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcft_hostile_spotted_fight","", 1));
 			}
 
             		iAI.PurgeOrders(patrol_leader);
@@ -1622,7 +1622,7 @@ int station_choice = 75;
 	    		
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    	tsDistance.CullingDistance()) {
-            			iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcft_FreeTrader_hostile_spotted_flee","", 1));
+            			iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcft_hostile_spotted_flee","", 1));
 			}
 			
 	    		iShip.UndockSelf( merchant_ship );
@@ -1761,7 +1761,7 @@ int station_choice = 75;
  				if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < tsDistance.CullingDistance()) {
  				
                    			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_Attacked Answering Distress Call!\n");
-               				iComms.Shout(patrol_leader,"",tsString.CommsStringRandom("pcft_FreeTrader_answering_distress_call","", 1));
+               				iComms.Shout(patrol_leader,"",tsString.CommsStringRandom("pcft_answering_distress_call","", 1));
 				}
 				
 				fight_timer =0;	
@@ -1828,7 +1828,7 @@ int station_choice = 75;
             
  		if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < tsDistance.CullingDistance()) {
  				
-               		iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcft_FreeTrader_hostile_spotted","", 1));
+               		iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcft_hostile_spotted","", 1));
                				
 		}
 				
@@ -1842,7 +1842,7 @@ int station_choice = 75;
  		//if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
  		if (Sim.DistanceBetween(sender, player) < 
                 tsDistance.CullingDistance()) {
-               		iComms.Shout(sender,"", tsString.CommsStringRandom("pcft_FreeTrader_distress_call","", 1));
+               		iComms.Shout(sender,"", tsString.CommsStringRandom("pcft_distress_call","", 1));
 		}
 
 
@@ -1868,7 +1868,7 @@ int station_choice = 75;
  		//if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
  		if (Sim.DistanceBetween(sender, player) < 
                 tsDistance.CullingDistance()) {
-               		iComms.Shout(sender,"", tsString.CommsStringRandom("pcft_FreeTrader_distress_call","", 1));
+               		iComms.Shout(sender,"", tsString.CommsStringRandom("pcft_distress_call","", 1));
 		}
 
             	tsDistress.Send(espDistress,
@@ -1998,7 +1998,7 @@ int station_choice = 75;
          if (do_rescue) {
  		if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    tsDistance.CullingDistance()) {
-            		iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcft_FreeTrader_answering_distress_call","", 1));
+            		iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcft_answering_distress_call","", 1));
             		debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_Distress Answering someones Distress Call!\n");
 		}
             	iAI.PurgeOrders(patrol_leader);
@@ -2059,7 +2059,7 @@ int station_choice = 75;
 			if (doonce == 0) {
 				if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                 		tsDistance.CullingDistance()) {
-					iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_FreeTrader_approach_LDS",speech_style,5));
+					iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_approach_LDS",speech_style,5));
 				}
 				doonce = 1;
 			}
@@ -2097,7 +2097,7 @@ int station_choice = 75;
 			// Give a shout that the operation is arriving in the area
 			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                 	tsDistance.CullingDistance()) {
-				iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_FreeTrader_fleeing_attackers",speech_style,5));
+				iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_fleeing_attackers",speech_style,5));
 			}
  
             		state = change_state(state, post_state, debug_on);
