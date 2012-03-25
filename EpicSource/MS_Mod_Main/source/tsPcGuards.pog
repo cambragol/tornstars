@@ -64,6 +64,7 @@ uses    Sim,
 		  tsStationFilter,
 		  tsTime,
 		  tsStationEnum,
+		  tsStationAi, 
         tsPcOwner,
         tsShip,
         tsShipEscort,
@@ -538,6 +539,8 @@ task ship_controller(hmapentity location,
    set nearby_locations;
 	hmapentity station, new_station;
 	hisim operation;
+	bool toggle;
+
 
 // added for Lpoint functions
 
@@ -989,6 +992,10 @@ int station_choice = 99;
 			debug Debug.PrintString("tsPcGuards.ship_controller: eCS_Docking\n");
 			// wait until ship has docked.  Keep an eye out for bad guys and attacks.
 
+	   // Enable a dock for docking
+	   toggle = true;
+	   tsStationAi.toggle_universal_dock(toggle, iHabitat.Cast(location));
+
          if (iSim.IsDockedToStructure(merchant_ship, iSim.Cast(location))) {
 				// shout something on docking??
 
@@ -1050,6 +1057,10 @@ int station_choice = 99;
 	if( iSim.IsDockedToStructure(merchant_ship, location) ) {
 			// if docked then undock and reformat
 			iShip.UndockSelf( merchant_ship );
+
+			// restore the station dock lock
+	   		toggle = false;
+	   		tsStationAi.toggle_universal_dock(toggle, iHabitat.Cast(location));
 				
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    tsDistance.CullingDistance()) {

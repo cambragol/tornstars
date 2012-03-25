@@ -58,6 +58,8 @@ prototype bool tsShip.IsLongRangeScan( hship ship );
 
 prototype bool tsShip.IsTanker( hship ship );
 
+prototype bool tsShip.IsFreighter( hship ship );
+
 prototype bool tsShip.IsWarship( hship ship );
 
 prototype int tsShip.Owner( hship ship );

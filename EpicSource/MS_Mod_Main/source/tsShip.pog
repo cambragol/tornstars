@@ -95,6 +95,7 @@ provides
         IsProspector,
         IsLongRangeScan,
         IsTanker,
+	  IsFreighter,
         IsWarship,
 
         Owner,
@@ -393,7 +394,7 @@ ReadIniFile(hship ship)
    float jump_fuel;
    int daily_cost;
    int ship_type;
-   int tanker, miner, prospector, study_days, scan_range;
+   int tanker, miner, prospector, study_days, scan_range, freighter;
    int hiring_fee;
    float faction_standing;
    string ship_desc;
@@ -436,6 +437,7 @@ ReadIniFile(hship ship)
    jump_fuel = INIFile.Float(ship_file,"Properties","jump_fuel", default_jump_fuel(ship_type));
    daily_cost = INIFile.Int(ship_file,"Properties","daily_cost", default_daily_cost(ship_type));
    tanker = INIFile.Int(ship_file,"Properties","tanker", 0);
+   freighter = INIFile.Int(ship_file,"Properties","freighter", 0);
    miner = INIFile.Int(ship_file,"Properties","miner", 0);
    mining_efficiency = INIFile.Float(ship_file,"Properties","mining_efficiency", 0);
    prospector = INIFile.Int(ship_file,"Properties","prospector", 0);
@@ -458,6 +460,7 @@ ReadIniFile(hship ship)
    Object.AddIntProperty(ship, "daily_cost", daily_cost);
 
    Object.AddIntProperty(ship, "tanker", tanker);
+   Object.AddIntProperty(ship, "freighter", freighter);
    Object.AddIntProperty(ship, "miner", miner);
    Object.AddFloatProperty(ship, "mining_efficiency", mining_efficiency);
    Object.AddIntProperty(ship, "prospector", prospector);
@@ -523,6 +526,11 @@ bool IsMiner(hship ship)
 bool IsTanker(hship ship)
 {
    return (Object.IntProperty(ship,"tanker") >= 1);
+}
+
+bool IsFreighter(hship ship)
+{
+   return (Object.StringProperty(ship,"gtHiredShipType") == "freighter");
 }
 
 bool IsCapsuleJumping(hship ship)

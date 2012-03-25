@@ -49,6 +49,7 @@ uses	Sim,
 		tsFaction,
 		tsStationEnum,
 		tsStation,
+		tsStationAi,
 		tsLProduction,
 		tsMegaTrucking,
 		tsStationFilter;
@@ -764,6 +765,7 @@ task wingman_watch(hship ship)
    list target_list, fuel_list, cargo_list;
    set cargo_set, empty_set, stations, nearby_locations;
    int i, total;
+   bool toggle;
 
 
    // Inital checks before we start the watch task.
@@ -1082,9 +1084,20 @@ task wingman_watch(hship ship)
 
       case eSS_DockStart:
          target = current_target(ship);
+	   toggle = true;
 
          if (none != target) {
             iConversation.OneLiner(ship, "", "epo_dock_target_ack");
+
+			// This mess decides which dock to enable
+			if (tsShip.IsFreighter(ship)){
+
+				tsStationAi.toggle_unload_dock(toggle, iHabitat.Cast(target));
+
+			} else {
+
+				tsStationAi.toggle_universal_dock(toggle, iHabitat.Cast(target));
+			}
 
             iAI.PurgeOrders(ship);
             iAI.GiveDockOrder(ship, target);
@@ -1119,7 +1132,21 @@ task wingman_watch(hship ship)
          iConversation.OneLiner(ship, "", "epo_undock_ack");
          // Undock from whatever we are docked onto, go to idle order.
          iAI.PurgeOrders(ship);
-         iShip.UndockSelf(ship);      
+         iShip.UndockSelf(ship);
+ 
+	   toggle = false;
+
+			// This mess decides which dock to disable
+			if (tsShip.IsFreighter(ship)){
+
+				tsStationAi.toggle_unload_dock(toggle, iHabitat.Cast(target));
+
+			} else {
+
+				//tsStationAi.toggle_universal_dock(toggle, iHabitat.Cast(target));
+			}
+
+     
          wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
          break;
 

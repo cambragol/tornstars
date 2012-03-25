@@ -18,9 +18,15 @@
 
 prototype tsStationAi.Reaction();
 
+prototype tsStationAi.Comms();
+
 prototype bool tsStationAi.Start( hhabitat station );
 
 prototype bool tsStationAi.End( hhabitat station );
+
+prototype bool tsStationAi.toggle_universal_dock(bool toggle, hhabitat station);
+
+prototype bool tsStationAi.toggle_unload_dock(bool toggle, hhabitat station);
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

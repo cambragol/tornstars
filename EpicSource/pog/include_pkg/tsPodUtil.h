@@ -70,5 +70,13 @@ prototype tsPodUtil.HackNearbyPods();
 
 prototype tsPodUtil.TogglePodTag();
 
+prototype tsPodUtil.LoadPodsToPlayerShip();
+
+prototype tsPodUtil.InitializeKeyBindings();
+
+prototype tsPodUtil.PlayerShipDropCargo();
+
+prototype tsPodUtil.DockTargetPodToPlayerShip();
+
 // EOF /////////////////////////////////////////////////////////////////////////
 

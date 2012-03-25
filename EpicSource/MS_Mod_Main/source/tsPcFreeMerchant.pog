@@ -64,6 +64,7 @@ uses    Sim,
 		  tsStationFilter,
 		  tsTime,
 		  tsStationEnum,
+		  tsStationAi,
         tsPcOwner,
         tsShip,
         tsShipEscort,
@@ -333,7 +334,7 @@ setup_ship(hisim marker)
    }
 
    // Get the ship types from the ini file for leader, escort, merchant.
-   leader_type = INIFile.String(control_file,"Properties","leader_ship_type","EST_PassengerAll");
+   leader_type = INIFile.String(control_file,"Properties","leader_ship_type","EST_DemoShips");
    escort_type = INIFile.String(control_file,"Properties","escort_ship_type","EST_CombatFighter");
 	merchant_type_str = INIFile.String(control_file,"Properties","merchant_ship_type","EST_PassengerAll");
 	merchant_type = tsShipCreation.String2ShipType(merchant_type_str);
@@ -542,6 +543,8 @@ task ship_controller(hmapentity location,
    set nearby_locations;
 	hmapentity station, new_station;
 	hisim operation;
+	bool toggle;
+
 
 // added for Lpoint functions
 
@@ -926,12 +929,12 @@ int station_choice = 60;
 				// get a random merchant
 				//merchant_ship = iShip.Cast(List.GetNth(merchant_list, Math.RandomInt(0, merchant_list_size-1)));
 				
-
- 				if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
+			// Commented out as the FreeMerchant is travelling alone
+ 			/*	if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    tsDistance.CullingDistance()) {
             		iComms.Shout(patrol_leader,"", tsString.CommsStringRandom("pcft_docking","", 1));
 
-				}
+				}*/
 
 			state = change_state(state, eCS_Docking, debug_on);
 			
@@ -944,6 +947,10 @@ int station_choice = 60;
 	
 			debug Debug.PrintString("tsPcFreeMerchant.ship_controller: eCS_Docking\n");
 			// wait until ship has docked.  Keep an eye out for bad guys and attacks.
+
+	   // Enable a dock for docking
+	   toggle = true;
+	   tsStationAi.toggle_universal_dock(toggle, iHabitat.Cast(location));
 
          if (iSim.IsDockedToStructure(merchant_ship, iSim.Cast(location))) {
 				// shout something on docking??
@@ -1005,6 +1012,10 @@ int station_choice = 60;
 	if( iSim.IsDockedToStructure(merchant_ship, location) ) {
 			// if docked then undock and reformat
 			iShip.UndockSelf( merchant_ship );
+
+			// restore the station dock lock
+	   		toggle = false;
+	   		tsStationAi.toggle_universal_dock(toggle, iHabitat.Cast(location));
 				
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    tsDistance.CullingDistance()) {
@@ -1098,6 +1109,9 @@ int station_choice = 60;
 				
 				// Added to sort out hidden stations for this operation
 				nearby_locations = tsStationFilter.OnMapVisible(nearby_locations, true);
+
+        			station = iHabitat.Nearest(nearby_locations, patrol_leader);
+         			Set.Remove(nearby_locations, station);
 				
 				new_station = iHabitat.Random(tsStationFilter.OnGreaterFeeling(nearby_locations, merc_faction, -0.2));
 				

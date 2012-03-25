@@ -54,12 +54,17 @@ uses    Sim,
         iUtilities,
         iRemotePilot,
         iHUD,
+	  iComms,
 //        CargoTypes,
         tsFaction,
         tsShip,
 	  tsShipCreationEnum,
 	  tsShipCreation,
         ECargoTypes,
+
+//  SRC hacks added starting 2012-March-19
+	  iDockport,
+//  SRC hacks added starting 2012-March-19
 	  tsEconomy;
 //        ECargoScript;
 
@@ -93,7 +98,26 @@ provides CreateCargoPod,
          RemoveHack,
          HackTargetPod,
          HackNearbyPods,
-         TogglePodTag;
+         TogglePodTag,
+
+
+// SRC hacks added starting 2012-March-19 and following
+
+
+
+	   InitializeKeyBindings,
+         LoadPodsToPlayerShip,
+         PlayerShipDropCargo,
+         DockTargetPodToPlayerShip;
+
+
+prototype InitializeKeyBindings();
+prototype LoadPodsToPlayerShip();
+prototype PlayerShipDropCargo();
+prototype DockTargetPodToPlayerShip();
+
+
+// SRC hacks added starting 2012-March-19
 
 
          
@@ -108,6 +132,15 @@ prototype AutodockPod(hship pod, hsim ship, hdockport target);
 
 //******************************************************************************************/
 // 
+
+
+
+InitializeKeyBindings()
+{
+   Input.BindKey( "tsPodUtil.LoadPodsToPlayerShip", "tsPodUtil.LoadPodsToPlayerShip");
+   Input.BindKey( "tsPodUtil.PlayerShipDropCargo", "tsPodUtil.PlayerShipDropCargo");
+   Input.BindKey( "tsPodUtil.DockTargetPodToPlayerShip", "tsPodUtil.DockTargetPodToPlayerShip");
+}
 
 
 //******************************************************************************************/
@@ -900,9 +933,163 @@ DropCargo(hship freighter)
 }
 
 
+
+// Keybindable function to dock a single layer of pods to the player ship
+
+
+LoadPodsToPlayerShip()
+{
+   hship player_ship = iShip.FindPlayerShip();
+   set my_pods = PlayerPods( iSim.Cast(player_ship), 20km);
+   set load_pods, dock_port_set;
+
+	// Are there any pods in range
+	if (Set.ItemCount(my_pods) == 0){
+	   	iComms.Shout(none, "name_az", "tspu_no_pods_within_range");
+	   	return;
+  	}
+
+	//Does Player have a free dockport?
+   	dock_port_set = DockPorts(player_ship);
+
+   	if (Set.ItemCount(dock_port_set) == 0){
+      	iHUD.Print("No Available Dockport");
+      	iHUD.PlayAudioCue(AC_InvalidInput);
+		iComms.Shout(none, "name_az", "tspu_no_available_dockport");
+
+      	return;
+   	}
+
+	if (Set.ItemCount(dock_port_set) > Set.ItemCount(my_pods)) {
+		iComms.Shout(none, "name_az", "tspu_loading_a_partial_load");
+		load_pods = ClaimPods(player_ship, my_pods);
+   		iHUD.Print(String.FormatInt("DOCKING %d CARGO CONTAINERS ",Set.ItemCount(load_pods)));
+
+		return;
+	}
+
+	if (Set.ItemCount(dock_port_set) < Set.ItemCount(my_pods)) {
+		iComms.Shout(none, "name_az", "tspu_loading_as_many_as_can");
+		load_pods = ClaimPods(player_ship, my_pods);
+   		iHUD.Print(String.FormatInt("DOCKING %d CARGO CONTAINERS ",Set.ItemCount(load_pods)));
+
+		return;
+	}
+
+   load_pods = ClaimPods(player_ship, my_pods);
+   iHUD.Print(String.FormatInt("DOCKING %d CARGO CONTAINERS ",Set.ItemCount(load_pods)));
+   iComms.Shout(none, "name_az", "tspu_loading_all_cargo_pods");
+
+
+}
+
+
+
+// Player ship rapidly unlocks/undocks its docked pods
+// (single layer of pods only in this revision)
+
+PlayerShipDropCargo()
+{
+   list children;
+   int total_pods, j;
+   hship pod;
+
+   hship player_ship = iShip.FindPlayerShip();
+
+   children = List.FromSet(Sim.Children(player_ship));
+   total_pods = List.ItemCount(children);
+
+   for (j=0;j<total_pods;++j) {
+      pod = iShip.Cast(List.GetNth(children,j));
+      if (T_CargoPod == iSim.Type(pod)) {
+         iSim.SetDockingLock(player_ship, pod, false);
+         iShip.UndockSelf(pod);
+      }
+   }
+
+   if (total_pods == 0){
+	   iComms.Shout(none, "name_az", "tspu_no_pods_loaded");
+	   return;
+   }
+
+   iHUD.Print(String.FormatInt("UNDOCKING %d CARGO CONTAINERS ",total_pods));
+   iComms.Shout(none, "name_az", "tspu_undocking_the_cargo_pod");
+
+}
+
+
+
+// Current player ship target, if a cargo pod, will be
+// docked to the player ship. If pod is not already of the
+// Player's faction it will be hacked prior to docking
+
+DockTargetPodToPlayerShip()
+{
+   hdockport dock_port;
+   set dock_port_set;
+
+   hship player_ship = iShip.FindPlayerShip();
+   hship target_pod = iShip.Cast(iShip.CurrentTarget(player_ship));
+
+   //Close enough?
+   if (Sim.DistanceBetween(target_pod, player_ship) > 20km) {
+      iHUD.Print("Target Beyond 20km Range");
+      iHUD.PlayAudioCue(AC_InvalidInput);
+	iComms.Shout(none, "name_az", "tspu_need_to_move_closer");
+
+      return;
+   }
+
+   //Is this a cargo pod?
+   if ( iSim.Type( iSim.Cast( target_pod ) ) != T_CargoPod ) {
+      iHUD.Print("Target Not a Cargo Container");
+      iHUD.PlayAudioCue(AC_InvalidInput);
+	iComms.Shout(none, "name_az", "tspu_that_is_not_cargopod");
+
+      return;
+   }
+
+   //Does Player have a free dockport?
+   dock_port_set = DockPorts(player_ship);
+
+   if (Set.ItemCount(dock_port_set) == 0){
+      iHUD.Print("No Available Dockport");
+      iHUD.PlayAudioCue(AC_InvalidInput);
+	iComms.Shout(none, "name_az", "tspu_no_available_dockport");
+
+      return;
+   }
+
+
+   //Does player own this pod?
+   if (iFaction.Find("Player") != iSim.Faction(iSim.Cast(target_pod))){
+		HackTargetPod();
+   }
+
+   //Player hacked or owns pod now
+   if (iFaction.Find("Player") == iSim.Faction(iSim.Cast(target_pod))){
+
+		//Dock Pod to Player Ship
+   		dock_port = iDockport.Cast(Set.FirstElement(dock_port_set));
+   		AutodockPod(target_pod, player_ship, dock_port);
+   		iHUD.Print(String.FormatInt("DOCKING %d CARGO CONTAINERS ",1));
+   		iComms.Shout(none, "name_az", "tspu_docking_the_cargo_pod");
+
+		return;
+   }
+
+   // Player couldn't hack pod or doesn't own it.  Exit.
+   iComms.Shout(none, "name_az", "tspu_cannot_hack_that_pod");
+
+   return;
+
+}
+
+
 /* 
 THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
 OR PARTICLE SYSTEMS LTD. 
 
 ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
 */
+

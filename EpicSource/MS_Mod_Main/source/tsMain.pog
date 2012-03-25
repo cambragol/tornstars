@@ -77,6 +77,7 @@ Global,
    tsShipCreation,
    tsReferenceGui,
    tsLoadoutGui,
+	tsPodUtil,
    tsEquipSell,
    tsEquipBuy;
 
@@ -186,7 +187,11 @@ SessionEnter()
    tsLoadoutGui.SessionStart();
 
    tsEquipBuy.SessionStart();
-   tsEquipSell.SessionStart();   
+   tsEquipSell.SessionStart();  
+
+//    added SRC 2012-March-21
+
+   tsPodUtil.InitializeKeyBindings(); 
    
    atomic debug Debug.PrintString("tsMain.SessionEnter ----------------End----------------\n");
 }

@@ -64,6 +64,7 @@ uses    Sim,
 		  tsStationFilter,
 		  tsTime,
 		  tsStationEnum,
+		  tsStationAi,
         tsPcOwner,
         tsShip,
         tsShipEscort,
@@ -412,8 +413,8 @@ setup_ship(hisim marker)
    fleets = fleets - Object.FloatProperty(patrol_ship, "threat");
 
 	// calc number of merchants to be created. Based on a portion of available fleets
-	total_escort = fleets/150;
-	//total_escort = 0;
+	// Add +1 to ensure at least one merchant
+	total_escort = (fleets/150 + 1);
 
 	// create the merchants next
 	for (i=0; i<total_escort; ++i) {
@@ -446,18 +447,6 @@ setup_ship(hisim marker)
    }
 	
 
-   // Create escorts with the remaining fleet value.
-   //create_escorts(owner, fleets, patrol_ship, patrol_group, escort_type);
-   //tsShip.CreateEscorts(owner, patrol_ship, patrol_group, "govornment", escort_type);
-   // create any escort if we need it
-   //tsShipEscort.CreateStandardEscort(owner, patrol_ship, patrol_group, "general", escort_type);
-
-
-	//Added to randomize size and composition of escorts
-	//fighters = Math.RandomInt(0,fleets/150);
-	//light = Math.RandomInt(0,fleets/200);
-	//heavy = Math.RandomInt(0,fleets/250);
-	//capital = Math.RandomInt(0,fleets/600);
 	
 	fighters = fleets/200;
 	light = fleets/275;
@@ -541,6 +530,8 @@ task ship_controller(hmapentity location,
    set nearby_locations;
 	hmapentity station, new_station;
 	hisim operation;
+	bool toggle;
+
 
 // added for Lpoint functions
 
@@ -816,10 +807,17 @@ int station_choice = 75;
 	case eCS_AskForBusiness:
 			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_AskForBusiness\n");
 			
-			
 			if(wait_count == 0) {
- 				if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < tsDistance.CullingDistance()) {
-					iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_FreeTrader_looking_for_work",speech_style,5));
+				// we pick a ship from the merchant list
+				merchant_list_size = List.ItemCount(merchant_list);
+				if(merchant_list_size > 0) {
+
+					// get a random merchant
+					merchant_ship = iShip.Cast(List.GetNth(merchant_list, Math.RandomInt(0, merchant_list_size-1)));
+
+ 					if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < tsDistance.CullingDistance()) {
+						iComms.Shout(merchant_ship, "", tsString.CommsStringRandom("pcft_FreeTrader_looking_for_work",speech_style,5));
+					}
 				}
 			}
 			else if(wait_count > wait_limit) {
@@ -861,11 +859,7 @@ int station_choice = 75;
 
 			
          iAI.PurgeOrders(patrol_leader);
-//         iAI.GiveApproachOrderAdvanced( patrol_leader,
-//                                        marker,
-//                                        10km,
-//                                        11km,
-//                                        true);
+
 			state = change_state(state, eCS_MoveToMarker, debug_on);
 			
 	break;
@@ -916,23 +910,38 @@ int station_choice = 75;
 	case eCS_SelectShipToDock:
 	
 			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_SelectShipToDock\n");
-			
+						
 			// we pick a ship from the merchant list
-			merchant_list_size = List.ItemCount(merchant_list);
+			// merchant_list_size = List.ItemCount(merchant_list);
+			// set the merchant list size to the size of the group
+			merchant_list_size = Group.TotalSimCount(patrol_group);
+
 			if(merchant_list_size > 0) {
 
 				if ((iDockport.Count(location, DT_Universal, DS_Free)) > 0) {
 
-				// get a random merchant
-				merchant_ship = iShip.Cast(List.GetNth(merchant_list, Math.RandomInt(0, merchant_list_size-1)));
+					// get a random ship
+					merchant_ship = iShip.Cast(Group.NthSim(patrol_group, Math.RandomInt(0, merchant_list_size-1)));
 
- 					if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
-                   		tsDistance.CullingDistance()) {
-            				iComms.Shout(merchant_ship,"", tsString.CommsStringRandom("pcft_docking","", 1));
+					// get a random merchant
+					// merchant_ship = iShip.Cast(List.GetNth(merchant_list, Math.RandomInt(0, merchant_list_size-1)));
 
+					if (merchant_ship == patrol_leader) {
+						state = change_state(state, eCS_LeaveArea, debug_on);
+					} else {
+						
+ 						if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
+                   			tsDistance.CullingDistance()) {
+            					iComms.Shout(merchant_ship,"", tsString.CommsStringRandom("pcft_docking","", 1));
+
+						}
+
+						// Added to prevent the ship being hired during docking procedures
+						// It can cause complications if a ships is hired during docking
+						tsShipHire.RemoveShipHire(merchant_ship);
+
+						state = change_state(state, eCS_Docking, debug_on);	
 					}
-
-				state = change_state(state, eCS_Docking, debug_on);	
 				}
 
 				else {
@@ -942,11 +951,10 @@ int station_choice = 75;
 
 
 
-
 			else {
 				// nothing to do here so move on
 				merchant_ship = none;
-				debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_SelectShipToDock - no merchant ship\n");
+				debug Debug.PrintString("tsPcFreeScience.ship_controller: eCS_SelectShipToDock - no merchant ship\n");
 				state = change_state(state, eCS_LeaveArea, debug_on);
 			}
 			
@@ -959,6 +967,10 @@ int station_choice = 75;
 	
 			debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_Docking\n");
 			// wait until ship has docked.  Keep an eye out for bad guys and attacks.
+
+	   // Enable a dock for docking
+	   toggle = true;
+	   tsStationAi.toggle_universal_dock(toggle, iHabitat.Cast(location));
 
          if (iSim.IsDockedToStructure(merchant_ship, iSim.Cast(location))) {
 				// shout something on docking??
@@ -1020,6 +1032,10 @@ int station_choice = 75;
 	if( iSim.IsDockedToStructure(merchant_ship, location) ) {
 			// if docked then undock and reformat
 			iShip.UndockSelf( merchant_ship );
+
+			// restore the station dock lock
+	   		toggle = false;
+	   		tsStationAi.toggle_universal_dock(toggle, iHabitat.Cast(location));
 				
  			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    tsDistance.CullingDistance()) {
@@ -1033,6 +1049,10 @@ int station_choice = 75;
 			}
         else if (OT_None == iAI.CurrentOrderType(merchant_ship)) {
 				iEscort.RandomRectangle( patrol_group, spacing, 50km, false );
+
+				// added to restore ship hiring after the ship finishes docking
+				tsShipHire.InitShipHire(merchant_ship);
+
 				state = change_state(state, eCS_LeaveArea, debug_on);
         }
 	else {
@@ -1112,6 +1132,9 @@ int station_choice = 75;
 				
 				// Added to sort out hidden stations for this operation
 				nearby_locations = tsStationFilter.OnMapVisible(nearby_locations, true);
+
+        			station = iHabitat.Nearest(nearby_locations, patrol_leader);
+         			Set.Remove(nearby_locations, station);
 				
 				new_station = iHabitat.Random(tsStationFilter.OnGreaterFeeling(nearby_locations, merc_faction, -0.2));
 				
