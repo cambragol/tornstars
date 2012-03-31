@@ -1,4 +1,4 @@
-//*******************************************************************************************/
+ //*******************************************************************************************/
 //
 // tsWingman.pog
 //
@@ -340,7 +340,9 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool restored_
       // Test if we are out of system.
       // Tell player, ship out of system.
       if (iSim.ActiveWorld() != iSim.WorldName(ship)) {
-         iConversation.OneLiner( ship, "", "epo_refuse_out_of_system");
+         //iConversation.OneLiner( ship, "", "epo_refuse_out_of_system");
+	   iConversation.OneLiner(none, "name_az", "epo_ship_out_of_system");
+
          return;
       }
    }
@@ -373,6 +375,19 @@ task evaluate_order(hship ship, ePlayerOrder order, hisim target, bool restored_
    default:
       break;
    }
+
+
+	//Reject if the station has no faction, or is players faction
+      switch (order) {
+	case ePO_Dock:
+		if ((iSim.Faction(target) == empty_faction)|| (iSim.Faction(target) == player_faction)){
+         		iConversation.OneLiner( ship, "", "epo_refuse_no_target");
+			return;
+		}
+		break;
+	default:
+		break;
+	}
 
 
    // Reject if the ship is docked to a larger ship.
@@ -766,6 +781,7 @@ task wingman_watch(hship ship)
    set cargo_set, empty_set, stations, nearby_locations;
    int i, total;
    bool toggle;
+   hisim previous_target;
 
 
    // Inital checks before we start the watch task.
@@ -1142,8 +1158,8 @@ task wingman_watch(hship ship)
 				tsStationAi.toggle_unload_dock(toggle, iHabitat.Cast(target));
 
 			} else {
-
-				//tsStationAi.toggle_universal_dock(toggle, iHabitat.Cast(target));
+				tsStationAi.toggle_asteroid_dock(toggle, iHabitat.Cast(target));
+				tsStationAi.toggle_universal_dock(toggle, iHabitat.Cast(target));
 			}
 
      
@@ -1434,11 +1450,16 @@ task wingman_watch(hship ship)
             wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
          }
          break;
+
          // Docks to nearest asteroid and begins science survey.
       case eSS_ProspectStart:
          target = current_target(ship);
 
          if (none != target) {
+
+ 		// Enable a dock on the asteroid
+		toggle = true;
+		tsStationAi.toggle_asteroid_dock(toggle, iHabitat.Cast(target));
 
             iAI.PurgeOrders(ship);
             iAI.GiveDockOrder(ship, target);
@@ -1482,6 +1503,7 @@ task wingman_watch(hship ship)
       case eSS_Prospect:
          if (neworder == ePO_Undock) {
             iConversation.OneLiner(ship, "", "epo_prospector_undocking");
+
             accept_order(ship, debug_on);
             next_state = new_order_state(neworder);
             wingman_state = change_state(ship, wingman_state, next_state, debug_on);
@@ -1493,6 +1515,11 @@ task wingman_watch(hship ship)
          target = new_target(ship);
 
          if (none != target) {
+
+ 		// Enable a dock on the asteroid
+		toggle = true;
+		tsStationAi.toggle_asteroid_dock(toggle, iHabitat.Cast(target));
+		previous_target = target;
 
             iAI.PurgeOrders(ship);
             iAI.GiveDockOrder(ship, target);
@@ -1528,6 +1555,8 @@ task wingman_watch(hship ship)
 
       case eSS_Mine:
          if (neworder == ePO_Undock) {
+
+
             iConversation.OneLiner(ship, "", "epo_mining_rig_undocking");
             accept_order(ship, debug_on);
             next_state = new_order_state(neworder);

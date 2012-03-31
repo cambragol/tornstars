@@ -88,6 +88,9 @@ provides CreateCargoPod,
 
          AutodockPod,
          DockPorts,
+	   AsteroidDockPorts,
+	   UnloadDockPorts,
+	   UniversalDockPorts,
          ClaimPods,
          LoadDone,
          FreePods,
@@ -127,6 +130,10 @@ prototype set PlayerPods(hisim center, float distance);
 
 prototype task autodock_task(hship pod, hsim ship);
 prototype set DockPorts(hship ship);
+prototype set AsteroidDockPorts(hhabitat station);
+prototype set UniversalDockPorts(hhabitat station);
+prototype set UnloadDockPorts(hhabitat station);
+
 
 prototype AutodockPod(hship pod, hsim ship, hdockport target);
 
@@ -719,6 +726,69 @@ set DockPorts(hship ship)
    }
    return dock_ports;
 }
+
+
+
+// Returns a set of asteroid docking ports
+set AsteroidDockPorts(hhabitat station)
+{
+   int i, total;
+   hsubsim sub;
+   set dock_ports;
+
+   total = Sim.SubsimCount(station);
+   for (i=0;i<total;++i) {
+      sub = Sim.NthSubsim(station,i);
+      if ("system_asteroid_port" == Object.StringProperty(sub,"name")) {
+         if (DS_Free == iDockport.Status(iDockport.Cast(sub))) {
+            Set.Add(dock_ports, sub);
+            //debug Debug.PrintString("Found Free Dockport\n");
+         }
+      }
+   }
+   return dock_ports;
+}
+
+// Returns a set of asteroid docking ports
+set UnloadDockPorts(hhabitat station)
+{
+   int i, total;
+   hsubsim sub;
+   set dock_ports;
+
+   total = Sim.SubsimCount(station);
+   for (i=0;i<total;++i) {
+      sub = Sim.NthSubsim(station,i);
+      if ("system_unload_port" == Object.StringProperty(sub,"name")) {
+         if (DS_Free == iDockport.Status(iDockport.Cast(sub))) {
+            Set.Add(dock_ports, sub);
+            //debug Debug.PrintString("Found Free Dockport\n");
+         }
+      }
+   }
+   return dock_ports;
+}
+
+// Returns a set of asteroid docking ports
+set UniversalDockPorts(hhabitat station)
+{
+   int i, total;
+   hsubsim sub;
+   set dock_ports;
+
+   total = Sim.SubsimCount(station);
+   for (i=0;i<total;++i) {
+      sub = Sim.NthSubsim(station,i);
+      if ("system_dock_port" == Object.StringProperty(sub,"name")) {
+         if (DS_Free == iDockport.Status(iDockport.Cast(sub))) {
+            Set.Add(dock_ports, sub);
+            //debug Debug.PrintString("Found Free Dockport\n");
+         }
+      }
+   }
+   return dock_ports;
+}
+
 
 
 

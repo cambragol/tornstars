@@ -50,6 +50,12 @@ prototype tsPodUtil.AutodockPod( hship pod, hsim ship, hdockport target );
 
 prototype set tsPodUtil.DockPorts( hship ship );
 
+prototype set tsPodUtil.AsteroidDockPorts( hhabitat ship );
+
+prototype set tsPodUtil.UniversalDockPorts( hhabitat ship );
+
+prototype set tsPodUtil.UnloadDockPorts( hhabitat ship );
+
 prototype set tsPodUtil.ClaimPods( hship ship, set pods );
 
 prototype bool tsPodUtil.LoadDone( set cargo_pods );

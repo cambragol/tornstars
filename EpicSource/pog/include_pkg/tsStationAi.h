@@ -28,5 +28,7 @@ prototype bool tsStationAi.toggle_universal_dock(bool toggle, hhabitat station);
 
 prototype bool tsStationAi.toggle_unload_dock(bool toggle, hhabitat station);
 
+prototype bool tsStationAi.toggle_asteroid_dock(bool toggle, hhabitat station);
+
 // EOF /////////////////////////////////////////////////////////////////////////
 
