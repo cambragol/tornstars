@@ -1,0 +1,111 @@
+//*******************************************************************************************/
+//
+// tsDebug.pog
+//
+// 
+// Provides debug print facilities PrintString and PrintHandle to let a developer turn off
+// debug features.
+//
+// Jan 2007, Jon Freise
+//******************************************************************************************/
+
+package tsDebug;
+
+uses	Sim,
+		iShip,
+		iSim,
+		Debug,
+		Global,
+		GUI,
+		iGame,
+		iGUI,
+		iHUD,
+		iHabitat,
+		iMapEntity,
+      INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text;
+
+provides PrintString,
+         PrintHandle,
+			DumpSetHandles,
+			DumpListHandles,
+         NewGame;
+         
+
+NewGame()
+{
+   int count, i, value;
+   string debug_name, flag_name;
+   hinifile debug_file = INIFile.Create("ini:/ms_mod_debug");
+
+   if (none == debug_file) {
+      debug Debug.PrintString("tsDebug error missing ms_mod_debug file\n");
+   }
+                                   
+   count = 0;
+   while (INIFile.NumberedExists(debug_file,"DebugFlags","flag_name", count)) {
+      flag_name = INIFile.NumberedString(debug_file,"DebugFlags","flag_name", count, "");
+      value = INIFile.NumberedInt(debug_file,"DebugFlags","value", count, 0);
+      ++count;
+
+      Global.CreateBool(flag_name,GA_Write, value);
+   }
+
+   INIFile.Destroy(debug_file);
+}
+
+PrintString(string flag, string info)
+{
+   debug {
+      if (Global.Bool(flag)) {
+         atomic Debug.PrintString(info);
+      }
+   }
+}
+ 
+
+
+
+PrintHandle(string flag, hobject item)
+{
+   debug {
+      if (Global.Bool(flag)) {
+         atomic Debug.PrintHandle(item);
+      }
+   }
+}
+
+
+
+
+DumpListHandles(ref list a_list) {
+	int index;
+	
+	Debug.PrintString("----- Start Handles Dump -----\n");
+	for(index=0; index < List.ItemCount(a_list); ++index) {
+		Debug.PrintHandle(List.GetNth(a_list, index));
+		Debug.PrintString("\n");
+	}
+	Debug.PrintString("----- End Handles Dump -----\n");
+}
+
+DumpSetHandles(ref set a_set) {
+	list as_a_list;
+	
+	as_a_list = List.FromSet( a_set );
+	
+	DumpListHandles(as_a_list);
+}
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

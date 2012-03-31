@@ -1,0 +1,16 @@
+package UniGUIBase;
+
+uses GUI,
+     UniGUI,
+     UniGUIMisc;
+
+provides EnterSpace;
+
+prototype EnterSpace();
+
+EnterSpace()
+{
+  UniGUI.Initialise();
+  UniGUIMisc.Initialise();
+}
+

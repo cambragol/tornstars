@@ -1,0 +1,83 @@
+//*******************************************************************************************/
+//
+// tTestObject.pog
+//
+// 
+// 
+//
+//
+//
+// May 6, 2005, jon freise
+//******************************************************************************************/
+
+package zTestObject;
+
+uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, 
+   iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+   iConversation, iFormation, Group, Text, iEmail, State, 
+   iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker, 
+   iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+   iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
+   iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI;
+
+
+
+
+provides RunCheck,
+         object_task,
+         CreateObject;
+
+RunCheck()
+{
+   Global.SetBool("g_zz_ug_passme",true);
+}
+
+task object_task()
+{
+   hstate state;
+
+   state = State.Find(Task.Current());
+
+   if (none == state) {
+      state = State.Create(Task.Current(), 0);
+
+   }else {
+
+   }
+
+   debug {
+      Debug.PrintHandle(state);
+      Debug.PrintString("\n");
+      Debug.PrintInt(Object.IDModulus(state, 2147483647));
+      Debug.PrintString("\n");
+   }
+
+   while (1) {
+      Task.Sleep(Task.Current(), 30.0);
+   }
+}
+
+CreateObject()
+{
+
+   Task.Detach(start object_task());
+
+}
+
+
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+
+
+
+

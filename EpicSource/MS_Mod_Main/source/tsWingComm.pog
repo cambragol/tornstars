@@ -1,0 +1,1377 @@
+//*******************************************************************************************/
+//
+// tsWingComm.pog
+//
+// This file implements player wingman commands.
+// 
+// 
+// 
+//
+// Nov 2006, Jon Freise
+//******************************************************************************************/
+
+package tsWingComm;
+
+uses    Sim,
+        iShip,
+        iSim,
+        iPilotSetup,
+        Debug,
+        Global,
+        GUI,
+        iDirector,
+        iGUI,
+        iHUD,
+        iHabitat,
+        iMapEntity,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        iUtilities,
+        iCargo,
+        iInventory,
+        iComms,
+        iConversation,
+        iAi,
+        iWingmen,
+        iRemotePilot,
+        iDeathScript,
+        iMultiplay,
+        iGame,
+        iComms,
+        Math,
+
+        tsPodUtil,
+        tsShipEnum,
+        tsShip,
+        tsWingman,
+        tsCapsuleJump;
+
+provides ClearCommand,
+         KeyOne,
+         KeyTwo,
+         KeyThree,
+         KeyFour,
+         KeyFive,
+         KeySix,
+         KeySeven,
+         KeyEight,
+         KeyNine,
+         KeyZero,
+         Setup,
+         GroupNumber,
+         HasGroup,
+         GroupRemoveShip,
+         GroupMoveShip,
+         Save,
+         Restore;
+
+
+enum eWingCommState{
+   WCS_GroupSelect = 0,
+   WCS_Command,
+   WCS_Empty,
+   WCS_GroupComm,
+   WCS_CargoComm,
+   WCS_CombatComm,
+   WCS_MiningComm,
+   WCS_DockComm, 
+   WCS_FollowComm
+};
+
+// External interface to the package
+prototype   ReportIn(int group, hsim speaker);
+prototype   ClearCommand();
+
+// local functions to implement commands.
+prototype clear_command();
+
+prototype   select_group(int group);
+prototype   halt();
+prototype   defend_me();
+prototype   follow_me();
+prototype   attack();
+prototype   defend();
+prototype   dock();
+prototype   undock();
+prototype   approach();
+prototype   cargo_command();
+prototype   group_command();
+prototype   remove_ship();
+prototype   mining_command();
+prototype   dock_command();
+prototype   follow_command();
+prototype   add_ship();
+
+prototype   refuel();
+prototype   refuel_all();
+prototype   take_fuel();
+prototype   refuel_player();
+
+// Screen prompt aids for commands.
+prototype   clear_prompt();
+prototype   level_one_prompt();
+prototype   cargo_prompt();
+prototype   group_prompt();
+prototype   combat_prompt();
+prototype   mining_prompt();
+prototype   dock_prompt();
+prototype   follow_prompt();
+prototype   empty_group_prompt();
+
+
+
+// spoken acknoledgements
+prototype ask_response(hship ship);
+prototype halt_ack();
+prototype defend_me_ack();
+prototype attack_ack();
+prototype defend_ack();
+prototype dock_ack();
+prototype undock_ack();
+prototype approach_ack();
+prototype flee_ack();
+prototype bombard_ack();
+
+prototype refuse_ack();
+
+
+prototype move_group_ack(hsim ship);
+
+prototype collect_pods_ack();
+prototype undock_all_pods_ack();
+
+prototype no_group_response();
+
+prototype issue_order(int group, ePlayerOrder order, hisim target);
+
+
+prototype int GroupNumber(hship ship);
+prototype bool HasGroup(hship ship);
+prototype bool GroupRemoveShip(hship ship);
+prototype bool GroupMoveShip(hship ship, int group);
+
+
+prototype setup_groups();
+prototype list return_group(int group);
+prototype group_add_ship(hship ship, int group);
+prototype set_group_number(hship ship, int group);
+prototype bool group_move_ship(hship ship, int group);
+prototype group_remove_ship(hship ship);
+prototype remove_group_number(hship ship);
+
+prototype string group_name(int group);
+
+// Numbered keypresses. Numbers select groups.
+// ~ is the clear command key.
+
+
+
+
+Setup()
+{
+   debug Debug.PrintString("tsWingComm.Setup\n");
+
+   Global.CreateInt("gtWingCommDepth",GA_Write|GA_NoSave,WCS_GroupSelect);
+   Global.CreateInt("gtWingCommGroup",GA_Write|GA_NoSave,0);
+   Global.CreateInt("gtWingCommKey",GA_Write|GA_NoSave,0);
+
+   Input.BindKey( "tsWingComm.ClearCommand", "tsWingComm.ClearCommand");
+
+   Input.BindKey( "tsWingComm.KeyOne","tsWingComm.KeyOne");
+   Input.BindKey( "tsWingComm.KeyTwo", "tsWingComm.KeyTwo"); 
+   Input.BindKey( "tsWingComm.KeyThree","tsWingComm.KeyThree");
+
+   Input.BindKey( "tsWingComm.KeyFour", "tsWingComm.KeyFour"); 
+   Input.BindKey( "tsWingComm.KeyFive","tsWingComm.KeyFive");
+   Input.BindKey( "tsWingComm.KeySix", "tsWingComm.KeySix"); 
+
+   Input.BindKey( "tsWingComm.KeySeven","tsWingComm.KeySeven");
+   Input.BindKey( "tsWingComm.KeyEight","tsWingComm.KeyEight");
+   Input.BindKey( "tsWingComm.KeyNine", "tsWingComm.KeyNine"); 
+
+   Input.BindKey( "tsWingComm.KeyZero",  "tsWingComm.KeyZero"); 
+
+   // Pod Control Keys
+   Input.BindKey( "tsPodUtil.HackNearbyPods",  "tsWingComm.HackCargo"); 
+
+   Text.Add("csv:/TEXT/wing_text");
+
+   setup_groups();
+}
+
+ClearCommand()
+{
+   iHUD.Print("Clear Command");
+
+   clear_command();
+}
+
+clear_command()
+{
+   Global.SetInt("gtWingCommDepth",WCS_GroupSelect);
+   Global.SetInt("gtWingCommGroup",0);
+   Global.SetInt("gtWingCommKey",0);
+
+   clear_prompt();
+}
+
+select_group(int group)
+{
+   list fleet;
+   hship leader;
+
+   Global.SetInt("gtWingCommGroup",group);
+
+   fleet = return_group(group);
+   if (List.ItemCount(fleet) > 0) {
+      level_one_prompt();
+      Global.SetInt("gtWingCommDepth",WCS_Command);
+
+      issue_order(group, ePO_Respond, none);
+   }else {
+      empty_group_prompt();
+      Global.SetInt("gtWingCommDepth",WCS_Empty);
+   }
+
+   iHUD.Print(String.FormatInt("Group %d Selected", group));
+}
+
+// Test if the group is empty. Give audio warning to the player.
+bool empty_group_check(int group)
+{
+   // There are no ships in this group yet. Beep.
+   if (List.ItemCount(return_group(group)) == 0){
+      return true;
+   }
+   return false;
+}
+
+
+halt()
+{
+   int group = Global.Int("gtWingCommGroup");
+
+   clear_command();
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+   
+   issue_order(group, ePO_Halt, none);
+
+
+}
+
+defend_me()
+{
+   int group = Global.Int("gtWingCommGroup");
+
+   clear_command();   
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   issue_order(group, ePO_DefendMe, none);
+}
+
+
+follow_me()
+{
+   int group = Global.Int("gtWingCommGroup");
+   hship player = iShip.FindPlayerShip();
+
+   clear_command();   
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   issue_order(group, ePO_Formate, player);
+}
+
+
+attack()
+{
+   int group = Global.Int("gtWingCommGroup");
+   hship player = iShip.FindPlayerShip();
+   hisim target;
+
+   clear_command();
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   target = iShip.CurrentTarget(player);
+
+   issue_order(group, ePO_Attack, target);
+}
+
+
+defend()
+{
+   int group = Global.Int("gtWingCommGroup");
+   hship player = iShip.FindPlayerShip();
+   hisim target;
+
+   clear_command();
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   target = iShip.CurrentTarget(player);
+
+   issue_order(group, ePO_Escort, target);
+
+
+}
+
+
+
+approach()
+{
+   int group = Global.Int("gtWingCommGroup");
+   hship player = iShip.FindPlayerShip();
+   hisim target;
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   target = iShip.CurrentTarget(player);
+
+   issue_order(group, ePO_Formate, target);
+
+   clear_command();
+}
+
+
+
+dock()
+{
+   int group = Global.Int("gtWingCommGroup");
+   hship player = iShip.FindPlayerShip();
+   hisim target;
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   target = iShip.CurrentTarget(player);
+
+   issue_order(group, ePO_Dock, target);
+
+   clear_command();
+}
+
+
+undock()
+{
+   int group = Global.Int("gtWingCommGroup");
+   hship player = iShip.FindPlayerShip();
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+   issue_order(group, ePO_Undock, none);
+
+   clear_command();
+}
+
+
+refuel()
+{
+   int group = Global.Int("gtWingCommGroup");
+   hship player = iShip.FindPlayerShip();
+   hisim target;
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   target = iShip.CurrentTarget(player);
+
+   issue_order(group, ePO_FuelShip, target);
+
+   clear_command();
+}
+
+refuel_all()
+{
+   int group = Global.Int("gtWingCommGroup");
+   hship player = iShip.FindPlayerShip();
+   hisim target;
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   issue_order(group, ePO_FuelFleet, target);
+
+   clear_command();
+}
+
+refuel_player()
+{
+   int group = Global.Int("gtWingCommGroup");
+   hship player = iShip.FindPlayerShip();
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   issue_order(group, ePO_FuelShip, player);
+
+   clear_command();
+}
+
+take_fuel()
+{
+   int group = Global.Int("gtWingCommGroup");
+   hship player = iShip.FindPlayerShip();
+   hisim target;
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   target = iShip.CurrentTarget(player);
+
+   issue_order(group, ePO_DrainFuel, target);
+
+   clear_command();
+}
+
+
+
+
+
+group_command()
+{
+   Global.SetInt("gtWingCommDepth",WCS_GroupComm);
+   group_prompt();
+}
+
+
+
+
+
+
+remove_ship()
+{
+   hship player = iShip.FindPlayerShip();
+   hship target;
+   bool success;
+   target = iShip.Cast(iShip.CurrentTarget(player));
+
+   clear_command();
+   success = GroupRemoveShip(target);
+
+   if (success) {
+      ask_response(target);
+   }
+}
+
+
+
+add_ship()
+{
+   int group = Global.Int("gtWingCommGroup");
+   hship player = iShip.FindPlayerShip();
+   hship target;
+   bool success;
+
+   target = iShip.Cast(iShip.CurrentTarget(player));
+
+   clear_command();
+
+   success = GroupMoveShip(target, group);
+
+   if (success) {
+      ask_response(target);
+   }
+
+   debug {
+      Debug.PrintHandle(target);
+      Debug.PrintString(String.FormatInt(" ship to group %d\n",group));
+   }
+}
+
+
+
+cargo_command()
+{
+   Global.SetInt("gtWingCommDepth",WCS_CargoComm);
+   cargo_prompt();
+}
+
+
+
+dock_pod()
+{
+   int group = Global.Int("gtWingCommGroup");
+   hship player = iShip.FindPlayerShip();
+   hship target;
+
+   clear_command();
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   target = iShip.Cast(iShip.CurrentTarget(player));
+
+   issue_order(group, ePO_CollectPod, target);
+
+
+}
+
+
+
+collect_pods()
+{
+   int group = Global.Int("gtWingCommGroup");
+
+   clear_command();
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   issue_order(group, ePO_CollectAllPods, none);
+
+
+}
+
+
+
+undock_pods()
+{
+   int group = Global.Int("gtWingCommGroup");
+
+   clear_command();
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   issue_order(group, ePO_UndockPods, none);
+
+
+}
+
+
+scan_sky()
+{
+   int group = Global.Int("gtWingCommGroup");
+
+   clear_command();
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   issue_order(group, ePO_ScanSky, none);
+}
+
+
+start_prospecting()
+{
+   int group = Global.Int("gtWingCommGroup");
+   hship player = iShip.FindPlayerShip();
+   hisim target;
+
+   clear_command();
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   target = iSim.Cast(iShip.CurrentTarget(player));
+   issue_order(group, ePO_Prospect, target);
+
+
+}
+
+
+start_mining()
+{
+   int group = Global.Int("gtWingCommGroup");
+   hship player = iShip.FindPlayerShip();
+   hisim target;
+
+   clear_command();
+
+   if (empty_group_check(group)) {
+      no_group_response();
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   target = iSim.Cast(iShip.CurrentTarget(player));
+   issue_order(group, ePO_Mine, target);
+
+
+}
+
+
+
+combat_command()
+{
+   Global.SetInt("gtWingCommDepth",WCS_CombatComm);
+   combat_prompt();
+}
+
+
+mining_command()
+{
+   Global.SetInt("gtWingCommDepth",WCS_MiningComm);
+   mining_prompt();
+}
+
+dock_command()
+{
+   Global.SetInt("gtWingCommDepth",WCS_DockComm);
+   dock_prompt();
+}
+
+follow_command()
+{
+   Global.SetInt("gtWingCommDepth",WCS_FollowComm);
+   follow_prompt();
+}
+
+// All terminating cases should clear command prompts.
+clear_prompt()
+{
+   iHUD.SetPrompt("","");
+}
+
+level_one_prompt()
+{
+
+   iHUD.SetPrompt("1 Halt, 2 Formup, 3 Attack, 4 Defend, 5 Dock, 6 Approach",
+                  "7 Mining, 9 Cargo, 0 Group");
+}
+
+empty_group_prompt()
+{
+   iHUD.SetPrompt("",
+                  " 0 Group");
+}
+
+group_prompt()
+{
+   clear_prompt();
+   iHUD.SetPrompt("9 Remove Ship, 0 Add Ship","");
+}
+
+cargo_prompt()
+{
+   clear_prompt();
+
+   iHUD.SetPrompt("1 Fuel All, 2 Fuel Me, 3 Fuel Target, 4 Take Fuel, ",
+                  "8 Dock Pod, 9 Collect All, 0 Undock All");
+}
+
+combat_prompt()
+{
+   clear_prompt();
+   iHUD.SetPrompt("","");
+}
+
+mining_prompt()
+{
+   clear_prompt();
+
+   iHUD.SetPrompt("","5 Scan Space, 6 Study Asteroid, 7 Start Mining");
+
+}
+
+dock_prompt()
+{
+   clear_prompt();
+   iHUD.SetPrompt("5 Dock To My Target, 6 Undock","");
+}
+
+follow_prompt()
+{
+   clear_prompt();
+   iHUD.SetPrompt("2 Follow Me, 3 Defend Me","");
+}
+
+KeyOne()
+{
+   int depth = Global.Int("gtWingCommDepth");
+   int group = Global.Int("gtWingCommGroup");
+
+  // iHUD.Print("Key One");
+
+   if (tsCapsuleJump.IsCapsuleJumping()){
+      return;
+   }
+
+   Global.SetInt("gtWingCommKey",1);
+
+   switch (depth) {
+   case WCS_GroupSelect:
+      select_group(1);
+      break;
+   case WCS_Empty:
+      clear_command();
+      break;
+   case WCS_Command:
+      halt();
+      break;
+   case WCS_CargoComm:
+      refuel_all();
+      break;
+   default:
+      clear_command();
+   }
+}
+
+KeyTwo()
+{
+   int depth = Global.Int("gtWingCommDepth");
+   int group = Global.Int("gtWingCommGroup");
+
+  // iHUD.Print("Key Two");
+
+   if (tsCapsuleJump.IsCapsuleJumping()){
+      return;
+   }
+
+   Global.SetInt("gtWingCommKey",2);
+
+   switch (depth) {
+   case WCS_GroupSelect:
+      select_group(2);
+      break;
+   case WCS_Empty:
+      clear_command();
+      break;
+   case WCS_Command:
+      follow_command();
+      break;
+   case WCS_FollowComm:
+      follow_me();
+      break;
+   case WCS_CargoComm:
+      refuel_player();
+      break;
+   default:
+      clear_command();
+   }
+}
+
+KeyThree()
+{
+   int depth = Global.Int("gtWingCommDepth");
+   int group = Global.Int("gtWingCommGroup");
+
+ //  iHUD.Print("Key Three");
+
+   if (tsCapsuleJump.IsCapsuleJumping()){
+      return;
+   }
+
+   Global.SetInt("gtWingCommKey",3);
+
+   switch (depth) {
+   case WCS_GroupSelect:
+      select_group(3);
+      break;
+   case WCS_Empty:
+      clear_command();
+      break;
+   case WCS_FollowComm:
+      defend_me();
+      break;
+   case WCS_Command:
+      attack();
+      break;
+   case WCS_CargoComm:
+      refuel();
+      break;
+   default:
+      clear_command();
+   }
+}
+
+KeyFour()
+{
+   int depth = Global.Int("gtWingCommDepth");
+   int group = Global.Int("gtWingCommGroup");
+
+  // iHUD.Print("Key Four");
+
+   if (tsCapsuleJump.IsCapsuleJumping()){
+      return;
+   }
+
+   Global.SetInt("gtWingCommKey",4);
+
+   switch (depth) {
+   case WCS_GroupSelect:
+      select_group(4);
+      break;
+   case WCS_Empty:
+      clear_command();
+      break;
+   case WCS_CargoComm:
+      take_fuel();
+      break;
+   case WCS_Command:
+      defend();
+      break;
+   default:
+      clear_command();
+   }
+}
+
+KeyFive()
+{
+   int depth = Global.Int("gtWingCommDepth");
+   int group = Global.Int("gtWingCommGroup");
+
+//   iHUD.Print("Key Five");
+
+   if (tsCapsuleJump.IsCapsuleJumping()){
+      return;
+   }
+
+   Global.SetInt("gtWingCommKey",5);
+
+   switch (depth) {
+   case WCS_GroupSelect:
+      select_group(5);
+      break;
+   case WCS_Empty:
+      clear_command();
+      break;
+   case WCS_Command:
+      dock_command();
+      break;
+   case WCS_MiningComm:
+      scan_sky();
+      break;
+   case WCS_DockComm:
+      dock();
+      break;
+   default:
+      clear_command();
+   }
+}
+
+KeySix()
+{
+   int depth = Global.Int("gtWingCommDepth");
+   int group = Global.Int("gtWingCommGroup");
+
+//   iHUD.Print("Key Six");
+
+   if (tsCapsuleJump.IsCapsuleJumping()){
+      return;
+   }
+
+   Global.SetInt("gtWingCommKey",6);
+
+   switch (depth) {
+   case WCS_GroupSelect:
+      select_group(6);
+      break;
+   case WCS_Empty:
+      clear_command();
+      break;
+   case WCS_Command:
+      approach();
+      break;
+   case WCS_MiningComm:
+      start_prospecting();
+      break;
+   case WCS_DockComm:
+      undock();
+      break;
+   default:
+      clear_command();
+   }
+}
+
+KeySeven()
+{
+   int depth = Global.Int("gtWingCommDepth");
+   int group = Global.Int("gtWingCommGroup");
+
+//   iHUD.Print("Key Seven");
+
+   if (tsCapsuleJump.IsCapsuleJumping()){
+      return;
+   }
+
+   Global.SetInt("gtWingCommKey",7);
+
+   switch (depth) {
+   case WCS_GroupSelect:
+      select_group(7);
+      break;
+   case WCS_Empty:
+      clear_command();
+      break;
+   case WCS_Command:
+      mining_command();
+      break;
+   case WCS_MiningComm:
+      start_mining();
+      break;
+   default:
+      clear_command();
+   }
+}
+
+KeyEight()
+{
+   int depth = Global.Int("gtWingCommDepth");
+   int group = Global.Int("gtWingCommGroup");
+
+//   iHUD.Print("Key Eight");
+
+   if (tsCapsuleJump.IsCapsuleJumping()){
+      return;
+   }
+
+   Global.SetInt("gtWingCommKey",8);
+
+   switch (depth) {
+   case WCS_GroupSelect:
+      select_group(1);
+      break;
+   case WCS_Empty:
+      clear_command();
+      break;
+   case WCS_Command:
+      // We are not implementing combat commands
+      // in this release.
+//      combat_command();
+      clear_command();
+      break;
+   case WCS_CargoComm:
+      dock_pod();
+      break;
+   default:
+      clear_command();
+   }
+}
+
+KeyNine()
+{
+   int depth = Global.Int("gtWingCommDepth");
+   int group = Global.Int("gtWingCommGroup");
+
+//   iHUD.Print("Key Nine");
+
+   if (tsCapsuleJump.IsCapsuleJumping()){
+      return;
+   }
+
+   Global.SetInt("gtWingCommKey",9);
+
+   switch (depth) {
+   case WCS_GroupSelect:
+      select_group(9);
+      break;
+   case WCS_Empty:
+      clear_command();
+      break;
+   case WCS_Command:
+      cargo_command();
+      break;
+   case WCS_CargoComm:
+      collect_pods();
+      break;
+   case WCS_GroupComm:
+      remove_ship();
+      break;
+   default:
+      clear_command();
+   }
+}
+
+KeyZero()
+{
+   int depth = Global.Int("gtWingCommDepth");
+   int group = Global.Int("gtWingCommGroup");
+
+   //iHUD.Print("Key Zero");
+
+   if (tsCapsuleJump.IsCapsuleJumping()){
+      return;
+   }
+
+   Global.SetInt("gtWingCommKey",0);
+
+   switch (depth) {
+   case WCS_GroupSelect:
+      select_group(0);
+      break;
+   case WCS_Empty:
+      // This is the only command allowed by an empty group.
+      group_command();
+      break;
+   case WCS_Command:
+      group_command();
+      break;
+   case WCS_GroupComm:
+      add_ship();
+      break;
+   case WCS_CargoComm:
+      undock_pods();
+      break;
+   default:
+      clear_command();
+   }
+}
+
+//*******************************************************************************************/
+// Voice related functions begin here.
+
+//*******************************************************************************************/
+
+// Have wing issue a voice acknowledgement.
+ReportIn(int group, hsim speaker)
+{
+
+   switch (group) {
+   case 0:
+      iComms.Shout(speaker, "PlayerWingMan", "OrderGroupZeroAck");
+      break;
+   case 1:
+      iComms.Shout(speaker, "PlayerWingMan", "OrderGroupOneAck");
+      break;
+   case 2:
+      iComms.Shout(speaker, "PlayerWingMan", "OrderGroupTwoAck");
+      break;
+   case 3:
+      iComms.Shout(speaker, "PlayerWingMan", "OrderGroupThreeAck");
+      break;
+   case 4:
+      iComms.Shout(speaker, "PlayerWingMan", "OrderGroupFourAck");
+      break;
+   case 5:
+      iComms.Shout(speaker, "PlayerWingMan", "OrderGroupFiveAck");
+      break;
+   case 6:
+      iComms.Shout(speaker, "PlayerWingMan", "OrderGroupSixAck");
+      break;
+   case 7:
+      iComms.Shout(speaker, "PlayerWingMan", "OrderGroupSevenAck");
+      break;
+   case 8:
+      iComms.Shout(speaker, "PlayerWingMan", "OrderGroupEightAck");
+      break;
+   case 9:
+      iComms.Shout(speaker, "PlayerWingMan", "OrderGroupNineAck");
+      break;
+   default:
+      break;
+   }
+}
+
+
+task empty_task()
+{
+   iConversation.OneLiner(none, "name_jafs", "That group is empty");
+}
+
+no_group_response()
+{
+   Task.Detach(start empty_task());
+}
+
+//******************************************************************************************/
+
+ask_response(hship ship)
+{
+   tsWingman.GiveOrder(ship, ePO_Respond, none);
+}
+
+issue_order(int group, ePlayerOrder order, hisim target)
+{
+   list fleet;
+   int total, i;
+   hship ship;
+
+   fleet = return_group(group);
+   total = List.ItemCount(fleet);
+   for (i=0;i<total;++i) {
+      ship = iShip.Cast(List.GetNth(fleet,i));
+      tsWingman.GiveOrder(ship, order, target);
+   }
+}
+
+
+//******************************************************************************************/
+//
+// Group handling commands.
+//
+//******************************************************************************************/
+
+
+
+// Use this function to take a ship out of a group.
+// We don't block removing non-player wingman, because
+// they should not be in the player groups, and if they are (bug),
+// we don't want them trapped there.
+bool GroupRemoveShip(hship ship)
+{
+
+   group_remove_ship(ship);
+
+   return true;
+}
+
+// Use this function to add a ship to a group.
+// It will remove the ship from any prior group.
+// It protects against adding non-player ships to the 
+// wingman command groups.
+bool GroupMoveShip(hship ship, int group)
+{
+   if ((group > 9) || (group<0)) {
+      debug Debug.PrintString("EpicFleet Move Ship bad group\n");
+      return false;
+   }
+
+   if (!tsShip.IsPlayerFleetShip(ship)){
+      debug Debug.PrintString("EpicFleet Move Ship not player ship\n");
+      return false;
+   }
+
+   if (HasGroup(ship)) {
+      group_remove_ship(ship);
+   }
+
+   group_add_ship(ship, group);
+
+   return true;
+}
+
+bool HasGroup(hship ship)
+{
+   if (Object.PropertyExists(ship, "EpicFleetOGroup")) {
+      return true;
+   }
+
+   return false;
+}
+
+int GroupNumber(hship ship)
+{
+   if (Object.PropertyExists(ship, "EpicFleetOGroup")) {
+      return Object.IntProperty(ship,"EpicFleetOGroup");
+   }
+
+   return -1;
+}
+
+//******************************************************************************************/
+// Private group functions.
+
+setup_groups()
+{
+   int i;
+   list empty_list;
+
+   // Create all the player order groups.
+   for (i=0;i<10;++i) {
+      Global.CreateList(String.FormatInt("g_epic_fleet_group_%d",i),GA_Write|GA_NoSave, empty_list);
+   }
+}
+
+
+set_group_number(hship ship, int group)
+{
+   if ((group > 9) || (group<0)) {
+      debug Debug.PrintString("EpicFleet Set Ship bad group\n");
+      group = 0;
+   }
+
+   if (Object.PropertyExists(ship,"EpicFleetOGroup")) {
+      Object.SetIntProperty(ship,"EpicFleetOGroup", group);
+   }else {
+      Object.AddIntProperty(ship,"EpicFleetOGroup", group);
+   }
+}
+
+remove_group_number(hship ship)
+{
+   Object.RemoveProperty(ship,"EpicFleetOGroup");
+}
+
+
+group_remove_ship(hship ship)
+{
+   list fleet;
+   string name;
+   int group = GroupNumber(ship);
+
+   if ((group > 9) || (group<0)) {
+      debug Debug.PrintString("EpicFleet Remove Ship bad group\n");
+      return;
+   }
+
+   name = group_name(group);
+    
+   if (none == ship) {
+      debug Debug.PrintString("EpicFleet Remove Ship is None\n");
+      return;
+   }
+
+   debug {
+      Debug.PrintHandle(ship);
+      Debug.PrintString(String.FormatInt(" remove ship, group %d\n", group));
+      Debug.PrintString(name);
+      Debug.PrintString(" \n");
+   }
+
+   remove_group_number(ship);
+
+   atomic {
+      fleet = Global.List(name);
+      List.Remove(fleet,ship);
+      Global.SetList(name,fleet);
+   }
+}
+
+group_add_ship(hship ship, int group)
+{
+   list fleet;
+   string name;
+    
+   if ((group > 9) || (group<0)) {
+      debug Debug.PrintString("EpicFleet Add Ship bad group\n");
+      return;
+   }
+   name = group_name(group);
+    
+   if (none == ship) {
+      debug Debug.PrintString("EpicFleet Add Ship is None\n");
+      return;
+   }
+
+   set_group_number(ship, group);
+
+   debug {
+      Debug.PrintHandle(ship);
+      Debug.PrintString(String.FormatInt(" add ship, group %d\n", group));
+      Debug.PrintString(name);
+      Debug.PrintString(" \n");
+   }
+
+   atomic {
+      fleet = Global.List(name);
+      List.AddTail(fleet,ship);
+      Global.SetList(name,fleet);
+   }
+}
+
+list return_group(int group)
+{
+   list fleet;
+   string name;
+
+   if ((group > 9) || (group<0)) {
+      debug Debug.PrintString("EpicFleet Return group bad group\n");
+      return fleet;
+   }
+
+   name = group_name(group);
+   fleet = Global.List(name);
+
+   debug {
+      Debug.PrintString(String.FormatInt("Return Group %d \n",group));
+      Debug.PrintString(String.FormatInt("Item Count %d\n",List.ItemCount(fleet)));
+      Debug.PrintString(name);
+      Debug.PrintString(" \n");
+   }
+
+   return fleet;
+}
+
+string group_name(int group)
+{
+   return String.FormatInt("g_epic_fleet_group_%d",group);
+}
+ 
+
+Save(hship ship)
+{
+   int id = Object.IDModulus( ship, 2147483647);
+   string save_key = String.Join("tsWingComm",String.FromInt(id));
+
+   Global.CreateInt(String.Join(save_key,"group"), GA_Write, GroupNumber(ship));
+
+}
+
+
+
+// Will restore the prior orders of the wing man. And try to restore the prior target.
+Restore(hship ship)
+{
+   int id = tsShip.SaveId(ship);
+   string save_key = String.Join("tsWingComm",String.FromInt(id));
+   hisim target;
+   int group;
+
+   group = Global.Int(String.Join(save_key,"group"));
+   Global.Destroy(String.Join(save_key,"group"));
+
+   group_add_ship(ship, group);
+}
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

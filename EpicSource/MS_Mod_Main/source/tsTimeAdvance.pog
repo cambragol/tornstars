@@ -1,0 +1,163 @@
+//*******************************************************************************************/
+//
+// tsTimeAdvance.pog
+//
+// This file allows the player to advance a day of game time from UniGui.
+// 
+// 
+// 
+//
+// August 2003, Jon Freise
+//******************************************************************************************/
+
+package tsTimeAdvance;
+
+uses    Sim,
+        iShip,
+        iSim,
+        iPilotSetup,
+        Debug,
+        Global,
+        GUI,
+        iDirector,
+        iGUI,
+        iHUD,
+        iHabitat,
+        iMapEntity,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        iUtilities,
+        iCargo,
+        iInventory,
+        iComms,
+        iAi,
+        iWingmen,
+        iRemotePilot,
+        iDeathScript,
+        iMultiplay,
+        iGame,
+        Math,        
+        tsPodUtil,
+        tsStationEnum,
+        tsStation,
+        tsTime,
+        tsShip;
+
+provides AdvanceDay,
+         TestAdvanceDay,
+         RunCheck; 
+
+prototype task do_advance();
+
+prototype task do_test_advance();
+
+
+RunCheck()
+{
+   if (Set.IsEmpty(iSim.PlayerHostilesInRadius( Global.Float("gt_distance_culling"), TM_Ship))) {
+      Global.SetBool("g_zz_ug_passme",true);
+      return;
+   }
+
+   Global.SetBool("g_zz_ug_passme",false);
+}
+
+
+// Called when UniGui button pressed to advance time.        
+
+AdvanceDay()
+{
+
+   Task.Detach(start do_advance());
+
+}
+
+TestAdvanceDay()
+{
+
+   Task.Detach(start do_test_advance());
+
+}
+        
+task do_advance()
+{
+   hship player = iShip.FindPlayerShip();
+   hship new_ship;
+   set hostiles;
+   hsim station;
+   bool docked = false;
+
+   // Check if there are no hostiles within culling distance.
+   hostiles = iSim.PlayerHostilesInRadius( Global.Float("gt_distance_culling"), TM_Ship);
+
+   if (!Set.IsEmpty(hostiles)) {
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   // Black the screen.
+   iGame.EnableBlackout(true);
+
+   station = tsStation.Nearest(player, List.FromSet(iMapEntity.SystemHabitats()));
+   if (iSim.IsDockedToStructure(player, iSim.Cast(station)) ) {
+      iShip.UndockSelf(player);
+      docked = true;
+   }
+
+   new_ship = tsShip.Create("ini:/sims/ships/player/comsec_prefitted","advance_time");
+   Sim.SetCullable(new_ship, false);
+   Sim.PlaceNear(new_ship, station, Global.Float("gt_distance_culling") * 2.0);
+
+   // Move the player.
+   iShip.InstallPlayerPilot(new_ship);
+
+   // Advance time.
+   tsTime.AdvanceTime(Global.Int("gt_time_one_day"));
+
+   // Wait a few seconds. Give update scripts time to run.
+   Task.Sleep(Task.Current(), 10.0);
+
+   /*
+   if (docked) {
+      iSim.Dock(player, iSim.Cast(station));
+   }else {
+      Sim.PlaceNear(player, station, 5km);
+   }
+   */
+
+   // Move the player back into his old ship.
+   iShip.InstallPlayerPilot(player);
+
+   Task.Sleep(Task.Current(), 1.0);
+
+   // Clean up the temp ship.
+   Sim.Destroy(new_ship);
+
+   iGame.EnableBlackout(false);
+}
+
+
+task do_test_advance()
+{
+   hship player = iShip.FindPlayerShip();
+   hship new_ship;
+   set hostiles;
+   hsim station;
+   bool docked = false;
+
+   // Advance time.
+   tsTime.AdvanceTime(Global.Int("gt_time_one_day"));
+
+}
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

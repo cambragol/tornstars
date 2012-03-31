@@ -1,0 +1,590 @@
+//*****************************************************************************/
+//
+// tsShipCreation.pog
+//
+// This module looks up faction and fleet specific ships.
+// This module also provides utility functions for the creation of
+// ship escort groups. From basic form to more complex.
+// 
+// Core code taken from jcEShipCreation.pog by james.
+//
+// June 2004, James Walker
+// Dec 2006, Jon Freise, rewritten to use caching to avoid timeout failure.
+// Nov 2011, Jesse Dallin, modified to add category specific cargo pods.
+//****************************************************************************/
+
+package	tsShipCreation;
+
+
+uses
+	Debug,
+	String,
+	INIFile,
+	List,
+	Set,
+	Global,
+	iShip,
+	iFaction,
+	Math,
+	Group,
+   iUtilities,
+   tsShipCreationEnum,
+   tsFaction;
+
+
+	
+provides GetShip,
+         ShipClassTemplate,
+         ShipType2String,
+         String2ShipType,
+         Init,
+         TestINIFile;
+
+ 
+
+
+
+//
+// Prototypes
+//
+prototype string ShipClassTemplate(string faction, string fleet_style, string ship_class);
+prototype string iShipCreation.GetShip( hfaction faction, etsShipType ship_type );
+prototype string ShipType2String(etsShipType ship_type);
+
+
+prototype string choose_ship(hsim root, string subsection, string ship_class, int item);
+prototype hsim create_subsection(hinifile hini, string subsection, bool must_have);
+
+
+
+string GetShip( hfaction faction, etsShipType ship_type )
+{
+   string faction_name, fleet_style, ship_class;
+
+   ship_class = ShipType2String(ship_type);
+
+   faction_name = tsFaction.EName(faction);
+
+   fleet_style = tsFaction.FleetStyle(faction);
+
+   return ShipClassTemplate(faction_name, fleet_style, ship_class);
+}
+
+
+//
+// Fn: ShipClassTemplate
+// Desc: Returns a fully qulaified sim template string for use in tsShip.Create.
+//       This function pulls this data from the faction_ships.ini mapping file.
+//
+string ShipClassTemplate(string faction, string fleet_style, string ship_class)
+{
+   string ship_template;
+   hsim root;
+   
+   root = Sim.Cast(Global.Handle("ts_ship_creation_root"));
+
+   ship_template = choose_ship(root, faction, ship_class, 99);
+
+   if ("" == ship_template) {
+      ship_template = choose_ship(root, fleet_style, ship_class, 99);
+
+      if ("" == ship_template) {
+         ship_template = choose_ship(root, "default", ship_class, 99);
+      }
+   }
+
+	return ship_template;
+}
+
+
+// Allow asking for a specific ship. This allows automated testing, as well
+// as random selection.
+string choose_ship(hsim root, string subsection, string ship_class, int item)
+{
+   hsim holder;
+   int index, entries;
+   string key_name;
+
+   if (Object.PropertyExists(root, subsection)) {
+      holder = Sim.Cast(Object.HandleProperty(root, subsection));
+      
+      if (Object.PropertyExists(holder, ship_class)) {
+
+         if (99 == item) {
+            entries = Object.IntProperty(holder, ship_class);
+            index = Math.RandomInt(0, (entries-1));
+         }else {
+            index = item;
+         }
+         
+         key_name = String.Join(ship_class, String.FromInt(index));
+
+         return Object.StringProperty(holder, key_name);
+      }
+   }
+
+   return "";
+}
+
+
+string ShipType2String(etsShipType ship_type)
+{
+   switch (ship_type) {
+	case EST_Gunstar: return "EST_Gunstar";break;
+
+	case EST_Drone: return "EST_Drone";break;
+	case EST_Waldo: return "EST_Waldo";break;
+	case EST_CommandSection: return "EST_CommandSection";break;
+	case EST_Utility: return "EST_Utility";break;
+	case EST_Passenger: return "EST_Passenger";break;
+	case EST_Fighter: return "EST_Fighter";break;
+	case EST_Tug: return "EST_Tug";break;
+	case EST_Patcom: return "EST_Patcom";break;
+	case EST_Interceptor: return "EST_Interceptor";break;
+	case EST_Corvette: return "EST_Corvette";break;
+	case EST_Freighter: return "EST_Freighter";break;
+	case EST_Destroyer: return "EST_Destroyer";break;
+	case EST_Cruiser: return "EST_Cruiser";break;
+	case EST_Carrier: return "EST_Carrier";break;  
+
+	case EST_FreightLight: return "EST_FreightLight";break; 
+   case EST_FreightHeavy: return "EST_FreightHeavy";break; 
+   case EST_FreightAll: return "EST_FreightAll";break; 
+   case EST_FreightSuperHeavy: return "EST_FreightSuperHeavy";break; 
+	case EST_FreightCourier: return "EST_FreightCourier";break; 
+
+   case EST_CombatFighter: return "EST_CombatFighter";break; 
+   case EST_CombatLight: return "EST_CombatLight";break; 
+   case EST_CombatHeavy: return "EST_CombatHeavy";break;
+	case EST_CombatCaptial: return "EST_CombatCapital";break; 
+   case EST_CombatAll: return "EST_CombatAll";break; 
+
+   case EST_Medical: return "EST_Medical";break; 
+   case EST_Interface: return "EST_Interface";break; 
+   case EST_PassengerLight: return "EST_PassengerLight";break; 
+	case EST_PassengerHeavy: return "EST_PassengerHeavy";break; 
+   case EST_PassengerAll: return "EST_PassengerAll";break; 
+
+   case EST_MiningLight: return "EST_MiningLight";break; 
+   case EST_MiningHeavy: return "EST_MiningHeavy";break; 
+   case EST_MiningAll: return "EST_MiningAll";break;
+
+	case EST_TankerLight: return "EST_TankerLight";break; 
+   case EST_TankerHeavy: return "EST_TankerHeavy";break; 
+   case EST_TankerAll: return "EST_TankerAll";break; 
+
+   case EST_GeneralPurpose: return "EST_GeneralPurpose";break; 
+   case EST_Flitter: return "EST_Flitter";break; 
+   case EST_Recovery: return "EST_Recovery";break;
+	case EST_DemoShips: return "EST_DemoShips";break; 
+	case ECC_CommonElementsA: return "ECC_CommonElementsA";break; 
+	case ECC_CommonElementsB: return "ECC_CommonElementsB";break; 
+	case ECC_CommonElementsC: return "ECC_CommonElementsC";break; 
+	case ECC_CommonGasses: return "ECC_CommonGasses";break; 
+	case ECC_RareElementsA: return "ECC_RareElementsA";break; 
+	case ECC_RareElementsB : return "ECC_RareElementsB";break; 
+	case ECC_RareGasses: return "ECC_RareGasses";break; 
+	case ECC_ExoticElementsA: return "ECC_ExoticElementsA";break; 
+	case ECC_ExoticElementsB : return "ECC_ExoticElementsB";break; 
+	case ECC_ExoticElementsC : return "ECC_ExoticElementsC";break; 
+	case ECC_ExoticElementsD : return "ECC_ExoticElementsD";break; 
+	case ECC_ExoticElementsE: return "ECC_ExoticElementsE";break; 
+	case ECC_Sulfides: return "ECC_Sulfides";break; 
+	case ECC_Oxides: return "ECC_Oxides";break; 
+	case ECC_Halides: return "ECC_Halides";break; 
+	case ECC_Anonates : return "ECC_Anonates";break; 
+	case ECC_Silicates: return "ECC_Silicates";break; 
+	case ECC_NeutroniumOre: return "ECC_NeutroniumOre";break; 
+	case ECC_SyntheticElementsA: return "ECC_SyntheticElementsA";break; 
+	case ECC_SyntheticElementsB: return "ECC_SyntheticElementsB";break; 
+	case ECC_SyntheticElementsC: return "ECC_SyntheticElementsC";break; 
+	case ECC_NanoFibres: return "ECC_NanoFibres";break; 
+	case ECC_NanoSubstrates: return "ECC_NanoSubstrates";break; 
+	case ECC_NanoAlloys: return "ECC_NanoAlloys";break; 
+	case ECC_NanoFluids: return "ECC_NanoFluids";break; 
+	case ECC_SelfAssemblingCompounds: return "ECC_SelfAssemblingCompounds";break; 
+	case ECC_SelfAssemblingAlloys: return "ECC_SelfAssemblingAlloys";break; 
+	case ECC_SelfReplicatingCompounds: return "ECC_SelfReplicatingCompounds";break; 
+	case ECC_SelfReplicatingAlloys: return "ECC_SelfReplicatingAlloys";break; 
+	case ECC_IntelligentCompounds: return "ECC_IntelligentCompounds";break; 
+	case ECC_AdvancedNanoCompounds: return "ECC_AdvancedNanoCompounds";break; 
+	case ECC_StarShip: return "ECC_StarShip";break; 
+	case ECC_MiningEquipment: return "ECC_MiningEquipment";break; 
+	case ECC_Robotics: return "ECC_Robotics";break; 
+	case ECC_Nanotechnology: return "ECC_Nanotechnology";break; 
+	case ECC_Computers: return "ECC_Computers";break; 
+	case ECC_SpacecraftWeapons: return "ECC_SpacecraftWeapons";break; 
+	case ECC_Pharmaceuticals: return "ECC_Pharmaceuticals";break; 
+	case ECC_ConsumerGoods: return "ECC_ConsumerGoods";break; 
+	case ECC_FusionReactors: return "ECC_FusionReactors";break; 
+	case ECC_PowerSystems: return "ECC_PowerSystems";break; 
+	case ECC_Environmental: return "ECC_Environmental";break; 
+	case ECC_LuxuryConsumerGoods: return "ECC_LuxuryConsumerGoods";break; 
+	case ECC_FoodProducts: return "ECC_FoodProducts";break; 
+	case ECC_SyntheticFoodProducts: return "ECC_SyntheticFoodProducts";break; 
+	case ECC_LuxuryFoodProducts: return "ECC_LuxuryFoodProducts";break; 
+	case ECC_LDSSystems: return "ECC_LDSSystems";break; 
+	case ECC_ElectronicSystems: return "ECC_ElectronicSystems";break; 
+	case ECC_MemorySystems: return "ECC_MemorySystems";break; 
+	case ECC_MedicalSystems: return "ECC_MedicalSystems";break; 
+	case ECC_AgriculturalSystems: return "ECC_AgriculturalSystems";break; 
+	case ECC_ConsumerTransport: return "ECC_ConsumerTransport";break; 
+	case ECC_ConsumerEquipment: return "ECC_ConsumerEquipment";break; 
+	case ECC_WasteProduct: return "ECC_WasteProduct";break; 
+	case ECC_HeavyMaterials: return "ECC_HeavyMaterials";break; 
+	case ECC_MilitaryEquipment: return "ECC_MilitaryEquipment";break; 
+	case ECC_ReactorFuel: return "ECC_ReactorFuel";break; 
+	case ECC_Neutronium: return "ECC_Neutronium";break; 
+	case ECC_Radioactives: return "ECC_Radioactives";break; 
+	case ECC_RadioactiveOre: return "ECC_RadioactiveOre";break; 
+
+
+
+   case EST_Taxi: return "EST_Taxi";break;
+   default:
+      debug {
+         Debug.PrintString("tsShipCreation.ShipType2String Error invalid type\n");
+         Debug.PrintString(String.FormatInt("%d invalid type\n",ship_type));
+      }
+      break;
+   }
+
+   return "";
+}
+
+
+etsShipType String2ShipType(string type_name)
+{
+	if ("EST_Gunstar"==type_name) { return EST_Gunstar; }
+	else if ("EST_Drone"==type_name) { return EST_Drone; }
+	else if ("EST_Waldo"==type_name) { return EST_Waldo; }
+	else if ("EST_CommandSection"==type_name) { return EST_CommandSection; }
+	else if ("EST_Utility"==type_name) { return EST_Utility; }
+	else if ("EST_Passenger"==type_name) { return EST_Passenger; }
+	else if ("EST_Fighter"==type_name) { return EST_Fighter; }
+	else if ("EST_Tug"==type_name) { return EST_Tug; }
+	else if ("EST_Patcom"==type_name) { return EST_Patcom; }
+	else if ("EST_Interceptor"==type_name) { return EST_Interceptor; }
+	else if ("EST_Corvette"==type_name) { return EST_Corvette; }
+	else if ("EST_Freighter"==type_name) { return EST_Freighter; }
+	else if ("EST_Destroyer"==type_name) { return EST_Destroyer; }
+	else if ("EST_Cruiser"==type_name) { return EST_Cruiser; }
+	else if ("EST_Carrier"==type_name) { return EST_Carrier; }  
+
+	else if ("EST_FreightLight"==type_name) { return EST_FreightLight; } 
+   else if ("EST_FreightHeavy"==type_name) { return EST_FreightHeavy; } 
+   else if ("EST_FreightAll"==type_name) { return EST_FreightAll; } 
+   else if ("EST_FreightSuperHeavy"==type_name) { return EST_FreightSuperHeavy; } 
+	else if ("EST_FreightCourier"==type_name) { return EST_FreightCourier; } 
+
+   else if ("EST_CombatFighter"==type_name) { return EST_CombatFighter; } 
+   else if ("EST_CombatLight"==type_name) { return EST_CombatLight; } 
+   else if ("EST_CombatHeavy"==type_name) { return EST_CombatHeavy; }
+	else if ("EST_CombatCapital"==type_name) { return EST_CombatCaptial; } 
+   else if ("EST_CombatAll"==type_name) { return EST_CombatAll; } 
+
+   else if ("EST_Medical"==type_name) { return EST_Medical; } 
+   else if ("EST_Interface"==type_name) { return EST_Interface; } 
+   else if ("EST_PassengerLight"==type_name) { return EST_PassengerLight; } 
+	else if ("EST_PassengerHeavy"==type_name) { return EST_PassengerHeavy; } 
+   else if ("EST_PassengerAll"==type_name) { return EST_PassengerAll; } 
+
+   else if ("EST_MiningLight"==type_name) { return EST_MiningLight; } 
+   else if ("EST_MiningHeavy"==type_name) { return EST_MiningHeavy; } 
+   else if ("EST_MiningAll"==type_name) { return EST_MiningAll; }
+
+	else if ("EST_TankerLight"==type_name) { return EST_TankerLight; } 
+   else if ("EST_TankerHeavy"==type_name) { return EST_TankerHeavy; } 
+   else if ("EST_TankerAll"==type_name) { return EST_TankerAll; } 
+
+   else if ("EST_GeneralPurpose"==type_name) { return EST_GeneralPurpose; } 
+   else if ("EST_Flitter"==type_name) { return EST_Flitter; } 
+   else if ("EST_Recovery"==type_name) { return EST_Recovery; }
+	else if ("EST_DemoShips"==type_name) { return EST_DemoShips; } 
+	else if ("ECC_CommonElementsA"==type_name) { return ECC_CommonElementsA; } 
+	else if ("ECC_CommonElementsB"==type_name) { return ECC_CommonElementsB; } 
+	else if ("ECC_CommonElementsC"==type_name) { return ECC_CommonElementsC; } 
+	else if ("ECC_CommonGasses"==type_name) { return ECC_CommonGasses; } 
+	else if ("ECC_RareElementsA"==type_name) { return ECC_RareElementsA; } 
+	else if ("ECC_RareElementsB"==type_name) { return ECC_RareElementsB; } 
+	else if ("ECC_RareGasses"==type_name) { return ECC_RareGasses; } 
+	else if ("ECC_ExoticElementsA"==type_name) { return ECC_ExoticElementsA; } 
+	else if ("ECC_ExoticElementsB"==type_name) { return ECC_ExoticElementsB; } 
+	else if ("ECC_ExoticElementsC"==type_name) { return ECC_ExoticElementsC; } 
+	else if ("ECC_ExoticElementsD"==type_name) { return ECC_ExoticElementsD; } 
+	else if ("ECC_ExoticElementsE"==type_name) { return ECC_ExoticElementsE; } 
+	else if ("ECC_Sulfides"==type_name) { return ECC_Sulfides; } 
+	else if ("ECC_Oxides"==type_name) { return ECC_Oxides; } 
+	else if ("ECC_Halides"==type_name) { return ECC_Halides; } 
+	else if ("ECC_Anonates"==type_name) { return ECC_Anonates; } 
+	else if ("ECC_Silicates"==type_name) { return ECC_Silicates; } 
+	else if ("ECC_NeutroniumOre"==type_name) { return ECC_NeutroniumOre; } 
+	else if ("ECC_SyntheticElementsA"==type_name) { return ECC_SyntheticElementsA; } 
+	else if ("ECC_SyntheticElementsB"==type_name) { return ECC_SyntheticElementsB; } 
+	else if ("ECC_SyntheticElementsC"==type_name) { return ECC_SyntheticElementsC; } 
+	else if ("ECC_NanoFibres"==type_name) { return ECC_NanoFibres; } 
+	else if ("ECC_NanoSubstrates"==type_name) { return ECC_NanoSubstrates; } 
+	else if ("ECC_NanoAlloys"==type_name) { return ECC_NanoAlloys; } 
+	else if ("ECC_NanoFluids"==type_name) { return ECC_NanoFluids; } 
+	else if ("ECC_SelfAssemblingCompounds"==type_name) { return ECC_SelfAssemblingCompounds; } 
+	else if ("ECC_SelfAssemblingAlloys"==type_name) { return ECC_SelfAssemblingAlloys; } 
+	else if ("ECC_SelfReplicatingCompounds"==type_name) { return ECC_SelfReplicatingCompounds; } 
+	else if ("ECC_SelfReplicatingAlloys"==type_name) { return ECC_SelfReplicatingAlloys; } 
+	else if ("ECC_IntelligentCompounds"==type_name) { return ECC_IntelligentCompounds; } 
+	else if ("ECC_AdvancedNanoCompounds"==type_name) { return ECC_AdvancedNanoCompounds; } 
+	else if ("ECC_StarShip"==type_name) { return ECC_StarShip; } 
+	else if ("ECC_MiningEquipment"==type_name) { return ECC_MiningEquipment; } 
+	else if ("ECC_Robotics"==type_name) { return ECC_Robotics; } 
+	else if ("ECC_Nanotechnology"==type_name) { return ECC_Nanotechnology; } 
+	else if ("ECC_Computers"==type_name) { return ECC_Computers; } 
+	else if ("ECC_SpacecraftWeapons"==type_name) { return ECC_SpacecraftWeapons; } 
+	else if ("ECC_Pharmaceuticals"==type_name) { return ECC_Pharmaceuticals; } 
+	else if ("ECC_ConsumerGoods"==type_name) { return ECC_ConsumerGoods; } 
+	else if ("ECC_FusionReactors"==type_name) { return ECC_FusionReactors; } 
+	else if ("ECC_PowerSystems"==type_name) { return ECC_PowerSystems; } 
+	else if ("ECC_Environmental"==type_name) { return ECC_Environmental; } 
+	else if ("ECC_LuxuryConsumerGoods"==type_name) { return ECC_LuxuryConsumerGoods; } 
+	else if ("ECC_FoodProducts "==type_name) { return ECC_FoodProducts ; } 
+	else if ("ECC_SyntheticFoodProducts "==type_name) { return ECC_SyntheticFoodProducts ; } 
+	else if ("ECC_LuxuryFoodProducts "==type_name) { return ECC_LuxuryFoodProducts ; } 
+	else if ("ECC_LDSSystems"==type_name) { return ECC_LDSSystems ; } 
+	else if ("ECC_ElectronicSystems"==type_name) { return ECC_ElectronicSystems; } 
+	else if ("ECC_MemorySystems"==type_name) { return ECC_MemorySystems; } 
+	else if ("ECC_MedicalSystems"==type_name) { return ECC_MedicalSystems; } 
+	else if ("ECC_AgriculturalSystems"==type_name) { return ECC_AgriculturalSystems; } 
+	else if ("ECC_ConsumerTransport"==type_name) { return ECC_ConsumerTransport; } 
+	else if ("ECC_ConsumerEquipment"==type_name) { return ECC_ConsumerEquipment; } 
+	else if ("ECC_WasteProduct"==type_name) { return ECC_WasteProduct; } 
+	else if ("ECC_HeavyMaterials"==type_name) { return ECC_HeavyMaterials; } 
+	else if ("ECC_MilitaryEquipment "==type_name) { return ECC_MilitaryEquipment ; } 
+	else if ("ECC_ReactorFuel"==type_name) { return ECC_ReactorFuel; } 
+	else if ("ECC_Neutronium"==type_name) { return ECC_Neutronium; } 
+	else if ("ECC_Radioactives"==type_name) { return ECC_Radioactives; }
+	else if ("ECC_RadioactiveOre"==type_name) { return ECC_RadioactiveOre; }
+
+   else if ("EST_Taxi"==type_name) { return EST_Taxi; }
+
+   debug {
+       Debug.PrintString("tsShipCreation.String2ShipType Error invalid type :");
+       Debug.PrintString(type_name);
+       Debug.PrintString("\n");
+    }
+
+   return EST_Invalid;
+}
+
+
+
+test_subsection(hinifile hini, string subsection, bool must_have)
+{
+   int entries, j, i;
+   string ship_class;
+   string result, stored;
+   hship ship;
+   hsim root;
+
+   root = Sim.Cast(Global.Handle("ts_ship_creation_root"));
+   // Loop through all ship choices and 
+   // create at least one from each.
+   for (i=EST_Gunstar;i<EST_Max;++i) {
+      ship_class = ShipType2String(i);
+
+      if (INIFile.NumberedExists( hini, subsection, ship_class, 0 )) {
+         entries = iUtilities.FindNumberOfINIEntries( hini, subsection, ship_class );
+
+         // Loop through all the entries for each type of ship.
+         for (j=0;j<entries;++j) {
+
+            result = INIFile.NumberedString( hini, subsection, ship_class, j, "" );
+            stored = choose_ship(root, subsection, ship_class, j);
+
+            if (result != stored) {
+               debug {
+                  Debug.PrintString("tsShipCreation.TestINIFile cach mismatch Error\n");
+                  Debug.PrintString(subsection);
+                  Debug.PrintString(" Subsection\n");
+                  Debug.PrintString(ship_class);
+                  Debug.PrintString(" ship class\n");
+                  Debug.PrintString(result);
+                  Debug.PrintString(" template\n");                  
+               }
+            }
+
+            ship = iShip.Create(result,"testship");
+
+            if (none == ship) {
+               // This is not a valid entry. Print it.
+               debug {
+                  Debug.PrintString("tsShipCreation.TestINIFile Error\n");
+                  Debug.PrintString(subsection);
+                  Debug.PrintString(" Subsection\n");
+                  Debug.PrintString(ship_class);
+                  Debug.PrintString(" ship class\n");
+               }
+            }else {
+               // Clean up.
+               Sim.Destroy(ship);
+            }
+
+         }// for each entry
+      }else {
+         if (must_have) {
+            debug {
+               Debug.PrintString("tsShipCreation.TestINIFile Error missing entry\n");
+               Debug.PrintString(subsection);
+               Debug.PrintString(" Subsection\n");
+               Debug.PrintString(ship_class);
+               Debug.PrintString(" ship class\n");
+
+            }
+         }
+      }
+   }// for each ship class  
+}
+
+TestINIFile()
+{
+   set factions;
+   hfaction faction;
+   int total, i, j, entries, count;
+   string template_name;
+   string subsection;
+   string ship_class;
+   hship ship;
+   hinifile hini = INIFile.Create("ini:/faction_ships");
+
+   debug Debug.PrintString("tsShipCreation.TestINIFile starts\n");
+
+   
+   if (none == hini) {
+      debug Debug.PrintString("tsShipCreation.TestINIFile error no file\n");
+      return;
+   }
+
+
+   factions = Set.FromList(iFaction.All());
+   while (!Set.IsEmpty(factions)) {
+      faction = iFaction.Cast(Set.FirstElement(factions));
+      Set.Remove(factions, faction);
+
+      test_subsection(hini, tsFaction.EName(faction), false);
+   }
+
+
+   // Test the default
+   test_subsection(hini, "default", true);
+
+   // Test each fleet style
+   test_subsection(hini, "leung", false);
+
+   test_subsection(hini, "sultan", false);
+
+   test_subsection(hini, "barrens", false);
+
+   test_subsection(hini, "cmc", false);
+
+   test_subsection(hini, "machine", false);
+
+   test_subsection(hini, "brethren", false);
+
+   count = 0;
+   while (INIFile.NumberedExists(hini, "Subsections","name",count)) {
+      subsection = INIFile.NumberedString(hini, "Subsections","name",count,"");
+
+      test_subsection(hini, subsection, false);
+
+      ++count;
+   }
+
+   INIFile.Destroy(hini);
+
+   debug Debug.PrintString("tsShipCreation.TestINIFile ends\n");
+}
+
+
+// Call init after the factions are initilized, but before anything else needs
+// ships. System Enter.
+Init()
+{
+   int count;
+   string subsection;
+   hinifile hini = INIFile.Create("ini:/faction_ships");
+   hsim root, holder;
+   bool must_have;
+
+   // Build the list of ships, if this handle 
+   root = Sim.Cast(Global.Handle("ts_ship_creation_root"));
+   if ((none != root) && (!Sim.IsDead(root))) {
+      return;
+   }
+
+   root = Sim.Create("ini:/sims/nav/waypoint","ship_creation_root");
+
+   count = 0;
+   while (INIFile.NumberedExists(hini, "Subsections","name",count)) {
+      subsection = INIFile.NumberedString(hini, "Subsections","name",count,"");
+      
+      if ("default" == subsection) {
+         must_have = true;
+      }else {
+         must_have = false;
+      }
+
+      holder = create_subsection(hini, subsection, must_have);
+
+      Object.AddHandleProperty(root, subsection, holder);
+
+      ++count;
+   }
+
+   Global.CreateHandle("ts_ship_creation_root", GA_Write|GA_NoSave, root);
+}
+
+
+
+hsim create_subsection(hinifile hini, string subsection, bool must_have)
+{
+   int entries, j, i;
+   string ship_class;
+   string result;
+   string key_name;
+   hship ship;
+   hsim holder;
+
+   holder = Sim.Create("ini:/sims/nav/waypoint",subsection);
+
+   // Loop through all ship choices and 
+   // create at least one from each.
+   for (i=EST_Gunstar;i<EST_Max;++i) {
+      ship_class = ShipType2String(i);
+
+      if (INIFile.NumberedExists( hini, subsection, ship_class, 0 )) {
+         entries = iUtilities.FindNumberOfINIEntries( hini, subsection, ship_class );
+
+         // Record the number of entries.
+         Object.AddIntProperty(holder, ship_class, entries);
+
+         // Loop through all the entries for each type of ship.
+         for (j=0;j<entries;++j) {
+            result = INIFile.NumberedString( hini, subsection, ship_class, j, "" );
+            if ("" != result) {
+               key_name = String.Join(ship_class,String.FromInt(j));
+               Object.AddStringProperty(holder, key_name, result);
+            }
+         }// for each entry
+      }else {
+         if (must_have) {
+            debug {
+               Debug.PrintString("tsShipCreation.create_subsection Error missing entry\n");
+               Debug.PrintString(subsection);
+               Debug.PrintString(" Subsection\n");
+               Debug.PrintString(ship_class);
+               Debug.PrintString(" ship class\n");
+            }
+         }
+      }
+   }// for each ship class  
+
+
+   return holder;
+}

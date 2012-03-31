@@ -1,0 +1,215 @@
+// Array on Objects utilities
+//
+// Arrays are zero indexed. i.e. the first position is index 0
+
+
+
+package tsArray;
+
+uses
+   String,
+   List,
+   Object,
+   Debug;
+
+provides
+   SetArrayString,
+   GetArrayString,
+   SetArrayHandle,
+   GetArrayHandle,
+   SetArrayBool,
+   GetArrayBool,
+   SetArrayInt,
+   GetArrayInt,
+   ShrinkArray,
+   DeleteArray,
+   ArraySize;
+
+
+
+//
+// String Arrays
+//
+SetArrayString(hobject obj, string array_name, int index, string value)
+{
+   string working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+   int current_highest_index = Object.IntProperty(obj, array_name);
+   
+   // does current highest index exist
+   if(!Object.PropertyExists( obj, array_name ))
+      Object.AddIntProperty( obj, array_name, 0 );
+
+   // if the array_name_index does not exists add it
+   if(Object.PropertyExists( obj, working_name ))
+      Object.SetStringProperty( obj, working_name, value );
+   else
+      Object.AddStringProperty( obj, working_name, value );
+   
+   // tell the array about it's highest index
+   if(index > current_highest_index)
+      Object.SetIntProperty( obj, array_name, index );
+
+   // warn of gap creation
+   if(index > current_highest_index+1)
+      debug Debug.PrintString("tsArray.SetArrayString: WARNING: Index gap created\n");
+}
+
+
+string GetArrayString(hobject obj, string array_name, int index)
+{
+   string working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+   return Object.StringProperty( obj, working_name );
+}
+
+
+//
+// Handle Arrays
+//
+SetArrayHandle(hobject obj, string array_name, int index, hobject value)
+{
+   string working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+   int current_highest_index = Object.IntProperty(obj, array_name);
+   
+   // does current highest index exist
+   if(!Object.PropertyExists( obj, array_name ))
+      Object.AddIntProperty( obj, array_name, 0 );
+
+   // if the array_name_index does not exists add it
+   if(Object.PropertyExists( obj, working_name ))
+      Object.SetHandleProperty( obj, working_name, value );
+   else
+      Object.AddHandleProperty( obj, working_name, value );
+   
+   // tell the array about it's highest index
+   if(index > current_highest_index)
+      Object.SetIntProperty( obj, array_name, index );
+
+   // warn of gap creation
+   if(index > current_highest_index+1)
+      debug Debug.PrintString("tsArray.SetArrayHandle: WARNING: Index gap created\n");
+}
+
+
+hobject GetArrayHandle(hobject obj, string array_name, int index)
+{
+   string working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+   return Object.HandleProperty( obj, working_name );
+}
+
+
+//
+// Boolean Arrays
+//
+SetArrayBool(hobject obj, string array_name, int index, bool value)
+{
+   string working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+   int current_highest_index = Object.IntProperty(obj, array_name);
+   
+   // does current highest index exist
+   if(!Object.PropertyExists( obj, array_name ))
+      Object.AddIntProperty( obj, array_name, 0 );
+
+   // if the array_name_index does not exists add it
+   if(Object.PropertyExists( obj, working_name ))
+      Object.SetBoolProperty( obj, working_name, value );
+   else
+      Object.AddBoolProperty( obj, working_name, value );
+   
+   // tell the array about it's highest index
+   if(index > current_highest_index)
+      Object.SetIntProperty( obj, array_name, index );
+
+   // warn of gap creation
+   if(index > current_highest_index+1)
+      debug Debug.PrintString("tsArray.SetArrayHandle: WARNING: Index gap created\n");
+}
+
+
+bool GetArrayBool(hobject obj, string array_name, int index)
+{
+   string working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+   return Object.BoolProperty( obj, working_name );
+}
+
+
+//
+// Integer Arrays
+//
+SetArrayInt(hobject obj, string array_name, int index, int value)
+{
+   string working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+   int current_highest_index = Object.IntProperty(obj, array_name);
+   
+   // does current highest index exist
+   if(!Object.PropertyExists( obj, array_name ))
+      Object.AddIntProperty( obj, array_name, 0 );
+
+   // if the array_name_index does not exists add it
+   if(Object.PropertyExists( obj, working_name ))
+      Object.SetIntProperty( obj, working_name, value );
+   else
+      Object.AddIntProperty( obj, working_name, value );
+   
+   // tell the array about it's highest index
+   if(index > current_highest_index)
+      Object.SetIntProperty( obj, array_name, index );
+
+   // warn of gap creation
+   if(index > current_highest_index+1)
+      debug Debug.PrintString("tsArray.SetArrayHandle: WARNING: Index gap created\n");
+}
+
+
+int GetArrayInt(hobject obj, string array_name, int index)
+{
+   string working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+   return Object.IntProperty( obj, working_name );
+}
+
+
+//
+// Common Functions
+//
+int ArraySize(hobject obj, string array_name)
+{
+   return Object.IntProperty(obj, array_name);
+}
+
+ShrinkArray(hobject obj, string array_name, int size)
+{
+   string working_name;
+   int index;
+   int current_highest_index = Object.IntProperty(obj, array_name);
+   
+   // nothing to do?
+   if(current_highest_index <= size)
+      return;
+   
+   // you can't reduce below a single element array
+   if(size < 1)
+      return;
+   
+   // clean out the array items past the size limit
+   for(index=size; index<=current_highest_index; ++index)
+      working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+      Object.RemoveProperty( obj, working_name );   
+}
+
+
+DeleteArray(hobject obj, string array_name)
+{
+   string working_name;
+   int current_highest_index = Object.IntProperty(obj, array_name);
+   int index;
+   
+   // this will clean out the array from the object
+   for(index=0;index<=current_highest_index;++index)
+   {
+      working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+      if(Object.PropertyExists( obj, working_name ))
+         Object.RemoveProperty( obj, working_name );
+   }
+   
+   // final removal
+   Object.RemoveProperty( obj, array_name );
+}

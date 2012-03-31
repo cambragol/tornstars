@@ -1,0 +1,320 @@
+//*******************************************************************************************/
+//
+// tsPcWreckBelt
+//
+// The wreck belt uses the locations wreck value to create floating debris fields.
+// These wrecks are cargo pods that can be harvested by the player and sold.
+//
+// March 2006, Jon Freise
+//******************************************************************************************/
+
+package tsPcWreckBelt;
+
+uses    Sim,
+        iShip,
+        iSim,
+        iLagrangePoint,
+        Debug,
+        Global,
+        GUI,
+        iGUI,
+        iHUD,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        Math,
+        CargoTypes,
+        iCargo,
+        iDockport,
+        iUtilities,
+        tsCull,
+        tsFaction,
+        tsLCenter,
+        tsLFleet,
+        tsPodUtil;
+
+
+provides PogCreate,
+         PogStart;
+
+
+prototype setup_wreck_belt(hisim center);
+
+prototype hmapentity nearby_location(hisim center);
+
+prototype task dock_watch(hship wreck, hmapentity location, int value);
+
+/*
+   Test code just looks up a sim type from the properties section of 
+   the class instance INI file. It creates that Sim and passes it 
+   back.
+ 
+*/
+hsim PogCreate(string template_name, string object_name)
+{
+
+   hinifile object_file;
+   string item_template, pog_class, start_function;
+   hisim center;
+
+   debug Debug.PrintString("tsPcWreckBelt.PogCreate\n");
+
+
+   object_file = INIFile.Create(template_name);
+
+   if (none == object_file) {
+      debug {
+         Debug.PrintString("tsPcWreckBelt.PogCreate, failed to find object file\n");
+      }
+
+      return none;
+   }
+
+   // Pull needed items out of template file. Create the object.
+   // Attach them
+
+   pog_class = INIFile.String(object_file, "PogClass","name","none");   
+
+   INIFile.Destroy(object_file);
+
+
+   ///********************
+   // This block of code is class dependent. The rest must be done to adhere
+   // to the pog object calling conventions.
+
+   // Setup the center waypoint at proper location. Wait until placement is done to actually 
+   // set the asteroids down around the center point.
+   center = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint", object_name));
+   ///********************
+
+
+   // Attach these properties to be able to refrence them at start time.
+   Object.AddStringProperty(center, "gt_pog_object_class", pog_class);
+   Object.AddStringProperty(center, "gt_pog_object_template", template_name);
+
+      
+   return center;
+}
+
+
+/*
+   A simple behavior test.
+
+*/
+task PogStart(hsim pog_object)
+{
+   hship player;
+   float distance;
+
+   debug Debug.PrintString("tsPcWreckBelt.PogStart\n");
+
+   ///***************************************
+   // This part of the start code is object dependent. The prior pieces must
+   // be done to adhere to the pog class calling convention.
+
+   // Wreck belts are inert, but we could create some cool behaviors here
+   // like belts that throw rocks at ships.
+
+   setup_wreck_belt(iSim.Cast(pog_object));
+
+   ///***************************************
+}
+
+/*
+[PogClass]
+name=tsPcWreckBelt
+
+[Properties]
+
+length=
+width=
+height=
+
+; controls how tightly packed the wrecks are. Use a one
+; for scattered fields (default) or higher numbers for
+; tightly packed fields. Above 3 is not likely to make
+; much difference.
+
+density=1
+
+List of field items, and the total number of each item type
+item[0]=
+number[0]=
+
+
+*/
+
+
+
+// Read the ini file, setup the object. 
+setup_wreck_belt(hisim pog_object)
+{
+   hinifile control_file;
+   hship item;
+   hisim center;
+
+   int threat_value, total_threat;
+   int total, i, item_count, index;
+   float length, width, height;
+
+   string item_template, template_file;
+
+   list cull_list;
+
+   hfaction empty = tsFaction.EmptyFaction();
+
+   hmapentity location = nearby_location(pog_object);
+
+
+   debug Debug.PrintString("tsPcWreckBelt.setup_wreck_belt\n");
+
+
+   template_file = Object.StringProperty(pog_object, "gt_pog_object_template");
+   control_file = INIFile.Create(template_file);
+
+   if (none == control_file) {
+      debug Debug.PrintString("ERROR tsPcWreckBelt.setup_wreck_belt invalid template_file\n");
+      debug Debug.PrintString(template_file);
+      debug Debug.PrintString("\n");
+   }
+
+   // Read in the belt control properties
+   length = INIFile.Float(control_file, "Properties", "length", 10km);
+   width = INIFile.Float(control_file, "Properties", "width", 10km);
+   height = INIFile.Float(control_file, "Properties", "height", 10km);
+
+   threat_value = INIFile.Int(control_file, "Properties", "threat_value", 100);
+
+   total_threat = tsLFleet.Wrecks(location);
+
+   total = total_threat/threat_value;
+
+   // Clamp the values to prevent crazy errors.
+   if (total > 100) {
+      total = 100;
+   }else if (total < 0) {
+      total = 0;
+   }
+
+   item_count = iUtilities.FindNumberOfINIEntries(control_file, "Wrecks", "wreck" );
+
+   for (i=0;i<total;++i) {
+
+      index = Math.RandomInt(0, item_count-1);
+
+      item_template = INIFile.NumberedString(control_file,"Wrecks","wreck",index,"none");
+
+      item = tsPodUtil.CreateCargoPodCustom(CT_BattleScrap,"Neutral", "Neutral", item_template);
+
+      // No hacking needed.
+      tsPodUtil.SetHackLevel(item, 0);
+
+      if (none == item) {
+         debug Debug.PrintString("ERROR tsPcWreckBelt.setup_wreck_belt invalid item\n");
+      }
+
+
+      Sim.PlaceRelativeTo(item, 
+                          pog_object, 
+                          Math.Random(-width, width),
+                          Math.Random(-height, height),
+                          Math.Random(-length, length));
+
+      Sim.SetOrientationEuler( item,
+                               Math.Random(0,360),
+                               Math.Random(0,360),
+                               Math.Random(0,360));
+
+      Task.Detach(start dock_watch(item, location, threat_value));
+
+   }
+
+   // We don't set the wreckage bits to survive culling so they are removed.
+   // The player will need to hack the bits to get control of them.
+   // That will make them not cull.
+   tsCull.AddSim(location, pog_object);
+
+
+   INIFile.Destroy(control_file);
+}
+
+
+// If someone docks to a bit of wreckage, remove it from the total.
+// This allows wrecks to be cleared by the player or AI.
+task dock_watch(hship wreck, hmapentity location, int value)
+{
+   list ship_list;
+   int i, ship_list_size;
+   hship ship;
+   hfaction player_faction = tsFaction.PlayerFaction();
+
+
+   while (1) {
+      Task.Sleep(Task.Current(), 1);
+
+      if (Sim.IsDead(wreck)) {
+         return;
+      }
+
+      if (iSim.IsDocked(wreck)) {
+         debug Debug.PrintString("tsPcWreckBelt.dock_watch ship docked to scrap, removing from wreck count\n");
+
+         tsLFleet.ChangeWrecks(location, -1*value);
+
+         // we need to know if this pod docked to a player ship. If so, we need to give over the
+         // pod to the player faction. 
+         ship_list = List.FromSet(iSim.SimsInRadius(wreck, 1km, TM_Ship));
+         ship_list_size = List.ItemCount(ship_list);
+
+         for(i = 0; i < ship_list_size; ++i)
+         {
+            ship = iShip.Cast(List.GetNth(ship_list, i));
+
+            if (iSim.IsDockedTo(wreck, ship)) {
+               
+               // if this is a player ship, remove the pod from the culling list and
+               // change it to be the player faction. Set it not to cull. 
+               if (iSim.Faction(ship) == player_faction) {
+                  tsCull.RemoveSim(location, wreck);
+                  Sim.SetCullable(wreck, false);
+                  iSim.SetFaction(wreck, player_faction);
+
+                  Object.AddIntProperty(wreck,"cargo_faction",iFaction.Allegiance(player_faction));
+               }
+            }
+         }
+
+         // sim has been taken by someone. only decrement once.
+         return;
+      }
+   }
+}
+
+// Finds the closest location or station.
+hmapentity nearby_location(hisim pog_object)
+{
+   hlagrangepoint lpoint;
+   hhabitat habitat;
+
+   lpoint = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), pog_object);
+   habitat = iHabitat.Nearest(iMapEntity.SystemHabitats(), pog_object);
+
+   if (Sim.DistanceBetween(habitat, pog_object) < Sim.DistanceBetween(lpoint, pog_object)) {
+      return habitat;
+   }
+
+   return lpoint;
+}
+
+
+/*   
+
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

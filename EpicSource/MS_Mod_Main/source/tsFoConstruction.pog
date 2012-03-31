@@ -1,0 +1,437 @@
+/*******************************************************************************************/
+//
+// tsFoConstruction.pog
+// 
+// Torn Stars Construction Fleet
+// 
+// This function implements the decision making intellegence of an
+// station construction fleet as it looks for a new station to build.
+// 
+//
+//
+// December 2007
+//******************************************************************************************/
+
+package tsFoConstruction;
+
+
+uses  Sim,
+iSim,
+Debug,
+Global,
+iGame,
+iFaction,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+State,
+Text,
+Math,
+iShip,
+iHabitat,
+iMapEntity,
+   iHUD,
+   iComms,
+   tsDistance,
+   tsStationEnum,
+   tsStation,
+   tsFaction,
+   tsTime,
+   tsFleetOp,
+   tsLRoot,
+   tsLCenter,
+   tsLProduction,
+   tsLFleet,
+   tsStationFilter,
+   tsShipName,
+   tsShipCreationEnum,
+   tsShipCreation,
+   tsFleetOpCombat,
+   tsDebug;
+
+
+
+
+provides New,
+         Save,
+         Restore,
+         Update;
+
+ 
+
+prototype hhabitat find_production_station(hisim operation, hmapentity center, string system_name);
+
+prototype bool is_production(hmapentity center);
+
+prototype hhabitat find_non_dislike_station(hisim operation, hmapentity center, string system_name);
+
+prototype abandon_station(hmapentity center);
+
+prototype finish_station(hmapentity center);
+
+
+
+//*******************************************************************************************/         
+//
+//*******************************************************************************************/
+
+
+
+
+New(hisim operation)
+{
+   string ship_name, ship_template;
+   hfaction faction;
+
+   faction = iSim.Faction(operation);
+
+   // We pick an underworld name for ourselves. 
+   // using a large number means we get a random name.
+   ship_name = tsShipName.ShipName("mca", 10000);
+
+   // Station constructors are LOR platforms.
+   //ship_template = tsShipCreation.GetShip(faction, EST_FreightHeavy);
+
+   tsFleetOp.SetName(operation, ship_name);
+   tsFleetOp.SetShipTemplate(operation, "ini:/sims/ships/utility/lor_platform");
+
+   // Embezzle ops are special in that they want people to find them.
+   tsFleetOp.SetKnown(operation, true);
+
+   // This is a station construction op. It needs some defense.
+   tsLFleet.SetFleets(operation, 400);
+   tsLFleet.SetMaxFleets(operation, 400);
+
+   // A build day of zero, means not building.
+   Object.AddIntProperty(operation,"tsfoconstruction_build_day", 0);
+}
+
+
+
+Save(hisim operation)
+{
+   int id = tsLRoot.GetId(operation);
+   int build_day;
+
+   build_day = Object.IntProperty(operation,"tsfoconstruction_build_day");
+   Global.CreateInt(String.FormatInt("tsfoconstruction_buildday%d",id),GA_Write, build_day);
+
+
+}
+
+
+
+Restore(hisim operation)
+{
+
+   int id = tsLRoot.GetId(operation);
+   int build_day;
+
+   build_day = Global.Int(String.FormatInt("tsfoconstruction_buildday%d",id));
+   Object.AddIntProperty(operation,"tsfoconstruction_build_day", build_day);
+
+}
+
+
+
+Update(hisim operation)
+{
+   hmapentity center = tsLCenter.GetCenter(operation);
+   hhabitat target_station, supporter_station, station;
+   bool hostiles, wounded, home, move_home, move_production;
+   list local_operations;
+   hisim visitor;
+   hfaction faction, visitor_faction;
+   int fleets, i, total;
+   int update_delay = 1;
+   int build_day = 0;
+
+   debug tsDebug.PrintString("tsFoConstruction_debug","tsFoConstruction.Update\n");
+
+   build_day = Object.IntProperty(operation,"tsfoconstruction_build_day");
+
+   
+   faction = iSim.Faction(operation);
+
+   // if we are not building
+   // and there are hostiles, flee somewhere safe.
+   // if we are building
+   // and there are hostiles, and we are wounded flee.
+   // and there are hostiles, but not wounded, stay.
+   // if we are not building, try to locate a station where we
+   // can build. 
+   // if there are no stations travel to a nearby system
+
+   // if there are no nearby systems and no stations open, remove self.
+
+
+   // Here we look up what other operations are nearby. 
+   // Any combat between this and other operations happens here.
+
+   local_operations = tsFleetOp.StationOperations(center);
+   List.Remove(local_operations, operation);
+   total = List.ItemCount(local_operations);
+
+   hostiles = false;
+
+   for (i=0;i<total;++i) {
+      visitor = iSim.Cast(List.GetNth(local_operations,i));
+      visitor_faction = iSim.Faction(visitor);
+
+      if (iFaction.Feeling(visitor_faction, faction) < -0.2) {
+
+         // Construction ships evade.
+         tsFleetOpCombat.Defense(center, operation, visitor);
+
+         hostiles = true;
+      }
+   }
+
+   fleets = tsLFleet.Fleets(operation);
+
+   if (fleets == 0) {
+      // Ouch, we died.
+      debug tsDebug.PrintString("tsFoConstruction_debug","tsFoConstruction lost fleets and died\n");
+
+      tsFleetOp.DestroyOp(operation);
+
+      // destroy any station under construction.
+      abandon_station(center);
+
+      return;
+   }
+
+
+   // We survived. First thing to check is if we were 
+   // building a station. If we were, check if it is done.
+   if ((build_day > 0) && (build_day < tsTime.GetDay())) {
+      finish_station(center);
+   }
+
+   // Construction fleets try to stick it out because 
+   // if they leave the station is destroyed
+   if (fleets < (tsLFleet.MaxFleets(operation) / 2)) {
+      wounded = true;
+   }else {
+      wounded = false;
+   }
+
+   supporter_station = tsFleetOp.Supporter(operation);
+
+   // Are we home?
+   if (center == iMapEntity.Cast(supporter_station)) {
+      home = true;
+   }else {
+      home = false;
+   }
+
+   move_home = false;
+   move_production = false;
+
+
+   if (hostiles && !wounded) {
+      // We are under attack but coping. Stick it out.
+   }else if (hostiles) {
+      // if we got hurt, run home.
+      move_home = true;
+   }else if (wounded && !home) {
+      move_home = true;
+   }else if (!wounded && !is_production(center)){
+      move_production = true;
+   }
+   // Otherwise, just park here and enjoy making lots of cash
+   // fenceing cargo throught the station.
+
+
+   // If we are at home, repair some fleets.
+   if (home) {
+      tsLFleet.ChangeFleets(operation, 10 * update_delay);
+
+      debug tsDebug.PrintString("tsFoConstruction_debug",String.FormatInt("tsFoConstruction repairing at home %d fleets\n", 
+                                               tsLFleet.Fleets(operation)));
+   }
+
+   if (move_home) {
+
+      tsLCenter.SetCenter(operation, supporter_station);
+      tsFleetOpCombat.SetDistressFlags(supporter_station);
+
+      debug {
+         tsDebug.PrintString("tsFoConstruction_debug","tsFoConstruction moving home\n");
+         tsDebug.PrintHandle("tsFoConstruction_debug",supporter_station);
+         tsDebug.PrintString("tsFoConstruction_debug"," supporter station\n");
+      }
+
+   }else if (move_production) {
+
+      target_station = find_production_station(operation, center, iSim.WorldName(center));
+
+      if (none != target_station) {
+         // To move an operation, we just move the center.
+         tsLCenter.SetCenter(operation, target_station);
+      tsFleetOpCombat.SetDistressFlags(target_station);         
+      }else {
+         // We must be running, so pick any nearby non-hostile station.
+         target_station = find_non_dislike_station(operation, center, iSim.WorldName(center));
+
+         if (none != target_station) {
+            // To move an operation, we just move the center.
+            tsLCenter.SetCenter(operation, target_station);
+            tsFleetOpCombat.SetDistressFlags(target_station);
+         }else {
+            tsLCenter.SetCenter(operation, supporter_station);
+            tsFleetOpCombat.SetDistressFlags(supporter_station);            
+         }
+      }
+
+      debug {
+         tsDebug.PrintString("tsFoConstruction_debug","tsFoConstruction moving to production\n");
+         tsDebug.PrintHandle("tsFoConstruction_debug",target_station);
+         tsDebug.PrintString("tsFoConstruction_debug"," new station\n");
+      }
+   }
+
+   // Next update, tomorrow.
+   tsFleetOp.SetWakeTimer(operation, tsTime.GetDay() + update_delay);
+}
+
+
+// Return true is this location is an operating production station.
+bool is_production(hmapentity center)
+{
+   if (T_Station == iSim.Type(center)) {
+      if (ESS_Normal == tsStation.Status(iHabitat.Cast(center))) {
+         if ( (ESC_Mine|ESC_Process|ESC_Manufacture) & tsStation.Category(iHabitat.Cast(center))){
+            return true;
+         }
+      }
+   }
+   return false;
+}
+
+hhabitat find_production_station(hisim operation, hmapentity center, string system_name)
+{
+   set habitats;
+
+   // Search system stations and find a production station where we can live.
+   habitats = tsStationFilter.OnStatusAndCategory(iMapEntity.SystemHabitatsInSystem(system_name),
+                                                 ESS_Normal,
+                                                 (ESC_Mine|ESC_Process|ESC_Manufacture));
+
+   Set.Remove(habitats, center);
+   // We can hang out at neutral or better stations. We avoid people trying to
+   // kill us.
+   habitats = tsStationFilter.OnGreaterFeeling(habitats,
+                                              iSim.Faction(operation),
+                                              tsFaction.Type2LowerLevel(FT_Neutral));
+
+   return iHabitat.Random(habitats);
+}
+
+hhabitat find_non_dislike_station(hisim operation, hmapentity center, string system_name)
+{
+   set habitats;
+
+   // We can hang out at neutral or better stations. We avoid people trying to
+   // kill us.
+   habitats = tsStationFilter.OnGreaterFeeling(iMapEntity.SystemHabitatsInSystem(system_name),
+                                              iSim.Faction(operation),
+                                              tsFaction.Type2LowerLevel(FT_Neutral));
+   Set.Remove(habitats, center);
+
+   return iHabitat.Random(habitats);
+}
+
+
+// Calculate the total feeling toward the faction by summing
+// the feelings of all those who already operate stations around
+// this planet.
+float calculate_support(hhabitat station, hfaction faction)
+{
+   set habitats;
+   hhabitat habitat;
+   float support =0.0;
+   hfaction habitat_faction;
+
+   // Find all other stations in the same planetary diameter.
+   habitats = iSim.SimsInRadius(station, tsDistance.PlanetaryRange(), T_Station);
+   habitats = tsStationFilter.OnStatus(habitats, ESS_Normal);
+
+   while (!Set.IsEmpty(habitats)) {
+      habitat = iHabitat.Cast(Set.FirstElement(habitats));
+      Set.Remove(habitats, habitat);
+
+      habitat_faction = iSim.Faction(iSim.Cast(habitat));
+      support += iFaction.Feeling(habitat_faction, faction);
+   }
+
+   return support;
+}
+
+
+
+hhabitat find_build_prospect(hisim operation, string system_name)
+{
+   list habitat_list;
+   set habitats;
+   int total, i;
+   float support;
+   hfaction faction = iSim.Faction(operation);
+   hhabitat habitat;
+
+   // Find those habitats that were destroyed or never built.
+   habitats = tsStationFilter.OnStatus(iMapEntity.SystemHabitatsInSystem(system_name), ESS_NeverBuilt|ESS_Destroyed);
+
+   // Find those habitats that we are allowed to build.
+   habitats = tsStationFilter.OnFactionAllowed(habitats, faction);
+
+   // For each of those habitats, calculate the support level of habitats nearby.
+   habitat_list = List.FromSet(habitats);
+
+   total = List.ItemCount(habitat_list);
+   for (i=0;i<total;++i) {
+      habitat = iHabitat.Cast(List.GetNth(habitat_list, i));
+
+      support = calculate_support(habitat, faction);
+
+      Object.AddFloatProperty(habitat, "tsfoconstruction_support", support);
+   }
+
+   // Return the habitat with the highest level.
+   habitat = iHabitat.Cast(List.Head(List.SortByFloatProperty(habitat_list, "distance")));
+
+   return habitat;
+}
+
+// We had to leave or were killed. Check if we were building a station
+// and if we were, destroy it. 
+abandon_station(hmapentity center)
+{
+   // if we are parked around a station, check the status.
+   if (T_Station == iSim.Type(iSim.Cast(center))) {
+      // Station was under construction, destroy it.
+      if (ESS_Building == tsStation.Status(iHabitat.Cast(center))) {
+         tsStation.SetStatus(iHabitat.Cast(center), ESS_Destroyed);
+      }
+   }
+}
+
+finish_station(hmapentity center)
+{
+   // if we are parked around a station, check the status.
+   if (T_Station == iSim.Type(iSim.Cast(center))) {
+      // Station was under construction, finish it.
+      if (ESS_Building == tsStation.Status(iHabitat.Cast(center))) {
+         tsStation.SetStatus(iHabitat.Cast(center), ESS_Finished);
+      }
+   }
+}
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

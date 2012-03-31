@@ -1,0 +1,507 @@
+//*******************************************************************************************/
+//
+// tsDescribeINI
+//
+// This module translates INI files into human readable text for GUI display.
+// 
+// 
+// 
+//
+// December 2007, jon freise
+//******************************************************************************************/
+
+package tsDescribeINI;
+
+uses	Sim,
+		iShip,
+		iSim,
+		Debug,
+		Global,
+		GUI,
+		iDirector,
+		iGame,
+		iGUI,
+		iHUD,
+		iHabitat,
+		iMapEntity,
+		INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+		iUtilities,
+		iCargo,
+		iInventory,
+		iComms,
+		Math,
+      iDockPort,                
+      CargoTypes,
+		UniGUI,
+      tsStationEnum,
+      tsStation,
+      tsGuiEnum,
+      tsGui,
+      tsFaction,
+      tsLProduction,
+      tsLInventory,
+      tsLTrade,
+      tsEconomy,
+      tsEconUtil,
+      tsMoney,
+      tsPodUtil,
+      tsString;
+
+
+
+
+provides Subsystem,
+         Projectile;
+                    
+                    
+prototype int float2int(float value);
+prototype float int2float(int value);
+
+
+// Returns an HTML compatable translation of the features
+// of the weapon bolt
+string Projectile(string weapon_template)
+{
+   hinifile weapon_ini = INIFile.Create(weapon_template);
+   string sim_class;
+   string text;
+   float damage, speed, penetration, time;
+   int antimatter, blast_radius, field_time;
+
+   if (none == weapon_ini) {
+      // Template open failed, return empty string.
+      return "";
+   }
+   text = "";
+
+   sim_class = INIFile.String(weapon_ini,"Class","name","");
+   if ("" == sim_class) {
+      // add nothing, this is not a subsim.
+   }else if ("icBullet" == sim_class) {
+
+      text = "<p>Bolt";
+
+      damage = INIFile.Float(weapon_ini,"Properties","damage",1);
+      text = String.Join(text, String.FormatInt("<br>%d damage",float2int(damage)));
+
+      penetration = INIFile.Float(weapon_ini,"Properties", "penetration",1);
+      text = String.Join(text, String.FormatInt("<br>%d penetration",float2int(penetration)));
+
+      speed = INIFile.Float(weapon_ini,"Properties", "speed",1);
+      text = String.Join(text, String.FormatInt("<br>%d bolt speed m/s",float2int(speed)));
+
+      time = INIFile.Float(weapon_ini,"Properties", "lifetime",1);
+      text = String.Join(text, String.FormatInt("<br>%d km range",float2int((speed*time)/1000)));
+
+      antimatter = INIFile.Int(weapon_ini,"Properties", "antimatter_based",0);
+      if (antimatter > 0) {
+         text = String.Join(text, "<br>Antimatter Weapon");
+      }
+
+   }else if ("icSimTrackingMissile" == sim_class) {
+      text = "<p>Missile";
+
+      damage = INIFile.Float(weapon_ini,"Properties","damage",1);
+      text = String.Join(text, String.FormatInt("<br>%d damage",float2int(damage)));
+
+      penetration = INIFile.Float(weapon_ini,"Properties", "penetration",1);
+      text = String.Join(text, String.FormatInt("<br>%d penetration",float2int(penetration)));
+
+      blast_radius = INIFile.Int(weapon_ini,"Properties", "blast_radius",1);
+      text = String.Join(text, String.FormatInt("<br>%d blast radius", blast_radius));
+
+      speed = INIFile.VectorZ(weapon_ini,"Properties", "acceleration");
+      text = String.Join(text, String.FormatInt("<br>%d max accleration m/s/s",float2int(speed)));
+
+      time = INIFile.Float(weapon_ini,"Properties", "lifetime",1);
+      text = String.Join(text, String.FormatInt("<br>%d sec life time",float2int(time)));
+
+      time = INIFile.Float(weapon_ini,"Properties", "disruptor_time",0);
+      if (time > 1) {
+         text = String.Join(text, String.FormatInt("<br>%d sec disruption time",float2int(time)));
+      }
+
+      antimatter = INIFile.Int(weapon_ini,"Properties", "antimatter_based",0);
+      if (antimatter > 0) {
+         text = String.Join(text, "<br>Antimatter Weapon");
+      }
+
+   }else if ("icLDSIMissile" == sim_class) {
+      text = "<p>LDS Inhibitor";
+
+      damage = INIFile.Float(weapon_ini,"Properties","damage",1);
+      text = String.Join(text, String.FormatInt("<br>%d damage",float2int(damage)));
+
+      field_time = INIFile.Int(weapon_ini,"Properties", "field_life_time",1);
+      text = String.Join(text, String.FormatInt("<br>%d field life time", field_time));
+
+      blast_radius = INIFile.Int(weapon_ini,"Properties", "field_radius",1);
+      text = String.Join(text, String.FormatInt("<br>%d field radius", blast_radius));
+
+      speed = INIFile.VectorZ(weapon_ini,"Properties", "acceleration");
+      text = String.Join(text, String.FormatInt("<br>%d max accleration m/s/s",float2int(speed)));
+
+      time = INIFile.Float(weapon_ini,"Properties", "lifetime",1);
+      text = String.Join(text, String.FormatInt("<br>%d sec life time",float2int(time)));
+
+   }else if ("icCounterMeasure" == sim_class) {
+      text = "<p>Counter Measure";
+
+      time = INIFile.Float(weapon_ini,"Properties", "engage_time",0);
+      text = String.Join(text, String.FormatInt("<br>%d delay to start", float2int(time)));
+
+      time = INIFile.Float(weapon_ini,"Properties", "lifetime",1);
+      text = String.Join(text, String.FormatInt("<br>%d sec life time",float2int(time)));
+
+   }else if ("icRemoteMissile" == sim_class) {
+      text = "<p>Remote Pilot Missile";
+
+      damage = INIFile.Float(weapon_ini,"Properties","damage",1);
+      text = String.Join(text, String.FormatInt("<br>%d damage",float2int(damage)));
+
+      penetration = INIFile.Float(weapon_ini,"Properties", "penetration",1);
+      text = String.Join(text, String.FormatInt("<br>%d penetration",float2int(penetration)));
+
+      blast_radius = INIFile.Int(weapon_ini,"Properties", "blast_radius",1);
+      text = String.Join(text, String.FormatInt("<br>%d blast radius", blast_radius));
+
+      speed = INIFile.VectorZ(weapon_ini,"Properties", "acceleration");
+      text = String.Join(text, String.FormatInt("<br>%d max accleration m/s/s",float2int(speed)));
+
+      time = INIFile.Float(weapon_ini,"Properties", "lifetime",1);
+      text = String.Join(text, String.FormatInt("<br>%d sec life time",float2int(time)));
+
+      time = INIFile.Float(weapon_ini,"Properties", "disruptor_time",0);
+      if (time > 1) {
+         text = String.Join(text, String.FormatInt("<br>%d sec disruption time",float2int(time)));
+      }
+
+      antimatter = INIFile.Int(weapon_ini,"Properties", "antimatter_based",0);
+      if (antimatter > 0) {
+         text = String.Join(text, "<br>Antimatter Weapon");
+      }
+   }else if ("icBeam" == sim_class) {
+
+      text = "<p>Beam";
+
+      damage = INIFile.Float(weapon_ini,"Properties","damage_rate",1);
+      text = String.Join(text, String.FormatInt("<br>%d damage per second",float2int(damage)));
+
+      penetration = INIFile.Float(weapon_ini,"Properties", "penetration",1);
+      text = String.Join(text, String.FormatInt("<br>%d penetration",float2int(penetration)));
+
+      time = INIFile.Float(weapon_ini,"Properties", "length",1);
+      text = String.Join(text, String.FormatInt("<br>%d m rage",float2int(time)));
+
+      antimatter = INIFile.Int(weapon_ini,"Properties", "antimatter_based",0);
+      if (antimatter > 0) {
+         text = String.Join(text, "<br>Antimatter Weapon");
+      }
+
+   }else if ("icBeam" == sim_class) {
+
+      text = "<p>Beam";
+
+      damage = INIFile.Float(weapon_ini,"Properties","damage_rate",1);
+      text = String.Join(text, String.FormatInt("<br>%d damage per second",float2int(damage)));
+
+      penetration = INIFile.Float(weapon_ini,"Properties", "penetration",1);
+      text = String.Join(text, String.FormatInt("<br>%d penetration",float2int(penetration)));
+
+      time = INIFile.Float(weapon_ini,"Properties", "length",1);
+      text = String.Join(text, String.FormatInt("<br>%d m rage",float2int(time)));
+
+      antimatter = INIFile.Int(weapon_ini,"Properties", "antimatter_based",0);
+      if (antimatter > 0) {
+         text = String.Join(text, "<br>Antimatter Weapon");
+      }
+
+   }
+
+   INIFile.Destroy(weapon_ini);
+
+   return text;
+}
+
+
+
+
+// Returns an HTML compatable translation of the features
+// of the subsystem.
+string Subsystem(string subsim_template)
+{
+   hinifile subsim_ini = INIFile.Create(subsim_template);
+   string subsim_class;
+   string text;
+   string weapon_template;
+   float fire_rate, power, heat_rate, range, speed;
+   int ammo, memory;
+
+   if (none == subsim_ini) {
+      // Template open failed, return empty string.
+      return "";
+   }
+   text = "";
+
+   subsim_class = INIFile.String(subsim_ini,"Class","name","");
+   if ("" == subsim_class) {
+      // add nothing, this is not a subsim.
+   }else if ("icCannon" == subsim_class) {
+
+      text = "<p>Particle Cannon";
+
+      fire_rate = INIFile.Float(subsim_ini,"Properties","refire_delay",1);
+      text = String.Join(text, "<br>");      
+      text = String.Join(text, String.FromFloat(1/fire_rate));
+      text = String.Join(text, " shots per second");      
+
+      power = INIFile.Float(subsim_ini,"Properties", "power",1);
+      text = String.Join(text, String.FormatInt("<br>%d power draw",float2int(power)));
+
+      heat_rate = INIFile.Float(subsim_ini,"Properties", "heat_rate",0);
+      text = String.Join(text, String.FormatInt("<br>%d heat",float2int(heat_rate)));
+
+      weapon_template = INIFile.String(subsim_ini,"Properties", "projectile_template","");
+      text = String.Join(text, Projectile(weapon_template));
+
+   }else if ("icSlugThrower" == subsim_class) {
+
+      text = "<p>Ammo Particle Cannon";
+
+      fire_rate = INIFile.Float(subsim_ini,"Properties","refire_delay",1);
+
+      text = String.Join(text, "<br>");      
+      text = String.Join(text, String.FromFloat(1/fire_rate));
+      text = String.Join(text, " shots per second");      
+
+
+      power = INIFile.Float(subsim_ini,"Properties", "power",1);
+      text = String.Join(text, String.FormatInt("<br>%d power draw",float2int(power)));
+
+      ammo = INIFile.Int(subsim_ini,"Properties", "ammo_count",1);
+      text = String.Join(text, String.FormatInt("<br>%d rounds carried", ammo));
+
+      weapon_template = INIFile.String(subsim_ini,"Properties", "projectile_template","");
+      text = String.Join(text, Projectile(weapon_template));
+   
+   }else if ("icMissileMagazine" == subsim_class) {
+
+      text = "<p>Missile Launcher";
+
+      fire_rate = INIFile.Float(subsim_ini,"Properties","refire_delay",1);
+
+      text = String.Join(text, "<br>");      
+      text = String.Join(text, String.FromFloat(1/fire_rate));
+      text = String.Join(text, " shots per second");      
+
+      ammo = INIFile.Int(subsim_ini,"Properties", "max_ammo_count",1);
+      text = String.Join(text, String.FormatInt("<br>%d missiles carried", ammo));
+
+      weapon_template = INIFile.String(subsim_ini,"Properties", "projectile_template","");
+      text = String.Join(text, Projectile(weapon_template));
+
+   }else if ("icCounterMeasureMagazine" == subsim_class) {
+
+      text = "<p>Anti Missile Counter Measure Launcher";
+
+      fire_rate = INIFile.Float(subsim_ini,"Properties","refire_delay",1);
+
+      text = String.Join(text, "<br>");      
+      text = String.Join(text, String.FromFloat(1/fire_rate));
+      text = String.Join(text, " shots per second");      
+
+      ammo = INIFile.Int(subsim_ini,"Properties", "max_ammo_count",1);
+      text = String.Join(text, String.FormatInt("<br>%d counter measures carried", ammo));
+
+      weapon_template = INIFile.String(subsim_ini,"Properties", "projectile_template","");
+      text = String.Join(text, Projectile(weapon_template));
+
+   }else if ("icBeamProjector" == subsim_class) {
+
+      text = "<p>Beam Projector";
+
+      power = INIFile.Float(subsim_ini,"Properties", "power",1);
+      text = String.Join(text, String.FormatInt("<br>%d power draw",float2int(power)));
+
+      heat_rate = INIFile.Float(subsim_ini,"Properties", "heat_rate",0);
+      text = String.Join(text, String.FormatInt("<br>%d heat",float2int(heat_rate)));
+
+      weapon_template = INIFile.String(subsim_ini,"Properties", "beam_template","");
+      text = String.Join(text, Projectile(weapon_template));
+
+   }else if ("icTurret" == subsim_class) {
+
+      text = "<p>Particle Turret";
+
+      fire_rate = INIFile.Float(subsim_ini,"Properties","refire_delay",1);
+      text = String.Join(text, "<br>");      
+      text = String.Join(text, String.FromFloat(1/fire_rate));
+      text = String.Join(text, " shots per second");      
+
+      power = INIFile.Float(subsim_ini,"Properties", "power",1);
+      text = String.Join(text, String.FormatInt("<br>%d power draw",float2int(power)));
+
+      heat_rate = INIFile.Float(subsim_ini,"Properties", "heat_rate",0);
+      text = String.Join(text, String.FormatInt("<br>%d heat",float2int(heat_rate)));
+
+      weapon_template = INIFile.String(subsim_ini,"Properties", "projectile_template","");
+      text = String.Join(text, Projectile(weapon_template));
+
+   }else if ("icActiveSensor" == subsim_class) {
+
+      text = "<p>Active Sensor";
+
+      range = INIFile.Float(subsim_ini,"Properties", "id_range_increase",0);
+      text = String.Join(text, String.FormatInt("<br>%d id range increase",float2int(range)));
+
+      power = INIFile.Float(subsim_ini,"Properties", "power",1);
+      text = String.Join(text, String.FormatInt("<br>%d power draw",float2int(power)));
+
+      heat_rate = INIFile.Float(subsim_ini,"Properties", "heat_rate",0);
+      text = String.Join(text, String.FormatInt("<br>%d heat",float2int(heat_rate)));
+
+   }else if ("icSensor" == subsim_class) {
+
+      text = "<p>Passive Sensor";
+
+      range = INIFile.Float(subsim_ini,"Properties", "range",0);
+      text = String.Join(text, String.FormatInt("<br>%d sensor range",float2int(range)));
+
+      range = INIFile.Float(subsim_ini,"Properties", "identification_range",0);
+      text = String.Join(text, String.FormatInt("<br>%d identification range",float2int(range)));
+
+      speed = INIFile.Float(subsim_ini,"Properties", "sensed_brightness",0);
+      text = String.Join(text, "<br>");
+      text = String.Join(text, String.FromFloat(speed));
+      text = String.Join(text, " sensed brightness");
+
+      power = INIFile.Float(subsim_ini,"Properties", "power",1);
+      text = String.Join(text, String.FormatInt("<br>%d power draw",float2int(power)));
+
+      heat_rate = INIFile.Float(subsim_ini,"Properties", "heat_rate",0);
+      text = String.Join(text, String.FormatInt("<br>%d heat",float2int(heat_rate)));
+
+   }else if ("icHeatSink" == subsim_class) {
+
+      text = "<p>Heat Sink";
+
+      heat_rate = INIFile.Float(subsim_ini,"Properties", "heat_loss_rate",0);
+      text = String.Join(text, String.FormatInt("<br>%d heat loss rate",float2int(heat_rate)));
+
+      power = INIFile.Float(subsim_ini,"Properties", "power",1);
+      text = String.Join(text, String.FormatInt("<br>%d power draw",float2int(power)));
+
+   }else if ("icReactor" == subsim_class) {
+
+      text = "<p>Fusion Reactor";
+
+      power = INIFile.Float(subsim_ini,"Properties", "output_power",0);
+      text = String.Join(text, String.FormatInt("<br>%d output power",float2int(power)));
+
+      heat_rate = INIFile.Float(subsim_ini,"Properties", "heat_rate",0);
+      text = String.Join(text, String.FormatInt("<br>%d heat",float2int(heat_rate)));
+
+   }else if ("icPlayerLDA" == subsim_class) {
+
+      text = "<p>LDA Shield";
+
+      power = INIFile.Float(subsim_ini,"Properties", "field_coverage",0);
+      text = String.Join(text, String.FormatInt("<br>%d degrees coverage",float2int(power)));
+
+      speed = INIFile.Float(subsim_ini,"Properties", "field_hold_time",0);
+      text = String.Join(text, "<br>");
+      text = String.Join(text, String.FromFloat(speed));
+      text = String.Join(text, " hold time");
+
+      power = INIFile.Float(subsim_ini,"Properties", "reliability",0);
+      text = String.Join(text, String.FormatInt("<br>%d percent reliability",float2int(power*100)));
+
+      power = INIFile.Float(subsim_ini,"Properties", "power",1);
+      text = String.Join(text, String.FormatInt("<br>%d power draw",float2int(power)));
+
+      heat_rate = INIFile.Float(subsim_ini,"Properties", "heat_rate",0);
+      text = String.Join(text, String.FormatInt("<br>%d heat",float2int(heat_rate)));
+
+   }else if ("icLDSDrive" == subsim_class) {
+
+      text = "<p>LDS Drive";
+
+      speed = INIFile.Float(subsim_ini,"Properties", "max_speed",0);
+      text = String.Join(text, String.FormatInt("<br>%d maximum speed",float2int(speed)));
+
+      speed = INIFile.Float(subsim_ini,"Properties", "acceleration",0);
+      text = String.Join(text, "<br>");
+      text = String.Join(text, String.FromFloat(speed));
+      text = String.Join(text, " acceleration");
+
+      power = INIFile.Float(subsim_ini,"Properties", "power",1);
+      text = String.Join(text, String.FormatInt("<br>%d power draw",float2int(power)));
+
+      heat_rate = INIFile.Float(subsim_ini,"Properties", "heat_rate",0);
+      text = String.Join(text, String.FormatInt("<br>%d heat",float2int(heat_rate)));
+
+   }else if ("icCPU" == subsim_class) {
+
+      text = "<p>Ship Computer";
+
+      memory = INIFile.Int(subsim_ini,"Properties", "memory_slots",0);
+      text = String.Join(text, String.FormatInt("<br>%d memory slots",memory));
+
+      speed = INIFile.Float(subsim_ini,"Properties", "engine_management_power_multiplier",0);
+      text = String.Join(text, "<br>");
+      text = String.Join(text, String.FromFloat(speed));
+      text = String.Join(text, " efficiency boost");
+
+      power = INIFile.Float(subsim_ini,"Properties", "power",1);
+      text = String.Join(text, String.FormatInt("<br>%d power draw",float2int(power)));
+
+      heat_rate = INIFile.Float(subsim_ini,"Properties", "heat_rate",0);
+      text = String.Join(text, String.FormatInt("<br>%d heat",float2int(heat_rate)));
+
+   }else if ("icAutorepair" == subsim_class) {
+
+      text = "<p>Damage Repair";
+
+      speed = INIFile.Float(subsim_ini,"Properties", "autorepair_rate",0);
+      text = String.Join(text, String.FormatInt("<br>%d repair point rate",float2int(speed)));
+
+      heat_rate = INIFile.Float(subsim_ini,"Properties", "heat_rate",0);
+      text = String.Join(text, String.FormatInt("<br>%d heat",float2int(heat_rate)));
+
+   }
+
+   INIFile.Destroy(subsim_ini);
+
+   return text;
+}
+
+
+/*
+
+
+
+*/
+
+float int2float(int value)
+{
+   return value;
+}
+
+
+int float2int(float value)
+{
+   return value;
+}
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

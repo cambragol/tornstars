@@ -1,0 +1,141 @@
+//*******************************************************************************************/
+//
+// tsDistance.pog
+//
+// Creates globals related to distances. Most importantly, culling distances.
+// 
+//
+//
+//
+// June 2004, Jon Freise
+// March 2006, jf reads flux for distances
+//******************************************************************************************/
+
+package tsDistance;
+
+uses Global,
+     INIFile,
+     Debug;
+
+
+provides Init,
+         VisibleDistance,
+         CullingDistance,
+         WakingDistance,
+         TradeDistance,
+         PodDistance,
+         PlanetaryRange;
+ 
+
+Init()
+{
+   hinifile flux_init = INIFile.Create("ini:/flux");
+
+   float distance, cull;
+
+
+   debug atomic {
+      if (none == flux_init) {
+         Debug.PrintString("tsDistance error cannot open flux file\n");
+      }
+   }
+
+   distance = INIFile.Float(flux_init, "icSolarSystem","far_clip", 0);
+
+   debug atomic {
+      if (distance < 1) {
+         Debug.PrintString("tsDistance error invalid far_clip value\n");
+
+         // Set a default value.
+         distance = 200km;
+      }
+   } 
+
+   INIFile.Destroy(flux_init);
+
+
+   Global.CreateFloat("gt_distance_visible", GA_NoSave|GA_Write, distance);
+
+   // Wakeup distance is meant to be just inside the culling radius. A place where
+   // objects can be placed that will not cull.
+   // Global.Float("gt_distance_wakeup")
+   Global.CreateFloat("gt_distance_wakeup", GA_NoSave|GA_Write, 2*distance/3);
+
+   // Culling distance is twice far clip distance, which is the sight range.
+   cull = distance * 2;
+
+   // Global.Float("gt_distance_culling")
+   Global.CreateFloat("gt_distance_culling", GA_NoSave|GA_Write, cull);
+
+   // Trade distance from station
+   // Global.Create("gt_distance_trade")
+   Global.CreateFloat("gt_distance_trade", GA_NoSave|GA_Write, 20km);
+
+   // Pod counting distance, for tradinge or working with stations
+   // Global.Float("gt_distance_trade_pods")
+   Global.CreateFloat("gt_distance_trade_pods", GA_NoSave|GA_Write, 50km);
+
+
+   // Distance that is considered to be within the same planetary range.
+   // The diameter that would encompass a planet and all of its moons.
+   // Used for distress call response max distance and strategic planning.
+   Global.CreateFloat("gt_distance_planet_system_diameter", GA_NoSave|GA_Write, 5000000km);
+}
+
+
+
+float VisibleDistance()
+{
+   return Global.Float("gt_distance_visible");
+}
+
+
+float CullingDistance()
+{
+   return Global.Float("gt_distance_culling");
+}
+
+
+
+float WakingDistance()
+{
+   return Global.Float("gt_distance_wakeup");
+}
+
+
+
+float TradeDistance()
+{
+   return Global.Float("gt_distance_trade");
+}
+
+
+
+float PodDistance()
+{
+   return Global.Float("gt_distance_trade_pods");
+}
+
+
+float PlanetaryRange()
+{
+   return Global.Float("gt_distance_planet_system_diameter");
+}
+
+
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+
+
+
+

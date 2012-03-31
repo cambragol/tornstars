@@ -1,0 +1,279 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 1
+PreviewLastFrame 100
+PreviewFrameStep 1
+FramesPerSecond 25.000000
+
+AddNullObject <detail_switch min=0.0 max=0.1>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -250 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.1 max=0.8>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.8 max=1.0>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  250 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\NewFreighterBum\RTO\0_FRE_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -155 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 3
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\Spine0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 29
+ParentObject 6
+ShadowOptions 7
+
+AddNullObject SpineNull
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -21.5 -211.5 0 0 45 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\Link0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -21.5 -372.6 90 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\NewFreighterBum\RTO\LOD1\1_FRE_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -155 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 2
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\LOD1\Spine1_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 29
+ParentObject 10
+ShadowOptions 7
+
+AddNullObject SpineNull
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -21.5 -211.5 0 0 45 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 8
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\LOD1\Link1_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -21.5 -372.6 90 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 8
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\NewFreighterBum\RTO\LOD2\2_FRE_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -155 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\LOD2\Spine2_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 29
+ParentObject 14
+ShadowOptions 7
+
+AddNullObject SpineNull
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -21.5 -211.5 0 0 45 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 12
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\LOD2\Link2_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -21.5 -372.6 90 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 12
+ShadowOptions 7
+
+AddNullObject root
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -155 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ShadowOptions 7
+
+AddNullObject LOD2EngHandle
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 12
+ShadowOptions 7
+
+AddNullObject LOD1EngHandle
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 8
+ShadowOptions 7
+
+AddNullObject LOD0EngHandle
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 4
+ShadowOptions 7
+
+
+AmbientColor 255 255 255
+AmbIntensity 0.000000
+
+
+ShowCamera 1 7
+CameraMotion (unnamed)
+  9
+  1
+  0 0.25 -247.308 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ZoomFactor 3.200000
+Resolution 1
+PixelAspectRatio 3
+SegmentMemory 1050000
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+FilmSize 2
+FieldRendering 0
+MotionBlur 0
+DepthOfField 0
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 0
+ClipRayColors 0
+DataOverlayLabel  
+FullSceneParamEval 0
+
+ViewMode 1
+ViewAimpoint -0.477272 -3.664630 178.389389
+ViewDirection -11.864759 -0.148353 0.000000
+ViewZoomFactor 4.000003
+GridNumber 40
+GridSize 100.000000
+ShowMotionPath 1
+ShowBGImage 0
+ShowFogRadius 0
+ShowRedraw 0
+ShowSafeAreas 0
+ShowFieldChart 0

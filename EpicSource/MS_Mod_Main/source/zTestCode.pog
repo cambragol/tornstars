@@ -1,0 +1,119 @@
+//*******************************************************************************************/
+//
+// tTestCode.pog
+//
+// 
+// 
+//
+//
+//
+// March, 2006, jon freise
+//******************************************************************************************/
+
+package zTestCode;
+
+uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, 
+   iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+   iConversation, iFormation, Group, Text, iEmail, State, 
+   iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker, 
+   iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+   iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
+   iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
+   ECargoTypes,
+   tsEconUtil,
+   tsTradeBuy,
+   tsPogClass,
+   tsLRoot,
+   tsLTrade,
+   tsMoney,
+   tsTime,
+   tsFaction,
+   tsShip,
+   tsPodUtil,
+   tsShipCreationEnum,
+   tsShipCreation;
+
+
+
+
+
+provides TestTranslation,
+         TestShipCreation;
+
+
+
+TestTranslation()
+{
+   int i, type;
+   hcargo cargo;
+   string name;
+
+   for (i=CT_Invalid;i<CT_AdvancedHullMaterialRefit;++i) {
+
+      cargo = iCargo.Find(i);
+      name = iCargo.Name(cargo);
+
+      debug {
+         Debug.PrintString(ECargoTypes.CargoType2String(i));
+         Debug.PrintString(":");
+         Debug.PrintString(name);
+         Debug.PrintString(":\n");
+      }
+
+   }
+}
+
+
+
+TestShipCreation()
+{
+   // validate every entry is a valid ship template.
+   tsShipCreation.TestINIFile();
+}
+
+
+// This code exaimines every station and reports the distance between the stations and the 
+// planets. The idea is to make sure our stations are no too close to the planets that we 
+// could be creating a danger of crashes do to visual culling.
+TestsStationPlacement()
+{
+   hinifile flux_init = INIFile.Create("ini:/flux");
+
+   float distance;
+
+
+   if (none == flux_init) {
+      debug Debug.PrintString("zTestCode error cannot open flux file\n");
+      return;
+   }
+
+   distance = INIFile.Float(flux_init, "icSolarSystem","far_clip", 0);
+
+   if (distance < 1) {
+      debug Debug.PrintString("zTestCode error cannot read far_clip\n");
+      return;
+   }
+
+   INIFile.Destroy(flux_init);
+
+   // Culling distance is twice far clip distance, which is the sight range.
+   distance = distance * 2;
+
+
+}
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+
+
+
+

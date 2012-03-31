@@ -1,0 +1,95 @@
+//*******************************************************************************************/
+//
+// tsCrewSpeak.pog
+//
+// This package adds some crew responses to player keyboard commands. Makes the ship feel
+// like it has more crew.
+// 
+//
+// Feb 2006, Jon Freise
+//******************************************************************************************/
+
+package tsCrewSpeak;
+
+uses    Sim,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        GUI,
+        iGUI,
+        iHUD,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        iMod,
+        iComms,
+        tsString;
+
+
+
+
+provides Init,
+         AutopilotHalt,
+         AutopilotApproach,
+         AutopilotFormate,
+         AutopilotDock;
+
+
+
+
+Init()
+{
+	 int i;
+   list empty_list;
+   
+   Input.BindKey( "tsCrewSpeak.AutopilotHalt", "icPlayerPilot.AutopilotOff" );
+
+   Input.BindKey( "tsCrewSpeak.AutopilotApproach", "icPlayerPilot.AutopilotApproach" );
+
+   Input.BindKey( "tsCrewSpeak.AutopilotFormate", "icPlayerPilot.AutopilotFormate" );
+
+   Input.BindKey( "tsCrewSpeak.AutopilotDock", "icPlayerPilot.AutopilotDock" );
+   
+   Input.BindKey( "tsCrewSpeak.AutopilotMatchVelocity", "icPlayerPilot.AutopilotMatchVelocity" );
+   
+   Text.Add("csv:/TEXT/crew_text");
+      
+}
+
+AutopilotHalt()
+{
+   iComms.Shout(none,"name_az",tsString.CommsStringRandom( "crew_halting","",4));
+}
+
+AutopilotApproach()
+{
+   // crew_approach, "Aye Aye Sir. On Approach to target"
+   iComms.Shout(none,"name_az",tsString.CommsStringRandom( "crew_approach","",4));
+}
+
+AutopilotFormate()
+{
+   iComms.Shout(none,"name_az", tsString.CommsStringRandom("crew_formate","",4));
+}
+
+AutopilotDock()
+{
+   iComms.Shout(none,"name_az", tsString.CommsStringRandom("crew_dock","",4));
+}
+
+AutopilotMatchVelocity()
+{
+   iComms.Shout(none,"name_az", tsString.CommsStringRandom("crew_pursuit","",4));
+}
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

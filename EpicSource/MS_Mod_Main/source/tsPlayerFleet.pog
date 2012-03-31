@@ -1,0 +1,415 @@
+//*******************************************************************************************/
+//
+// tsPlayerFleet.pog
+//
+// Functions specific to handling the player fleet. Player and wingmen death scripts.
+// Query functions related to the player fleet.
+// 
+// Nov 2006, Jon Freise
+//
+// There are a few main entry points for player wingmen
+// HireShip is used when the player hires a wingman for service. 
+// CaptureShip is used when the player siezes a ship.
+// SetupPlayerWingman is used in the general case of purchasing a ship (not a standard feature).
+// and is used to restore the wingmen after load.
+//
+// There are a few main entry points for the player.
+// PlayerDeath is the death script that handles the players ship being destroyed.
+// SetupPlayer is used during restore to attach all proper items to the player ship.
+// NewPlayerShip is used when the player purchases a ship, via menu. It will 
+// setup that ship properly, and change the inventory to match the ship.
+//******************************************************************************************/
+
+package tsPlayerFleet;
+
+//[of]:Import
+uses	Sim,
+		iShip,
+		iSim,
+		iPilotSetup,
+		Debug,
+		Global,
+		GUI,
+		iDirector,
+		iGUI,
+		iHUD,
+		iHabitat,
+		iMapEntity,
+		INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+		iUtilities,
+		iCargo,
+		iInventory,
+		iComms,
+		iAi,
+		iWingmen,
+		iRemotePilot,
+		iDeathScript,
+		iGame,
+		Math,
+		iInventory,
+		iConversation,
+		CargoTypes,
+		
+		tsStationEnum,
+		tsEconUtil,
+		tsPodUtil,
+		tsShipComms,
+		tsFormation,
+		tsFaction, 
+		tsShipEnum,
+		tsShip,
+		tsWingman,
+      tsWingComm;
+//[cf]
+
+ 
+//[of]:Export
+provides 
+   SetupPlayerWingman,
+   NewPlayerShip,
+   SetupPlayer, 
+   WingmanComms,
+
+   HireShip,
+   FireShip;
+//[cf]
+
+        
+prototype add_ship_to_list(hship ship);
+prototype remove_ship_from_list(hship ship);
+prototype SetupPlayerWingman(hship ship);
+prototype SetupPlayer(hship ship);
+
+
+// Helper functions
+prototype release_wingman(hship ship);
+prototype set_position(hship ship, int counter);
+
+
+int float2int(float number)
+{
+   return number;
+}
+
+float int2float(int number)
+{
+   return number;
+}
+
+
+
+
+
+
+
+
+
+//******************************************************************************************/
+
+// Formation handling routines.
+
+//******************************************************************************************/
+
+// Place the ship at the proper formation position. 
+// All wingman commands will use this position to keep
+// the wingmen from collision.
+//[of]:set_position(hship ship, int counter)
+set_position(hship ship, int counter)
+{
+   int spacing; 
+   float x, y, z;
+
+   // The distance behind increases by half a kilometer
+   // for every four ships.
+   z = (int2float(counter)/4);
+   z = z + 1.0;
+   z = z * 0.5km;
+   z = z * -1.0;
+
+   spacing = counter % 8;
+
+   switch (spacing) {
+   case 0:
+      // above
+      x = 0.0;
+      y = 0.5km;
+      break;
+   case 1:
+      // left
+      x = 0.5km;
+      y = 0.0;
+      break;
+   case 2:
+      // below
+      x = 0.0;
+      y = -0.5km;
+      break;
+   case 3:
+      // right
+      x = -0.5km;
+      y = 0.0;
+      break;
+   case 4:
+      // above far
+      x = 0.0;
+      y = 1.0km;
+      break;
+   case 5:
+      // left far
+      x = 1.0km;
+      y = 0.0;
+      break;
+   case 6:
+      // below far
+      x = 0.0;
+      y = -1.0km;
+      break;
+   case 7:
+      // left far
+      x = -1.0km;
+      y = 0.0;
+      break;
+   default:
+      // Straight back
+      x = 0.0;
+      y = 0.0;
+      break;
+   }
+
+   tsFormation.SetPos(ship, x, y, z);
+}
+//[cf]
+
+
+//******************************************************************************************/
+
+// Routines for adding new wingmen or player ships to the fleet.
+
+//******************************************************************************************/
+
+//[of]:SetupPlayerWingman(hship ship)
+SetupPlayerWingman(hship ship)
+{
+   list player_fleet = tsShip.PlayerFleet();
+   hfaction player_faction = tsFaction.PlayerFaction();
+
+   // Add to the player fleet
+   tsShip.AddNewShip(ship);
+
+   set_position(ship, List.ItemCount(player_fleet));
+
+   iShip.InstallAIPilot(ship, 4.0, 0.25, 0.5,"","","","");
+
+   iSim.SetSensorVisibility(iSim.Cast(ship), true);
+
+   iSim.SetFaction(ship, player_faction);
+
+   Sim.SetCullable(ship, false);
+
+   tsShipComms.AddComms(ship, "tsPlayerFleet.WingmanComms");
+
+   Object.SetStringProperty(ship, "death_script", "tsWingmanDeath.Death");
+}
+//[cf]
+
+
+// Used to purchase a new player ship. Properly sets the inventory and
+// any needed fleet values.
+//[of]:NewPlayerShip(hship ship)
+NewPlayerShip(hship ship)
+{
+   // We need to remove the players current ship from the hanger.
+   // Just get rid of all the ships.
+/*
+   iInventory.RemoveCommandSection();
+   iInventory.RemoveTug();
+   iInventory.RemoveFastAttackShip();
+   iInventory.RemoveHeavyCorvette();
+   iInventory.RemoveStormPetrel();
+
+
+   // Now add back the ship the player has just added.
+   if (iSim.Type(ship) == T_CommandSection) {
+      iInventory.AddCommandSection();
+   }if (iSim.Type(ship) == T_Tug) {
+      iInventory.AddTug();
+   }else if (iSim.Type(ship) == T_Patcom) {
+      iInventory.AddFastAttackShip();
+   }else if (iSim.Type(ship) == T_Corvette) {
+      iInventory.AddHeavyCorvette();
+   }else if (iSim.Type(ship) == T_Fighter) {
+      iInventory.AddStormPetrel();
+   }
+*/
+   // Purchased ships are owned.
+   tsShip.SetOwner(ship, efoOwned);
+   iShip.InstallPlayerPilot(ship);
+
+   SetupPlayer(ship);
+}
+//[cf]
+
+
+// Attaches any needed properties to the players current ship. The pilot should
+// already be installed at this time.
+//[of]:SetupPlayer(hship ship)
+SetupPlayer(hship ship)
+{
+   hfaction player_faction = iFaction.Find("Player");
+
+   if (iSim.Type(ship) != T_CommandSection) {
+      // If the ship is larger than a command section, then it gets a command
+      // section for a life pod. otherwise, none.
+      Object.SetStringProperty(ship, "death_script", "tsPlayerDeath.Death");
+   }else {
+      Object.SetStringProperty(ship, "death_script", "iDeathScript.PlayerDeathScript");
+   }
+
+   iSim.SetFaction(ship, player_faction);
+
+   // Do not allow the player ship to be removed when player has
+   // been moved away to a life pod or something.
+
+   Sim.SetCullable(ship, false);
+
+   // Links the player weapons, while protecting beams from crashing game.
+   tsShip.LinkPlayerWeapons(ship);
+
+}
+//[cf]
+
+
+
+
+// used to remove a ship from the player service.
+//[of]:release_wingman(hship ship)
+release_wingman(hship ship)
+{
+   hfaction independent_faction = iFaction.Find("Independent");
+
+   // remove from save restore list.
+   tsShip.RemoveFleetShip(ship);
+
+   tsShip.SetOwner(ship, efoNotPlayer);   
+
+   // return the ship to standard sensor visibility.
+   iSim.SetSensorVisibility(iSim.Cast(ship), false);
+
+   // 
+   iSim.SetStandardSensorVisibility( iSim.Cast(ship), true );
+
+   // change the faction to independent.
+   iSim.SetFaction(ship, independent_faction);
+
+   // allow the ship to be removed.
+   Sim.SetCullable(ship, true);
+
+   // Remove the ship from any combat group.
+   tsWingComm.GroupRemoveShip(ship);
+
+   // remove the comms function.
+   tsShipComms.AddComms(ship, "");
+}
+//[cf]
+
+
+// Add this ship to the player fleet. Mark it as a hired ship.
+//[of]:HireShip(hship ship)
+HireShip(hship ship)
+{
+
+   tsShip.SetOwner(ship, efoHired);
+   SetupPlayerWingman(ship);
+
+   tsWingman.Start(ship, ePO_None, none);
+}
+//[cf]
+
+
+// Player releases a wingman from service. Send the ship toward the nearest lpoint.
+// Also used when the player cannot pay the upkeep of a ship.
+//[of]:FireShip(hship ship)
+FireShip(hship ship)
+{
+   hlagrangepoint lpoint;
+
+   release_wingman(ship);
+
+   // Find the nearest lpoint.
+   lpoint = iLagrangePoint.Nearest( iMapEntity.SystemLagrangePoints(),
+                                    ship);
+
+   // Give the ship orders to approach the lpoint, hopefully it will be culled in route.
+   iAI.GiveApproachOrder( ship, lpoint );   
+
+}
+//[cf]
+
+
+//******************************************************************************************/
+
+// Communication Routines for the player fleet ships.
+
+//******************************************************************************************/
+
+//[of]:task WingmanComms()
+task WingmanComms()
+{
+   hship ship;
+
+   ship = iShip.Cast(tsShipComms.CommsSource());
+
+        // Start the conversation.
+    iConversation.Begin();
+
+
+    
+    // Response 1
+    iConversation.AddResponse(
+       "Nothing. Over and out.",
+       "Nothing. Over and out.");
+
+        // Response 2
+    iConversation.AddResponse(
+        "Wingman, you are released from service.",
+        "Wingman, you are released from service.");
+
+    // Ask the player a question and switch on their response.
+
+
+    switch ( iConversation.Ask( ship, "", "Sir! How can we be of service?" ) )
+    {
+        case 1 :
+           // Player said no.
+            iConversation.Say(ship,"", "Out." );
+            break;
+
+        case 2 :
+           // Player fired ship
+            iConversation.Say(ship,"", "Yes Sir! It has been good serving with you." );
+            FireShip(ship);
+            break;
+
+        default :
+            // Player selected "Nothing"
+            iConversation.Say(ship,"", "Out." );
+    }
+
+    // Finish the conversation.
+    iConversation.End();
+}
+//[cf]
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

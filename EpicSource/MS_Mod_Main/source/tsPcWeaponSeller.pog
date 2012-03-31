@@ -1,0 +1,816 @@
+//*******************************************************************************************/
+//
+// tsPcWeaponSeller
+//
+// This pog object implements weapons sellers that will sell player ship systems
+// 
+//
+// June 2005, Jon Freise
+//
+// Updates:
+// 20-May-08 JW: Changed to pick ship template using tsShipCreation
+// 28-Jun-08 JW: Updated to use utility escort creation, tsFleetOp getter attribute functions
+//
+//******************************************************************************************/
+
+package tsPcWeaponSeller;
+
+//[of]:Imports
+uses    Sim,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+//        GUI,
+//        iGUI,
+//        iHUD,
+        INIFile,
+//        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        Math,
+        iShipCreation,
+        iComms,
+        iConversation,
+        iAI,
+        iEscort,
+        ABB_Common,
+
+        tsLCenter,
+        tsEquipBuy,
+        tsShipComms,
+        tsLRoot,
+        tsLTrade,
+        tsFaction,
+        tsTradeSell,
+        tsMoney,
+        tsShipName,
+        tsPcOwner,
+        tsLProduction,
+        tsFleetOp,
+        tsDistance,
+        tsShipCreationEnum,
+        tsShipCreation,
+        tsLFleet,
+        tsPilotSetup,
+        tsStationFilter,
+		  tsStationEnum,
+		  tsStation,
+		  tsEconUtil,
+        tsDistance,
+        tsCapsuleJump,
+        tsCull,
+        tsShip,
+        tsShipEscort;
+//[cf]
+
+
+//[of]:Exports
+provides PogCreate,
+         PogStart,
+         Comms,
+         CriminalComms;
+//[cf]
+
+enum eCSScriptState
+{
+   eCS_Init,
+   eCS_Idle,
+   eCS_Flee,
+   eCS_WaitApproach,
+   eCS_EscortOnly,
+   eCS_Dead,
+   eCS_Cull
+};
+
+
+prototype setup_trade_ship(hisim marker);
+
+prototype string type2comms(string seller_type);
+
+prototype task ship_watch(hgroup seller_fleet);
+
+prototype eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool debug_on);
+
+prototype string state2string(eCSScriptState state);
+
+
+
+hsim PogCreate(string template_name, string object_name)
+{
+
+   hinifile object_file;
+   string name;
+   string item_template, pog_class, start_function;
+   hsim item;
+
+   debug Debug.PrintString("tsPcWeaponSeller.PogCreate\n");
+
+
+   object_file = INIFile.Create(template_name);
+
+   if (none == object_file) {
+      debug {
+         Debug.PrintString("tsPcWeaponSeller.PogCreate, failed to find object file\n");
+      }
+
+      return none;
+   }
+
+   // Pull needed items out of template file. Create the object.
+   // Attach them
+   pog_class = INIFile.String(object_file, "PogClass","name","none");
+
+
+   ///********************
+   // This block of code is class dependent. The rest must be done to adhere
+   // to the pog object calling conventions.
+
+   //name = tsShipName.ShipName( "general", Math.RandomInt(0, 343));
+   //item_template = INIFile.String(object_file, "Properties","template","none");
+   INIFile.Destroy(object_file);
+
+   item = Sim.Create("ini:/sims/nav/waypoint","weapon_script_marker");
+   Sim.SetCullable(item, false);
+
+   //item = Sim.Create(item_template, name);
+
+   if (none == item) {
+      debug {
+         Debug.PrintString("tsPcWeaponSeller.PogCreate, bad object template\n");
+      }
+      return none;
+   }
+   ///********************
+
+
+   // All 
+   Object.AddStringProperty(item, "gt_pog_object_class", pog_class);
+   Object.AddStringProperty(item, "gt_pog_object_template", template_name);
+   
+   // finally mark this sim as an internal sim, i.e. created through an internal PogCreate process,
+   Object.AddBoolProperty(item, "gt_pog_internal", true);
+
+   return item;
+}
+
+
+//
+//This function is called after the ship has been placed. 
+//
+task PogStart(hsim pog_object)
+{
+   debug Debug.PrintString("tsPcWeaponSeller: starting\n");
+
+   ///***************************************
+   // This part of the start code is object dependent. The prior pieces must
+   // be done to adhere to the pog class calling convention.
+
+   setup_trade_ship(iSim.Cast(pog_object));
+
+   ///***************************************
+}
+
+/*
+; 
+; Example INI file for setting up a hired ship.
+; One of these template files should be created
+; for each kind of ship that can be hired.
+; Freighter, warship, etc.
+
+[PogClass]
+name=tsPcWeaponSeller
+
+[Properties]
+
+template=ini:/sims/ships/utility/freighter
+
+// This is the file that specifies the cargo categories that this 
+// weapon seller will provide.
+
+trade_file="ini:/weapon_cargo"
+
+
+
+// This is the entry used in the cargo trade_file to use 
+// for this specific weapon seller. Look in the file for
+// valid entry names.
+
+seller_type="Civilian"
+
+
+
+;There are two types of communications from this pog object
+; legal - used for legal weapons and equipment dealers
+; criminal - used for illegal weapons and equipment dealers
+
+comm_type=legal
+
+*/
+
+
+
+//
+// This code needs to be able to differentiate between being  called by
+// with being passed a waypoint coming from this packages PogCreate
+// or from an operation creation facility. The difference being we
+// do NOT want to delete the operation waypoint.
+// We use the 'internal' property existence to make that determination.
+//
+// Read the ini file, setup the object.
+//
+setup_trade_ship(hisim marker)
+{
+   hinifile control_file;
+   bool is_internal;
+   string template_file_name, comm_function;
+   string seller_file, seller_type, station_string, comms, faction_ship_class;
+   string name, ship_template;
+	string station_category;
+   //float faction_standing;
+   set habitats;
+   hfaction station_faction;
+   hfaction faction;
+   hisim owner;
+   hhabitat start_station;
+   hship ship;
+   hgroup cull_group;
+
+
+   debug Debug.PrintString("tsPcWeaponSeller.setup_trade_ship: Start\n");
+
+   // is  the marker from this packages internal source
+   is_internal = Object.PropertyExists(marker, "gt_pog_internal");
+
+   // since the marker has been placed in space we use it as a focus
+   // to gather information: Nearby habitats, closest habitat to marker and faction of that closest habitat
+   // ?????????????????????????????????????????????????????
+   habitats = iMapEntity.SystemHabitats();
+   start_station = iHabitat.Nearest(habitats, marker);
+   station_faction = iSim.Faction(start_station);
+   // ?????????????????????????????????????????????????????
+
+
+   // get the ini file from the waypoint and open it
+   template_file_name = Object.StringProperty(marker, "gt_pog_object_template");
+   control_file = INIFile.Create(template_file_name);
+
+   // check for no ini file available
+   if (none == control_file) {
+      debug Debug.PrintString("ERROR tsPcWeaponSeller. invalid template_file\n");
+      debug Debug.PrintString(template_file_name);
+      debug Debug.PrintString("\n");
+   }
+
+	// determine the station category for the station nearest the ship. This will drive the type of
+	// goods that will be sold
+	station_category = tsStation.Category2String(tsEconUtil.StationType2Category(iHabitat.Type(start_station)));
+
+   // Read in the weapon seller control properties and the ship class to be created
+   seller_file = INIFile.String(control_file, "Properties", "trade_file", "ini:/weapon_cargo");
+   seller_type = INIFile.String(control_file, "Properties", station_category, "Civilian");
+   //faction_ship_class = INIFile.String(control_file, "Properties", "faction_ship_class", "EST_FreightAll");
+
+   // get the comms attribute
+   comms = INIFile.String(control_file, "Properties", "comm_type", "legal");
+
+   // close ini file
+   INIFile.Destroy(control_file);
+
+   // debug display what faction we will set the ship to
+   debug {
+   Debug.PrintString("tsPcWeaponSeller.setup_trade_ship: faction = ");
+   Debug.PrintHandle(station_faction);
+   Debug.PrintString(" <-- ");
+   Debug.PrintString(tsFaction.EName(station_faction));
+   Debug.PrintString("\n");
+   }
+
+
+   // The first thing we do is learn if this marker is to represent an operation.
+   // If we do, then we handle some things differently.
+   owner = iSim.Cast(tsPcOwner.Owner(marker));
+
+   faction = iSim.Faction(iSim.Cast(owner));
+
+
+   if (!tsFleetOp.IsOperation(owner)){
+      // This pog object can only represent operations. 
+      // So we destroy the marker and bail out.
+      
+      debug Debug.PrintString("tsPcTankerOp error no operation set as owner\n");
+
+      Sim.Destroy(marker);
+      return;
+   }
+
+   // If this operation already has an in game representation, get rid of ourselves.
+   if (tsFleetOp.IsCreated(owner)) {
+      debug Debug.PrintString("tsPcTankerOp physical already exists.\n");
+      Sim.Destroy(marker);
+      return;
+   }
+
+
+
+  debug Debug.PrintString("tsPcTankerOp.setup_tanker_ship: operation tanker creating\n");
+
+   // Set the operation to already have a physical representation.
+   tsFleetOp.SetCreated(owner, true);
+
+   // determine what the ship template and name to use is.
+   ship_template = tsFleetOp.ShipTemplate(owner);
+   name = tsFleetOp.Name(owner);
+   // create a ship sim
+   ship = tsShip.Create(ship_template, name);
+
+   // if the ship creation failed then we destroy marker, set op to not created and bail
+   if (ship == none) {
+      debug Debug.PrintString("tsPcWeaponSeller.setup_trade_ship: ship failed to create\n");
+      debug Debug.PrintString(ship_template);
+      debug Debug.PrintString(" template\n");
+      Sim.Destroy(marker);
+      tsFleetOp.SetCreated(owner, false);
+      return;
+   }
+
+
+
+
+   // Set the owner for this ship and faction
+   //if(is_internal) {
+   //    tsPcOwner.SetOwner(ship, start_station);
+   //    iSim.SetFaction(iSim.Cast(ship), station_faction);
+   //} else
+   //{
+   //    tsPcOwner.SetOwner(ship, marker);
+   //   iSim.SetFaction(iSim.Cast(ship), iSim.Faction(marker));
+   //}
+
+
+   // create the cull group
+   cull_group = Group.Create();
+   // add ship to cull group
+   Group.AddSim(cull_group, ship);
+   // set the owner of the ship
+   tsPcOwner.SetOwner(ship, owner);
+   // set the faction of the ship
+   iSim.SetFaction(iSim.Cast(ship), faction);
+
+   // Notice attacks fast, and flee quickly.
+   tsPilotSetup.SetupOperation(ship, 0.9, 0.75);
+   // mark the ship as not cullable
+   Sim.SetCullable(ship, false);
+   // place the ship near the marker
+   Sim.PlaceNear(ship, marker, 1km);
+
+   // We have placed the ship so remove the marker
+   Sim.Destroy(marker);
+
+   // create any escort if we need it
+//   tsShipEscort.CreateStandardEscort(owner, ship, cull_group, "underworld", "EST_CombatLight");
+/*
+   tsShipEscort.CreateMixedEscort(
+                  hisim    operation,
+                  hship    leader,
+                  hgroup   cull_group,
+                  string   ship_name_group,
+                  int      fighter_ships,
+                  int      light_ships,
+                  int      heavy_ships,
+                  int      capital_ships
+                  );
+*/
+   tsShipEscort.CreateMixedEscort(
+                  owner,
+                  ship,
+                  cull_group,
+                  "underworld",
+                  true,          // use maxfleets
+                  4,             //fighter_ships
+                  2,             // light_ships
+                  1,             // heavy_ships
+                  0              // capital_ships
+                  );
+
+
+   // Setup the comms tasks
+   tsShipComms.AddComms(ship, type2comms(comms));
+   tsShipComms.DisplayComms(ship, true);
+
+   // Setup the trade properties for the seller. NB in this case owner = start_station/operation
+   tsLRoot.SetId(ship, tsLRoot.GetId(owner));
+   tsLTrade.Create(ship, seller_file, seller_type);
+
+   // Add the ship to the global cull list
+   //tsCull.AddSim(iSim.Cast(start_station), ship);
+
+   /*
+   debug{
+      Debug.PrintString("seller file: ");
+      Debug.PrintString(seller_file);
+      Debug.PrintString("\n");
+
+      Debug.PrintString("seller type: ");
+      Debug.PrintString(seller_type);
+      Debug.PrintString("\n");
+
+   }
+   */
+   
+   
+   // We don't need the marker anymore if it is an internal on
+   //if(is_internal)
+   //    Sim.Destroy(marker);
+   
+   Task.Detach(start ship_watch( cull_group ));
+   
+   debug Debug.PrintString("tsPcWeaponSeller.setup_trade_ship: End\n");
+}
+
+//
+// Task to watch/manage the seller fleet.
+//
+task ship_watch(hgroup seller_fleet)
+{
+   set nearby_ships, nearby_locations;
+   hship player;
+   hship seller;
+   hship ship;
+   hisim operation;
+   hmapentity station, new_station;
+   int timer;
+   eCSScriptState state;
+   float spacing;
+   hfaction seller_faction, ship_faction;
+   bool nearby_hostile;
+   bool debug_on = true;
+   int react_distance = 25km;
+
+
+   // Get handles to the actual tanker and the operation
+   seller = iShip.Cast(Group.Leader(seller_fleet));
+   operation = iSim.Cast(tsPcOwner.Owner(seller));
+
+   // seller faction and set initial state
+   seller_faction = iSim.Faction(seller);
+   state = eCS_Idle;
+
+   // Put the ships into formation. And give them guard orders.
+   // Any hostiles inside of 25km get shot. We use a smaller
+   // value than normal, because weapon sellers lurk on the edges of other
+   // stations. They don't like trouble. This makes it easier for them to flee
+   // without getting hung up on the stations FLT dampening field.
+   spacing = iUtilities.GetLargestShipRadius( seller_fleet);
+   iEscort.Wedge( seller_fleet, spacing, 25km, true );
+
+   // Have any ships that dislike us come within react_distance? Flee to a nearby non-dislike 
+   // station. Our escorts will tail along.
+
+   while (1) {
+      // pasue a second between situation checks
+      Task.Sleep(Task.Current(), 1.0);
+
+
+      // Set-state processing logic
+      if (tsCapsuleJump.IsCapsuleJumping()) {
+         // in capsule jump
+         state = change_state(state, eCS_Cull, debug_on);
+      }else {
+         // in normal space, get handle to player ship
+         player = iShip.FindPlayerShip();
+
+         if (Sim.IsDead(seller)) {
+            // trade ship (the leader) is dead
+            if (eCS_Cull != state) {
+               // not in cull state so set state to dead
+               state = change_state(state, eCS_Dead, debug_on);
+            }
+         }else if (Sim.DistanceBetween(iShip.Cast(Group.Leader(seller_fleet)), player) > 
+                   tsDistance.CullingDistance()) {
+            // distance between player and fleet > culling distance for more than 30 secs
+            ++timer;
+            if (timer > 30) {
+               state = change_state(state, eCS_Cull, debug_on);
+            }
+         }else {
+            // inside culling distance limit to set timer to 0
+            timer = 0;
+         }
+      }
+
+      // State engine proper.  React to differnt states and move state on if needed
+      switch (state) {
+      case eCS_Init:
+         station = iHabitat.Nearest(iMapEntity.SystemHabitats(), seller);
+         state = change_state(state, eCS_Idle, debug_on);
+         break;
+      case eCS_Idle:
+
+         // Check for nearby ships. Are any of them dislike or lower?
+         nearby_ships = iSim.ShipsInRadius(seller, react_distance);
+         nearby_hostile = false;
+
+         // process through the set of ships witin react_distance
+         while (!Set.IsEmpty(nearby_ships)) {
+            ship = iShip.Cast(Set.FirstElement(nearby_ships));
+            Set.Remove(nearby_ships, ship);
+            ship_faction = iSim.Faction(ship);
+
+            // Are any of these ships dislike or lower?
+            if (iFaction.Feeling(ship_faction, seller_faction) < -0.2) {
+               nearby_hostile = true;
+            }
+         }
+
+         if (nearby_hostile) {
+            // Some bad guys have arrived, Run.
+            state = change_state(state, eCS_Flee, debug_on);
+         }
+
+         break;
+      case eCS_Flee:
+
+         // Pick a non-hostile station that is near.
+         nearby_locations = iMapEntity.SystemHabitats();
+         station = iHabitat.Nearest(nearby_locations, seller);
+         Set.Remove(nearby_locations, station);
+
+         // find a station to flee to
+         new_station = iHabitat.Nearest(
+                           tsStationFilter.OnGreaterFeeling(
+                                 nearby_locations,
+                                 seller_faction, 
+                                 -0.2), 
+                           seller);
+
+         // if we couldn't find a station to flee to then go to nearest L-point
+         if (none == new_station) {
+            new_station = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), seller);
+         }
+
+         debug {
+            Debug.PrintHandle(new_station);
+            Debug.PrintString(" flee station target\n");
+         }
+
+         iAI.PurgeOrders(seller);
+         iAI.GiveApproachOrderAdvanced( seller,
+                                        new_station,
+                                        75km,
+                                        80km,
+                                        true);
+
+
+         // Move the operation to the target station.
+         tsLCenter.SetCenter(operation, new_station);
+
+         state = change_state(state, eCS_WaitApproach, debug_on);
+
+         break;
+      case eCS_WaitApproach:
+         // We are now running. If we return "no orders", we must be there.
+         // Go back to idle.
+         if (OT_None == iAI.CurrentOrderType(seller)) {
+            state = change_state(state, eCS_Idle, debug_on);
+         }
+
+         break;
+      case eCS_EscortOnly:
+         // We were attacked and lost the leader. Now we just wait here for the 
+         // fighting to end. The escorts have thier own orders.
+
+         break;
+      case eCS_Dead:
+         if (Sim.IsDead(seller)) {
+            Group.RemoveSim(seller_fleet, seller);
+         }
+
+         seller = iShip.Cast(Group.Leader(seller_fleet));
+
+         if (none == seller) {
+            state = change_state(state, eCS_Cull, debug_on);
+         }else {
+            state = change_state(state, eCS_EscortOnly, debug_on);
+         }
+         break;
+
+      case eCS_Cull:
+         // Player is far, or all the ships are dead. Set the last to allow
+         // culling and exit task.
+         iAI.PurgeOrders(seller_fleet);
+         ABB_Common.SetCullableGroup(seller_fleet, true);
+         Group.Destroy(seller_fleet, false);
+         debug atomic {
+            Debug.PrintString("tsPcWeaponSeller all ships culled, exit\n");
+         }
+
+         // Allow this operation to be physically created again.
+         tsFleetOp.SetCreated(operation, false);
+         return;
+
+         break;
+      default:
+         state = eCS_Init;
+         break;
+      }
+   }
+}
+
+
+task Comms()
+{
+   hship ship;
+   string ask_string;
+   bool start_deal;
+   hfaction player_faction, source_faction;
+
+   ship = iShip.Cast(tsShipComms.CommsSource());
+
+   // Turn off the comms display, now that the player knows he can talk to this ship.
+   tsShipComms.DisplayComms(ship, false);
+
+        
+   // Start the conversation.
+    iConversation.Begin();
+
+    // pcws_legal_player_agrees, "Yes, Lets Deal"
+    iConversation.AddResponse(
+       "pcws_player_agrees",
+       "pcws_player_agrees");       
+
+    // pcws_legal_player_refuses, "No Thanks"
+    iConversation.AddResponse(
+       "pcws_player_refuses",
+       "pcws_player_refuses");
+
+
+   // psws_legal_ask_player, "We supply the finest in weapon systems. Care to look?"
+    switch ( iConversation.Ask( ship, "", "pcws_legal_ask_player" ) )
+    {
+    case 1 :
+       player_faction = tsFaction.PlayerFaction();
+       source_faction = iSim.Faction(iSim.Cast(ship));
+       start_deal = true;
+
+       break;
+
+    case 2 :
+       // Player said no.
+       // pcws_legal_player_said_no, "This is a dangerous place. You will be back." 
+       iConversation.Say(ship,"", "pcws_legal_player_said_no");
+       start_deal = false;
+       break;
+
+    default :
+       // Player selected "Nothing"
+       // pcws_legal_player_said_nothing, "The quiet type."
+       iConversation.Say(ship,"", "pcws_legal_player_said_nothing");
+       start_deal = false;
+    }
+
+    // Finish the conversation.
+    iConversation.End();
+
+    if (start_deal) {
+       tsEquipBuy.TradeObjectStart(ship);
+    }
+
+}
+
+task CriminalComms()
+{
+   hship ship;
+   string ask_string;
+   bool start_deal;
+   hfaction player_faction, source_faction;
+
+   ship = iShip.Cast(tsShipComms.CommsSource());
+
+   // Turn off the comms display, now that the player knows he can talk to this ship.
+   tsShipComms.DisplayComms(ship, false);
+
+
+
+        // Start the conversation.
+    iConversation.Begin();
+
+    iConversation.AddResponse(
+       "pcws_player_agrees",
+       "pcws_player_agrees");
+
+    // Response 2
+    iConversation.AddResponse(
+       "pcws_player_refuses",
+       "pcws_player_refuses");
+
+    // Ask the player a question and switch on their response.
+
+    // pcws_crime_player_ask, "Can we hook you up with some 'restricted' equipment?"
+    switch ( iConversation.Ask( ship, "", "pcws_crime_player_ask") )
+    {
+    case 1 :
+       player_faction = tsFaction.PlayerFaction();
+       source_faction = iSim.Faction(iSim.Cast(ship));
+
+       start_deal = true;
+       break;
+
+    case 2 :
+       // Player said no.
+       // pcws_crime_refuse_reply, "Too bad. We have top of the line stuff. Real Navy."
+       iConversation.Say(ship,"", "pcws_crime_refuse_reply" );
+       start_deal = false;
+       break;
+
+    default :
+       // pcws_crime_nothing_reply, "Suit yourself."
+       start_deal = false;
+       iConversation.Say(ship,"", "pcws_crime_nothing_reply" );
+    }
+
+    // Finish the conversation.
+    iConversation.End();
+
+    if (start_deal) {
+       tsEquipBuy.TradeObjectStart(ship);
+    }
+
+}
+
+// Turns the specified two types of communications into
+// the proper comm task call name.
+string type2comms(string seller_type)
+{
+    if ("legal" == seller_type) {
+        return "tsPcWeaponSeller.Comms";
+    }else {
+        return "tsPcWeaponSeller.CriminalComms";
+    }
+
+    return "tsPcWeaponSeller.Comms";
+}
+
+
+
+
+
+
+
+eCSScriptState change_state(eCSScriptState state, eCSScriptState new_state, bool debug_on)
+{
+   if (debug_on) {
+      debug Debug.PrintString(String.FormatStrStr("tsPcTankerOp state change %s->%s\n",
+                                                  state2string(state),
+                                                  state2string(new_state)));
+   }
+
+   return new_state;
+}
+
+
+
+string state2string(eCSScriptState state)
+{
+   switch (state) {
+   case eCS_Init:
+      return "eCS_Init";
+      break;
+   case eCS_Idle:   
+      return "eCS_Idle";
+      break;
+   case eCS_Flee:   
+      return "eCS_Flee";
+      break;
+   case eCS_WaitApproach:   
+      return "eCS_WaitApproach";
+      break;
+   case eCS_EscortOnly:   
+      return "eCS_EscortOnly";
+      break;
+   case eCS_Dead:   
+      return "eCS_Dead";
+      break;
+   case eCS_Cull:   
+      return "eCS_Cull";
+      break;
+   default:
+      break;
+   }
+
+   return "eCS_Invalid";
+
+}
+
+
+
+/*   
+
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

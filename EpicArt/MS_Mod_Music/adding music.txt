@@ -1,0 +1,60 @@
+The music package is very easy to customize. 
+
+Music is added in "Suites". A suite is a file containing a list of MP3 music files to play for each "Mood" in the game. The following example is copied from a working Suite file (barrens_suite.ini).
+
+[Suite_properties]
+key_name=barrens
+
+[Ambient]
+stream[0]=sound:\streams\audio\music\a2_ambient
+
+[Action]
+stream[0]=sound:\streams\audio\music\a2_action
+
+[Discovery]
+stream[0]=sound:\streams\audio\music\a2_discovery
+
+[Tension]
+stream[0]=sound:\streams\audio\music\a2_tension
+
+[Theme]
+stream[0]=sound:\streams\audio\music\a2_theme
+
+
+To add a new suite, just copy an existing suite file, and replace the MP3 file names with new ones. You MUST change the key_name to a new single word name. This key name is how the music system will find your suite for later playing. Each suite file needs a unique name.
+
+You can add additional MP3 file names under each mood, like this
+
+[Action]
+stream[0]=sound:\streams\audio\music\terminator.mp3
+stream[1]=sound:\streams\audio\music\valkeri.mp3
+stream[2]=sound:\streams\audio\music\firestorm.mp3
+
+The music code will randomly shuffel between these files when combat is happening.
+
+You can add new Moods to your Suite files. These new moods will not be used by the standard code, but your missions can use them. The mood name must be all one word.
+
+Playing Your Music
+
+Once you have defined your new Suite, you can load it into the game by adding it to the epicmusic.ini file. Just put the suite file name under the SuiteList, incrementing the number. Here is an example:
+
+[SuiteList]
+suite[0]=ini:\audio\empire_suite
+suite[1]=ini:\audio\my_new_suite
+
+Also in the epicmusic.ini file is the definition of which music suite is the default for each system. If you want your music to play in a specific system, just change the "suite=key_name" line to be the same as your new file. So if your new files keyname was "revolution" you could change the music file as follows:
+
+[map:/geog/middle/al_wadi]        
+suite=revolution
+
+And now the player will hear your new suite whenever they go to this system.
+
+Testing your music
+
+A UniGui application has been written to let you test that your new music setup files all work. (I strongly recommend you test as you go). Just start UniGui, and then select Music Test GUI.
+
+This program displays the suites loaded on the left, and the moods on the right.
+
+Press a suite button to change to that suite. Press a mood button to change to that mood. Music defaults to Ambient mood. Only the default moods are supported, if you need more added, the test app can be updated.
+
+If your music is not loading or playing, then it is likely a typo in the INI files.

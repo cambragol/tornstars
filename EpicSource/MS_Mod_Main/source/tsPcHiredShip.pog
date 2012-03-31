@@ -1,0 +1,401 @@
+//*******************************************************************************************/
+//
+// tsPcHiredShip
+//
+// This pog object implements ships that can be hired by the player to become wingmen.
+// 
+//
+// March 2005, Jon Freise
+//******************************************************************************************/
+
+package tsPcHiredShip;
+
+uses    Sim,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        GUI,
+        iGUI,
+        iHUD,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        Math,
+        iShipCreation,
+        iComms,
+        iConversation,
+        iLagrangePoint,
+        iAI,
+
+        tsShipComms,
+        tsShipEnum,
+        tsPlayerFleet,
+        tsFaction,
+        tsMoney,
+        tsShipName,
+        tsPcOwner,
+        tsShip,
+        tsCull;
+
+
+
+provides PogCreate,
+         PogStart,
+         Comms;
+
+
+prototype setup_hired_ship(hship ship);
+
+prototype hmapentity nearby_location(hisim center);
+
+
+/*
+   Test code just looks up a sim type from the properties section of 
+   the class instance INI file. It creates that Sim and passes it 
+   back.
+*/
+
+hsim PogCreate(string template_name, string object_name)
+{
+
+   hinifile object_file;
+   string name;
+   string item_template, pog_class, start_function;
+   hship item;
+
+   debug Debug.PrintString("tsPcHiredShip.PogCreate\n");
+
+   object_file = INIFile.Create(template_name);
+
+   if (none == object_file) {
+      debug {
+         Debug.PrintString("tsPcHiredShip.PogCreate, failed to find object file\n");
+      }
+
+      return none;
+   }
+
+   // Pull needed items out of template file. Create the object.
+   // Attach them
+
+   pog_class = INIFile.String(object_file, "PogClass","name","none");
+
+
+   ///********************
+   // This block of code is class dependent. The rest must be done to adhere
+   // to the pog otbject calling conventions.
+
+   item_template = INIFile.String(object_file, "Properties","template","none");
+
+   INIFile.Destroy(object_file);
+
+
+   name = tsShipName.ShipName( "general", Math.RandomInt(0, 343));
+
+   item = tsShip.Create(item_template, name);
+
+   if (none == item) {
+      debug {
+         Debug.PrintString("tsPcHiredShip.PogCreate, bad object template\n");
+      }
+      return none;
+   }
+   ///********************
+
+
+   // All 
+   Object.AddStringProperty(item, "gt_pog_object_class", pog_class);
+   Object.AddStringProperty(item, "gt_pog_object_template", template_name);
+
+      
+   return item;
+}
+
+
+/*
+This function is called after the ship has been placed. 
+
+*/
+task PogStart(hsim pog_object)
+{
+   debug Debug.PrintString("tsPcHiredShip: starting\n");
+
+   ///***************************************
+   // This part of the start code is object dependent. The prior pieces must
+   // be done to adhere to the pog class calling convention.
+
+   setup_hired_ship(iShip.Cast(pog_object));
+
+   ///***************************************
+}
+
+/*
+; 
+; Example INI file for setting up a hired ship.
+; One of these template files should be created
+; for each kind of ship that can be hired.
+; Freighter, warship, etc.
+
+[PogClass]
+name=tsPcHiredShip
+
+[Properties]
+
+template=ini:/sims/ships/utility/freighter
+
+hiring_fee=integer one time hiring fee
+faction_standing=float, minimum faction standing the player must have
+
+
+ship_type = freighter
+;ship_type = warship
+;ship_type = tanker
+;ship_type = prospector
+;ship_type = miner
+
+*/
+
+
+
+// Read the ini file, setup the object. 
+setup_hired_ship(hship ship)
+{
+   hinifile control_file, ship_file;
+   int hiring_fee, daily_upkeep, fuel_per_jump;
+   string template_file_name, ship_template, ship_type, ship_desc;
+   float faction_standing;
+   hfaction faction;
+   hmapentity location;
+   hisim owner;
+
+   template_file_name = Object.StringProperty(ship, "gt_pog_object_template");
+   control_file = INIFile.Create(template_file_name);
+
+   if (none == control_file) {
+      debug Debug.PrintString("ERROR tsPcHiredShip. invalid template_file\n");
+      debug Debug.PrintString(template_file_name);
+      debug Debug.PrintString("\n");
+   }
+
+   // Read in the belt control properties
+   hiring_fee = INIFile.Int(control_file, "Properties", "hiring_fee", 10000);
+
+   ship_template = INIFile.String(control_file, "Properties", "template", "none");
+
+   faction_standing = tsFaction.String2LowerLevel(INIFile.String(control_file, 
+                                                                 "Properties", 
+                                                                 "faction_standing",
+                                                                 "FT_Neutral"));
+                                    
+   ship_type = INIFile.String(control_file, "Properties", "ship_type", "freighter");
+                                  
+   Object.AddIntProperty(ship, "gtHiredShipFee", hiring_fee);
+   Object.AddFloatProperty(ship, "gtHiredShipStanding", faction_standing);
+
+   INIFile.Destroy(control_file);
+
+
+   // Pull in the one line ship description string.
+   ship_file = INIFile.Create(ship_template);
+   ship_desc = INIFile.String(ship_file, "Properties", "text", "Nothing Special.");
+   INIFile.Destroy(ship_file);
+
+
+
+   Object.AddStringProperty(ship, "gtHiredShipDesc", ship_desc);   
+   Object.AddStringProperty(ship, "gtHiredShipType", ship_type);   
+
+
+   tsShipComms.AddComms(ship, "tsPcHiredShip.Comms");
+   tsShipComms.DisplayComms(ship, true);
+
+
+   location = nearby_location(ship);
+
+   // Find the owning station or operation of this hired ship.
+   // Set the faction of the ship to match its owner.
+   owner = iSim.Cast(tsPcOwner.Owner(ship));
+   faction = iSim.Faction(iSim.Cast(owner));
+   iSim.SetFaction(iSim.Cast(ship), faction);
+
+   tsCull.AddSim(iSim.Cast(location), ship);
+}
+
+
+
+// This is the new combined hired ship comm task.
+task Comms() {
+    hship ship;
+    hfaction player = iFaction.Find("Player");
+    hfaction source_faction;
+    string ask_string, ship_type, desc_string, ask_prompt;
+    int hire_fee, upkeep_fee, fleet_total;
+    float standing;
+    hhabitat station;
+    hgroup station_cull;
+    list player_fleet = tsShip.PlayerFleet();
+    bool finished;
+
+    fleet_total = List.ItemCount(player_fleet);
+
+
+    ship = iShip.Cast(tsShipComms.CommsSource());
+    station = iHabitat.Nearest(iMapEntity.SystemHabitats(),ship);
+
+
+    // Turn off the comms display, now that the player knows he can talk to this ship.
+    tsShipComms.DisplayComms(ship, false);
+
+
+    hire_fee = Object.IntProperty(ship, "gtHiredShipFee");
+    ship_type = Object.StringProperty(ship, "gtHiredShipType");
+    desc_string = Object.StringProperty(ship, "gtHiredShipDesc");
+
+
+    ask_prompt = String.Join("pchs_player_ask_", ship_type);
+    ask_string = Text.Field(ask_prompt, FT_Text);
+    ask_string = String.Join(ask_string,
+                             String.FormatInt(" $ %d", hire_fee));
+
+    finished = false;
+
+    // Start the conversation.
+    iConversation.Begin();
+
+    // Loop to let the player collect info.
+    do {
+
+        // pchs_player_refuses, "No, Thanks."
+        iConversation.AddResponse("pchs_player_refuses",
+                                  "pchs_player_refuses");
+
+
+        // pchs_player_info, "Tell me about your ship"
+        iConversation.AddResponse("pchs_player_info",
+                                  "pchs_player_info");
+
+
+        // pchs_player_accepts, "Yes, I will hire you"
+        iConversation.AddResponse("pchs_player_accepts",
+                                  "pchs_player_accepts");
+
+
+
+        // Ask the player a question and switch on their response.
+        switch ( iConversation.Ask( ship, "", ask_string ) ) {
+        case 1 :
+            // Player said no.
+            // pchs_player_refuse_response, "Very well."
+            iConversation.Say(ship,"", "pchs_player_refuse_response");
+            finished = true;
+            break;
+
+
+        case 2 :
+            // Player asked for more info
+            iConversation.Say(ship,"", desc_string );
+            Task.Sleep(Task.Current(), 0.75);
+            finished = false;
+
+            // pchs_ask_player_second, "Still looking to hire a ship? Hire Fee "
+            ask_string = Text.Field("pchs_ask_player_second", FT_Text);
+            ask_string = String.Join(ask_string, String.FormatInt(" $ %d", hire_fee));
+
+            break;
+
+
+        case 3 :
+            // Player wants to hire us.
+
+            // First we find out if the player has a high enough standing to hire this
+            // ship.
+            standing = Object.FloatProperty(ship, "gtHiredShipStanding");
+            source_faction = iSim.Faction(iSim.Cast(ship));
+
+            if (standing > iFaction.Feeling(source_faction, player)) {
+
+                // pchs_rep_low, "Sorry, your reputation is not good enough to trust you."
+                iConversation.Say(ship,"", "pchs_rep_low");
+                finished = true;
+
+            } else if (hire_fee >= tsMoney.ShipAccount()) {
+                // pchs_credits_low, "Sorry, you do not have enough funds to afford our services."
+                iConversation.Say(ship,"","pchs_credits_low");
+                finished = true;
+
+            } else if (fleet_total > 9) {
+                // pchs_max_wingmen, "Sorry, You already have enough wingmen." 
+                iConversation.Say(ship,"", "pchs_max_wingmen");
+                finished = true;
+
+            } else {
+
+                // pchs_join_fleet, "Glad to join you. What are your orders?"
+                iConversation.Say(ship,"", "pchs_join_fleet");
+
+                tsMoney.ChangeShipAccount(-1*hire_fee);
+                tsPlayerFleet.HireShip(ship);
+
+
+                // Prevent this sim from culling!
+                tsCull.RemoveSim(iSim.Cast(station), ship);
+
+                finished = true;
+                debug Debug.PrintString(String.FormatInt("Ship account %d\n",tsMoney.ShipAccount()));
+
+            }
+            break;
+
+
+        default :
+            // Player selected "Nothing" should never happen.
+            iConversation.Say(ship,"", "See Ya" );
+            finished = true;
+            break;
+        }
+
+    }while (!finished);
+
+    // Finish the conversation.
+    iConversation.End();
+}
+
+// pchs_player_ask_freighter, "Do you need to hire a freighter? Hire Fee "
+
+// pchs_player_ask_warship, "Do you need to hire a Warship? Hire Fee "
+
+// pchs_player_ask_tanker, "Do you need to hire a Tanker? Hire Fee "
+
+// pchs_player_ask_miner, "Do you need to hire a Mining Rig? Hire Fee "
+
+// pchs_player_ask_prospector, "Do you need to hire a Prospecting Ship? Hire Fee "
+
+
+// Finds the closest location or station.
+hmapentity nearby_location(hisim center)
+{
+   hlagrangepoint lpoint;
+   hhabitat habitat;
+
+   lpoint = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), center);
+   habitat = iHabitat.Nearest(iMapEntity.SystemHabitats(), center);
+
+   if (Sim.DistanceBetween(habitat, center) < Sim.DistanceBetween(lpoint, center)) {
+      return habitat;
+   }
+
+   return lpoint;
+}
+
+/*   
+
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

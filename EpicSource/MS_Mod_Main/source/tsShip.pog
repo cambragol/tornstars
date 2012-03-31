@@ -1,0 +1,1163 @@
+//*******************************************************************************************/
+//
+// tsShip.pog
+//
+// 
+//
+// Nov 2006, Jon Freise
+//
+//******************************************************************************************/
+
+package tsShip;
+
+//[of]:Import
+uses	 Sim,
+		iShip,
+		iSim,
+		iPilotSetup,
+		Debug,
+		Global,
+		GUI,
+		iDirector,
+		iGUI,
+		iHUD,
+		iHabitat,
+		iMapEntity,
+		INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+		iUtilities,
+		iCargo,
+		iInventory,
+		iComms, 
+		iAi,
+		iWingmen,
+		iRemotePilot,
+		iDeathScript,
+		iGame,
+		Math,
+		iInventory,
+		iConversation,
+		CargoTypes,
+		iMultiplay,
+		
+      //tsShipCreationEnum,
+      //tsShipCreation,
+      //tsLFleet,
+      //tsShipName,
+      //tsPilotSetup,
+      //tsPcOwner,
+      
+		tsStationEnum,
+      tsShipEnum,
+		tsEconUtil,
+		tsPodUtil,
+		tsShipComms,
+		tsFormation,
+		tsFaction,
+		tsDebug;
+		
+//[cf]
+
+
+//[of]:Export
+provides 
+        Fuel,
+        SetFuel,
+
+        FuelMax,
+        SetFuelMax,
+
+        FuelPerJump,
+        SetFuelPerJump,
+
+        CanJump,
+        DeductFuelPerJump,
+
+        DailyFuel,
+        SetDailyFuel,
+
+        DailyUpkeep,
+        SetDailyUpkeep,
+        
+        World,
+        SetWorld,
+        ShipPodList,
+   
+        DockParent,
+ 
+        IsCapsuleJumping,
+        IsMiner,
+        IsProspector,
+        IsLongRangeScan,
+        IsTanker,
+	  IsFreighter,
+        IsWarship,
+
+        Owner,
+        SetOwner,
+
+        IsPlayerFleetShip,
+        PlayerFleet,
+        AddNewShip,
+        RemoveFleetShip,
+        
+        ReadIniFile,
+    
+        Create,
+
+        SetSaveId,
+        SaveId,
+        FindSubsimByTemplateNumber,
+        ReplaceSubsim,
+        PlaceSubsim,
+        LinkPlayerWeapons; 
+
+//[cf]
+
+
+ 
+prototype hsubsim FindSubsimByTemplateNumber(hship ship, int template_number);
+
+
+// Reading INI defaults
+prototype float default_max_fuel(int ship_type);
+prototype float default_daily_fuel(int ship_type);
+prototype float default_jump_fuel(int ship_type);
+prototype int default_daily_cost(int ship_type);
+
+prototype ReadIniFile(hship ship);
+
+prototype PlaceSubsim(hship ship, hsubsim subsim);
+
+prototype tag_subsims(hship ship);
+
+prototype add_hardpoints(hship ship, hinifile ship_file);
+
+
+prototype null_subsims(hship ship);
+
+prototype float DailyFuel(hship ship);
+
+
+int float2int(float number)
+{
+   return number;
+}
+
+float int2float(int number)
+{
+   return number;
+}
+
+
+SetSaveId(hship ship, int id)
+{
+   Object.AddIntProperty(ship, "tsss_save_id", id);
+}
+
+
+int SaveId(hship ship)
+{
+   return Object.IntProperty(ship, "tsss_save_id");
+}
+
+
+// This is the maximum level of fuel that
+// can be loaded into the ship.
+SetFuelMax(hship ship, float fuel_maximum)
+{
+   if (Object.PropertyExists(ship, "max_fuel")) {
+      Object.SetFloatProperty(ship, "max_fuel", fuel_maximum);
+   }else{
+      Object.AddFloatProperty(ship, "max_fuel", fuel_maximum);
+   }
+}
+
+float FuelMax(hship ship)
+{
+   return Object.FloatProperty(ship, "max_fuel");
+}
+
+
+// This is the current level of fuel in the ship. Zero
+// is the lowest and max_fuel is the highest value.
+// When this number hits zero, the ship cannot move
+// or fight.
+SetFuel(hship ship, float fuel_used)
+{
+   // Clip current fuel supply to the ships limits.
+   if (fuel_used < 0.0)
+   {
+      fuel_used = 0.0;
+   }else if (fuel_used > FuelMax(ship))
+   {
+      fuel_used = FuelMax(ship);
+   }
+
+   if (Object.PropertyExists(ship, "fuel")) {
+      Object.SetFloatProperty(ship, "fuel", fuel_used);
+   }else{
+      Object.AddFloatProperty(ship, "fuel", fuel_used);
+   }
+}
+
+float Fuel(hship ship)
+{
+   return Object.FloatProperty(ship, "fuel");
+}
+
+
+
+
+// This is the amount of fuel the ship uses to make one capsule jump.
+SetFuelPerJump(hship ship, float fuel_per_jump)
+{
+   if (Object.PropertyExists(ship, "jump_fuel")) {
+      Object.SetFloatProperty(ship, "jump_fuel", fuel_per_jump);
+   }else{
+      Object.AddFloatProperty(ship, "jump_fuel", fuel_per_jump);
+   }
+}
+
+float FuelPerJump(hship ship)
+{
+   return Object.FloatProperty(ship, "jump_fuel");
+}
+
+// cost is the percent modifier for the jump
+/*
+ * We make sure there is a DailyFuel's worth in excess of the jump 
+ * because ships always(?) have the daily fuel use deducted during a 
+ * jump, which can end up with them stuck on 0 fuel at the other side.
+ */
+bool CanJump(hship ship, float cost)
+{
+  atomic debug {
+    tsDebug.PrintString("tsjump_debug", "checking jump: ship fuel: ");
+    tsDebug.PrintString("tsjump_debug", String.FromFloat(Fuel(ship)));
+    tsDebug.PrintString("tsjump_debug", "\n");
+    tsDebug.PrintString("tsjump_debug", "route cost: ");
+    tsDebug.PrintString("tsjump_debug", String.FromFloat(cost));
+    tsDebug.PrintString("tsjump_debug", "\n");
+    tsDebug.PrintString("tsjump_debug", "total jump cost: ");
+    tsDebug.PrintString("tsjump_debug", String.FromFloat(cost * FuelPerJump(ship)));
+    tsDebug.PrintString("tsjump_debug", "\n");
+  }
+  if ((FuelPerJump(ship) * cost) + DailyFuel(ship) < Fuel(ship))
+  {
+    return true;
+  }
+  return false;
+}
+
+// cost is the percent modifier for the jump
+// assumption: we've got enough fuel to jump, callers beware!
+DeductFuelPerJump(hship ship, float cost)
+{
+  float amount;
+
+  atomic debug {
+    tsDebug.PrintString("tsjump_debug", "about to deduct fuel for jump: ship fuel: ");
+    tsDebug.PrintString("tsjump_debug", String.FromFloat(Fuel(ship)));
+    tsDebug.PrintString("tsjump_debug", "\n");
+    tsDebug.PrintString("tsjump_debug", "route cost: ");
+    tsDebug.PrintString("tsjump_debug", String.FromFloat(cost));
+    tsDebug.PrintString("tsjump_debug", "\n");
+    tsDebug.PrintString("tsjump_debug", "total jump cost: ");
+    tsDebug.PrintString("tsjump_debug", String.FromFloat(cost * FuelPerJump(ship)));
+    tsDebug.PrintString("tsjump_debug", "\n");
+  }
+  // not sure that this really has to be atomic, but wth.
+  atomic {
+    amount = FuelPerJump(ship) * cost;
+    amount = Fuel(ship) - amount;
+    SetFuel(ship, amount);
+  }
+}
+
+// This is the amount of fuel a ship burns for reactor power and
+// using thrusters to move around.
+SetDailyFuel(hship ship, float fuel_amount)
+{
+   if (Object.PropertyExists(ship, "daily_fuel")) {
+      Object.SetFloatProperty(ship, "daily_fuel", fuel_amount);
+   }else{
+      Object.AddFloatProperty(ship, "daily_fuel", fuel_amount);
+   }
+}
+
+float DailyFuel(hship ship)
+{
+   return Object.FloatProperty(ship, "daily_fuel");
+}
+
+
+
+// This is the cost in credits of operating a ship for one day.
+// The credit cost pays for ship upkeep, standard expenses, and crew.
+// Fuel is not included.
+SetDailyUpkeep(hship ship, int daily_cost)
+{
+   if (Object.PropertyExists(ship, "daily_cost")) {
+      Object.SetIntProperty(ship, "daily_cost", daily_cost);
+   }else{
+      Object.AddIntProperty(ship, "daily_cost", daily_cost);
+   }
+}
+
+int DailyUpkeep(hship ship)
+{
+   return Object.IntProperty(ship, "daily_cost");
+}
+
+
+
+SetWorld(hship ship, string world)
+{
+   if (Object.PropertyExists(ship, "EpicFleetWorld")) {
+      Object.SetStringProperty(ship, "EpicFleetWorld", world);
+   }else{
+      Object.AddStringProperty(ship, "EpicFleetWorld", world);
+   }
+}
+
+string World(hship ship)
+{
+   return Object.StringProperty(ship, "EpicFleetWorld");
+}
+
+
+
+SetOwner(hship ship, int owner)
+{
+   Object.AddIntProperty(ship, "EpicFleetOwner", owner);
+}
+
+int Owner(hship ship)
+{
+   return Object.IntProperty(ship, "EpicFleetOwner");
+}
+
+
+// Returns all cargo pods docked to a ship.
+list ShipPodList(hsim ship)
+{
+   set pods;
+   list docked_pods;
+   hsim child;
+
+   // Search all subsims for cargo pods.
+   
+   pods = Sim.Children(ship);
+
+   while (!Set.IsEmpty(pods)) {
+      child = Sim.Cast(Set.FirstElement(pods));
+      Set.Remove(pods, child);
+
+      if (T_CargoPod == iSim.Type(child)) {
+         List.AddTail(docked_pods, child);
+      }
+   }
+
+   return docked_pods;
+}
+
+// Creates a ship from it's template and attaches all the epic specific data 
+// that is needed.
+hship Create(string ini_file, string name)
+{
+   hship ship;
+
+   ship = iShip.Create(ini_file, name);
+
+   if (none != ship) {
+      ReadIniFile(ship);
+   }
+
+   return ship; 
+}
+
+
+
+// Read in the INI file, attach the properties to the ship.
+ReadIniFile(hship ship)
+{
+
+   hinifile ship_file;
+   float max_fuel;
+   float daily_fuel;
+   float jump_fuel;
+   int daily_cost;
+   int ship_type;
+   int tanker, miner, prospector, study_days, scan_range, freighter;
+   int hiring_fee;
+   float faction_standing;
+   string ship_desc;
+   float mining_efficiency;
+   string template_name;
+   string death_script;
+   string ship_type_str;
+
+   template_name = Sim.TemplateName(ship);
+
+   if (template_name == "") {
+      // The player ship has no template. So we pick a new one based on ships class.
+      switch (iSim.Type(ship)) {
+      case T_CommandSection:
+         template_name = "ini:/sims/ships/player/comsec";
+         break;
+      case T_Tug:
+         template_name = "ini:/sims/ships/player/tug";
+         break;
+      case T_Patcom:
+         template_name = "ini:/sims/ships/player/fast_attack";
+         break;
+      case T_Corvette:
+         template_name = "ini:/sims/ships/player/heavy_corvette";
+         break;
+      case T_Fighter:
+      case T_Interceptor:
+         template_name = "ini:/sims/ships/player/storm_petrel";
+         break;
+      default:
+         break;
+      }
+   }
+
+   ship_file = INIFile.Create(template_name);
+   ship_type = iSim.Type(ship);
+
+   max_fuel = INIFile.Float(ship_file,"Properties","max_fuel", default_max_fuel(ship_type));
+   daily_fuel = INIFile.Float(ship_file,"Properties","daily_fuel", default_daily_fuel(ship_type));
+   jump_fuel = INIFile.Float(ship_file,"Properties","jump_fuel", default_jump_fuel(ship_type));
+   daily_cost = INIFile.Int(ship_file,"Properties","daily_cost", default_daily_cost(ship_type));
+   tanker = INIFile.Int(ship_file,"Properties","tanker", 0);
+   freighter = INIFile.Int(ship_file,"Properties","freighter", 0);
+   miner = INIFile.Int(ship_file,"Properties","miner", 0);
+   mining_efficiency = INIFile.Float(ship_file,"Properties","mining_efficiency", 0);
+   prospector = INIFile.Int(ship_file,"Properties","prospector", 0);
+   study_days = INIFile.Int(ship_file,"Properties","study_days", 0);
+   scan_range = INIFile.Int(ship_file,"Properties","scan_range", 0);
+   // allow default PS death script override
+   death_script = INIFile.String(ship_file,"Properties","death_script", "");
+   // get ship hire data
+   hiring_fee = INIFile.Int(ship_file, "Properties","hiring_fee", 0);
+   faction_standing = tsFaction.String2LowerLevel(INIFile.String(ship_file,"Properties", "faction_standing","FT_Neutral"));
+   ship_desc = INIFile.String(ship_file,"Properties", "ship_desc", "");
+   ship_type_str = INIFile.String(ship_file,"Properties", "ship_type", "");
+
+
+   // Attach the properties to the ship.
+   Object.AddFloatProperty(ship, "fuel", max_fuel);
+   Object.AddFloatProperty(ship, "max_fuel", max_fuel);
+   Object.AddFloatProperty(ship, "daily_fuel", daily_fuel);
+   Object.AddFloatProperty(ship, "jump_fuel", jump_fuel);
+   Object.AddIntProperty(ship, "daily_cost", daily_cost);
+
+   Object.AddIntProperty(ship, "tanker", tanker);
+   Object.AddIntProperty(ship, "freighter", freighter);
+   Object.AddIntProperty(ship, "miner", miner);
+   Object.AddFloatProperty(ship, "mining_efficiency", mining_efficiency);
+   Object.AddIntProperty(ship, "prospector", prospector);
+   Object.AddIntProperty(ship, "study_days", study_days);
+   Object.AddIntProperty(ship, "scan_range", scan_range);
+
+   Object.AddBoolProperty(ship, "fuel_locked", false);
+
+
+   // add in ship hire properties
+   /*
+   a ship ini template file needs to have these attributes for hiring to work
+   [Properties]
+   hiring_fee=integer one time hiring fee
+   faction_standing=float, minimum faction standing the player must have
+   ship_desc=some text to describe this ship
+   */
+   if(hiring_fee > 0)         Object.AddIntProperty(ship, "gtHiredShipFee", hiring_fee);
+                              Object.AddFloatProperty(ship, "gtHiredShipStanding", faction_standing);
+   if(ship_desc != "")        Object.AddStringProperty(ship, "gtHiredShipDesc", ship_desc);   
+   if(ship_type_str != "")    Object.AddStringProperty(ship, "gtHiredShipType", ship_type_str);   
+
+
+   // only set the death script if we found one.
+   if(death_script != "")     Object.SetStringProperty ( ship, "death_script", death_script );
+
+
+   // Attach the template numbers and location properties to the subsims
+   // for saving and loadout.
+   null_subsims(ship);
+
+   // Match up the template numbers to the created subsims.
+   // tag_subsims(ship);
+
+   // Add any subsystems in the ships hardpoint list.
+   //add_hardpoints(ship, ship_file);
+
+   INIFile.Destroy(ship_file);
+}
+
+
+// If this ship is docked to a larger ship, return that ship.
+hisim DockParent(hship ship)
+{
+   return iSim.Cast(Sim.Parent(ship));
+}
+
+bool IsLongRangeScan(hship ship)
+{
+   return (Object.IntProperty(ship,"scan_range") >= 1);
+}
+
+bool IsProspector(hship ship)
+{
+   return (Object.IntProperty(ship,"prospector") >= 1);
+}
+
+bool IsMiner(hship ship)
+{
+   return (Object.IntProperty(ship,"miner") >= 1);
+}
+
+bool IsTanker(hship ship)
+{
+   return (Object.IntProperty(ship,"tanker") >= 1);
+}
+
+bool IsFreighter(hship ship)
+{
+   return (Object.StringProperty(ship,"gtHiredShipType") == "freighter");
+}
+
+bool IsCapsuleJumping(hship ship)
+{
+   if (iSim.WorldName(ship) == "map:/geog/middle/capsule_space"){
+      return true;
+   }
+
+   return false;
+}
+
+
+// Is this an armed ship? Transports and utility vessels are excluded.
+bool IsWarship(hship ship)
+{
+   if (iSim.Type(ship) & (T_Fighter | T_Tug | T_Patcom | T_Utility | T_Interceptor | T_Corvette | T_Destroyer | T_Cruiser | T_Carrier)) {
+      return true;
+   }
+   return false;
+}
+
+
+
+
+
+
+
+
+
+float default_max_fuel(int ship_type)
+{
+
+    //debug Debug.PrintString("tsShip.using default max fuel\n");
+
+   switch (ship_type)
+   {
+
+   case 	T_Drone	: return 500.0; 
+      break;
+   case 	T_Waldo	: return 500.0; 
+      break;
+   case 	T_CommandSection: return 500.0; 
+      break;
+   case 	T_Utility			: return 500.0; 
+      break;
+   case 	T_Passenger			: return 500.0; 
+      break;
+   case 	T_Fighter			: return 500.0; 
+      break;
+   case 	T_Tug				: return 500.0; 
+      break;
+   case 	T_Patcom			: return 500.0; 
+      break;
+   case 	T_Interceptor	: return 500.0; 
+      break;
+   case 	T_Corvette		: return 500.0; 
+      break;
+   case 	T_Freighter		: return 500.0; 
+      break;
+   case 	T_Destroyer		: return 500.0; 
+      break;
+   case 	T_Cruiser		: return 500.0; 
+      break;
+   case 	T_Carrier		: return 500.0; 
+      break;
+   default: 
+      break;
+   }
+
+   return 500.0;
+}
+
+
+float default_daily_fuel(int ship_type)
+{
+   
+   switch (ship_type)
+   {
+
+   case 	T_Drone	: return 10.0; 
+      break;
+   case 	T_Waldo	: return 10.0; 
+      break;
+   case 	T_CommandSection: return 10.0; 
+      break;
+   case 	T_Utility			: return 10.0; 
+      break;
+   case 	T_Passenger			: return 10.0; 
+      break;
+   case 	T_Fighter			: return 10.0; 
+      break;
+   case 	T_Tug				: return 10.0; 
+      break;
+   case 	T_Patcom			: return 10.0; 
+      break;
+   case 	T_Interceptor	: return 10.0; 
+      break;
+   case 	T_Corvette		: return 10.0; 
+      break;
+   case 	T_Freighter		: return 10.0; 
+      break;
+   case 	T_Destroyer		: return 10.0; 
+      break;
+   case 	T_Cruiser		: return 10.0; 
+      break;
+   case 	T_Carrier		: return 10.0; 
+      break;
+   default: 
+      break;
+   }
+
+   return 10.0;
+
+}
+
+
+float default_jump_fuel(int ship_type)
+{
+   switch (ship_type)
+   {
+
+   case 	T_Drone	: return 100.0; 
+      break;
+   case 	T_Waldo	: return 100.0; 
+      break;
+   case 	T_CommandSection: return 100.0; 
+      break;
+   case 	T_Utility			: return 100.0; 
+      break;
+   case 	T_Passenger			: return 100.0; 
+      break;
+   case 	T_Fighter			: return 100.0; 
+      break;
+   case 	T_Tug				: return 100.0; 
+      break;
+   case 	T_Patcom			: return 100.0; 
+      break;
+   case 	T_Interceptor	: return 100.0; 
+      break;
+   case 	T_Corvette		: return 100.0; 
+      break;
+   case 	T_Freighter		: return 100.0; 
+      break;
+   case 	T_Destroyer		: return 100.0; 
+      break;
+   case 	T_Cruiser		: return 100.0; 
+      break;
+   case 	T_Carrier		: return 100.0; 
+      break;
+   default: 
+      break;
+   }
+
+   return 100.0;
+}
+
+
+int default_daily_cost(int ship_type)
+{
+   switch (ship_type)
+   {
+
+   case 	T_Drone	: return 10; 
+      break;
+   case 	T_Waldo	: return 10; 
+      break;
+   case 	T_CommandSection: return 10; 
+      break;
+   case 	T_Utility			: return 10; 
+      break;
+   case 	T_Passenger			: return 10; 
+      break;
+   case 	T_Fighter			: return 10; 
+      break;
+   case 	T_Tug				: return 10; 
+      break;
+   case 	T_Patcom			: return 10; 
+      break;
+   case 	T_Interceptor	: return 10; 
+      break;
+   case 	T_Corvette		: return 10; 
+      break;
+   case 	T_Freighter		: return 10; 
+      break;
+   case 	T_Destroyer		: return 10; 
+      break;
+   case 	T_Cruiser		: return 10; 
+      break;
+   case 	T_Carrier		: return 10; 
+      break;
+   default: 
+      break;
+   }
+
+   return 10;
+}
+
+
+
+
+
+
+// This function attaches the template number and the null position information to
+// each subsim.
+null_subsims(hship ship)
+{
+   string template_name, subsim_template, subsim_name, subsim_class, null_name;
+   hinifile ship_file;
+   hinifile template_file;
+   hsubsim subsim;
+   int subsim_count, template_count;
+   bool not_found;
+
+   float xpos, ypos, zpos;
+   float yaw, pitch, roll;
+
+   template_name = Sim.TemplateName(ship);
+
+   if (template_name == "") {
+      // No template, there is nothing we can do.
+      debug Debug.PrintString("tsShip.null_subsims ship has no template file\n");
+      return;
+   }
+
+   /*
+   debug {
+      Debug.PrintString("tsShip.null_subsims ");                        
+      Debug.PrintString(template_name);
+      Debug.PrintString(" ship type\n");
+   }
+   */
+
+   ship_file = INIFile.Create(template_name);   
+
+   if (ship_file == none) {
+      // Invalid ship template, there is nothing we can do
+      debug Debug.PrintString("tsShip.null_subsims Error invalid ship template file\n");
+      return;
+   }
+   
+   // Find the highest numbered template entry.
+   template_count = 0;
+   while (INIFile.NumberedExists(ship_file,"Subsims","template",template_count)) {
+      ++template_count;
+   } 
+   --template_count;
+
+   // Now, walk backwards down the template entries. 
+   xpos = 0;
+   ypos = 0;
+   zpos = 0;
+
+   yaw = 0;
+   pitch = 0;
+   roll = 0;
+
+   while (template_count >=0){
+      subsim_template = INIFile.NumberedString(ship_file,"Subsims","template",template_count,"");
+
+      if ("" != subsim_template) {
+         template_file = INIFile.Create(subsim_template);
+
+         // Check if this template entry has a matching null entry. Then attach the nulls position
+         // data to the subsim.
+         if (INIFile.NumberedExists(ship_file, "Subsims", "null", template_count)) {
+            null_name = INIFile.NumberedString(ship_file,"Subsims","null",template_count,"null");
+
+            xpos = INIFile.NumberedVectorX(ship_file,"Subsims","null_position",template_count);
+            ypos = INIFile.NumberedVectorY(ship_file,"Subsims","null_position",template_count);
+            zpos = INIFile.NumberedVectorZ(ship_file,"Subsims","null_position",template_count);
+
+            yaw = INIFile.NumberedVectorX(ship_file,"Subsims","null_orientation",template_count);
+            pitch = INIFile.NumberedVectorY(ship_file,"Subsims","null_orientation",template_count);
+            roll = INIFile.NumberedVectorZ(ship_file,"Subsims","null_orientation",template_count);   
+         }
+
+         if (template_file != none) {
+            subsim_class = INIFile.String(template_file,"Class","name","");
+            subsim_name = INIFile.String(template_file,"Properties","name","");
+            INIFile.Destroy(template_file);
+
+
+            // Decrement through the ships subsims, looking for one by this name.
+            subsim_count = Sim.SubsimCount(ship);
+            not_found = true;
+            do {
+               subsim = Sim.NthSubsim(ship, subsim_count);
+
+               if (subsim_name == Object.StringProperty(subsim,"name")) {
+
+                  // Check if we already tagged this one.
+                  if (!Object.PropertyExists(subsim,"subsim_template")) {
+
+                     /*
+                     debug {
+                        Debug.PrintString("tsShip.null_subsims ");                     
+                        Debug.PrintHandle(subsim);
+                        Debug.PrintString(" ");
+                        Debug.PrintString(subsim_template);
+                        Debug.PrintString(" ");
+                        Debug.PrintInt(template_count);
+                        Debug.PrintString("\n");
+                     }
+                     */
+
+                     not_found = false;
+                     Object.AddStringProperty(subsim,"subsim_template", subsim_template);
+                     Object.AddStringProperty(subsim,"subsim_class", subsim_class);
+                     Object.AddIntProperty(subsim,"template_number", template_count);
+                     Object.AddVectorProperty(subsim, "position", xpos, ypos, zpos);
+                     Object.AddVectorProperty(subsim, "orientation", yaw, pitch, roll);
+                     Object.AddStringProperty(subsim,"null_name", null_name);
+                  }
+               }
+               --subsim_count;
+            } while (not_found && (subsim_count > -1) );
+
+            if (not_found) {
+                  debug {
+                     Debug.PrintString(subsim_template);
+                     Debug.PrintString(" tsShip.null_subsims Error no match\n");
+                  }
+            }
+         }
+      }
+      --template_count;
+   }
+
+
+   INIFile.Destroy(ship_file);
+}
+
+
+
+// returns the subsim matching this template number.
+hsubsim FindSubsimByTemplateNumber(hship ship, int template_number)
+{
+   int subsim_count = Sim.SubsimCount(ship);
+   int i;
+   hsubsim subsim;
+
+   for (i=0;i<subsim_count;++i) {
+      subsim = Sim.NthSubsim(ship,i);
+
+      if (Object.IntProperty(subsim,"template_number") == template_number) {
+         return subsim;
+      }
+   }
+
+   return none;
+}
+
+
+
+
+
+// Replaces the passed in subsim with a new one created from template_name.
+hsubsim ReplaceSubsim(hship ship, hsubsim subsim, string template_name)
+{
+   string hardpoint_name, subsim_class, hardpoint_type, null_name;
+   int template_number;
+   float xpos, ypos, zpos, roll, pitch, yaw;
+   hsubsim new_subsim;
+   hinifile subsim_file;
+
+   if (Object.PropertyExists(subsim, "template_number")) {
+
+      subsim_file = INIFile.Create(template_name);
+
+      if (none != subsim_file) {
+         subsim_class = INIFile.String(subsim_file,"Class","name","");
+         INIFile.Destroy(subsim_file);
+
+         new_subsim = Subsim.Create(template_name);
+
+         if (none != subsim) {
+            template_number = Object.IntProperty(subsim,"template_number");
+
+            xpos = Object.VectorPropertyX(subsim,"position");
+            ypos = Object.VectorPropertyY(subsim,"position");
+            zpos = Object.VectorPropertyZ(subsim,"position");
+
+            yaw =   Object.VectorPropertyX(subsim,"orientation");
+            pitch = Object.VectorPropertyY(subsim,"orientation");
+            roll =  Object.VectorPropertyZ(subsim,"orientation");
+            null_name = Object.StringProperty(subsim, "null_name");
+
+            Object.AddStringProperty(new_subsim,"subsim_template", template_name);
+            Object.AddStringProperty(new_subsim,"subsim_class", subsim_class);
+            Object.AddStringProperty(new_subsim,"null_name", null_name);
+            Object.AddIntProperty(new_subsim,"template_number", template_number);
+
+            Object.AddVectorProperty(new_subsim, "position", xpos, ypos, zpos);
+            Object.AddVectorProperty(new_subsim, "orientation", yaw, pitch, roll);
+
+            Sim.AddSubsim(ship, new_subsim);
+
+            PlaceSubsim(ship, new_subsim);
+
+            // Now remove the old subsim.
+            Subsim.Destroy(subsim);
+
+            return new_subsim;
+         }else{
+            debug Debug.PrintString("tsShip.ReplaceSubsim Error create subsim failed");
+         }
+      }else {
+         debug Debug.PrintString("tsShip.ReplaceSubsim Error template file invalid");
+      }
+   }else {
+      debug Debug.PrintString("tsShip.ReplaceSubsim Error subsim has no template number");
+   }
+
+   return none;
+}
+
+// Used to place a subsim that has all the required location properties already attached.
+// It must be added to the ship first. 
+PlaceSubsim(hship ship, hsubsim subsim)
+{
+   float xpos, ypos, zpos, roll, pitch, yaw;
+
+   xpos = Object.VectorPropertyX(subsim,"position");
+   ypos = Object.VectorPropertyY(subsim,"position");
+   zpos = Object.VectorPropertyZ(subsim,"position");
+
+   yaw =   Object.VectorPropertyX(subsim,"orientation");
+   pitch = Object.VectorPropertyY(subsim,"orientation");
+   roll =  Object.VectorPropertyZ(subsim,"orientation");
+
+   Subsim.Place(subsim, xpos, ypos, zpos);
+   Subsim.OrientateEuler(subsim, yaw, pitch, roll);
+}
+
+
+
+
+
+
+list remove_beams(hship ship)
+{
+   hsubsim subsim;
+   list beams;
+   int i = 0;
+   hsim beam_object;
+
+   while (i<Sim.SubsimCount(ship)) {
+      subsim = Sim.NthSubsim(ship, i);
+      if ("icBeamProjector" == Object.StringProperty(subsim, "subsim_class")) {
+         beam_object = Sim.Create("ini:/sims/nav/waypoint", "beam");
+         Object.AddIntProperty(beam_object,"template_number", Object.IntProperty(subsim, "template_number"));
+         Object.AddStringProperty(beam_object,"subsim_template", Object.StringProperty(subsim, "subsim_template"));
+
+         List.AddTail(beams, beam_object);
+
+         // put a mountpoint here while the weapons are linked.
+         ReplaceSubsim(ship, subsim, "ini:/subsims/mountpoints/pylon_mount");
+
+      }else {
+         ++i;
+      }
+   }
+
+   return beams;
+}
+
+attach_beams(hship ship, list beams)
+{
+   int i, total, position;
+   hsubsim mountpoint, subsim;
+   hsim beam_object;
+   string subsim_template;
+
+   
+
+   total = List.ItemCount(beams);
+   for (i=0;i<total;++i) {
+      beam_object = Sim.Cast(List.GetNth(beams, i));
+
+      position = Object.IntProperty(beam_object,"template_number");
+      subsim_template = Object.StringProperty(beam_object,"subsim_template");
+
+      mountpoint = FindSubsimByTemplateNumber(ship, position);
+
+      subsim = ReplaceSubsim(ship, mountpoint, subsim_template);
+
+      atomic debug {
+         Debug.PrintHandle(subsim);
+         Debug.PrintString(" replacing-beam\n");
+      }
+
+   }
+}
+ 
+
+
+// Tries to link the player weapons.
+// Beams are removed before the link to prevent crashes.
+LinkPlayerWeapons(hship ship)
+{
+   list beams;
+
+   beams = remove_beams(ship);
+
+   if (!Global.Bool("tsdisable_weapon_link")) {
+
+      iMultiplay.UnlinkShipWeapons(ship);
+
+      iMultiplay.LinkShipWeapons(ship);
+   }
+
+   attach_beams(ship, beams);
+}
+
+
+
+
+
+//******************************************************************************************/
+// Player Fleet handling routines. They end up here because POG cannot 
+// handle circular dependency and they need to be at the bottom of the hierarcy.
+//******************************************************************************************/
+
+
+//[of]:add_ship_to_list(hship ship)
+add_ship_to_list(hship ship)
+{
+   set fleet;
+    
+   if (none == ship) {
+      return;
+   }
+   atomic {
+      if (Global.Exists("g_epic_fleet_player_list")) {
+         fleet = Global.Set("g_epic_fleet_player_list");
+         Set.Add(fleet, ship);
+         Global.SetSet("g_epic_fleet_player_list", fleet);
+      }else {
+         Set.Add(fleet, ship);
+         Global.CreateSet("g_epic_fleet_player_list", GA_Write|GA_NoSave, fleet);
+      }
+   }
+}
+//[cf]
+
+
+//[of]:remove_ship_from_list(hship ship)
+remove_ship_from_list(hship ship)
+{
+   set fleet;
+    
+   if (none == ship) {
+      return;
+   }
+
+   if (!Global.Exists("g_epic_fleet_player_list")) {
+      return;
+   }
+
+   atomic {
+      fleet = Global.Set("g_epic_fleet_player_list");
+      Set.Remove(fleet,ship);
+      Global.SetSet("g_epic_fleet_player_list",fleet);
+   }
+}
+
+
+//[of]:AddNewShip(hship ship)
+AddNewShip(hship ship)
+{
+   add_ship_to_list(ship);
+
+}
+//[cf]
+
+
+//[of]:RemoveFleetShip(hship ship)
+RemoveFleetShip(hship ship)
+{
+   remove_ship_from_list(ship);
+}
+//[cf]
+
+
+//[of]:list PlayerFleet()
+list PlayerFleet()
+{
+   list fleet;
+   hship player = iShip.FindPlayerShip();
+
+   fleet = List.FromSet(Global.Set("g_epic_fleet_player_list"));
+
+   List.AddHead(fleet, player);
+
+   return fleet;
+}
+//[cf]
+
+
+//[of]:bool IsPlayerFleetShip(hsim ship)
+bool IsPlayerFleetShip(hsim ship)
+{
+   set fleet = Global.Set("g_epic_fleet_player_list");
+   hship player = iShip.FindPlayerShip();
+
+   Set.Add(fleet, player);
+
+   if (Set.Contains(fleet, ship)) {
+      return true;
+   }
+
+   return false;
+}
+//[cf]
+
+
+
+//[cf]
+
+
+
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

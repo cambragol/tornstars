@@ -1,0 +1,172 @@
+; Translation strings for the Ship Loadout,
+gt_loadoutgui_title,"SHIP FITTER"
+gt_loadoutgui_subtitle,"Repair, rearm, refuel, equip"
+gt_loadoutgui_exit,"EXIT"
+
+gt_loadoutgui_fleet_list,"Player Fleet"
+gt_loadoutgui_ship_info,"Ship Information"
+
+gt_loadoutgui_systems_list,"Removable Systems"
+gt_loadoutgui_equipment_list,"Possible Replacement"
+
+gt_loadoutgui_your_equipment,"Your Equipment Inventory"
+gt_loadoutgui_equipment_info,"Equipment Infomation"
+
+
+gt_loadoutgui_repair,"Repair"
+gt_loadoutgui_rearm,"Rearm"
+gt_loadoutgui_refuel,"Refuel"
+
+
+gt_loadoutgui_remove,"Remove"
+gt_loadoutgui_replace,"Replace"
+
+; There are no EoC translations for the mountpoint subsims
+; so we add them here in the loadout GUI because we need them.
+
+mountpoint_lda, "  System - Shield"
+
+mountpoint_auto_repair,"   System - Autorepair"
+
+mountpoint_heatsink,"   System - Heatsink"
+
+mountpoint_lds,"   System - LDS Drive"
+
+mountpoint_passive_sensors,"   System - Passive Sensors"
+
+mountpoint_CPU,"   System - CPU"
+
+mountpoint_active_sensors,"   System - Active Sensors"
+
+mountpoint_capsule_drive,"   System - Capsule Drive"
+
+mountpoint_large_external_weapon,"   Pylon"
+
+mountpoint_internal_countermeasure,"   Hardpoint - Countermeasure"
+
+mountpoint_turret,"   Hardpoint - Turret"
+
+mountpoint_medium_internal_weapon,"   Hardpoint"
+
+; These are translated names pulled from the .lws files
+; each is an object in lws, but serves as a name for a specific location in game.
+
+; systems
+
+autorepair, ""
+
+capsule_drive, ""
+
+heatsink, ""
+
+active_sensors, ""
+
+passive_sensors, ""
+
+lds, ""
+
+cpu, ""
+
+; shields
+
+shield_lower, "- Lower"
+
+shield_upper, "- Upper"
+
+shield_front, "- Forward"
+
+shield_forward, "- Forward"
+
+shield_aft, "- Aft"
+
+; pylons (for external weapons)
+
+upper_pylon_2, "- Upper 2"
+
+lower_pylon_2, "- Lower 2"
+
+upper_pylon_1, "- Upper 1"
+
+lower_pylon_1, "- Lower 1"
+
+upper_pylon, "- Upper"
+
+lower_pylon, "- Lower"
+
+upper_pylon_left, "- Upper Left"
+
+upper_pylon_right, "- Upper Right"
+
+left_pylon_2, "- Left 2"
+
+right_pylon_2, "- Right 2"
+
+left_pylon_1, "- Left 1"
+
+right_pylon_1, "- Right 1"
+
+; hardpoints (for internal weapons and countermeasures)
+
+comsec_hardpoint, "- Front"
+
+aft_decoy_hardpoint, "- Aft"
+
+fwd_decoy_hardpoint, "- Forward"
+
+right_decoy_hardpoint, "- Right"
+
+left_decoy_hardpoint, "- Left"
+
+aft_wing_hardpoint, "- Aft Wing"
+
+fwd_wing_hardpoint, "- Fwd Wing"
+
+left_wing_hardpoint, "- Left Wing"
+
+right_wing_hardpoint, "- Right Wing"
+
+left_fwd_hardpoint, "- Left Forward"
+
+right_fwd_hardpoint, "- Right Forward"
+
+left_upper_hardpoint, "- Left Upper"
+
+right_upper_hardpoint, "- Right Upper"
+
+upper_hardpoint, "- Upper"
+
+forward_hardpoint, "- Forward"
+
+right_wing_hardpoint_1, "- Right Wing 1"
+
+right_wing_hardpoint_2, "- Right Wing 2"
+
+left_wing_hardpoint_1, "- Left Wing 1"
+
+left_wing_hardpoint_2, "- Left Wing 2"
+
+; turrets
+
+right_lower_turret, "- Right Lower"
+
+left_lower_turret, "- Left Lower"
+
+left_upper_turret, "- Left Upper"
+
+right_upper_turret, "- Right Upper"
+
+forward_turret, "- Forward"
+
+aft_turret, "- Aft"
+
+right_turret, "- Right"
+
+left_turret, "- Left"
+
+forward_upper_turret, "- Forward Upper"
+
+forward_lower_turret, "- Forward Lower"
+
+
+
+

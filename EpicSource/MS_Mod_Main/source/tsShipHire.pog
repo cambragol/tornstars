@@ -1,0 +1,259 @@
+//*******************************************************************************************/
+//
+// tsShipHire
+//
+// This pog object implements functions to support making a ship hirable.
+// These functions will over-ride any existing communication task you
+// might hooked to the object.
+//
+// August 2008, James Walker.
+// Based on work by Jon Freise in March 2005
+//******************************************************************************************/
+
+package tsShipHire;
+
+uses    Sim,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        GUI,
+        iGUI,
+        iHUD,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        Math,
+        iShipCreation,
+        iComms,
+        iConversation,
+        iLagrangePoint,
+        iAI,
+
+        tsShipComms,
+        tsShipEnum,
+        tsPlayerFleet,
+        tsFaction,
+        tsLFleet,
+        tsMoney,
+        tsShipName,
+        tsPcOwner,
+        tsShip,
+        tsCull,
+        tsString;
+
+
+
+provides
+   InitShipHire,
+   RemoveShipHire,
+   Comms;
+
+
+
+// Setup the ship for hiring using the supplied info
+InitShipHire(hship ship)
+{
+   // Determine if ship can be hired. Must have key hire attributes loaded
+   if(Object.PropertyExists(ship, "gtHiredShipFee"))
+   {
+      tsShipComms.AddComms(ship, "tsShipHire.Comms");
+      tsShipComms.DisplayComms(ship, true);
+   }
+}
+
+
+// Remove ship comms for hostile ships
+RemoveShipHire(hship ship)
+{
+   // Determine if ship can be hired. Must have key hire attributes loaded
+   // Redundent, but why not?
+   if(Object.PropertyExists(ship, "gtHiredShipFee"))
+   {
+      tsShipComms.RemoveComms(ship);
+      tsShipComms.DisplayComms(ship, false);
+   }
+}
+
+// This is the new combined hired ship comms task.
+task Comms() {
+    hship ship;
+    hfaction player = iFaction.Find("Player");
+    hfaction source_faction;
+    string ask_string, ship_type, desc_string, ask_prompt;
+    int hire_fee, upkeep_fee, fleet_total;
+    float standing;
+    hhabitat station;
+    hgroup station_cull;
+    list player_fleet = tsShip.PlayerFleet();
+    bool finished;
+    string text_token;
+    hisim owner;
+    
+
+   // get the total fleet value for the players fleet
+    fleet_total = List.ItemCount(player_fleet);
+
+   // get the ship the comms is with
+    ship = iShip.Cast(tsShipComms.CommsSource());
+    
+    // get the station closest to the ship we are talking to
+    station = iHabitat.Nearest(iMapEntity.SystemHabitats(),ship);
+
+    // Turn off the comms display, now that the player knows he can talk to this ship.
+    tsShipComms.DisplayComms(ship, false);
+
+
+    hire_fee = Object.IntProperty(ship, "gtHiredShipFee");
+    ship_type = Object.StringProperty(ship, "gtHiredShipType");
+    desc_string = Object.StringProperty(ship, "gtHiredShipDesc");
+
+
+    ask_prompt = String.Join("pchs_player_ask_", ship_type);
+    ask_string = Text.Field(ask_prompt, FT_Text);
+    ask_string = String.Join(ask_string,
+                             String.FormatInt(" $ %d", hire_fee));
+
+    finished = false;
+
+    // Start the conversation.
+    iConversation.Begin();
+
+    // Loop to let the player collect info.
+    do {
+
+        // pchs_player_refuses, "No, Thanks."
+        text_token = tsString.CommsStringRandom("pchs_player_refuses", "", 5);
+        iConversation.AddResponse(text_token, text_token);
+
+
+        // pchs_player_info, "Tell me about your ship"
+        iConversation.AddResponse("pchs_player_info",
+                                  "pchs_player_info");
+
+
+        // pchs_player_accepts, "Yes, I will hire you"
+        text_token = tsString.CommsStringRandom("pchs_player_accepts", "", 5);
+        iConversation.AddResponse(text_token, text_token);
+
+
+
+        // Ask the player a question and switch on their response.
+        switch ( iConversation.Ask( ship, "", ask_string ) ) {
+        case 1 :
+            // Player said no.
+            // pchs_player_refuse_response, "Very well."
+            iConversation.Say(ship,"", "pchs_player_refuse_response");
+            finished = true;
+            break;
+
+
+        case 2 :
+            // Player asked for more info
+            iConversation.Say(ship,"", desc_string );
+            Task.Sleep(Task.Current(), 0.75);
+            finished = false;
+
+            // pchs_ask_player_second, "Still looking to hire a ship? Hire Fee "
+            ask_string = Text.Field("pchs_ask_player_second", FT_Text);
+            ask_string = String.Join(ask_string, String.FormatInt(" $ %d", hire_fee));
+
+            break;
+
+
+        case 3 :
+            // Player wants to hire us.
+
+            // First we find out if the player has a high enough
+            // standing to hire this ship.
+            standing = Object.FloatProperty(ship, "gtHiredShipStanding");
+            source_faction = iSim.Faction(iSim.Cast(ship));
+
+            if (standing > iFaction.Feeling(source_faction, player)) {
+
+               // pchs_rep_low, "Sorry, your reputation is not good enough to trust you."
+               iConversation.Say(ship,"", "pchs_rep_low");
+               finished = true;
+
+            } else if (hire_fee >= tsMoney.ShipAccount()) {
+               // pchs_credits_low, "Sorry, you do not have enough funds to afford our services."
+               iConversation.Say(ship,"","pchs_credits_low");
+               finished = true;
+
+            } else if (fleet_total > 9) {
+               // pchs_max_wingmen, "Sorry, You already have enough wingmen." 
+               iConversation.Say(ship,"", "pchs_max_wingmen");
+               finished = true;
+
+            } else {
+               // pchs_join_fleet, "Glad to join you. What are your orders?"
+               iConversation.Say(ship,"", "pchs_join_fleet");
+
+               tsMoney.ChangeShipAccount(-1*hire_fee);
+               
+               // remove the ship from its existing Group
+               atomic {
+                 // make sure that nothing interfers with this - needed?
+                 debug Debug.PrintString("tsShipHire.Comms: purge orders, remove AI, remove from any group\n");
+                 iAI.PurgeOrders( ship );
+                 iShip.RemovePilot( ship );
+                 Group.RemoveSim(Sim.Group(ship), ship);
+               }
+                
+               // adjust the fleet value for the operation to account for the ship hired away
+               owner = iSim.Cast(tsPcOwner.Owner(ship));
+               if( none != owner )
+               {
+                  debug Debug.PrintString("tsShipHire.Comms: reduce owners fleets\n");
+                  tsLFleet.ChangeFleets(owner, -1*Object.FloatProperty(ship, "threat"));
+               }
+                
+               // hire the ship into the players wingmen which deals with cullable false
+               tsPlayerFleet.HireShip(ship);
+
+               // prevent this sim from culling! -- only applicable if ship not part of an Operation
+               tsCull.RemoveSim(iSim.Cast(station), ship);
+
+               finished = true;
+               debug Debug.PrintString(String.FormatInt("Ship account %d\n",tsMoney.ShipAccount()));
+
+            }
+            break;
+
+
+        default :
+            // Player selected "Nothing" should never happen.
+            iConversation.Say(ship,"", "See Ya" );
+            finished = true;
+            break;
+        }
+
+    }while (!finished);
+
+    // Finish the conversation.
+    iConversation.End();
+}
+
+// pchs_player_ask_freighter, "Do you need to hire a freighter? Hire Fee "
+
+// pchs_player_ask_warship, "Do you need to hire a Warship? Hire Fee "
+
+// pchs_player_ask_tanker, "Do you need to hire a Tanker? Hire Fee "
+
+// pchs_player_ask_miner, "Do you need to hire a Mining Rig? Hire Fee "
+
+// pchs_player_ask_prospector, "Do you need to hire a Prospecting Ship? Hire Fee "
+
+
+
+/*   
+
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

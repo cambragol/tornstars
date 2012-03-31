@@ -1,0 +1,89 @@
+//*******************************************************************************************/
+//
+// tsWingmanDeath.pog
+//
+// Called when a player wingman dies. Cleans up the ship and group issues.
+//
+// Nov 2006, Jon Freise
+//
+//******************************************************************************************/
+
+package tsWingmanDeath;
+
+uses    Sim,
+        iShip,
+        iSim,
+        iPilotSetup,
+        Debug,
+        Global,
+        GUI,
+        iDirector,
+        iGUI,
+        iHUD,
+        iHabitat,
+        iMapEntity,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        iUtilities,
+        iCargo,
+        iInventory,
+        iComms,
+        iAi,
+        iWingmen,
+        iRemotePilot,
+        iDeathScript,
+        iGame,
+        Math,
+        iInventory,
+        iConversation,
+        CargoTypes,
+   
+        tsStationEnum,
+        tsFaction,
+        tsShip,
+        tsPlayerFleet,
+        tsWingComm;
+
+
+provides Death;
+
+
+task wingman_announce(string wingman_name)
+{
+   iConversation.OneLiner(none,"name_jafs",String.Join("crew_wingman_lost+", wingman_name));
+}
+
+
+task Death(hship wingman)
+{
+   hisim waypoint;
+
+   tsShip.RemoveFleetShip(wingman);
+
+   tsWingComm.GroupRemoveShip(wingman);
+
+   Group.RemoveSim(Sim.Group(wingman), wingman);
+
+   Task.Detach(start wingman_announce(Sim.Name(wingman)));
+
+   waypoint = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint", String.Join("dead wingman ", Text.Field(Sim.Name(wingman), FT_Text))));
+   
+   Sim.SetCullable(waypoint, false);
+   Sim.PlaceRelativeToInside(waypoint, wingman, 0, 0, 0);
+   iSim.SetSensorVisibility(waypoint, true);
+
+   iSim.Kill(iSim.Cast(wingman));
+}
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

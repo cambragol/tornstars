@@ -1,0 +1,700 @@
+//*******************************************************************************************/
+//
+// tsStationAi
+//
+// This package implements Station AI routines to support:
+//     * Distress call processing
+//     * Station attack response
+//
+// 
+//
+// May 2008, James Walker
+//******************************************************************************************/
+
+package tsStationAi;
+
+//[of]:Imports
+uses 
+iShip,
+Global,
+Object,
+Sim,
+Input,
+iMapEntity,
+Math,
+iAI, 
+Task,
+Debug,
+iFaction,
+iSim,
+iFactionScript,
+iComms,
+INIFile,
+iUtilities,
+iPilotSetup,
+iConversation,
+iFormation,
+Group,
+Text,
+iEmail,
+State,
+iTrafficCreation, 
+iRangeCheck,
+iRemotePilot,
+iRegion,
+iMissionTracker,
+iWingmen,
+iCargoScript,
+iShipCreation,
+iHUD,
+iScriptedOrders,
+iStation, 
+iStartSystem, 
+iLagrangePoint, 
+iGame, 
+Stream, 
+iDockport,
+tsFaction,
+tsStationEnum,
+tsDistress,
+	tsDistance,
+	tsShipComms,
+	tsString,
+	tsMoney,
+	tsShip,
+	tsDebug,
+	tsPodUtil,
+tEpicEventEnum;
+//[cf]
+
+
+//[of]:Exports
+provides 
+   Reaction,
+	Comms,
+toggle_universal_dock,
+toggle_unload_dock,
+toggle_asteroid_dock,
+   Start,
+   End;
+//[cf]
+
+
+// Prototypes -----------------------------------------------------------------------------------------
+prototype Reaction();
+prototype bool Start(hhabitat station);
+prototype bool End(hhabitat station);
+prototype task station_watcher(hhabitat station);
+prototype bool toggle_universal_dock(bool toggle, hhabitat station);
+prototype bool toggle_unload_dock(bool toggle, hhabitat station);
+prototype bool toggle_asteroid_dock(bool toggle, hhabitat station);
+
+
+// Functions -------------------------------------------------------------------------------------------
+
+// Call back function used by iHabitate.SetReactiveFunction
+Reaction()
+{
+    debug Debug.PrintString("tsStationAi.Reaction: Start\n");
+    debug Debug.PrintString("tsStationAi.Reaction: End\n");
+}
+
+
+task station_watcher(hhabitat station)
+{
+    float pause_time = 2.0;            // loop pause in seconds
+    int allowed_attacks = 3;           // number of allowed attacks on station before it takes steps
+    int attack_count = 0;
+    hisim our_attacker;
+    float first_attack_time = 0;       // game time of first attack event. Look for multiple in x seconds before resetting
+    float attack_reset_time = 60.0;    // time to allow before restting first_attack_time to 0
+    hship player_ship = iShip.FindPlayerShip();
+    htask t;
+    bool docked = false;
+    bool toggle;
+    set universal_dockports, unload_dockports;
+
+    // ensure stations attacked flag has been cleared before we start checking
+    iSim.Attacked(station);
+    
+    while(1)
+    {
+        // In this loop we check for all the events  of interest to the station AI
+
+	   // This checks for whether the player is docked, or has undocked
+	   // If the player undocks, station dockports are disabled again.
+         if (iSim.IsDockedToStructure(player_ship, station) ) {
+            if (!docked) {
+               debug Debug.PrintString("tsStationAi player just docked to station\n");
+               // player just docked, report
+               docked = true;
+            }
+         } else {
+            if (docked) {
+               debug Debug.PrintString("tsStationAi player just undocked from station\n");
+               // player just undocked, report.
+               docked = false;
+
+ 			toggle_universal_dock(docked, station);
+			toggle_unload_dock(docked, station);
+
+            }
+         }
+
+	  universal_dockports = iDockport.DockportsCompatibleWith( iSim.Cast(station),
+                                                  DT_Universal,
+                                                  DS_Free);
+
+		
+	  // This checks for docking requests and the status of dockports
+	  if ((Object.BoolProperty (station, "jd_ship_in_universal_queue")) && (!Set.IsEmpty(universal_dockports))) { 
+
+         		iConversation.OneLiner(station, "", tsString.CommsStringRandom("pcsa_station_dockport_now_free","",5));
+         		//iComms.Shout(station, "", tsString.CommsStringRandom("pcsa_station_dockport_now_free","",5));
+			toggle = true;
+			toggle_universal_dock(toggle, station);
+			Object.SetBoolProperty (station, "jd_ship_in_universal_queue", false);
+
+	  }
+
+	  unload_dockports = iDockport.DockportsCompatibleWith( iSim.Cast(station),
+                                                  DT_Freight,
+                                                  DS_Free);
+
+		
+	  // This checks for docking requests and the status of dockports
+	  if ((Object.BoolProperty (station, "jd_ship_in_unload_queue")) && (!Set.IsEmpty(unload_dockports))) { 
+
+         		iConversation.OneLiner(station, "", tsString.CommsStringRandom("pcsa_station_dockport_now_free","",5));
+        		//iComms.Shout(station, "", tsString.CommsStringRandom("pcsa_station_dockport_now_free","",5));
+			toggle = true;
+			toggle_unload_dock(toggle, station);
+			Object.SetBoolProperty (station, "jd_ship_in_unload_queue", false);
+
+	  }
+
+			
+
+        
+        // Attacked Event
+        if( (first_attack_time > 0) && (iGame.GameTime()-first_attack_time) > attack_reset_time )
+        {
+            // rest checks
+            debug Debug.PrintString("tsStationAi.station_watcher: Attack status rest.\n");
+            first_attack_time = 0;
+            attack_count = 0;
+        }
+        if( iSim.Attacked(station) &&  attack_count <= allowed_attacks)
+        {
+            debug Debug.PrintString("tsStationAi.station_watcher: Station attacked!\n");
+            our_attacker = iSim.LastAttacker( iSim.Cast(station) );
+            // Determine if this was a stray shot or a deliberate attack.
+            // We will use a 3 strikes type model with a timed reset
+            if( first_attack_time == 0 )
+            {
+                debug Debug.PrintString("tsStationAi.station_watcher: First attack.\n");
+                first_attack_time = iGame.GameTime();
+                ++attack_count;
+            } else
+            {
+                ++attack_count;
+                debug {
+                Debug.PrintString("tsStationAi.station_watcher: Attack count increased to: ");
+                Debug.PrintInt(attack_count);
+                Debug.PrintString("\n");
+                }
+            }
+            
+            // Now check the attack_count and react if it is past the threshold
+            if( attack_count > allowed_attacks)
+            {
+                // 1st send a distress event with priority=1, event=etShipAttacked
+	    	    // Changed the range on this dramatically to pull in allies from stations in the same orbit (that were awoken previously by player)
+			
+		    tsShipComms.RemoveComms(station);
+    		    tsShipComms.DisplayComms(station, false);
+
+ 			if (Sim.DistanceBetween(station, player_ship) < tsDistance.CullingDistance()) {
+         			iComms.Shout(station, "", tsString.CommsStringRandom("pcsa_defenders_are_coming","",5));
+			}
+
+                tsDistress.Send(espStationAttack, eseStationAttack, iSim.Cast(station), our_attacker, iSim.Cast(station), 2000000000);
+                debug Debug.PrintString("tsStationAi.station_watcher: Distress call sent!\n");
+            }
+        }
+        
+        
+        // Put some wait time into the loop.
+        Task.Sleep(Task.Current(), pause_time);
+    }
+}
+
+
+
+
+// This is the new station docking Comms task.
+task Comms() {
+	htask t;
+	hhabitat ship;
+	hship player_ship = iShip.FindPlayerShip();
+    	hfaction player = iFaction.Find("Player");
+    	hfaction source_faction;
+    	float standing;
+    	hhabitat station;
+    	hgroup station_cull;
+    	list player_fleet = tsShip.PlayerFleet();
+    	bool finished;
+    	string text_token, ask_string;
+    	hisim owner;
+	bool toggle = true;
+	eDockportType dock_type;
+	set unload_dockports, universal_dockports;
+    
+
+   // get the ship the comms is with
+    ship = iHabitat.Cast(tsShipComms.CommsSource());
+    
+    // get the station closest to the ship we are talking to
+    station = iHabitat.Nearest(iMapEntity.SystemHabitats(),ship);
+
+    // Turn off the comms display, now that the player knows he can talk to this ship.
+    tsShipComms.DisplayComms(ship, false);
+
+
+    universal_dockports = iDockport.DockportsOfType( iSim.Cast(station),
+                                                  DT_Universal,
+                                                  DS_Any);
+
+    unload_dockports = iDockport.DockportsOfType( iSim.Cast(station),
+                                                  DT_Freight,
+                                                  DS_Any);
+
+	ask_string = tsString.CommsStringRandom("pcsa_station_acknowledges_player_comms", "", 5);
+
+    finished = false;
+
+    // Start the conversation.
+    iConversation.Begin();
+
+    // Loop to let the player collect info.
+    do {
+
+
+	  if (Object.BoolProperty(station,"jd_ship_in_universal_queue")){
+	  	text_token = tsString.CommsStringRandom("pcsa_player_wondering_about_universal_dock_queue", "", 5);
+
+	  } else if (Object.BoolProperty(station,"jd_ship_in_unload_queue")){
+        	// pcsa_player_wants_to_switch_to_universal_queue, "I am requesting to dock with the station"
+        	text_token = tsString.CommsStringRandom("pcsa_player_wants_switch_to_universal_dock", "", 5);
+	  } else {
+        	// pcsa_player_wants_universal_dock, "I am requesting to dock with the station"
+        	text_token = tsString.CommsStringRandom("pcsa_player_wants_universal_dock", "", 5);
+	  }
+        iConversation.AddResponse(text_token, text_token);
+	
+
+
+	  if (Object.BoolProperty(station,"jd_ship_in_unload_queue")){
+	  	text_token = tsString.CommsStringRandom("pcsa_player_wondering_about_unload_dock_queue", "", 5);
+	  } else if (Object.BoolProperty(station,"jd_ship_in_universal_queue")){
+        	// pcsa_player_wants_to_switch_to_unload_queue, "I am requesting to unload  dock with the station"
+        	text_token = tsString.CommsStringRandom("pcsa_player_wants_switch_to_unload_dock", "", 5);
+	  } else {
+        	// pcsa_player_wants_unload_dock, "I am requesting to dock with the station"
+        	text_token = tsString.CommsStringRandom("pcsa_player_wants_unload_dock", "", 5);
+	  }
+        iConversation.AddResponse(text_token, text_token);
+	
+
+        // pcsa_player_says_nevermind, "Never mind"
+        text_token = tsString.CommsStringRandom("pcsa_player_says_nevermind", "", 5);
+        iConversation.AddResponse(text_token, text_token);
+
+
+
+        // Ask the player a question and switch on their response.
+        switch ( iConversation.Ask( ship, "", ask_string) ) {
+        case 1 :
+
+		if(Set.IsEmpty(universal_dockports)) {
+			
+			//Station has no universal dockports
+            	iConversation.Say(ship,"", "pcsa_station_no_universal_docks");
+			ask_string = tsString.CommsStringRandom("pcsa_station_acknowledges_player_comms_again", "", 5);
+
+            	finished = false;
+			break;
+		}
+
+		if (iSim.IsDocked(iSim.Cast(player_ship))) {
+		
+			//Player is already docked
+            	iConversation.Say(ship,"", "pcsa_station_you_are_already_docked");
+            	finished = true;
+			break;
+		}
+
+		if (Object.BoolProperty(station,"jd_ship_in_universal_queue")){
+
+            	iConversation.Say(ship,"", "pcsa_station_please_wait_your_turn");
+            	finished = true;
+			break;
+
+            	
+		} else {
+
+
+			if (Object.BoolProperty(station,"jd_ship_in_unload_queue")){
+
+				iConversation.Say(ship,"", "pcsa_station_switching_to_universal_queue");
+				Object.SetBoolProperty(station, "jd_ship_in_unload_queue", false);
+
+			}
+
+		// Find the stations main universal port
+   		universal_dockports = iDockport.DockportsCompatibleWith( iSim.Cast(station),
+                                                  DT_Universal,
+                                                  DS_Free);
+		// make sure there is something to dock with
+		if(Set.IsEmpty(universal_dockports)) {
+
+			iConversation.Say(ship,"", "pcsa_station_universal_dockports_all_busy");
+      		debug Debug.PrintString("habitat universal dockports currently occupied\n");
+
+   			// Set that the station has a watch task assigned, or is being reactivated
+   			if (Object.PropertyExists(station, "jd_ship_in_universal_queue")) {
+      			Object.SetBoolProperty(station,"jd_ship_in_universal_queue", true);
+   			}else {
+      			Object.AddBoolProperty(station,"jd_ship_in_universal_queue", true);
+   			}
+
+            	finished = true;
+			break;
+		}	
+
+
+            // Player wants a universal dock.
+            iConversation.Say(ship,"", "pcsa_station_confirms_available_dockport");
+
+		toggle_universal_dock(toggle, ship);
+
+		
+            finished = true;
+
+		}
+
+        break;
+
+
+        case 2 :
+
+		if(Set.IsEmpty(unload_dockports)) {
+			
+			//Station has no unload dockports
+            	iConversation.Say(ship,"", "pcsa_station_no_unload_docks");
+			ask_string = tsString.CommsStringRandom("pcsa_station_acknowledges_player_comms_again", "", 5);
+            	finished = false;
+			break;
+		}
+
+		if (iSim.IsDocked(iSim.Cast(player_ship))) {
+		 
+			//Player is already docked
+            	iConversation.Say(ship,"", "pcsa_station_you_are_already_docked");
+            	finished = true;
+			break;
+		}
+
+		if (Object.BoolProperty(station,"jd_ship_in_unload_queue")){
+
+            	iConversation.Say(ship,"", "pcsa_station_please_wait_your_turn");
+            	finished = true;
+			break;
+
+            	
+		} else {
+
+
+			if (Object.BoolProperty(station,"jd_ship_in_universal_queue")){
+
+				iConversation.Say(ship,"", "pcsa_station_switching_to_unload_queue");
+				Object.SetBoolProperty(station, "jd_ship_in_universal_queue", false);
+
+			}
+
+		// Find the stations main universal port
+   		unload_dockports = iDockport.DockportsCompatibleWith( iSim.Cast(station),
+                                                  DT_Freight,
+                                                  DS_Free);
+		// make sure there is something to dock with
+		if(Set.IsEmpty(unload_dockports)) {
+
+			iConversation.Say(ship,"", "pcsa_station_unload_dockports_all_busy");
+      		debug Debug.PrintString("habitat unload dockports currently occupied\n");
+
+   			// Set that the station has a watch task assigned, or is being reactivated
+   			if (Object.PropertyExists(station, "jd_ship_in_unload_queue")) {
+      			Object.SetBoolProperty(station,"jd_ship_in_unload_queue", true);
+   			}else {
+      			Object.AddBoolProperty(station,"jd_ship_in_unload_queue", true);
+   			}
+
+
+            	finished = true;
+			break;
+		}	
+
+
+            // Player wants a unload dock.
+            iConversation.Say(ship,"", "pcsa_station_confirms_available_dockport");
+
+		toggle_unload_dock(toggle, ship);
+
+		
+            finished = true;
+
+		}
+
+        break;
+
+
+
+
+        case 3 :
+            // Player wants to end conversation
+            iConversation.Say(ship,"", "pcsa_station_confused_goodbye");
+
+		finished = true;
+            break;
+
+
+        default :
+            // Player selected "Nothing" should never happen.
+            iConversation.Say(ship,"", "See Ya" );
+            finished = true;
+            break;
+        }
+
+    }while (!finished);
+
+    // Finish the conversation.
+    iConversation.End();
+}
+
+
+
+
+bool Start(hhabitat station)
+{
+    	htask t;
+	string comms;
+   	hfaction empty_faction = iFaction.Find("Neutral");
+	hfaction station_faction = iSim.Faction(station);
+	set dockports;
+	hdockport station_dock;
+
+
+		// Disable all universal docks
+   		dockports = tsPodUtil.UniversalDockPorts(station);
+
+		while(!Set.IsEmpty(dockports)) {
+			station_dock = iDockport.Cast(Set.FirstElement(dockports));
+			iDockport.Disable(station_dock);
+			Set.Remove(dockports, station_dock);
+		}
+		
+		// Disable all unload ports
+   		dockports = tsPodUtil.UnloadDockPorts(station);
+
+		while(!Set.IsEmpty(dockports)) {
+			station_dock = iDockport.Cast(Set.FirstElement(dockports));
+			iDockport.Disable(station_dock);
+			Set.Remove(dockports, station_dock);
+		}
+
+		// Disable all cargo ports
+   		dockports = tsPodUtil.AsteroidDockPorts(station);
+
+		while(!Set.IsEmpty(dockports)) {
+			station_dock = iDockport.Cast(Set.FirstElement(dockports));
+			iDockport.Disable(station_dock);
+			Set.Remove(dockports, station_dock);
+		}
+
+	// Don't attach a station watcher task to empty stations and those without dockports (pirate cove)
+    	if ((empty_faction == station_faction) || (iDockport.Count(station, DT_All, DS_Any)) <= 0) {
+		return true;
+
+	}    
+
+		// setup the station watcher task
+          	debug Debug.PrintString("tsStationAi.Start: Start station_watcher task.\n");
+    		t = start station_watcher(station);
+
+
+		tsShipComms.AddComms(station, "tsStationAi.Comms");
+    		tsShipComms.DisplayComms(station, true);
+
+    		Task.Detach(t);
+    		Object.SetHandleProperty(station, "gt_station_watcher", t);
+
+		return false;
+
+}
+
+
+bool End(hhabitat station)
+{
+    htask t;
+    
+    debug Debug.PrintString("tsStationAi.End: End station_watcher and dock task.\n");
+    t = Task.Cast(Object.HandleProperty(station, "gt_station_watcher"));
+    Task.Halt(t);
+
+
+    return false;
+}
+	
+
+
+//[of]:bool toggle_unload_dock(bool toggle, hhabitat station)
+bool toggle_unload_dock(bool toggle, hhabitat station)
+{
+   hdockport station_dock, ship_dock;
+
+   set dockports;
+
+	// dump out the handles
+	debug {
+	Debug.PrintString("------------------- fn Toggle Unload Dock -------------------\n");
+	Debug.PrintString("Handles for station:\n");
+	Debug.PrintString("\n");
+	Debug.PrintHandle(station);
+	Debug.PrintString("\n");
+	}
+
+   // Find the stations main universal port
+   dockports = iDockport.DockportsOfType( iSim.Cast(station),
+                                                  DT_Freight,
+                                                  DS_Free);
+   dockports = tsPodUtil.UnloadDockPorts(station);
+	// make sure there is something to dock with
+	if(Set.IsEmpty(dockports)) {
+      debug Debug.PrintString("habitat has no compatible dock ports\n");
+      return false;
+	}	
+   station_dock = iDockport.Cast(Set.FirstElement(dockports));
+
+	if(toggle) {
+
+   		iDockport.Enable(station_dock);
+
+	} else {
+
+		iDockport.Disable(station_dock);
+	}
+
+	debug Debug.PrintString("------------------- fn Toggle Unload Dock End -------------------\n");
+
+  return true;
+}
+//[cf]
+
+
+//[of]:bool toggle_universal_dock(bool toggle, hhabitat station)
+bool toggle_universal_dock(bool toggle, hhabitat station)
+{
+   hdockport station_dock, ship_dock;
+
+   set dockports;
+
+	// dump out the handles
+	debug {
+	Debug.PrintString("------------------- fn Toggle Universal Dock -------------------\n");
+	Debug.PrintString("Handles for station:\n");
+	Debug.PrintString("\n");
+	Debug.PrintHandle(station);
+	Debug.PrintString("\n");
+	}
+
+   // Find the stations main universal port
+   dockports = iDockport.DockportsOfType( iSim.Cast(station),
+                                                  DT_Universal,
+                                                  DS_Free);
+   dockports = tsPodUtil.UniversalDockPorts(station);
+	// make sure there is something to dock with
+	if(Set.IsEmpty(dockports)) {
+      debug Debug.PrintString("habitat has no compatible dock ports\n");
+      return false;
+	}	
+   station_dock = iDockport.Cast(Set.FirstElement(dockports));
+
+   	if(toggle) {
+
+   		iDockport.Enable(station_dock);
+
+	} else {
+
+		iDockport.Disable(station_dock);
+	}
+
+	debug Debug.PrintString("------------------- fn Toggle Universal Dock End -------------------\n");
+
+  return true;
+}
+//[cf] 
+
+
+//[of]:bool toggle_asteroid_dock(bool toggle, hhabitat station)
+bool toggle_asteroid_dock(bool toggle, hhabitat station)
+{
+   hdockport station_dock, ship_dock;
+
+   set dockports;
+
+	// dump out the handles
+	debug {
+	Debug.PrintString("------------------- fn Toggle Cargo Dock -------------------\n");
+	Debug.PrintString("Handles for station:\n");
+	Debug.PrintString("\n");
+	Debug.PrintHandle(station);
+	Debug.PrintString("\n");
+	}
+
+   // Find the stations main universal port
+   dockports = tsPodUtil.AsteroidDockPorts(station);
+	// make sure there is something to dock with
+	if(Set.IsEmpty(dockports)) {
+      debug Debug.PrintString("habitat has no compatible dock ports\n");
+      return false;
+	}	
+   station_dock = iDockport.Cast(Set.FirstElement(dockports));
+
+   	if(toggle) {
+
+   		iDockport.Enable(station_dock);
+
+	} else {
+
+		iDockport.Disable(station_dock);
+	}
+
+	debug Debug.PrintString("------------------- fn Toggle Cargo Dock End -------------------\n");
+
+  return true;
+}
+//[cf]
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+

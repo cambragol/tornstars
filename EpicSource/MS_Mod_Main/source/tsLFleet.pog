@@ -1,0 +1,334 @@
+//*******************************************************************************************/
+//
+// tsLFleet.pog
+//
+// This layer implements a fleet tracking layer. It keeps track of weapons supplies 
+// and ships. It allows fleet objects and stations to battle one another.
+//
+// Fleets are tracked in "threat" units. This allows more powerful units to require more
+// resource than less powerful units.
+//
+// Supplies are also tracked in threat units. A ship must maintain supply to repair properly.
+//
+// April 2004, Jon Freise
+// March 2006, jf updated fleets to use threat and have max fleet values.
+//******************************************************************************************/
+
+package tsLFleet;
+
+uses 
+iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, 
+Task, Debug, iFaction, iSim, iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+iConversation, iFormation, Group, Text, iEmail, State, iTrafficCreation, 
+iRangeCheck,iRemotePilot, iRegion, iMissionTracker, iWingmen,
+iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,
+iDirector, iEscort, 
+iLagrangePoint, iMusic, iGame, Stream,
+   tsLRoot;
+
+
+
+provides Init,
+         Create,
+         Save,
+         Restore,
+         All,
+
+         Supplies,
+         SetSupplies,
+         MaxSupplies,
+         SetMaxSupplies,
+         ChangeSupplies,
+
+         Fleets,
+         SetFleets,
+         ChangeFleets,
+
+         MaxFleets,
+         SetMaxFleets,
+   
+         Wrecks,
+         SetWrecks,
+         ChangeWrecks,
+
+         Distress,
+         SetDistress;
+
+
+
+prototype add(hisim producer);
+
+
+prototype int Supplies(hisim producer);
+
+prototype SetSupplies(hisim producer, int supplies);
+
+prototype int MaxSupplies(hisim producer);
+
+prototype SetMaxSupplies(hisim producer, int supplies);
+
+prototype ChangeSupplies(hisim producer, int amount);
+
+
+prototype int Fleets(hisim producer);
+
+prototype SetFleets(hisim producer, int fleets);
+
+prototype int MaxFleets(hisim producer);
+
+prototype SetMaxFleets(hisim producer, int fleets);
+
+prototype ChangeFleets(hisim producer, int amount);
+
+prototype int Wrecks(hisim producer);
+
+prototype SetWrecks(hisim producer, int wrecks);
+
+prototype int ChangeWrecks(hisim producer, int amount);
+
+
+prototype bool Distress(hisim producer);
+
+prototype SetDistress(hisim producer, bool distressed);
+
+// Session init this layer.
+Init()
+{
+   list empty_list;
+
+   Global.CreateList("gt_LFleet_all_list",GA_Write|GA_NoSave, empty_list);
+}
+
+
+
+
+// Pass in an object to become a fleet layer.
+Create(hisim producer, int fleets, int supplies, int max_fleets, int max_supplies)
+{
+   SetMaxFleets(producer, max_fleets);
+   SetMaxSupplies(producer, max_supplies);
+
+   SetSupplies(producer, supplies);
+   SetFleets(producer, fleets);
+
+   SetWrecks(producer, 0);
+
+   SetDistress(producer, false);
+
+   add(producer);
+}
+
+
+
+
+
+Save(hisim producer)
+{
+   int id = tsLRoot.GetId(producer);
+   int supplies, max_supplies;
+   int fleets, max_fleets, wrecks;
+   bool active;
+   bool distress;
+
+   supplies = Supplies(producer);
+   max_supplies = MaxSupplies(producer);
+
+   fleets = Fleets(producer);
+   max_fleets = MaxFleets(producer);
+   wrecks = Wrecks(producer);
+   distress = Distress(producer);
+
+   Global.CreateInt(String.FormatInt("gt_LFleet%d_supplies",id),GA_Write, supplies);
+   Global.CreateInt(String.FormatInt("gt_LFleet%d_fleets",id),GA_Write, fleets);
+   Global.CreateInt(String.FormatInt("gt_LFleet%d_maxsupplies",id),GA_Write, max_supplies);
+   Global.CreateInt(String.FormatInt("gt_LFleet%d_maxfleets",id),GA_Write, max_fleets);
+   Global.CreateInt(String.FormatInt("gt_LFleet%d_wrecks",id),GA_Write, wrecks);
+   Global.CreateBool(String.FormatInt("gt_LFleet%d_distress",id),GA_Write, distress);
+}
+
+
+
+
+Restore(hisim producer)
+{  
+   int id = tsLRoot.GetId(producer);
+   int supplies, maxsupplies;
+   int fleets, maxfleets, wrecks;
+   bool active;
+   bool distress;
+
+
+   supplies = Global.Int(String.FormatInt("gt_LFleet%d_supplies",id));
+   Global.Destroy(String.FormatInt("gt_LFleet%d_supplies",id));
+
+   maxsupplies = Global.Int(String.FormatInt("gt_LFleet%d_maxsupplies",id));
+   Global.Destroy(String.FormatInt("gt_LFleet%d_maxsupplies",id));
+
+   fleets = Global.Int(String.FormatInt("gt_LFleet%d_fleets",id));
+   Global.Destroy(String.FormatInt("gt_LFleet%d_fleets",id));
+
+   maxfleets = Global.Int(String.FormatInt("gt_LFleet%d_maxfleets",id));
+   Global.Destroy(String.FormatInt("gt_LFleet%d_maxfleets",id));
+
+   wrecks = Global.Int(String.FormatInt("gt_LFleet%d_wrecks",id));
+   Global.Destroy(String.FormatInt("gt_LFleet%d_wrecks",id));
+
+   distress = Global.Bool(String.FormatInt("gt_LFleet%d_distress",id));
+   Global.Destroy(String.FormatInt("gt_LFleet%d_distress",id));
+
+   Create(producer, fleets, supplies, maxfleets, maxsupplies);
+
+   SetWrecks(producer, wrecks);
+   
+   SetDistress(producer, distress);
+}
+
+
+add(hisim producer)
+{
+   list all_list;
+
+   atomic {
+      all_list = Global.List("gt_LFleet_all_list");
+      List.AddTail(all_list, producer); 
+      Global.SetList("gt_LFleet_all_list", all_list);
+   }
+}
+
+list All()
+{
+   return Global.List("gt_LFleet_all_list");
+}
+
+
+
+
+int Supplies(hisim producer)
+{
+   return Object.IntProperty(producer,"gtsLFleetSupplies");
+}
+
+SetSupplies(hisim producer, int supplies)
+{
+   Object.AddIntProperty(producer,"gtsLFleetSupplies", supplies);
+}
+
+int MaxSupplies(hisim producer)
+{
+   return Object.IntProperty(producer,"gtsLFleetMaxSupplies");
+}
+
+SetMaxSupplies(hisim producer, int supplies)
+{
+   Object.AddIntProperty(producer,"gtsLFleetMaxSupplies", supplies);
+}
+
+// Change supplies does bounds checking as well as atomic operation.
+// it will clip the value to between zero and max supplies.
+ChangeSupplies(hisim producer, int amount)
+{
+   int supplies, max;
+
+   max = MaxSupplies(producer);
+
+   atomic {
+      supplies = Object.IntProperty(producer,"gtsLFleetSupplies");
+      supplies += amount;
+      if (supplies < 0) {
+         supplies = 0;
+      }else if (supplies > max) {
+         supplies = max;
+      }
+
+      Object.SetIntProperty(producer,"gtsLFleetSupplies", supplies);
+   }
+}
+
+
+int Fleets(hisim producer)
+{
+   return Object.IntProperty(producer,"gtsLFleetFleets");
+}
+
+SetFleets(hisim producer, int fleets)
+{
+   Object.AddIntProperty(producer,"gtsLFleetFleets", fleets);
+}
+
+int MaxFleets(hisim producer)
+{
+   return Object.IntProperty(producer,"gtsLFleetMaxFleets");
+}
+
+SetMaxFleets(hisim producer, int fleets)
+{
+   Object.AddIntProperty(producer,"gtsLFleetMaxFleets", fleets);
+}
+
+ChangeFleets(hisim producer, int amount)
+{
+   int fleets, max;
+
+   max = MaxFleets(producer);
+
+   atomic {
+      fleets = Object.IntProperty(producer,"gtsLFleetFleets");
+      fleets += amount;
+      if (fleets < 0) {
+         fleets = 0;
+      }else if (fleets > max) {
+         fleets = max;
+      }
+      Object.SetIntProperty(producer,"gtsLFleetFleets", fleets);
+   }
+}
+
+int Wrecks(hisim producer)
+{
+   return Object.IntProperty(producer,"gtsLFleetWrecks");
+}
+
+
+SetWrecks(hisim producer, int wrecks)
+{
+   Object.AddIntProperty(producer,"gtsLFleetWrecks", wrecks);
+}
+
+
+int ChangeWrecks(hisim producer, int amount)
+{
+   int fleets;
+   int max = 10000;
+   
+   atomic {
+      fleets = Object.IntProperty(producer,"gtsLFleetWrecks");
+      fleets += amount;
+      if (fleets < 0) {
+         fleets = 0;
+      }else if (fleets > max) {
+         fleets = max;
+      }
+      Object.SetIntProperty(producer,"gtsLFleetWrecks", fleets);
+   }
+
+   return fleets;
+}
+
+bool Distress(hisim producer)
+{
+   return Object.BoolProperty(producer, "gtsLFleetDistress");
+}
+
+SetDistress(hisim producer, bool distressed)
+{
+
+   Object.AddBoolProperty(producer, "gtsLFleetDistress", distressed);
+}
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

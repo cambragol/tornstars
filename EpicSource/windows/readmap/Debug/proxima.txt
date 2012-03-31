@@ -1,0 +1,136 @@
+Entity 0, type 0, body type 0 hab_type 0 yscale 0.000000 radius          0 name Proxima_center
+Parent 0 2 0, Faction 0, Population 0
+Texture type 0, t1 0, t2 0, t3 0 
+Pos 0.000000e+000 0.000000e+000 0.000000e+000, Ori 1.000000 0.000000 0.000000
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 1, type 5, body type 5 hab_type 0 yscale 0.000000 radius  100000000 name Proxima Centauri
+Parent 0 2 5, Faction 0, Population 0
+Texture type 0, t1 0, t2 0, t3 0 
+Pos 0.000000e+000 0.000000e+000 0.000000e+000, Ori 1.000000 0.000000 0.000000
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 2, type 0, body type 4 hab_type 0 yscale 0.000000 radius   80000000 name Vethonin
+Parent 1 2 4, Faction 0, Population 0
+Texture type 2, t1 8, t2 9, t3 0 
+Pos 1.684125e+011 8.682402e+010 4.627081e+011, Ori 1.000000 0.000000 0.000000
+Color r  32 g 200 b  32
+Color r 200 g  32 b  32
+Color r  32 g  32 b 200
+Cloud 255 Ring 5 Unk 0 Unk2 0 
+
+Entity 3, type 0, body type 3 hab_type 0 yscale 0.000000 radius   80000000 name Vethonin Alpha
+Parent 2 2 3, Faction 0, Population 0
+Texture type 1, t1 3, t2 3, t3 0 
+Pos 1.698267e+011 8.682402e+010 4.641223e+011, Ori 1.000000 0.000000 0.000000
+Color r  32 g 200 b  32
+Color r 200 g  32 b  32
+Color r  32 g  32 b 200
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 4, type 0, body type 3 hab_type 0 yscale 0.000000 radius   80000000 name Feynman
+Parent 2 2 3, Faction 0, Population 0
+Texture type 1, t1 3, t2 3, t3 0 
+Pos 1.684125e+011 8.875039e+010 4.620070e+011, Ori 1.000000 0.000000 0.000000
+Color r  32 g 200 b  32
+Color r 200 g  32 b  32
+Color r  32 g  32 b 200
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 5, type 0, body type 3 hab_type 0 yscale 0.000000 radius   80000000 name Certhe
+Parent 2 2 3, Faction 0, Population 0
+Texture type 1, t1 3, t2 3, t3 0 
+Pos 1.669125e+011 8.942209e+010 4.627081e+011, Ori 1.000000 0.000000 0.000000
+Color r  32 g 200 b  32
+Color r 200 g  32 b  32
+Color r  32 g  32 b 200
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 6, type 0, body type 3 hab_type 0 yscale 0.000000 radius   80000000 name Antor
+Parent 2 2 3, Faction 0, Population 0
+Texture type 1, t1 3, t2 3, t3 0 
+Pos 1.677868e+011 8.682402e+010 4.666589e+011, Ori 1.000000 0.000000 0.000000
+Color r  32 g 200 b  32
+Color r 200 g  32 b  32
+Color r  32 g  32 b 200
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 7, type 0, body type 3 hab_type 0 yscale 0.000000 radius   80000000 name Vethonin Epsilon
+Parent 2 2 3, Faction 0, Population 0
+Texture type 1, t1 3, t2 3, t3 0 
+Pos 1.709125e+011 8.682402e+010 4.583780e+011, Ori 1.000000 0.000000 0.000000
+Color r  32 g 200 b  32
+Color r 200 g  32 b  32
+Color r  32 g  32 b 200
+Cloud 255 Ring 0 Unk 54 Unk2 0 
+
+Entity 8, type 0, body type 3 hab_type 0 yscale 0.000000 radius   80000000 name Vethonin Zeta
+Parent 2 2 3, Faction 0, Population 0
+Texture type 1, t1 3, t2 3, t3 0 
+Pos 1.729125e+011 8.982403e+010 4.601100e+011, Ori 1.000000 0.000000 0.000000
+Color r  32 g 200 b  32
+Color r 200 g  32 b  32
+Color r  32 g  32 b 200
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 9, type 1, body type 8 hab_type 116 yscale 0.000000 radius          0 name Feynman Station
+Parent 4 2 671446024, Faction 5, Population 40
+Texture type 0, t1 0, t2 0, t3 0 
+Pos 1.686470e+011 8.875039e+010 4.625593e+011, Ori 1.000000 0.000000 0.000000
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 10, type 1, body type 6 hab_type 116 yscale 0.000000 radius          0 name Solaris Sundiving Orbital
+Parent 1 2 335770630, Faction 3, Population 20
+Texture type 0, t1 0, t2 0, t3 0 
+Pos -5.906824e+009 3.396034e+011 -8.446676e+010, Ori 1.000000 0.000000 0.000000
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 11, type 1, body type 11 hab_type 116 yscale 0.000000 radius          0 name Sleepy Joe's
+Parent 6 2 1258517515, Faction 3, Population 75
+Texture type 0, t1 0, t2 0, t3 0 
+Pos 1.679409e+011 8.747304e+010 4.668710e+011, Ori 1.000000 0.000000 0.000000
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 12, type 1, body type 7 hab_type 118 yscale 0.000000 radius          0 name NSO Laplace Shipyard Alpha
+Parent 8 2 1258714631, Faction 6, Population 75
+Texture type 0, t1 0, t2 0, t3 0 
+Pos 1.730986e+011 8.998300e+010 4.602836e+011, Ori 1.000000 0.000000 0.000000
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 13, type 1, body type 9 hab_type 116 yscale 0.000000 radius          0 name NSO Laplace HQ
+Parent 8 2 1678144521, Faction 6, Population 100
+Texture type 0, t1 0, t2 0, t3 0 
+Pos 1.729519e+011 8.951874e+010 4.601468e+011, Ori 1.000000 0.000000 0.000000
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+Entity 14, type 2, body type 2 hab_type 0 yscale 0.000000 radius          0 name Certhe Lpoint
+Parent 5 2 2, Faction 0, Population 0
+Texture type 0, t1 0, t2 0, t3 0 
+Pos 1.676625e+011 8.812306e+010 4.627081e+011, Ori -0.353553 0.866026 -0.353552
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Color r   0 g   0 b   0
+Cloud 0 Ring 0 Unk 0 Unk2 0 
+
+

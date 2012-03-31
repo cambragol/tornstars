@@ -1,0 +1,220 @@
+//*******************************************************************************************/
+//
+// tsEvent.pog
+//
+// This module implements a simple event system. Ships can be signalled they have
+// distress calls, or that they have been attacked. Or that nearby ships have been
+// attacked.
+// 
+//
+// March 2004, Jon Freise
+// March 2006, jf updated for use with groups of ships and order scripts
+//******************************************************************************************/
+
+package tsEvent;
+
+uses    Sim,
+iShip,
+iSim,
+Debug,
+Global,
+GUI,
+Input,
+List,
+Object,
+String,
+Task,
+Text,
+Math,
+iGame,
+   tEpicEventEnum;
+
+provides InitReciever,
+         SetListenType,
+         GetListenType,
+         SendEvent,
+         IsNewEvent,
+         RemoveEvent,
+         ClearNewFlag,
+         GetPriority,
+         GetEventType,
+         GetLocation,
+         GetTarget,
+         GetSender;
+         
+prototype InitReciever(hobject listener);
+prototype int GetPriority(hobject listener);
+
+
+// Set up the properties that a vessel needs to recieve new events.
+InitReciever(hobject listener)
+{
+   Object.AddBoolProperty(listener,"gt_ese_new_event",false);
+   Object.AddIntProperty(listener,"gt_ese_priority",0);
+   Object.AddIntProperty(listener,"gt_ese_event_type",0);
+
+   Object.AddHandleProperty(listener,"gt_ese_event_loc",none);
+   Object.AddHandleProperty(listener,"gt_ese_event_target",none);
+   Object.AddHandleProperty(listener,"gt_ese_event_sender",none);
+
+   Object.AddIntProperty(listener,"gt_ese_listen_type",0);
+}
+
+
+// Set the event types that this listener wants to recieve. Patrol ships, or 
+// guards might have different events from customs vessels and pirates.
+
+SetListenType(hobject listener, int type)
+{
+   Object.SetIntProperty(listener,"gt_ese_listen_type",type);
+}
+
+// Gets the type of the event this listener wants to hear
+int GetListenType(hobject listener)
+{
+   return Object.IntProperty(listener,"gt_ese_listen_type");
+} 
+
+
+// Check if a new event has arrived.
+bool IsNewEvent(hobject listener)
+{
+   return Object.BoolProperty(listener,"gt_ese_new_event");
+}
+
+
+
+// Tries to send an event to the listener. It will not overwrite a higher priority
+// event in progress.
+SendEvent(hobject listener, int priority, int event_type, hisim location, hisim target, hisim sender)
+{
+   int old_priority, listen_type;
+
+   // If the listener has not been inited, bail
+   if (!Object.PropertyExists(listener,"gt_ese_new_event")) {
+      debug{
+         Debug.PrintString("tsEvent.SendEvent listener not init");
+         Debug.PrintHandle(listener);
+         Debug.PrintString("\n");
+      }
+      return;
+   }
+
+   // If there is an unhandled event on the queue, don't
+   // mess with it, cause it could be in process.
+   // We accept there will be dropped messages on rare
+   // occasion. It is worth the simplicity of a non-buffered
+   // system.
+
+   if (IsNewEvent(listener)) {
+      debug Debug.PrintString("tsEvent.SendEvent already event");
+      return;
+   }
+
+   // If the listener does not want to hear this kind of event, bail.
+   listen_type = GetListenType(listener);
+   if (!(listen_type & event_type)) {
+      debug Debug.PrintString("tsEvent.SendEvent not listen type");
+      return;
+   }
+
+
+   // If the listener already has an event that is higher priority,
+   // or same then don't send this one.
+   /*
+   // I removed this, cause we now don't double write events ever.
+   if (IsNewEvent(listener)) {
+      old_priority = GetPriority(listener);
+      if (old_priority >= priority) {
+         debug Debug.PrintString("tsEvent.SendEvent low priorty");
+         return;
+      }
+   }
+*/
+
+   // Ok, copy the event properties and set the new event flag true.
+   atomic {
+      Object.SetIntProperty(listener, "gt_ese_priority", priority);
+      Object.SetIntProperty(listener, "gt_ese_event_type", event_type);
+
+      Object.SetHandleProperty(listener, "gt_ese_event_loc", location);
+      Object.SetHandleProperty(listener, "gt_ese_event_target", target);
+      Object.SetHandleProperty(listener, "gt_ese_event_sender", sender);
+
+      Object.SetBoolProperty(listener, "gt_ese_new_event",true);
+   }
+}
+
+
+
+// Clears an event so that new ones can be retrieved.
+RemoveEvent(hobject listener)
+{
+   atomic {
+      Object.SetBoolProperty(listener,"gt_ese_new_event",false);
+      Object.SetIntProperty(listener,"gt_ese_priority",0);
+   }
+}
+
+
+
+// Clears the recieved flag, so a watch task 
+// does not need to keep checking this event.
+ClearNewFlag(hobject listener)
+{
+   Object.SetBoolProperty(listener,"gt_ese_new_event",false);
+}
+
+
+
+// Gets the priority of the current event.
+int GetPriority(hobject listener)
+{
+   return Object.IntProperty(listener,"gt_ese_priority");
+}
+
+
+
+// Gets the type of the current event.
+int GetEventType(hobject listener)
+{
+   return Object.IntProperty(listener,"gt_ese_event_type");
+}
+
+
+
+// Each event has a location that can be used to 
+// arrive at the scene of the event.
+// Distress calls drop waypoints.
+hisim GetLocation(hobject listener)
+{
+   return iSim.Cast(Object.HandleProperty(listener,"gt_ese_event_loc"));
+}
+
+
+
+// This is the ship causing the event. An attacker, or hostile listener.
+hisim GetTarget(hobject listener)
+{
+   return iSim.Cast(Object.HandleProperty(listener,"gt_ese_event_target"));
+}
+
+
+
+// This is the listener sending the event. The one who was attacked.
+// The one that should be defended.
+hisim GetSender(hobject listener)
+{
+   return iSim.Cast(Object.HandleProperty(listener,"gt_ese_event_sender"));
+}
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+

@@ -1,0 +1,144 @@
+;Center, Name,
+Center,Test_Pirate_center,end,
+
+;Star, Name, Parent, Distance, Rotation, Elevation, Color,
+Star,Test Pirate Alpha,Test_Pirate_center,0.000000,  0,  0,1,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Evergreen,Test Pirate Alpha,1000000000.000000,  0,  0,1.000000,0.000000,0.000000,0.000000,3415601.000000,2,0,1,27,39.0,255.0,255.0,255.0,0.0,0.0,0.0,127.0,44.0,34,255,0,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Evergreen Metals,Evergreen,6831202.000000,  0,  0,1.000000,0.000000,0.000000,0,0,1,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Evergreen Refining,Evergreen,6831202.000000,127,  0,1.000000,0.000000,0.000000,0,0,1,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Evergreen Security,Evergreen,6831202.000000,254,  0,1.000000,0.000000,0.000000,0,0,10,54,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Evergreen Manufacture,Evergreen,6831202.000000, 21,  0,1.000000,0.000000,0.000000,0,0,5,22,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Evergreen City,Evergreen,6831202.000000,148,  0,1.000000,0.000000,0.000000,0,0,3,112,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Evergreen Habitat,Evergreen,6831202.000000,275,  0,1.000000,0.000000,0.000000,0,0,3,112,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Evergreen Entertainment,Evergreen,6831202.000000, 42,  0,1.000000,0.000000,0.000000,0,0,11,66,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Evergreen Pirate Base,Evergreen,6831202.000000,169,  0,1.000000,0.000000,0.000000,0,0,16,101,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Pinecone,Evergreen,400000000.000000,  0,  0,1.000000,0.000000,0.000000,0.000000,827268.750000,3,0,1,28,42.0,255.0,255.0,255.0,0.0,0.0,0.0,127.0,44.0,34,255,0,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Pinecone Pirate Cove,Pinecone,1654537.500000,  0,  0,1.000000,0.000000,0.000000,0,0,26,102,end,
+
+;Lpoint, Name, Planet, Moon, Distance,
+Lpoint,Pinecone Lpoint,Evergreen,Pinecone,2.00,0,end,
+
+;Belt, Name, Parent, Distance, Rotation, Elevation, Field Size,
+Belt,Birch,Test Pirate Alpha,1500000000.000000, 30,  0,1.000000,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Birch Shipyard,Birch,20000000.000000, 30,  0,1.000000,0.000000,0.000000,0,0,7,21,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Birch Security,Birch,20000000.000000,157,  0,1.000000,0.000000,0.000000,0,0,10,54,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Birch Manufacture,Birch,20000000.000000,284,  0,1.000000,0.000000,0.000000,0,0,5,22,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Birch Shipping,Birch,20000000.000000, 51,  0,1.000000,0.000000,0.000000,0,0,8,62,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Birch Corporate Center,Birch,20000000.000000,178,  0,1.000000,0.000000,0.000000,0,0,17,47,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Birch Research,Birch,20000000.000000,305,  0,1.000000,0.000000,0.000000,0,0,6,40,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Birch City,Birch,20000000.000000, 72,  0,1.000000,0.000000,0.000000,0,0,3,112,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Seed,Birch,400000000.000000, 30,  0,1.000000,0.000000,0.000000,0.000000,1922475.375000,3,0,1,14,36.0,255.0,255.0,255.0,0.0,0.0,0.0,127.0,44.0,34,255,0,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Seed Pirate Base,Seed,3844950.750000,  0,  0,1.000000,0.000000,0.000000,0,0,16,101,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Seed Pirate Cove,Seed,3844950.750000,127,  0,1.000000,0.000000,0.000000,0,0,26,102,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Oak,Test Pirate Alpha,2249999872.000000, 60,  0,1.000000,0.000000,0.000000,0.000000,7897915.500000,2,0,1,6,42.0,255.0,255.0,255.0,0.0,0.0,0.0,127.0,44.0,34,255,0,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Oak Metals,Oak,15795831.000000,  0,  0,1.000000,0.000000,0.000000,0,0,1,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Oak Refining,Oak,15795831.000000,127,  0,1.000000,0.000000,0.000000,0,0,1,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Oak Security,Oak,15795831.000000,254,  0,1.000000,0.000000,0.000000,0,0,10,54,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Oak Manufacture,Oak,15795831.000000, 21,  0,1.000000,0.000000,0.000000,0,0,5,22,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Oak City,Oak,15795831.000000,148,  0,1.000000,0.000000,0.000000,0,0,3,112,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Oak Habitat,Oak,15795831.000000,275,  0,1.000000,0.000000,0.000000,0,0,3,112,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Oak Pirate Cove,Oak,15795831.000000, 42,  0,1.000000,0.000000,0.000000,0,0,26,102,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Acorn,Oak,400000000.000000, 60,  0,1.000000,0.000000,0.000000,0.000000,1704863.000000,3,0,1,30,52.0,255.0,255.0,255.0,0.0,0.0,0.0,127.0,44.0,34,255,0,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Acorn Pirate Base,Acorn,3409726.000000,  0,  0,1.000000,0.000000,0.000000,0,0,16,101,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Acorn Pirate Cove,Acorn,3409726.000000,127,  0,1.000000,0.000000,0.000000,0,0,26,102,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Acorn Habitat,Acorn,3409726.000000,254,  0,1.000000,0.000000,0.000000,0,0,3,112,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Elm,Test Pirate Alpha,3375000064.000000, 90,  0,1.000000,0.000000,0.000000,0.000000,62804956.000000,4,0,2,4,3.0,255.0,255.0,255.0,0.0,0.0,0.0,127.0,116.0,96,0,5,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Elm Metals,Elm,125609912.000000,  0,  0,1.000000,0.000000,0.000000,0,0,1,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Elm Refining,Elm,125609912.000000,127,  0,1.000000,0.000000,0.000000,0,0,1,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Elm Security,Elm,125609912.000000,254,  0,1.000000,0.000000,0.000000,0,0,10,54,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Elm Manufacture,Elm,125609912.000000, 21,  0,1.000000,0.000000,0.000000,0,0,5,22,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Elm City,Elm,125609912.000000,148,  0,1.000000,0.000000,0.000000,0,0,3,112,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Elm Habitat,Elm,125609912.000000,275,  0,1.000000,0.000000,0.000000,0,0,3,112,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Elm Pirate Base,Elm,125609912.000000, 42,  0,1.000000,0.000000,0.000000,0,0,16,101,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Leaf,Elm,400000000.000000, 90,  0,1.000000,0.000000,0.000000,0.000000,3743049.500000,3,0,1,26,31.0,255.0,255.0,255.0,0.0,0.0,0.0,127.0,44.0,34,255,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Bud,Elm,600000000.000000,120,  0,1.000000,0.000000,0.000000,0.000000,4666425.000000,3,0,1,2,45.0,255.0,255.0,255.0,0.0,0.0,0.0,127.0,44.0,34,255,0,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Nut,Elm,900000000.000000,150,  0,1.000000,0.000000,0.000000,0.000000,910527.375000,3,0,1,0,51.0,255.0,255.0,255.0,0.0,0.0,0.0,127.0,44.0,34,255,0,end,
+

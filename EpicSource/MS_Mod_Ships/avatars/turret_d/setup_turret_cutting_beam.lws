@@ -1,0 +1,224 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 0
+PreviewLastFrame 100
+PreviewFrameStep 1
+FramesPerSecond 25
+
+LoadObject I:\Projects\resource\avatars\turret_d\0_Fort_bodyJB)_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 2
+ShadowOptions 7
+
+AddNullObject <anim channel="heading">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+  0 0 0 360 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <anim channel="elevation">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 7.95 0 0 -90 0 1 1 1
+  0 0 0 0 0
+  0 7.95 0 0 90 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 2
+ShadowOptions 7
+
+AddNullObject <anim channel="fire?o(8.0)j(0.1)">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  2.315881 1.3 38.01479 0 0 0 0 0 0
+  0 0 0 0 0
+  2.315881 1.3 38.01479 0 0 0 1 1 1
+  1 1 0 0 0
+EndBehavior 1
+ParentObject 3
+ShadowOptions 7
+
+AddNullObject <node template=ini||audio|sfx|cutting_beam>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+  0 0 0 0 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.0 max=0.01>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -20 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 3
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.01 max=0.04>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 3
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.04 max=1.0>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  20 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 3
+ShadowOptions 7
+
+LoadObject I:\Projects\resource\avatars\cutting_beam_projector\LOD0_RTO_sniperPBC_T.lwo
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  -1.1 0 16.3 0 0 0 2 2 2
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 8
+ShadowOptions 7
+
+LoadObject I:\Projects\resource\avatars\cutting_beam_projector\LOD1_RTO_sniperPBC_T.lwo
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  -1.1 0 16.3 0 0 0 2 2 2
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 7
+ShadowOptions 7
+
+LoadObject I:\Projects\resource\avatars\cutting_beam_projector\LOD2_RTO_sniperPBC_T.lwo
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  -1.1 0 16.3 0 0 0 2 2 2
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 6
+ShadowOptions 7
+
+AmbientColor 255 255 255
+AmbIntensity 0.25
+
+AddLight
+LightName FlashFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 0 0 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+LightColor 247 151 9
+LgtIntensity 0
+LightType 1
+LightFalloff 1
+LightRange 300
+LensFlare 1
+FlareIntensity 0.145
+FlareNominalDistance 100
+FlareDissolve 0
+LensFlareFade 6
+LensFlareOptions 11
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareRandStreakInt 0.03
+FlareRandStreakDens 50
+FlareRandStreakSharp 6
+ShadowType 1
+
+ShowCamera 0 7
+CameraMotion (unnamed)
+  9
+  1
+  0.004104614 0.9625 -46.25725 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ZoomFactor 3.2
+Resolution 1
+CustomSize 752 576
+PixelAspectRatio -1
+CustomPixelRatio 1.0186
+MaskPosition 0 0 752 576
+MotionBlur 0
+FieldRendering 0
+SegmentMemory 8000000
+ApertureHeight 0.015
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 0
+RayTraceOptimization 1
+DataOverlayLabel  
+SaveRGB 0
+SaveAlpha 0
+
+ViewType 7
+CenterItem 1
+ViewAimpoint 2.315881 45.96479 -1.299993
+ViewDirection -6.305894 -0.09424891 0
+ViewZoomFactor 8.753895
+
+GridNumber 40
+GridSize 20
+CameraViewBG 0
+ShowMotionPath 1
+ShowFogRadius 0
+ShowFogEffect 0
+ShowSafeAreas 0
+ShowFieldChart 0

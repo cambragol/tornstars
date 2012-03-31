@@ -1,0 +1,227 @@
+;Texture Setup Data,,
+RockyTextureCount,32,
+RockyTwoTextureCount,23,
+
+
+GiantTextureCount,13,
+
+
+
+Model,MT_MiningStation ,0
+Model,MT_ProcessingPlant ,1
+Model,MT_OrbitalGarden ,2
+Model,MT_RichSettlement ,3
+Model,MT_PoorSettlement ,4
+Model,MT_ManufacturePlant ,5
+Model,MT_ResearchStation ,6
+Model,MT_ShipYardStation ,7
+Model,MT_Beanstalk ,8
+
+Model,MT_TransferStation ,8
+Model,MT_AdminStation ,9
+Model,MT_SecurityStation ,10
+Model,MT_CasinoStation ,11
+Model,MT_STC ,12
+Model,MT_MarauderBase ,13
+Model,MT_FortressStation ,14
+Model,MT_NavalBaseStation ,15
+Model,MT_PirateStation ,16
+Model,MT_CorporateHQ ,17
+
+Model,MT_Communications ,18
+Model,MT_Prison,19
+Model,MT_AsteroidSmall ,20,,
+Model,MT_AsteroidMedium ,22,,
+Model,MT_AsteroidLarge ,23,,
+Model,MT_AsteroidPlain ,26,,
+Model,MT_JumpAccel ,29,,
+Model,MT_Biobomber ,32,,
+
+Model,MT_HavenStation ,34,,
+Model,MT_PoliceStation ,36,,
+Model,MT_SmallPirate ,37,,
+Model,MT_CurvedStation ,38,,
+Model,MT_NewAsteroid01 ,39,, 
+Model,MT_NewAsteroid03 ,40,,
+Model,MT_NewAsteroid05 ,41,,
+Model,MT_NewAsteroid06 ,42,,
+"	",,,,
+;Some planets are also stations,,
+Model,MT_Emerald ,43
+Model,MT_Chenyuang ,44
+Model,MT_Tseng ,45
+;mines,,
+Model,MT_SmallBiomassMine ,46
+Model,MT_SmallCommonMetalsMine ,47
+Model,MT_SmallRareMetalsMine ,48
+Model,MT_SmallExoticMetalsMine ,49
+Model,MT_SmallFusionableGasesMine ,50
+Model,MT_SmallInorganicsMine ,51
+Model,MT_SmallOrganicsMine ,52
+Model,MT_SmallRadioactivesMine ,53
+Model,MT_SmallWaterMine ,54
+Model,MT_SmallNeutroniumMine ,55
+
+Model,MT_LargeBiomassMine ,56
+Model,MT_LargeCommonMetalsMine ,57
+Model,MT_LargeRareMetalsMine ,58
+Model,MT_LargeExoticMetalsMine ,59
+Model,MT_LargeFusionableGasesMine ,60
+Model,MT_LargeInorganicsMine ,61
+Model,MT_LargeOrganicsMine ,62
+Model,MT_LargeRadioactivesMine ,63
+Model,MT_LargeWaterMine ,64
+Model,MT_LargeNeutroniumMine ,65
+
+
+
+
+
+;EmeraldCitizens Alliance,,
+
+Center,emerald_sys,known,,,,
+Star,Emerald Alpha,5,,,,
+
+Planet,Ruby,,,,,
+
+
+Planet,Sapphire,,,,,
+
+
+
+
+
+
+Planet,SmallMines,,,,,
+;Mine ,Name,Station type,Model name,Faction,Status ,Richness
+Mine,WaterMine,HT_WaterMine,MT_SmallWaterMine,Empty,ok,3
+
+Mine,CommonMetals,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,Empty,empty,1
+Mine,OrganicsMine,HT_OrganicsMine,MT_SmallOrganicsMine,Empty,ok,0
+
+Mine,InOrganicsMine,HT_InorganicsMine,MT_SmallInorganicsMine,EmeraldCitizens,empty,3
+Mine,BiomassMine,HT_BiomassMine,MT_SmallBiomassMine,EmeraldCitizens,ok,2
+
+Mine,RareMetalsMine,HT_RareMetalsMine,MT_SmallRareMetalsMine,EmeraldCitizens,ok,1
+
+Mine,ExoticMetalsMine,HT_ExoticMetalsMine,MT_SmallExoticMetalsMine,EmeraldCitizens,ok,2
+Mine,RadioactivesMine,HT_RadioactivesMine,MT_SmallRadioactivesMine,EmeraldCitizens,ok,3
+Mine,FusionableGasesMine,HT_FusionableGasesMine,MT_SmallFusionableGasesMine,EmeraldCitizens,ok,0
+Mine,NeutroniumMine,HT_NeutroniumMine,MT_SmallNeutroniumMine,EmeraldCitizens,ok,1
+Mine,BuildingWaterMine,HT_WaterMine,MT_SmallWaterMine,EmeraldCitizens,building,2
+Moon,SmallMoon,,,,,
+Lpoint,SmallMinesLpoint,SmallMines,SmallMoon,1,second_test,SecondLpoint,2,0,0
+
+
+
+Planet,LargeMines,,,,,,,,
+Mine,WaterMineLarge,HT_WaterMine,MT_LargeWaterMine,EmeraldCitizens,ok,0,,,
+
+Mine,CommonMetalsLarge,HT_CommonMetalsMine,MT_LargeCommonMetalsMine,EmeraldCitizens,ok,1,,,
+Mine,OrganicsMineLarge,HT_OrganicsMine,MT_LargeOrganicsMine,EmeraldCitizens,ok,2,,,
+
+Mine,InorganicsMineLarge,HT_InorganicsMine,MT_LargeInorganicsMine,EmeraldCitizens,ok,3,,,
+Mine,BiomassMineLarge,HT_BiomassMine,MT_LargeBiomassMine,EmeraldCitizens,ok,0,,,
+Mine,RareMetalsMineLarge,HT_RareMetalsMine,MT_LargeRareMetalsMine,EmeraldCitizens,ok,1,,,
+Mine,ExoticMetalsMineLarge,HT_ExoticMetalsMine,MT_LargeExoticMetalsMine,EmeraldCitizens,ok,2,,,
+Mine,RadioactivesMineLarge,HT_RadioactivesMine,MT_LargeRadioactivesMine,EmeraldCitizens,ok,3,,,
+Mine,FusionableGasesMineLarge,HT_FusionableGasesMine,MT_LargeFusionableGasesMine,EmeraldCitizens,ok,0,,,
+Mine,NeutroniumMineLarge,HT_NeutroniumMine,MT_LargeNeutroniumMine,EmeraldCitizens,ok,1
+Mine,BuildingWaterLarge,HT_WaterMine,MT_LargeWaterMine,EmeraldCitizens,ok,2
+
+Planet,Processing,,,,,
+Station,WaterProc,HT_WaterProcessingPlant,MT_ProcessingPlant ,EmeraldCitizens,ok,
+,,,MT_ProcessingPlant ,,,
+Station,OrganicsProc,HT_OrganicsProcessingPlant,MT_ProcessingPlant ,EmeraldCitizens,ok,
+Station,InorganicsProc,HT_InorganicsProcessingPlant,MT_ProcessingPlant ,EmeraldCitizens,ok,
+Station,BiomassProc,HT_BiomassProcessingPlant,MT_ProcessingPlant ,EmeraldCitizens,ok,
+Station,CommonMetalsProc,HT_CommonMetalsProcessingPlant,MT_ProcessingPlant ,EmeraldCitizens,ok,
+Station,ExoticMetalsProc,HT_ExoticMetalsProcessingPlant,MT_ProcessingPlant ,EmeraldCitizens,ok,
+Station,RadioactivesProc,HT_RadioactivesProcessingPlant,MT_ProcessingPlant ,EmeraldCitizens,ok,
+Station,FusionableGasesProc,HT_FusionableGasesProcessingPlant,MT_ProcessingPlant ,EmeraldCitizens,ok,
+Station,NeutroniumProc,HT_NeutroniumProcessingPlant,MT_ProcessingPlant ,EmeraldCitizens,ok,
+
+
+Planet,Manufacture,,,,
+Station,HeavyMan,HT_HeavyManufacturingPlant,MT_ManufacturePlant ,EmeraldCitizens,ok
+,,,MT_ManufacturePlant ,,
+Station,BiologicalMan,HT_BiologicalManufacturingPlant,MT_ManufacturePlant ,EmeraldCitizens,ok
+Station,WetwareMan,HT_WetwareManufacturingPlant,MT_ManufacturePlant ,EmeraldCitizens,ok
+Station,HiTechMan,HT_HiTechManufacturingPlant,MT_ManufacturePlant ,EmeraldCitizens,ok
+Station,ElectronicsMan,HT_ElectronicsManufacturingPlant,MT_ManufacturePlant ,EmeraldCitizens,ok
+Station,WeaponsMan,HT_WeaponsManufacturingPlant,MT_ManufacturePlant ,EmeraldCitizens,ok
+Station,PharmaceuticalsMan,HT_PharmaceuticalsManufacturingPlant,MT_ManufacturePlant ,EmeraldCitizens,ok
+Station,PlasticsMan,HT_PlasticsManufacturingPlant,MT_ManufacturePlant ,EmeraldCitizens,ok
+Station,FusionReactorsMan,HT_FusionReactorsManufacturingPlant,MT_ManufacturePlant ,EmeraldCitizens,ok
+Station,EnergyCellsMan,HT_EnergyCellsManufacturingPlant,MT_ManufacturePlant ,EmeraldCitizens,ok
+Station,StationFabricationMan,HT_StationFabricationManufacturingPlant,MT_ManufacturePlant ,EmeraldCitizens,ok
+Station,LuxuriesMan,HT_LuxuriesManufacturingPlant,MT_ManufacturePlant ,EmeraldCitizens,ok
+
+
+Planet,Civilian,,,,
+Station,Shipyard,HT_Shipyard,MT_ShipYardStation,EmeraldCitizens,ok
+Station,Waystation,HT_Waystation,MT_ShipYardStation,EmeraldCitizens,ok
+Station,Research,HT_ResearchStation,MT_ResearchStation,EmeraldCitizens,ok
+Station,CentralHQ,HT_CentralHQ,MT_CorporateHQ,EmeraldCitizens,ok
+Station,AgSettlement,HT_AgriculturalSettlement,MT_OrbitalGarden,EmeraldCitizens,ok
+Station,Resort,HT_Resort,MT_CasinoStation,EmeraldCitizens,ok
+Station,Medical,HT_MedicalFacility,MT_AdminStation,EmeraldCitizens,ok
+Station,SecurityStation,HT_SecurityStation,MT_SecurityStation,EmeraldCitizens,ok
+Station,MercenaryBase,HT_MercenaryBase,MT_FortressStation,EmeraldCitizens,ok
+Station,Fortress mercenary,HT_Fortress,MT_FortressStation,EmeraldCitizens,ok
+Station,Entertainment,HT_EntertainmentStation,MT_CasinoStation,EmeraldCitizens,ok
+Station,Casino,HT_Casino,MT_CasinoStation,EmeraldCitizens,ok
+Station,Settlement,HT_Settlement,MT_RichSettlement,EmeraldCitizens,ok
+Station,Habitat with spewer,HT_Habitat,MT_ProcessingPlant,EmeraldCitizens,ok
+Station,Habitat,HT_Habitat,MT_PoorSettlement,EmeraldCitizens,ok
+Station,Transfer,HT_TransferStation,MT_TransferStation,EmeraldCitizens,ok
+Station,Beanstalk,HT_Beanstalk,MT_Beanstalk,EmeraldCitizens,ok
+
+
+Planet,Government,, ,,
+Station,PoliceBase,HT_PoliceBase,MT_PoliceStation,EmeraldCitizens,ok
+Station,SystemDefenseDock,HT_SystemDefenceDock,MT_NavalBaseStation,EmeraldCitizens,ok
+Station,Cluster Admin,HT_ClusterAdministration,MT_CorporateHQ,EmeraldCitizens,ok
+Station,Regional Department,HT_RegionalDepartment,MT_CorporateHQ,EmeraldCitizens,ok
+Station,SystemA,HT_SystemAdministration,MT_CorporateHQ,EmeraldCitizens,ok
+
+Planet,Pirates,,,,
+Station,Outpost,HT_Outpost,MT_AdminStation,EmeraldCitizens,ok
+Station,FTLArray,HT_FTLArray,MT_STC,EmeraldCitizens,ok
+
+
+Station,PirateBase,HT_PirateBase,MT_PirateStation,Droznic,ok
+Station,PirateCove,HT_PirateCove,MT_PirateStation,Droznic,ok
+Station,PirateOutpost,HT_PirateOutpost,MT_PirateStation,Droznic,ok
+Station,BlackMarket,HT_BlackMarket,MT_PirateStation,Droznic,ok
+Station,Gangster Hideout,HT_GangsterHideout,MT_PirateStation,EmeraldCitizens,ok
+Station,Hideout,HT_Hideout,MT_PirateStation,EmeraldCitizens,ok
+
+
+
+
+
+
+
+
+
+Center,bedalov,unknown,,,
+Star ,Second Sun,5,,,,,,,,,,,,
+Planet,SecondPrime,,,,,,,,,,,,,
+Moon,SecondMoon,,,,,,,,,,,,,
+Mine,CommonMetals,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,Empty,empty,1,,,,,,,,
+Mine,OrganicsMine,HT_OrganicsMine,MT_SmallOrganicsMine,EmeraldCitizens,ok,0,,,,,,,,
+
+Lpoint,SecondLpoint,SecondPrime,SecondMoon,2,emerald_sys,SmallMinesLpoint,1,0,0,alcuin,ThirdLpoint,2,0,0
+
+
+Center,alcuin,hidden,,,,,,,,,,,,
+Star,Third Sun,5,,,,,,,,,,,,
+Planet,ThirdPrime,,,,,,,,,,,,,
+Moon,ThirdMoon,,,,,,,,,,,,,
+Mine,CommonMetals,HT_CommonMetalsMine,MT_SmallCommonMetalsMine,Empty,empty,1,,,,,,,,
+Mine,OrganicsMine,HT_OrganicsMine,MT_SmallOrganicsMine,EmeraldCitizens,ok,0,,,,,,,,
+
+Lpoint,ThirdLpoint,ThirdPrime,ThirdMoon,1,bedalov,SecondLpoint,3,0,0
+
+Center,capsule_space,hidden,,,,,,,

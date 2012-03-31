@@ -1,0 +1,373 @@
+//*******************************************************************************************/
+//
+// tsPogClass
+//
+// Similar to C++ sim classes, these pog classes allow objects and code behavior to be
+// merged into one.
+// 
+//
+// August 2003, Jon Freise
+//******************************************************************************************/
+
+package tsPogClass;
+
+// Make sure all tsPc packages the game uses as pog clases are included 
+//[of]:Imports
+uses    Sim,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        GUI,
+        iGUI,
+        iHUD,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        tsPcFenceShip,
+        tsPcAsteroidBelt,
+        tsPcConstructionShip,
+        tsPcCustomsToll,
+        tsPcPirateToll,
+        tsPcGuards,
+        tsPcHiredShip,
+        tsPcOwner,
+        tsPcPirateToll,
+        tsPcPodScrapper,
+        tsPcRumorSeller,
+        tsPcTankerShip,
+        tsPcWeaponSeller,
+        tsPcEmbezzleOp,
+        tsPcWreckBelt,
+        tsPcCargoShip,
+        tsPcTankerOp,
+        tsPcMerc,
+		  tsPcFreeTrader,
+		  tsPcFreeMiner,
+		  tsPcFreeTanker,
+		  tsPcFreeScience,
+		  tsPcFreeMerchant;
+
+//[cf]
+
+
+//[of]:Exports
+provides Create,
+         Start;
+//[cf]
+
+
+
+/* Example minimum pog class file instance.
+
+[PogClass]
+name=test_class
+
+[Properties]
+template=ini:/sims/stations/custom/ice_asteroid_debris
+
+create_function=pog_package.create
+
+start_function=pog_package.start
+
+
+   Resulting Object minimum properties
+   
+   "name" 
+   "gt_pog_object_id"
+   "gt_pog_object_start"
+
+
+*/
+
+/* 
+
+  Takes a pog object ini file and creates an instance of the object.
+  (The object should then be placed into the world, and started.)
+ 
+  Template_name is the class instance template file. It allows
+  building custom versions of the object.
+  
+  Object_name is just a referencing string. It could be used by
+  the class to allow its object to be found by other objects. For 
+  instance, a patrol path object might name each subwaypoint Name1, Name2
+  etc. This allows patrol objects to find the path and follow it.
+  
+  Id_String is seperate from Object_name to allow a unique id string to be handed
+  to a new object. This is useful for objects that must preserve state between
+  player visits. For instance, a dead ship object might give cargo when a 
+  player docks, but only once. If the graveyard gives this ship a unique
+  id string, it can create a global that remembers if it has been visited.
+  By seperating the id from the name, the same localized name can be used
+  for many, many dead ship objects without global clash. 
+
+   The create function is responsible for reading the INI file supplied,
+   and using it to modify any properties the object will need later 
+   at run time.   
+ */
+
+hsim Create(string template_name, string object_name)
+{
+   hinifile object_file = INIFile.Create(template_name);
+   string pog_class, pog_function, create_function;
+   hsim item = none;
+   htask current_task, new_task;
+
+   if (none == object_file) {
+      debug Debug.PrintString("tsPogClass: Error, no template file\n");
+      debug Debug.PrintString(template_name);
+      debug Debug.PrintString("\n");
+      return none;
+
+   }
+
+   pog_function = INIFile.String(object_file,"PogClass","name","none");   
+
+   INIFile.Destroy(object_file);
+
+   if ("tsPcFenceShip" == pog_function){
+      item = iSim.Cast(tsPcFenceShip.PogCreate(template_name, object_name));
+   }else if ("tsPcAsteroidBelt" == pog_function){
+      item = iSim.Cast(tsPcAsteroidBelt.PogCreate(template_name, object_name));
+   }else if ("tsPcWreckBelt" == pog_function){
+      item = iSim.Cast(tsPcWreckBelt.PogCreate(template_name, object_name));
+   }else if ("tsPcConstructionShip" == pog_function){
+      item = iSim.Cast(tsPcConstructionShip.PogCreate(template_name, object_name));
+   }else if ("tsPcCustomsToll" == pog_function){
+      item = iSim.Cast(tsPcCustomsToll.PogCreate(template_name, object_name));
+   }else if ("tsPcGuards" == pog_function){
+      item = iSim.Cast(tsPcGuards.PogCreate(template_name, object_name));
+   }else if ("tsPcHiredShip" == pog_function){
+      item = iSim.Cast(tsPcHiredShip.PogCreate(template_name, object_name));
+   }else if ("tsPcPirateToll" == pog_function){
+      item = iSim.Cast(tsPcPirateToll.PogCreate(template_name, object_name));
+   }else if ("tsPcPodScrapper" == pog_function){
+      item = iSim.Cast(tsPcPodScrapper.PogCreate(template_name, object_name));
+   }else if ("tsPcRumorSeller" == pog_function){
+      item = iSim.Cast(tsPcRumorSeller.PogCreate(template_name, object_name));
+   }else if ("tsPcTankerShip" == pog_function){
+      item = iSim.Cast(tsPcTankerShip.PogCreate(template_name, object_name));
+   }else if ("tsPcWeaponSeller" == pog_function){
+      item = iSim.Cast(tsPcWeaponSeller.PogCreate(template_name, object_name));
+   }else if ("tsPcEmbezzleOp" == pog_function){
+      item = iSim.Cast(tsPcEmbezzleOp.PogCreate(template_name, object_name));
+   }else if ("tsPcTankerOp" == pog_function){
+      item = iSim.Cast(tsPcTankerOp.PogCreate(template_name, object_name));
+   }else if ("tsPcCargoShip" == pog_function){
+      item = iSim.Cast(tsPcCargoShip.PogCreate(template_name, object_name));
+   }else if ("tsPcMerc" == pog_function){
+      item = iSim.Cast(tsPcMerc.PogCreate(template_name, object_name));
+   }else if ("tsPcFreeTrader" == pog_function){
+      item = iSim.Cast(tsPcFreeTrader.PogCreate(template_name, object_name));
+   }else if ("tsPcFreeMiner" == pog_function){
+      item = iSim.Cast(tsPcFreeMiner.PogCreate(template_name, object_name));
+   }else if ("tsPcFreeTanker" == pog_function){
+      item = iSim.Cast(tsPcFreeTanker.PogCreate(template_name, object_name));
+   }else if ("tsPcFreeScience" == pog_function){
+      item = iSim.Cast(tsPcFreeScience.PogCreate(template_name, object_name));
+   }else if ("tsPcFreeMerchant" == pog_function){
+      item = iSim.Cast(tsPcFreeMerchant.PogCreate(template_name, object_name));
+   }else if ("none" == pog_function){
+      item = Sim.Create(template_name, object_name);
+   }else {
+      item = none;
+
+      debug {
+         Debug.PrintString("tsPogClass.Create Error pog class invalid\n");
+         Debug.PrintString(pog_function);
+         Debug.PrintString("\n");
+      }
+   }
+
+   return item;
+}
+
+/* 
+   Start the behavior task for the specified pog object. This is seperated from the 
+   create to allow the creating task to place the object, set faction, or adjust
+   properties before the object code takes over.
+
+   The create function must set the start function. At this point, all properties
+   are set and ready to run. The object is placed, and is ready for code
+   execution.  
+ 
+ */
+Start(hsim pog_object)
+{
+   string pog_start;
+   htask new_task;
+
+   pog_start = Object.StringProperty(pog_object, "gt_pog_object_class");
+
+   if ("tsPcFenceShip" == pog_start){
+      Task.Detach(start tsPcFenceShip.PogStart(pog_object));
+   }else if ("tsPcAsteroidBelt" == pog_start){
+      Task.Detach(start tsPcAsteroidBelt.PogStart(pog_object));
+   }else if ("tsPcWreckBelt" == pog_start){
+      Task.Detach(start tsPcWreckBelt.PogStart(pog_object));
+   }else if ("tsPcConstructionShip" == pog_start){
+      Task.Detach(start tsPcConstructionShip.PogStart(pog_object));
+   }else if ("tsPcCustomsToll" == pog_start){
+      Task.Detach(start tsPcCustomsToll.PogStart(pog_object));
+   }else if ("tsPcGuards" == pog_start){
+      Task.Detach(start tsPcGuards.PogStart(pog_object));
+   }else if ("tsPcHiredShip" == pog_start){
+      Task.Detach(start tsPcHiredShip.PogStart(pog_object));
+   }else if ("tsPcPirateToll" == pog_start){
+      Task.Detach(start tsPcPirateToll.PogStart(pog_object));
+   }else if ("tsPcPodScrapper" == pog_start){
+      Task.Detach(start tsPcPodScrapper.PogStart(pog_object));
+   }else if ("tsPcRumorSeller" == pog_start){
+      Task.Detach(start tsPcRumorSeller.PogStart(pog_object));
+   }else if ("tsPcTankerShip" == pog_start){
+      Task.Detach(start tsPcTankerShip.PogStart(pog_object));
+   }else if ("tsPcWeaponSeller" == pog_start){
+      Task.Detach(start tsPcWeaponSeller.PogStart(pog_object));
+   }else if ("tsPcEmbezzleOp" == pog_start){
+      Task.Detach(start tsPcEmbezzleOp.PogStart(pog_object));
+   }else if ("tsPcTankerOp" == pog_start){
+      Task.Detach(start tsPcTankerOp.PogStart(pog_object));
+   }else if ("tsPcCargoShip" == pog_start){
+      Task.Detach(start tsPcCargoShip.PogStart(pog_object));
+   }else if ("tsPcMerc" == pog_start){
+      Task.Detach(start tsPcMerc.PogStart(pog_object));
+   }else if ("tsPcFreeTrader" == pog_start){
+      Task.Detach(start tsPcFreeTrader.PogStart(pog_object));
+   }else if ("tsPcFreeMiner" == pog_start){
+      Task.Detach(start tsPcFreeMiner.PogStart(pog_object));
+   }else if ("tsPcFreeTanker" == pog_start){
+      Task.Detach(start tsPcFreeTanker.PogStart(pog_object));
+   }else if ("tsPcFreeScience" == pog_start){
+      Task.Detach(start tsPcFreeScience.PogStart(pog_object));
+   }else if ("tsPcFreeMerchant" == pog_start){
+      Task.Detach(start tsPcFreeMerchant.PogStart(pog_object));
+   }else {
+      debug {
+         Debug.PrintString("tsPogClass.Start Error pog class invalid\n");
+         Debug.PrintString(pog_start);
+         Debug.PrintString("\n");
+      }
+   }
+}
+
+
+/*
+   Test code just looks up a sim type from the properties section of 
+   the class instance INI file. It creates that Sim and passes it 
+   back.
+
+*/
+TestCreate()
+{
+
+   hinifile object_file;
+   string name, file_name;
+   string item_template, pog_class, start_function;
+   hsim item;
+   htask current_task;
+   htask parent_task;
+
+   debug Debug.PrintString("PogClass.PogCreate\n");
+
+   current_task = Task.Current();
+
+   parent_task = Task.Cast(Object.HandleProperty(current_task,"gt_pc_object_parent"));
+
+   file_name = Object.StringProperty(current_task,"gt_pc_object_file");
+   name = Object.StringProperty(current_task,"gt_pc_object_name");
+
+   object_file = INIFile.Create(file_name);
+
+   if (none == object_file) {
+      debug {
+         Debug.PrintString("PogClass.PogCreate, failed to find object file\n");
+      }
+
+      return;
+   }
+
+   // Pull needed items out of template file. Create the object.
+   // Attach them
+
+   pog_class = INIFile.String(object_file, "PogClass","name","none");
+
+
+   ///********************
+   // This block of code is class dependent. The rest must be done to adhere
+   // to the pog object calling conventions.
+
+   item_template = INIFile.String(object_file, "Properties","template","none");
+   item = Sim.Create(item_template, name);
+
+   if (none == item) {
+      debug {
+         Debug.PrintString("PogClass.PogCreate, bad object template\n");
+      }
+      return;
+   }
+   ///********************
+
+
+   // All 
+   Object.AddStringProperty(item, "gt_pog_object_class", pog_class);
+   Object.AddStringProperty(item, "gt_pog_object_template", file_name);
+
+      
+   // Attach the new item for return to the calling task.
+   if (Object.PropertyExists(parent_task, "gt_pc_object")) {
+      Object.SetHandleProperty(parent_task,"gt_pc_object", item);
+   }else {
+      Object.AddHandleProperty(parent_task,"gt_pc_object", item);
+   }
+
+   Task.Resume(parent_task);
+}
+
+
+/*
+   A simple behavior test.
+
+*/
+task TestStart()
+{
+   hship player;
+   float distance;
+   hsim pog_object;
+
+   debug Debug.PrintString("PogClass.PogStart: alive\n");
+
+   pog_object = Sim.Cast(Object.HandleProperty(Task.Current(),"gt_pc_object"));
+
+
+   ///***************************************
+   // This part of the start code is object dependent. The prior pieces must
+   // be done to adhere to the pog class calling convention.
+
+   while (1) {
+      Task.Sleep(Task.Current(), 10.0);
+
+      // skip out if we get culled.
+      if (!Sim.IsAlive(pog_object)) {
+         return;
+      }
+
+      player = iShip.FindPlayerShip();
+      distance = Sim.DistanceBetween(player, pog_object);
+
+      iHUD.Print(String.Join("Distance ",String.FromFloat(distance)));
+   }
+
+   ///***************************************
+}
+
+/*   
+
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

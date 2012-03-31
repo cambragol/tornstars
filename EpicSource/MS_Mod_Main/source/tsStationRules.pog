@@ -1,0 +1,498 @@
+//*******************************************************************************************/
+//
+// tsStationRules.pog
+//
+// This package handles the economies and rules surrounding station activities.
+// Including building stations, and destroying stations.
+// 
+// 
+//
+// April 2004, Jon Freise
+// March 2006, major revision to support fleet operations, jon freise
+//******************************************************************************************/
+
+package tsStationRules;
+
+uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, 
+   iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+   iConversation, iFormation, Group, Text, iEmail, State, 
+   iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker, 
+   iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+   iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
+   iEscort, iLagrangePoint, iMusic, iGame, Stream, iGUI,
+   tsTime,
+   tsStationEnum,
+   tsStation,
+   tsFleetOp,
+   tsFleetOpFilter,
+   tsEconUtil,
+   tsLProduction,
+   tsLFleet,
+   tsFleetOpCall,
+   tsFaction;
+
+
+
+ 
+provides UpdateAllStations,
+         InitAllStations;
+
+
+
+prototype bool spawn_operation(hhabitat station, int operation_type);
+
+prototype bool select_operation(hhabitat station, hinifile prod_data_file);
+
+prototype restart_timer(hhabitat station, hinifile prod_data_file);
+
+
+
+update_system(string system, hinifile production_file)
+{
+   hhabitat station;
+   list station_list;
+   int i, total;
+   int status, current_day, timer;
+   bool wakeup;
+
+/*
+   debug Debug.PrintString("tsStationRules.UpdateSystem ");
+   debug Debug.PrintString(system);
+   debug Debug.PrintString("\n");
+*/
+
+
+   current_day = tsTime.GetDay();
+
+   station_list = List.FromSet(iMapEntity.SystemHabitatsInSystem(system));
+   total = List.ItemCount(station_list);
+
+   for (i=0;i<total;++i) {
+      station = iHabitat.Cast(List.GetNth(station_list,i));
+
+      status = tsStation.Status(station);
+      timer = tsStation.ChangeTime(station);
+      wakeup = tsStation.IsAwake(station);
+
+      // Clear the wakup flag.
+      tsStation.SetAwake(station, false);
+
+      if (ESS_Normal == status) {
+         
+         // All active stations regrow a few fleet points each day.
+         tsLFleet.ChangeFleets(station, 10);
+
+         if ((timer != 0) && ( current_day >= timer)) {
+            tsStation.SetChangeTime(station, 0);
+
+            // We can build operations, and the build time
+            // has elapsed. Choose an operation to start. 
+            select_operation(station, production_file);
+
+            // If we still have room for another operation
+            // reset the change timer.
+            restart_timer(station, production_file);
+
+         }else if ((timer == 0) && wakeup) {
+            // The station was in sleep mode, but something has 
+            // happened (most likely we lost an operation)
+            // restart the spawning timer.
+            restart_timer(station, production_file);
+         }
+
+      }else if (ESS_Building == status) {
+         // We wait here for the operation to finish
+         // construction.
+      } else if (ESS_Leaving == status) {
+
+         if ( current_day >= timer) {
+            // Build time completed, change station to normal.
+            tsStation.SetStatus(station, ESS_Empty);
+            tsStation.SetChangeTime(station, 0);
+
+         }
+
+      }else if (ESS_Fleeing == status) {
+
+         if ( current_day >= timer) {
+
+            tsStation.SetStatus(station, ESS_Destroyed);
+            tsStation.SetChangeTime(station, 0);
+
+         }
+      }else if (ESS_Finished == status) {
+         // Station finished construction! 
+         // Change status to normal, and set the station to wake up.
+
+         tsStation.SetStatus(station, ESS_Normal);
+         restart_timer(station, production_file);
+      }
+   }
+}
+
+
+UpdateAllStations()
+{
+   hinifile geog;
+   hisim station;
+   int count,i,total, habtype;
+   string system_name;
+   list station_list;
+   bool visible;
+   hinifile production_file = INIFile.Create("ini:/metagame_production");
+
+   //debug Debug.PrintString("StationRules.UpdateAllStations\n");
+
+   if (none == production_file) {
+      debug Debug.PrintString("Error StationRules.UpdateAllStations production file not found!\n");      
+      return;
+   }
+
+   geog = INIFile.Create("ini:/geog/clusters");
+
+   if (none == geog) {
+      debug Debug.PrintString("Error StationRules.UpdateAllStations Geog file not found!\n");      
+      return;
+   }
+
+   count = 0;
+   while (INIFile.NumberedExists(geog,"badlands","system",count)) {
+      system_name = INIFile.NumberedString(geog,"badlands","system",count,"invalid");
+      update_system(system_name, production_file);
+      ++count;
+   }
+
+   INIFile.Destroy(geog);
+
+   INIFile.Destroy(production_file);
+}
+
+
+
+
+
+init_system(string system, hinifile production_file)
+{
+   hhabitat station;
+   list station_list;
+   int i, total;
+   int status;
+   bool created;
+
+   /*
+   debug Debug.PrintString("tsStationRules.init_system ");
+   debug Debug.PrintString(system);
+   debug Debug.PrintString("\n");
+   */
+
+   station_list = List.FromSet(iMapEntity.SystemHabitatsInSystem(system));
+   total = List.ItemCount(station_list);
+
+   for (i=0;i<total;++i) {
+      station = iHabitat.Cast(List.GetNth(station_list,i));
+
+      status = tsStation.Status(station);
+
+      if (ESS_Normal == status) {
+         // Fill up the station with max operations to begin the game.
+         created = false;
+         do {
+            created = select_operation(station, production_file);
+         } while ( created );
+      }
+   }
+}
+
+
+InitAllStations()
+{
+
+
+   hinifile geog;
+   hisim station;
+   int count,i,total, habtype;
+   string system_name;
+   list station_list;
+   bool visible;
+   hinifile production_file = INIFile.Create("ini:/metagame_production");
+
+   //debug Debug.PrintString("StationRules.UpdateAllStations\n");
+
+   if (none == production_file) {
+      debug Debug.PrintString("Error StationRules.UpdateAllStations production file not found!\n");      
+      return;
+   }
+
+   geog = INIFile.Create("ini:/geog/clusters");
+
+   if (none == geog) {
+      debug Debug.PrintString("Error StationRules.UpdateAllStations Geog file not found!\n");      
+      return;
+   }
+
+   count = 0;
+   while (INIFile.NumberedExists(geog,"badlands","system",count)) {
+      system_name = INIFile.NumberedString(geog,"badlands","system",count,"invalid");
+      init_system(system_name, production_file);
+      ++count;
+   }
+
+   INIFile.Destroy(geog);
+
+   INIFile.Destroy(production_file);
+}
+
+
+bool station_map_visible(int station_type)
+{
+  switch (station_type) {
+  case ept_PirateBase :
+  case ept_PirateCove :
+  case ept_PirateOutpost:
+  case ept_GangsterHideout:
+     return false;
+     break;
+  default:
+      break;
+   }
+
+  return true;
+}
+
+
+AdjustStatus(hhabitat station, eStationStatus status)
+{
+
+   bool hidden, visible, destroyed;
+   int station_type;
+   hfaction empty;
+
+      visible = station_map_visible(station_type);
+
+      switch (status) {
+
+      case ESS_Normal:
+         hidden = false;
+         destroyed = false;
+         break;
+
+      case ESS_Empty:
+         hidden = false;
+         destroyed = false;
+         empty = tsFaction.EmptyFaction();
+         tsFaction.AddStation(station, empty);
+         //iSim.SetFaction(station, empty);
+         break;
+
+      case ESS_NeverBuilt:
+         hidden = true;
+         destroyed = true;
+         visible = false;
+         break;
+
+      case ESS_Destroyed:
+         hidden = false;
+         destroyed= true;
+         break;
+
+      case ESS_Building:
+         hidden = false;
+         destroyed = true;
+         // It takes 3 months to build the station.
+         tsStation.SetChangeTime(station, tsTime.GetDay()+90);
+         break;
+
+         // Ships are fleeing a destroyed station.
+      case ESS_Fleeing:
+         hidden = false;
+         destroyed= true;
+         tsStation.SetChangeTime(station, tsTime.GetDay()+30);
+         break;
+
+         // Ships are leaving an abandond station.
+      case ESS_Leaving:
+         hidden = false;
+         destroyed= false;
+         tsStation.SetChangeTime(station, tsTime.GetDay()+30);
+         break;
+
+      default:
+         break;
+      }
+
+      tsStation.SetDestroyed(station, destroyed);
+      tsStation.SetHidden(station, hidden);
+      tsStation.SetMapVisibility(station, visible);
+}
+
+
+
+
+// Returns true if we have one of these operation types.
+bool have_required(list station_operations, int operation_type)
+{
+   if (List.IsEmpty(tsFleetOpFilter.FilterType(station_operations, operation_type))){
+      return false;
+   }
+
+   return true;
+}
+
+
+// Check if the station has fewer operations than it supports
+// if so, restart the event timer.
+
+restart_timer(hhabitat station, hinifile prod_data_file)
+{
+   int station_type, max_ops, respawn_days;
+   string station_type_string;
+   list operations = tsFleetOp.SupportedOperations(station);
+
+   station_type = tsLProduction.GetType(station);
+   station_type_string = tsEconUtil.StationIntToString(station_type);
+
+   max_ops = INIFile.Int(prod_data_file, station_type_string, "max_ops", 0);
+   respawn_days = INIFile.Int(prod_data_file, station_type_string, "op_respawn_days", 30);
+
+   if (max_ops > List.ItemCount(operations)) {
+      tsStation.SetChangeTime(station, tsTime.GetDay()+respawn_days);
+   }
+}
+
+// Returns true if an operation was created. Returns false if the
+// station could not create the op because it has no 
+// positions left or does not support operations.
+
+bool select_operation(hhabitat station, hinifile prod_data_file)
+{
+   list operations = tsFleetOp.SupportedOperations(station);
+   int station_type, op_type, count, entries, max_ops;
+   string station_type_string, op_type_string;
+
+   //debug Debug.PrintString("tsStationRules.select_operation\n");
+
+   // Check we actually do have a position for an operation open.
+   // operation count <= max_operation. if not, bail.
+
+   // For each of the required operations, check we already have one
+   station_type = tsLProduction.GetType(station);
+   station_type_string = tsEconUtil.StationIntToString(station_type);
+
+   //debug Debug.PrintString(station_type_string);
+   //debug Debug.PrintString(" type\n");
+   //debug Debug.PrintHandle(station);
+   //debug Debug.PrintString(" \n");
+
+   max_ops = INIFile.Int(prod_data_file, station_type_string, "max_ops", 0);
+
+   if (max_ops <= List.ItemCount(operations)) {
+      // No empty slots left. Bail out.
+      // This can happen if operations get assigned to a station from
+      // outside sources.
+      return false;
+   }
+
+   // First check that all the required operations exist. 
+   count = 0;
+   while (INIFile.NumberedExists(prod_data_file, station_type_string, "required_op", count)){
+      op_type_string = INIFile.NumberedString(prod_data_file, station_type_string, "required_op", count, "none");
+      ++count;
+
+      op_type = tsEconUtil.StationStringToEnum(op_type_string);
+
+      if (HT_Invalid != op_type) {
+
+         if (!have_required(operations, op_type)) {
+
+            // Found one we need. Create it and exit.
+            //debug Debug.PrintString(op_type_string);
+            //debug Debug.PrintString(" spawning required op\n");
+            //debug Debug.PrintHandle(station);
+            //debug Debug.PrintString(" \n");
+            
+            if (spawn_operation(station, op_type)){
+               return true;
+            }
+         }
+      }else {
+         debug {
+            debug Debug.PrintString("Error invalid op type required\n");
+            debug Debug.PrintString(station_type_string);
+            debug Debug.PrintString(" type\n");
+            debug Debug.PrintHandle(station);
+            debug Debug.PrintString(" \n");
+            debug Debug.PrintString(op_type_string);
+            debug Debug.PrintString(" \n");
+         }
+      }
+   }
+
+   // Ok. all the required operation exist. So now
+   // pick one at random from 
+   entries = iUtilities.FindNumberOfINIEntries( prod_data_file,
+                                                station_type_string,
+                                                "supported_op" );
+
+   count = Math.RandomInt(0, entries-1);
+
+   // Choose one of those entries at random. Read the type.
+   // Create that operation.
+   op_type_string = INIFile.NumberedString(prod_data_file, 
+                                           station_type_string, 
+                                           "supported_op", count, "none");
+
+   op_type = tsEconUtil.StationStringToEnum(op_type_string);
+
+   if (!spawn_operation(station, op_type))
+   {
+      debug Debug.PrintString("tsStationRules.select_operation Error invalid operation type\n");
+   }
+
+   return true;
+}
+
+
+// Returns true on successful creation (not an invalid op type).
+
+bool spawn_operation(hhabitat station, int operation_type)
+{
+   hfaction faction;
+   hisim op;
+
+   //debug Debug.PrintString("tsStationRules.spawn_operation\n");
+
+   if (HT_Invalid != operation_type) {
+      faction = iSim.Faction(iSim.Cast(station));
+
+      // Creates the operation and places it into the station.
+      op = tsFleetOpCall.New(operation_type, faction, station);
+
+      return true;
+   }else {
+      debug {
+         Debug.PrintString("tsStationRules.spawn_operation Error invalid op type\n");
+         Debug.PrintHandle(station);
+         Debug.PrintString(" \n");
+         Debug.PrintString(String.FormatInt("op type %d\n", operation_type));
+      }
+   }
+
+   return false;
+}
+
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+
+
+
+

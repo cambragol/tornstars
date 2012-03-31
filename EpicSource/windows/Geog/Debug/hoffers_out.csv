@@ -1,0 +1,414 @@
+;Center, Name,
+Center,Hoffer's Wake System,end,
+
+;Star, Name, Parent, Distance, Rotation, Elevation, Color,
+Star,Hoffer's Wake Alpha,Hoffer's Wake System,0.000000,  0,  0,11,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Junkyard,Hoffer's Wake Alpha,274090369262.545410, 30,  0,1.000000,0.000000,0.000000,7,113,13,25,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Military FTL Outpost,Hoffer's Wake Alpha,2727805984849.454100, 50,  0,1.000000,0.000000,0.000000,18,1,1,21,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Hoffer's Gap,Hoffer's Wake Alpha,370126939687.566650, 77,  0,1.000000,0.000000,0.000000,30,119,5,135,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Hoffer's Gap Entertainment Complex,Hoffer's Gap,1366937.028624, 35,  0,1.000000,0.000000,0.000000,11,66,1,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Hoffer's Gap Independent Trading Post,Hoffer's Gap,1366937.028605,316,  0,1.000000,0.000000,0.000000,4,61,1,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Maurice's Freighter Service Depot,Hoffer's Gap,1366937.028630,260,  0,1.000000,0.000000,0.000000,7,21,1,3,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,The Hole,Hoffer's Gap,13603220.286256,174,  0,1.000000,0.000000,0.000000,26,1,8,21,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Ursus,Hoffer's Gap,13603220.286256,127,  0,1.000000,0.000000,0.000000,23,6,1,30,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Griffon,Hoffer's Wake Alpha,1455300864.000000,230,  0,1.000000,0.000000,0.000000,0.000000,4120000.000000,2,1,6,4,99.0,46.0,40.0,120.0,145.0,14.0,127.0,44.0,34.0,255,0,0,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Griffon Orbital Transfer Station,Griffon,21118159.221812,270,  0,1.000000,0.000000,0.000000,8,122,1,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Helios Mining Local HQ,Griffon,21118159.221812, 60,  0,1.000000,0.000000,0.000000,9,95,27,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Refuge Squatter Camp,Griffon,21118159.221812,150,  0,1.000000,0.000000,0.000000,1,112,1,40,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Rosie's Piggery,Griffon,21118159.221812,196,  0,1.000000,0.000000,0.000000,18,48,1,5,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Samarakand,Griffon,13596750.000000,250,  0,1.000000,0.000000,0.000000,0.000000,554670.000000,3,1,3,5,107.0,97.0,82.0,250.0,224.0,168.0,127.0,117.0,117.0,255,0,0,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Greydog City,Samarakand,2067302.527975,360,  0,1.000000,0.000000,0.000000,2,112,1,25,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Samarakand Common Metals Processing Plant - disused,Samarakand,3484151.695828,215,  0,1.000000,0.000000,0.000000,1,1,1,21,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Charitable Sisters of Pity Hospital,Samarakand,2067302.527975,320,  0,1.000000,0.000000,0.000000,3,51,1,5,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Lomax Technologies Energy Cell Manufacturing Plant,Samarakand,2303444.055951, 23,  0,1.000000,0.000000,0.000000,5,31,51,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Samarakand Orbital Transfer Station,Samarakand,2067302.527975,130,  0,1.000000,0.000000,0.000000,8,122,1,5,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Samarakand Trading co,Samarakand,2067302.527975,350,  0,1.000000,0.000000,0.000000,4,61,1,5,end,
+
+;Lpoint, Name, Planet, Moon, Distance,
+Lpoint,Samarakand L-Point,Samarakand,Griffon,0.50,0, end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Jebiadiah's Foundary,Samarakand L-Point,16979.567730,134,  0,1.000000,0.000000,0.000000,5,105,4,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Samarkand L-Point Police Base - disused,Samarakand L-Point,13397.956773,226,  0,1.000000,0.000000,0.000000,36,1,5,21,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Petra,Griffon,27654404.569206,305,  0,1.000000,0.000000,0.000000,0.000000,87543.000000,3,1,7,2,65.0,81.0,112.0,48.0,48.0,23.0,127.0,102.0,67.0,255,0,0,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Maas Systems Orbital Transfer Station,Petra,498542.005682,360,  0,1.000000,0.000000,0.000000,8,122,11,5,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Maas Systems Processing Plant,Petra,1543042.502841,340,  0,1.000000,0.000000,0.000000,1,15,11,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Maas Systems Security Station,Petra,1960842.701705,300,  0,1.000000,0.000000,0.000000,10,54,11,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Maas Corporation  Local Supply Depot,Petra,2378642.900568,150,  0,1.000000,0.000000,0.000000,8,84,11,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Maas Corporation Electronics Manufacturing Plant,Petra,498542.005682, 73,  0,1.000000,0.000000,0.000000,5,26,11,15,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Timbuktu,Griffon,96332251.439936,346,  0,1.000000,0.000000,0.000000,0.000000,375403.000000,3,1,3,6,46.0,46.0,46.0,48.0,48.0,23.0,127.0,115.0,91.0,255,0,0,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Timbuktu Orbital Transfer Station,Timbuktu,1485200.159091, 45,  0,1.000000,0.000000,0.000000,8,122,1,5,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Trimann Shipping Trading Post,Timbuktu,2958921.863636,344,  0,1.000000,0.000000,0.000000,4,61,23,5,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Crosspoint Minerals Processing Plant,Timbuktu,3695782.715909,250,  0,1.000000,0.000000,0.000000,1,18,26,30,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Trimann Shipping Freighter Service Yard,Timbuktu,3695782.715909,300,  0,1.000000,0.000000,0.000000,7,21,23,15,end,
+
+;Nebula, Name, Parent, Distance, Rotation, Elevation, Nebula Radius,
+Nebula,The Effrit,Hoffer's Wake Alpha,1455300864.000000, 60,  0,250000000.000000,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Lucrecia's Base,The Effrit,750.000000,329,  0,1.000000,0.000000,0.000000,28,116,21,21,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Touchdown,Hoffer's Wake Alpha,19968004362.811634, 89,  0,1.000000,0.000000,0.000000,0.000000,4218000.000000,2,1,3,1,48.0,48.0,23.0,168.0,168.0,116.0,127.0,72.0,30.0,2,0,28,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Touchdown NOMEX Orbital Processor,Touchdown,28585456.146873, 64,  0,1.000000,0.000000,0.000000,1,15,15,5,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Touchdown NOMEX Orbital Habitat,Touchdown,28585456.146873,104,  0,1.000000,0.000000,0.000000,2,112,15,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Touchdown L.O.R. Platform,Touchdown,28585456.146871, 94,  0,1.000000,0.000000,0.000000,7,37,46,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Touchdown NOMEX Security Station,Touchdown,28585456.146874, 81,  0,1.000000,0.000000,0.000000,10,54,15,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Touchdown Orbital Transfer Station,Touchdown,28585456.146873, 23,  0,1.000000,0.000000,0.000000,8,122,1,5,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Greenback,Touchdown,48798226.777975,313,  0,1.000000,0.000000,0.000000,0.000000,447870.000000,3,1,4,3,107.0,97.0,82.0,120.0,145.0,14.0,127.0,114.0,85.0,255,0,0,end,
+
+;Lpoint, Name, Planet, Moon, Distance,
+Lpoint,Touchdown L-Point,Touchdown,Greenback,0.50,0, end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Greenback Agri-Orbital 1,Greenback,3546693.090909,141,  0,1.000000,0.000000,0.000000,2,48,9,5,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Greenback Agri-Orbital 2,Greenback,3546693.090909, 45,  0,1.000000,0.000000,0.000000,2,48,9,5,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Greenback Agri-Orbital 3,Greenback,3546693.090909,360,  0,1.000000,0.000000,0.000000,2,48,9,5,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Greenback Orbital Transfer Station,Greenback,3546693.090909,150,  0,1.000000,0.000000,0.000000,8,122,9,5,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Hope,Greenback,24226414.000000,203,  0,1.000000,0.000000,0.000000,0.000000,197440.000000,3,1,6,1,48.0,48.0,23.0,65.0,81.0,112.0,77.0,101.0,127.0,255,0,0,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Twinkle,Touchdown,160573211.468724,236,  0,1.000000,0.000000,0.000000,21,101,4,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Zira,Hoffer's Wake Alpha,370126939687.566710,190,  0,1.000000,0.000000,0.000000,21,6,1,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Henge,Zira,1366937.028615,249,  0,1.000000,0.000000,0.000000,1,112,1,20,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Blackfoot,Zira,13603220.286238,138,  0,1.000000,0.000000,0.000000,21,104,4,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Tunnel,Zira,13603220.286256,173,  0,1.000000,0.000000,0.000000,26,1,8,21,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Galan,Zira,13603220.286272, 34,  0,1.000000,0.000000,0.000000,21,112,4,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Freetown Ship Park,Galan,52409.090897, 68,  0,1.000000,0.000000,0.000000,7,21,10,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Freelancers co-op HQ,Galan,457940.909073,144,  0,1.000000,0.000000,0.000000,12,87,22,20,end,
+
+;Belt, Name, Parent, Distance, Rotation, Elevation, Field Size,
+Belt,Hoffer's Asteroid Belt,Hoffer's Wake Alpha,370126939687.566590,235,  0,6000000000.000000,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Hoffer's Heel,Hoffer's Wake Alpha,370126939687.566710, 59,  0,1.000000,0.000000,0.000000,23,112,1,50,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Hoffer's Heel Ship Park,Hoffer's Heel,2046928.418660, 62,  0,1.000000,0.000000,0.000000,7,21,1,5,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Kirk,Hoffer's Heel,14284398.930477, 13,  0,1.000000,0.000000,0.000000,20,7,1,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Blight,Hoffer's Heel,20403134.186387,195,  0,1.000000,0.000000,0.000000,20,27,1,25,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Zaius,Hoffer's Heel,20403134.186376, 74,  0,1.000000,0.000000,0.000000,21,67,18,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Gabriel Defense Station,Zaius,843521.999999,229,  0,1.000000,0.000000,0.000000,15,85,18,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Topov,Zaius,8369069.999970,317,  0,1.000000,0.000000,0.000000,26,1,8,21,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Andre,Zaius,8369070.000012,330,  0,1.000000,0.000000,0.000000,26,1,8,21,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Eustace,Zaius,8369070.000015,343,  0,1.000000,0.000000,0.000000,26,1,8,21,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Grimwald,Hoffer's Wake Alpha,370126939687.566650,349,  0,1.000000,0.000000,0.000000,25,114,1,60,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Grimwald Container Yard,Grimwald,1366937.028639,297,  0,1.000000,0.000000,0.000000,8,38,1,21,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Grimwald Collection Station I,Grimwald,1366937.028644,216,  0,1.000000,0.000000,0.000000,8,65,11,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Camel Back,Grimwald,13603220.286255,105,  0,1.000000,0.000000,0.000000,20,67,1,20,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Malvem,Grimwald,13603220.286263,281,  0,1.000000,0.000000,0.000000,25,8,1,5,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Tremour,Grimwald,13603220.286263, 16,  0,1.000000,0.000000,0.000000,20,6,1,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Gavin's Rock,Grimwald,13603220.286252, 25,  0,1.000000,0.000000,0.000000,21,67,1,20,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Independent Hauler Co,Gavin's Rock,78968.181821,263,  0,1.000000,0.000000,0.000000,7,37,1,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Ariane,Hoffer's Wake Alpha,370126939687.566650,251,  0,1.000000,0.000000,0.000000,23,6,1,50,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Jim Bob's,Ariane,2726919.511780,250,  0,1.000000,0.000000,0.000000,8,112,1,30,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Charlesworth Freight Service Depot,Ariane,2726919.511805,310,  0,1.000000,0.000000,0.000000,8,36,12,25,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Enclave,Ariane,2726919.511780,270,  0,1.000000,0.000000,0.000000,5,112,1,25,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Zion,Ariane,2726919.511791,150,  0,1.000000,0.000000,0.000000,4,112,1,35,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Scallywag,Ariane,2726919.511808, 68,  0,1.000000,0.000000,0.000000,8,112,1,30,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Rebecca,Ariane,2726919.511787,350,  0,1.000000,0.000000,0.000000,8,112,1,25,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Police Patrol Station,Ariane,2726919.511816,105,  0,1.000000,0.000000,0.000000,36,68,14,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Ariane Collection Station II,Ariane,2726919.511823,230,  0,1.000000,0.000000,0.000000,8,65,11,5,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,O'Gradys Trading Post,Ariane,2726919.511795,294,  0,1.000000,0.000000,0.000000,4,61,1,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Buddokan,Ariane,2726919.511784,103,  0,1.000000,0.000000,0.000000,4,63,4,20,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Freelancers Co-op Aid Centre,Ariane,2726919.511799, 34,  0,1.000000,0.000000,0.000000,3,51,1,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Spring Heeled Jack's,Ariane,2726919.511798,  1,  0,1.000000,0.000000,0.000000,32,105,4,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Moonmist,Ariane,13605197.558980,322,  0,1.000000,0.000000,0.000000,20,67,1,25,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Stanu,Ariane,13605197.558996, 94,  0,1.000000,0.000000,0.000000,26,1,8,21,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Aldo,Ariane,13605197.559015, 78,  0,1.000000,0.000000,0.000000,21,6,1,25,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Stockade,Ariane,27203045.117963, 46,  0,1.000000,0.000000,0.000000,22,102,4,50,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Alexander,Hoffer's Wake Alpha,1145445018892.209700,245,  0,-0.260368,0.000000,0.000000,0.965509,88378000.000000,4,2,5,7,127.0,116.0,96.0,127.0,111.0,82.0,127.0,116.0,96.0,0,5,255,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,MAAS Orbital Processing Plant,Alexander,375078145.487856,360, -0,1.000000,0.000000,0.000000,1,15,11,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,MAAS Freighter Waystation,Alexander,1125948014.556552, 41, -0,1.000000,0.000000,0.000000,7,37,11,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,MAAS Systems Security Station,Alexander,375078145.487851, 25, -0,1.000000,0.000000,0.000000,10,54,11,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Alexander Network 54 Transmittion Station,Alexander,375078145.487849, 12, -0,1.000000,0.000000,0.000000,18,91,37,10,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Cleitus,Alexander,291648160.042847,189, -0,1.000000,0.000000,0.000000,0.000000,2256000.000000,3,1,1,6,46.0,46.0,46.0,191.0,169.0,128.0,127.0,87.0,87.0,3,0,15,end,
+
+;Lpoint, Name, Planet, Moon, Distance,
+Lpoint,Alexander L-Point,Alexander,Cleitus,0.50,1,Coyote,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Alexander Sentry Station,Alexander L-Point,17983.238916,326,  0,1.000000,0.000000,0.000000,15,70,14,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Courier Transmission Station,Alexander L-Point,13498.323851,292,  0,1.000000,0.000000,0.000000,18,91,5,21,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Weimar Station,Cleitus,15187960.497962, 22,  0,1.000000,0.000000,0.000000,8,112,1,20,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Cleitus Common Metals Processing Plant,Cleitus,15187960.497986,360,  0,1.000000,0.000000,0.000000,1,15,1,10,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Darius,Alexander,454663914.201957,346, -0,1.000000,0.000000,0.000000,0.000000,1950000.000000,3,1,1,7,120.0,145.0,14.0,99.0,46.0,40.0,127.0,70.0,63.0,255,0,0,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Darius Orbital Transfer Station,Darius,6435750.000010,217,  0,1.000000,0.000000,0.000000,8,122,5,5,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Bessus,Alexander,618422385.893515, 64, -0,1.000000,0.000000,0.000000,0.000000,3270000.000000,3,2,3,7,127.0,114.0,100.0,127.0,38.0,28.0,127.0,114.0,100.0,3,0,255,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Bessus Laplace Residential Habitat,Bessus,10791750.000005,230,  0,1.000000,0.000000,0.000000,2,112,16,35,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Bessus Laplace Exotic Metals Processing Plant,Bessus,10791750.000057,105,  0,1.000000,0.000000,0.000000,1,17,16,5,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Laplace Construction Platform,Bessus,10791749.999985,145,  0,1.000000,0.000000,0.000000,5,32,16,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Bessus Laplace Security Station,Bessus,10791750.000014,136,  0,1.000000,0.000000,0.000000,35,55,16,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Bessus Orbital Transfer Station,Bessus,10791749.999999,121,  0,1.000000,0.000000,0.000000,8,122,16,5,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Memnon,Alexander,1101156960.127082, 40, -0,1.000000,0.000000,0.000000,0.000000,2983000.000000,3,1,1,3,168.0,168.0,116.0,48.0,48.0,23.0,127.0,114.0,96.0,255,0,0,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Hoffers Wake Police Headquarters,Memnon,9844649.999972,280,  0,1.000000,0.000000,0.000000,36,68,14,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Hoffers Port Orbital,Memnon,9844650.000006,289,  0,1.000000,0.000000,0.000000,8,65,5,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Memnon Military System Defence Dock,Memnon,9844649.999976,320,  0,1.000000,0.000000,0.000000,15,71,5,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Macedonian Shipping and Haualge,Memnon,9844649.999992,351,  0,1.000000,0.000000,0.000000,7,21,22,20,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Blackeye,Hoffer's Wake Alpha,2094814076992.000200,214,  0,0.540440,0.000000,0.000000,-0.841382,32190000.000000,4,2,9,0,127.0,92.0,41.0,127.0,99.0,59.0,127.0,92.0,41.0,1,5,255,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Danzig,Blackeye,106227752.117641, 87, -0,1.000000,0.000000,0.000000,0.000000,827000.000000,3,1,4,2,107.0,97.0,82.0,99.0,46.0,40.0,127.0,97.0,57.0,3,0,10,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Dog 1 Orbital,Danzig,6677524.041879, 77,  0,1.000000,0.000000,0.000000,14,55,17,15,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Marauders Supply Depot,Dog 1 Orbital,978968.181868, 76,  0,1.000000,0.000000,0.000000,8,84,17,21,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Deep Sytems Research Facility,Danzig,6677524.041846,100,  0,1.000000,0.000000,0.000000,6,111,17,10,end,
+
+;Lpoint, Name, Planet, Moon, Distance,
+Lpoint,Blackeye L-point,Blackeye,Danzig,0.50,1,Coyote,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Krakow,Blackeye,181189687.238226,332, -0,1.000000,0.000000,0.000000,0.000000,720000.000000,3,1,5,0,107.0,97.0,82.0,65.0,81.0,112.0,127.0,124.0,124.0,255,0,0,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Krakow FTL Comms Array,Krakow,2751204.545410,360,  0,1.000000,0.000000,0.000000,18,88,5,21,end,
+
+;Star, Name, Parent, Distance, Rotation, Elevation, Color,
+Star,Hoffer's Wake Beta,Hoffer's Wake Alpha,3000441053247.999500,221,  0,2,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Corinthia,Hoffer's Wake Beta,476747126591.999940,172,  0,0.711625,0.000000,0.000000,0.702560,74145000.000000,4,2,1,0,127.0,71.0,64.0,76.0,93.0,127.0,127.0,71.0,64.0,2,6,255,end,
+
+;Lpoint, Name, Planet, Moon, Distance,
+Lpoint,Dante Interstellar L-Point,Corinthia,Hoffer's Wake Beta,0.01,1,Dante,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Haven Station,Corinthia,17378679062.158745,270, -0,1.000000,0.000000,0.000000,34,47,22,250,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Haven Station Construction Yard,Corinthia,17378679062.158772,279, -0,1.000000,0.000000,0.000000,7,37,22,10,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,YellowRock,Corinthia,244679272.051187,239, -0,1.000000,0.000000,0.000000,0.000000,988000.000000,3,1,7,6,107.0,97.0,82.0,48.0,48.0,23.0,127.0,110.0,74.0,255,0,0,end,
+
+;Lpoint, Name, Planet, Moon, Distance,
+Lpoint,Corinthia L-Point,Corinthia,YellowRock,0.50,0,0end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Haven Rare Metals Processing,YellowRock,13611287.709035,129,  0,1.000000,0.000000,0.000000,1,16,22,5,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Haven Security Station,YellowRock,13611287.708931,142,  0,1.000000,0.000000,0.000000,10,54,22,21,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Yellowrock Orbital Transfer Station,YellowRock,13611287.708984,360,  0,1.000000,0.000000,0.000000,8,122,22,5,end,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type,Texture Type, Texture Map 1, Texture Map 2, Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk,Cloud Texture Map, Number Rings, Cloud Opacity,
+Body,Gimble,Corinthia,591155954.756068, 36, -0,1.000000,0.000000,0.000000,0.000000,877000.000000,3,1,5,6,46.0,46.0,46.0,48.0,48.0,23.0,61.0,87.0,127.0,255,0,0,end,
+
+;Station, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z,Station Model, Habitat Type, Faction Allegiance, Population,
+Station,Rossywell Research Lab,Gimble,2894849.999917,282,  0,1.000000,0.000000,0.000000,6,1,5,21,end,
+

@@ -1,0 +1,254 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 0
+PreviewLastFrame 100
+PreviewFrameStep 1
+FramesPerSecond 25
+
+AddNullObject front_dockport
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 10.5 242.25 0 -89.99999 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 45
+ShadowOptions 7
+
+LoadObject I:\Projects\resource\collisionhulls\FuelTransporter_Long_HULL.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject crew
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 6.25 263.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject active_sensors
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 267.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject passive_sensors
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -8 257.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject cpu
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 1.25 254 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject autorepair
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 214.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject lds
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 1 -190.75 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject heatsink
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -0.25 -155.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject capsule_drive
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -55.5 -0.25 -176 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject drive
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -0.75 -217.75 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject shield_forward
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  0 18.75 262.25 0 39 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject shield_aft
+ShowObject 8 3
+ObjectMotion (unnamed)
+  9
+  1
+  0 11.75 -248.5 0 -38 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject forward_upper_turret
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 6.1521 193.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject forward_lower_turret
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -6.1521 193.5 0 0 180 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AmbientColor 255 255 255
+AmbIntensity 0.25
+
+AddLight
+LightName WhiteFlasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 -21.5 6 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 0
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.3
+  16 1 0 0 0
+  0.3
+  17 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 6
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 1
+
+ShowCamera 1 7
+CameraMotion (unnamed)
+  9
+  2
+  -125.3515 157 471.3698 158.7 23.5 0 1 1 1
+  0 0 0 0 0
+  -71.08188 38.5 -356.6769 32.49999 21 1 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+ZoomFactor 3.2
+Resolution 1
+CustomSize 752 576
+PixelAspectRatio -1
+CustomPixelRatio 1.0186
+MaskPosition 0 0 752 576
+MotionBlur 0
+FieldRendering 0
+SegmentMemory 8000000
+ApertureHeight 0.015
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 0
+RayTraceOptimization 1
+DataOverlayLabel  
+SaveRGB 0
+SaveAlpha 0
+
+ViewType 7
+ViewAimpoint 35.97128 35.75818 20.86484
+ViewDirection 0.300197 -0.314159 0
+ViewZoomFactor 3.767605
+
+GridNumber 40
+GridSize 50
+CameraViewBG 0
+ShowMotionPath 1
+ShowFogRadius 0
+ShowFogEffect 0
+ShowSafeAreas 0
+ShowFieldChart 0

@@ -1,0 +1,2485 @@
+Entity 0, type 0, body type 0 hab_type 0 radius          0 name Firefrost System
+Parent 0, Faction 0, Population 0
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 0.000000e+000 -4.197660e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 1, type 5, body type 1 hab_type 0 radius 39289094144 name Firefrost I
+Parent 0, Faction 0, Population 0
+Texture type 1, t1 6, t2 2, t3 191 
+Pos 2.121996e-314 -3.437702e-005 1.030792e+011, Ori 46.000000 99.000000 46.000000
+Color r  46 g  46 b  46
+Color r  99 g  46 b  40
+Color r 127 g 101 b  69
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 2, type 0, body type 2 hab_type 0 radius    4100216 name Nyr
+Parent 1, Faction 0, Population 0
+Texture type 1, t1 4, t2 6, t3 191 
+Pos 4.243992e-314 -4.199151e-005 4.194305e+006, Ori 7.000000 107.000000 97.000000
+Color r  64 g  13 b   7
+Color r 107 g  97 b  82
+Color r 127 g 127 b  20
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 3, type 0, body type 2 hab_type 0 radius    3866127 name Bavor
+Parent 1, Faction 0, Population 0
+Texture type 1, t1 5, t2 4, t3 191 
+Pos 4.243992e-314 -3.818426e-005 4.194305e+006, Ori 7.000000 99.000000 46.000000
+Color r  64 g  13 b   7
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 4, type 0, body type 3 hab_type 0 radius    2135779 name Bavor I
+Parent 3, Faction 0, Population 0
+Texture type 1, t1 2, t2 7, t3 191 
+Pos 6.365987e-314 -4.388396e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 124 g 125 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 5, type 0, body type 3 hab_type 0 radius    2525580 name Bavor II
+Parent 3, Faction 0, Population 0
+Texture type 1, t1 7, t2 5, t3 191 
+Pos 6.365987e-314 -4.010651e-005 3.377700e+015, Ori 116.000000 107.000000 97.000000
+Color r 168 g 168 b 116
+Color r 107 g  97 b  82
+Color r 127 g 107 b  78
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 6, type 0, body type 3 hab_type 0 radius    2174028 name Bavor III
+Parent 3, Faction 0, Population 0
+Texture type 1, t1 3, t2 2, t3 191 
+Pos 6.365987e-314 -3.435466e-005 3.377700e+015, Ori 116.000000 250.000000 224.000000
+Color r 168 g 168 b 116
+Color r 250 g 224 b 168
+Color r 127 g 106 b  90
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 7, type 0, body type 2 hab_type 0 radius    7060155 name Dainn
+Parent 1, Faction 0, Population 0
+Texture type 1, t1 5, t2 6, t3 191 
+Pos 4.243992e-314 -4.199896e-005 3.377700e+015, Ori 116.000000 107.000000 97.000000
+Color r 168 g 168 b 116
+Color r 107 g  97 b  82
+Color r  51 g  87 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 8, type 0, body type 3 hab_type 0 radius     500969 name Dainn I
+Parent 7, Faction 0, Population 0
+Texture type 1, t1 6, t2 3, t3 191 
+Pos 6.365987e-314 -3.628436e-005 3.602881e+016, Ori 168.000000 120.000000 145.000000
+Color r 250 g 224 b 168
+Color r 120 g 145 b  14
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 9, type 2, body type 7 hab_type 0 radius     500969 name Dainn I L-Point
+Parent 8, Faction 0, Population 0
+Texture type 1, t1 6, t2 3, t3 191 
+Pos 1.485397e-313 -3.628436e-005 3.602881e+016, Ori 168.000000 120.000000 145.000000
+Color r 250 g 224 b 168
+Color r 120 g 145 b  14
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 10, type 6, body type 255 hab_type 117 radius     500969 name Dainn I L-Point Defense Array
+Parent 9, Faction 1, Population 21
+Texture type 1, t1 6, t2 3, t3 191 
+Pos 1.699574e-207 -3.628436e-005 3.602881e+016, Ori 168.000000 120.000000 145.000000
+Color r 250 g 224 b 168
+Color r 120 g 145 b  14
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 11, type 1, body type 25 hab_type 87 radius     500969 name Quail
+Parent 8, Faction 17, Population 100
+Texture type 1, t1 6, t2 3, t3 191 
+Pos 1.072191e+174 -3.628436e-005 3.602881e+016, Ori 168.000000 120.000000 145.000000
+Color r 250 g 224 b 168
+Color r 120 g 145 b  14
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 12, type 0, body type 3 hab_type 87 radius      40605 name Dainn II
+Parent 7, Faction 17, Population 100
+Texture type 1, t1 6, t2 3, t3 191 
+Pos 1.072170e+174 -3.628436e-005 4.194305e+006, Ori 7.000000 99.000000 46.000000
+Color r  64 g  13 b   7
+Color r  99 g  46 b  40
+Color r 127 g 114 b  78
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 13, type 2, body type 7 hab_type 0 radius      40605 name Dainn II L-Point
+Parent 12, Faction 0, Population 0
+Texture type 1, t1 6, t2 3, t3 191 
+Pos 1.485397e-313 -3.628436e-005 4.194305e+006, Ori 7.000000 99.000000 46.000000
+Color r  64 g  13 b   7
+Color r  99 g  46 b  40
+Color r 127 g 114 b  78
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 14, type 0, body type 3 hab_type 0 radius    1808443 name Dainn III
+Parent 7, Faction 0, Population 0
+Texture type 1, t1 4, t2 0, t3 191 
+Pos 6.365987e-314 -3.054742e-005 1.030792e+011, Ori 46.000000 120.000000 145.000000
+Color r  46 g  46 b  46
+Color r 120 g 145 b  14
+Color r 127 g  88 b  88
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 15, type 0, body type 2 hab_type 0 radius   27768366 name Oinn
+Parent 1, Faction 0, Population 0
+Texture type 2, t1 9, t2 8, t3 191 
+Pos 4.243992e-314 -4.584349e-005 1.407375e+014, Ori 100.000000 116.000000 127.000000
+Color r 127 g 112 b 100
+Color r 116 g 127 b  65
+Color r 127 g 112 b 100
+Cloud 3 Ring 0 Unk 255 Unk2 0 
+
+Entity 16, type 0, body type 3 hab_type 0 radius    3573165 name Rock
+Parent 15, Faction 0, Population 0
+Texture type 1, t1 2, t2 0, t3 191 
+Pos 6.365987e-314 -3.053252e-005 1.196269e+015, Ori 14.000000 64.000000 13.000000
+Color r 120 g 145 b  14
+Color r  64 g  13 b   7
+Color r 127 g 116 b  92
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 17, type 0, body type 3 hab_type 0 radius    4339377 name Doogal's Folly
+Parent 15, Faction 0, Population 0
+Texture type 1, t1 1, t2 3, t3 191 
+Pos 6.365987e-314 -3.624711e-005 9.895607e+012, Ori 112.000000 46.000000 46.000000
+Color r  65 g  81 b 112
+Color r  46 g  46 b  46
+Color r  51 g  87 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 18, type 0, body type 3 hab_type 0 radius   13172128 name Charlotte
+Parent 15, Faction 0, Population 0
+Texture type 1, t1 0, t2 7, t3 191 
+Pos 6.365987e-314 -4.386906e-005 1.374390e+011, Ori 23.000000 191.000000 169.000000
+Color r  48 g  48 b  23
+Color r 191 g 169 b 128
+Color r 127 g 123 b 123
+Cloud 1 Ring 0 Unk 72 Unk2 0 
+
+Entity 19, type 0, body type 2 hab_type 0 radius    4791708 name Galar
+Parent 1, Faction 0, Population 0
+Texture type 1, t1 7, t2 2, t3 191 
+Pos 4.243992e-314 -3.438447e-005 1.030792e+011, Ori 46.000000 127.000000 111.000000
+Color r  46 g  46 b  46
+Color r 127 g 111 b  93
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 20, type 0, body type 2 hab_type 0 radius    8704172 name Naglfar
+Parent 1, Faction 0, Population 0
+Texture type 1, t1 1, t2 2, t3 191 
+Pos 4.243992e-314 -3.433976e-005 4.194305e+006, Ori 7.000000 127.000000 116.000000
+Color r  64 g  13 b   7
+Color r 127 g 116 b  88
+Color r 127 g 112 b  85
+Cloud 3 Ring 0 Unk 218 Unk2 0 
+
+Entity 21, type 1, body type 3 hab_type 51 radius    8704172 name Naglfar Government Medicare Orbital
+Parent 20, Faction 5, Population 5
+Texture type 1, t1 1, t2 2, t3 191 
+Pos 1.782030e-284 -3.433976e-005 4.194305e+006, Ori 7.000000 127.000000 116.000000
+Color r  64 g  13 b   7
+Color r 127 g 116 b  88
+Color r 127 g 112 b  85
+Cloud 3 Ring 0 Unk 218 Unk2 0 
+
+Entity 22, type 0, body type 3 hab_type 51 radius    5807586 name Tomb
+Parent 20, Faction 5, Population 5
+Texture type 1, t1 2, t2 0, t3 191 
+Pos 1.782030e-284 -3.053252e-005 1.374390e+011, Ori 23.000000 168.000000 168.000000
+Color r  48 g  48 b  23
+Color r 168 g 168 b 116
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 23, type 0, body type 3 hab_type 51 radius     970195 name Lonely
+Parent 20, Faction 5, Population 5
+Texture type 1, t1 6, t2 0, t3 191 
+Pos 1.782030e-284 -3.056232e-005 3.602881e+016, Ori 168.000000 48.000000 48.000000
+Color r 250 g 224 b 168
+Color r  48 g  48 b  23
+Color r 127 g 105 b  78
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 24, type 0, body type 3 hab_type 51 radius    2221425 name Preistess
+Parent 20, Faction 5, Population 5
+Texture type 1, t1 1, t2 5, t3 191 
+Pos 1.782030e-284 -4.006181e-005 3.518438e+015, Ori 128.000000 250.000000 224.000000
+Color r 191 g 169 b 128
+Color r 250 g 224 b 168
+Color r 127 g  95 b  56
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 25, type 0, body type 2 hab_type 51 radius    2622385 name Gandalfr
+Parent 1, Faction 5, Population 5
+Texture type 1, t1 1, t2 4, t3 191 
+Pos 1.782028e-284 -3.815446e-005 1.030792e+011, Ori 40.000000 48.000000 48.000000
+Color r  99 g  46 b  40
+Color r  48 g  48 b  23
+Color r  51 g  87 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 26, type 0, body type 3 hab_type 51 radius     592704 name Cove
+Parent 25, Faction 5, Population 5
+Texture type 1, t1 5, t2 3, t3 191 
+Pos 1.782030e-284 -3.627691e-005 1.030792e+011, Ori 46.000000 64.000000 13.000000
+Color r  46 g  46 b  46
+Color r  64 g  13 b   7
+Color r 127 g 105 b  82
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 27, type 0, body type 3 hab_type 51 radius     935481 name Shadwell
+Parent 25, Faction 5, Population 5
+Texture type 1, t1 7, t2 1, t3 191 
+Pos 1.782030e-284 -3.247712e-005 1.030792e+011, Ori 40.000000 107.000000 97.000000
+Color r  99 g  46 b  40
+Color r 107 g  97 b  82
+Color r 127 g 112 b  89
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 28, type 0, body type 3 hab_type 51 radius     550230 name Ishallah
+Parent 25, Faction 5, Population 5
+Texture type 1, t1 4, t2 5, t3 191 
+Pos 1.782030e-284 -4.008416e-005 3.518438e+015, Ori 128.000000 46.000000 46.000000
+Color r 191 g 169 b 128
+Color r  46 g  46 b  46
+Color r 127 g 111 b  87
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 29, type 0, body type 4 hab_type 51 radius   88879104 name Eddas
+Parent 1, Faction 5, Population 5
+Texture type 2, t1 1, t2 9, t3 191 
+Pos 1.782031e-284 -4.769123e-005 2.199024e+013, Ori 39.000000 108.000000 127.000000
+Color r 127 g  90 b  39
+Color r 108 g 127 b  71
+Color r 127 g  90 b  39
+Cloud 0 Ring 7 Unk 255 Unk2 0 
+
+Entity 30, type 0, body type 3 hab_type 51 radius    7592484 name Carolina
+Parent 29, Faction 5, Population 5
+Texture type 1, t1 2, t2 4, t3 191 
+Pos 1.782030e-284 -3.816191e-005 2.748780e+012, Ori 0.000000 77.000000 127.000000
+Color r  35 g  66 b   0
+Color r  77 g 127 b  75
+Color r 127 g 112 b  85
+Cloud 2 Ring 0 Unk 11 Unk2 0 
+
+Entity 31, type 0, body type 3 hab_type 51 radius    8787145 name Huxley
+Parent 29, Faction 5, Population 5
+Texture type 1, t1 3, t2 6, t3 191 
+Pos 1.782030e-284 -4.198406e-005 2.748780e+012, Ori 0.000000 77.000000 127.000000
+Color r  35 g  66 b   0
+Color r  77 g 127 b  75
+Color r 127 g  59 b  51
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 32, type 0, body type 3 hab_type 51 radius    3184445 name Ambrosia
+Parent 29, Faction 5, Population 5
+Texture type 1, t1 3, t2 7, t3 191 
+Pos 1.782030e-284 -4.389141e-005 2.748780e+012, Ori 0.000000 127.000000 76.000000
+Color r  35 g  66 b   0
+Color r 127 g  76 b  57
+Color r 127 g 127 b  81
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 33, type 0, body type 3 hab_type 51 radius   19930976 name Onamuji
+Parent 29, Faction 5, Population 5
+Texture type 2, t1 4, t2 1, t3 191 
+Pos 1.782030e-284 -3.245480e-005 2.199024e+013, Ori 39.000000 127.000000 105.000000
+Color r 127 g  90 b  39
+Color r 127 g 105 b  79
+Color r 127 g  90 b  39
+Cloud 2 Ring 0 Unk 255 Unk2 0 
+
+Entity 34, type 0, body type 3 hab_type 51 radius    6977561 name Nobre
+Parent 29, Faction 5, Population 5
+Texture type 1, t1 0, t2 1, t3 191 
+Pos 1.782030e-284 -3.242496e-005 2.748780e+012, Ori 0.000000 77.000000 127.000000
+Color r  35 g  66 b   0
+Color r  77 g 127 b  75
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 35, type 0, body type 3 hab_type 51 radius    7575824 name Siam
+Parent 29, Faction 5, Population 5
+Texture type 1, t1 1, t2 4, t3 191 
+Pos 1.782030e-284 -3.815446e-005 2.748780e+012, Ori 0.000000 77.000000 127.000000
+Color r  35 g  66 b   0
+Color r  77 g 127 b  75
+Color r 127 g 112 b  85
+Cloud 1 Ring 0 Unk 21 Unk2 0 
+
+Entity 36, type 0, body type 3 hab_type 51 radius    8895880 name Gladheim
+Parent 29, Faction 5, Population 5
+Texture type 1, t1 0, t2 5, t3 191 
+Pos 1.782030e-284 -4.005436e-005 2.748780e+012, Ori 0.000000 77.000000 127.000000
+Color r  35 g  66 b   0
+Color r  77 g 127 b  75
+Color r 127 g  59 b  51
+Cloud 2 Ring 0 Unk 20 Unk2 0 
+
+Entity 37, type 0, body type 2 hab_type 51 radius    9327665 name Thorinn
+Parent 1, Faction 5, Population 5
+Texture type 1, t1 2, t2 4, t3 191 
+Pos 1.782028e-284 -3.816191e-005 2.748780e+012, Ori 0.000000 168.000000 168.000000
+Color r  35 g  66 b   0
+Color r 168 g 168 b 116
+Color r 127 g 112 b  85
+Cloud 0 Ring 0 Unk 35 Unk2 0 
+
+Entity 38, type 0, body type 3 hab_type 51 radius    1569200 name Bonita Cara
+Parent 37, Faction 5, Population 5
+Texture type 1, t1 0, t2 1, t3 191 
+Pos 1.782030e-284 -3.242496e-005 2.748780e+012, Ori 0.000000 191.000000 169.000000
+Color r  35 g  66 b   0
+Color r 191 g 169 b 128
+Color r  76 g  94 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 39, type 1, body type 1 hab_type 1 radius    1569200 name Bonita Cara Independent Common Metal Processing Plant
+Parent 38, Faction 1, Population 35
+Texture type 1, t1 0, t2 1, t3 191 
+Pos 4.462119e-140 -3.242496e-005 2.748780e+012, Ori 0.000000 191.000000 169.000000
+Color r  35 g  66 b   0
+Color r 191 g 169 b 128
+Color r  76 g  94 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 40, type 0, body type 3 hab_type 1 radius    4063466 name Mandalay
+Parent 37, Faction 1, Population 35
+Texture type 1, t1 7, t2 0, t3 191 
+Pos 4.462127e-140 -3.056977e-005 2.748780e+012, Ori 0.000000 250.000000 224.000000
+Color r  35 g  66 b   0
+Color r 250 g 224 b 168
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 41, type 0, body type 3 hab_type 1 radius    3508807 name Rangoon
+Parent 37, Faction 1, Population 35
+Texture type 1, t1 3, t2 5, t3 191 
+Pos 4.462127e-140 -4.007671e-005 2.748780e+012, Ori 0.000000 65.000000 81.000000
+Color r  35 g  66 b   0
+Color r  65 g  81 b 112
+Color r 127 g  59 b  51
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 42, type 0, body type 2 hab_type 1 radius   12136934 name Norori
+Parent 1, Faction 1, Population 35
+Texture type 1, t1 3, t2 0, t3 191 
+Pos 4.462123e-140 -3.053997e-005 2.748780e+012, Ori 0.000000 120.000000 145.000000
+Color r  35 g  66 b   0
+Color r 120 g 145 b  14
+Color r 127 g 112 b  85
+Cloud 3 Ring 0 Unk 153 Unk2 0 
+
+Entity 43, type 0, body type 3 hab_type 1 radius    2801385 name Adijon
+Parent 42, Faction 1, Population 35
+Texture type 1, t1 4, t2 7, t3 191 
+Pos 4.462127e-140 -4.389886e-005 2.748780e+012, Ori 0.000000 168.000000 168.000000
+Color r  35 g  66 b   0
+Color r 168 g 168 b 116
+Color r 127 g  59 b  51
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 44, type 0, body type 3 hab_type 1 radius    6843850 name Samaruand
+Parent 42, Faction 1, Population 35
+Texture type 1, t1 1, t2 0, t3 191 
+Pos 4.462127e-140 -3.052507e-005 2.748780e+012, Ori 0.000000 99.000000 46.000000
+Color r  35 g  66 b   0
+Color r  99 g  46 b  40
+Color r 127 g 112 b  85
+Cloud 1 Ring 0 Unk 8 Unk2 0 
+
+Entity 45, type 0, body type 2 hab_type 1 radius    2784708 name Frosti
+Parent 1, Faction 1, Population 35
+Texture type 1, t1 1, t2 2, t3 191 
+Pos 4.462123e-140 -3.433976e-005 3.958243e+013, Ori 82.000000 191.000000 169.000000
+Color r 107 g  97 b  82
+Color r 191 g 169 b 128
+Color r 127 g  59 b  51
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 46, type 1, body type 19 hab_type 56 radius    2784708 name Frosti Government High Security Prison
+Parent 45, Faction 5, Population 15
+Texture type 1, t1 1, t2 2, t3 191 
+Pos 2.606869e-236 -3.433976e-005 3.958243e+013, Ori 82.000000 191.000000 169.000000
+Color r 107 g  97 b  82
+Color r 191 g 169 b 128
+Color r 127 g  59 b  51
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 47, type 0, body type 3 hab_type 56 radius    2547742 name Bukhoro
+Parent 45, Faction 5, Population 15
+Texture type 1, t1 7, t2 0, t3 191 
+Pos 2.606839e-236 -3.056977e-005 2.748780e+012, Ori 0.000000 46.000000 46.000000
+Color r  35 g  66 b   0
+Color r  46 g  46 b  46
+Color r 127 g 114 b  74
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 48, type 0, body type 4 hab_type 56 radius  109554448 name Gerd
+Parent 1, Faction 5, Population 15
+Texture type 2, t1 4, t2 1, t3 191 
+Pos 2.606840e-236 -3.245480e-005 2.199024e+013, Ori 39.000000 108.000000 127.000000
+Color r 127 g  90 b  39
+Color r 108 g 127 b  71
+Color r 127 g  90 b  39
+Cloud 2 Ring 8 Unk 255 Unk2 0 
+
+Entity 49, type 0, body type 4 hab_type 56 radius   89621576 name Nott
+Parent 1, Faction 5, Population 15
+Texture type 2, t1 9, t2 6, t3 191 
+Pos 2.606840e-236 -4.202879e-005 2.199024e+013, Ori 39.000000 117.000000 127.000000
+Color r 127 g  90 b  39
+Color r 117 g 127 b  69
+Color r 127 g  90 b  39
+Cloud 1 Ring 7 Unk 255 Unk2 0 
+
+Entity 50, type 0, body type 3 hab_type 56 radius    7559486 name Kotido
+Parent 49, Faction 5, Population 15
+Texture type 1, t1 5, t2 3, t3 191 
+Pos 2.606839e-236 -3.627691e-005 2.748780e+012, Ori 0.000000 107.000000 97.000000
+Color r  35 g  66 b   0
+Color r 107 g  97 b  82
+Color r 127 g  59 b  51
+Cloud 3 Ring 0 Unk 17 Unk2 0 
+
+Entity 51, type 0, body type 3 hab_type 56 radius    3806635 name Junja
+Parent 49, Faction 5, Population 15
+Texture type 1, t1 3, t2 0, t3 191 
+Pos 2.606839e-236 -3.053997e-005 2.748780e+012, Ori 0.000000 99.000000 46.000000
+Color r  35 g  66 b   0
+Color r  99 g  46 b  40
+Color r 127 g  59 b  51
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 52, type 0, body type 3 hab_type 56 radius    6756386 name Mbale
+Parent 49, Faction 5, Population 15
+Texture type 1, t1 3, t2 4, t3 191 
+Pos 2.606839e-236 -3.816936e-005 2.748780e+012, Ori 0.000000 64.000000 13.000000
+Color r  35 g  66 b   0
+Color r  64 g  13 b   7
+Color r 127 g 112 b  85
+Cloud 3 Ring 0 Unk 13 Unk2 0 
+
+Entity 53, type 0, body type 3 hab_type 56 radius   25512858 name Soroti
+Parent 49, Faction 5, Population 15
+Texture type 2, t1 0, t2 9, t3 191 
+Pos 2.606839e-236 -4.768378e-005 2.199024e+013, Ori 39.000000 127.000000 105.000000
+Color r 127 g  90 b  39
+Color r 127 g 105 b  79
+Color r 127 g  90 b  39
+Cloud 3 Ring 0 Unk 255 Unk2 0 
+
+Entity 54, type 0, body type 3 hab_type 56 radius    9662340 name Gulu
+Parent 49, Faction 5, Population 15
+Texture type 1, t1 7, t2 4, t3 191 
+Pos 2.606839e-236 -3.819916e-005 2.748780e+012, Ori 0.000000 65.000000 81.000000
+Color r  35 g  66 b   0
+Color r  65 g  81 b 112
+Color r 127 g  59 b  51
+Cloud 2 Ring 0 Unk 40 Unk2 0 
+
+Entity 55, type 0, body type 3 hab_type 56 radius    5960012 name Apac
+Parent 49, Faction 5, Population 15
+Texture type 1, t1 6, t2 3, t3 191 
+Pos 2.606839e-236 -3.628437e-005 2.748780e+012, Ori 0.000000 168.000000 168.000000
+Color r  35 g  66 b   0
+Color r 168 g 168 b 116
+Color r 127 g 112 b  85
+Cloud 1 Ring 0 Unk 8 Unk2 0 
+
+Entity 56, type 0, body type 3 hab_type 56 radius    6692152 name Mubende
+Parent 49, Faction 5, Population 15
+Texture type 1, t1 6, t2 0, t3 191 
+Pos 2.606839e-236 -3.056232e-005 2.748780e+012, Ori 0.000000 64.000000 13.000000
+Color r  35 g  66 b   0
+Color r  64 g  13 b   7
+Color r 127 g 112 b  85
+Cloud 1 Ring 0 Unk 11 Unk2 0 
+
+Entity 57, type 4, body type 56 hab_type 239 radius   10000000 name Inner Belt
+Parent 1, Faction 58, Population 83
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 8.778630e+092 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 58, type 1, body type 26 hab_type 1 radius   10000000 name Ashimali
+Parent 1, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 59, type 1, body type 26 hab_type 1 radius   10000000 name Itiki
+Parent 1, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 60, type 1, body type 26 hab_type 1 radius   10000000 name Mullai
+Parent 1, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 61, type 1, body type 21 hab_type 59 radius   10000000 name Karatchi
+Parent 1, Faction 1, Population 5
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.448436e-284 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 62, type 1, body type 26 hab_type 1 radius   10000000 name Abasir
+Parent 1, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 63, type 1, body type 21 hab_type 8 radius   10000000 name Theocrete
+Parent 1, Faction 1, Population 10
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.730806e-260 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 64, type 1, body type 18 hab_type 90 radius   10000000 name Theocrete Government STL Transceiver
+Parent 63, Faction 5, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.078300e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 65, type 1, body type 26 hab_type 1 radius   10000000 name Tabullah
+Parent 1, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 66, type 1, body type 26 hab_type 1 radius   10000000 name Goliath
+Parent 1, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 67, type 0, body type 4 hab_type 1 radius  137783744 name Surt
+Parent 1, Faction 8, Population 21
+Texture type 2, t1 8, t2 9, t3 191 
+Pos 2.336447e-207 -4.774339e-005 2.199024e+013, Ori 39.000000 108.000000 127.000000
+Color r 127 g  90 b  39
+Color r 108 g 127 b  71
+Color r 127 g  90 b  39
+Cloud 1 Ring 7 Unk 255 Unk2 0 
+
+Entity 68, type 0, body type 3 hab_type 1 radius    6593092 name Solomon's Claim
+Parent 67, Faction 8, Population 21
+Texture type 1, t1 3, t2 6, t3 191 
+Pos 2.336446e-207 -4.198406e-005 2.748780e+012, Ori 0.000000 64.000000 13.000000
+Color r  35 g  66 b   0
+Color r  64 g  13 b   7
+Color r 127 g  59 b  51
+Cloud 3 Ring 0 Unk 11 Unk2 0 
+
+Entity 69, type 0, body type 4 hab_type 1 radius  109254416 name Jord
+Parent 1, Faction 8, Population 21
+Texture type 2, t1 7, t2 4, t3 191 
+Pos 2.336447e-207 -3.819919e-005 2.199024e+013, Ori 39.000000 108.000000 127.000000
+Color r 127 g  90 b  39
+Color r 108 g 127 b  71
+Color r 127 g  90 b  39
+Cloud 0 Ring 4 Unk 255 Unk2 0 
+
+Entity 70, type 0, body type 3 hab_type 1 radius   12974938 name Hickory
+Parent 69, Faction 8, Population 21
+Texture type 1, t1 4, t2 6, t3 191 
+Pos 2.336446e-207 -4.199151e-005 2.748780e+012, Ori 0.000000 48.000000 48.000000
+Color r  35 g  66 b   0
+Color r  48 g  48 b  23
+Color r 127 g  90 b  39
+Cloud 2 Ring 0 Unk 178 Unk2 0 
+
+Entity 71, type 0, body type 3 hab_type 1 radius    4212989 name Hammer
+Parent 69, Faction 8, Population 21
+Texture type 1, t1 3, t2 1, t3 191 
+Pos 2.336446e-207 -3.244732e-005 2.748780e+012, Ori 0.000000 99.000000 46.000000
+Color r  35 g  66 b   0
+Color r  99 g  46 b  40
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 72, type 0, body type 2 hab_type 1 radius    2636075 name Harr
+Parent 1, Faction 8, Population 21
+Texture type 1, t1 5, t2 2, t3 191 
+Pos 2.336445e-207 -3.436957e-005 2.748780e+012, Ori 0.000000 191.000000 169.000000
+Color r  35 g  66 b   0
+Color r 191 g 169 b 128
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 73, type 0, body type 3 hab_type 1 radius     331465 name Apache
+Parent 72, Faction 8, Population 21
+Texture type 1, t1 5, t2 0, t3 191 
+Pos 2.336446e-207 -3.055487e-005 2.748780e+012, Ori 0.000000 99.000000 46.000000
+Color r  35 g  66 b   0
+Color r  99 g  46 b  40
+Color r 127 g 113 b  91
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 74, type 0, body type 3 hab_type 1 radius     293732 name Custer
+Parent 72, Faction 8, Population 21
+Texture type 1, t1 7, t2 3, t3 191 
+Pos 2.336446e-207 -3.629182e-005 2.748780e+012, Ori 0.000000 65.000000 81.000000
+Color r  35 g  66 b   0
+Color r  65 g  81 b 112
+Color r 127 g  94 b  53
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 75, type 0, body type 3 hab_type 1 radius     318831 name Big Horn
+Parent 72, Faction 8, Population 21
+Texture type 1, t1 4, t2 0, t3 191 
+Pos 2.336446e-207 -3.054742e-005 2.748780e+012, Ori 0.000000 120.000000 145.000000
+Color r  35 g  66 b   0
+Color r 120 g 145 b  14
+Color r  61 g  83 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 76, type 0, body type 2 hab_type 1 radius   29535212 name Durinn
+Parent 1, Faction 8, Population 21
+Texture type 2, t1 2, t2 5, t3 191 
+Pos 2.336445e-207 -4.006929e-005 2.199024e+013, Ori 39.000000 127.000000 103.000000
+Color r 127 g  90 b  39
+Color r 127 g 103 b  81
+Color r 127 g  90 b  39
+Cloud 1 Ring 0 Unk 255 Unk2 0 
+
+Entity 77, type 4, body type 62 hab_type 182 radius   10000000 name Durin's Gatekeepers
+Parent 1, Faction 143, Population 83
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 3.307430e+094 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 78, type 1, body type 26 hab_type 1 radius   10000000 name Blaire
+Parent 1, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 79, type 1, body type 26 hab_type 1 radius   10000000 name Bunnin
+Parent 1, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 80, type 1, body type 26 hab_type 1 radius   10000000 name Blade
+Parent 1, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 81, type 1, body type 26 hab_type 1 radius   10000000 name Bik
+Parent 1, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 82, type 1, body type 26 hab_type 1 radius   10000000 name Batrium
+Parent 1, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 83, type 1, body type 23 hab_type 59 radius   10000000 name Bnidir
+Parent 1, Faction 1, Population 5
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.448438e-284 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 84, type 1, body type 26 hab_type 1 radius   10000000 name Bakkar
+Parent 1, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 85, type 1, body type 26 hab_type 1 radius   10000000 name Bowlan
+Parent 1, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 86, type 1, body type 26 hab_type 1 radius   10000000 name Bile
+Parent 1, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 87, type 0, body type 4 hab_type 1 radius  219927168 name Njord
+Parent 1, Faction 8, Population 21
+Texture type 2, t1 6, t2 5, t3 191 
+Pos 2.336447e-207 -4.009909e-005 2.199024e+013, Ori 39.000000 108.000000 127.000000
+Color r 127 g  90 b  39
+Color r 108 g 127 b  71
+Color r 127 g  90 b  39
+Cloud 1 Ring 7 Unk 255 Unk2 0 
+
+Entity 88, type 0, body type 3 hab_type 1 radius    6233162 name Crowsfoot
+Parent 87, Faction 8, Population 21
+Texture type 1, t1 5, t2 6, t3 191 
+Pos 2.336446e-207 -4.199896e-005 2.748780e+012, Ori 0.000000 168.000000 168.000000
+Color r  35 g  66 b   0
+Color r 168 g 168 b 116
+Color r 127 g  59 b  51
+Cloud 1 Ring 0 Unk 11 Unk2 0 
+
+Entity 89, type 2, body type 88 hab_type 0 radius    6233162 name Njord L-Point
+Parent 87, Faction 0, Population 0
+Texture type 1, t1 5, t2 6, t3 191 
+Pos 1.867356e-312 -4.199896e-005 2.748780e+012, Ori 0.000000 168.000000 168.000000
+Color r  35 g  66 b   0
+Color r 168 g 168 b 116
+Color r 127 g  59 b  51
+Cloud 1 Ring 0 Unk 11 Unk2 0 
+
+Entity 90, type 0, body type 3 hab_type 0 radius    7536355 name Spartan
+Parent 87, Faction 0, Population 0
+Texture type 1, t1 4, t2 2, t3 191 
+Pos 6.365987e-314 -3.436212e-005 2.748780e+012, Ori 0.000000 65.000000 81.000000
+Color r  35 g  66 b   0
+Color r  65 g  81 b 112
+Color r 127 g 112 b  85
+Cloud 1 Ring 0 Unk 14 Unk2 0 
+
+Entity 91, type 0, body type 3 hab_type 0 radius    3940283 name Exodus
+Parent 87, Faction 0, Population 0
+Texture type 1, t1 3, t2 1, t3 191 
+Pos 6.365987e-314 -3.244732e-005 2.748780e+012, Ori 0.000000 168.000000 168.000000
+Color r  35 g  66 b   0
+Color r 168 g 168 b 116
+Color r 127 g  59 b  51
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 92, type 0, body type 3 hab_type 0 radius    3564383 name Nickoli's Homestead
+Parent 87, Faction 0, Population 0
+Texture type 1, t1 3, t2 7, t3 191 
+Pos 6.365987e-314 -4.389141e-005 2.748780e+012, Ori 0.000000 168.000000 168.000000
+Color r  35 g  66 b   0
+Color r 168 g 168 b 116
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 93, type 0, body type 3 hab_type 0 radius   25243514 name Trevellin
+Parent 87, Faction 0, Population 0
+Texture type 2, t1 9, t2 1, t3 191 
+Pos 6.365987e-314 -3.249205e-005 2.199024e+013, Ori 39.000000 127.000000 105.000000
+Color r 127 g  90 b  39
+Color r 127 g 105 b  79
+Color r 127 g  90 b  39
+Cloud 1 Ring 0 Unk 255 Unk2 0 
+
+Entity 94, type 1, body type 16 hab_type 111 radius   25243514 name Trevellin Exile Hideout
+Parent 93, Faction 2, Population 10
+Texture type 2, t1 9, t2 1, t3 191 
+Pos 1.873309e-260 -3.249205e-005 2.199024e+013, Ori 39.000000 127.000000 105.000000
+Color r 127 g  90 b  39
+Color r 127 g 105 b  79
+Color r 127 g  90 b  39
+Cloud 1 Ring 0 Unk 255 Unk2 0 
+
+Entity 95, type 0, body type 2 hab_type 111 radius    2640035 name Nori
+Parent 1, Faction 2, Population 10
+Texture type 1, t1 4, t2 7, t3 191 
+Pos 1.873288e-260 -4.389886e-005 2.748780e+012, Ori 0.000000 48.000000 48.000000
+Color r  35 g  66 b   0
+Color r  48 g  48 b  23
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 96, type 0, body type 3 hab_type 111 radius     301607 name Fort Louis
+Parent 95, Faction 2, Population 10
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.873289e-260 -4.197661e-005 2.748780e+012, Ori 0.000000 64.000000 13.000000
+Color r  35 g  66 b   0
+Color r  64 g  13 b   7
+Color r 127 g 109 b  70
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 97, type 1, body type 15 hab_type 74 radius     301607 name Fort Louis Naval Intelligence Base
+Parent 96, Faction 3, Population 5
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.621475e-284 -4.197661e-005 2.748780e+012, Ori 0.000000 64.000000 13.000000
+Color r  35 g  66 b   0
+Color r  64 g  13 b   7
+Color r 127 g 109 b  70
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 98, type 5, body type 8 hab_type 74 radius  595643584 name Firefrost II
+Parent 1, Faction 3, Population 5
+Texture type 1, t1 3, t2 7, t3 191 
+Pos 1.621466e-284 -4.389141e-005 3.518438e+015, Ori 128.000000 64.000000 13.000000
+Color r 191 g 169 b 128
+Color r  64 g  13 b   7
+Color r 127 g 119 b 119
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 99, type 0, body type 2 hab_type 74 radius    4990839 name Austri
+Parent 98, Faction 3, Population 5
+Texture type 1, t1 5, t2 1, t3 191 
+Pos 1.621459e-284 -3.246222e-005 9.895607e+012, Ori 112.000000 46.000000 46.000000
+Color r  65 g  81 b 112
+Color r  46 g  46 b  46
+Color r 127 g 113 b  84
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 100, type 0, body type 3 hab_type 74 radius    1628928 name Khulna
+Parent 99, Faction 3, Population 5
+Texture type 1, t1 2, t2 7, t3 191 
+Pos 1.621460e-284 -4.388396e-005 3.377700e+015, Ori 116.000000 64.000000 13.000000
+Color r 168 g 168 b 116
+Color r  64 g  13 b   7
+Color r 127 g  59 b  51
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 101, type 1, body type 5 hab_type 25 radius    1628928 name Khulna MAAS Hi-Tech Manufacturing Plant
+Parent 100, Faction 11, Population 15
+Texture type 1, t1 2, t2 7, t3 191 
+Pos 3.329096e-236 -4.388396e-005 3.377700e+015, Ori 116.000000 64.000000 13.000000
+Color r 168 g 168 b 116
+Color r  64 g  13 b   7
+Color r 127 g  59 b  51
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 102, type 1, body type 8 hab_type 122 radius    1628928 name Khulna Orbital Transfer Station
+Parent 100, Faction 1, Population 5
+Texture type 1, t1 2, t2 7, t3 191 
+Pos 1.469106e-284 -4.388396e-005 3.377700e+015, Ori 116.000000 64.000000 13.000000
+Color r 168 g 168 b 116
+Color r  64 g  13 b   7
+Color r 127 g  59 b  51
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 103, type 0, body type 3 hab_type 122 radius    1938222 name Chittagong
+Parent 99, Faction 1, Population 5
+Texture type 1, t1 6, t2 5, t3 191 
+Pos 1.469100e-284 -4.009906e-005 3.602881e+016, Ori 168.000000 46.000000 46.000000
+Color r 250 g 224 b 168
+Color r  46 g  46 b  46
+Color r 127 g 113 b  84
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 104, type 0, body type 2 hab_type 122 radius    8665614 name Bambur
+Parent 98, Faction 1, Population 5
+Texture type 1, t1 2, t2 0, t3 191 
+Pos 1.469098e-284 -3.053252e-005 3.958243e+013, Ori 82.000000 64.000000 13.000000
+Color r 107 g  97 b  82
+Color r  64 g  13 b   7
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 105, type 0, body type 3 hab_type 122 radius    1674445 name Smitten
+Parent 104, Faction 1, Population 5
+Texture type 1, t1 7, t2 5, t3 191 
+Pos 1.469100e-284 -4.010651e-005 1.374390e+011, Ori 23.000000 65.000000 81.000000
+Color r  48 g  48 b  23
+Color r  65 g  81 b 112
+Color r 127 g 103 b  67
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 106, type 0, body type 3 hab_type 122 radius    5383695 name Libniz
+Parent 104, Faction 1, Population 5
+Texture type 1, t1 2, t2 4, t3 191 
+Pos 1.469100e-284 -3.816191e-005 1.374390e+011, Ori 23.000000 120.000000 145.000000
+Color r  48 g  48 b  23
+Color r 120 g 145 b  14
+Color r  85 g 102 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 107, type 0, body type 3 hab_type 122 radius    1428139 name Minskaya
+Parent 104, Faction 1, Population 5
+Texture type 1, t1 5, t2 0, t3 191 
+Pos 1.469100e-284 -3.055487e-005 3.377700e+015, Ori 116.000000 46.000000 46.000000
+Color r 168 g 168 b 116
+Color r  46 g  46 b  46
+Color r 127 g 103 b  74
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 108, type 0, body type 2 hab_type 122 radius   10287396 name Fili
+Parent 98, Faction 1, Population 5
+Texture type 1, t1 1, t2 4, t3 191 
+Pos 1.469098e-284 -3.815446e-005 1.196269e+015, Ori 14.000000 250.000000 224.000000
+Color r 120 g 145 b  14
+Color r 250 g 224 b 168
+Color r 127 g 112 b  85
+Cloud 1 Ring 0 Unk 86 Unk2 0 
+
+Entity 109, type 0, body type 3 hab_type 122 radius    6687456 name Lenin's Eye
+Parent 108, Faction 1, Population 5
+Texture type 1, t1 1, t2 5, t3 191 
+Pos 1.469100e-284 -4.006181e-005 9.895607e+012, Ori 112.000000 48.000000 48.000000
+Color r  65 g  81 b 112
+Color r  48 g  48 b  23
+Color r 127 g  59 b  51
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 110, type 0, body type 2 hab_type 122 radius    3229933 name Nibelung
+Parent 98, Faction 1, Population 5
+Texture type 1, t1 3, t2 7, t3 191 
+Pos 1.469098e-284 -4.389141e-005 3.518438e+015, Ori 128.000000 99.000000 46.000000
+Color r 191 g 169 b 128
+Color r  99 g  46 b  40
+Color r 127 g 117 b  86
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 111, type 0, body type 3 hab_type 122 radius     678900 name Carnegie
+Parent 110, Faction 1, Population 5
+Texture type 1, t1 3, t2 1, t3 191 
+Pos 1.469100e-284 -3.244732e-005 1.196269e+015, Ori 14.000000 107.000000 97.000000
+Color r 120 g 145 b  14
+Color r 107 g  97 b  82
+Color r 127 g  93 b  51
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 112, type 0, body type 2 hab_type 122 radius    6758770 name Gloinn
+Parent 98, Faction 1, Population 5
+Texture type 1, t1 7, t2 3, t3 191 
+Pos 1.469098e-284 -3.629182e-005 9.895607e+012, Ori 112.000000 48.000000 48.000000
+Color r  65 g  81 b 112
+Color r  48 g  48 b  23
+Color r  51 g  87 b 127
+Cloud 2 Ring 0 Unk 33 Unk2 0 
+
+Entity 113, type 0, body type 3 hab_type 122 radius    1170611 name Al Jumayleyah
+Parent 112, Faction 1, Population 5
+Texture type 1, t1 0, t2 2, t3 191 
+Pos 1.469100e-284 -3.433231e-005 3.377700e+015, Ori 116.000000 191.000000 169.000000
+Color r 168 g 168 b 116
+Color r 191 g 169 b 128
+Color r 127 g  32 b  21
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 114, type 0, body type 3 hab_type 122 radius    3140496 name Creole
+Parent 112, Faction 1, Population 5
+Texture type 1, t1 0, t2 1, t3 191 
+Pos 1.469100e-284 -3.242496e-005 4.194305e+006, Ori 7.000000 168.000000 168.000000
+Color r  64 g  13 b   7
+Color r 168 g 168 b 116
+Color r 127 g  91 b  41
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 115, type 1, body type 8 hab_type 122 radius    3140496 name Creole Orbital Transfer Station
+Parent 114, Faction 1, Population 5
+Texture type 1, t1 0, t2 1, t3 191 
+Pos 1.469106e-284 -3.242496e-005 4.194305e+006, Ori 7.000000 168.000000 168.000000
+Color r  64 g  13 b   7
+Color r 168 g 168 b 116
+Color r 127 g  91 b  41
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 116, type 0, body type 2 hab_type 122 radius    5080436 name Durathror
+Parent 98, Faction 1, Population 5
+Texture type 1, t1 3, t2 6, t3 191 
+Pos 1.469098e-284 -4.198406e-005 9.895607e+012, Ori 112.000000 250.000000 224.000000
+Color r  65 g  81 b 112
+Color r 250 g 224 b 168
+Color r 127 g 123 b 123
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 117, type 1, body type 8 hab_type 122 radius    5080436 name Durathror Orbital transfer Station
+Parent 116, Faction 1, Population 5
+Texture type 1, t1 3, t2 6, t3 191 
+Pos 1.469106e-284 -4.198406e-005 9.895607e+012, Ori 112.000000 250.000000 224.000000
+Color r  65 g  81 b 112
+Color r 250 g 224 b 168
+Color r 127 g 123 b 123
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 118, type 0, body type 2 hab_type 122 radius    2538541 name Ori
+Parent 98, Faction 1, Population 5
+Texture type 1, t1 4, t2 1, t3 191 
+Pos 1.469098e-284 -3.245477e-005 3.958243e+013, Ori 82.000000 65.000000 81.000000
+Color r 107 g  97 b  82
+Color r  65 g  81 b 112
+Color r  47 g  74 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 119, type 1, body type 8 hab_type 122 radius    2538541 name Ori Orbital Transfer Station
+Parent 118, Faction 1, Population 21
+Texture type 1, t1 4, t2 1, t3 191 
+Pos 1.701109e-207 -3.245477e-005 3.958243e+013, Ori 82.000000 65.000000 81.000000
+Color r 107 g  97 b  82
+Color r  65 g  81 b 112
+Color r  47 g  74 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 120, type 0, body type 3 hab_type 122 radius    1171787 name Aubrey
+Parent 118, Faction 1, Population 21
+Texture type 1, t1 3, t2 4, t3 191 
+Pos 1.701101e-207 -3.816936e-005 4.194305e+006, Ori 7.000000 120.000000 145.000000
+Color r  64 g  13 b   7
+Color r 120 g 145 b  14
+Color r 127 g 124 b 124
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 121, type 1, body type 8 hab_type 122 radius    1171787 name Aubrey Orbital Transfer Station
+Parent 120, Faction 1, Population 5
+Texture type 1, t1 3, t2 4, t3 191 
+Pos 1.469106e-284 -3.816936e-005 4.194305e+006, Ori 7.000000 120.000000 145.000000
+Color r  64 g  13 b   7
+Color r 120 g 145 b  14
+Color r 127 g 124 b 124
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 122, type 0, body type 2 hab_type 122 radius    7234819 name Vestri
+Parent 98, Faction 1, Population 5
+Texture type 1, t1 2, t2 0, t3 191 
+Pos 1.469098e-284 -3.053252e-005 1.030792e+011, Ori 46.000000 191.000000 169.000000
+Color r  46 g  46 b  46
+Color r 191 g 169 b 128
+Color r  51 g  87 b 127
+Cloud 3 Ring 0 Unk 38 Unk2 0 
+
+Entity 123, type 4, body type 5 hab_type 160 radius   10000000 name The Vandrills
+Parent 98, Faction 202, Population 79
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.408573e+076 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 124, type 1, body type 21 hab_type 7 radius   10000000 name Grunge
+Parent 98, Faction 1, Population 10
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.730409e-260 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 125, type 1, body type 8 hab_type 65 radius   10000000 name Grunge Independent Docking Station
+Parent 124, Faction 1, Population 10
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.753413e-260 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 126, type 1, body type 8 hab_type 36 radius   10000000 name Grunge Independent Waystation
+Parent 124, Faction 1, Population 5
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.440867e-284 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 127, type 1, body type 26 hab_type 1 radius   10000000 name Skexis
+Parent 98, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 128, type 1, body type 26 hab_type 1 radius   10000000 name Gaffah
+Parent 98, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 129, type 1, body type 23 hab_type 59 radius   10000000 name Nadir
+Parent 98, Faction 1, Population 5
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.448438e-284 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 130, type 1, body type 20 hab_type 59 radius   10000000 name Gabba
+Parent 98, Faction 1, Population 5
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.448435e-284 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 131, type 1, body type 20 hab_type 8 radius   10000000 name Mountbatton
+Parent 98, Faction 1, Population 10
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.730805e-260 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 132, type 1, body type 4 hab_type 62 radius   10000000 name Mountbatton Independent Warehousing
+Parent 131, Faction 1, Population 5
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.449399e-284 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 133, type 1, body type 3 hab_type 51 radius   10000000 name Mountbatton Government Medicare Orbital
+Parent 131, Faction 5, Population 5
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.782030e-284 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 134, type 1, body type 11 hab_type 66 radius   10000000 name Mountbatton Independent Leisure Station
+Parent 131, Faction 1, Population 20
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.563203e-212 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 135, type 1, body type 16 hab_type 60 radius   10000000 name Mountbatton Independent Mercenary Base
+Parent 131, Faction 1, Population 10
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.751441e-260 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 136, type 1, body type 5 hab_type 26 radius   10000000 name Mountbatton Independent Electronics Engineering Manufacturing Plant
+Parent 131, Faction 1, Population 20
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.539983e-212 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 137, type 1, body type 8 hab_type 36 radius   10000000 name Mountbatton Independent Waystation
+Parent 131, Faction 1, Population 5
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.440867e-284 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 138, type 1, body type 1 hab_type 17 radius   10000000 name Mountbatton Independent Exotic Metals Processing Plant
+Parent 131, Faction 1, Population 5
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.434619e-284 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 139, type 1, body type 21 hab_type 59 radius   10000000 name Callahan
+Parent 98, Faction 1, Population 5
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.448436e-284 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 140, type 1, body type 8 hab_type 36 radius   10000000 name Callahan Independent Waystation
+Parent 139, Faction 1, Population 5
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.440867e-284 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 141, type 1, body type 23 hab_type 67 radius   10000000 name Drumsheath
+Parent 98, Faction 1, Population 30
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 3.747013e-164 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 142, type 0, body type 4 hab_type 67 radius  100170824 name Hlodyn
+Parent 98, Faction 1, Population 30
+Texture type 2, t1 9, t2 3, t3 191 
+Pos 3.746950e-164 -3.630675e-005 2.199024e+013, Ori 39.000000 108.000000 127.000000
+Color r 127 g  90 b  39
+Color r 108 g 127 b  71
+Color r 127 g  90 b  39
+Cloud 3 Ring 7 Unk 255 Unk2 0 
+
+Entity 143, type 0, body type 3 hab_type 67 radius    9856326 name Saint Apollonia
+Parent 142, Faction 1, Population 30
+Texture type 1, t1 4, t2 1, t3 191 
+Pos 3.746947e-164 -3.245477e-005 2.748780e+012, Ori 0.000000 77.000000 127.000000
+Color r  35 g  66 b   0
+Color r  77 g 127 b  75
+Color r 127 g  59 b  51
+Cloud 2 Ring 0 Unk 56 Unk2 0 
+
+Entity 144, type 2, body type 143 hab_type 0 radius    9856326 name Hlodyn L-Point
+Parent 142, Faction 0, Population 0
+Texture type 1, t1 4, t2 1, t3 191 
+Pos 3.034454e-312 -3.245477e-005 2.748780e+012, Ori 0.000000 77.000000 127.000000
+Color r  35 g  66 b   0
+Color r  77 g 127 b  75
+Color r 127 g  59 b  51
+Cloud 2 Ring 0 Unk 56 Unk2 0 
+
+Entity 145, type 0, body type 3 hab_type 0 radius    5803906 name New Rochdale
+Parent 142, Faction 0, Population 0
+Texture type 1, t1 1, t2 4, t3 191 
+Pos 6.365987e-314 -3.815446e-005 2.748780e+012, Ori 0.000000 77.000000 127.000000
+Color r  35 g  66 b   0
+Color r  77 g 127 b  75
+Color r 127 g  59 b  51
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 146, type 0, body type 3 hab_type 0 radius    3096516 name Hermintage
+Parent 142, Faction 0, Population 0
+Texture type 1, t1 5, t2 0, t3 191 
+Pos 6.365987e-314 -3.055487e-005 1.374390e+011, Ori 23.000000 77.000000 127.000000
+Color r  48 g  48 b  23
+Color r  77 g 127 b  75
+Color r 127 g  64 b  64
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 147, type 0, body type 3 hab_type 0 radius   12314010 name Clyde's Dig
+Parent 142, Faction 0, Population 0
+Texture type 1, t1 0, t2 6, t3 191 
+Pos 6.365987e-314 -4.196171e-005 2.748780e+012, Ori 0.000000 127.000000 111.000000
+Color r  35 g  66 b   0
+Color r 127 g 111 b  87
+Color r 127 g  90 b  39
+Cloud 2 Ring 0 Unk 60 Unk2 0 
+
+Entity 148, type 2, body type 142 hab_type 0 radius   12314010 name Clyde's Dig L-Point
+Parent 147, Faction 0, Population 0
+Texture type 1, t1 0, t2 6, t3 191 
+Pos 3.013234e-312 -4.196171e-005 2.748780e+012, Ori 0.000000 127.000000 111.000000
+Color r  35 g  66 b   0
+Color r 127 g 111 b  87
+Color r 127 g  90 b  39
+Cloud 2 Ring 0 Unk 60 Unk2 0 
+
+Entity 149, type 0, body type 3 hab_type 0 radius    3156605 name Sanctuary
+Parent 142, Faction 0, Population 0
+Texture type 1, t1 6, t2 0, t3 191 
+Pos 6.365987e-314 -3.056232e-005 1.196269e+015, Ori 14.000000 46.000000 46.000000
+Color r 120 g 145 b  14
+Color r  46 g  46 b  46
+Color r 127 g 118 b  91
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 150, type 0, body type 3 hab_type 0 radius   17495296 name Parodox
+Parent 142, Faction 0, Population 0
+Texture type 2, t1 6, t2 9, t3 191 
+Pos 6.365987e-314 -4.772849e-005 1.407375e+014, Ori 85.000000 127.000000 99.000000
+Color r 127 g 112 b  85
+Color r 127 g  99 b  68
+Color r 127 g 112 b  85
+Cloud 0 Ring 0 Unk 255 Unk2 0 
+
+Entity 151, type 0, body type 3 hab_type 0 radius    3112610 name Shabe
+Parent 142, Faction 0, Population 0
+Texture type 1, t1 0, t2 3, t3 191 
+Pos 6.365987e-314 -3.623966e-005 3.958243e+013, Ori 82.000000 77.000000 127.000000
+Color r 107 g  97 b  82
+Color r  77 g 127 b  75
+Color r 102 g 111 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 152, type 0, body type 3 hab_type 0 radius    6251560 name Yukotan
+Parent 142, Faction 0, Population 0
+Texture type 1, t1 1, t2 4, t3 191 
+Pos 6.365987e-314 -3.815446e-005 2.748780e+012, Ori 0.000000 77.000000 127.000000
+Color r  35 g  66 b   0
+Color r  77 g 127 b  75
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 153, type 0, body type 3 hab_type 0 radius    8489105 name Greenfield
+Parent 142, Faction 0, Population 0
+Texture type 1, t1 5, t2 2, t3 191 
+Pos 6.365987e-314 -3.436957e-005 2.748780e+012, Ori 0.000000 77.000000 127.000000
+Color r  35 g  66 b   0
+Color r  77 g 127 b  75
+Color r 127 g  59 b  51
+Cloud 0 Ring 0 Unk 26 Unk2 0 
+
+Entity 154, type 0, body type 2 hab_type 0 radius   26474456 name Litur
+Parent 98, Faction 0, Population 0
+Texture type 2, t1 4, t2 6, t3 191 
+Pos 4.243992e-314 -4.199154e-005 2.199024e+013, Ori 39.000000 127.000000 105.000000
+Color r 127 g  90 b  39
+Color r 127 g 105 b  79
+Color r 127 g  90 b  39
+Cloud 3 Ring 0 Unk 255 Unk2 0 
+
+Entity 155, type 0, body type 3 hab_type 0 radius    3675840 name Redrock
+Parent 154, Faction 0, Population 0
+Texture type 1, t1 2, t2 7, t3 191 
+Pos 6.365987e-314 -4.388396e-005 2.748780e+012, Ori 0.000000 127.000000 76.000000
+Color r  35 g  66 b   0
+Color r 127 g  76 b  57
+Color r 127 g 106 b  74
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 156, type 0, body type 3 hab_type 0 radius    9012381 name Euwan's Claim
+Parent 154, Faction 0, Population 0
+Texture type 1, t1 2, t2 0, t3 191 
+Pos 6.365987e-314 -3.053252e-005 2.748780e+012, Ori 0.000000 77.000000 127.000000
+Color r  35 g  66 b   0
+Color r  77 g 127 b  75
+Color r 127 g 112 b  85
+Cloud 2 Ring 0 Unk 32 Unk2 0 
+
+Entity 157, type 0, body type 4 hab_type 0 radius  249128944 name Besla
+Parent 98, Faction 0, Population 0
+Texture type 2, t1 3, t2 2, t3 191 
+Pos 8.487983e-314 -3.435469e-005 2.199024e+013, Ori 39.000000 108.000000 127.000000
+Color r 127 g  90 b  39
+Color r 108 g 127 b  71
+Color r 127 g  90 b  39
+Cloud 3 Ring 6 Unk 255 Unk2 0 
+
+Entity 158, type 0, body type 3 hab_type 0 radius   16320326 name Mahomet
+Parent 157, Faction 0, Population 0
+Texture type 2, t1 8, t2 6, t3 191 
+Pos 6.365987e-314 -4.202134e-005 1.407375e+014, Ori 85.000000 127.000000 99.000000
+Color r 127 g 112 b  85
+Color r 127 g  99 b  68
+Color r 127 g 112 b  85
+Cloud 3 Ring 0 Unk 255 Unk2 0 
+
+Entity 159, type 0, body type 3 hab_type 0 radius    4643690 name Constance
+Parent 157, Faction 0, Population 0
+Texture type 1, t1 3, t2 4, t3 191 
+Pos 6.365987e-314 -3.816936e-005 2.748780e+012, Ori 0.000000 65.000000 81.000000
+Color r  35 g  66 b   0
+Color r  65 g  81 b 112
+Color r 127 g  59 b  51
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 160, type 0, body type 3 hab_type 0 radius    3253448 name Seljuk
+Parent 157, Faction 0, Population 0
+Texture type 1, t1 7, t2 3, t3 191 
+Pos 6.365987e-314 -3.629182e-005 2.748780e+012, Ori 0.000000 168.000000 168.000000
+Color r  35 g  66 b   0
+Color r 168 g 168 b 116
+Color r 127 g 114 b  74
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 161, type 0, body type 4 hab_type 0 radius  123291200 name Skrymir
+Parent 98, Faction 0, Population 0
+Texture type 2, t1 6, t2 7, t3 191 
+Pos 8.487983e-314 -4.391379e-005 2.199024e+013, Ori 39.000000 108.000000 127.000000
+Color r 127 g  90 b  39
+Color r 108 g 127 b  71
+Color r 127 g  90 b  39
+Cloud 3 Ring 5 Unk 255 Unk2 0 
+
+Entity 162, type 0, body type 3 hab_type 0 radius    3959596 name Pooka
+Parent 161, Faction 0, Population 0
+Texture type 1, t1 6, t2 7, t3 191 
+Pos 6.365987e-314 -4.391376e-005 2.748780e+012, Ori 0.000000 168.000000 168.000000
+Color r  35 g  66 b   0
+Color r 168 g 168 b 116
+Color r 127 g  59 b  51
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 163, type 0, body type 4 hab_type 0 radius  212170160 name Thrym
+Parent 98, Faction 0, Population 0
+Texture type 2, t1 8, t2 7, t3 191 
+Pos 8.487983e-314 -4.392869e-005 2.199024e+013, Ori 39.000000 108.000000 127.000000
+Color r 127 g  90 b  39
+Color r 108 g 127 b  71
+Color r 127 g  90 b  39
+Cloud 0 Ring 8 Unk 255 Unk2 0 
+
+Entity 164, type 0, body type 2 hab_type 0 radius    2823109 name Fundiun
+Parent 98, Faction 0, Population 0
+Texture type 1, t1 6, t2 5, t3 191 
+Pos 4.243992e-314 -4.009906e-005 2.748780e+012, Ori 0.000000 64.000000 13.000000
+Color r  35 g  66 b   0
+Color r  64 g  13 b   7
+Color r 127 g  59 b  51
+Cloud 1 Ring 0 Unk 16 Unk2 0 
+
+Entity 165, type 0, body type 3 hab_type 0 radius     830614 name Amsu
+Parent 164, Faction 0, Population 0
+Texture type 1, t1 6, t2 3, t3 191 
+Pos 6.365987e-314 -3.628436e-005 2.748780e+012, Ori 0.000000 168.000000 168.000000
+Color r  35 g  66 b   0
+Color r 168 g 168 b 116
+Color r 127 g 104 b  86
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 166, type 0, body type 3 hab_type 0 radius    1630152 name Reshpu
+Parent 164, Faction 0, Population 0
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 6.365987e-314 -4.197661e-005 2.748780e+012, Ori 0.000000 65.000000 81.000000
+Color r  35 g  66 b   0
+Color r  65 g  81 b 112
+Color r 127 g 114 b  95
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 167, type 0, body type 4 hab_type 0 radius  142147904 name Fjorgynn
+Parent 98, Faction 0, Population 0
+Texture type 2, t1 6, t2 1, t3 191 
+Pos 8.487983e-314 -3.246970e-005 2.199024e+013, Ori 39.000000 108.000000 127.000000
+Color r 127 g  90 b  39
+Color r 108 g 127 b  71
+Color r 127 g  90 b  39
+Cloud 2 Ring 6 Unk 255 Unk2 0 
+
+Entity 168, type 0, body type 3 hab_type 0 radius   10248756 name Nergal
+Parent 167, Faction 0, Population 0
+Texture type 1, t1 2, t2 3, t3 191 
+Pos 6.365987e-314 -3.625456e-005 2.748780e+012, Ori 0.000000 48.000000 48.000000
+Color r  35 g  66 b   0
+Color r  48 g  48 b  23
+Color r 127 g  90 b  39
+Cloud 3 Ring 0 Unk 84 Unk2 0 
+
+Entity 169, type 0, body type 3 hab_type 0 radius    4970879 name Aralu
+Parent 167, Faction 0, Population 0
+Texture type 1, t1 3, t2 2, t3 191 
+Pos 6.365987e-314 -3.435466e-005 2.748780e+012, Ori 0.000000 107.000000 97.000000
+Color r  35 g  66 b   0
+Color r 107 g  97 b  82
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 170, type 0, body type 3 hab_type 0 radius   16612945 name Damkina
+Parent 167, Faction 0, Population 0
+Texture type 2, t1 0, t2 5, t3 191 
+Pos 6.365987e-314 -4.005439e-005 9.620728e+011, Ori 51.000000 127.000000 110.000000
+Color r 127 g  59 b  51
+Color r 127 g 110 b  76
+Color r 127 g  59 b  51
+Cloud 3 Ring 0 Unk 255 Unk2 0 
+
+Entity 171, type 0, body type 3 hab_type 0 radius    4668943 name Namtar
+Parent 167, Faction 0, Population 0
+Texture type 1, t1 4, t2 2, t3 191 
+Pos 6.365987e-314 -3.436212e-005 2.748780e+012, Ori 0.000000 64.000000 13.000000
+Color r  35 g  66 b   0
+Color r  64 g  13 b   7
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 172, type 0, body type 3 hab_type 0 radius    3136786 name Nina
+Parent 167, Faction 0, Population 0
+Texture type 1, t1 1, t2 7, t3 191 
+Pos 6.365987e-314 -4.387651e-005 2.748780e+012, Ori 0.000000 65.000000 81.000000
+Color r  35 g  66 b   0
+Color r  65 g  81 b 112
+Color r 127 g  59 b  51
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 173, type 0, body type 3 hab_type 0 radius    4504295 name Shamash
+Parent 167, Faction 0, Population 0
+Texture type 1, t1 5, t2 1, t3 191 
+Pos 6.365987e-314 -3.246222e-005 2.748780e+012, Ori 0.000000 48.000000 48.000000
+Color r  35 g  66 b   0
+Color r  48 g  48 b  23
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 174, type 5, body type 11 hab_type 0 radius 3540405760 name Firefrost III
+Parent 1, Faction 0, Population 0
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.334195e-313 -4.197661e-005 3.377700e+015, Ori 116.000000 48.000000 48.000000
+Color r 168 g 168 b 116
+Color r  48 g  48 b  23
+Color r  83 g 101 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 175, type 1, body type 4 hab_type 59 radius 3540405760 name Nodens Blanket Independent Homestead
+Parent 174, Faction 1, Population 5
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.448414e-284 -4.197661e-005 3.377700e+015, Ori 116.000000 48.000000 48.000000
+Color r 168 g 168 b 116
+Color r  48 g  48 b  23
+Color r  83 g 101 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 176, type 1, body type 16 hab_type 101 radius 3540405760 name Nodens Blanket Underworld Pirate Base
+Parent 174, Faction 4, Population 15
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.505603e-236 -4.197661e-005 3.377700e+015, Ori 116.000000 48.000000 48.000000
+Color r 168 g 168 b 116
+Color r  48 g  48 b  23
+Color r  83 g 101 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 177, type 0, body type 2 hab_type 101 radius    2500872 name Vindalfr
+Parent 174, Faction 4, Population 15
+Texture type 1, t1 6, t2 7, t3 191 
+Pos 2.505577e-236 -4.391376e-005 1.030792e+011, Ori 46.000000 64.000000 13.000000
+Color r  46 g  46 b  46
+Color r  64 g  13 b   7
+Color r  67 g  96 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 178, type 0, body type 2 hab_type 101 radius    2612784 name Sudri
+Parent 174, Faction 4, Population 15
+Texture type 1, t1 3, t2 1, t3 191 
+Pos 2.505577e-236 -3.244732e-005 1.030792e+011, Ori 46.000000 65.000000 81.000000
+Color r  46 g  46 b  46
+Color r  65 g  81 b 112
+Color r 127 g 102 b  83
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 179, type 0, body type 3 hab_type 101 radius     542393 name Mule
+Parent 178, Faction 4, Population 15
+Texture type 1, t1 0, t2 3, t3 191 
+Pos 2.505579e-236 -3.623966e-005 4.194305e+006, Ori 7.000000 99.000000 46.000000
+Color r  64 g  13 b   7
+Color r  99 g  46 b  40
+Color r 127 g 101 b  69
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 180, type 0, body type 3 hab_type 101 radius     542209 name Harrison
+Parent 178, Faction 4, Population 15
+Texture type 1, t1 0, t2 3, t3 191 
+Pos 2.505579e-236 -3.623966e-005 4.194305e+006, Ori 7.000000 99.000000 46.000000
+Color r  64 g  13 b   7
+Color r  99 g  46 b  40
+Color r 127 g 101 b  69
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 181, type 0, body type 3 hab_type 101 radius    1289931 name Black Dog
+Parent 178, Faction 4, Population 15
+Texture type 1, t1 1, t2 6, t3 191 
+Pos 2.505579e-236 -4.196916e-005 3.518438e+015, Ori 128.000000 250.000000 224.000000
+Color r 191 g 169 b 128
+Color r 250 g 224 b 168
+Color r 127 g 102 b  66
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 182, type 0, body type 2 hab_type 101 radius    2511223 name Nali
+Parent 174, Faction 4, Population 15
+Texture type 1, t1 6, t2 0, t3 191 
+Pos 2.505577e-236 -3.056232e-005 4.194305e+006, Ori 7.000000 168.000000 168.000000
+Color r  64 g  13 b   7
+Color r 168 g 168 b 116
+Color r 127 g 112 b  79
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 183, type 0, body type 3 hab_type 101 radius    1018932 name Cornerstone
+Parent 182, Faction 4, Population 15
+Texture type 1, t1 6, t2 4, t3 191 
+Pos 2.505579e-236 -3.819171e-005 1.030792e+011, Ori 46.000000 168.000000 168.000000
+Color r  46 g  46 b  46
+Color r 168 g 168 b 116
+Color r 127 g  95 b  47
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 184, type 0, body type 2 hab_type 101 radius    5047818 name Nyi
+Parent 174, Faction 4, Population 15
+Texture type 1, t1 3, t2 5, t3 191 
+Pos 2.505577e-236 -4.007671e-005 3.377700e+015, Ori 116.000000 120.000000 145.000000
+Color r 168 g 168 b 116
+Color r 120 g 145 b  14
+Color r  51 g  87 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 185, type 2, body type 174 hab_type 0 radius    5047818 name Nyi L-Point
+Parent 184, Faction 0, Population 0
+Texture type 1, t1 3, t2 5, t3 191 
+Pos 3.692273e-312 -4.007671e-005 3.377700e+015, Ori 116.000000 120.000000 145.000000
+Color r 168 g 168 b 116
+Color r 120 g 145 b  14
+Color r  51 g  87 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 186, type 0, body type 3 hab_type 0 radius    1810136 name Kingpin
+Parent 184, Faction 0, Population 0
+Texture type 1, t1 2, t2 3, t3 191 
+Pos 6.365987e-314 -3.625456e-005 1.030792e+011, Ori 40.000000 48.000000 48.000000
+Color r  99 g  46 b  40
+Color r  48 g  48 b  23
+Color r 127 g 100 b  60
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 187, type 0, body type 3 hab_type 0 radius    1109429 name Godfather
+Parent 184, Faction 0, Population 0
+Texture type 1, t1 7, t2 5, t3 191 
+Pos 6.365987e-314 -4.010651e-005 3.518438e+015, Ori 128.000000 250.000000 224.000000
+Color r 191 g 169 b 128
+Color r 250 g 224 b 168
+Color r 127 g  90 b  39
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 188, type 0, body type 3 hab_type 0 radius     551105 name Don
+Parent 184, Faction 0, Population 0
+Texture type 1, t1 2, t2 1, t3 191 
+Pos 6.365987e-314 -3.243987e-005 3.377700e+015, Ori 116.000000 65.000000 81.000000
+Color r 168 g 168 b 116
+Color r  65 g  81 b 112
+Color r 127 g 115 b  80
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 189, type 0, body type 2 hab_type 0 radius    2863773 name Ginnar
+Parent 174, Faction 0, Population 0
+Texture type 1, t1 4, t2 5, t3 191 
+Pos 4.243992e-314 -4.008416e-005 1.374390e+011, Ori 23.000000 65.000000 81.000000
+Color r  48 g  48 b  23
+Color r  65 g  81 b 112
+Color r 127 g 106 b  74
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 190, type 0, body type 3 hab_type 0 radius     394724 name Slime
+Parent 189, Faction 0, Population 0
+Texture type 1, t1 2, t2 3, t3 191 
+Pos 6.365987e-314 -3.625456e-005 9.895607e+012, Ori 112.000000 64.000000 13.000000
+Color r  65 g  81 b 112
+Color r  64 g  13 b   7
+Color r 127 g 114 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 191, type 0, body type 3 hab_type 0 radius     327898 name Square Rock
+Parent 189, Faction 0, Population 0
+Texture type 1, t1 0, t2 5, t3 191 
+Pos 6.365987e-314 -4.005436e-005 1.196269e+015, Ori 14.000000 250.000000 224.000000
+Color r 120 g 145 b  14
+Color r 250 g 224 b 168
+Color r 127 g  39 b  29
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 192, type 1, body type 12 hab_type 86 radius     327898 name Square Rock Government STC Post
+Parent 191, Faction 5, Population 5
+Texture type 1, t1 0, t2 5, t3 191 
+Pos 1.793534e-284 -4.005436e-005 1.196269e+015, Ori 14.000000 250.000000 224.000000
+Color r 120 g 145 b  14
+Color r 250 g 224 b 168
+Color r 127 g  39 b  29
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 193, type 1, body type 12 hab_type 87 radius     327898 name Square Rock Government STC System HQ
+Parent 191, Faction 5, Population 15
+Texture type 1, t1 0, t2 5, t3 191 
+Pos 2.621732e-236 -4.005436e-005 1.196269e+015, Ori 14.000000 250.000000 224.000000
+Color r 120 g 145 b  14
+Color r 250 g 224 b 168
+Color r 127 g  39 b  29
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 194, type 1, body type 15 hab_type 70 radius     327898 name Square Rock System Defense Station
+Parent 191, Faction 5, Population 5
+Texture type 1, t1 0, t2 5, t3 191 
+Pos 1.788284e-284 -4.005436e-005 1.196269e+015, Ori 14.000000 250.000000 224.000000
+Color r 120 g 145 b  14
+Color r 250 g 224 b 168
+Color r 127 g  39 b  29
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 195, type 1, body type 18 hab_type 89 radius     327898 name Square Rock Infonet Transmittion station
+Parent 191, Faction 38, Population 5
+Texture type 1, t1 0, t2 5, t3 191 
+Pos 7.514350e-284 -4.005436e-005 1.196269e+015, Ori 14.000000 250.000000 224.000000
+Color r 120 g 145 b  14
+Color r 250 g 224 b 168
+Color r 127 g  39 b  29
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 196, type 0, body type 2 hab_type 89 radius    2541375 name Fundin
+Parent 174, Faction 38, Population 5
+Texture type 1, t1 5, t2 6, t3 191 
+Pos 7.514268e-284 -4.199896e-005 1.030792e+011, Ori 40.000000 107.000000 97.000000
+Color r  99 g  46 b  40
+Color r 107 g  97 b  82
+Color r 127 g 108 b  67
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 197, type 2, body type 174 hab_type 0 radius    2541375 name Square Rock L-Point
+Parent 196, Faction 0, Population 0
+Texture type 1, t1 5, t2 6, t3 191 
+Pos 3.692273e-312 -4.199896e-005 1.030792e+011, Ori 40.000000 107.000000 97.000000
+Color r  99 g  46 b  40
+Color r 107 g  97 b  82
+Color r 127 g 108 b  67
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 198, type 0, body type 3 hab_type 0 radius     959291 name Carolina
+Parent 196, Faction 0, Population 0
+Texture type 1, t1 3, t2 2, t3 191 
+Pos 6.365987e-314 -3.435466e-005 3.958243e+013, Ori 82.000000 48.000000 48.000000
+Color r 107 g  97 b  82
+Color r  48 g  48 b  23
+Color r 127 g 111 b  80
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 199, type 0, body type 2 hab_type 0 radius   24503720 name Fith
+Parent 174, Faction 0, Population 0
+Texture type 2, t1 7, t2 4, t3 191 
+Pos 4.243992e-314 -3.819919e-005 3.870282e+014, Ori 123.000000 127.000000 125.000000
+Color r 127 g 123 b 123
+Color r 127 g 125 b  72
+Color r 127 g 123 b 123
+Cloud 2 Ring 0 Unk 255 Unk2 0 
+
+Entity 200, type 0, body type 2 hab_type 0 radius    2506827 name Alfar
+Parent 174, Faction 0, Population 0
+Texture type 1, t1 4, t2 6, t3 191 
+Pos 4.243992e-314 -4.199151e-005 9.895607e+012, Ori 112.000000 46.000000 46.000000
+Color r  65 g  81 b 112
+Color r  46 g  46 b  46
+Color r  85 g 102 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 201, type 0, body type 3 hab_type 0 radius     648726 name Niederdruken
+Parent 200, Faction 0, Population 0
+Texture type 1, t1 1, t2 2, t3 191 
+Pos 6.365987e-314 -3.433976e-005 1.374390e+011, Ori 23.000000 191.000000 169.000000
+Color r  48 g  48 b  23
+Color r 191 g 169 b 128
+Color r  61 g  87 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 202, type 1, body type 8 hab_type 122 radius     648726 name Niederdruken Orbital Transfer Station
+Parent 201, Faction 1, Population 5
+Texture type 1, t1 1, t2 2, t3 191 
+Pos 1.469106e-284 -3.433976e-005 1.374390e+011, Ori 23.000000 191.000000 169.000000
+Color r  48 g  48 b  23
+Color r 191 g 169 b 128
+Color r  61 g  87 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 203, type 0, body type 3 hab_type 122 radius    2045499 name Hablich
+Parent 200, Faction 1, Population 5
+Texture type 1, t1 2, t2 7, t3 191 
+Pos 1.469100e-284 -4.388396e-005 3.518438e+015, Ori 128.000000 250.000000 224.000000
+Color r 191 g 169 b 128
+Color r 250 g 224 b 168
+Color r  35 g  72 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 204, type 1, body type 36 hab_type 68 radius    2045499 name Hablich Police Base
+Parent 203, Faction 14, Population 10
+Texture type 1, t1 2, t2 7, t3 191 
+Pos 3.075752e-260 -4.388396e-005 3.518438e+015, Ori 128.000000 250.000000 224.000000
+Color r 191 g 169 b 128
+Color r 250 g 224 b 168
+Color r  35 g  72 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 205, type 0, body type 3 hab_type 68 radius    1183970 name FallHammer
+Parent 200, Faction 14, Population 10
+Texture type 1, t1 7, t2 4, t3 191 
+Pos 3.075701e-260 -3.819916e-005 3.602881e+016, Ori 168.000000 107.000000 97.000000
+Color r 250 g 224 b 168
+Color r 107 g  97 b  82
+Color r 127 g 127 b  65
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 206, type 1, body type 5 hab_type 26 radius    1183970 name FallHammer NOMEX Electronics Manufacturing Plant
+Parent 205, Faction 15, Population 10
+Texture type 1, t1 7, t2 4, t3 191 
+Pos 3.160655e-260 -3.819916e-005 3.602881e+016, Ori 168.000000 107.000000 97.000000
+Color r 250 g 224 b 168
+Color r 107 g  97 b  82
+Color r 127 g 127 b  65
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 207, type 0, body type 4 hab_type 26 radius  145951616 name Mimir
+Parent 174, Faction 15, Population 10
+Texture type 2, t1 9, t2 2, t3 191 
+Pos 3.160653e-260 -3.439940e-005 2.199024e+013, Ori 39.000000 108.000000 127.000000
+Color r 127 g  90 b  39
+Color r 108 g 127 b  71
+Color r 127 g  90 b  39
+Cloud 0 Ring 6 Unk 255 Unk2 0 
+
+Entity 208, type 0, body type 3 hab_type 26 radius    3649805 name Nubia
+Parent 207, Faction 15, Population 10
+Texture type 1, t1 5, t2 1, t3 191 
+Pos 3.160651e-260 -3.246222e-005 1.030792e+011, Ori 46.000000 107.000000 97.000000
+Color r  46 g  46 b  46
+Color r 107 g  97 b  82
+Color r 127 g  59 b  51
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 209, type 0, body type 3 hab_type 26 radius   10633286 name Aswan
+Parent 207, Faction 15, Population 10
+Texture type 1, t1 4, t2 7, t3 191 
+Pos 3.160651e-260 -4.389886e-005 2.748780e+012, Ori 0.000000 127.000000 111.000000
+Color r  35 g  66 b   0
+Color r 127 g 111 b  87
+Color r 127 g 123 b 123
+Cloud 1 Ring 0 Unk 39 Unk2 0 
+
+Entity 210, type 0, body type 3 hab_type 26 radius    6243400 name Tanis
+Parent 207, Faction 15, Population 10
+Texture type 1, t1 3, t2 0, t3 191 
+Pos 3.160651e-260 -3.053997e-005 1.030792e+011, Ori 40.000000 46.000000 46.000000
+Color r  99 g  46 b  40
+Color r  46 g  46 b  46
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 211, type 0, body type 3 hab_type 26 radius   12209038 name Thebes
+Parent 207, Faction 15, Population 10
+Texture type 1, t1 3, t2 7, t3 191 
+Pos 3.160651e-260 -4.389141e-005 2.748780e+012, Ori 0.000000 127.000000 111.000000
+Color r  35 g  66 b   0
+Color r 127 g 111 b  87
+Color r 127 g 112 b  85
+Cloud 0 Ring 0 Unk 60 Unk2 0 
+
+Entity 212, type 1, body type 3 hab_type 51 radius   12209038 name Thebes Government Medical Facility
+Parent 211, Faction 5, Population 10
+Texture type 1, t1 3, t2 7, t3 191 
+Pos 2.154342e-260 -4.389141e-005 2.748780e+012, Ori 0.000000 127.000000 111.000000
+Color r  35 g  66 b   0
+Color r 127 g 111 b  87
+Color r 127 g 112 b  85
+Cloud 0 Ring 0 Unk 60 Unk2 0 
+
+Entity 213, type 1, body type 32 hab_type 112 radius   12209038 name Thebes MASS Bio-Bomber 1
+Parent 211, Faction 11, Population 25
+Texture type 1, t1 3, t2 7, t3 191 
+Pos 4.926574e-188 -4.389141e-005 2.748780e+012, Ori 0.000000 127.000000 111.000000
+Color r  35 g  66 b   0
+Color r 127 g 111 b  87
+Color r 127 g 112 b  85
+Cloud 0 Ring 0 Unk 60 Unk2 0 
+
+Entity 214, type 1, body type 32 hab_type 112 radius   12209038 name Thebes MAAS Bio-Bomber 2
+Parent 211, Faction 11, Population 10
+Texture type 1, t1 3, t2 7, t3 191 
+Pos 2.788342e-260 -4.389141e-005 2.748780e+012, Ori 0.000000 127.000000 111.000000
+Color r  35 g  66 b   0
+Color r 127 g 111 b  87
+Color r 127 g 112 b  85
+Cloud 0 Ring 0 Unk 60 Unk2 0 
+
+Entity 215, type 0, body type 3 hab_type 112 radius    5811618 name Ammon
+Parent 207, Faction 11, Population 10
+Texture type 1, t1 1, t2 2, t3 191 
+Pos 2.788297e-260 -3.433976e-005 3.602881e+016, Ori 168.000000 64.000000 13.000000
+Color r 250 g 224 b 168
+Color r  64 g  13 b   7
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 216, type 0, body type 3 hab_type 112 radius    6441595 name Luxor
+Parent 207, Faction 11, Population 10
+Texture type 1, t1 2, t2 5, t3 191 
+Pos 2.788297e-260 -4.006926e-005 3.958243e+013, Ori 82.000000 46.000000 46.000000
+Color r 107 g  97 b  82
+Color r  46 g  46 b  46
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 217, type 0, body type 3 hab_type 112 radius    9180066 name Giza
+Parent 207, Faction 11, Population 10
+Texture type 1, t1 6, t2 2, t3 191 
+Pos 2.788297e-260 -3.437702e-005 1.030792e+011, Ori 40.000000 64.000000 13.000000
+Color r  99 g  46 b  40
+Color r  64 g  13 b   7
+Color r 127 g 112 b  85
+Cloud 1 Ring 0 Unk 24 Unk2 0 
+
+Entity 218, type 1, body type 1 hab_type 19 radius    9180066 name Giza Independent Fusionable Gases Processing Plant
+Parent 217, Faction 1, Population 5
+Texture type 1, t1 6, t2 2, t3 191 
+Pos 1.435276e-284 -3.437702e-005 1.030792e+011, Ori 40.000000 64.000000 13.000000
+Color r  99 g  46 b  40
+Color r  64 g  13 b   7
+Color r 127 g 112 b  85
+Cloud 1 Ring 0 Unk 24 Unk2 0 
+
+Entity 219, type 0, body type 3 hab_type 19 radius    8724703 name Takoshima
+Parent 207, Faction 1, Population 5
+Texture type 1, t1 3, t2 4, t3 191 
+Pos 1.435278e-284 -3.816936e-005 2.748780e+012, Ori 0.000000 77.000000 127.000000
+Color r  35 g  66 b   0
+Color r  77 g 127 b  75
+Color r 127 g 112 b  85
+Cloud 3 Ring 0 Unk 32 Unk2 0 
+
+Entity 220, type 1, body type 8 hab_type 64 radius    8724703 name Takoshima Independent Dry Dock
+Parent 219, Faction 1, Population 5
+Texture type 1, t1 3, t2 4, t3 191 
+Pos 1.450061e-284 -3.816936e-005 2.748780e+012, Ori 0.000000 77.000000 127.000000
+Color r  35 g  66 b   0
+Color r  77 g 127 b  75
+Color r 127 g 112 b  85
+Cloud 3 Ring 0 Unk 32 Unk2 0 
+
+Entity 221, type 1, body type 7 hab_type 37 radius    8724703 name Takoshima Independent Repair Station
+Parent 219, Faction 1, Population 15
+Texture type 1, t1 3, t2 4, t3 191 
+Pos 2.106307e-236 -3.816936e-005 2.748780e+012, Ori 0.000000 77.000000 127.000000
+Color r  35 g  66 b   0
+Color r  77 g 127 b  75
+Color r 127 g 112 b  85
+Cloud 3 Ring 0 Unk 32 Unk2 0 
+
+Entity 222, type 0, body type 3 hab_type 37 radius    5235668 name Memphis
+Parent 207, Faction 1, Population 15
+Texture type 1, t1 7, t2 0, t3 191 
+Pos 2.106300e-236 -3.056977e-005 1.030792e+011, Ori 40.000000 168.000000 168.000000
+Color r  99 g  46 b  40
+Color r 168 g 168 b 116
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 223, type 0, body type 3 hab_type 37 radius   22991130 name Bacchias
+Parent 207, Faction 1, Population 15
+Texture type 2, t1 8, t2 9, t3 191 
+Pos 2.106300e-236 -4.774339e-005 2.199024e+013, Ori 39.000000 103.000000 127.000000
+Color r 127 g  90 b  39
+Color r 103 g 127 b  68
+Color r 127 g  90 b  39
+Cloud 1 Ring 0 Unk 255 Unk2 0 
+
+Entity 224, type 0, body type 4 hab_type 37 radius  245290272 name Sif
+Parent 174, Faction 1, Population 15
+Texture type 2, t1 4, t2 7, t3 191 
+Pos 2.106302e-236 -4.389889e-005 2.199024e+013, Ori 39.000000 108.000000 127.000000
+Color r 127 g  90 b  39
+Color r 108 g 127 b  71
+Color r 127 g  90 b  39
+Cloud 0 Ring 8 Unk 255 Unk2 0 
+
+Entity 225, type 0, body type 2 hab_type 37 radius    3381939 name Balder
+Parent 174, Faction 1, Population 15
+Texture type 1, t1 2, t2 4, t3 191 
+Pos 2.106298e-236 -3.816191e-005 2.748780e+012, Ori 0.000000 127.000000 76.000000
+Color r  35 g  66 b   0
+Color r 127 g  76 b  57
+Color r 127 g  59 b  51
+Cloud 0 Ring 0 Unk 53 Unk2 0 
+
+Entity 226, type 1, body type 10 hab_type 54 radius    3381939 name Balder NOMEX Security Station
+Parent 225, Faction 15, Population 5
+Texture type 1, t1 2, t2 4, t3 191 
+Pos 2.623633e-284 -3.816191e-005 2.748780e+012, Ori 0.000000 127.000000 76.000000
+Color r  35 g  66 b   0
+Color r 127 g  76 b  57
+Color r 127 g  59 b  51
+Cloud 0 Ring 0 Unk 53 Unk2 0 
+
+Entity 227, type 0, body type 3 hab_type 54 radius    1169009 name Vini
+Parent 225, Faction 15, Population 5
+Texture type 1, t1 6, t2 0, t3 191 
+Pos 2.623624e-284 -3.056232e-005 2.748780e+012, Ori 0.000000 250.000000 224.000000
+Color r  35 g  66 b   0
+Color r 250 g 224 b 168
+Color r  60 g  87 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 228, type 0, body type 3 hab_type 54 radius    1594486 name Vidi
+Parent 225, Faction 15, Population 5
+Texture type 1, t1 5, t2 6, t3 191 
+Pos 2.623624e-284 -4.199896e-005 2.748780e+012, Ori 0.000000 107.000000 97.000000
+Color r  35 g  66 b   0
+Color r 107 g  97 b  82
+Color r  58 g  91 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 229, type 0, body type 3 hab_type 54 radius     519434 name Vichi
+Parent 225, Faction 15, Population 5
+Texture type 1, t1 1, t2 3, t3 191 
+Pos 2.623624e-284 -3.624711e-005 2.748780e+012, Ori 0.000000 64.000000 13.000000
+Color r  35 g  66 b   0
+Color r  64 g  13 b   7
+Color r 127 g  75 b  19
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 230, type 1, body type 2 hab_type 48 radius     519434 name Vichi Independent Agricultural Settlement
+Parent 229, Faction 1, Population 10
+Texture type 1, t1 1, t2 3, t3 191 
+Pos 1.746655e-260 -3.624711e-005 2.748780e+012, Ori 0.000000 64.000000 13.000000
+Color r  35 g  66 b   0
+Color r  64 g  13 b   7
+Color r 127 g  75 b  19
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 231, type 4, body type 216 hab_type 106 radius    1000000 name Nodens Blanket
+Parent 174, Faction 17, Population 81
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 3.304313e+082 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 232, type 1, body type 25 hab_type 59 radius    1000000 name Old Nick
+Parent 174, Faction 1, Population 5
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.448441e-284 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 233, type 1, body type 8 hab_type 36 radius    1000000 name Old Nick Independent Waystation
+Parent 232, Faction 1, Population 5
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.440867e-284 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 234, type 1, body type 21 hab_type 7 radius    1000000 name Nemu
+Parent 174, Faction 1, Population 10
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.730409e-260 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 235, type 1, body type 26 hab_type 1 radius    1000000 name Hu
+Parent 174, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 236, type 1, body type 26 hab_type 1 radius    1000000 name Wenslydale
+Parent 174, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 237, type 1, body type 26 hab_type 1 radius    1000000 name Chedder
+Parent 174, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 238, type 1, body type 24 hab_type 59 radius    1000000 name Ghaddar
+Parent 174, Faction 1, Population 5
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.448440e-284 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 239, type 1, body type 26 hab_type 1 radius    1000000 name Paradise
+Parent 174, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 240, type 1, body type 21 hab_type 7 radius    1000000 name Lolla
+Parent 174, Faction 1, Population 5
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 1.431361e-284 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 241, type 1, body type 26 hab_type 1 radius    1000000 name Tamugien
+Parent 174, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 242, type 1, body type 26 hab_type 1 radius    1000000 name Ashanti
+Parent 174, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 243, type 1, body type 26 hab_type 1 radius    1000000 name Cambria
+Parent 174, Faction 8, Population 21
+Texture type 1, t1 2, t2 6, t3 191 
+Pos 2.336480e-207 -4.197661e-005 3.377700e+015, Ori 116.000000 99.000000 46.000000
+Color r 168 g 168 b 116
+Color r  99 g  46 b  40
+Color r 127 g 119 b 104
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 244, type 0, body type 4 hab_type 1 radius   97922432 name Orgelmir
+Parent 174, Faction 8, Population 21
+Texture type 2, t1 5, t2 6, t3 191 
+Pos 2.336447e-207 -4.199899e-005 2.199024e+013, Ori 39.000000 108.000000 127.000000
+Color r 127 g  90 b  39
+Color r 108 g 127 b  71
+Color r 127 g  90 b  39
+Cloud 2 Ring 5 Unk 255 Unk2 0 
+
+Entity 245, type 0, body type 3 hab_type 1 radius    1511607 name Grande Roditore
+Parent 244, Faction 8, Population 21
+Texture type 1, t1 3, t2 4, t3 191 
+Pos 2.336446e-207 -3.816936e-005 2.748780e+012, Ori 0.000000 250.000000 224.000000
+Color r  35 g  66 b   0
+Color r 250 g 224 b 168
+Color r  53 g  88 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 246, type 0, body type 3 hab_type 1 radius     892724 name Vidar's Key
+Parent 244, Faction 8, Population 21
+Texture type 1, t1 5, t2 3, t3 191 
+Pos 2.336446e-207 -3.627691e-005 2.748780e+012, Ori 0.000000 191.000000 169.000000
+Color r  35 g  66 b   0
+Color r 191 g 169 b 128
+Color r  80 g  96 b 127
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 247, type 0, body type 3 hab_type 1 radius     525873 name Grande Capra
+Parent 244, Faction 8, Population 21
+Texture type 1, t1 3, t2 2, t3 191 
+Pos 2.336446e-207 -3.435466e-005 2.748780e+012, Ori 0.000000 64.000000 13.000000
+Color r  35 g  66 b   0
+Color r  64 g  13 b   7
+Color r 127 g 106 b  78
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 248, type 0, body type 2 hab_type 1 radius    3625866 name Vidar
+Parent 174, Faction 8, Population 21
+Texture type 1, t1 1, t2 2, t3 191 
+Pos 2.336445e-207 -3.433976e-005 2.748780e+012, Ori 0.000000 168.000000 168.000000
+Color r  35 g  66 b   0
+Color r 168 g 168 b 116
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 249, type 0, body type 4 hab_type 1 radius  111000064 name Hyrrokin
+Parent 174, Faction 8, Population 21
+Texture type 2, t1 3, t2 8, t3 191 
+Pos 2.336447e-207 -4.579879e-005 2.199024e+013, Ori 39.000000 108.000000 127.000000
+Color r 127 g  90 b  39
+Color r 108 g 127 b  71
+Color r 127 g  90 b  39
+Cloud 0 Ring 6 Unk 255 Unk2 0 
+
+Entity 250, type 0, body type 3 hab_type 1 radius    6142846 name Hyrrokin Beta
+Parent 249, Faction 8, Population 21
+Texture type 1, t1 0, t2 5, t3 191 
+Pos 2.336446e-207 -4.005436e-005 2.748780e+012, Ori 0.000000 168.000000 168.000000
+Color r  35 g  66 b   0
+Color r 168 g 168 b 116
+Color r 127 g 112 b  85
+Cloud 2 Ring 0 Unk 9 Unk2 0 
+
+Entity 251, type 2, body type 249 hab_type 0 radius    6142846 name Hyrrokin L-Point
+Parent 250, Faction 0, Population 0
+Texture type 1, t1 0, t2 5, t3 191 
+Pos 5.283770e-312 -4.005436e-005 2.748780e+012, Ori 0.000000 168.000000 168.000000
+Color r  35 g  66 b   0
+Color r 168 g 168 b 116
+Color r 127 g 112 b  85
+Cloud 2 Ring 0 Unk 9 Unk2 0 
+
+Entity 252, type 1, body type 11 hab_type 66 radius    6142846 name Blue Note Social
+Parent 250, Faction 1, Population 45
+Texture type 1, t1 0, t2 5, t3 191 
+Pos 6.618831e-092 -4.005436e-005 2.748780e+012, Ori 0.000000 168.000000 168.000000
+Color r  35 g  66 b   0
+Color r 168 g 168 b 116
+Color r 127 g 112 b  85
+Cloud 2 Ring 0 Unk 9 Unk2 0 
+
+Entity 253, type 0, body type 3 hab_type 66 radius   13458697 name Hyrrokin Alpha
+Parent 249, Faction 1, Population 45
+Texture type 2, t1 6, t2 0, t3 191 
+Pos 6.618784e-092 -3.056235e-005 1.407375e+014, Ori 85.000000 127.000000 99.000000
+Color r 127 g 112 b  85
+Color r 127 g  99 b  68
+Color r 127 g 112 b  85
+Cloud 2 Ring 0 Unk 255 Unk2 0 
+
+Entity 254, type 0, body type 3 hab_type 66 radius   11811188 name Hyrrokin Gamma
+Parent 249, Faction 1, Population 45
+Texture type 1, t1 4, t2 7, t3 191 
+Pos 6.618784e-092 -4.389886e-005 2.748780e+012, Ori 0.000000 107.000000 97.000000
+Color r  35 g  66 b   0
+Color r 107 g  97 b  82
+Color r 127 g  90 b  39
+Cloud 3 Ring 0 Unk 103 Unk2 0 
+
+Entity 255, type 0, body type 4 hab_type 66 radius  203372624 name Gefjon
+Parent 174, Faction 1, Population 45
+Texture type 2, t1 0, t2 1, t3 191 
+Pos 6.618790e-092 -3.242499e-005 2.199024e+013, Ori 39.000000 108.000000 127.000000
+Color r 127 g  90 b  39
+Color r 108 g 127 b  71
+Color r 127 g  90 b  39
+Cloud 1 Ring 5 Unk 255 Unk2 0 
+
+Entity 256, type 1, body type 8 hab_type 36 radius  203372624 name Gefjon Independent Waystation
+Parent 255, Faction 1, Population 5
+Texture type 2, t1 0, t2 1, t3 191 
+Pos 1.440867e-284 -3.242499e-005 2.199024e+013, Ori 39.000000 108.000000 127.000000
+Color r 127 g  90 b  39
+Color r 108 g 127 b  71
+Color r 127 g  90 b  39
+Cloud 1 Ring 5 Unk 255 Unk2 0 
+
+Entity 257, type 1, body type 0 hab_type 10 radius  203372624 name Gefjon Independent Fusionable Gases Mine
+Parent 255, Faction 1, Population 15
+Texture type 2, t1 0, t2 1, t3 191 
+Pos 2.093337e-236 -3.242499e-005 2.199024e+013, Ori 39.000000 108.000000 127.000000
+Color r 127 g  90 b  39
+Color r 108 g 127 b  71
+Color r 127 g  90 b  39
+Cloud 1 Ring 5 Unk 255 Unk2 0 
+
+Entity 258, type 0, body type 3 hab_type 10 radius    3292509 name Fort Brooklyn
+Parent 255, Faction 1, Population 15
+Texture type 1, t1 3, t2 7, t3 191 
+Pos 2.093342e-236 -4.389141e-005 2.748780e+012, Ori 0.000000 107.000000 97.000000
+Color r  35 g  66 b   0
+Color r 107 g  97 b  82
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 259, type 1, body type 15 hab_type 74 radius    3292509 name Fort Brooklyn Naval Listening Post
+Parent 258, Faction 3, Population 15
+Texture type 1, t1 3, t2 7, t3 191 
+Pos 2.369789e-236 -4.389141e-005 2.748780e+012, Ori 0.000000 107.000000 97.000000
+Color r  35 g  66 b   0
+Color r 107 g  97 b  82
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 260, type 6, body type 255 hab_type 117 radius    3292509 name Fort Brooklyn Gunstar Array
+Parent 259, Faction 3, Population 21
+Texture type 1, t1 3, t2 7, t3 191 
+Pos 1.894246e-207 -4.389141e-005 2.748780e+012, Ori 0.000000 107.000000 97.000000
+Color r  35 g  66 b   0
+Color r 107 g  97 b  82
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 261, type 1, body type 15 hab_type 85 radius    3292509 name Fort Brooklyn Naval Defense Station
+Parent 258, Faction 3, Population 10
+Texture type 1, t1 3, t2 7, t3 191 
+Pos 1.964610e-260 -4.389141e-005 2.748780e+012, Ori 0.000000 107.000000 97.000000
+Color r  35 g  66 b   0
+Color r 107 g  97 b  82
+Color r 127 g 112 b  85
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 262, type 0, body type 3 hab_type 85 radius   10342992 name Almost
+Parent 255, Faction 3, Population 10
+Texture type 1, t1 6, t2 4, t3 191 
+Pos 1.964592e-260 -3.819171e-005 2.748780e+012, Ori 0.000000 250.000000 224.000000
+Color r  35 g  66 b   0
+Color r 250 g 224 b 168
+Color r 127 g 112 b  85
+Cloud 2 Ring 0 Unk 90 Unk2 0 
+
+Entity 263, type 1, body type 2 hab_type 112 radius   10342992 name Almost Independent Orbital Habitat
+Parent 262, Faction 1, Population 10
+Texture type 1, t1 6, t2 4, t3 191 
+Pos 1.772061e-260 -3.819171e-005 2.748780e+012, Ori 0.000000 250.000000 224.000000
+Color r  35 g  66 b   0
+Color r 250 g 224 b 168
+Color r 127 g 112 b  85
+Cloud 2 Ring 0 Unk 90 Unk2 0 
+
+Entity 264, type 0, body type 3 hab_type 112 radius   11843771 name Sunflower
+Parent 255, Faction 1, Population 10
+Texture type 1, t1 2, t2 5, t3 191 
+Pos 1.772063e-260 -4.006926e-005 2.748780e+012, Ori 0.000000 99.000000 46.000000
+Color r  35 g  66 b   0
+Color r  99 g  46 b  40
+Color r 127 g  90 b  39
+Cloud 1 Ring 0 Unk 175 Unk2 0 
+
+Entity 265, type 1, body type 9 hab_type 93 radius   11843771 name Firefrost System Administration
+Parent 264, Faction 5, Population 15
+Texture type 1, t1 2, t2 5, t3 191 
+Pos 2.624606e-236 -4.006926e-005 2.748780e+012, Ori 0.000000 99.000000 46.000000
+Color r  35 g  66 b   0
+Color r  99 g  46 b  40
+Color r 127 g  90 b  39
+Cloud 1 Ring 0 Unk 175 Unk2 0 
+
+Entity 266, type 1, body type 17 hab_type 45 radius   11843771 name Sunflower MAAS Regional HQ
+Parent 264, Faction 11, Population 10
+Texture type 1, t1 2, t2 5, t3 191 
+Pos 2.761722e-260 -4.006926e-005 2.748780e+012, Ori 0.000000 99.000000 46.000000
+Color r  35 g  66 b   0
+Color r  99 g  46 b  40
+Color r 127 g  90 b  39
+Cloud 1 Ring 0 Unk 175 Unk2 0 
+
+Entity 267, type 1, body type 17 hab_type 45 radius   11843771 name Sunflower NOMEX Regional HQ
+Parent 264, Faction 15, Population 5
+Texture type 1, t1 2, t2 5, t3 191 
+Pos 2.620686e-284 -4.006926e-005 2.748780e+012, Ori 0.000000 99.000000 46.000000
+Color r  35 g  66 b   0
+Color r  99 g  46 b  40
+Color r 127 g  90 b  39
+Cloud 1 Ring 0 Unk 175 Unk2 0 
+
+Entity 268, type 2, body type 255 hab_type 0 radius   11843771 name Sunflower L-Point
+Parent 264, Faction 0, Population 0
+Texture type 1, t1 2, t2 5, t3 191 
+Pos 5.411089e-312 -4.006926e-005 2.748780e+012, Ori 0.000000 99.000000 46.000000
+Color r  35 g  66 b   0
+Color r  99 g  46 b  40
+Color r 127 g  90 b  39
+Cloud 1 Ring 0 Unk 175 Unk2 0 
+
+Entity 269, type 1, body type 8 hab_type 38 radius   11843771 name Sunflower Independent Orbital Transfer Station
+Parent 264, Faction 1, Population 10
+Texture type 1, t1 2, t2 5, t3 191 
+Pos 1.742695e-260 -4.006926e-005 2.748780e+012, Ori 0.000000 99.000000 46.000000
+Color r  35 g  66 b   0
+Color r  99 g  46 b  40
+Color r 127 g  90 b  39
+Cloud 1 Ring 0 Unk 175 Unk2 0 
+
+Entity 270, type 0, body type 3 hab_type 38 radius   26076818 name Al Fujayrah
+Parent 255, Faction 1, Population 10
+Texture type 2, t1 1, t2 9, t3 191 
+Pos 1.742687e-260 -4.769123e-005 2.199024e+013, Ori 39.000000 127.000000 105.000000
+Color r 127 g  90 b  39
+Color r 127 g 105 b  79
+Color r 127 g  90 b  39
+Cloud 1 Ring 0 Unk 255 Unk2 0 
+
+Entity 271, type 0, body type 3 hab_type 38 radius    4014010 name Ad Dawhah
+Parent 255, Faction 1, Population 10
+Texture type 1, t1 6, t2 4, t3 191 
+Pos 1.742687e-260 -3.819171e-005 2.748780e+012, Ori 0.000000 191.000000 169.000000
+Color r  35 g  66 b   0
+Color r 191 g 169 b 128
+Color r 127 g  59 b  51
+Cloud 255 Ring 0 Unk 0 Unk2 0 
+
+Entity 272, type 0, body type 3 hab_type 38 radius   24737026 name Ash Shamal
+Parent 255, Faction 1, Population 10
+Texture type 2, t1 6, t2 1, t3 191 
+Pos 1.742687e-260 -3.246970e-005 2.199024e+013, Ori 39.000000 127.000000 105.000000
+Color r 127 g  90 b  39
+Color r 127 g 105 b  79
+Color r 127 g  90 b  39
+Cloud 2 Ring 0 Unk 255 Unk2 0 
+
+Entity 273, type 0, body type 2 hab_type 38 radius    7199190 name Sjarr
+Parent 0, Faction 1, Population 10
+Texture type 1, t1 0, t2 3, t3 191 
+Pos 1.742686e-260 -3.623966e-005 2.748780e+012, Ori 0.000000 191.000000 169.000000
+Color r  35 g  66 b   0
+Color r 191 g 169 b 128
+Color r 127 g 112 b  85
+Cloud 1 Ring 0 Unk 17 Unk2 0 
+
+Entity 274, type 1, body type 18 hab_type 88 radius    7199190 name Sjarr Government FTL Comms Array
+Parent 273, Faction 5, Population 21
+Texture type 1, t1 0, t2 3, t3 191 
+Pos 2.077540e-207 -3.623966e-005 2.748780e+012, Ori 0.000000 191.000000 169.000000
+Color r  35 g  66 b   0
+Color r 191 g 169 b 128
+Color r 127 g 112 b  85
+Cloud 1 Ring 0 Unk 17 Unk2 0 
+
+Entity 275, type 1, body type 16 hab_type 68 radius    7199190 name Sjarr Pirate Hideout
+Parent 273, Faction 4, Population 25
+Texture type 1, t1 0, t2 3, t3 191 
+Pos 3.638798e-188 -3.623966e-005 2.748780e+012, Ori 0.000000 191.000000 169.000000
+Color r  35 g  66 b   0
+Color r 191 g 169 b 128
+Color r 127 g 112 b  85
+Cloud 1 Ring 0 Unk 17 Unk2 0 
+
+

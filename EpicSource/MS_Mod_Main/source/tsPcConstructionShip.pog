@@ -1,0 +1,290 @@
+//*******************************************************************************************/
+//
+// tsPcConstructionShip
+//
+// This pog object implements construction ships that will purchase construction cargo at
+// higher than normal rates.
+// 
+//
+// May 2005, Jon Freise
+//******************************************************************************************/
+
+package tsPcConstructionShip;
+
+uses    Sim,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        GUI,
+        iGUI,
+        iHUD,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        Math,
+        iShipCreation,
+        iComms,
+        iConversation,
+        iAI,
+
+        tsShipComms,
+        tsLRoot,
+        tsLCenter,
+        tsLTrade,
+        tsFaction,
+        tsTradeSell,
+        tsMoney,
+        tsShipName,
+        tsPcOwner,
+        tsCull;
+
+
+provides PogCreate,
+         PogStart,
+         Comms;
+
+
+prototype setup_ship(hship ship);
+
+
+
+
+
+hsim PogCreate(string template_name, string object_name)
+{
+
+   hinifile object_file;
+   string item_template, pog_class, start_function, name;
+   hsim item;
+   htask current_task;
+   htask parent_task;
+
+   debug Debug.PrintString("tsPcConstructionShip.PogCreate\n");
+
+
+   object_file = INIFile.Create(template_name);
+
+   if (none == object_file) {
+      debug {
+         Debug.PrintString("tsPcConstructionShip.PogCreate, error failed to find object file\n");
+      }
+
+      return none;
+   }
+
+   // Pull needed items out of template file. Create the object.
+   // Attach them
+   pog_class = INIFile.String(object_file, "PogClass","name","none");
+
+
+   ///********************
+   // This block of code is class dependent. The rest must be done to adhere
+   // to the pog object calling conventions.
+   item_template = INIFile.String(object_file, "Properties","template","none");
+
+   INIFile.Destroy(object_file);
+
+
+   name = tsShipName.ShipName("maas", Math.RandomInt(0,44));
+
+   item = Sim.Create(item_template, name);
+
+   if (none == item) {
+      debug {
+         Debug.PrintString("tsPcConstructionShip.PogCreate, bad object template\n");
+      }
+      return none;
+   }
+   ///********************
+
+
+   // All 
+   Object.AddStringProperty(item, "gt_pog_object_class", pog_class);
+   Object.AddStringProperty(item, "gt_pog_object_template", template_name);
+
+      
+   return item;
+}
+
+
+/*
+This function is called after the ship has been placed. 
+
+*/
+task PogStart(hsim pog_object)
+{
+   hship player;
+   float distance;
+
+   debug Debug.PrintString("tsPcConstructionShip: starting\n");
+
+   ///***************************************
+   // This part of the start code is object dependent. The prior pieces must
+   // be done to adhere to the pog class calling convention.
+
+   setup_ship(iShip.Cast(pog_object));
+
+   ///***************************************
+}
+
+/*
+; 
+; Example INI file for setting up a hired ship.
+; One of these template files should be created
+; for each kind of ship that can be hired.
+; Freighter, warship, etc.
+
+[PogClass]
+name=tsPcConstructionShip
+
+[Properties]
+
+template=ini:/sims/ships/utility/freighter
+
+
+; This code will be called by the players communication subsystem
+; It will check to see if the player has a high enough standing to hire the ship.
+; Then it will offer the player the choice of hiring. It will display fee info.
+; 
+comm_start_function="tsPcConstructionShip.FenceComm"
+
+*/
+
+
+
+// Read the ini file, setup the object. 
+setup_ship(hship ship)
+{
+   hinifile control_file;
+   string template_file_name, comm_function;
+   string construction_file, station_string;
+   float faction_standing;
+   hfaction faction;
+   hsim owner;
+   hhabitat station;
+
+   template_file_name = Object.StringProperty(ship, "gt_pog_object_template");
+   control_file = INIFile.Create(template_file_name);
+
+   if (none == control_file) {
+      debug Debug.PrintString("ERROR tsPcConstructionShip. invalid template_file\n");
+      debug Debug.PrintString(template_file_name);
+      debug Debug.PrintString("\n");
+   }
+
+   // Read in the belt control properties
+   construction_file = INIFile.String(control_file, "Properties", "trade_file", "ini:/construction_cargo");
+
+//   comm_function = INIFile.String(control_file, "Properties", "comm_start_function", "");
+                                  
+   comm_function = "tsPcConstructionShip.Comms";
+
+   INIFile.Destroy(control_file);
+
+   // Setup the later comms task.
+   tsShipComms.AddComms(ship, comm_function);
+   tsShipComms.DisplayComms(ship, true);
+
+
+   // Find the owner ship.
+   owner = Sim.Cast(tsPcOwner.Owner(ship));
+   faction = iSim.Faction(iSim.Cast(owner));
+   iSim.SetFaction(iSim.Cast(ship), faction);
+
+
+   station = iHabitat.Nearest(iMapEntity.SystemHabitats(),ship);
+
+
+   // Setup the trade properties for the fence.
+   tsLRoot.SetId(ship, tsLRoot.GetId(owner));
+   tsLTrade.Create(ship, construction_file, "Construction");
+
+   tsCull.AddSim(station, ship);
+
+   debug{
+      Debug.PrintString("construction file: ");
+      Debug.PrintString(construction_file);
+      Debug.PrintString("\n");
+   }
+
+}
+
+
+task Comms()
+{
+   hship ship;
+   string ask_string;
+   bool start_deal;
+
+   ship = iShip.Cast(tsShipComms.CommsSource());
+
+   // Turn off the comms display, now that the player knows he can talk to this ship.
+   tsShipComms.DisplayComms(ship, false);
+
+
+
+        // Start the conversation.
+    iConversation.Begin();
+
+    // pccs_introduction, "We are building a new station and need construction supplies."
+    iConversation.Say(ship,"", "pccs_introduction");
+
+    // Response 1
+    // pccs_player_agrees, "Yes, Lets see what you need"
+    iConversation.AddResponse(
+        "Yes",
+        "pccs_player_agrees");
+
+    // Response 2
+    // pccs_player_refuses, "No, I have no supplies"
+    iConversation.AddResponse(
+       "No",
+       "pccs_player_refuses");
+
+
+    // Ask the player a question and switch on their response.
+    // pccs_ask_player, "We are willing to pay a bonus. Do you have any to sell?"
+    switch ( iConversation.Ask( ship, "", "pccs_ask_player" ) )
+    {
+    case 1 :
+       start_deal = true;
+       break;
+
+    case 2 :
+       // Player said no.
+       // pccs_player_refuse_response, "If you find any, stop back."
+       iConversation.Say(ship,"", "pccs_player_refuse_response");
+       start_deal = false;
+       break;
+
+    default :
+       // Player selected "Nothing"
+       // pccs_player_nothing_response, "Not the talkative type?"
+       iConversation.Say(ship,"", "pccs_player_nothing_reponse");
+       start_deal = false;
+    }
+
+    // Finish the conversation.
+    iConversation.End();
+
+    if (start_deal) {
+       tsTradeSell.TradeObjectStart(ship);
+    }
+
+}
+
+
+
+
+/*   
+
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

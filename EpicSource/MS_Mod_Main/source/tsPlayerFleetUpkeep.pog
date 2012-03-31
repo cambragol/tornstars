@@ -1,0 +1,618 @@
+//*******************************************************************************************/
+//
+// tsPlayerFleetUpkeep.pog
+//
+// Code that charges the player to maintain ships. It causes ships to desert if they cannot 
+// be paid.
+//
+//
+//
+// March 2005, Jon Freise
+//******************************************************************************************/
+
+package tsPlayerFleetUpkeep;
+
+uses iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, Task, Debug, iFaction, iSim, 
+   iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+   iConversation, iFormation, Group, Text, iEmail, State, 
+   iTrafficCreation, iRangeCheck,iRemotePilot, iRegion, iMissionTracker, 
+   iWingmen, iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+   iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,iDirector, 
+   iEscort, iLagrangePoint, iMusic, iGame, Stream, 
+   iGUI,
+
+   tsTime,
+   tsStationEnum,
+   tsStation,
+   tsFaction,
+   tsShipEnum,
+   tsShip,
+   tsPlayerFleet,
+   tsMoney,
+   tsLProduction,
+   tsLInventory,
+   tsEconUtil,
+   tsEconomy,
+   tsPodUtil,
+   tsMail;
+
+provides Setup,
+         RunUpkeep,
+         UpkeepCost,
+         JumpFee,
+         SellingValue,
+         ProduceCargo;
+
+
+
+prototype debug_type(int ship_type, string type_name);
+
+prototype int UpkeepCost(int ship_type);
+prototype int JumpFee(int ship_type);
+prototype int SellingValue(int ship_type);
+
+
+prototype prospector_upkeep(hship explorer);
+prototype mining_rig_upkeep(hship rig);
+
+prototype bool is_mine(hhabitat station);
+
+
+
+float int2float(int value)
+{
+   return value;
+}
+
+
+int float2int(float value)
+{
+   return value;
+}
+
+
+
+RunUpkeep()
+{
+   list player_fleet;
+   hship player = iShip.FindPlayerShip();
+   hship ship, leaving_ship;
+   int i, total;
+   int  upkeep;
+   float fuel_cost;
+   bool deserted = false;
+
+   // Get list of player ships
+   player_fleet = tsShip.PlayerFleet();
+
+   total = List.ItemCount(player_fleet);
+   for (i=0;i<total;++i) {
+      ship = iShip.Cast(List.GetNth(player_fleet,i));
+      upkeep = tsShip.DailyUpkeep(ship);
+
+
+
+      if (upkeep > tsMoney.ShipAccount()) {
+         // Player does not have the funds. Desert the ship.
+         if (player != ship) {
+            tsPlayerFleet.FireShip(ship);
+            deserted = true;
+            leaving_ship = ship;
+         }
+      }else {
+         upkeep = upkeep * -1;
+         tsMoney.ChangeShipAccount(upkeep);
+      }
+
+      // Deduct the days fuel usage from the ships fuel tanks.
+      atomic {
+         fuel_cost = tsShip.Fuel(ship);
+         fuel_cost = fuel_cost - tsShip.DailyFuel(ship);
+         tsShip.SetFuel(ship, fuel_cost);
+      }
+
+
+
+      if (Object.IntProperty(ship,"miner") > 0) {
+         mining_rig_upkeep(ship);
+      } 
+      
+      if (Object.IntProperty(ship,"prospector") > 0) {
+         prospector_upkeep(ship);
+      } 
+
+   }
+
+   if (deserted) {
+      // Send shout to the player if any ships deserted.
+      iComms.Shout(leaving_ship,"","Sir! You cannot pay our wages. We are leaving!");
+   }
+
+   debug Debug.PrintString(String.FormatInt("Ship account %d\n",tsMoney.ShipAccount()));
+}
+
+
+type_setup(hinifile upkeep_file, string type_string, int ship_type, hsim waypoint)
+{
+   int jump_fee, upkeep_fee, hiring_fee, selling_value;
+
+   upkeep_fee = INIFile.Int(upkeep_file, type_string, "daily_upkeep", 0);
+   jump_fee = INIFile.Int(upkeep_file, type_string, "fuel_per_jump", 100);
+   selling_value = INIFile.Int(upkeep_file, type_string, "selling_price", 0);
+   hiring_fee = INIFile.Int(upkeep_file, type_string, "hiring_fee", 0);
+
+   Object.AddIntProperty(waypoint,String.FormatInt("upkeep%d",ship_type),upkeep_fee);
+   Object.AddIntProperty(waypoint,String.FormatInt("selling%d",ship_type),selling_value);
+   Object.AddIntProperty(waypoint,String.FormatInt("jump%d",ship_type),jump_fee);
+}
+
+
+Setup()
+{
+   hsim waypoint;
+   hinifile upkeep_file = INIFile.Create("ini:/upkeep");
+   int upkeep_fee, hiring_fee, selling_value, ship_type;
+
+   waypoint = Sim.Create("ini:/sims/nav/waypoint","upkeep_costs");
+
+   type_setup(upkeep_file, "T_Utility", T_Utility, waypoint);
+   type_setup(upkeep_file, "T_Passenger", T_Passenger, waypoint);
+   type_setup(upkeep_file, "T_Fighter", T_Fighter, waypoint);
+   type_setup(upkeep_file, "T_Tug", T_Tug, waypoint);
+   type_setup(upkeep_file, "T_Patcom", T_Patcom, waypoint);
+   type_setup(upkeep_file, "T_Interceptor", T_Interceptor, waypoint);
+   type_setup(upkeep_file, "T_Corvette", T_Corvette, waypoint);
+   type_setup(upkeep_file, "T_Freighter", T_Freighter, waypoint);
+   type_setup(upkeep_file, "T_Destroyer", T_Destroyer, waypoint);
+   type_setup(upkeep_file, "T_Cruiser", T_Cruiser, waypoint);
+   type_setup(upkeep_file, "T_Carrier", T_Carrier, waypoint);
+
+   INIFile.Destroy(upkeep_file);
+
+   // Save this stuff for future lookups.
+   Global.CreateHandle("gt_fleet_update_data",GA_NoSave|GA_Write, waypoint);
+
+   // A few debug printouts of the first and last to be sure we loaded the data right.
+   debug_type(T_Utility,"T_Utility");
+   debug_type(T_Freighter,"T_Freighter");
+   debug_type(T_Carrier,"T_Carrier");
+}
+
+
+
+int UpkeepCost(int ship_type)
+{
+   hsim data;
+   
+   data = Sim.Cast(Global.Handle("gt_fleet_update_data"));
+
+   return Object.IntProperty(data, String.FormatInt("upkeep%d",ship_type));
+}
+
+
+
+int SellingValue(int ship_type)
+{
+   hsim data;
+
+   data = Sim.Cast(Global.Handle("gt_fleet_update_data"));
+
+   return Object.IntProperty(data, String.FormatInt("selling%d",ship_type));
+}
+
+
+int JumpFee( int ship_type)
+{
+   hsim data;
+   data = Sim.Cast(Global.Handle("gt_fleet_update_data"));
+
+   return Object.IntProperty(data, String.FormatInt("jump%d",ship_type));
+}
+
+
+debug_type(int ship_type, string type_name)
+{
+   debug {
+      Debug.PrintString(String.Join("Upkeep:",type_name));
+      Debug.PrintInt(UpkeepCost(ship_type));
+      Debug.PrintString("u ");
+      Debug.PrintInt(SellingValue(ship_type));
+      Debug.PrintString("s\n");
+   }
+}
+
+
+mining_rig_upkeep(hship rig)
+{
+   hfaction player_faction = tsFaction.PlayerFaction();
+   hhabitat station;
+   int mining_fee, richness;
+   list cargo_list;
+   hcargo cargo;
+   int i, total;
+   float pods, efficiency;
+   string global_name;
+   string email_sender;
+   string email_body;
+   string email_subject;
+   int id = Object.IDModulus(rig, 2147483647);
+   string save_key = String.Join("tsSS",String.FromInt(id));
+
+   save_key = String.Join(save_key, "fuel");
+
+   // is the ship docked to a station?
+   // is the station player owned?
+   // is the station a mine?
+   // charge the player a mining fee
+   // use some mining fuel
+   // calculate pods of cargo produced.
+   // find total types of cargo mine produces.
+   // add the pods to any cargo item that is 
+   // not at max production.
+
+   debug
+   {
+      Debug.PrintHandle(rig);
+      Debug.PrintString("\n");
+      Debug.PrintString("Mining Rig Upkeep\n");
+   }
+
+   if (iSim.IsDocked(rig)) {
+      debug Debug.PrintString("Rig docked\n");
+
+      station = iHabitat.Nearest(iMapEntity.SystemHabitatsInSystem(iSim.WorldName(rig)), rig);
+      if (iSim.IsDockedToStructure(rig, station)) {
+         debug Debug.PrintString("Rig docked to station\n");
+
+         debug {
+            Debug.PrintHandle(iSim.Faction(iSim.Cast(station)));
+            Debug.PrintString(" station faction\n");
+
+            Debug.PrintHandle(player_faction);
+            Debug.PrintString(" player faction\n");
+         }
+
+         if (player_faction == iSim.Faction(iSim.Cast(station))) {
+            debug Debug.PrintString("Rig station player\n");
+
+            // We only work mining stations.
+            if (is_mine(station)) {
+
+               debug Debug.PrintString("Rig in position\n");
+
+               // If we don't have fuel, we don't drill.
+               if (tsShip.Fuel(rig) > 0.1) {
+
+                  // Ok, the rig is in position. Charge the player a 
+                  // fee and produce some ore
+                  mining_fee = Object.IntProperty(rig, "miner");
+                  if (mining_fee < tsMoney.ShipAccount()) {
+                     debug Debug.PrintString("Rig charging\n");
+
+                     tsMoney.ChangeShipAccount(-1*mining_fee);
+                     // Ok, we read the richness of this asteroid. We
+                     // add cargo pods of stuff based on the richness.
+
+                     // The standard economy also starts out station inventories full
+                     // of cargo. we don't want to give the player that boost.
+                     // So we clear all the production back to zero.
+
+                     /*
+                     cargo_list = List.FromSet(tsEconomy.StationProducedCargo(iSim.Cast(station)));
+                     total = List.ItemCount(cargo_list);
+   
+                     for (i=0;i<total;++i) {
+                        cargo = iCargo.Cast(List.GetNth(cargo_list, i));
+   
+                        // Increment by one pod
+                        tsLInventory.ChangeInventory(iSim.Cast(station), cargo, 1);
+                     }
+                     */
+
+                     // Increment the global count of pods waiting for pickup.
+
+                     richness = tsStation.Richness(station);
+                     efficiency = Object.FloatProperty(rig,"mining_efficiency");
+
+                     pods = int2float(richness) * efficiency;
+
+                     global_name = String.Join("ts_mine", Sim.Name(station));
+
+                     if (Global.Exists(global_name)) {
+                        pods += Global.Float(global_name);
+                        Global.SetFloat(global_name, pods);
+                     } else {
+                        Global.CreateFloat(global_name, GA_Write, pods);
+                     }
+                  }// if player has funds to pay rig
+
+                  // Since we now have fuel, if we alerted the player, 
+                  // let them know we have been fueled.
+                  if (Global.Exists(save_key)) {
+                     Global.Destroy(save_key);
+                  }
+
+               } else {// if rig has no fuel
+
+                  if (!Global.Exists(save_key)) {
+                     // Alert the player if we have not yet.
+                     Global.CreateBool(save_key,GA_NoSave|GA_Write, true);
+
+                     // Send the player an email, and let them know the rig has no fuel.
+                     email_sender = Text.Field(Sim.Name(rig), FT_Text);
+                     email_sender = String.Join("Mining Ship ", email_sender);
+
+                     email_subject = Text.Field(Sim.Name(station), FT_Text);
+                     email_subject = String.Join("Out of Fuel ", email_subject);
+
+                     // Our mining rig "name" is out of fuel and mining has stopped. We are
+                     // located at "asteroid" in system "system". Please return ASAP.
+
+                     email_body = "<html><body>Our mining rig ";
+                     email_body = String.Join(email_body, Text.Field(Sim.Name(rig), FT_Text));
+                     email_body = String.Join(email_body, " is out of fuel and mining has stopped. We are located at ");
+                     email_body = String.Join(email_body, Text.Field(Sim.Name(station), FT_Text));
+                     email_body = String.Join(email_body, " in system ");
+                     email_body = String.Join(email_body, Text.Field(iSim.WorldName(station), FT_Text));
+                     email_body = String.Join(email_body, ". Please return ASAP.");
+                     email_body = String.Join(email_body, "</body></html>");
+
+                     tsMail.SendMail(tsMail.FindArchive("ShipMail"),
+                                                        email_sender,
+                                                        email_subject,
+                                                        email_body,
+                                                        "",
+                                                        String.FormatInt("Day %d", tsTime.GetDay()),
+                                                        false, //autodelete
+                                                        false,// mission critical
+                                                        false);  //html
+                  }
+               }// mining rig was out of fuel.
+            }// if station is a mine
+         } // if the mine belongs to the player
+      }// if the miner is docked to the mine
+   }// if the miner is docked at all
+}
+
+
+// Called by the player watch when the player gets nearby a station.
+// This creates cargo pods for any mining rigs the player is operating.
+ProduceCargo(hhabitat station)
+{
+   float pods;
+   int total_pods, i;
+   list cargo_list;
+   hcargo cargo;
+   string global_name;
+   hship pod;
+
+   global_name = String.Join("ts_mine", Sim.Name(station));
+                  
+   if (Global.Exists(global_name)) {
+      pods = Global.Float(global_name);
+      total_pods = float2int(pods);
+      pods = pods - int2float(total_pods);
+      Global.SetFloat(global_name, pods);
+
+      if (total_pods > 0) {
+         cargo_list = List.FromSet(tsEconomy.StationProducedCargo(iSim.Cast(station)));
+         cargo = iCargo.Cast(List.Head(cargo_list));
+
+         for (i=0;i<total_pods;++i) {
+            pod = iShip.Cast(tsPodUtil.CreateCargoPod(tsEconUtil.CargoType(cargo), "Player", "Player"));
+            Sim.SetCullable(pod, false);
+            Sim.PlaceRelativeTo(pod, station, 10km, 0, 0);
+         }
+      }
+   }
+}
+
+prospector_upkeep(hship explorer) {
+   hfaction empty_faction= tsFaction.EmptyFaction();
+   hfaction player_faction = tsFaction.PlayerFaction();
+   hhabitat station;
+   int prospecting_fee, study_days;
+   string global_name;
+   list cargo_list;
+   hcargo cargo;
+   int i, total;
+   string email_sender;
+   string email_body;
+   string email_subject;
+
+   // is the ship docked to a station?
+   // is the station empty?
+   // charge player search fee.
+   // update another day of completion.
+   // if the days are up, 
+   // change owning faction to player
+   // set inventory to zero.
+   // set growth to zero
+
+   debug
+   {
+      Debug.PrintHandle(explorer);
+      Debug.PrintString("\n");
+      Debug.PrintString("Prospector upkeep\n");
+   }
+
+
+   if (iSim.IsDocked(explorer)) {
+      debug Debug.PrintString("Prospector docked\n");
+
+      station = iHabitat.Nearest(iMapEntity.SystemHabitatsInSystem(iSim.WorldName(explorer)), explorer);
+      if (iSim.IsDockedToStructure(explorer, station)) {
+         debug Debug.PrintString("Prospector docked to station\n");
+
+         debug {
+            Debug.PrintHandle(iSim.Faction(iSim.Cast(station)));
+            Debug.PrintString(" station faction\n");
+
+            Debug.PrintHandle(empty_faction);
+            Debug.PrintString(" empty faction\n");
+         }
+
+         if (empty_faction == iSim.Faction(iSim.Cast(station))) {
+            debug Debug.PrintString("Prospector station empty\n");
+            // Only allow claiming of mine type stations.
+
+            if (is_mine(station)) {
+
+               debug Debug.PrintString("Prospector in position\n");
+
+               // Ok, the prospecting rig is in position. Charge the player a 
+               // fee and increment another day of prospecting.
+               prospecting_fee = Object.IntProperty(explorer, "prospector");
+               if (prospecting_fee < tsMoney.ShipAccount()) {
+
+                  debug Debug.PrintString("Prospector charging\n");
+
+                  tsMoney.ChangeShipAccount(-1*prospecting_fee);
+
+                  // Days are stored, attached to a stations name.
+                  global_name = String.Join("gt_prospect",Sim.Name(Sim.Cast(station)));
+
+                  if (Global.Exists(global_name)) {
+                     study_days = Global.Int(global_name);
+                  } else {
+                     Global.CreateInt(global_name, GA_Write, 0);
+                     study_days = 0;
+                  }
+
+                  ++study_days;
+                  Global.SetInt(global_name, study_days);
+
+                  if (study_days > Object.IntProperty(explorer,"study_days")) {
+                     // Reset to zero, for possible next claiming action.
+                     Global.SetInt(global_name, 0);
+
+                     debug Debug.PrintString("Prospector finished work\n");
+
+                     // We are done studying this asteroid, claim it for the
+                     // player.
+
+                     //iSim.SetFaction(iSim.Cast(station), player_faction);
+                     tsFaction.AddStation(station, player_faction);
+
+                     // Let the player see the station at any distance.
+                     iSim.SetSensorVisibility(station, true);
+
+                     // Send the player an email, and let them know the asteroid is thiers.
+                     email_sender = Text.Field(Sim.Name(explorer), FT_Text);
+                     email_sender = String.Join("Prospecting Ship ", email_sender);
+
+                     email_subject = Text.Field(Sim.Name(station), FT_Text);
+                     email_subject = String.Join("Asteroid Claimed ", email_subject);
+
+                     // The scientific survey of asteroid "asteroidname" in system "systemname"
+                     // has completed. The asteroid has "unusable" quality ore.
+
+                     email_body = "<html><body>The scientific survey of asteroid ";
+                     email_body = String.Join(email_body, Text.Field(Sim.Name(station), FT_Text));
+                     email_body = String.Join(email_body, " in system ");
+                     email_body = String.Join(email_body, Text.Field(iSim.WorldName(station), FT_Text));
+                     email_body = String.Join(email_body, " has completed. The asteroid has ");
+                     email_body = String.Join(email_body, tsStation.Richness2String(tsStation.Richness(station)));
+                     email_body = String.Join(email_body, " quality of ore.");
+                     email_body = String.Join(email_body, "</body></html>");
+
+
+                   tsMail.SendMail(tsMail.FindArchive("ShipMail"),
+                                                        email_sender,
+                                                        email_subject,
+                                                        email_body,
+                                                        "",
+                                                        String.FormatInt("Day %d", tsTime.GetDay()),
+                                                        false, //autodelete
+                                                        false,// mission critical
+                                                        false);  //html
+
+
+                     // The standard economy should no longer grow pods in this
+                     // station. Set the growth rate to nothing to prevent it.
+                     tsLInventory.SetGrowthRate(iSim.Cast(station), 0.0);
+
+
+                     // The standard economy also starts out station inventories full
+                     // of cargo. we don't want to give the player that boost.
+                     // So we clear all the production back to zero.
+
+                     cargo_list = List.FromSet(tsEconomy.StationProducedCargo(iSim.Cast(station)));
+                     total = List.ItemCount(cargo_list);
+
+                     for (i=0;i<total;++i) {
+                        cargo = iCargo.Cast(List.GetNth(cargo_list, i));
+
+                        tsLInventory.ClearInventory(iSim.Cast(station), cargo);
+                     }
+
+                  }// if study time finished
+               }// if player has funds to pay prospectors
+            }// if station is a mine
+         }// if the mine is empty and can be claimed
+      }// if the prospector is docked to the mine
+   }// if the prospector is docked at all
+}
+
+
+bool is_mine(hhabitat station)
+{
+   int station_type;
+
+   station_type = tsLProduction.GetType(iSim.Cast(station));
+
+   debug {
+      Debug.PrintString(String.FormatInt("station type %d\n", station_type));
+   }
+
+   switch (station_type) {
+   case HT_WaterMine:
+   case HT_OrganicsMine:
+   case HT_InorganicsMine:
+	case HT_BiomassMine:
+	case HT_CommonMetalsMine:
+	case HT_RareMetalsMine:
+	case HT_ExoticMetalsMine:
+	case HT_RadioactivesMine:
+	case HT_FusionableGasesMine:
+   case HT_NeutroniumMine:
+      return true;
+      break;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+
+
+
+/*
+
+;Example INI file format
+
+[T_Freighter]
+upkeep=5
+jump=20
+selling=10000
+
+
+
+
+*/
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+
+
+
+

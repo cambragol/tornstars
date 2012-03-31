@@ -1,0 +1,211 @@
+//*******************************************************************************************/
+//
+// tsLCenter.pog
+//
+// This package tracks the station center that is attached to any fleet or production
+// layer used to manage actual fleets of ships. Stations and Operations have one.
+//
+//  
+// 
+//
+// May 2004, Jon Freise
+//******************************************************************************************/
+
+package tsLCenter;
+
+uses 
+iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, 
+Task, Debug, iFaction, iSim, iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+iConversation, iFormation, Group, Text, iEmail, State, iTrafficCreation, 
+iRangeCheck,iRemotePilot, iRegion, iMissionTracker, iWingmen,
+iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+iStartSystem, iObjectives, iMultiplay, iCutsceneUtilities,
+iDirector, iEscort, 
+iLagrangePoint, iMusic, iGame, Stream,
+   tsLRoot;
+
+
+
+provides Create,
+         Save,
+         Restore,
+         GetCenter,
+         SetCenter,
+         GetsStationName,
+         GetSystemName,
+         GetAttached,
+         SetCullMarker,
+         GetCullMarker;
+
+
+
+
+prototype string GetsStationName(hisim producer);
+
+prototype string GetSystemName(hisim producer);
+
+prototype hmapentity GetCenter(hisim producer);
+
+prototype SetCenter(hisim producer, hmapentity center);
+
+prototype SetCullMarker(hmapentity center, bool player_near);
+
+
+
+Create(hisim producer, hmapentity center)
+{
+   Object.AddHandleProperty(producer,"gtsLCenterCenter", none);
+   SetCenter(producer, center);
+}
+
+
+
+
+
+Save(hisim producer)
+{
+   int id = tsLRoot.GetId(producer);
+   string station_name, system_name;
+   
+   station_name = GetsStationName(producer);
+   system_name = GetSystemName(producer);
+
+   Global.CreateString(String.FormatInt("gt_lcenter%d_station",id),GA_Write, station_name);
+   Global.CreateString(String.FormatInt("gt_lcenter%d_system",id),GA_Write, system_name);
+}
+
+
+
+
+Restore(hisim producer)
+{  
+   int id = tsLRoot.GetId(producer);
+   int supplies;
+   float fleets;
+   bool active;
+   string faction_name, station_name, system_name;
+   hmapentity center;
+
+   station_name = Global.String(String.FormatInt("gt_lcenter%d_station",id));
+   Global.Destroy(String.FormatInt("gt_lcenter%d_station",id));
+
+   system_name = Global.String(String.FormatInt("gt_lcenter%d_system",id));
+   Global.Destroy(String.FormatInt("gt_lcenter%d_system",id));
+
+   center = iMapEntity.FindByNameInSystem(station_name, system_name);
+
+      debug {
+         Debug.PrintString("tsCenter.Restoring Operation Center at\n");
+         Debug.PrintString(station_name);
+         Debug.PrintString(" ");
+         Debug.PrintString(system_name);
+         Debug.PrintString("\n");
+      }
+
+   Create(producer, center);
+
+   SetCullMarker(center, false);
+}
+
+
+
+
+string GetSystemName(hisim producer)
+{
+   hisim center;
+
+   center = GetCenter(producer);
+
+   if (none != center) {
+      return iSim.WorldName(center);
+   }
+   
+   return "";
+}
+
+
+string GetsStationName(hisim producer)
+{
+   hisim center;
+
+   center = GetCenter(producer);
+
+   if (none != center) {
+      return Sim.Name(center);
+   }
+
+   return "";
+}
+
+
+SetCenter(hisim producer, hmapentity center)
+{
+   list attach_list;
+   hisim old_center;
+
+   old_center = GetCenter(producer);
+
+   if (none != old_center) {
+      if (Object.PropertyExists(old_center,"gtsLCenterAttachList")) {
+         attach_list = Object.ListProperty(old_center,"gtsLCenterAttachList");
+         List.Remove(attach_list, producer);
+         Object.SetListProperty(old_center,"gtsLCenterAttachList", attach_list);
+      }
+   }
+
+   // Setup the new center
+   Object.SetHandleProperty(producer,"gtsLCenterCenter", center);
+
+
+   // Make sure this is not clearing the new center.
+   if (none != center) {
+
+      if (!Object.PropertyExists(center,"gtsLCenterAttachList")) {
+         List.AddTail(attach_list, producer);
+         Object.AddListProperty(center,"gtsLCenterAttachList", attach_list);
+      }else {
+         attach_list = Object.ListProperty(center,"gtsLCenterAttachList");
+         List.AddTail(attach_list, producer);
+         Object.SetListProperty(center,"gtsLCenterAttachList", attach_list);
+      }
+   }
+}
+
+
+
+hmapentity GetCenter(hisim producer)
+{
+   return iMapEntity.Cast(Object.HandleProperty(producer,"gtsLCenterCenter"));
+}
+
+
+
+list GetAttached(hisim center)
+{
+   return Object.ListProperty(center,"gtsLCenterAttachList");
+}
+
+
+
+SetCullMarker(hmapentity center, bool player_near)
+{
+   if (Object.PropertyExists(center,"gtsLCenterCullMark")) {
+      Object.SetBoolProperty(center,"gtsLCenterCullMark", player_near);
+   }else {
+      Object.AddBoolProperty(center,"gtsLCenterCullMark", player_near);
+   }
+}
+
+
+bool GetCullMarker(hisim center)
+{
+   return Object.BoolProperty(center,"gtsLCenterCullMark");
+}
+ 
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

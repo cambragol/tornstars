@@ -1,0 +1,84 @@
+//*******************************************************************************************/
+//
+// tsDistress.pog
+//
+// This module implements ships signalling other groups of ships if they get attacked.
+// It uses the tsEvent package.
+// 
+//
+// April 2006, jon freise
+//******************************************************************************************/
+
+package tsDistress;
+
+uses    Sim,
+iShip,
+iSim,
+Debug,
+Global,
+GUI,
+Input,
+List,
+Object,
+String,
+Task,
+Text,
+Math,
+iGame,
+   tEpicEventEnum,
+   tsEvent;
+
+provides Send;
+         
+
+
+//SendEvent(hobject listener, int priority, int event_type, hisim location, hisim target, hisim sender)
+
+// Send this event to all groups of ships within specified distance.
+// priority is of type enum eShipEventPriority
+// event_type is of type enum eEpicShipEvent
+Send(int priority, int event_type, hisim location, hisim target, hisim sender, float distance)
+{
+   set ships, groups;
+   hship ship;
+   hgroup owner_group = Sim.Group(sender);
+   hgroup nearby_group;
+
+   ships = iSim.ShipsInRadius(sender, distance);
+
+   // Don't let the distress call get sent back to the senders group.
+   if (owner_group != none) {
+      Set.Add(groups, owner_group);
+   }
+
+   while (!Set.IsEmpty(ships)) {
+      ship = iShip.Cast(Set.FirstElement(ships));
+      Set.Remove(ships, ship);
+
+      nearby_group = Sim.Group(ship);
+
+      if (none != nearby_group) {
+         if (!Set.Contains(groups, nearby_group)) {
+            Set.Add(groups, nearby_group);
+
+            tsEvent.SendEvent(nearby_group, 
+                              priority, 
+                              event_type, 
+                              location, 
+                              target, 
+                              sender);            
+         }
+      }
+   }
+}
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+

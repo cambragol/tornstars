@@ -1,0 +1,68 @@
+Center,emerald_sys_center,0,0,0,1,0,0,0,0,,,end,,,,,,,,,,,,,,,
+
+;Star, name, parent, distance, rotation, elevation, magnitude, end,,,,,,,,,,,,,,,,,,,,
+Star,Emerald Alpha,emerald_sys_center,0,0,0,5,end,,,,,,,,,,,,,,,,,,,,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),"	Texture Type", Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end
+Body,Ruby,Emerald Alpha,3000000000,0,0,1,0,0,0,1010010.071,2,1,18,6,200,200,200,55,55,55,127,44,34,255,0,0,end
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),"	Texture Type", Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end
+Body,Blackstone,Ruby,400000000,0,0,1,0,0,0,266174.81,3,1,18,43,117,144,141,15,15,15,127,44,34,255,0,0,end
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),"	Texture Type", Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end
+Body,Bloodstone,Ruby,480000000,30,0,1,0,0,0,264932.0963,3,1,5,51,135,125,115,15,15,15,127,44,34,255,0,0,end
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),"	Texture Type", Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end
+Body,Sapphire,Emerald Alpha,4500000000,30,0,1,0,0,0,1119876.705,2,1,2,11,200,200,200,55,55,55,127,44,34,255,0,0,end
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),"	Texture Type", Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end
+Body,Moonstone,Sapphire,400000000,30,0,1,0,0,0,254414.8446,3,1,5,54,122,105,100,15,15,15,127,44,34,255,0,0,end
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),"	Texture Type", Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end
+Body,Emerald,Emerald Alpha,6750000000,60,0,1,0,0,0,1071291.238,2,1,56,56,200,200,200,55,55,55,127,44,34,255,0,0,end
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,,,,,,,,,,,,,,
+Station,Emerald Beanstalk Orbital,Emerald,2142582.476,0,0,1,0,0,13,36,6,10,end,,,,,,,,,,,,,,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,,,,,,,,,,,,,,
+Station,Emerald STC,Emerald,2142582.476,127,0,1,0,0,19,68,6,10,end,,,,,,,,,,,,,,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,,,,,,,,,,,,,,
+Station,Emerald Defense Station,Emerald,2142582.476,254,0,1,0,0,20,71,7,10,end,,,,,,,,,,,,,,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,,,,,,,,,,,,,,
+Station,Emerald Waystation Station,Emerald,2142582.476,21,0,1,0,0,21,36,6,10,end,,,,,,,,,,,,,,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),"	Texture Type", Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end
+Body,Pearl,Emerald,400000000,60,0,1,0,0,0,257557.6037,3,1,17,45,130,130,108,15,15,15,127,44,34,255,0,0,end
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,,,,,,,,,,,,,,
+Station,Pearl Research Station,Pearl,515115.2074,0,0,1,0,0,13,40,6,10,end,,,,,,,,,,,,,,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (giant),"	Texture Type", Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end
+Body,Jade,Emerald Alpha,10125000000,90,0,1,0,0,0,66413159.58,4,2,5,0,200,200,200,149,138,114,127,116,96,0,5,255,end
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),"	Texture Type", Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end
+Body,Crystal,Jade,400000000,90,0,1,0,0,0,4387440.107,3,1,1,45,139,140,125,15,15,15,127,44,34,255,0,0,end
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,,,,,,,,,,,,,,
+Station,Jade Manufacturing Station,Crystal,8774880.215,0,0,1,0,0,22,22,6,10,end,,,,,,,,,,,,,,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),"	Texture Type", Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end
+Body,Beryl,Jade,480000000,120,0,1,0,0,0,3797914.06,3,1,28,48,147,146,126,15,15,15,127,44,34,255,0,0,end
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,,,,,,,,,,,,,,
+Station,Emerald Shipyard,Beryl,7595828.12,0,0,1,0,0,23,21,6,10,end,,,,,,,,,,,,,,
+
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (planet),"	Texture Type", Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end
+Body,Diamond,Emerald Alpha,15187500000,120,0,1,0,0,0,2138706.626,2,1,14,7,200,200,200,55,55,55,127,44,34,255,0,0,end
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),"	Texture Type", Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end
+Body,Zircon,Diamond,400000000,120,0,1,0,0,0,495459.4431,3,1,6,49,142,149,149,15,15,15,127,44,34,255,0,0,end
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,,,,,,,,,,,,,,
+Station,Military Outpost,Zircon,990918.8863,0,0,1,0,0,24,71,7,10,end,,,,,,,,,,,,,,
+;Body, Name, Parent, Distance, Rotation, Elevation, Orientation X, Y, Z, Y Scale, Body Radius, Body Type (moon),"	Texture Type", Texture Map 1, Texture Map 2,Red Low, Blue Low, Green Low, Red High, Green High, Blue High, Red Unk, Green Unk, Blue Unk, Cloud Texture Map, Number Rings, Cloud Opacity, end
+Body,Opal,Diamond,480000000,150,0,1,0,0,0,424079.5973,3,1,12,38,114,142,101,15,15,15,127,44,34,255,0,0,end
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,,,,,,,,,,,,,,
+Station,MelNet FTL Relay,Opal,848159.1946,0,0,1,0,0,25,88,38,10,end,,,,,,,,,,,,,,
+;Station, name, parent, distance, rotation, elevation, orientation x, y, z, station model, hab type, faction, populatin, end,,,,,,,,,,,,,,
+Station,Icy Stone,Opal,848159.1946,127,0,1,0,0,26,115,0,10,end,,,,,,,,,,,,,,
+Station,Test A,Opal,848159.1946,127,0,1,0,0,27,115,0,10,end,,,,,,,,,,,,,,
+Station,Test B,Opal,848159.1946,127,0,1,0,0,28,115,0,10,end,,,,,,,,,,,,,,
+Station,Test C,Opal,848159.1946,127,0,1,0,0,29,115,0,10,end,,,,,,,,,,,,,,
+Station,Test D,Opal,848159.1946,127,0,1,0,0,30,115,0,10,end,,,,,,,,,,,,,,
+Station,Test E,Opal,848159.1946,127,0,1,0,0,31,115,0,10,end,,,,,,,,,,,,,,
+Station,Test F,Opal,848159.1946,127,0,1,0,0,32,115,0,10,end,,,,,,,,,,,,,,
+Station,Test G,Opal,848159.1946,127,0,1,0,0,33,115,0,10,end,,,,,,,,,,,,,,
+Station,Test H,Opal,848159.1946,127,0,1,0,0,34,115,0,10,end,,,,,,,,,,,,,,
+Station,Test I,Opal,848159.1946,127,0,1,0,0,35,115,0,10,end,,,,,,,,,,,,,,
+Station,Test J,Opal,848159.1946,127,0,1,0,0,36,115,0,10,end
+Station,Test K,Opal,848159.1946,127,0,1,0,0,0,115,0,10,end
+Lpoint,Crystal Lpoint,Jade,Crystal,0.5,2,huang,bedalov,end,,,,,
+Lpoint,Beryl Lpoint,Jade,Beryl,0.5,2,penda,providence,end,,,,,

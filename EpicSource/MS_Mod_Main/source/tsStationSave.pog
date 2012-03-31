@@ -1,0 +1,784 @@
+//*******************************************************************************************/
+//
+// tsStationSave
+//
+// Handles the save and restore of station objects.
+// 
+// 
+//
+// 
+//
+// April 2004, Jon Freise
+//******************************************************************************************/
+
+package tsStationSave;
+
+uses 
+iShip, Global, Object, Sim, Input, iMapEntity, Math, iAI, 
+Task, Debug, iFaction, iSim, iFactionScript, iComms, INIFile, iUtilities, iPilotSetup,
+iConversation, iFormation, Group, Text, iEmail, State, iTrafficCreation, 
+iRangeCheck,iRemotePilot, iRegion, iMissionTracker, iWingmen,
+iCargoScript, iShipCreation, iHUD, iScriptedOrders, iStation, 
+iStartSystem, 
+iLagrangePoint, 
+   iGame, 
+   Stream, 
+   iDockport,
+   tsEconUtil,
+   tEpicFactionEnum,
+   tsFaction,
+   tsStationEnum,
+   tsStation,
+   tsStationRules,
+   tsLRoot,
+   tsLProduction,
+   tsLFleet,
+   tsLCenter,
+   tsLTrade,
+   iRangeCheck,
+   tsStarSystem;
+
+
+
+
+provides 
+   RestoreAllStations,
+   SaveAllStations,
+   ReadSystemIni,
+   SaveSystem,
+   RestoreSystem,
+   ReadNewStations,
+   BaseExit,
+   SessionStart;
+
+
+enum eSystemVisible{
+   esvKnown = 0,
+   esvUnknown=1,
+   esvHidden=2
+};
+
+
+prototype bool station_map_visible(int station_type, eSystemVisible system);
+prototype bool station_known(int station_type, eSystemVisible system);
+
+prototype eSystemVisible string2visible(string visible_name);
+
+prototype bool is_allowed_station(hhabitat station, hfaction owner);
+
+
+
+/* 
+   Store all pog created stations into globals.
+   
+   First need:
+   Name
+   Template   
+   
+   Id
+   Faction
+   Type
+   Location: Vector property on sim object
+*/
+
+save_station(hhabitat station)
+{
+   int id = tsLRoot.GetId(iSim.Cast(station));
+   int status, build_time, reactor_time, control_time, richness;
+   string faction_name;
+   bool known, awake;
+   
+   status = tsStation.Status(station);
+
+   build_time = tsStation.ChangeTime(station);
+   reactor_time = tsStation.ReactorBuildTime(station);
+   control_time = tsStation.ControlBuildTime(station);
+//   faction_name = Sim.Name(tEpicFaction.Faction(station));
+   faction_name = iFaction.Name(iSim.Faction(station));
+   richness = tsStation.Richness(station);
+   known = tsStation.IsKnown(station);
+   awake = tsStation.IsAwake(station);
+
+   Global.CreateInt(String.FormatInt("gt_tstationsave%d_status",id),GA_Write, status);
+   Global.CreateInt(String.FormatInt("gt_tstationsave%d_build",id),GA_Write, build_time);
+   Global.CreateInt(String.FormatInt("gt_tstationsave%d_reactor",id),GA_Write, reactor_time);
+   Global.CreateInt(String.FormatInt("gt_tstationsave%d_control",id),GA_Write, control_time);
+   Global.CreateString(String.FormatInt("gt_tstationsave%d_faction",id),GA_Write, faction_name);
+   Global.CreateInt(String.FormatInt("gt_tstationsave%d_richness",id),GA_Write, richness);
+   Global.CreateBool(String.FormatInt("gt_tstationsave%d_known",id),GA_Write, known);
+   Global.CreateBool(String.FormatInt("gt_tstationsave%d_awake",id),GA_Write, awake);
+}
+
+
+restore_station(hhabitat station)
+{
+   int id = tsLRoot.GetId(iSim.Cast(station));
+   int build_time, reactor, control, richness;
+   string faction_name;
+   bool known, awake;
+
+   eStationStatus status;
+
+   status = Global.Int(String.FormatInt("gt_tstationsave%d_status",id));
+   Global.Destroy(String.FormatInt("gt_tstationsave%d_status",id));
+
+   build_time = Global.Int(String.FormatInt("gt_tstationsave%d_build",id));
+   Global.Destroy(String.FormatInt("gt_tstationsave%d_build",id));
+
+   reactor = Global.Int(String.FormatInt("gt_tstationsave%d_reactor",id));
+   Global.Destroy(String.FormatInt("gt_tstationsave%d_reactor",id));
+
+   control = Global.Int(String.FormatInt("gt_tstationsave%d_control",id));
+   Global.Destroy(String.FormatInt("gt_tstationsave%d_control",id));
+
+   faction_name = Global.String(String.FormatInt("gt_tstationsave%d_faction",id));
+   Global.Destroy(String.FormatInt("gt_tstationsave%d_faction",id));
+
+   richness = Global.Int(String.FormatInt("gt_tstationsave%d_richness",id));
+   Global.Destroy(String.FormatInt("gt_tstationsave%d_richness",id));
+
+   known = Global.Bool(String.FormatInt("gt_tstationsave%d_known",id));
+   Global.Destroy(String.FormatInt("gt_tstationsave%d_known",id));
+
+   awake = Global.Bool(String.FormatInt("gt_tstationsave%d_awake",id));
+   Global.Destroy(String.FormatInt("gt_tstationsave%d_awake",id));
+
+   tsStation.Create(station, faction_name, status, build_time, reactor, control, richness, known, awake);
+
+   // Turn off the PS traffic if the station is not owned by anyone, or
+   // if the station is owned by the player.
+   /*
+   if (("Neutral" == faction_name) || ("Player" == faction_name)) {
+      iRangeCheck.AddTrafficException ( station );
+   }
+   */
+
+   // Turn off the PS traffic if the station state is not normal,
+   // building, or faction leaving or fleeing the station.
+   /*
+   if (!(status & (ESS_Normal|ESS_Building|ESS_Leaving|ESS_Fleeing))) {
+
+      iRangeCheck.AddTrafficException ( station );
+   }
+   */
+
+
+}
+
+
+
+
+SaveSystem(string system)
+{
+   hhabitat station;
+   list station_list;
+   int i, total, id;
+   string name, save_name;
+
+
+   debug Debug.PrintString("Station: saving system ");
+   debug Debug.PrintString(system);
+   debug Debug.PrintString("\n");
+
+   // Save the attributes of every station in the system.
+   // Save attributes.
+
+   station_list = List.FromSet(iMapEntity.SystemHabitatsInSystem(system));
+   total = List.ItemCount(station_list);
+
+   for (i=0;i<total;++i) {
+      station = iHabitat.Cast(List.GetNth(station_list,i));
+
+      save_station(station);
+
+      tsLProduction.Save(iSim.Cast(station));
+
+      tsLFleet.Save(iSim.Cast(station));
+      tsLCenter.Save(iSim.Cast(station));
+
+      tsLTrade.Save(iSim.Cast(station));
+
+      id = tsLRoot.GetId(station);
+      name = Sim.Name(station);
+
+      save_name = String.Join(name,system);
+      save_name = String.Join("gt_ssave", save_name);
+      Global.CreateInt(save_name, GA_Write, id);
+   }
+}
+
+
+
+
+RestoreSystem(string system)
+{
+   int i, total, id;
+   hhabitat station;
+   string save_name, name;
+   list station_list;
+   int ptype;
+   hbody parent;
+
+   debug {
+      Debug.PrintString("tsStationSave.RestoreSystem");
+      Debug.PrintString(system);
+      Debug.PrintString("\n");
+   }
+
+   station_list = List.FromSet(iMapEntity.SystemHabitatsInSystem(system));
+   total = List.ItemCount(station_list);
+
+   for (i=0;i<total;++i) {
+      station = iHabitat.Cast(List.GetNth(station_list,i));
+
+      name = Sim.Name(station);
+
+      save_name = String.Join(name,system);
+      save_name = String.Join("gt_ssave", save_name);
+
+      id = Global.Int(save_name);
+      Global.Destroy(save_name);
+
+      tsLRoot.SetId(iSim.Cast(station), id);
+
+      restore_station(station);
+
+      tsLProduction.Restore(iSim.Cast(station));
+
+
+
+      tsLFleet.Restore(iSim.Cast(station));
+
+      tsLCenter.Restore(iSim.Cast(station));
+
+      tsLTrade.Restore(iSim.Cast(station));
+
+      ptype = tsLProduction.GetType(station);
+
+      tsStation.SetCategory(station, 
+                           tsEconUtil.StationType2Category( ptype ));
+
+
+      // We aim the station at it's planet. This allows beanstalks
+      // and other odd stations to have proper orientation.
+      parent = iBody.Nearest(iMapEntity.SystemBodiesInSystem(system), station);
+      if (none != parent) {
+         Sim.PointAt(station, parent);
+      }
+
+
+   }// For each station in the system.
+}
+
+/* 
+   Called on the first enter space after a new game has started.
+
+   It loads the default stations 
+   
+   Ini file entry needs
+   
+   parent body name
+   orbital distance
+   orbital angle around parent (360)
+   orbital angle above/below parent (90-0-180)
+   name
+   type
+   faction
+   template
+   
+   parent_body[] string
+   orbital_distance[] float
+   orbital_angle_around[] float
+   orbital_angle_above[] float
+   name[] string
+   type[] int
+   faction[] string 
+   template[] string
+
+   Using angles allows the stations to move with the parents. So geography 
+   redefines are less painful.
+   
+   
+   These values go under [starting_stations] in the system info file.
+   
+*/
+
+ReadSystemIni(string system_file, string system)
+{
+   hinifile sys_info= INIFile.Create(system_file);
+
+   int count;
+
+   string name, efaction_name, status_string, visible_name;
+   int destroyed_int, build_int, hidden_int, visible_int, type;
+
+   bool destroyed, hidden, visible, known;
+   int build_time, id, richness;
+   int fleets, supplies;
+   hhabitat station;
+
+   hfaction station_faction;
+   
+   eSystemVisible system_visible;
+   eStationStatus status;
+
+   hbody parent;
+
+   hfaction empty_faction = iFaction.Find("Neutral");
+	
+   set switchports;
+
+
+   count = 0;
+
+   debug {
+      Debug.PrintString("tsStationSave.ReadSystemIni\n");
+      Debug.PrintString("System ini file: ");
+      Debug.PrintString(system_file);
+      Debug.PrintString("\n");
+      Debug.PrintString("System: ");
+      Debug.PrintString(system);
+      Debug.PrintString("\n");
+   }
+
+
+   debug {
+      if (none == sys_info) {
+         Debug.PrintString("tsStationSave.ReadSystemIni error system file missing\n");
+         return;
+      }
+   }
+
+
+   system_visible = string2visible(INIFile.String(sys_info,"SystemProperties","visibility", "known"));
+
+   
+   // Mark the system hidden on the map. Not the best to hide this here, but 
+   // we have all the files open.
+   if (esvHidden == system_visible) {
+      tsStarSystem.SetKnown(system, false);
+   }else {
+      tsStarSystem.SetKnown(system, true);
+   }
+
+
+   while (INIFile.NumberedExists(sys_info,"starting_stations","name",count)) {
+
+      // read strings
+      name = INIFile.NumberedString(sys_info,"starting_stations","name",count,"");
+
+      efaction_name = INIFile.NumberedString(sys_info,"starting_stations","faction",count,"F_Empty");
+
+      // read ints
+      type = INIFile.NumberedInt(sys_info,"starting_stations","type",count,0);
+
+      status_string = INIFile.NumberedString(sys_info,"starting_stations","status",count,"Junk");
+
+      richness = INIFile.NumberedInt(sys_info,"starting_stations","richness",count,0);
+      
+      //*************************
+      // Check the faction for the station is correct
+      
+      station_faction = tsFaction.EFind(efaction_name);
+
+      if (none == station_faction) {
+         debug{
+            Debug.PrintString("tsStationSave.ReadSystemIni Error\n");
+            Debug.PrintString(efaction_name);
+            Debug.PrintString(" faction name error.\n");
+         }
+      }
+      
+      
+      //*************************
+      // Info read in, now adjust geography to match.
+
+      build_time = 0;
+      status = ESS_Normal;
+      destroyed = false;
+      hidden = false;
+
+//      faction = tEpicFaction.Find(faction_name);
+
+      // do we display on the map?
+      visible = station_map_visible(type, system_visible);
+
+      known = station_known(type, system_visible);
+      
+      fleets = 0;
+      supplies = 0;
+
+      // The flags control the status, and construction
+      if ("NeverBuilt" == status_string ) {
+         status = ESS_NeverBuilt;
+         hidden = true;
+         destroyed = true;
+         visible = false;
+
+      } else if ("Empty" == status_string ) {
+         status = ESS_Empty;
+         hidden = false;
+         destroyed = false;
+
+      } else if ("Building" == status_string ) {
+         status = ESS_Building;
+         hidden = false;
+         destroyed = false;
+
+         build_time = 30;
+      } else if ("Destroyed" == status_string ) {
+         status = ESS_Destroyed;
+         hidden = false;
+         destroyed= true;
+
+      } else if ("Normal" == status_string ) {
+         status = ESS_Normal;
+         hidden = false;
+         destroyed = false;
+         fleets = 200;
+         supplies = 200;
+      }else {
+         debug Debug.PrintString("Error: StationSave.ReadINI Invalid station status\n");
+      }
+
+      station = iHabitat.Cast(iSim.FindByNameInSystem(name, system));
+
+      // create the station
+      tsStation.Create(station, iFaction.Name(station_faction), status, build_time, 0, 0, richness, known, true);
+
+      id = tsLRoot.NewId();
+      tsLRoot.SetId(iSim.Cast(station), id);
+
+      tsLProduction.Create(iSim.Cast(station), type, 20000, 0, 0, true);
+
+      // Test value of 1 fleet and 10 supplies.
+      tsLFleet.Create(iSim.Cast(station), fleets, supplies, 500, 500);
+      tsLCenter.Create(iSim.Cast(station), station);
+
+      // Setup the trade interface for this station.
+      tsLTrade.Create(iSim.Cast(station), "ini:/station_cargo", tsEconUtil.StationIntToString(type)); 
+
+      // We only do the build when the station is operational.
+
+      tsStation.SetDestroyed(station, destroyed);
+      tsStation.SetHidden(station, hidden);
+      tsStation.SetMapVisibility(station, visible);
+
+      
+      tsStation.SetCategory(station, tsEconUtil.StationType2Category( type));
+
+	//if (tsStation.Category2String(tsStation.Category(station)) == "ESC_Mine") {
+		//if (tsStation.Status2String(tsStation.Status(station)) == "ESS_Empty") {
+
+
+      	if (empty_faction == station_faction) {
+			switchports = iDockport.DockportsOfType(station, DT_Freight, DS_Any);
+			while (!Set.IsEmpty(switchports)) {
+				iDockport.Disable(iDockport.Cast(Set.FirstElement(switchports)));
+				Set.Remove(switchports, Set.FirstElement(switchports));
+			}
+
+			switchports = iDockport.DockportsOfType(station, DT_Universal, DS_Any);
+			while (!Set.IsEmpty(switchports)) {
+				iDockport.Disable(iDockport.Cast(Set.FirstElement(switchports)));
+				Set.Remove(switchports, Set.FirstElement(switchports));
+			}
+
+			switchports = iDockport.DockportsOfType(station, DT_Fuel, DS_Any);
+			while (!Set.IsEmpty(switchports)) {
+				iDockport.Disable(iDockport.Cast(Set.FirstElement(switchports)));
+				Set.Remove(switchports, Set.FirstElement(switchports));
+			}
+
+		}
+	//}
+			
+			
+
+      // Turn off the PS traffic if the station is not owned by anyone, or
+      // if the station is owned by the player.
+      /*
+      if (("Neutral" == faction_name) || ("Player" == faction_name)) {
+         iRangeCheck.AddTrafficException ( station );
+      }
+      */
+
+      // Turn off the PS traffic if the station state is not normal,
+      // building, or faction leaving or fleeing the station.
+      /*
+      if (!(status & (ESS_Normal|ESS_Building|ESS_Leaving|ESS_Fleeing))) {
+         iRangeCheck.AddTrafficException ( station );
+      }
+      */
+
+      parent = iBody.Nearest(iMapEntity.SystemBodiesInSystem(system), station);
+      if (none != parent) {
+         Sim.PointAt(station, parent);
+      }
+
+      if (empty_faction != station_faction) {
+         is_allowed_station(station, station_faction);
+      }
+
+      ++count;
+   }
+
+   INIFile.Destroy(sys_info);
+}
+
+
+
+
+// Called at system enter, this function will 
+// restore the state of all stations in the cluster.
+
+RestoreAllStations()
+{
+   hinifile geog;
+   hisim station;
+   int count;
+   string system_name, station_file;
+   bool first = false;
+
+   if (Global.Bool("gt_station_restore_done")) {
+      // system enter will happen many times, we don't want to 
+      // reinit the stations unless the player has returned to base.
+      // This global locks out repeated restores. Set false
+      // by session enter (load) and base exit.
+      return;
+   }
+
+   Global.SetBool("gt_station_restore_done", true);
+
+   // If the first restore after a new game, read the stations out of
+   // an INI file for extra information.
+   first = Global.Bool("gt_station_first_create");
+
+
+   geog = INIFile.Create("ini:/geog/clusters");
+
+   count = 0;
+   while (INIFile.NumberedExists(geog,"badlands","system",count)) {
+      system_name = INIFile.NumberedString(geog,"badlands","system",count,"invalid");
+      
+      if (first){
+
+         station_file = String.Join("ini", String.TrimLeft(system_name,3));
+         ReadSystemIni(station_file, system_name);
+
+      }else {
+      
+         RestoreSystem(system_name);
+         
+      }
+      ++count;
+   }
+
+   if (first) {
+      // Fill up all the stations with supported operations.
+      tsStationRules.InitAllStations();
+   }
+
+   INIFile.Destroy(geog);
+}
+
+
+// Called by save game. Saves the current state of the stations.
+
+SaveAllStations()
+{
+   hinifile geog;
+   hisim station;
+   int count,i,total, habtype;
+   string system_name;
+   list station_list;
+   bool visible;
+
+   debug Debug.PrintString("Station: Saving all stations\n");
+
+   // Tell restore code we can restore safely.
+   Global.SetBool("gt_station_first_create", false);
+
+   geog = INIFile.Create("ini:/geog/clusters");
+
+   if (none == geog) {
+      debug Debug.PrintString("Station: Geog file not found!\n");      
+   }
+
+   count = 0;
+   while (INIFile.NumberedExists(geog,"badlands","system",count)) {
+      system_name = INIFile.NumberedString(geog,"badlands","system",count,"invalid");
+      SaveSystem(system_name);
+      ++count;
+   }
+
+   INIFile.Destroy(geog);
+}
+
+// Must be called by a new game to cause the ini files to be read and the 
+// new stations to be created. This is only done after a new game is
+// started.
+
+ReadNewStations()
+{
+   Global.CreateBool("gt_station_first_create",GA_Write,true);
+}
+
+
+BaseExit()
+{
+   //debug Debug.PrintString("Station: BaseExit\n");
+
+   Global.CreateBool("gt_station_restore_done",GA_Write|GA_NoSave, false);
+}
+
+
+SessionStart()
+{
+   Global.CreateBool("gt_station_restore_done",GA_Write|GA_NoSave, false);
+}
+
+
+
+// Returns if a station should be hidden on the map.
+// If the whole system is hidden, then stations are always hidden.
+// If the whole system is known, then only pirate stations are hidden.
+bool station_map_visible(int station_type, eSystemVisible system)
+{
+   bool visible;
+
+   if (esvHidden == system) {
+      visible = false;
+   }else {
+      visible = true;
+   }
+
+   switch (station_type) {
+   case ept_PirateBase :
+   case ept_PirateCove :
+   case ept_PirateOutpost:
+   case ept_BlackMarket:
+   case ept_GangsterHideout:
+   case ept_Hideout:
+      return false;
+      break;
+   default:
+      break;
+   }
+
+   return visible;
+}
+
+
+// Returns if a station details should be known to the player.
+// If the whole system is hidden, then stations are always unknown
+// If the whole system is unknown, then stations are unknown
+// If the whole system is known, then the station details are known.
+// Pirates are always unknown.
+bool station_known(int station_type, eSystemVisible system)
+{
+   bool known;
+
+   if (esvKnown == system) {
+      known = true;
+   }else {
+      known = false;
+   }
+
+   switch (station_type) {
+   case ept_PirateBase :
+   case ept_PirateCove :
+   case ept_PirateOutpost:
+   case ept_BlackMarket:
+   case ept_GangsterHideout:
+   case ept_Hideout:
+      return false;
+      break;
+   default:
+      break;
+   }
+
+   return known;
+}
+
+eSystemVisible string2visible(string visible_name)
+{
+   if ("known" == visible_name) {
+      return esvKnown;
+
+   }else if ("unknown" == visible_name) {
+      return esvUnknown;
+
+   }else if ("hidden" == visible_name) {
+      return esvHidden;
+   }
+
+   return esvKnown;
+}
+
+
+
+bool is_allowed_station(hhabitat station, hfaction owner)
+{
+   int faction_type = tsFaction.Type(owner);
+   int station_type = tsLProduction.GetType(station);
+
+   if ((FCT_Independent|FCT_MegaCorp) == faction_type){
+      if (tsEconUtil.IsAllowedIndependent(station_type)){
+         return true;
+      }
+   }else if (FCT_Navy == faction_type){
+      if (tsEconUtil.IsAllowedGovernment(station_type)){
+         return true;
+      }
+   }else if (FCT_Pirate == faction_type){
+      if (tsEconUtil.IsAllowedPirate(station_type)){
+         return true;
+      }
+   }else if ((FCT_Independent|FCT_Pirate) == faction_type){
+      if (tsEconUtil.IsAllowedPirate(station_type)){
+         return true;
+      }
+   }else if (FCT_Rebel == faction_type){
+      if (tsEconUtil.IsAllowedRebel(station_type)){
+         return true;
+      }
+   }else if (FCT_MegaCorp == faction_type){
+      if (tsEconUtil.IsAllowedMegaCorp(station_type)){
+         return true;
+      }
+   }else if (FCT_Mercenary == faction_type){
+      if (tsEconUtil.IsAllowedMercenary(station_type)){
+         return true;
+      }
+   }
+
+   debug {
+      Debug.PrintString("tsStationSave Error invalid station owner\n");
+      Debug.PrintString(Sim.Name(station));
+      Debug.PrintString(" ");
+      Debug.PrintString(iSim.WorldName(station));
+      Debug.PrintString("\n");
+      Debug.PrintString(tsFaction.EName(owner));
+      Debug.PrintString(" ");
+      Debug.PrintHandle(owner);
+      Debug.PrintString("\n");
+      Debug.PrintString(" \n");
+   }
+
+   return false;
+}
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+

@@ -1,0 +1,433 @@
+//*****************************************************************************/
+//
+// tsChangeIdGui.pog
+//
+// 
+// 
+// 
+// 
+//
+// May 2004, James Walker
+//
+// Last Edit: 
+//****************************************************************************/
+
+
+package		tsChangeIdGui;
+
+
+uses
+	Debug,
+	String,
+	INIFile,
+//	iMapEntity,
+	List,
+//	Set,
+	Global,
+	Sim,
+//	iEmail,
+//	iHabitat,
+	iShip,
+	iFaction,
+//	iFactionScript,
+//	iScriptedOrders,
+//	Task,
+//	Math,
+//	iFormation,
+//	iShipCreation,
+//	iComms,
+//	Object,
+//	State,
+//	iCargo,
+	iInventory,
+//	iAI,
+//	iPilotSetup,
+//	iUtilities,
+//	iConversation,
+//	Text,
+//	iLagrangePoint,
+//	Group,
+//	Object,
+//	iMissionTracker,
+//	iCutsceneUtilities,
+	iHUD,
+//	iGame,
+//	iRemotePilot,
+//	iDirector,
+//	iLoadout,
+	GUI,
+	iGUI,
+//	Config,
+//	iMultiplay,
+//	Input,
+//	iRegion,
+	UniGUI,
+	tsFactionEnum,
+	tsFaction,
+	tsGuiEnum,
+	tsGui,
+	tsSaveGui,
+   tsStationEnum,
+	tsMoney;
+
+	
+provides
+	DisplayWindow,
+	RunCheck,
+	StartScreen,
+	ExitScreen,
+	EraseIdBtn;
+
+
+//
+// prototypes
+//
+prototype hide_window( hwindow win );
+prototype show_window( hwindow win );
+prototype hwindow get_top_container();
+prototype hsim docked_to_station();	// returns handle to station the player is docked to, else returns none
+prototype copy_feelings(hfaction source, hfaction new_faction);		// should be form tsFaction but can't get compiler to find it
+prototype RunCheck();			// UniGui start checker
+prototype StartScreen();		// Start screen
+prototype ExitScreen();			// End screen
+prototype DisplayWindow();		// Display code for screen
+prototype EraseIdBtn();
+
+prototype hwindow create_shady_box( hwindow shady_bar );
+
+//
+// Fn: RunCheck
+// Desc: Tell UniGUI when this screen should be available
+//
+RunCheck()
+{
+	hship player = iShip.FindPlayerShip();
+   hisim station = iSim.Cast(docked_to_station());
+
+    if ( iSim.IsDockedToStructure(iSim.Cast(player), station))
+    {
+       // Only pirate bases can wipe identity.
+       if (ept_PirateBase == iHabitat.Type(iHabitat.Cast(station))) {
+
+          Global.SetBool("g_zz_ug_passme",true);
+       }
+    }
+    else
+	{
+		Global.SetBool("g_zz_ug_passme",false);
+    }
+}
+
+
+//
+// Fn: StartScreen
+// Desc: Called by UniGUI to start this screen. This fn is what is referenced
+//       in the UniGUI .ini setup.
+//
+StartScreen()
+{
+   // start a background movie as a tester
+   
+   GUI.PopScreensTo("icSpaceFlightScreen");
+   GUI.OverlayScreen("icPDAOverlayManager");
+   iGUI.OverlayCustomScreen( "tsChangeIdGui.DisplayWindow" );
+}
+
+
+//
+// Fn: ExitScreen
+// Desc: Call when exiting this screen and returning code back to UniGUI
+//
+ExitScreen()
+{
+	// remove global handle
+	Global.Destroy( "gjc_e_gui_changeid_shady" );
+	GUI.StopBackgroundMovie();
+	UniGUI.UniGUIRemoveScreen();
+}
+
+
+//
+// Fn: DisplayWindow
+// Desc: Start gui system for player
+//
+DisplayWindow()
+{
+	hwindow shady_bar;
+   hwindow rh_shady;
+   hwindow help_window;
+	hwindow title;
+	hwindow subtitle;
+	hwindow exit;
+	hwindow erase_btn;
+	hwindow	price_area;
+	hwindow info_area;
+	hinifile	id_erase_ini;
+	hship	player;
+	eSimType	player_type;
+	int		cost;
+	int		player_resale;
+	
+	int width, height, accum_y_offset;
+	
+	debug Debug.PrintString("tsChangeIdGui.DisplayWindow START\n");
+	
+	
+	// Set right hand shady bar width and global save handle for later use
+	shady_bar = iGUI.CreateShadyBar();
+	rh_shady = iGUI.CreateShadyBarRight();
+
+	Global.CreateHandle("gjc_e_gui_changeid_shady", GA_Write|GA_NoSave, shady_bar);
+
+	// define the client area that can be used
+	GUI.SetWindowClientArea( shady_bar, 
+							0,
+							0,
+							GUI.WindowCanvasWidth( shady_bar ),
+							GUI.WindowCanvasHeight( shady_bar) );
+   
+
+
+	height = GUI.WindowCanvasHeight( shady_bar);
+	height = height - Global.Int("EpicGui_content_drop");
+	height = height - Global.Int("EpicGui_content_footer");
+	
+	
+	width = GUI.WindowCanvasWidth( shady_bar);
+	width = width - Global.Int("EpicGui_content_indent");
+	width = width - Global.Int("EpicGui_content_indent");
+	  
+	
+	tsGui.CreateTitle(shady_bar, "Identity");
+	tsGui.CreateSubtitle(shady_bar, "Erase your identity");
+	
+	// Create the exit button
+	tsGui.CreateExitButton(shady_bar, "EXIT", "tsChangeIdGui.ExitScreen");
+
+
+	//
+	// Build the detailed layout
+	//
+	accum_y_offset = Global.Int("EpicGui_content_drop");
+	
+	
+	// 1. make price area
+	price_area = GUI.CreateTextWindow( Global.Int("EpicGui_content_indent"), accum_y_offset,
+									    width, (height - accum_y_offset)/3, shady_bar );
+    // save the info_area to a global for later access from the buttons and list box
+	Object.AddHandleProperty(get_top_container(), "price_area", price_area);
+	accum_y_offset += GUI.WindowCanvasHeight( price_area );
+	
+	// 2. make the info display area
+	info_area = GUI.CreateTextWindow( Global.Int("EpicGui_content_indent"), accum_y_offset,
+									    width, height - accum_y_offset, shady_bar );
+	accum_y_offset += GUI.WindowCanvasHeight( info_area );
+    // save the info_area to a global for later access from the buttons and list box
+	Object.AddHandleProperty(get_top_container(), "info_area", info_area);
+	
+	// 3. make erase button
+	erase_btn = iGUI.CreateAndInitialiseFancyButton( shady_bar, accum_y_offset, "Erase Identity", "tsChangeIdGui.EraseIdBtn" );
+	GUI.SetWindowTextFormatting( erase_btn, true, 0 );	// centre text
+	// save inter button handles for on/off control
+	Object.AddHandleProperty( get_top_container(), "erase_btn", erase_btn );
+	
+	// get erase cost
+	id_erase_ini = INIFile.Create( "ini:/player_ship" );
+	cost = INIFile.Int( id_erase_ini, "IdentityErase", "cost", 0 );
+	// get the resale value of the players current ship. Then save in gui for later reference
+	// Do this here as we are already processing againts the player_ship.ini file.
+	player = iShip.FindPlayerShip();
+	player_type = iSim.Type( player );
+	switch( player_type )
+	{
+		case T_CommandSection:
+		player_resale = INIFile.Int( id_erase_ini, "Resale_Values", "commandsection", 0 );
+		break;
+		
+		case T_Tug:
+		player_resale = INIFile.Int( id_erase_ini, "Resale_Values", "tug", 0 );
+		break;
+		
+		case T_Patcom:
+		player_resale = INIFile.Int( id_erase_ini, "Resale_Values", "advancedpatcom", 0 );
+		break;
+		
+		case T_Interceptor:
+		player_resale = INIFile.Int( id_erase_ini, "Resale_Values", "stormpetrel", 0 );
+		break;
+		
+		case T_Corvette:
+		player_resale = INIFile.Int( id_erase_ini, "Resale_Values", "heavycorvette", 0 );
+		break;
+	}
+	Object.AddIntProperty( erase_btn, "cost", cost );
+	Object.AddIntProperty( erase_btn, "player_resale", player_resale );
+	INIFile.Destroy( id_erase_ini );
+	
+    // hard set some html for debug purposes.
+	GUI.SetTextWindowString( price_area, String.FormatInt("<html><body>Identity Erase Cost %d</body></html>", cost-player_resale));
+    //GUI.SetTextWindowResource( info_area, "html:/html/erase_identity" );
+
+
+   help_window = create_shady_box(rh_shady);
+   GUI.SetTextWindowResource( help_window, "html:/html/gt_id_gui_help");
+
+	debug Debug.PrintString("tsChangeIdGui.DisplayWindow END\n");
+}
+
+
+hwindow create_shady_box( hwindow shady_bar )
+{
+   hwindow border_box;
+   hwindow text_box;
+
+   int top_border = 40;
+   int splitter_alignment_offset = 4;
+   int height = GUI.WindowCanvasHeight( shady_bar ) - 80;
+   int x = Global.Int( "GUI_alignment_offset" ) + splitter_alignment_offset;
+   int y = top_border;
+   int width = Global.Int("GUI_shader_width" ) - ( x * 2 );
+
+   border_box = GUI.CreateStaticWindow( x, y, width, height, shady_bar );
+   GUI.CreateBorder( border_box );
+
+   text_box = GUI.CreateTextWindow( x + 5, y + 5, width - 10, height - 10, shady_bar );
+
+   GUI.SetWindowFont( text_box, Global.String( "GUI_detail_font" ) );
+
+   return text_box;
+}
+
+//
+// Fn: EraseIdBtn
+// Desc: Respond to ChangeIdBtn push event
+//
+EraseIdBtn()
+{
+	hwindow button = GUI.FocusedWindow();
+	hfaction player_faction = tsFaction.PlayerFaction();
+	hfaction independents = iFaction.Find("Independents");
+   hfaction owner;
+   hisim station = iSim.Cast(docked_to_station());
+	int cost;
+	
+	debug Debug.PrintString("tsChangeIdGui.EraseBtn: START\n");
+
+   owner = iSim.Faction(station);
+
+   // If the player is not at least liked by this faction, refuse the identity change.
+   if (iFaction.Feeling(owner, player_faction) < tsFaction.String2LowerLevel("FT_Like")){
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+	
+	// copy the feelings of for the Independent faction to the player faction
+	copy_feelings(independents, player_faction);
+	
+	// take the cost off the player
+	cost = Object.IntProperty( button, "cost" ) - Object.IntProperty( button, "player_resale" );
+	tsMoney.ChangeShipAccount( -cost );
+	
+	// strip out old ship
+	iInventory.RemoveCommandSection();
+	iInventory.RemoveTug();
+	iInventory.RemoveFastAttackShip();
+	iInventory.RemoveHeavyCorvette();
+	iInventory.RemoveStormPetrel();
+	
+	// add back basic ship - comsec
+	iInventory.AddCommandSection();
+	
+	// enter the base
+	tsSaveGui.PressEnterStation();
+	
+	debug Debug.PrintString("tsChangeIdGui.EraseBtn: End\n");
+}
+
+
+
+//
+// Fn: get_top_container
+// Desc: return the toplevel window container for the screen set
+//
+hwindow get_top_container()
+{
+	return (GUI.Cast( Global.Handle("gjc_e_gui_changeid_shady") ));
+}
+
+
+//
+// Fn: hide_window
+// Desc: Make window invisible and prevent it getting focus
+//
+hide_window( hwindow win )
+{
+	GUI.SetVisible( win, false );
+	GUI.SetWindowAcceptFocus( win, false );
+}
+
+
+//
+// Fn: show_window
+// Desc: Make window visible and allow focus
+//
+show_window( hwindow win )
+{
+	GUI.SetVisible( win, true );
+	GUI.SetWindowAcceptFocus( win, true );
+}
+
+
+//
+// Fn: docked_to_station
+// Desc: Returns the handle to the station the player is docked to
+//       else returns a none handle.
+//
+hsim docked_to_station()
+{
+	hship player = iShip.FindPlayerShip();
+	hhabitat closest_station = iHabitat.Nearest( iMapEntity.SystemHabitats(), player );
+	
+    if ( iSim.IsDockedToStructure(iSim.Cast(player), iSim.Cast(closest_station)) )
+    {
+	    return Sim.Cast(closest_station);
+    }
+    
+    return none;
+}
+
+
+// Copies the feelings of factions toward the source 
+// onto the new_faction, so that all factions will treat
+// the new faction exactly as they treated the source faction.
+copy_feelings(hfaction source, hfaction new_faction)
+{
+   int total, i;
+   list faction_list;
+   hfaction faction;
+   float feeling;
+
+   faction_list = iFaction.All();
+   List.Remove(faction_list, source);
+   List.Remove(faction_list, new_faction);
+
+   total = List.ItemCount(faction_list);
+   for (i=0;i<total;++i) {
+      faction = iFaction.Cast(List.GetNth(faction_list, i));
+
+      // Change the views of the new faction to match
+      feeling = iFaction.Feeling(source, faction);
+      iFaction.SetFeeling(new_faction, faction, feeling);
+
+      // Change the views of the target faction to match
+      feeling = iFaction.Feeling(faction, source);
+      iFaction.SetFeeling(faction, new_faction, feeling);
+   }
+   
+   // Relations between the two are an odd case, because
+   // it cannot be the normal ally that we expect.
+   // So instead they are set to neutral. And if another
+   // behavior is needed, it can be done out of this function.
+   iFaction.SetFeeling(source, new_faction, 0.0);
+   iFaction.SetFeeling(source, new_faction, 0.0);
+}

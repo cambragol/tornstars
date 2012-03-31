@@ -1,0 +1,60 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fswiss\fcharset0 Arial;}{\f1\fswiss\fprq2\fcharset0 Arial;}}
+{\*\generator Msftedit 5.41.15.1507;}\viewkind4\uc1\pard\b\f0\fs24 Changes in the Ship and System Rebalance for Unstable Space\par
+\b0\fs20\par
+For the most part, the changes that were made followed goals and intentions that GrandpaTrout layed out in Rebalance document several years ago.  However, in the process of attempting to reach the goals and intentions, a lot of fiddling was done.  I will go over the changes made in this document, as well as some of the reasons behind the changes (if they were not the result of finding something that just 'felt right').  I will also include here some of the passages from that original Rebalance document that I took into account while working on the Rebalance.  \par
+\par
+\b\fs24 Overall Feel\b0\fs20\par
+\par
+\f1 Torn Stars is closer to a role playing game than an arcade game. A players ship is a very expensive asset acquired through hours of play. It needs to last in combat. Combat should proceed more slowly. The player needs time to adapt, plan, recover, and escape. Duals should last minutes, not seconds. By extending combat we make better use of loadout, subsystem damage, and good tactics.\par
+\par
+Subsystem damage heightens tension, increases the cost of combat, and gives a the player a way to capture star ships (not yet). Subsystem damage can be nerve wracking in a long combat. The player scrambling to contain dying systems, while still trying to pilot effectively. This benefit requires long combats, and helps keep those combats interesting. \par
+\par
+Combat should be slower and more strategic. Current EoC ships have life times of seconds. This is far to short and arcade like. Ships should be much tougher, and designed to survive extended combats.\par
+\par
+Capitol ship to capitol ship conflict should be close to Freespace 2 in feel. Titans pounding each other with large weapons. These extended combats could last 5 to 10 minutes. Smaller ships weave in and out, mostly protected by small size. The small ships, unable to harm the larger vessels hulls, try to shift the outcome of the combat by destroying selective subsystems. (or as a similar example, Wingcommander Prophecy, where small ships could do very little harm to larger vessels without torpedoes).\par
+\par
+When ships are very fast, they move into and out of combat range quickly. Even the largest ships appear as small radar specs. Fighters are non-existent dots.\par
+\par
+\b\fs24 Specific Changes\par
+\par
+\fs20 Ship Categories\b0  -  Ships were divided into approximately 5 categories, based roughly on size/mass.  These categories were used to define accentuate differences between the ships, such as hit points, acceleration, flight handling etc.  The differences between each category are substantial.  Thus a ship from one category should fly and feel, and survive damage much different from a ship only on category up or down.  The ship categories could be roughly grouped as follows:  Fighters, Patcoms, Corvettes, Destroyers, Cruisers.\par
+\par
+\tab\i This change was to make different ships feel substantially different, and to potentially give a cost/benefit to \tab upgrading to a larger ship (i.e. they are slow and lumbering).  Additionally, these categories became important for \tab determining other changes.\i0\par
+\par
+\b Hit Points\b0  -  Hit points were increased for all ships.  The increase (generally) in hit points for each category was 2x for fighters, 3x for patcoms, 4x for Corvettes, 5x for Destroyers, and 6x for Cruisers\par
+\par
+\tab\i Hit points were increased for the obvious reason of increasing the lifespan of ships in combat.  The larger increase \tab for larger ships was done to help increase their sense of scale.\i0\par
+\par
+\b Flight Models\b0  -  Small ships were mostly untouched, but larger ships from Corvette up were made to feel much slower and heavier.  Linear speeds and accelerations not along the ships forward axis were reduced, increasingly so for larger ships.  Maximum forward speed was increased however.  Angular rotation and acceleration was once again reduced for larger ships.  For Cruisers and Destroyers the change is pronounced.\par
+\par
+\pard\li720\i For realism, I made most of the ships thrust be along the ship's forward axis.  Just comparing the size of the main thrusters on most ships to their lateral thrusters (non-existant?) initiated this.  Also, there is no practical limit on forward thrust.  Continuing to apply thrust should continue to accelerate the ship.  In terms of gameplay I think this adds a new type of battle, the 'running' battle, where ships are moving along similar vectors at extreme velocities.  A change to the regular 'dogfight' .These changes makes the flight model a little more 'newtonian' and realistic.  The changes to angular rotation for larger ships will be part of the 'cost' of having a larger ship.\i0\par
+\pard\par
+\b Armor\b0  -  Only small changes here.  Corvettes were used as a base and had armor values unchanged.  Categories above Corvette had armor slightly increased, categories below were slightly decreased.\par
+\par
+\i\tab Once again, a small attempt to feather out the differences between smaller and larger ships.\i0\par
+\par
+\b Bullet Weapons\b0  -  In general, bullet lifetimes were increased 3.5 fold, while speed was halved.  Damage was reduced 3/4.  Bullet mass was also increased several orders of magnitude.  Arcs of fire were significantly reduced for most weapons\par
+\par
+\pard\li720\i Bullet lifetimes were increased to support long range 'running' battles, whereas speed was halved to tighten the scope of 'dogfights'.  The hope was to bring ships into closer range for 'dogfights', allowing the ships to actually see each other.  Damage was decreased to support longer lifespans in battle.  Increase the 'survivability' of combat.  Arcs of fire were reduced to force the players to get even closer to ships in order to land significant hits and do significant damage.  Once again narrowing the scope of a 'dogfight'.  The increase in masses allows bullets to spin smaller ships, adding another cost to being hit by them, aside from damage.\i0\par
+\pard\par
+\b Missiles\b0  -  Maximum linear speeds were left unchanged, except along the forward axis, where it was increased 10 fold.  Linear accelerations along the non-forward axes were reduced 2 orders of magnitude.  Angular rotation and acceleration were increased slightly.  Missile lifetimes were doubled.  Penetrations were lowered slightly.  Damage was generally increased 1.5 to 2 fold.  The biggest changes would be in the sizes of the explode radius and blast radius, which were increased approximately 100 and 200 fold respectively.  Missile's explosion 'effect' was also changed to reflect the larger explosions.  Finally, missile launchers had their max_ammo_count cut in half.\par
+\par
+\pard\li720\i Much of the changes to missiles came about after a lot of testing, adjusting, testing and readjusting.  The hope was to make them important as a 'first strike' weapon that weakens an opponent, but doesn't destroy him.  Missiles are faster, but their speed plays against them in dogfights were they can be avoided with fancy maneuvering.  Penetrations were lowered to make them more effective with medium to smaller sized ships.  Captial ships can shrug off missile attacks.  In the end most of the changes here have no exact purpose but are merely the result of extensive 'fiddling'.  Max ammo counts were reduced to prevent using missiles to entirely destroy an opponent.  Also, missile explosion sizes were intially in the tens of kilometers, but this had the unexpected result of tossing capital ships around like dolls, and leaving smaller ship uneffected.  \par
+\pard\i0\par
+\b Rockets\b0  -  became converted missiles, with very low angular rotation and acceleration, as well as non-forward axes linear acceleration.  They generally have higher penetration and damage than missiles.  Rockets also disrupt.\par
+\par
+\i\tab Changes here were to essentially make rockets anti-capital ship weapons.\par
+\i0\par
+\b Beam Weapons\b0  -  Beam length was increased approximately 3 fold.  Penetration was left unchanged.  Damage was decreased 4 fold.\par
+\pard\li720\par
+\i Even with increased hitpoints, beam weapons were still insanely powerful.  Range was increased to make them useful not only at very close ranges.  Damage was reduced to prevent them becoming the ultimate weapon.  Penetration was unchanged, but increased armor for capital ships reduces the beam weapons usefullness against them.\i0\par
+\pard\par
+\b Shields\b0  -  Field coverage was lowered while field hold time was increased.\par
+\pard\li720\i\par
+Because of the attempt to tighten the scope of 'dogfights', bringing ships closer together, it was necessary to reduce field coverage in order that ships exposed areas could actually be hit.  Ships that can keep their shielded area facing an opponent despite this get the bonus of having their shields hold up a little longer.\i0\par
+\pard\par
+\b Ship Systems\b0  -  Very little was changed here.  There was one important change.  Autorepair rates were reduced an order of magnitude.  Repair takes much longer now, and requires that the player actually retreat from the battle, hole up and wait till repairs are finished.\par
+\par
+\pard\li720\i Autorepair was changed, as in the past it was just too insanely fast.  Requiring the player to retreat from a battle will hopefully increased the survivability of battles.\i0\par
+}
+ 

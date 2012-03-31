@@ -1,0 +1,121 @@
+//*******************************************************************************************/
+//
+// tsCull.pog
+//
+// This package has utility functions for aiding in the culling of environment objects
+// near stations.
+// 
+//
+// Feb 2006, Jon Freise
+//******************************************************************************************/
+
+package tsCull;
+
+uses    Sim,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        GUI,
+        iGUI,
+        iHUD,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        iMod,
+        tsPogClass,
+        tsPcOwner;
+
+
+
+provides AddSim,
+         AddList,
+         RemoveSim,
+         ItemList,
+         CullAll;
+
+
+
+AddSim(hisim location, hsim cull_object)
+{
+   list cull_list;
+
+   atomic {
+      if (Object.PropertyExists(location, "tsCullList")) {
+         cull_list = Object.ListProperty(location, "tsCullList");
+         List.AddTail(cull_list, cull_object);
+         Object.SetListProperty(location, "tsCullList", cull_list);
+      }else {
+         List.AddTail(cull_list, cull_object);
+         Object.AddListProperty(location, "tsCullList", cull_list);
+      }
+   }
+}
+
+AddList(hisim location, list object_list)
+{
+   list cull_list;
+
+   atomic {
+      if (Object.PropertyExists(location, "tsCullList")) {
+         cull_list = Object.ListProperty(location, "tsCullList");
+
+         List.Append(cull_list, object_list);
+         Object.SetListProperty(location, "tsCullList", cull_list);
+      }else {
+         Object.AddListProperty(location, "tsCullList", object_list);
+      }
+   }
+}
+
+
+RemoveSim(hisim location, hsim cull_object)
+{
+   list cull_list;
+
+   atomic {
+      if (Object.PropertyExists(location, "tsCullList")) {
+         cull_list = Object.ListProperty(location, "tsCullList");
+         List.Remove(cull_list, cull_object);
+         Object.SetListProperty(location, "tsCullList", cull_list);
+      }
+   }
+}
+
+
+
+list ItemList(hisim location)
+{
+   return Object.ListProperty(location, "tsCullList");
+}
+
+
+
+// Destroys all the sims in the cull set.
+CullAll(hisim location)
+{
+   list cull_list = Object.ListProperty(location, "tsCullList");
+   hsim item;
+
+   while (!List.IsEmpty(cull_list)) {
+      item = Sim.Cast(List.Head(cull_list));
+      List.RemoveHead(cull_list);
+
+      Sim.Destroy(item);
+   }
+
+   Object.SetListProperty(location, "tsCullList", cull_list);
+}
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

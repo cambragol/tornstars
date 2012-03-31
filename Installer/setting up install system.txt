@@ -1,0 +1,14 @@
+1. install 7-zip
+
+2. install ispack
+
+3. decide on a location to put the installer system. As my EoC home directory was c:\games\EoC_EPIC, I chose C:\games\EoC_EPIC\EpicInstaller
+
+4. Extract the archive to this location
+
+5. Decide on where the source files that get put into the installer will be located. I just took them from the mods directory. C:\games\EoC_EPIC\mods
+
+6. You can run each .iss file from ISTool or you can setup a version of GNU Make and use the supplied make file (after tweaking any paths as needed). I use make under cygwin which seems to work well
+
+
+

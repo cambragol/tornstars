@@ -1,0 +1,188 @@
+/*******************************************************************************************/
+//
+// tsFleetOpFilter
+//
+// Tools for finding the operations that you want.
+// 
+// 
+// 
+//
+// 
+//	
+// 
+//
+// May 2004
+//******************************************************************************************/
+
+package tsFleetOpFilter;
+
+
+uses  Sim,
+iSim,
+Debug,
+Global,
+iGame,
+iFaction,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+State,
+Text,
+Math,
+iShip,
+iHabitat,
+iMapEntity,
+   iHUD,
+   iComms,
+
+   tsStationEnum,
+   tsFleetOpEnum,
+   tsFleetOp,
+   tsLProduction,
+   tsLCenter;
+
+
+
+
+provides FilterOperations,
+         FilterSystem,
+         FilterType,
+         FilterKnown,
+         FilterNearby,
+         FindNearest;
+
+
+
+// Filters out the operations from a list of mixed operations and
+// stations. Such as provided by the faction.
+
+list FilterOperations(list station_list)
+{
+   int i, total;
+   list known;
+   hisim op;
+
+   total = List.ItemCount(station_list);
+   for (i=0;i<total;++i) {
+      op = iSim.Cast(List.GetNth(station_list, i));
+
+      if (tsFleetOp.IsOperation(op)) {
+         List.AddTail(known, op);
+      }
+   }
+
+   return known;
+}
+
+
+
+list FilterSystem(list op_list, string system)
+{
+   int i, total;
+   list known;
+   hisim op;
+
+   total = List.ItemCount(op_list);
+   for (i=0;i<total;++i) {
+      op = iSim.Cast(List.GetNth(op_list, i));
+
+      if (system == tsLCenter.GetSystemName(op)) {
+         List.AddTail(known, op);
+      }
+   }
+
+   return known;
+}
+
+
+
+list FilterType(list operation_list, eProductionType prod_type)
+{
+   int i, total;
+   list known;
+   hisim op;
+
+   total = List.ItemCount(operation_list);
+   for (i=0;i<total;++i) {
+      op = iSim.Cast(List.GetNth(operation_list, i));
+
+      if (tsLProduction.GetType(op) == prod_type) {
+         List.AddTail(known, op);
+      }
+   }
+
+   return known;
+}
+
+
+list FilterKnown(list operation_list, bool known)
+{
+   int i, total;
+   list known_list;
+   hisim op;
+
+   total = List.ItemCount(operation_list);
+   for (i=0;i<total;++i) {
+      op = iSim.Cast(List.GetNth(operation_list, i));
+
+      if (tsFleetOp.IsKnown(op) == known) {
+         List.AddTail(known_list, op);
+      }
+   }
+
+   return known_list;
+}
+
+
+hisim FindNearest(list op_list, hisim center)
+{
+   int i, total;
+   hisim op, op_center;
+   hisim nearest;
+   float distance = 1000000000km; // Very far.
+
+   total = List.ItemCount(op_list);
+   for (i=0;i<total;++i) {
+      op = iSim.Cast(List.GetNth(op_list, i));
+      op_center = tsLCenter.GetCenter(op);
+
+      if (distance > Sim.DistanceBetween(op_center, center)) {
+         nearest = op;
+         distance = Sim.DistanceBetween(op_center, center);
+      }
+   }
+
+   return nearest;
+}
+
+
+
+list FilterNearby(list op_list, hisim center, float distance)
+{
+   int i, total;
+   hisim op, op_center;
+   list nearby;
+
+
+   total = List.ItemCount(op_list);
+   for (i=0;i<total;++i) {
+      op = iSim.Cast(List.GetNth(op_list, i));
+      op_center = tsLCenter.GetCenter(op);
+
+      if (distance > Sim.DistanceBetween(op_center, center)) {
+         List.AddTail(nearby, op);
+      }
+   }
+
+   return nearby;
+}
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

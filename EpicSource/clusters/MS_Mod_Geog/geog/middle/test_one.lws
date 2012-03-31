@@ -1,0 +1,9561 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 60
+FrameStep 1
+PreviewFirstFrame 0
+PreviewLastFrame 60
+PreviewFrameStep 1
+FramesPerSecond 30
+Plugin MasterHandler 1 .HyperVoxels
+EndPlugin
+
+AddNullObject <node class=icNebulaAvatar url=model||models|farnorth|epic>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 0
+
+AddNullObject SystemParent
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -1695 0 -145 0 0 180 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject root
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AmbientColor 221 37 4
+AmbIntensity 0.63
+EnableLensFlare 0
+EnableShadowMaps 0
+EnableVolumetricLights 0
+
+AddLight
+LightName <star>
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 241 217
+LgtIntensity 1
+LightType 0
+LensFlare 1
+FlareIntensity 1
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 223
+FlareRingColor 255 255 255
+FlareRingSize 0.22
+FlareDistortFactor 147
+FlareStarFilter 10
+FlareRandStreakInt 0.03
+FlareRandStreakDens 50
+FlareRandStreakSharp 6
+ShadowType 1
+
+AddLight
+LightName <fill>
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 0.005
+LightType 0
+LensFlare 1
+FlareIntensity 0.5
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 11
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareRandStreakInt 0.03
+FlareRandStreakDens 50
+FlareRandStreakSharp 6
+ShadowType 0
+
+AddLight
+LightName HoffersWake
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -1693.9 0 146.9 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 255 217 213
+LgtIntensity 2
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.01
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 71
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareDistortFactor 7.02
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Coyote
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -1258.7 140 -821 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 254 69 65
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 71
+FlareRingColor 0 0 255
+FlareRingSize 0.22
+FlareDistortFactor 7.02
+FlareStarFilter 2
+FlareRotationAngle 90
+ShadowType 0
+
+AddLight
+LightName Dante
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -223.7008 100 1231 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 255 255 255
+LgtIntensity 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.04
+FlareDissolve (envelope)
+  1
+  1
+  0.725
+  0 0 0 0 0
+EndBehavior 1
+LensFlareFade 28
+LensFlareOptions 859
+FlareRingColor 255 255 255
+FlareRingSize 0.04500004
+FlareDistortFactor 138
+FlareRotationAngle 67
+FlareRandStreakInt 0.06499998
+FlareRandStreakDens 0.007
+FlareRandStreakSharp 9.07
+ShadowType 0
+
+AddLight
+LightName Kompira
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  6.2992 0 -1165 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 197 135 67
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Eureka
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1215.3 710 -981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 128 255 255
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Eureka2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  125.3 -190 -1981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 158 205 235
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Firefrost
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2186.3 0 -436 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 255 151 47
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.004
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Firefrost2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  286.3 600 -1436 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 205 151 147
+LgtIntensity 2
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.004
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2126.3 1392.858 291 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2926.3 1992.858 991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1926.3 1792.858 1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  926.3 392.8578 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 1750.138 191 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2926.3 1492.858 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -926.3 1492.858 1591 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 1272.858 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -26.3 92.85789 -491 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -607.142 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.026
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 1708.127 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1178.32 1047.858 727.1885 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  478.32 1007.858 127.1881 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.006
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  178.32 -52.14194 427.1886 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 1137.858 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2126.3 22.85806 291 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2926.3 622.8581 991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1926.3 422.8578 1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  926.3 -977.1419 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 24.56998 191 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2926.3 122.8579 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -926.3 122.8579 1591 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 80 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -26.3 -1100 -491 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -1800 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 1300 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1363.3 -145 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  663.3 -185 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  363.3 -1245 750 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 -55 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2126.3 -100 291 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2926.3 500 991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1926.3 300 1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  926.3 -1100 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 -793.6218 191 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2926.3 0 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -926.3 0 1591 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 -220 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -26.3 -1400 -491 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -2025 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 1000 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1678.3 -445 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  978.3 -485 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  678.3 -1545 750 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 -355 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2126.3 -925 291 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2926.3 -325 991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1926.3 -525 1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  926.3 -1925 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 1091.598 191 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2926.3 -825 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -926.3 -825 1591 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 -1045 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -26.3 -2225 -491 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -2925 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 175 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1363.3 -1270 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  663.3 -1310 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  363.3 -2370 750 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 -1180 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2126.3 875 291 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2926.3 1475 991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1926.3 1275 1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  926.3 -125 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 2512.325 191 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2926.3 975 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -926.3 975 1591 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 1292.303 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -26.3 -425 -491 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -1125 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 644.3438 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1363.3 530 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2618.051 490 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  365.7824 -570 1654.069 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 620 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1150.409 -965.7881 -537.989 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1950.411 -365.7881 162.0031 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  950.4075 -565.7881 1162.003 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1514.712 -2534.507 -3595.086 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  614.7114 -426.5832 -2413.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2337.884 -1854.898 -4595.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -337.8841 -1434.507 -1013.086 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  614.7114 -1654.507 -3595.086 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  562.1113 -2834.507 -3095.086 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -137.8848 -3534.507 -4595.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  814.7112 182.0668 -1623.084 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -610.7841 -1879.507 -1554.084 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -1310.783 -1919.507 -2154.084 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -1610.783 -2979.507 -1854.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1693.712 -1789.506 -2440.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  3690.605 -368.7192 -1484.096 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  4490.604 231.2807 -784.0959 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  3490.605 788.7811 215.9033 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2490.607 -1368.719 -2766.097 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1590.608 857.7282 -1584.095 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -1361.993 -2071.749 -3766.097 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  638.0081 607.6679 -184.0961 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1590.608 -488.7193 -2766.097 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1538.008 -1668.718 -2266.095 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -1800 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 1683.023 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2540.06 660 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  663.3 -185 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  363.3 -1245 750 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 -55 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -926.3 122.8579 1591 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 80 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -26.3 -1100 -491 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -1800 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 1300 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1363.3 -145 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  663.3 -185 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  363.3 -1245 750 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 -55 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2126.3 -100 291 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2926.3 500 991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1926.3 300 1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  926.3 -1100 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 -793.6218 191 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2926.3 0 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -926.3 0 1591 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 -220 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -26.3 -1400 -491 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -2025 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 1000 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1678.3 -445 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  978.3 -485 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  678.3 -1545 750 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 -355 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2126.3 -925 291 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2926.3 -325 991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1926.3 -525 1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  926.3 -1925 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 1091.598 191 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2926.3 -825 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -926.3 -825 1591 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 -1045 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -26.3 -2225 -491 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -2925 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 175 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1363.3 -1270 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  663.3 -1310 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  363.3 -2370 750 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 -1180 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2126.3 875 291 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2926.3 1475 991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1926.3 1275 1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  926.3 -125 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 2512.325 191 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2926.3 975 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -926.3 975 1591 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 1292.303 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -26.3 -425 -491 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -1125 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 644.3438 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1363.3 530 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2618.051 490 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  365.7824 -570 1654.069 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 620 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 0 7
+LightMotion (unnamed)
+  9
+  1
+  1150.409 -965.7881 -537.989 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1950.411 -365.7881 162.0031 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  950.4075 -565.7881 1162.003 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1514.712 -2534.507 -3595.086 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  614.7114 -426.5832 -2413.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2337.884 -1854.898 -4595.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -337.8841 -1434.507 -1013.086 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  614.7114 -1654.507 -3595.086 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  562.1113 -2834.507 -3095.086 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -137.8848 -3534.507 -4595.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  814.7112 182.0668 -1623.084 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -610.7841 -1879.507 -1554.084 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -1310.783 -1919.507 -2154.084 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -1610.783 -2979.507 -1854.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1693.712 -1789.506 -2440.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  3690.605 -368.7192 -1484.096 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  4490.604 231.2807 -784.0959 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  3490.605 788.7811 215.9033 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2490.607 -1368.719 -2766.097 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1590.608 857.7282 -1584.095 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -1361.993 -2071.749 -3766.097 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  638.0081 607.6679 -184.0961 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1590.608 -488.7193 -2766.097 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1538.008 -1668.718 -2266.095 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -1800 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 1683.023 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2540.06 660 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  663.3 -185 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  363.3 -1245 750 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 -55 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 -55 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2126.3 -100 291 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2926.3 500 991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1926.3 300 1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  926.3 -1100 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 -793.6218 191 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2926.3 0 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -926.3 0 1591 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 -220 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -26.3 -1400 -491 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -2025 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 1000 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1678.3 -445 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  978.3 -485 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  678.3 -1545 750 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 -355 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2126.3 -925 291 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2926.3 -325 991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1926.3 -525 1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  926.3 -1925 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 1091.598 191 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2926.3 -825 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -926.3 -825 1591 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 -1045 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -26.3 -2225 -491 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -2925 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 175 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1363.3 -1270 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  663.3 -1310 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  363.3 -2370 750 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 -1180 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2126.3 875 291 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2926.3 1475 991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1926.3 1275 1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  926.3 -125 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 2512.325 191 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2926.3 975 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -926.3 975 1591 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 1292.303 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -26.3 -425 -491 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -1125 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 644.3438 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1363.3 530 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2618.051 490 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  365.7824 -570 1654.069 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 620 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1150.409 -965.7881 -537.989 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1950.411 -365.7881 162.0031 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  950.4075 -565.7881 1162.003 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1514.712 -2534.507 -3595.086 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  614.7114 -426.5832 -2413.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2337.884 -1854.898 -4595.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -337.8841 -1434.507 -1013.086 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  614.7114 -1654.507 -3595.086 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  562.1113 -2834.507 -3095.086 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -137.8848 -3534.507 -4595.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  814.7112 182.0668 -1623.084 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -610.7841 -1879.507 -1554.084 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -1310.783 -1919.507 -2154.084 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -1610.783 -2979.507 -1854.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1693.712 -1789.506 -2440.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  3690.605 -368.7192 -1484.096 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  4490.604 231.2807 -784.0959 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  3490.605 788.7811 215.9033 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2490.607 -1368.719 -2766.097 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1590.608 857.7282 -1584.095 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -1361.993 -2071.749 -3766.097 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  638.0081 607.6679 -184.0961 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1590.608 -488.7193 -2766.097 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1538.008 -1668.718 -2266.095 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -1800 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 1683.023 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2540.06 660 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  663.3 -185 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  363.3 -1245 750 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 -55 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -926.3 122.8579 1591 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 80 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -26.3 -1100 -491 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -1800 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 1300 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1363.3 -145 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  663.3 -185 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  363.3 -1245 750 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 -55 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2126.3 -100 291 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2926.3 500 991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1926.3 300 1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  926.3 -1100 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 -793.6218 191 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2926.3 0 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -926.3 0 1591 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 -220 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -26.3 -1400 -491 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -2025 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 1000 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 165 220 220
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1678.3 -445 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  978.3 -485 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  678.3 -1545 750 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 -355 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2126.3 -925 291 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2926.3 -325 991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1926.3 -525 1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  926.3 -1925 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 1091.598 191 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2926.3 -825 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -926.3 -825 1591 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 -1045 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -26.3 -2225 -491 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -2925 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 175 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1363.3 -1270 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  663.3 -1310 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  363.3 -2370 750 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 -1180 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2126.3 875 291 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2926.3 1475 991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1926.3 1275 1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  926.3 -125 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 2512.325 191 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2926.3 975 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -926.3 975 1591 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  26.3 1292.303 -991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -26.3 -425 -491 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -1125 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 644.3438 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1363.3 530 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2618.051 490 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  365.7824 -570 1654.069 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 620 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 0 7
+LightMotion (unnamed)
+  9
+  1
+  1150.409 -965.7881 -537.989 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1950.411 -365.7881 162.0031 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  950.4075 -565.7881 1162.003 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1514.712 -2534.507 -3595.086 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  614.7114 -426.5832 -2413.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2337.884 -1854.898 -4595.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 140 230 242
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+VolumetricLighting 1
+{ Volumetrics
+  { Options
+    Flags 1 1 0 0 1 1 0
+    Sprite 0 1
+    Dissolve 0 0
+    Shadow 0.5 0
+    Radius 1 0
+    Base 0 0
+    Height 10 0
+    Luminosity 1 0
+    Opacity 0 0
+    Attenuation 0.25 0
+    RedShift 0 0
+    Density 1 0
+    Color 1 1 1 0
+  }
+  { Texture
+    { ImageMap
+      "(-128)"
+      Channel 1954051186
+      { Opacity
+        0
+        1
+        0
+      }
+      Enable 1
+      Negative 0
+    }
+    { TextureMap
+      { Center
+        0 0 0
+        0
+      }
+      { Size
+        1 1 1
+        0
+      }
+      { Rotation
+        0 0 0
+        0
+      }
+      { Falloff
+        0
+        0 0 0
+        0
+      }
+      RefObject "(none)"
+      Coordinates 0
+    }
+    Projection 0
+    Axis 2
+    { Image
+    }
+    WrapOptions 1 1
+    { WidthWrap
+      1
+      0
+    }
+    { HeightWrap
+      1
+      0
+    }
+    AntiAliasing 1 1
+    PixelBlending 1
+  }
+}
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -337.8841 -1434.507 -1013.086 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  614.7114 -1654.507 -3595.086 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  562.1113 -2834.507 -3095.086 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -137.8848 -3534.507 -4595.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  814.7112 182.0668 -1623.084 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -610.7841 -1879.507 -1554.084 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -1310.783 -1919.507 -2154.084 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -1610.783 -2979.507 -1854.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1693.712 -1789.506 -2440.085 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  3690.605 -368.7192 -1484.096 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 180 164 137
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  4490.604 231.2807 -784.0959 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  3490.605 788.7811 215.9033 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2490.607 -1368.719 -2766.097 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1590.608 857.7282 -1584.095 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -1361.993 -2071.749 -3766.097 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  638.0081 607.6679 -184.0961 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1590.608 -488.7193 -2766.097 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1538.008 -1668.718 -2266.095 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.002
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -726.3 -1800 -1991 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 34 34
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Dagda
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  226.3 1683.023 981 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 200 234 234
+LgtIntensity 0.5
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.001
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  2540.06 660 1050 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 147 147 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari2
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  663.3 -185 450 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+PivotRotation -14.3 -5.8 28.2
+LightColor 127 117 202
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName Mwari3
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  363.3 -1245 750 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+HLimits -180 180
+PLimits -180 0
+BLimits -180 0
+PivotRotation -14.3 -5.8 28.2
+IKAnchor 1
+LightColor 107 37 262
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SantaRomera
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1105.3 -55 164 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+PivotRotation -14.3 -5.8 28.2
+LightColor 217 193 102
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 1
+LensFlare 1
+FlareIntensity 0.003
+FlareDissolve 0
+LensFlareFade 4
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 0
+
+AddLight
+LightName SKT_Sun
+ShowLight 1 5
+LightMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+Plugin ItemMotionHandler 1 LW_SunSpot
+0
+0
+8
+2
+2
+2001
+-8
+1000
+{ VariantParameter
+  3
+  0
+  { ParameterValue
+    0
+    0
+  }
+}
+{ VariantParameter
+  3
+  0
+  { ParameterValue
+    -2.1368065
+    0
+  }
+}
+{ VariantParameter
+  3
+  0
+  { ParameterValue
+    0.65921086
+    0
+  }
+}
+EndPlugin
+LightColor 255 255 255
+LgtIntensity 1
+NoDiffuse 1
+NoSpecular 1
+LightType 0
+ShadowType 1
+
+ShowCamera 1 7
+CameraMotion (unnamed)
+  9
+  1
+  0 0 0 -1.5 -11.5 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ZoomFactor 3.2
+Resolution 1
+CustomSize 640 480
+PixelAspectRatio -1
+CustomPixelRatio 1
+MaskPosition 0 0 640 480
+MotionBlur 0
+FieldRendering 0
+SegmentMemory 8000000
+ApertureHeight 0.0035
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+Plugin EnvironmentHandler 1 SkyTracer2
+4
+0
+0
+6300
+0
+100000
+1
+1
+1.3
+0
+100
+0.25
+0.1
+0
+0
+0.2
+0.40000001
+0.80000001
+2
+200
+1000
+1
+0
+0
+0.5
+0.050000001
+0
+0.2
+0.15000001
+0.44999999
+1.8
+10
+7000
+0
+0
+0
+0.5
+0.1
+0
+0
+0.2
+0.1
+0
+10
+1
+10
+60
+1
+0
+0.1
+0.5
+0
+2
+1
+10
+60
+EndPlugin
+FogType 1
+FogMinDistance 0
+FogMaxDistance 1
+FogMinAmount 0
+FogMaxAmount 1
+FogColor 54 180 216
+BackdropFog 0
+Plugin VolumetricHandler 1 HyperVoxelsFilter
+{ HyperVoxelData
+  HVFlags 2 0 1 1
+  HVBlendingGroups 0
+}
+EndPlugin
+DitherIntensity 1
+AnimatedDither 0
+GlowEffect 1
+GlowIntensity 0.1400001
+GlowRadius 8
+
+RenderMode 2
+RayTraceEffects 0
+RayTraceOptimization 1
+DataOverlayLabel  
+SaveRGB 0
+SaveAlpha 0
+
+ViewType 7
+CenterItem 1
+ViewAimpoint 60.23795 -593.9995 164
+ViewDirection 4.588466 2.214812 0
+ViewZoomFactor 2.64345
+
+GridNumber 60
+GridSize 500
+CameraViewBG 2
+ShowMotionPath 1
+ShowFogRadius 1
+ShowFogEffect 1
+ShowSafeAreas 0
+ShowFieldChart 0

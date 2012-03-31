@@ -1,0 +1,354 @@
+/*******************************************************************************************/
+//
+// tsFoArmsDealer.pog
+// 
+// Torn Stars Fleet Operation Arms Dealer
+// 
+// This function implements the decision making intellegence of a
+// ArmsDealer type of Fleet Operation.
+// 
+// Template defined:- March 2006, Jon Freise
+// Implementaion:- June 2008, JW
+//
+//******************************************************************************************/
+
+package tsFoArmsDealer;
+
+
+//[of]:Impports
+uses  Sim,
+iSim,
+Debug,
+Global,
+iGame,
+iFaction,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+State,
+Text,
+Math,
+iShip,
+iHabitat,
+iMapEntity,
+iHUD,
+iComms,
+CargoTypes,
+iCargo,
+   tsEconUtil,
+   tsStationEnum,
+   tsStation,
+   tsFaction,
+   tsTime,
+   tsFleetOp,
+   tsLCenter,
+   tsLProduction,
+   tsLFleet,
+   tsStationFilter,
+   tsShipName,
+   tsShipCreationEnum,
+   tsShipCreation,
+   tsFleetOpCombat,
+   tsFleetOpPhysical,
+   tsDebug;
+//[cf]
+
+
+//[of]:Exports
+provides New,
+         Save,
+         Restore,
+         Update,
+         PlayerNear;
+//[cf]
+
+
+
+prototype hhabitat find_production_station(hisim operation, hmapentity center, string system_name);
+
+prototype bool is_production(hmapentity center);
+
+prototype hhabitat find_non_dislike_station(hisim operation, hmapentity center, string system_name);
+
+//*******************************************************************************************/         
+//
+//*******************************************************************************************/
+
+
+
+// Create the new FO and perform any property setups
+//[of]:New(hisim operation)
+New(hisim operation)
+{
+   string ship_name, ship_template;
+   hfaction faction;
+   string op_type_str;
+   string env_file_name;
+   string ship_class;
+   hinifile ini_file;
+   
+   
+
+   debug Debug.PrintString("tsFoArmsDealer.New\n");
+
+   faction = iSim.Faction(operation);
+
+   // We pick a general name for ourselves. 
+   // using a large number means we get a random name.
+   ship_name = tsShipName.ShipName("general", 10000);
+
+   // Get the ship faction template
+   env_file_name = tsFleetOp.GetOperationEnvFoTemplate(operation);
+
+   ini_file = INIFile.Create(env_file_name);
+   if(none == ini_file) {
+      Debug.PrintString(  String.FormatStrStr("tsFoArmsDealer.New: ERROR: %s not opened. Defaults taken.\n",env_file_name,"") );
+   }
+   ship_class = INIFile.NumberedString(ini_file, "Items", "faction_ship_class", 0, "EST_TankerAll");
+   INIFile.Destroy(ini_file);
+
+   // Get the ship template based on faction
+   ship_template = tsShipCreation.GetShip(faction, tsShipCreation.String2ShipType(ship_class));
+
+   tsFleetOp.SetName(operation, ship_name);
+   tsFleetOp.SetShipTemplate(operation, ship_template);
+
+   // Tanker ops are special in that they want people to find them.
+   // They are trying to make sales after all.
+   tsFleetOp.SetKnown(operation, true);
+
+   // This is a Tanker op, so we set enough fleets for the 
+   // freighter and 0 tug escort. Fleets use threat value for points.
+   tsLFleet.SetFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
+   tsLFleet.SetMaxFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
+}
+//[cf]
+
+
+
+Save(hisim operation)
+{
+   // Nothing to save for this operation type.
+}
+
+
+
+Restore(hisim operation)
+{
+   // Nothing to restore for this operation type.
+}
+
+
+// The FO's behaviour function
+//[of]:Update(hisim operation)
+Update(hisim operation)
+{
+   hmapentity center = tsLCenter.GetCenter(operation);
+   hhabitat target_station, supporter_station;
+   bool hostiles, wounded, home, move_home, move_production;
+   list local_operations;
+   hisim visitor;
+   hfaction faction, visitor_faction;
+   int fleets, i, total;
+   int update_delay = 1;
+
+   debug Debug.PrintString("tsFoArmsDealer.Update\n");
+
+   
+   faction = iSim.Faction(operation);
+
+
+   // If hostiles nearby flee, no matter what.
+   // If we are wounded, stay at home.
+   // If we are wounded, and not at home, move home, turn hidden.
+   // If we are at home, and not wounded, stay there
+
+   // Here we look up what other operations are nearby. 
+   // Any combat between this and other operations happens here.
+
+   local_operations = tsFleetOp.StationOperations(center);
+   List.Remove(local_operations, operation);
+   total = List.ItemCount(local_operations);
+
+
+   // Any hostiles about?
+   hostiles = false;
+   for (i=0;i<total;++i) {
+      visitor = iSim.Cast(List.GetNth(local_operations,i));
+      visitor_faction = iSim.Faction(visitor);
+
+      if (iFaction.Feeling(visitor_faction, faction) < -0.2) {
+         // Tanker always evades.
+         tsFleetOpCombat.Defense(center, operation, visitor);
+
+         hostiles = true;
+      }
+   }
+
+
+   fleets = tsLFleet.Fleets(operation);
+   if (fleets == 0) {
+      // Ouch, we died.
+      debug Debug.PrintString("tsFoArmsDealer.Update:  tsFoArmsDealer lost fleets and died\n");
+
+      tsFleetOp.DestroyOp(operation);
+      return;
+   }
+
+   // Are we damaged? Tanker operations are wimpy.
+   // They assume any damage is wounded.
+   if (fleets < tsLFleet.MaxFleets(operation)) {
+      wounded = true;
+   }else {
+      wounded = false;
+   }
+
+
+   // Are we home?
+   supporter_station = tsFleetOp.Supporter(operation);
+   if (center == iMapEntity.Cast(supporter_station)) {
+      home = true;
+   }else {
+      home = false;
+   }
+
+
+   // Determine what operations move will be
+   move_home = false;
+   move_production = false;
+   if (hostiles && !wounded) {
+      // if we are just scared, find another station.
+      move_production = true;
+   }else if (hostiles) {
+      // if we got hurt, run home.
+      move_home = true;
+   }else if (wounded && !home) {
+      move_home = true;
+   }
+   // Otherwise, just park here and enjoy making lots of cash
+   // selling fuel.
+
+
+   // If we are at home, repair some fleets.
+   if (home) {
+      tsLFleet.ChangeFleets(operation, 10 * update_delay);
+      debug Debug.PrintString(String.FormatInt("tsFoArmsDealer.Update: repairing at home %d fleets\n", 
+                                               tsLFleet.Fleets(operation)));
+   }
+
+   if (move_home) {
+
+      tsLCenter.SetCenter(operation, supporter_station);
+      tsFleetOpCombat.SetDistressFlags(supporter_station);
+
+      debug {
+         tsDebug.PrintString("tsFoArmsDealer_debug","tsFoArmsDealer moving home\n");
+         tsDebug.PrintHandle("tsFoArmsDealer_debug",supporter_station);
+         tsDebug.PrintString("tsFoArmsDealer_debug"," supporter station\n");
+      }
+
+   }else if (move_production) {
+
+      target_station = find_production_station(operation, center, iSim.WorldName(center));
+
+      if (none != target_station) {
+         // To move an operation, we just move the center.
+         tsLCenter.SetCenter(operation, target_station);
+         tsFleetOpCombat.SetDistressFlags(target_station);
+      }else {
+         // We must be running, so pick any nearby non-hostile station.
+         target_station = find_non_dislike_station(operation, center, iSim.WorldName(center));
+
+         if (none != target_station) {
+            // To move an operation, we just move the center.
+            tsLCenter.SetCenter(operation, target_station);
+            tsFleetOpCombat.SetDistressFlags(target_station);
+         }else {
+            tsLCenter.SetCenter(operation, supporter_station);
+            tsFleetOpCombat.SetDistressFlags(supporter_station);
+         }
+      }
+
+      debug {
+         tsDebug.PrintString("tsFoArmsDealer_debug","tsFoArmsDealer moving to production\n");
+         tsDebug.PrintHandle("tsFoArmsDealer_debug",target_station);
+         tsDebug.PrintString("tsFoArmsDealer_debug"," new station\n");
+      }
+   }
+
+   // Next update, tomorrow.
+   tsFleetOp.SetWakeTimer(operation, tsTime.GetDay() + update_delay);
+}
+//[cf]
+
+// Called when the player is near the operation
+PlayerNear(hisim operation)
+{
+   debug Debug.PrintString("tsFoArmsDealer.PlayerNear: Player near operation, instantiate physical sims.\n");
+   tsFleetOpPhysical.MakeOpPhysical(operation);
+}
+
+// Return true is this location is an operating production station.
+//[of]:bool is_production(hmapentity center)
+bool is_production(hmapentity center)
+{
+   // its a station
+   if (T_Station == iSim.Type(center)) {
+      // the station is in normal condition (i.e. not building or destroyed etc)
+      if (ESS_Normal == tsStation.Status(iHabitat.Cast(center))) {
+         // the map entity is something that can produce things
+         if ( (ESC_Mine|ESC_Process|ESC_Manufacture) & tsStation.Category(iHabitat.Cast(center))){
+            return true;
+         }
+      }
+   }
+   return false;
+}
+//[cf]
+
+//[of]:hhabitat find_production_station(hisim operation, hmapentity center, string system_name)
+hhabitat find_production_station(hisim operation, hmapentity center, string system_name)
+{
+   set habitats;
+
+   // Search system stations and find a production station where we can live.
+   habitats = tsStationFilter.OnStatusAndCategory(iMapEntity.SystemHabitatsInSystem(system_name),
+                                                 ESS_Normal,
+                                                 (ESC_Mine|ESC_Process|ESC_Manufacture));
+
+   Set.Remove(habitats, center);
+   // We can hang out at neutral or better stations. We avoid people trying to
+   // kill us.
+   habitats = tsStationFilter.OnGreaterFeeling(habitats,
+                                              iSim.Faction(operation),
+                                              tsFaction.Type2LowerLevel(FT_Neutral));
+
+   return iHabitat.Random(habitats);
+}
+//[cf]
+
+//[of]:hhabitat find_non_dislike_station(hisim operation, hmapentity center, string system_name)
+hhabitat find_non_dislike_station(hisim operation, hmapentity center, string system_name)
+{
+   set habitats;
+
+   // We can hang out at neutral or better stations. We avoid people trying to
+   // kill us.
+   habitats = tsStationFilter.OnGreaterFeeling(iMapEntity.SystemHabitatsInSystem(system_name),
+                                              iSim.Faction(operation),
+                                              tsFaction.Type2LowerLevel(FT_Neutral));
+   Set.Remove(habitats, center);
+
+   return iHabitat.Random(habitats);
+}
+//[cf]
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

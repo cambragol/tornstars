@@ -1,0 +1,3086 @@
+//
+// (c) 2001 Particle Systems Ltd. All Rights Reserved
+//
+// package LFPlus
+//
+// This package adds a Location Finder screen to the game.
+//
+// Written by Stephen Robertson
+// October 2001
+// 
+//
+// Revision control information:
+//
+// $Header: c:/epic/cvs/EpicSource/MS_Mod_Main/source/tsNavGui.pog,v 1.12 2006/03/28 13:28:52 Owner Exp $
+//
+// Modified for Epic by Jon Freise
+//
+// Epic needs pog built stations. So iMapEntites were removed.
+// New Features: cargo depot markers can be dropped.
+//               
+
+
+// Package name ///////////////////////////////////////////////////////////////
+
+package tsNavGui;
+
+// Imports ////////////////////////////////////////////////////////////////////
+// these are the packages we're going to use
+ 
+
+uses	Sim,
+		iAI,
+		iShip,
+		iSim,
+		Debug,
+		Global,
+		GUI,
+		iDirector,
+		iFaction,
+		iGame,
+		iGUI,
+		iHUD,
+		iHabitat,
+		iLagrangePoint,
+		iMapEntity,
+		iMultiplay,
+		INIFile,
+		Input,
+		List,
+		Object,
+		Set,
+		String,
+		Task,
+		Text,
+      iCargo,
+		iUtilities,
+      CargoTypes,
+      tsStationEnum,
+      tsStation,
+      tsGuiEnum,      
+      tsGui,
+      tsEconUtil,
+      tsLProduction,
+      tsLFleet,
+      tsFleetOp,
+      tsFleetOpFilter,
+      tsFaction,
+      tsStarSystem,
+      tsCapsuleJump,
+		UniGUI;
+
+// Exports ////////////////////////////////////////////////////////////////////
+// these are the functions that are going to be called from other packages
+// n.b. these start with uppercase letters, no underscores
+
+provides Initialise,
+		 ExitSpace,
+		 tsNavGuiScreen,
+		 OnSelectSystem,
+		 OnSelectLocation,
+		 OnQuit,
+       ToggleScreen,
+		 OnSetWaypoint,
+		 OnClearWaypoint,
+		 OnAddFavourite,
+		 OnRemoveFavourite,
+		 OnPDA,
+		 RunCheck,
+		 RunScreen,
+		 OnSelectFilter;
+
+
+// Local types ////////////////////////////////////////////////////////////////
+
+
+// Local functions ////////////////////////////////////////////////////////////
+// these are definitions of local calls found under the main routine
+
+// Initialises the globals and key bindings. This must be called
+// from somewhere to enable the screen.
+prototype Initialise();
+prototype ExitSpace();
+prototype hmapentity FindHabByGeogIndex( int index, string system );
+
+// Create and display the location finder screen.
+prototype tsNavGuiScreen();
+
+// Create the list of locations for a particular system
+prototype list create_location_list( string system );
+
+// Refresh the location sublist window (operations, lpoint routes)
+prototype update_location_sublist_window();
+
+// Create the location sublist window (operations, lpoint routes)
+prototype hwindow create_location_sublist_window();
+
+// Create the list box of solar system selection buttons
+prototype list create_system_buttons( hwindow list_box );
+
+// Create the window that contains the location list
+prototype hwindow create_location_list_window();
+
+// Monitor the location list for the currently focused location.
+prototype task list_box_monitor( hwindow system_list_box );
+
+// Create the location info box.
+prototype create_text_box( hwindow shady_bar );
+
+
+prototype update_location_info(hmapentity location, int selected);
+
+
+// Update the location info text box
+prototype update_text_box_info( string location, string location_type, string system, 
+                                string faction, string status, int fleets, int selected );
+
+// Clear the info in the location text box.
+prototype clear_text_box_info();
+
+// Clear the right hand shady bar if the PDA screen is accessed
+prototype OnPDA();
+
+// Clear the screens if the quit button is pressed, or the screen is toggled.
+prototype OnQuit();
+
+// Target the location finder waypoint
+prototype task set_hud_target( hisim waypoint );
+
+// Sets a waypoint to the current selected location
+prototype OnSetWaypoint();
+
+// Clears the current waypoint
+prototype OnClearWaypoint();
+
+prototype OnAddFavourite();
+prototype OnRemoveFavourite();
+
+// Puts the selected location into a global handle.
+prototype set_selected_location( hwindow window );
+
+// Change the location list when a system button is pressed
+prototype OnSelectSystem();
+
+prototype update_selected_system(string system);
+
+
+// Create a list box window for the system buttons
+prototype hwindow create_combo_window( hwindow window, string title, int y, int height, bool scrollbar );
+
+// A small task that quits the location finder screen.
+prototype task quit_task();
+
+prototype string parse_name(string system_url);
+
+// UniGUI: Functions.
+prototype RunCheck();
+prototype RunScreen();
+prototype list create_filters( hwindow list_box );
+prototype OnSelectFilter();
+
+prototype set AllMapEntities();
+prototype set AddSystemProperty( set maps, string system );
+
+// Filters
+
+prototype bool has_scrapper(hmapentity location);
+prototype bool has_weapons(hmapentity location);
+prototype bool has_fence(hmapentity location);
+prototype bool has_fuel(hmapentity location);
+prototype bool has_transports(hmapentity location);
+prototype bool has_warships(hmapentity location);
+prototype bool has_pirate(hmapentity location);
+prototype bool has_rumors(hmapentity location);
+prototype bool has_tanker(hmapentity location);
+prototype bool has_miner(hmapentity location);
+prototype bool has_science(hmapentity location);
+prototype bool is_player_owned(hmapentity location);
+
+// *********************************************
+// CODE BEGINS HERE
+// *********************************************
+
+RunCheck()
+{
+  if ( iGame.GameType() == IGT_SinglePlayer )
+  {
+	Global.SetBool("g_zz_ug_passme",true);
+  }
+  else
+  {
+	Global.SetBool("g_zz_ug_passme",false);
+  }
+
+}
+
+// *********************************************
+// * OnPDA()
+// *
+// * Clear the right hand shady bar if the PDA 
+// * screen is accessed
+// *********************************************
+
+OnPDA()
+{
+	// Set right hand shady bar width to zero.
+	// We have to do this, because if the PDA screen is accessed, the right hand bar is still there.
+	// So this function is bound to the SpaceFlightPDA key ( normally Esc ) and gets rid of the
+	// right and shady bar.
+	// For some reason if you quit the PDA screen and go back into the game the shady bar
+	// re-appears (which is what we want). If it works, don't knock it. Go figure.
+
+	GUI.SetRHSShadyBarWidth( 0 );
+
+} // OnPDA
+
+
+
+// *********************************************
+// * OnQuit()
+// *
+// * Removes the screens and tidies up when the 
+// * Screen is exited.
+// *********************************************
+
+OnQuit()
+{
+	Task.Halt( Task.Cast( Global.Handle( "g_zz_lf_text_box_monitor_task" ) ) );
+	Global.SetBool( "g_zz_lf_screen_active", false );
+	UniGUI.UniGUIRemoveScreen();
+} // OnQuit
+
+FastQuit()
+{
+
+}
+
+
+// *********************************************
+// * task set_hud_target( hisim waypoint )
+// *
+// * Sets the HUD target to the location finder
+// * waypoint.
+// *********************************************
+
+task set_hud_target( hisim waypoint )
+{
+	// We need this task as we have to wait for a short time before setting
+	// the HUD target, otherwise it doesn't register.
+
+	Task.Sleep( Task.Current(), 0.1 );
+	iHUD.SetTarget( waypoint );
+
+} // set_hud_target
+
+
+OnAddFavourite()
+{
+  hmapentity location = iMapEntity.Cast( Global.Handle("g_zz_lf_location_handle" ) );
+  list favs = Global.List("g_zz_lf_favourites");
+  string location_name = Object.StringProperty( location, "name" );
+  string location_type;
+  string status = "";
+
+  List.AddTail( favs, location );
+
+  Global.SetList("g_zz_lf_favourites", favs );
+
+  iHUD.PlayAudioCue( AC_ValidInput );
+
+  update_location_info(location, 2);
+
+}
+
+OnRemoveFavourite()
+{
+  hmapentity location = iMapEntity.Cast( Global.Handle("g_zz_lf_location_handle" ) );
+  list favs = Global.List("g_zz_lf_favourites");
+  string location_name = Object.StringProperty( location, "name" );
+  string status = "";
+  string location_type;
+
+
+  List.Remove( favs, location );
+
+  Global.SetList("g_zz_lf_favourites", favs );
+
+  iHUD.PlayAudioCue( AC_ValidInput );
+
+  update_location_info(location, 3);
+
+}
+
+
+// *********************************************
+// * OnSetWayoint()
+// *
+// * Creates and sets the current waypoint
+// *********************************************
+OnSetWaypoint()
+{
+	
+	hmapentity location = iMapEntity.Cast( Global.Handle( "g_zz_lf_location_handle" ) );			   // Get the waypoint
+	hisim waypoint = iSim.Cast( Global.Handle( "g_zz_lf_location_waypoint" ) ); 		   // Get the current location
+	hwindow text_box = GUI.Cast( Global.Handle( "g_zz_lf_location_text_box_handle" ) );    // Get the text box handle.
+	string location_name = Object.StringProperty( location, "name" );					// Location name
+	string waypoint_name;																// Name for the waypoint.
+	float avoidance_radius; 															// Avoidance Radius
+   string status = "";
+   string location_type;
+
+/*
+   if (T_Station == iSim.Type(iSim.Cast(location))) {
+      location_type = tsEconUtil.StationIntToString(tsLProduction.GetType(iHabitat.Cast(location)));
+     status = tsStation.Status2String(tsStation.Status(iHabitat.Cast(location)));
+   }else {
+      location_type = "Lagrange Point";
+   }
+   */
+
+	// First destroy the old waypoint.
+	Sim.Destroy( waypoint );															
+
+	// Work out the waypoint name - we set a prefix to make the waypoint name unique. 
+	// The + sign allows multiple name keys to be used in one string.
+	waypoint_name = String.Join( "zz_lf_prefix+", Object.StringProperty( location, "name" ) );
+
+	// Create the waypoint
+	waypoint = iSim.Cast( Sim.Create( "ini:/sims/nav/waypoint", waypoint_name ) );
+
+	// Add the localised location name as a property.
+	Object.AddStringProperty( waypoint, "location_name", location_name );
+	
+	// Place the waypoint at a safe distance from the location.
+	avoidance_radius = iAI.AvoidanceRadius( iSim.Cast(location), iShip.FindPlayerShip() ) + 1km;
+	Sim.PlaceRelativeTo( waypoint, Sim.Cast(location), 0, avoidance_radius, 0 );
+	
+	// Make it visible to sensors and on the starmap. Make it critical for good measure.
+	iSim.SetSensorVisibility( waypoint, true );
+
+	// Set the handle and system name.
+	Global.SetHandle( "g_zz_lf_location_waypoint", waypoint );
+	Global.SetString( "g_zz_lf_waypoint_system", Global.String( "g_zz_lf_selected_system" ) );
+
+   update_location_info(location, 1);
+
+
+	// We need to do this, as we need to wait a short while before setting the target
+	// Otherwise it doesn't register.
+	Task.Detach( start set_hud_target(	waypoint ) );
+
+} // OnSetWaypoint
+
+
+
+// *********************************************
+// * OnClearWayoint()
+// *
+// * Clears the current waypoint 
+// *********************************************
+
+OnClearWaypoint()
+{
+
+	// Get the waypoint from the global.
+	hsim waypoint = Sim.Cast( Global.Handle( "g_zz_lf_location_waypoint" ) );
+	
+	// Destroy it
+	Sim.Destroy( waypoint );								
+
+	// Clear the text box
+	clear_text_box_info();
+	
+	// Set the waypoint global to a null handle.
+	Global.SetHandle( "g_zz_lf_location_waypoint", none );
+
+} // OnClearWaypoint
+
+
+
+// ************************************************
+// * set_selected_location( hwindow window )
+// *
+// * Get the handle from the location from the window
+// * property, and put it into a global.
+// ************************************************
+
+set_selected_location( hwindow window )
+{
+	
+	// Get the location handle.
+	hisim location = iSim.Cast( Object.HandleProperty( window, "location_handle" ) );
+
+   hisim prior_location = iSim.Cast(Global.Handle( "g_zz_lf_location_handle"));
+
+   list favorites = Global.List("g_zz_lf_favourites");
+
+
+	/*int gi = iMapEntity.GeogIndex( iMapEntity.Cast( Object.HandleProperty( window, "location_handle" ) ) );
+	string system = Object.StringProperty( Object.HandleProperty( window, "location_handle" ), "zz_lf_system" );
+
+	iHUD.Print( String.Join( "tsNavGui: GeogIndex is ",String.FromInt( gi ) ) );
+	iHUD.Print( String.Join( "tsNavGui: System is ", system ) );*/
+
+	// Set the location handle global.
+	Global.SetHandle( "g_zz_lf_location_handle", location);
+
+   // new station needs to update operations, lpoint routes.
+   update_location_sublist_window();
+
+/*
+	debug Debug.PrintString( "tsNavGui: Location selected = " );
+	debug Debug.PrintString( Text.Field( Object.StringProperty( location, "name" ), FT_Text ) );
+	debug Debug.PrintString( "\n" );
+*/
+   // Return the prior selection to standard visibility, unless
+   // it is one of the favorites. Then keep it on the contact list.
+   if (none != prior_location) {
+      if (!List.Contains(favorites, prior_location)) {
+         iSim.SetStandardSensorVisibility(prior_location, true);
+      }
+   }
+   
+   iSim.SetSensorVisibility(location, true);
+   Task.Detach(start set_hud_target(location));
+} // set_selected_location
+
+
+
+// ************************************************
+// * OnSelectLocation()
+// *
+// * When a location list entry is clicked on, get
+// * the window ID, then set the location selected.
+// ************************************************
+
+OnSelectLocation()
+{
+	// Get the window
+	hwindow selected_location =   GUI.FocusedWindow();
+	
+	// Set the locatio selected.
+	set_selected_location( selected_location );
+
+} // OnSelectedLocation
+
+
+
+// ************************************************
+// * OnSelectSystem()
+// *
+// * When a system list entry is clicked on, get
+// * change the current system, and update the
+// * location list.
+// ************************************************
+
+OnSelectSystem()
+{
+
+	// Get the currently focused window - it must be the correct system button.
+	hwindow selected_system =	GUI.FocusedWindow();
+	
+   update_selected_system(Object.StringProperty( selected_system, "system_map" ) );
+
+} // OnSelectSystem
+
+
+
+update_selected_system(string system)
+{
+
+	// Create the list of locations for the system using the map property on the button.
+	list location_list = create_location_list( system);
+
+	// Update the location list global so the location box monitor can find it.
+	Global.SetList( "g_zz_lf_location_list", location_list );
+	
+	// Set the selected system global so other routines can use it.
+	Global.SetString( "g_zz_lf_selected_system", system);
+
+	Global.SetString( "g_zz_lf_selected_system2", system);
+
+   /*
+	debug
+	{
+	Debug.PrintString("tsNavGui.SelectSystem: Selected System = ");
+	Debug.PrintString( Global.String( "g_zz_lf_selected_system" ) );
+	Debug.PrintString(".\n");
+	}
+*/
+	// Destroy the old location list window.
+	GUI.DeleteWindow( GUI.Cast( Global.Handle( "g_zz_lf_location_window" ) ) );
+	
+	// Create a new location list window.
+	create_location_list_window();
+
+}
+
+
+
+set AddSystemProperty( set maps, string system )
+{
+  int i;
+  int number = Set.ItemCount( maps );
+  hsim entity;
+  set new;
+
+  for ( i = 0; i < number; ++i )
+  {
+	entity = Sim.Cast( Set.FirstElement( maps ) );
+	Set.Remove( maps, entity );
+	Object.AddStringProperty( entity, "zz_lf_system_p", system );
+	Set.Add( new, entity );
+  }
+
+  return new;
+}
+
+
+int read_next_station()
+{
+   hinifile econ_file = INIFile.Create("ini:/station_cargo");
+   string station_key;
+   string next_station;
+   hship player = iShip.FindPlayerShip();
+   hhabitat station = iHabitat.Nearest(iMapEntity.SystemHabitats(), player);
+
+
+   station_key = tsEconUtil.StationIntToString(tsLProduction.GetType(iSim.Cast(station)));
+   next_station = INIFile.String(econ_file, station_key,"next_station","");
+
+   INIFile.Destroy(econ_file);
+
+   return tsEconUtil.StationStringToEnum(next_station);
+}
+
+// ************************************************
+// * list create_location_list( string system )
+// *
+// * When a system list entry is clicked on, get
+// * change the current system, and update the
+// * location list.
+// ************************************************
+
+list create_location_list( string system )
+{
+	// Get the set of habitats 
+	set habitats = iMapEntity.SystemHabitatsInSystem( system );
+
+
+	// Get the set of L-Points
+	set lpoints = iMapEntity.SystemLagrangePointsInSystem( system );
+
+   set bodies = iMapEntity.SystemBodiesInSystem( system );
+	set locations;
+
+	hmapentity current_location; // Current location being indexed.
+	
+	hwindow current_window; 	 // Current window being created. 
+	
+	list location_list; 		 // List of locations
+   list jump_routes;
+	string location_name;		 // The name of the location.
+
+	int filter;
+	int habtype;
+   int next_station;
+   int i, total;
+	bool flag = false;
+   
+   hmapentity lpoint;
+   hmapentity habitat;
+
+
+
+
+
+	filter = Global.Int( "g_zz_lf_filter" );
+
+
+
+   // Remove all hidden and not map visible lpoints and stations.
+
+   location_list = List.FromSet(habitats);
+   total = List.ItemCount(location_list);
+   for (i=0;i<total;++i) {
+      habitat = iMapEntity.Cast(List.GetNth(location_list,i));
+
+      if (!Global.Bool("tsshow_hidden_stations")) {
+
+         if (!iMapEntity.IsVisibleOnMap(habitat)) {
+            Set.Remove(habitats, habitat);
+         }
+         if (iMapEntity.IsHidden(habitat)){
+            Set.Remove(habitats, habitat);
+         }
+      }
+   }
+
+   location_list = List.FromSet(lpoints);
+   total = List.ItemCount(location_list);
+   for (i=0;i<total;++i) {
+      lpoint = iMapEntity.Cast(List.GetNth(location_list,i));
+
+      if (!iMapEntity.IsVisibleOnMap(lpoint)) {
+         Set.Remove(lpoints, lpoint);
+      }
+
+      if (iMapEntity.IsHidden(lpoint)){
+         Set.Remove(lpoints, lpoint);
+      }
+
+      // Remove all those lpoint the player has not travelled. Direction matters.
+      if (List.IsEmpty(tsCapsuleJump.KnownList(iLagrangePoint.Cast(lpoint)))){
+         Set.Remove(lpoints, lpoint);
+      }
+
+   }
+
+   List.RemoveAll(location_list);
+
+   // Join the habitat and lpoint sets together.
+   Set.Union( locations, habitats );
+   Set.Union( locations, lpoints );
+
+     // This is the planets only filter.
+     if (16 == filter) {
+        Set.Union(locations, bodies);
+     }
+
+     // If the filter is next trade station, then we need to read the station 
+     // type.
+     if (3 == filter) {
+        next_station =  read_next_station();
+     }
+
+/*
+	debug
+   {
+		Debug.PrintString( "tsNavGui: System = ");
+		Debug.PrintString( system );
+		Debug.PrintString( " Habitats found = " );
+		Debug.PrintInt( Set.ItemCount( habitats ) );
+		Debug.PrintString( ", L-Points found = " );
+		Debug.PrintInt( Set.ItemCount( lpoints ) );
+		Debug.PrintString( ", Total = " );
+		Debug.PrintInt( Set.ItemCount( locations ) );
+		Debug.PrintString( "\n" );
+	}
+   */
+
+	// Filter the set of locations, removing any hidden or non-mapped
+	// locations. Also builds a set of windows for use in the selection box.
+
+//	debug Debug.PrintString( "tsNavGui.create_location_list: Filtering locations and building buttons\n" );
+
+	do
+	{
+		// Get the location
+		current_location = iMapEntity.Cast( Set.FirstElement( locations ) );
+		flag = false;
+
+		// Remove it from the set
+		Set.Remove( locations, current_location );
+
+		// Create a parentless window for the selection box.
+      location_name = Text.Field( Object.StringProperty( current_location, "name" ), FT_Text );
+
+		// Add the current location's name and handle to the window, so we can use it later.
+		 Object.AddStringProperty( current_location, "location_name", location_name  );
+		 if ( Object.PropertyExists( current_location, "zz_lf_system_p" ) )
+		 {
+		   Object.AddStringProperty( current_location, "zz_lf_system", Object.StringProperty( current_location, "zz_lf_system_p" ) );
+		   Object.RemoveProperty( current_location, "zz_lf_system_p" );
+		 }
+		 else
+		 {
+		   Object.AddStringProperty( current_location, "zz_lf_system", system );
+		 }
+
+       switch( filter )
+       {
+       case 0:
+           // No filtering
+           List.AddTail( location_list, current_location );
+			  break;
+        case 1:
+           // Favorites only
+           if ( List.Contains( Global.List("g_zz_lf_favourites"), Sim.Cast( current_location ) ) ){
+
+              List.AddTail( location_list, current_location );
+           }
+			  break;
+
+        case 2:
+           // Lpoints Filter
+			  if ( Set.Contains( lpoints, current_location ) ) {
+				  List.AddTail( location_list, current_location );
+			  }
+			  break;
+
+        case 3:
+           // Cargo buying station.
+           if (iSim.Type(iSim.Cast(current_location)) == T_Station) {
+              if (next_station == tsLProduction.GetType(current_location)){
+                 List.AddTail( location_list, current_location );
+              }
+           }
+           break;
+        case 4:
+           // Fuel
+           if (has_fuel(current_location)) {
+              List.AddTail( location_list, current_location );
+           }
+           break;
+
+        case 5:
+           // Transports for hire
+            if (has_transports(current_location)) {
+				  List.AddTail( location_list, current_location );
+            }
+            break;
+
+        case 6:
+           // Warships for hire
+            if (has_warships(current_location)) {
+               List.AddTail( location_list, current_location );
+            }
+            break;
+        case 7:
+           // Fuel tanker for hire
+           if (has_tanker(current_location)) {
+              List.AddTail( location_list, current_location );
+           }
+           break;
+        case 8:
+           if (has_miner(current_location)) {
+              List.AddTail( location_list, current_location );
+           }
+           break;
+        case 9:
+           if (has_science(current_location)) {
+              List.AddTail( location_list, current_location );
+           }
+           break;
+        case 10:
+           // Weapons dealers
+           if (has_weapons(current_location)) {
+              List.AddTail( location_list, current_location );
+           }
+           break;
+        case 11:
+           // Rumors 
+           if (has_rumors(current_location)) {
+              List.AddTail( location_list, current_location );
+           }
+           break;
+
+        case 12:
+           // Fence
+           if (has_fence(current_location)) {
+              List.AddTail( location_list, current_location );
+           }
+           break;
+
+        case 13:
+           // Pirate Bases
+            if (has_pirate(current_location)) {
+               List.AddTail( location_list, current_location );
+            }
+            break;
+
+        case 14:
+           // Pod scrapper
+           if (has_scrapper(current_location)) {
+              List.AddTail( location_list, current_location );
+           }
+           break;
+
+        case 15:
+           // Habitats
+           if ( Set.Contains( habitats, current_location ) ) {
+				  List.AddTail( location_list, current_location );
+			  }
+
+			  break;
+
+        case 16:
+           // Planets only
+           if (iSim.Type(iSim.Cast(current_location))& (T_Planet|T_Nebula)){
+              List.AddTail( location_list, current_location );
+           }
+           break;
+
+        case 17:
+           // Player owned
+           if ( is_player_owned( current_location ) ) {
+				  List.AddTail( location_list, current_location );
+			  }
+
+			  break;
+        }// End switch.
+
+			// Add the location to the location list.
+		   // List.AddTail( location_list, current_location );
+        /*
+		   if ( Object.StringProperty( List.Tail( location_list ), "location_name" ) == location_name )
+		   {
+
+			atomic
+			{
+
+				debug
+				{
+					Debug.PrintString( "tsNavGui: Adding Valid Location - " );
+					Debug.PrintString( Object.StringProperty( current_location, "name" ) );
+					Debug.PrintString( "\n" );
+				}
+			}
+
+		   }
+         */
+
+	}
+	while( ! Set.IsEmpty( locations ) );
+
+
+
+
+
+//	debug Debug.PrintString( "tsNavGui.create_location_list: Finished building buttons.\n" );
+
+	// Return a sorted list of locations.
+	return List.SortByStringProperty( location_list, "location_name" );
+
+} // create_location_list
+
+
+// ************************************************
+// * list create_system_buttons( hwindow list_box )
+// * 
+// * Create the solar system selection button list.
+// ************************************************
+
+list create_system_buttons( hwindow list_box )
+{
+	// A list of windows - the splitter and the buttons within it.
+	list buttons;
+
+	// The position of the splitter window
+	int splitter_left;
+	int splitter_top;
+
+	hwindow button; 	// The current button being processed
+	
+	// System info
+	string system_name;
+	string system_map;
+
+	// Number of entries in the inifile, and buttons to create.
+	int name_entries;
+	int map_entries;
+	int entries;
+	int count;
+
+	// Button dimensions
+	int scrollbar_width = Global.Int("GUI_scrollbar_width");
+	int button_height = Global.Int( "GUI_inversebutton_height" );
+	int list_box_gap = 3;
+	int button_width = Global.Int( "GUI_inversebutton_width" );
+
+	// Open the cluster.ini to get the system info.
+	hinifile cluster_ini = INIFile.Create( "ini:/geog/clusters" );
+
+	button_width = button_width - ( scrollbar_width + 4 );
+
+	// First find out how many systems we have. 
+
+	// Note that we are using a modified clusters.ini file which contains the name keys of the various systems
+	// in addition to the map urls.
+
+	entries = iUtilities.FindNumberOfINIEntries(  cluster_ini,	"badlands", "system" );
+
+	// Create and initialise the inverse buttons and add them to a list for a 
+	// standard layout function and control focus ordering. 
+
+	for ( count = 0 ; count < entries ; ++count )
+	{
+
+		// Get the system map URL. Note that if there is no entry, the default hoffers_wake map is used.
+		system_map = INIFile.NumberedString( cluster_ini, "badlands",
+													  "system",
+													   count,
+													   "map:/geog/badlands/hoffers_wake" );
+
+      // system_name = parse_name(system_map);
+
+      // Try to match the old lf code for now.
+      //system_name = String.Join("lf_",system_name);
+
+      /*
+		debug atomic
+		{
+			Debug.PrintString( "tsNavGui: Creating button for system - " );
+			Debug.PrintString( Text.Field( system_map, FT_Text ) );
+			Debug.PrintString( "\n" );
+		}	
+      */
+		
+      if (tsStarSystem.IsKnown(system_map)) {
+
+         // Create a special parentless rectangular inverse button
+         button = iGUI.CreateAndInitialiseRectangularInverseRadioButton(
+                                                                       none,
+                                                                       0,
+                                                                       0,
+                                                                       button_width,
+                                                                       Text.Field( system_map, FT_Text),
+                                                                       false );
+
+         iGUI.MakeRectangularInverseButtonIconic( button );
+
+         // Add the system name and url to the button so we can retrieve it later.
+         Object.AddStringProperty( button, "system_name", Text.Field( system_map, FT_Text ) );
+         Object.AddStringProperty( button, "system_map", system_map );
+
+         // Set the override, so that the button activates the system selection routine when
+         // a mouse is clicked on it.
+
+         // Note that we have to use the GUI override function to find out
+         // what button is pressed, as the GUI.ListBoxSelectedIndex command
+         // doesn't seem to work!
+
+         GUI.SetInputOverrideFunctions(
+                                      button,
+                                      "", 
+                                      "",
+                                      "", 
+                                      "", 
+                                      "", 
+                                      "",
+                                      "tsNavGui.OnSelectSystem",
+                                      "",
+                                      "" );
+
+         // Add the button to the list.
+         List.AddTail( buttons, button );
+      }
+
+	} // End for
+
+	// Close the inifile.  
+	INIFile.Destroy( cluster_ini );
+
+	// Sort the buttons by name
+	buttons = List.SortByStringProperty( buttons, "system_name" );
+
+	// Add the sorted buttons into the list box.
+	for ( count = 0 ; count < List.ItemCount( buttons ) ; ++count )
+	{
+		// Add the button to the list box
+		GUI.AddListBoxEntry( list_box, GUI.Cast( List.GetNth( buttons, count ) ) );
+	}
+
+	// Return the button list
+	return buttons;
+
+} // create_system_buttons
+
+
+
+// ************************************************
+// * hwindow create_combo_window( hwindow window,
+// *							  string title,
+// *							  int y,
+// *							  int height,
+// *							  bool scrollbar )
+// * 
+// * Create the solar system selection box.
+// ************************************************
+
+hwindow create_combo_window( hwindow window, string title, int y, int height, bool scrollbar )
+{
+
+	hwindow pane;				// One of the splitter windows.
+	hwindow title_window;		// The title window of the splitter
+
+	hsim current_location;		// The current location being processed.
+
+	// Set the title font
+	string title_font = Global.String( "GUI_subtitle_font" );
+
+	// Set the box button size and gaps.	
+	int button_height = Global.Int( "GUI_inversebutton_height" );
+	int list_box_gap = 3;
+	int button_width = Global.Int( "GUI_inversebutton_width" );
+
+	int i; // Counter
+
+	// Get the width of a scrollbar
+	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );
+
+	// Window handles for the various parts of the list box.
+	hwindow list_box;
+	hwindow button;
+	hwindow splitter;
+
+	list buttons;			// List of buttons
+	list location_list; 	// List of locations
+	
+	// Splitter dimension parameters.
+	int x;
+	int width;
+	int splitter_y_bottom_offset = 120;
+	int splitter_alignment_offset = 4;
+	int split = ( 2 * Global.Int( "GUI_fancyborder_width" ) ) + 13;
+	int element_gap = 10;
+
+	
+	// Work out x and y positions of the splitter
+	x = Global.Int( "GUI_alignment_offset" ) + splitter_alignment_offset;
+		
+	// Work out the width and height of the splitter
+	width = Global.Int( "GUI_shader_width" ) + splitter_alignment_offset - ( x * 2 );
+	
+	// If the height is -1 we assume the height is the full height of the window.
+	if ( height == -1 )
+	{
+		// Height has to allow for the text window at the bottom.
+		height = ( GUI.WindowCanvasHeight( window ) - ( y + splitter_y_bottom_offset ) );
+	}
+	
+	// Create the splitter window that contains the list box.
+	splitter = GUI.CreateSplitterWindow( 
+		x, y,
+		width, height, 
+		window, 
+		split,
+		false );
+
+	// Create a title window in the top pane of the splitter window
+
+	// Get the top pane
+	pane = GUI.SplitterWindowTopWindow( splitter );
+	
+	// Put a static window in the pane with the title in
+	title_window = iGUI.CreateAndInitialiseStaticWindow( 
+		0, 
+		0,
+		GUI.WindowCanvasWidth( pane ), 
+		GUI.WindowCanvasHeight( pane ),
+		pane,
+		title_font,
+		Text.Field( title, FT_Text ) );
+
+	// Set the text formatting
+	GUI.SetWindowTextFormatting( title_window, false, 9 );
+
+	// Get the bottom pane
+	pane = GUI.SplitterWindowBottomWindow( splitter );
+
+	// Check if we need a scollbar
+	if ( scrollbar )
+	{	
+		// We will have a smaller button width as we will always have a scrollbar.
+		button_width -= ( scrollbar_width + 4);
+	}
+
+	// Create the list box
+	list_box = GUI.CreateListBox( 
+		0, 0,
+		button_width,
+		GUI.WindowCanvasHeight( pane ),
+		pane,
+		true,
+		false );
+
+	// Add the list box to the interactive window element list
+	List.AddHead( location_list, list_box );
+
+	// Add the scrollbar if required
+	if ( scrollbar )
+	{
+		GUI.CreateVerticalScrollbar( 
+			GUI.WindowCanvasWidth( pane ) - scrollbar_width, 
+			0,
+			scrollbar_width, 
+			GUI.WindowCanvasHeight( pane ),
+			pane,
+			list_box,
+			Global.Float( "GUI_scrollbar_buttonratio" ),
+			"" );
+	}
+
+	// Return the list box
+	return list_box;
+
+} // reate_combo_window
+
+
+
+// ******************************************
+// * clear_text_box_info( hwindow text_box )
+// *
+// * Displays default text box info.
+// ******************************************
+clear_text_box_info()
+{
+	// Get handle for upper text box.
+	hwindow text_box_upper = GUI.Cast( Global.Handle( "g_zz_lf_location_text_box_upper_handle" ) );
+
+	// Get handle for lower text box
+	hwindow text_box_lower = GUI.Cast( Global.Handle( "g_zz_lf_location_text_box_lower_handle" ) );
+
+	string text; // String for html
+	
+	// Build the html
+	text = Text.Field( "zz_lf_no_waypoint_set", FT_Text );
+	text = String.Join( "<HTML><BODY>", text);
+	text = String.Join( text, "</HTML></BODY>" );
+	
+	// Set the text box strings.
+	GUI.SetTextWindowString( text_box_upper, text );
+	GUI.SetTextWindowString( text_box_lower, "" );
+
+} // clear_text_box_info
+
+
+
+// *********************************************
+// * hwindow create_location_list_window()
+// *
+// * Creates the window that holds the location
+// * list box.
+// *********************************************
+hwindow create_location_list_window()
+{
+
+	// Window handles
+	hwindow pane;
+	hwindow title_window;
+	hwindow shady_bar = GUI.Cast( Global.Handle( "g_zz_lf_shady_bar_top" ) );
+	hwindow list_box;
+	hwindow splitter;
+
+	// Title font
+	string title_font = Global.String( "GUI_subtitle_font" );
+
+	// Button parameters.
+	int button_height = Global.Int( "GUI_inversebutton_height" );
+	int list_box_gap = 3;
+	
+	int i; // Counter
+
+	
+	list location_list; // List of locations.
+
+	// Splitter dimension parameters.
+	int x;
+	int y;
+	int width;
+	int height;
+	int splitter_y_bottom_offset = 120;
+	int splitter_alignment_offset = 4;
+	int split = ( 2 * Global.Int( "GUI_fancyborder_width" ) ) + 13;
+	int element_gap = 10;
+
+	hsim current_location;								// Current location being processed
+	string location_name;										// Current location name
+	int max_title_length = 19;									// Title length parameter
+	hwindow button; 											// Current button being processed
+	int button_count;											// Count of buttons
+	int button_width = Global.Int( "GUI_inversebutton_width" ); // Width of the buttons.
+	list buttons;												// List of buttons.
+	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
+	string title;												// Title
+	hwindow scroll_bar; 										// Scrollbar handle
+
+
+   debug Debug.PrintString("tsNavGui.create_location_list\n");	
+
+	// Work out x and y positions of the splitter
+	x = Global.Int( "GUI_alignment_offset" ) + splitter_alignment_offset;
+	y = 0;
+	
+	// Work out the width and height of the splitter
+	width = Global.Int( "GUI_shader_width" ) + splitter_alignment_offset - ( x * 2 );
+	// height = ( y - (games_splitter_y_offset + element_gap ));
+	
+	// Height has to allow for the text window at the bottom.
+	height = ( GUI.WindowCanvasHeight( shady_bar ) - ( y + splitter_y_bottom_offset ) );
+	
+	// Create the splitter window that contains the list box.
+	splitter = GUI.CreateSplitterWindow( 
+		x, y,
+		width, height, 
+		shady_bar, 
+		split,
+		false );
+
+	// Set a global for the window so we can delete it when we re-create this screen.
+	// Note: Originally I was simply going to remove all the buttons from the list
+	//		 box and create a new list of buttons when changing system.
+	//		 Unfortunately, the scrollbar wouldn't reset and the list box wouldn't
+	//		 scroll properly. I then tried to delete the list box and re-create it.
+	//		 Unfortunately that crashed the game, so in the end whenever the system
+	//		 is changed the entire location window, along with its child windows are
+	//		 is deleted and re-created.
+
+	Global.SetHandle( "g_zz_lf_location_window", splitter );
+
+	// Get the top pane of the splitter, for the title.
+	pane = GUI.SplitterWindowTopWindow( splitter );
+	
+	// Put a static window in the pane with the title in
+	title_window = iGUI.CreateAndInitialiseStaticWindow( 
+		0, 
+		0,
+		GUI.WindowCanvasWidth( pane ), 
+		GUI.WindowCanvasHeight( pane ),
+		pane,
+		title_font,
+		title );
+
+	// Create a global for the title window so we can change the title if necessary.
+	Global.SetHandle( "g_zz_lf_location_title_window", title_window );
+
+	// Set the text formatting
+	GUI.SetWindowTextFormatting( title_window, false, 9 );
+
+	// Get the bottom pane
+	pane = GUI.SplitterWindowBottomWindow( splitter );
+	
+	// We will have a smaller button width as we will always have a scrollbar.
+	button_width -= ( scrollbar_width + 4);
+	
+	// Create the list box 
+
+	list_box = GUI.CreateListBox( 
+		0, 0,
+		button_width,
+		GUI.WindowCanvasHeight( pane ),
+		pane,
+		true,
+		false );
+
+	// Set the global for the list box.
+	Global.SetHandle( "g_zz_lf_location_list_box_handle", list_box );
+	
+	// Attach a scrollbar to the list box.
+	GUI.CreateVerticalScrollbar( 
+		GUI.WindowCanvasWidth( pane ) - scrollbar_width, 
+		0,
+		scrollbar_width, 
+		GUI.WindowCanvasHeight( pane ),
+		pane,
+		list_box,
+		Global.Float( "GUI_scrollbar_buttonratio" ),
+		"" );
+
+
+	// Get the location list from the global
+	location_list = Global.List( "g_zz_lf_location_list" );
+
+	// Count the buttons
+	button_count = List.ItemCount( location_list );
+
+   /*
+	debug
+	{
+	  Debug.PrintString("tsNavGui: button_count = ");
+	  Debug.PrintInt( button_count );
+	  Debug.PrintString(".\n");
+	}
+   */
+
+	// Create the title for the window. It's the system name plus number of locations.
+	title = String.Join( title, String.FromInt( List.ItemCount( location_list ) ) );
+	title = String.Join( title, " " );
+
+	// Use a non-plural if the number of locations is 1.
+	if ( button_count == 1 )
+	{
+		title = String.Join( title, Text.Field( "zz_lf_viewing_location", FT_Text ) );
+	}
+	else
+	{
+		// Otherwise use the plural
+		title = String.Join( title, Text.Field( "zz_lf_locations", FT_Text ) );
+	}
+
+
+	// Set the title and title window text formatting
+	GUI.SetWindowTitle( GUI.Cast( Global.Handle( "g_zz_lf_location_title_window" ) ),  title  );
+	GUI.SetWindowTextFormatting( GUI.Cast( Global.Handle( "g_zz_lf_location_title_window" ) ), false, 0 );
+	
+	// Create all the buttons for the set of locations
+	atomic
+	{
+		// For each of the locations
+		for ( i = 0; i < button_count; ++i )
+		{
+			
+			// Get the location and its name
+			current_location = Sim.Cast( List.GetNth( location_list, i ) );
+			location_name = Object.StringProperty( current_location, "location_name" );
+
+         /*
+			debug
+			{
+				Debug.PrintString( "tsNavGui: Creating button for location - " );
+				Debug.PrintString( location_name );
+				Debug.PrintString( "\n" );
+			}	
+         */
+
+			// Clip the title if it's longer than the max_title_length.
+			if ( String.Length( location_name ) >= max_title_length )
+			{
+				location_name = String.Left( location_name, max_title_length );
+				location_name = String.Join( location_name, "..." );
+			}
+
+			// Create a special parentless rectangular inverse button
+			button = iGUI.CreateAndInitialiseRectangularInverseRadioButton( 
+				none,
+				0,
+				0,
+				button_width,
+				location_name,
+				false );
+			iGUI.MakeRectangularInverseButtonIconic( button );
+			List.AddTail( buttons, button );
+
+			// Note that we have to use the GUI override function to find out
+			// what button is pressed, as the GUI.ListBoxSelectedIndex command
+			// doesn't seem to work!
+
+			GUI.SetInputOverrideFunctions( button,
+											"", 
+											"",
+											"", 
+											"", 
+											"", 
+											"",
+											"tsNavGui.OnSelectLocation",
+											"",
+											"" );
+
+			// Add the package & map name as a property to the button
+			Object.AddHandleProperty( button, "location_handle", List.GetNth( location_list, i ) );
+			Object.AddStringProperty( button, "location_name", location_name );
+
+			// Add the button to the list box
+			GUI.AddListBoxEntry( list_box, button );
+		
+		}	
+		
+		// Make the first entry of the list box the one that's selected.
+		GUI.SelectListBoxEntry( list_box, 0 );
+		button = GUI.Cast( List.Head( buttons ) );
+		set_selected_location( button );
+
+	}
+
+   // Now, since we have a new location selected,
+   // update the sublist to match.
+   update_location_sublist_window();
+
+	// Return the window handle, in case we need it.
+	return splitter;
+
+} // create_location_list_window
+
+
+
+// *********************************************
+// * update_location_sublist_window()
+// *
+// * removes the prior window and creates the new one
+// *********************************************
+
+update_location_sublist_window()
+{
+   hwindow prior = GUI.Cast(Global.Handle( "g_zz_lf_sublocation_window"));
+
+   GUI.DeleteWindow(prior);
+
+   create_location_sublist_window();
+
+}
+
+
+
+// *********************************************
+// * hwindow create_location_sublist_window()
+// *
+// * Creates the window that holds the location
+// * sub info. For lpoints, this is routes.
+// * for stations, this is operations.
+// *********************************************
+hwindow create_location_sublist_window()
+{
+
+	// Window handles
+	hwindow pane;
+	hwindow title_window;
+	hwindow shady_bar = GUI.Cast( Global.Handle( "g_zz_lf_shady_bar_bot" ) );
+	hwindow list_box;
+	hwindow splitter;
+
+	// Title font
+	string title_font = Global.String( "GUI_subtitle_font" );
+
+	// Button parameters.
+	int button_height = Global.Int( "GUI_inversebutton_height" );
+	int list_box_gap = 3;
+	
+	int i; // Counter
+
+	
+	list item_list; // List of submenu items.
+
+	// Splitter dimension parameters.
+	int x;
+	int y;
+	int width;
+	int height;
+	int splitter_alignment_offset = 4;
+	int split = ( 2 * Global.Int( "GUI_fancyborder_width" ) ) + 13;
+	int element_gap = 10;
+
+	hisim current_location =  iSim.Cast(Global.Handle( "g_zz_lf_location_handle"));
+   hisim item;
+   string item_name;										// sublist items name
+	int max_title_length = 19;									// Title length parameter
+	hwindow button; 											// Current button being processed
+	int button_count;											// Count of buttons
+	int button_width = Global.Int( "GUI_inversebutton_width" ); // Width of the buttons.
+	list buttons;												// List of buttons.
+	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
+	string title;												// Title
+	hwindow scroll_bar; 										// Scrollbar handle
+
+	
+   debug Debug.PrintString("tsNavGui.create_location_sublist\n");
+
+   //********
+
+   if (T_Station == iSim.Type(current_location)) {
+      // The submenu for stations shows operations parked at the station.
+      if (Global.Bool("tsnav_show_ops")) {
+         // In debug mode, show all ops.
+         item_list = tsFleetOp.StationOperations(current_location);
+      }else {
+         // Only show ops the player has already met and can track.
+         item_list = tsFleetOpFilter.FilterKnown(tsFleetOp.StationOperations(current_location), true);
+      }
+   }else if (T_LagrangePoint == iSim.Type(current_location)) {
+      item_list = tsCapsuleJump.KnownList(iLagrangePoint.Cast(current_location));
+   }else {
+      // nothing else has a sublist. so we bail out
+      // without creating one. Set to null to avoid crash.
+      Global.SetHandle( "g_zz_lf_sublocation_window", none);
+      return none;
+   }
+
+   debug {
+      Debug.PrintHandle(current_location);
+      Debug.PrintString(" current location\n");
+   }
+
+	// Work out x and y positions of the splitter
+	x = Global.Int( "GUI_alignment_offset" ) + splitter_alignment_offset;
+	y = 0;
+	
+	// Work out the width and height of the splitter
+//	width = Global.Int( "GUI_shader_width" ) + splitter_alignment_offset - ( x * 2 );
+
+	width = GUI.WindowCanvasWidth(shady_bar) + splitter_alignment_offset - ( x * 2 );
+
+	// height = ( y - (games_splitter_y_offset + element_gap ));
+	
+	height = GUI.WindowCanvasHeight( shady_bar );
+	
+	// Create the splitter window that contains the list box.
+	splitter = GUI.CreateSplitterWindow( 
+		x, y,
+		width, height, 
+		shady_bar, 
+		split,
+		false );
+
+	// Set a global for the window so we can delete it when we re-create this screen.
+
+	Global.SetHandle( "g_zz_lf_sublocation_window", splitter );
+
+	// Get the top pane of the splitter, for the title.
+	pane = GUI.SplitterWindowTopWindow( splitter );
+	
+	// Put a static window in the pane with the title in
+	title_window = iGUI.CreateAndInitialiseStaticWindow( 
+		0, 
+		0,
+		GUI.WindowCanvasWidth( pane ), 
+		GUI.WindowCanvasHeight( pane ),
+		pane,
+		title_font,
+		title );
+
+
+	// Set the text formatting
+	GUI.SetWindowTextFormatting( title_window, false, 9 );
+
+
+   if (T_Station == iSim.Type(current_location)) {
+      title = "Fleets at Station";
+   }else if (T_LagrangePoint == iSim.Type(current_location)) {
+      title = "Lpoint Routes";
+   }else{
+      title = "Error uknown object";
+   }
+
+	// Set the title and title window text formatting
+	GUI.SetWindowTitle( title_window,  title  );
+	GUI.SetWindowTextFormatting( title_window, false, 0 );
+
+
+
+	// Now we create the list box with the operations or lpoint routes.
+	pane = GUI.SplitterWindowBottomWindow( splitter );
+	
+	// We will have a smaller button width as we will always have a scrollbar.
+	button_width -= ( scrollbar_width + 4);
+	
+	// Create the list box 
+
+	list_box = GUI.CreateListBox( 
+		0, 0,
+		button_width,
+		GUI.WindowCanvasHeight( pane ),
+		pane,
+		true,
+		false );
+
+	
+	// Attach a scrollbar to the list box.
+	GUI.CreateVerticalScrollbar( 
+		GUI.WindowCanvasWidth( pane ) - scrollbar_width, 
+		0,
+		scrollbar_width, 
+		GUI.WindowCanvasHeight( pane ),
+		pane,
+		list_box,
+		Global.Float( "GUI_scrollbar_buttonratio" ),
+		"" );
+
+	// Count the buttons
+	button_count = List.ItemCount( item_list );
+
+   /*
+	debug
+	{
+	  Debug.PrintString("tsNavGui: button_count = ");
+	  Debug.PrintInt( button_count );
+	  Debug.PrintString(".\n");
+	}
+   */
+	
+	// Create all the buttons for the set of locations
+	atomic
+	{
+		// For each of the locations
+		for ( i = 0; i < button_count; ++i )
+		{
+			
+			// Get the location and its name
+			item = iSim.Cast( List.GetNth( item_list, i ) );
+
+         if (T_Station == iSim.Type(current_location)) {
+            // The list is operations, so report the type.
+            item_name = Text.Field(tsFleetOp.Name(item), FT_Text);
+            item_name = String.Join(item_name, " ");
+            item_name = String.Join(item_name, Text.Field(tsEconUtil.StationIntToString(tsLProduction.GetType(item)), FT_Text));
+         }else if (T_LagrangePoint == iSim.Type(current_location)) {
+            // The list is lpoint routes, so report the target system.
+            // This allows the player to plan a path through the cluster.
+             item_name = Text.Field(Object.StringProperty(item,"gtRouteSystem"), FT_Text);
+             //item_name = Object.StringProperty(item,"gtRouteName");
+         }
+
+         debug
+			{
+				Debug.PrintString( "tsNavGui: Creating button for sublocation - " );
+				Debug.PrintString( item_name );
+				Debug.PrintString( "\n" );
+			}	
+
+			// Clip the title if it's longer than the max_title_length.
+			if ( String.Length( item_name ) >= max_title_length )
+			{
+				item_name = String.Left( item_name, max_title_length );
+				item_name = String.Join( item_name, "..." );
+			}
+
+			// Create a special parentless rectangular inverse button
+			button = iGUI.CreateAndInitialiseRectangularInverseRadioButton( 
+				none,
+				0,
+				0,
+				button_width,
+				item_name,
+				false );
+			iGUI.MakeRectangularInverseButtonIconic( button );
+			List.AddTail( buttons, button );
+
+			// Add the button to the list box
+			GUI.AddListBoxEntry( list_box, button );
+		}	
+		
+		// Make the first entry of the list box the one that's selected.
+		GUI.SelectListBoxEntry( list_box, 0 );
+		button = GUI.Cast( List.Head( buttons ) );
+	}
+
+	// Return the window handle, in case we need it.
+	return splitter;
+
+} // create_location_sublist_window
+
+
+
+
+list create_filters( hwindow list_box )
+{
+  list buttons;
+
+  int count;
+  hwindow button;
+
+  int b_type;
+  string b_name;
+
+  int scrollbar_width = Global.Int("GUI_scrollbar_width");
+  int button_height = Global.Int( "GUI_inversebutton_height" );
+  int list_box_gap = 3;
+  int button_width = Global.Int( "GUI_inversebutton_width" );
+
+  hinifile filters = INIFile.Create("ini:/cfg/zz_lf_filters");
+  int entries = iUtilities.FindNumberOfINIEntries( filters, "filters", "name" );
+
+  /*
+  debug
+  {
+	Debug.PrintString("tsNavGui: ");
+	Debug.PrintInt( entries );
+	Debug.PrintString(" filters found.\n");
+  }
+  */
+
+  for ( count = 0; count < entries; ++count )
+  {
+	b_type = count;
+
+	b_name = INIFile.NumberedString( filters, "filters", "name", count, "Name Error" );
+
+	button = iGUI.CreateAndInitialiseRectangularInverseRadioButton(
+			 none,
+			 0,
+			 0,
+			 button_width - (scrollbar_width + 4),
+			 b_name,
+			 false );
+
+	 iGUI.MakeRectangularInverseButtonIconic( button );
+
+	 Object.AddStringProperty( button, "b_name", b_name );
+	 Object.AddIntProperty( button, "b_type", b_type );
+
+	 GUI.SetInputOverrideFunctions(
+		 button,
+		 "",
+		 "",
+		 "",
+		 "",
+		 "",
+		 "",
+		 "tsNavGui.OnSelectFilter",
+		 "",
+		 "" );
+
+    /*
+	 debug
+	 {
+	   Debug.PrintString("tsNavGui: Adding valid filter: ");
+	   Debug.PrintString( b_name );
+	   Debug.PrintString(", with type: ");
+	   Debug.PrintInt( b_type );
+	   Debug.PrintString(".\n");
+	 }
+    */
+
+	 List.AddTail( buttons, button );
+  }
+
+   for ( count = 0 ; count < List.ItemCount( buttons ) ; ++count )
+   {
+		GUI.AddListBoxEntry( list_box, GUI.Cast( List.GetNth( buttons, count ) ) );
+   }
+
+  return buttons;
+}
+
+
+
+
+OnSelectFilter()
+{
+  hwindow selected = GUI.FocusedWindow();
+  list location_list;
+  Global.SetInt( "g_zz_lf_filter", Object.IntProperty( selected, "b_type" ) );
+  location_list = create_location_list( Global.String( "g_zz_lf_selected_system2" ) );
+
+  /*
+  debug
+  {
+	Debug.PrintString("tsNavGui.SelectFilter: Selected System = ");
+	Debug.PrintString( Global.String( "g_zz_lf_selected_system" ) );
+	Debug.PrintString(".\n");
+  }
+  */
+
+  Global.SetList( "g_zz_lf_location_list", location_list );
+  GUI.DeleteWindow( GUI.Cast( Global.Handle( "g_zz_lf_location_window" ) ) );
+
+  create_location_list_window();
+}
+
+
+
+
+update_location_info(hmapentity location, int selected)
+{
+   string location_type;
+   string status_name;
+   string location_name = Sim.Name(Sim.Cast(location));
+   string faction_name;
+   int status;
+   int fleets = 0;
+
+
+   if (none == location) {
+
+      update_text_box_info( "zz_lf_empty_system",
+                            "zz_lf_empty",
+                            Global.String( "g_zz_lf_selected_system" ),
+                            "zz_lf_empty",
+                            "zz_lf_none",
+                            fleets,
+                            selected );
+      return;
+   }
+
+
+  if (T_Station == iSim.Type(iSim.Cast(location))) {
+     
+     location_type = tsEconUtil.StationIntToString(tsLProduction.GetType(location));
+     status = tsStation.Status(iHabitat.Cast(location));
+     
+     fleets = tsLFleet.Fleets(iSim.Cast(location));
+
+     if (tsStation.IsKnown(iHabitat.Cast(location))) {
+        
+        status_name = tsStation.Status2String(status);
+        faction_name =  iFaction.Name( iSim.Faction( location ));
+     
+     }else{
+        if (ESC_Mine == tsStation.Category(iHabitat.Cast(location))){
+           // This hides unclaimed mines from being seen.
+           location_type = "zz_lf_unknown_mine";
+        }
+        status_name = "zz_lf_unknown_status";
+        faction_name = "zz_lf_unknown_owner";
+     }
+
+  }else if (T_LagrangePoint == iSim.Type(iSim.Cast(location))) {
+     
+     location_type = "zz_lf_unknown_type";
+     status_name = "zz_lf_none";
+     faction_name = "zz_lf_no_owner";
+  
+  }else {
+     
+     location_type = "zz_lf_body";
+     status_name = "zz_lf_unknown_status";
+     faction_name = "zz_lf_no_owner";
+  
+  }
+
+  update_text_box_info( Text.Field( location_name, FT_Text ),
+                        location_type,
+                        Global.String( "g_zz_lf_selected_system" ),
+                        faction_name,
+                        status_name,
+                        fleets,
+                        selected );
+}
+
+
+
+
+// **************************************
+// update_text_box_info( string location,
+//						string system,
+//						string faction,
+//						bool selected )
+//
+// Update the info that appears in the
+// location information text box.
+// Essentially it builds html strings.
+// **************************************
+
+update_text_box_info( string location, 
+                      string location_type, 
+                      string system, 
+                      string faction, 
+                      string status, 
+                      int fleets,
+                      int selected )
+{
+	
+	// Get handle for upper text box.
+	hwindow text_box_upper = GUI.Cast( Global.Handle( "g_zz_lf_location_text_box_upper_handle" ) );
+
+	// Get handle for lower text box
+	hwindow text_box_lower = GUI.Cast( Global.Handle( "g_zz_lf_location_text_box_lower_handle" ) );
+	
+	string html;																		// The html string.
+	string header = "<HTML><BODY>"; 													// The first bit of html
+	string footer = "</BODY></HTML>";													// The last bit of html.
+	string viewing_location_heading = Text.Field( "zz_lf_viewing_location", FT_Text );	   // The 'VIEWING LOCATION' header
+	string selected_location_heading = Text.Field( "zz_lf_selected_location", FT_Text );   // The 'SELECTED LOCATION' header
+	string system_heading = Text.Field( "zz_lf_system", FT_Text );						   // The 'SYSTEM' heading
+	string faction_heading = Text.Field( "trading_faction", FT_Text );					// The 'FACTION' heading
+
+   string system_name = Text.Field(system, FT_Text);
+   string type_string = Text.Field(location_type, FT_Text);
+   string status_string = Text.Field(status, FT_Text);
+   string fleet_string = String.FormatInt("Guards %d", fleets);
+   string faction_name = Text.Field(faction, FT_Text);
+
+	// Set the html for the upper window
+	// If the location is selected it displays 'SELECTED LOCATION, 
+	
+	if ( selected == 1 )
+	{
+		html = String.Join( header, selected_location_heading );
+		
+	}
+	else if ( selected == 2 )
+	{
+	  html = String.Join( header, Text.Field("zz_lf_addtofav_head", FT_Text ) );
+	}
+	else if ( selected == 3 )
+	{
+	  html = String.Join( header, Text.Field("zz_lf_remfromfav_head", FT_Text ) );
+	}
+	else
+	{
+		// Otherwise it displays 'LOCATION'
+		html = String.Join( header, viewing_location_heading );
+	}
+	
+   html = header;
+	// Build the rest of the html.
+//	html = String.Join( html, ":<BR>" );
+	html = String.Join( html, location );
+
+	html = String.Join( html, "<BR>" );
+	html = String.Join( html, type_string );
+	html = String.Join( html, "<BR>" );
+   html = String.Join( html, fleet_string );
+	html = String.Join( html, footer );
+
+	// Update the upper window text.
+	GUI.SetTextWindowString( text_box_upper, html );
+
+	// HTML for the system name section
+   /*
+	html = String.Join( header, "<BR>" );
+	html = String.Join( html, system_heading );
+	html = String.Join( html, ": " );
+	html = String.Join( html, system_name );
+*/
+	html = String.Join( header, "<BR> Status " );
+//	html = String.Join( html, system_heading );
+//	html = String.Join( html, ": " );
+	html = String.Join( html, status_string );
+
+	// HTML for the faction name section.
+	html = String.Join( html, "<BR>" );
+	html = String.Join( html, faction_heading );
+	html = String.Join( html, ": " );
+	html = String.Join( html, Text.Field( faction, FT_Text ) );
+	html = String.Join( html, footer );
+
+	// Update the lower window text
+	GUI.SetTextWindowString( text_box_lower, html );
+
+} // update_text_box_info
+
+
+
+
+
+// *********************************************
+// * create_text_box( hwindow shady_bar )
+// *
+// * Create the text box that displays the
+// * location info.
+// *********************************************
+
+create_text_box( hwindow shady_bar )
+{
+	hwindow border_box; 		// Handle for the border window
+	hwindow text_box_upper; 	// Handle for upper text box.
+	hwindow text_box_lower; 	// Handle for lower text box.
+	
+	int bottom_border = 24; 													// How far off the bottom to put the windows.
+	int splitter_alignment_offset = 4;											// How far across to put the box
+	int height = 80;															// The height of the box
+	int x = Global.Int( "GUI_alignment_offset" ) + splitter_alignment_offset;	// Work out the x coordinate of the box
+	int y = GUI.WindowCanvasHeight( shady_bar ) - ( height + bottom_border );	// Work out the y coordinate of the box
+	int width = Global.Int( "GUI_shader_width" ) - ( x * 2 );					// Work out the width of the box.
+
+	// Create the border box.
+	border_box = GUI.CreateStaticWindow( x, y, width, height, shady_bar );		
+	GUI.CreateBorder( border_box );
+
+	// Create the upper and lower text boxes.
+	text_box_upper = GUI.CreateTextWindow( x, y, width, height / 2, shady_bar );
+	text_box_lower = GUI.CreateTextWindow( x, y + ( height / 2 ), width, height / 2, shady_bar );
+
+	//	Set their fonts.
+	GUI.SetWindowFont( text_box_upper, Global.String( "GUI_detail_font" ) );
+	GUI.SetWindowFont( text_box_lower, Global.String( "GUI_detail_font" ) );
+
+	// Set Global handle for the location upper text box.
+	Global.SetHandle( "g_zz_lf_location_text_box_upper_handle", text_box_upper );
+
+	// Global handle for the location lower ltext box.
+	Global.SetHandle( "g_zz_lf_location_text_box_lower_handle", text_box_lower );
+
+} // create_text_box
+
+
+
+
+// *********************************************
+// * tsNavGuiScreen()
+// *
+// * Creates and displays the actual location
+// * finder GUI screen,
+// *********************************************
+
+tsNavGuiScreen()
+{
+	// Windows
+	hwindow shady_bar;				// Left hand side shady bar
+	hwindow shady_bar_r;			// Right hand side shady bar
+   hwindow shady_bar_top;
+   hwindow shady_bar_bot;
+	hwindow location_list_box;		// The location list box
+	hwindow system_list_box;		// The system list box
+	hwindow text_box;				// Text box containing the locaton info.
+	hwindow current_button; 		// The current button being processed.
+	hwindow filters_list_box;
+	
+	int count;						// A counter
+	int waypoint_border_left;		// Left coordinate for the wayoint button border.
+	int waypoint_border_top;		// Top coordinate for the waypoint button border.
+	int button_width = Global.Int( "GUI_inversebutton_width" );
+	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );
+   int combo_height;
+   int split_height, split_offset;
+
+	list location_list; 			// List of sims in the location list
+	list system_button_list;		// List of buttons in the system button list
+	list location_button_list;		// List of buttons in the location button list
+	list waypoint_button_list;		// List of buttons for waypoint button list;
+	list favourites_button_list;
+	list temp_list; 				// Temporary list.
+	list filters_list;
+
+	htask location_text_box_monitor; // Handle for the text box monitor task.
+	
+	// Get the current map.
+	string active_world = iSim.ActiveWorld();
+	string title;
+   string subtitle;
+
+	// We don't want any movies.
+	GUI.StopAllMovies();
+
+	// Set the default font.
+	GUI.SetDefaultFont( Global.String( "GUI_title_font" ) );
+
+	// Create both right and left shady bars.
+	shady_bar = iGUI.CreateWideShadyBar();
+	shady_bar_r = iGUI.CreateShadyBarRight();
+
+   // Cover full left half of screen.
+//   GUI.SetShadyBarWidth( 400 );
+   GUI.SetShadyBarWidth( 250 );
+
+   split_height = (2*GUI.WindowCanvasHeight( shady_bar_r ))/3;
+
+
+
+   // Top 2/3 is used for the location list window
+   shady_bar_top = GUI.CreateWindow(0, 0,  
+                                    GUI.WindowCanvasWidth(shady_bar_r),
+                                    split_height,
+                                    shady_bar_r);
+
+   // Shrink the bottom window slightly to fit.
+   split_offset = split_height + 1;
+   split_height = GUI.WindowCanvasHeight( shady_bar_r )/3;
+   split_height = split_height-2;
+
+   // Bottom 1/3 is used for the location sublist window
+   shady_bar_bot = GUI.CreateWindow(0, 
+                                    split_offset,
+                                    GUI.WindowCanvasWidth(shady_bar_r),
+                                    split_height,
+                                    shady_bar_r);
+
+
+	// Set a global for the right hand shady bar, so other tsNavGui functions can use it.
+	Global.SetHandle( "g_zz_lf_shady_bar", shady_bar_r );
+
+	Global.SetHandle( "g_zz_lf_shady_bar_top", shady_bar_top );
+
+	Global.SetHandle( "g_zz_lf_shady_bar_bot", shady_bar_bot );
+
+   tsGui.CreateTitle(shady_bar,Text.Field( "zz_lf_location_finder", FT_Text ) );
+
+   // tsGui.CreateSubtitle(shady_bar, Text.Field( "zz_lf_subtitle", FT_Text ) );
+   // Put the current system in the subtitle bar
+   subtitle = String.Join(Text.Field( "zz_lf_subtitle", FT_Text ), 
+                          Text.Field( active_world, FT_Text));
+
+   tsGui.CreateSubtitle(shady_bar, subtitle);
+
+	// Set the title
+	//iGUI.AddTitle( shady_bar, Text.Field( "zz_lf_location_finder", FT_Text ) );
+
+	// Create the windows for the left hand side shady bar.
+	// ****************************************************
+	
+   combo_height = GUI.WindowCanvasHeight( shady_bar);
+   combo_height = combo_height - Global.Int("EpicGui_content_drop");
+   combo_height = combo_height - Global.Int("EpicGui_content_footer");
+
+	// First of all create the system list box.
+	system_list_box = create_combo_window( shady_bar,
+                                          "zz_lf_system",
+                                          Global.Int("EpicGui_content_drop"),
+                                          250,
+                                          true);
+                                          
+
+
+//										Global.Int( "GUI_title_yoffset" ) + 23,
+//										265, true );
+
+	// Create a global handle for this list box, so the gui functions can access it.
+	Global.SetHandle( "g_zz_lf_system_listbox_handle", system_list_box );
+
+	// The list box itself may get the focus, instead of the buttons, so we'll deal with that separately.
+	GUI.SetListBoxSelectFunction( system_list_box, "tsNavGui.OnSystemSelect" );
+
+	// Fill the system list with buttons.
+	system_button_list = create_system_buttons( system_list_box );
+	
+	// Create a global handle for the system button list so the gui functions can access it.
+	Global.SetList( "g_zz_lf_system_button_list", system_button_list );
+
+	// By default location finder always defaults to the current system, so 
+	// find  the list box entry for the current system, and set it selected
+
+	for ( count = 0 ; count < List.ItemCount( system_button_list ) ; ++count )
+	{
+		// Get the button
+		current_button = GUI.Cast( List.GetNth( system_button_list, count ) );
+
+		// If the active world matches the map property on the button...
+		if ( Object.StringProperty( current_button, "system_map" ) == active_world )
+		{
+			// Set the global for the current system name.
+			Global.SetString( "g_zz_lf_selected_system", Object.StringProperty( current_button, "system_name" ) );
+			Global.SetString( "g_zz_lf_selected_system2", Object.StringProperty( current_button, "system_map" ) );
+			GUI.SelectListBoxEntry( system_list_box, count );
+			break;
+		}
+
+	}
+
+	filters_list_box = GUI.CreateListBox( Global.Int( "GUI_alignment_offset" ) + 11, Global.Int( "GUI_title_yoffset" ) + 23 + 270, button_width - (scrollbar_width+4), 130, shady_bar, true, false );
+	filters_list = create_filters( filters_list_box );
+	GUI.SelectListBoxEntry( filters_list_box, 0 );
+	GUI.CreateVerticalScrollbar(
+		Global.Int( "GUI_alignment_offset" ) + 11 + button_width - scrollbar_width - 4,
+		Global.Int( "GUI_title_yoffset" ) + 23 + 270,
+		scrollbar_width,
+		130,
+		shady_bar,
+		filters_list_box,
+		Global.Float( "GUI_scrollbar_buttonratio" ),
+		"" );
+	Global.SetHandle( "g_zz_lf_filters_list_box_handle", filters_list_box );
+	Global.SetInt("g_zz_lf_filter", 0 );
+
+
+   // Create and setup favorites here.
+	// *****************************************
+
+	current_button = iGUI.CreateAndInitialiseParentlessInverseButton(
+			"tsNavGui.OnAddFavourite",
+			Text.Field( "zz_lf_add_fav", FT_Text ),
+			favourites_button_list );
+
+   /*
+		// Override the functions
+		GUI.SetInputOverrideFunctions(
+			current_button,
+			"", "", "", "", "",
+			"tsNavGui.OnQuit",
+			"", "", "" );
+*/
+	current_button = iGUI.CreateAndInitialiseParentlessInverseButton(
+			"tsNavGui.OnRemoveFavourite",
+			Text.Field( "zz_lf_rem_fav", FT_Text ),
+			favourites_button_list );
+
+   /*
+		// Override the functions
+		GUI.SetInputOverrideFunctions(
+			current_button,
+			"", "", "", "", "",
+			"tsNavGui.OnQuit",
+			"", "", "" );
+*/
+
+	// Create the set and clear waypoint buttons 
+	// *****************************************
+	
+	// Create the set waypoint button
+
+   /*
+	current_button = iGUI.CreateAndInitialiseParentlessInverseButton(
+			"tsNavGui.OnSetWaypoint",
+			Text.Field( "zz_lf_set_waypoint", FT_Text ),
+			waypoint_button_list );
+         */
+/*
+		// Override the functions
+		GUI.SetInputOverrideFunctions( 
+			current_button,
+			"", "", "", "", "", 
+			"tsNavGui.OnQuit",
+			"", "", "" );
+*/
+
+	// Create the clear waypoint button
+/*
+	current_button = iGUI.CreateAndInitialiseParentlessInverseButton( 
+			"tsNavGui.OnClearWaypoint",
+			Text.Field( "zz_lf_clear_waypoint", FT_Text ),
+			waypoint_button_list );
+         */
+/*
+		// Override the functions
+		GUI.SetInputOverrideFunctions( 
+			current_button,
+			"", "", "", "", "", 
+			"tsNavGui.OnQuit",
+			"", "", "" );	
+	*/
+	// Work out the splitter window left and top
+	waypoint_border_left = Global.Int( "GUI_alignment_offset" ) + Global.Int( "GUI_fancyborder_alignmentoffset" );
+	waypoint_border_top = GUI.WindowCanvasHeight( shady_bar ) - 95;
+		
+   /*
+	// Create the splitter using a layout helper
+	iGUI.CreateWindowListInFancyBorder( 
+		shady_bar,
+		waypoint_button_list, 
+		waypoint_border_left, 
+		waypoint_border_top );
+*/
+	waypoint_border_top = GUI.WindowCanvasHeight( shady_bar ) - 140;
+
+
+	// Create the splitter using a layout helper
+	iGUI.CreateWindowListInFancyBorder(
+		shady_bar,
+		favourites_button_list,
+		waypoint_border_left,
+		waypoint_border_top );
+
+
+	// Create the exit button
+   /*
+	current_button = iGUI.CreateAndInitialiseFancyButton( 
+		shady_bar,
+		GUI.WindowCanvasHeight( shady_bar ) - ( Global.Int( "GUI_fancybutton_height" ) + 8 ),
+		Text.Field( "zz_lf_exit", FT_Text ),
+		"tsNavGui.OnQuit" );
+*/
+
+	tsGui.CreateExitButton(shady_bar, Text.Field( "zz_lf_exit", FT_Text ), "tsNavGui.OnQuit" );
+
+	// Create the windows for the right hand side shady bar.
+	// *****************************************************
+
+	//Create a sorted location list for the current world. This is the default when first running the screen.
+	location_list = create_location_list( active_world );
+
+	// Create a global handle for the location list so the gui functions can access it.
+	Global.SetList( "g_zz_lf_location_list", location_list );
+
+	// Splitter window and list box. Returns the list_box handle, as this is what's used for the location buttons.
+	location_list_box = create_location_list_window();
+	Global.SetHandle( "g_zz_lf_location_window", location_list_box );
+
+	// Text box for location info.
+	create_text_box( shady_bar_top );
+
+	// Start the location box monitor ( displays the text in the info box. )
+	// We put this into a handle for when the screen is quit.
+	
+	location_text_box_monitor = start list_box_monitor( system_list_box );
+	Global.SetHandle( "g_zz_lf_text_box_monitor_task", location_text_box_monitor );
+	Task.Detach( location_text_box_monitor );
+
+	// Create the windows for the bottom right hand side shady bar.
+   // These display any operations that are located around
+   // a selected station or lpoint.
+	// *****************************************************
+
+
+
+} // tsNavGuiScreen
+
+
+
+// *********************************************
+// * quit_task()
+// *
+// * Starts the window quit function.
+// * Doing it this way stops the game from
+// * crashing if the text box monitor task
+// * needs to remove the location finder screen.
+// *********************************************
+
+task quit_task()
+{
+	OnQuit();
+}
+
+
+
+// ***************************************************
+// * task list_box_monitor( hwindow system_list_box )
+// *
+// * Monitors the location list box to update the 
+// * location text box.
+// * Also removes the location finder screen if the
+// * game goes into an external camera or director
+// * mode.
+// ****************************************************
+
+task list_box_monitor( hwindow system_list_box )
+{
+	// Track the currently selected list box entry
+	hwindow currently_selected = none;
+	hwindow selected;
+	
+	hwindow location_list_box;	// List box for the locations
+
+	// Track the currently focused list box entry
+
+	int focused_index;													// Location window focused index
+	int previous_focus = -1;											// Previous location window focused
+	int selected_index = GUI.ListBoxSelectedIndex( system_list_box );	// Currently selected location list box index
+	int previous_selected = selected_index; 							// Previous location list box selected index
+
+	hwindow selected_window = GUI.ListBoxValue( system_list_box );		// Currently selected system window.
+	hwindow previous_window = selected_window;							// Previously selected window
+
+	hisim location_handle;												// Handle for the currently selected location.
+
+
+	// The text to set in the text box
+	string location_text = "None";
+	string system_text = "None";
+	string faction_text = "None";
+
+	string current_screen;					// Current screen name being used.
+
+	bool update_waypoint_location = true;	// Boolean governing if the location waypoint info needs updating.
+   string location_type;
+   string status;
+
+
+	// Forever...
+	while( 1 )
+	{
+		
+		// Get the location list box handle.
+		location_list_box = GUI.Cast( Global.Handle( "g_zz_lf_location_list_box_handle" ) );
+		
+		// Continually check the list boxes for selections.
+		focused_index = GUI.ListBoxFocusedEntry( location_list_box );
+		
+		// If a window in the location list box is being focused... ( -1 is no focus )
+		if ( focused_index != -1 )
+		{
+			
+			// ... and it has changed from the previous focus can display the info for the
+			//	   currently focused location.
+
+			if ( focused_index != previous_focus )
+			{
+				
+				// Get the handle of the location, from the location list so we can find a few things about it.
+				location_handle = iSim.Cast( List.GetNth( Global.List( "g_zz_lf_location_list" ), focused_index ) );
+
+				// Find the name of the location.
+				location_text = Text.Field( Object.StringProperty( location_handle, "name" ), FT_Text );
+
+				// Find the system of the location
+				system_text = Global.String( "g_zz_lf_selected_system" );
+
+				// Find the faction name of the location
+				faction_text = iFaction.Name( iSim.Faction( location_handle ) );
+			
+
+            update_location_info(iMapEntity.Cast(location_handle), 0);
+            /*
+            if (T_Station == iSim.Type(iSim.Cast(location_handle))) {
+               location_type = tsEconUtil.StationIntToString(tsLProduction.GetType(iHabitat.Cast(location_handle)));
+               status = tsStation.Status2String(tsStation.Status(iHabitat.Cast(location_handle)));
+            }else {
+               location_type = "Lagrange Point";
+            }
+
+				// Update the text box, saying this is the viewing location.
+				update_text_box_info( location_text, location_type, system_text, 
+                                  faction_text, status, 0 );
+            */
+				
+				// Set the previous focus so we can check if we need to update the box next time.
+				previous_focus = focused_index;
+			
+			} // End if focused = previous
+		
+			// Reset the need to update the location waypoint, as the info for the 
+			// waypoint will have been overwritten by the focused location.
+			update_waypoint_location = true;
+		
+		}
+		else
+		{
+			// If there's nothing focused, we check if there's a location waypoint set, and display
+			// that instead.
+
+			// Reset the previous focus.
+			previous_focus = -1;
+
+			// Only do this if we need to update the waypoint location in the text box.
+			if ( update_waypoint_location )
+			{
+				
+				// Check the handle, as we'll print different info depending on the
+				// handle status.
+				location_handle = iSim.Cast( Global.Handle( "g_zz_lf_location_waypoint" ) );
+
+				// Find the name of the location.
+				location_text = Text.Field( Object.StringProperty( location_handle, "location_name" ), FT_Text );
+
+				// Find the system of the location
+				system_text = Global.String( "g_zz_lf_waypoint_system" );
+
+				// Find the faction name of the location
+				faction_text = iFaction.Name( iSim.Faction( location_handle ) );
+
+				// If the location handle is null, that means no location waypoint is set.
+				if ( location_handle == none )
+				{
+					clear_text_box_info();
+				}
+				else
+				{
+               /*
+               status = "";
+               if (T_Station == iSim.Type(iSim.Cast(location_handle))) {
+                  location_type = tsEconUtil.StationIntToString(tsLProduction.GetType(iHabitat.Cast(location_handle)));
+                  status = tsStation.Status2String(tsStation.Status(iHabitat.Cast(location_handle)));
+               }else {
+                  location_type = "Lagrange Point";
+               }
+
+					// Update the text box, saying this is the set location.
+					update_text_box_info( location_text, location_type, system_text, 
+                                     faction_text, status, 1 );
+                                     */
+               update_location_info(iMapEntity.Cast(location_handle), 1);
+				}
+
+				// Set the previous handle so we can check if we need to update the box next time.
+				//previous_location_handle = location_handle;
+
+				update_waypoint_location = false;
+			
+			} // End if update location waypoint
+
+		} // End else focused index = -1
+
+		// Sleep for a short time.
+		Task.Sleep( Task.Current(), 0.1 );
+
+	} // End while
+
+} // list_box_monitor
+
+RunScreen()
+{
+   Global.SetBool( "g_zz_lf_screen_active", true );
+   UniGUI.UniGUIAddScreen( "tsNavGui.tsNavGuiScreen" );
+}
+
+
+
+
+ToggleScreen()
+{
+   if ( Global.Bool( "g_zz_lf_screen_active")) {
+      // Already started, so clear it.
+      // Skip unigui when going this way.
+      GUI.RemoveOverlaysAfter("icSpaceFlightScreenOverlay");
+      GUI.PopScreensTo("icSpaceFlightScreen");
+
+      Task.Halt( Task.Cast( Global.Handle( "g_zz_lf_text_box_monitor_task" ) ) );
+      Global.SetBool( "g_zz_lf_screen_active", false );
+
+   }else {
+      RunScreen();
+   }
+}
+
+
+
+
+// *****************************************
+// * Initialise()
+// *
+// * Initialise the location finder resources
+// *****************************************
+Initialise()
+{
+	list empty_list; // Empty list for global initialisation
+	int i;
+	string global;
+	int count;
+	string system, name, active_system;
+	int gi;
+	hmapentity hab;
+	list fav;
+
+	// Globals
+	// ********
+	
+	debug Debug.PrintString( "tsNavGui.Initialise: Initialising globals and key bindings\n");
+
+
+  // Input.BindKey( "tsNavGui.ToggleScreen", "Multiplayer.Score" );
+
+
+
+	// We need to use globals to communicate with the various functions of this
+	// package because it's virtually the only way to get the various handles
+	// to the various windows and other items.
+	// Note these globals are configured not to save out, so they don't clutter the save game.
+
+	// Global handle for monitor task.
+	Global.CreateHandle( "g_zz_lf_text_box_monitor_task", GA_Write | GA_NoSave, none );
+
+	// Global handle for the location list box.
+	Global.CreateHandle( "g_zz_lf_location_list_box_handle", GA_Write | GA_NoSave, none );
+
+	// Global handle for the location upper text box.
+	Global.CreateHandle( "g_zz_lf_location_text_box_upper_handle", GA_Write | GA_NoSave, none );
+
+	// Global handle for the location lower ltext box.
+	Global.CreateHandle( "g_zz_lf_location_text_box_lower_handle", GA_Write | GA_NoSave, none );
+	
+	// Global handle for the left hand shady bar
+	Global.CreateHandle( "g_zz_lf_shady_bar", GA_Write | GA_NoSave, none );
+
+   // Global handle for the right hand shady bar locations subwindow
+	Global.CreateHandle( "g_zz_lf_shady_bar_top", GA_Write | GA_NoSave, none );
+
+   // Global handle for the right hand shady bar operations subwindow
+	Global.CreateHandle( "g_zz_lf_shady_bar_bot", GA_Write | GA_NoSave, none );
+	
+	// Global handle for the solar system list box.
+	Global.CreateHandle( "g_zz_lf_system_listbox_handle", GA_Write | GA_NoSave, none );
+	
+	// Global handle for the location list box title window
+	Global.CreateHandle( "g_zz_lf_location_title_window", GA_Write | GA_NoSave, none );
+
+	// Global handle for the location window.
+	Global.CreateHandle( "g_zz_lf_location_window", GA_Write | GA_NoSave, none );
+
+   // Global handle for the locations sublist window (operations, lpoint routes)
+	Global.CreateHandle( "g_zz_lf_sublocation_window", GA_Write | GA_NoSave, none );
+
+	// Global handle for the location handle
+	Global.CreateHandle( "g_zz_lf_location_handle", GA_Write | GA_NoSave, none );
+
+	// Global handle for the location waypoint
+	Global.CreateHandle( "g_zz_lf_location_waypoint", GA_Write | GA_NoSave, none );
+	
+	// Global list for the location list.
+	Global.CreateList( "g_zz_lf_location_list", GA_Write | GA_NoSave, empty_list );
+	
+	// Global list for the system button list
+	Global.CreateList( "g_zz_lf_system_button_list", GA_Write | GA_NoSave, empty_list );
+
+	// Global string for the selected system name.
+	Global.CreateString( "g_zz_lf_selected_system",  GA_Write | GA_NoSave, "" );
+
+	// Global string for the selected system name.
+	Global.CreateString( "g_zz_lf_waypoint_system",  GA_Write | GA_NoSave, "" );
+
+	// Global string for the selected system name.
+	Global.CreateBool( "g_zz_lf_screen_active",  GA_Write | GA_NoSave, false );
+
+	Global.CreateHandle( "g_zz_lf_filters_list_box_handle", GA_Write | GA_NoSave, none );
+	Global.CreateInt( "g_zz_lf_filter", GA_Write | GA_NoSave, 0);
+	Global.CreateString( "g_zz_lf_selected_system2", GA_Write | GA_NoSave, "" );
+
+	Global.CreateList("g_zz_lf_favourites", GA_Write | GA_NoSave, empty_list );
+
+	if ( Global.Exists("g_zz_lf_fav_count") == false )
+	  Global.CreateInt("g_zz_lf_fav_count", GA_Write, 0 );
+
+	// This adds the custom text for the location finder.
+	Text.Add( "csv:/text/ts_nav_gui" );
+
+	// Favourites code:
+	count = Global.Int("g_zz_lf_fav_count");
+
+   /*
+	debug
+	{
+	  Debug.PrintString("LF+: Number of Favourites is ");
+	  Debug.PrintInt( count );
+	  Debug.PrintString(".\n");
+	}
+   */
+
+   active_system = iSim.ActiveWorld();
+
+	for ( i = 0; i < count; ++i )
+	{
+	  global = String.Join("g_zz_lf_fav_", String.FromInt( i ) );
+	  system = Global.String( String.Join( global, "_system" ) );
+	  name = Global.String( String.Join( global, "_geog" ) );
+
+	  hab = iMapEntity.Cast(iSim.FindByNameInSystem(name, system));
+
+	  List.AddTail( fav, hab );
+
+
+	  debug
+	  {
+		Debug.PrintString("LF+: MapEntity is ");
+		Debug.PrintHandle( hab );
+		Debug.PrintString(".\n");
+		Debug.PrintString("LF+: System is ");
+		Debug.PrintString( system );
+		Debug.PrintString(".\n");
+	  }
+
+
+	  Global.Destroy( String.Join( global, "_system" ) );
+	  Global.Destroy( String.Join( global, "_geog" ) );
+
+     // If this station is one of the favorite stations, 
+     // and is in the current system, make it visible.
+     // Otherwise, set it to standard visibility (hidden).
+     if (system == active_system) {
+        iSim.SetSensorVisibility(iSim.Cast(hab), true);
+     }else {
+        iSim.SetStandardSensorVisibility(iSim.Cast(hab), true);
+     }
+
+	}
+	Global.SetList("g_zz_lf_favourites", fav );
+
+}
+
+ExitSpace()
+{
+  list favs = Global.List("g_zz_lf_favourites");
+  string global;
+  int i;
+  int size = List.ItemCount( favs );
+  hmapentity location;
+  int gi;
+  string system;
+
+/*
+  debug
+	{
+	  Debug.PrintString("LF+: Number of Favourites is ");
+	  Debug.PrintInt( size );
+	  Debug.PrintString(".\n");
+	}
+   */
+
+  for ( i = 0; i < size; ++i )
+  {
+	 global = String.Join("g_zz_lf_fav_",String.FromInt( i ) );
+	 location = iMapEntity.Cast( List.GetNth( favs, i ) );
+	 system = iSim.WorldName(location);
+
+	 Global.CreateString( String.Join( global, "_system" ), GA_Write, system );
+	 Global.CreateString( String.Join( global, "_geog" ), GA_Write, Sim.Name(location));
+
+    /*
+	 debug
+	  {
+		Debug.PrintString("LF+: MapEntity is ");
+		Debug.PrintHandle( location );
+		Debug.PrintString(".\n");
+		Debug.PrintString("LF+: Global is ");
+		Debug.PrintString( global );
+		Debug.PrintString(".\n");
+		Debug.PrintString("LF+: System is ");
+		Debug.PrintString( system );
+		Debug.PrintString(".\n");
+	  }
+     */
+  }
+
+  Global.SetInt("g_zz_lf_fav_count", size );
+}
+
+
+// *********************************************************************************
+// Functions for creating and removing waypoints
+
+// *********************************************************************************
+
+PlaceWaypoint()
+{
+
+
+}
+
+RemoveWaypoint(hsim waypoint)
+{
+   if (T_Waypoint == iSim.Type(iSim.Cast(waypoint))) {
+
+
+      Sim.Destroy(waypoint);
+   }
+}
+
+// *********************************************************************************
+// System names need special handling. 
+// 
+// This function will return the true system name, parsed out of the url file.
+
+// *********************************************************************************
+
+string parse_name(string system_url)
+{
+   // move backwards from right edge, looking for a slash
+   // return the trail edge of the string
+   int index = String.Length(system_url);
+
+   while (index !=0) {
+      if ("/"== String.Mid(system_url,index,1)) {
+
+         /*
+         debug {
+            Debug.PrintString(String.Right(system_url,index+1));
+            Debug.PrintString(" found system name\n");
+         }
+         */
+         ++index;
+         return String.Right(system_url,String.Length(system_url) - index);
+      }
+      --index;
+   }
+
+   debug Debug.PrintString("tsNavGui Error: No system name found\n");
+
+   return "";
+}
+
+
+bool has_science(hmapentity location)
+{
+
+   int habtype = tsLProduction.GetType(iHabitat.Cast(location));
+
+   switch( habtype )
+   {
+   case ept_CentralHQ:
+   case ept_ResearchStation:
+   case ept_RegionalDepartment:
+   case ept_SystemAdministration:
+   case ept_ClusterAdministration:
+      return true;
+      break;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+bool has_miner(hmapentity location)
+{
+
+   int habtype = tsLProduction.GetType(iHabitat.Cast(location));
+
+   switch( habtype )
+   {
+   case ept_Shipyard:
+
+   case ept_Resort:
+   case ept_EntertainmentStation:
+   case ept_Casino:
+
+   case ept_WaterProcessingPlant:
+   case ept_OrganicsProcessingPlant:
+   case ept_InorganicsProcessingPlant:
+   case ept_BiomassProcessingPlant:
+   case ept_CommonMetalsProcessingPlant:
+   case ept_RareMetalsProcessingPlant:
+   case ept_ExoticMetalsProcessingPlant:
+   case ept_RadioactivesProcessingPlant:
+   case ept_FusionableGasesProcessingPlant:
+   case ept_NeutroniumProcessingPlant:
+
+      return true;
+      break;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+bool has_rumors(hmapentity location)
+{
+
+   int habtype = tsLProduction.GetType(iHabitat.Cast(location));
+
+   switch( habtype )
+   {
+   case ept_Resort:
+   case ept_EntertainmentStation:
+   case ept_Casino:
+
+   case ept_RegionalDepartment:
+   case ept_SystemAdministration:
+   case ept_ClusterAdministration:
+   case ept_GangsterHideout:
+
+   case ept_Habitat:
+   case ept_Settlement:
+   case ept_AgriculturalSettlement:
+      return true;
+      break;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+
+bool has_pirate(hmapentity location)
+{
+
+   int habtype = tsLProduction.GetType(iHabitat.Cast(location));
+
+   switch( habtype )
+   {
+   case ept_PirateBase:
+   case ept_PirateCove:
+   case ept_PirateOutpost:
+      return true;
+      break;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+
+bool has_warships(hmapentity location)
+{
+
+   int habtype = tsLProduction.GetType(iHabitat.Cast(location));
+
+   switch( habtype )
+   {
+   case ept_MercenaryBase:
+   case ept_GangsterHideout:
+   case ept_Fortress:
+
+
+   case ept_PirateBase:
+   case ept_PirateCove:
+   case ept_PirateOutpost:
+
+   case ept_SecurityStation:
+   case ept_WeaponsManufacturingPlant:
+   case ept_Casino:
+   case ept_Resort:
+   case ept_EntertainmentStation:
+      return true;
+      break;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+bool has_transports(hmapentity location)
+{
+
+   int habtype = tsLProduction.GetType(iHabitat.Cast(location));
+
+   switch( habtype )
+   {
+   case ept_PirateBase:
+   case ept_PirateCove:
+   case ept_PirateOutpost:
+
+   case ept_Casino:
+   case ept_EntertainmentStation:
+   case ept_Resort:
+   case ept_Settlement:
+
+
+   case ept_Waystation:
+   case ept_Beanstalk:
+   case ept_Shipyard:
+   case ept_TransferStation:
+   case ept_Warehousing:
+      return true;
+      break;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+bool has_fuel(hmapentity location)
+{
+
+   int habtype = tsLProduction.GetType(iHabitat.Cast(location));
+
+   switch( habtype )
+   {
+
+   case ept_Waystation:
+   case ept_Shipyard:
+   case ept_TransferStation:
+   case ept_Warehousing:
+   case ept_Beanstalk:
+   case ept_CentralHQ:
+
+   case ept_Casino:
+   case ept_EntertainmentStation:
+   case ept_Resort:
+   case ept_Habitat:
+   case ept_Settlement:
+   case ept_AgriculturalSettlement:
+
+   case ept_WeaponsManufacturingPlant:
+   case ept_OrganicsProcessingPlant:
+   case ept_NeutroniumProcessingPlant:
+   case ept_FusionableGasesProcessingPlant:
+   case ept_RadioactivesProcessingPlant:
+   case ept_ExoticMetalsProcessingPlant:
+   case ept_RareMetalsProcessingPlant:
+   case ept_CommonMetalsProcessingPlant:
+   case ept_BiomassProcessingPlant:
+   case ept_InorganicsProcessingPlant:
+   case ept_WaterProcessingPlant:
+
+
+   case ept_MercenaryBase:
+   case ept_Fortress:
+   case ept_GangsterHideout:
+
+   case ept_PirateBase:
+   case ept_PirateCove:
+   case ept_PirateOutpost:
+      
+   case ept_DefenceStation:
+   case ept_RegionalDepartment:
+   case ept_SystemAdministration:
+   case ept_ClusterAdministration:
+   case ept_PoliceBase:
+   case ept_SecurityStation:
+
+
+      return true;
+      break;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+bool has_fence(hmapentity location)
+{
+   list op_list;
+   
+   op_list = tsFleetOpFilter.FilterKnown(tsFleetOp.StationOperationsOfType(location, ept_EmbezzleOp), true);
+
+   if (!List.IsEmpty(op_list)) {
+      return true;
+   }
+
+   return false;
+}
+
+
+
+
+bool has_weapons(hmapentity location)
+{
+
+   int habtype = tsLProduction.GetType(iHabitat.Cast(location));
+
+   switch( habtype )
+   {
+   case ept_MercenaryBase:
+   case ept_Fortress:
+
+   case ept_Shipyard:
+   case ept_WeaponsManufacturingPlant:
+   case ept_SystemAdministration:
+   case ept_ClusterAdministration:
+   case ept_BlackBudgetResearchStation:
+
+   case ept_PirateBase:
+   case ept_PirateCove:
+
+   case ept_DefenceStation:
+   case ept_PoliceBase:
+   case ept_SecurityStation:
+
+      return true;
+      break;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+
+
+bool has_scrapper(hmapentity location)
+{
+
+   int habtype = tsLProduction.GetType(iHabitat.Cast(location));
+
+   switch( habtype )
+   {
+   case ept_Shipyard:
+   case ept_Settlement:
+   case ept_AgriculturalSettlement:
+
+   case ept_PirateBase:
+   case ept_PirateCove:
+   case ept_PirateOutpost:
+
+   case ept_GangsterHideout:
+
+      return true;
+      break;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+// Tanker for wingman hiring.
+bool has_tanker(hmapentity location)
+{
+
+   int habtype = tsLProduction.GetType(iHabitat.Cast(location));
+
+   switch( habtype )
+   {
+   case ept_Waystation:
+   case ept_Beanstalk:
+   case ept_Shipyard:
+   case ept_TransferStation:
+   case ept_Warehousing:
+
+   case ept_MercenaryBase:
+   case ept_Fortress:
+
+   case ept_Casino:
+   case ept_EntertainmentStation:
+   case ept_Resort:
+   case ept_Habitat:
+   case ept_Settlement:
+   case ept_AgriculturalSettlement:
+
+   case ept_PirateBase:
+   case ept_PirateCove:
+   case ept_PirateOutpost:      
+
+      return true;
+      break;
+   default:
+      break;
+   }
+
+   return false;
+}
+
+bool is_player_owned(hmapentity location)
+{
+   hfaction player = tsFaction.PlayerFaction();
+
+   if (player == iSim.Faction(location)) {
+      return true;
+   }
+
+   return false;
+}
+
+// END OF CODE
+// *********************************************************************************

@@ -1,0 +1,441 @@
+//[c]//*******************************************************************************************/
+//[c]//
+//[c]// tsMain
+//[c]//
+//[c]// This package unifies the major Epic components. It handles script.ini calls, and 
+//[c]// in turn calls the Epic packages.
+//[c]//
+//[c]// This package is a great danger for circular dependency. Try to never call these functions
+//[c]// directly. Save is the only current exception.
+//[c]//
+//[c]// Feb 2003, Jon Freise
+//[c]//******************************************************************************************/
+
+// Package name
+package tsMain;
+
+// Imports
+uses 
+   Sim,
+   GUI,
+   Task,
+   State,
+   iSim,
+   iShip,
+   iFactionScript,
+   iCargo,
+   Debug,
+   Text,
+   iBaseGUI,
+   iLagrangePoint,
+   iAI,
+Global,
+
+   tsTime,
+   tsDistance,
+   tsDebug,
+   tMultimod,
+   UniGUI,
+   UniGUIBase,
+   tsNavGui,
+   tsFaction,
+   tsGuiEnum,
+   tsGui,
+   tsShip,
+   tsDistance,
+   tsWingComm,
+   tsPlayerWatch,
+   tsStationEnv,
+   tsShipComms,
+   tsPlayerFleetUpkeep,
+   tsFleetOp,
+   tsFleetOpSave,
+   tsLInventory,
+   tsEconomy,
+   tsTradeBuy,
+   tsTradeSell,
+   tsPlayerFleetGui,
+   tsExitGui,
+   tsStationSave,
+   tsStarSystem,
+   tsMusic,
+   tsMail,
+   tsNewsNet,
+   tsShipMail,
+   tsViewDock,
+   tsCapsuleJump,
+   tsLpointFindGui,
+   tsStationRules,
+   tsFleetOpUpdate,
+   tsCrewSpeak,
+   tsReputationUpdate,
+   tsOptionsGui,
+   tsStartGui,
+   tsShipSave,
+   tsPlayerSave,
+   tsShipCreationEnum,
+   tsShipCreation,
+   tsReferenceGui,
+   tsLoadoutGui,
+	tsPodUtil,
+   tsEquipSell,
+   tsEquipBuy;
+
+
+// Exports
+provides 
+   GameEnter,
+   SessionEnter,
+   SessionExit,
+   BaseEnter,
+   BaseExit,
+   SpaceEnter,
+   SpaceExit,
+   FinalSetup,
+   SystemEnter,
+   SystemExit,
+   SaveGame,
+   DayUpdate,
+   PlayerDocked,
+   PlayerUndocked;
+
+
+// Prototypes
+prototype GameEnter();
+prototype SessionEnter();
+prototype SessionExit();
+prototype BaseEnter();
+prototype BaseExit();
+prototype SpaceEnter();
+prototype SpaceExit();
+prototype FinalSetup();
+prototype SystemEnter();
+prototype SystemExit();
+prototype SaveGame();
+prototype DayUpdate();
+prototype PlayerDocked();
+prototype PlayerUndocked();
+
+
+// Happens after a session start.
+// Does not force a new session (very confusing).
+//[of]:GameEnter()
+GameEnter()
+{
+   atomic debug Debug.PrintString("tsMain.GameEnter ----------------Start----------------\n");
+
+   tsDebug.NewGame();
+
+   tsPlayerSave.NewGame();
+   
+   tsStationSave.ReadNewStations();
+
+   tsFleetOpSave.ReadNewOperations();
+
+   tsCapsuleJump.StartGame();
+
+   tsOptionsGui.NewGame();
+
+   tsStartGui.NewGame();
+
+   tsFaction.NewGame();
+   
+   atomic debug Debug.PrintString("tsMain.GameEnter ----------------End----------------\n");
+}
+//[cf]
+
+// Happens when the game is started, or loaded.
+//[of]:SessionEnter()
+SessionEnter()
+{
+   atomic debug Debug.PrintString("tsMain.SessionEnter ----------------Start----------------\n");
+
+   Text.Add("csv:/text/gt_station_types");
+   Text.Add("csv:/text/gt_pc_objects");
+   Text.Add("csv:/text/player_ship_name");
+
+	if (Global.Exists("g_trout_old_mission_time")) {
+		Global.SetInt("g_trout_old_mission_time", 0);
+	}
+
+   tsDistance.Init();
+
+   iFactionScript.Initialise();
+   tsFaction.SessionStart();
+
+   tsTime.InitGlobals();
+
+   tsStationSave.SessionStart();
+   tsFleetOpSave.SessionStart();
+
+
+   tsGui.InitGlobals();
+
+   tsTradeBuy.SessionStart();
+   tsTradeSell.SessionStart();
+   tsPlayerFleetGui.SessionStart();
+   tsExitGui.SessionStart();
+
+   tsMusic.Init();
+
+   tsLInventory.Init();
+
+   tsLpointFindGui.StartSession();
+
+   tsReferenceGui.SessionStart();
+
+   tsLoadoutGui.SessionStart();
+
+   tsEquipBuy.SessionStart();
+   tsEquipSell.SessionStart();  
+
+//    added SRC 2012-March-21
+
+   tsPodUtil.InitializeKeyBindings(); 
+   
+   atomic debug Debug.PrintString("tsMain.SessionEnter ----------------End----------------\n");
+}
+//[cf]
+
+// Happens when the game is quit, or reloaded.
+//[of]:SessionExit()
+SessionExit()
+{
+   atomic debug Debug.PrintString("tsMain.SessionExit ----------------Start----------------\n");
+
+   Text.Remove("csv:/text/gt_station_types");
+   Text.Remove("csv:/text/gt_pc_objects");
+   Text.Remove("csv:/text/player_ship_name");
+
+   tsTradeBuy.SessionEnd();
+   tsTradeSell.SessionEnd();
+   tsPlayerFleetGui.SessionEnd();
+   tsExitGui.SessionEnd();
+   tsLpointFindGui.EndSession();
+
+   tsReferenceGui.SessionEnd();
+
+   tsLoadoutGui.SessionEnd();
+
+   tsEquipBuy.SessionEnd();
+   tsEquipSell.SessionEnd();
+   
+   atomic debug Debug.PrintString("tsMain.SessionExit ----------------End----------------\n");
+}
+//[cf]
+
+
+//[of]:BaseEnter()
+BaseEnter()
+{
+   atomic debug Debug.PrintString("tsMain.BaseEnter ----------------Start----------------\n");
+
+   tsFleetOpSave.BaseEnter();
+
+
+   iBaseGUI.SetTradeScreenEnabled( false );
+   iBaseGUI.SetInventoryScreenEnabled( false );
+   iBaseGUI.SetRecyclingScreenEnabled( false );
+   iBaseGUI.SetManufacturingScreenEnabled( false );
+   iBaseGUI.SetCommsScreenEnabled( false );
+   iBaseGUI.SetEncyclopaediaScreenEnabled( false );
+   iBaseGUI.SetStatisticsScreenEnabled( false );
+   iBaseGUI.SetTriangulationScreenEnabled( false );
+
+   atomic debug Debug.PrintString("tsMain.BaseEnter ----------------End----------------\n");
+}
+//[cf]
+
+
+//[of]:BaseExit()
+BaseExit()
+{
+   atomic debug Debug.PrintString("tsMain.BaseExit ----------------Start----------------\n");
+
+   tsStationSave.BaseExit();
+   tsFleetOpSave.BaseExit();
+
+   tsStationEnv.EnterBase();
+   tsEconomy.ExitBase();
+
+   atomic debug Debug.PrintString("tsMain.BaseExit ----------------End----------------\n");
+}
+//[cf]
+
+
+//[of]:SpaceEnter()
+SpaceEnter()
+{
+   atomic debug Debug.PrintString("tsMain.SpaceEnter ----------------Start----------------\n");
+
+   UniGUIBase.EnterSpace();
+
+   tsEconomy.EnterSpace();
+
+   tsNavGui.Initialise();
+
+   atomic debug Debug.PrintString("tsMain.SpaceEnter ----------------End----------------\n");
+}
+//[cf]
+
+
+//[of]:SpaceExit()
+SpaceExit()
+{
+   atomic debug Debug.PrintString("tsMain.SpaceExit ----------------Start----------------\n");
+
+   tsNavGui.ExitSpace();
+
+   atomic debug Debug.PrintString("tsMain.SpaceExit ----------------End----------------\n");
+}
+//[cf]
+
+
+//[of]:FinalSetup()
+FinalSetup()
+{
+   atomic debug Debug.PrintString("tsMain.FinalSetup ----------------Start----------------\n");
+
+   tsPlayerWatch.PlayerWatch();
+   tsPlayerSave.Restore();
+
+   tsShipSave.Relink();
+   tsWingComm.Setup();
+   tsShipComms.Setup();
+
+   tsPlayerSave.RestoreOrders();
+
+   tsEconomy.TestRun();
+
+   tsCapsuleJump.Init();
+
+   tsMail.ReadArchives();
+
+   tsShipMail.StartMyMod();
+
+   tsLoadoutGui.AttachCargoHardpoint();
+
+   tsCrewSpeak.Init();
+
+   tsStartGui.FinalSetup();
+
+   atomic debug Debug.PrintString("tsMain.FinalSetup ----------------End----------------\n");
+}
+//[cf]
+
+
+//[of]:SystemEnter()
+SystemEnter()
+{
+   atomic debug Debug.PrintString("tsMain.SystemEnter ----------------Start----------------\n");
+
+   tsFaction.Init();
+
+   tsShipCreation.Init();
+
+   tsStationSave.RestoreAllStations();   
+
+   tsFleetOpSave.Restore();
+
+   tsStarSystem.UpdateSystem();
+
+   tsStationEnv.CallMods();
+   tsStationEnv.SystemSetup();
+
+   tsEconomy.StartSystem();
+   tsPlayerWatch.SystemEnter();
+
+   tsMusic.NewSystem();
+
+   atomic debug Debug.PrintString("tsMain.SystemEnter ----------------End----------------\n");
+}
+//[cf]
+
+
+//[of]:SystemExit()
+SystemExit()
+{
+   atomic debug Debug.PrintString("tsMain.SystemExit\n");
+}
+//[cf]
+
+
+//[of]:SaveGame()
+SaveGame()
+{
+   atomic debug Debug.PrintString("tsMain.SaveGame ----------------Start----------------\n");
+
+   tsTime.SaveTime();
+
+   tsStationSave.SaveAllStations();
+   tsFaction.SaveGame();
+   tsPlayerSave.Save();
+
+   tsFleetOpSave.Save();
+
+
+   tsMail.SaveArchives();
+
+   // Saves the favorites.
+   tsNavGui.ExitSpace();
+
+   tMultimod.SaveGame();
+
+   atomic debug Debug.PrintString("tsMain.SaveGame ----------------End----------------\n");
+}
+//[cf]
+
+
+//[of]:DayUpdate()
+DayUpdate()
+{
+   atomic debug Debug.PrintString("tsMain.DayUpdate ----------------Start----------------\n");
+
+   //tsStationRules.UpdateAllStations();
+   tsFleetOpUpdate.UpdateAll();
+
+   tsNewsNet.DayUpdate();
+   tsPlayerFleetUpkeep.RunUpkeep();
+
+   tsReputationUpdate.Update();
+   tMultimod.DayUpdate();
+
+   atomic debug Debug.PrintString("tsMain.DayUpdate ----------------End----------------\n");
+}
+//[cf]
+
+
+// Event called when the player docks to a station.
+//[of]:PlayerDocked()
+PlayerDocked()
+{
+   atomic debug Debug.PrintString("tsMain.PlayerDocked\n");
+
+   tsViewDock.PlayerDock();
+   tMultimod.PlayerDocked();
+}
+//[cf]
+
+
+//[of]:PlayerUndocked()
+PlayerUndocked()
+{
+   atomic debug Debug.PrintString("tsMain.PlayerUndocked\n");
+
+   tMultimod.PlayerUndocked();
+}
+//[cf]
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+

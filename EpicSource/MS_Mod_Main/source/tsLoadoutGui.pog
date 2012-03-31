@@ -1,0 +1,2125 @@
+//*******************************************************************************************/
+//
+// tsLoadoutGui.pog
+//
+// This module allows the player to swap out systems on his ship.
+// 
+//
+// Jan 2007, jon freise
+//******************************************************************************************/
+
+package tsLoadoutGui;
+
+//[of]:Imports
+uses	Sim,
+		iShip,
+		iSim,
+		Debug,
+		Global,
+		GUI,
+		iDirector,
+		iGame,
+		iGUI,
+		iHUD,
+		iHabitat,
+		iMapEntity,
+		INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+		iUtilities,
+		iCargo,
+		iInventory,
+		iComms,
+		Math,
+		iDockPort, 
+		CargoTypes,
+		tsEconUtil,
+		UniGUI,
+		tsStationEnum,
+		tsStation,
+		tsGuiEnum,
+		tsGui,
+		tsFaction,
+		tsMoney,
+		tsShip,
+		tsPlayerFleet,
+      tsLProduction,
+      tsDescribeINI,
+		tsString;
+//[cf]
+
+
+//[of]:Exports
+provides MainWindow,
+         RunCheck,
+         StartScreen,
+         ExitScreen,
+         SessionStart,
+         SessionEnd,
+
+         RemoveEquipment,
+
+
+         OnShipPress,
+         OnSystemPress,
+         OnEquipmentPress,
+         OnInventoryItemPress,
+
+         OnRepairPress,
+         OnRearmPress,
+         OnRefuelPress,
+
+         OnReplacePress,
+         OnRemovePress,
+   
+         AttachCargoHardpoint;
+//[cf]
+
+
+
+prototype update_ship_info();
+prototype update_cargo_info(hcargo cargo);
+
+prototype create_player_inventory_list();
+prototype create_player_fleet_list();
+prototype create_ship_systems_list();
+prototype create_equipment_list();
+prototype bool allow_run();
+
+prototype select_ship(hship ship);
+prototype clear_ship();
+
+prototype select_equipment(hcargo cargo);
+prototype clear_equipment();
+
+prototype select_system(hsubsim subsim);
+prototype clear_system();
+
+prototype list hardpoint_list(hship ship);
+prototype list find_equipment(string hardpoint_type);
+prototype hcargo subsim2cargo(string subsim_template);
+
+prototype bool store_subsim(hsubsim subsim);
+prototype rearm_subsim(hsubsim subsim, bool empty_subsim);
+
+prototype hide_window( hwindow win );
+prototype show_window( hwindow win );
+prototype tag_equipment(hship ship);
+prototype bool needs_rearm(hship ship);
+prototype rearm_ship(hship ship);
+
+prototype string get_mountpoint_template(string hardpoint_type);
+prototype string get_mountpoint_type(hsubsim subsim);
+
+prototype string ship_status2string(hship ship);
+
+prototype bool allow_loadout(hship ship);
+prototype bool allow_rearming(hship ship);
+//
+// Determine if the gui can be run or not.
+//
+//[of]:RunCheck()
+bool allow_run()
+{
+   hmapentity station;
+   hship player = iShip.FindPlayerShip();
+   hfaction station_faction;
+
+   bool allow_trade = true;
+
+   station = iHabitat.Nearest(iMapEntity.SystemHabitats(), player);
+   
+   // Allow when player near the station.
+   if (Sim.DistanceBetween(player, station) > 20km) {
+      allow_trade = false;
+   }
+
+   // Don't allow the player to loadout when the station is not
+   // operating (destroyed or under construction). 
+   if (tsStation.Status(iHabitat.Cast(station)) != ESS_Normal) {
+      allow_trade = false;
+   }
+
+   // If the player owns this station, do not allow loadout.
+   if (station_faction == tsFaction.PlayerFaction()){
+      allow_trade = false;
+   }
+
+   // If no one owns this station (it was abandond) do not allow loadout.
+   if (station_faction == tsFaction.EmptyFaction()){
+      allow_trade = false;
+   }
+
+   // If the player is not neutral or better, do not allow trade.
+   // TBD?
+
+   return allow_trade;
+}
+
+
+RunCheck()
+{
+   Global.SetBool("g_zz_ug_passme", allow_run());
+}
+//[cf]
+
+
+//
+// Load the text files
+//
+//[of]:SessionStart()
+SessionStart()
+{
+   Text.Add("csv:/text/gt_loadout_gui");
+}
+//[cf]
+
+
+//
+// Unload any text files.
+//
+//[of]:SessionEnd()
+SessionEnd()
+{
+   Text.Remove("csv:/text/gt_loadout_gui");
+}
+//[cf]
+
+
+//
+// Called when loadout GUI is started.
+// 1. Builds up the price and hardpoint data aginst the iCargo cargo types
+// 2. Builds up a list of mountpoints in a list and saves globally
+//
+//[of]:AttachCargoHardpoint()
+AttachCargoHardpoint()
+{
+   hinifile hardpoint_file = INIFile.Create("ini:/cargo_hardpoints");
+   string cargo_name, hardpoint_type, template_name, ammo_name;
+   int count, cargo_type, price, ammo_type;
+   hcargo cargo;
+   hinifile subsim_file;
+   list mountpoint_list;
+   hsim mountpoint;
+
+   debug Debug.PrintString("tsLoadoutGui.AttachCargoHardpoint Start\n");
+   
+   // process the cargo types in the cargo_hardpoints.ini file
+   count = 0;
+   while (INIFile.NumberedExists(hardpoint_file, "Cargo", "cargo_type", count)) {
+      cargo_name = INIFile.NumberedString(hardpoint_file, "Cargo", "cargo_type", count, "CT_Invalid");
+      hardpoint_type = INIFile.NumberedString(hardpoint_file, "Cargo", "hardpoint_type", count, "");
+      template_name = INIFile.NumberedString(hardpoint_file, "Cargo", "template", count, "");
+      price = INIFile.NumberedInt(hardpoint_file, "Cargo", "price", count, 0);
+      ammo_name = INIFile.NumberedString(hardpoint_file, "Cargo", "ammo_type", count, "no_ammo");
+      ++count;
+
+      cargo_type = tsEconUtil.String2CargoType(cargo_name);
+
+      if ("no_ammo" == ammo_name) {
+         ammo_type = CT_Invalid;
+      }else {
+         ammo_type = tsEconUtil.String2CargoType(ammo_name);
+      }
+
+      // Validate there are no typo errors.
+      subsim_file = INIFile.Create(template_name);
+      if (none == subsim_file) {
+         debug {
+            Debug.PrintString(String.FormatStrStr("tsLoadoutGui.AttachCargoHardpoint Error invalid template entry '%s' in cargo '%s'\n",
+                                                  template_name,
+                                                  cargo_name));
+         }
+      }
+      INIFile.Destroy(subsim_file);
+
+      if (CT_Invalid != cargo_type) {
+         cargo = iCargo.Find(cargo_type);
+
+         if (none != cargo) {
+            Object.AddStringProperty(cargo, "hardpoint_type", hardpoint_type);
+            Object.AddStringProperty(cargo, "template_name", template_name);
+            Object.AddIntProperty(cargo, "equip_price", price);
+            Object.AddIntProperty(cargo, "ammo_type", ammo_type);
+         }else{
+            debug {
+               Debug.PrintString(String.FormatStrStr("tsLoadoutGui.AttachCargoHardpoint Error invalid cargo type from cargo name '%s' %s\n",
+                                                     cargo_name, 
+                                                     ""));
+            }
+         }
+      }else {
+         debug {
+            Debug.PrintString(String.FormatStrStr("tsLoadoutGui.AttachCargoHardpoint Error invalid cargo name '%s' %s\n",
+                                                  template_name,
+                                                  cargo_name));
+         }
+      }
+                  
+      if (CT_Invalid != ammo_type) {
+         cargo = iCargo.Find(ammo_type);
+
+         if (none != cargo) {
+            Object.AddStringProperty(cargo, "hardpoint_type", "ammo");
+            Object.AddStringProperty(cargo, "template_name", "");
+            Object.AddIntProperty(cargo, "equip_price", 0);
+            Object.AddIntProperty(cargo, "ammo_type", 0);
+         }else{
+            debug {
+               Debug.PrintString(String.FormatStrStr("tsLoadoutGui.AttachCargoHardpoint Error invalid template entry '%s' in cargo '%s'\n",
+                                                     template_name,
+                                                     cargo_name));
+            }
+         }
+      }else {
+         // User was trying to setup some ammo, but did a typo or something
+         if ("no_ammo" != ammo_name) {
+            debug {
+               Debug.PrintString(String.FormatStrStr("tsLoadoutGui.AttachCargoHardpoint Error invalid ammo_type '%s' in cargo '%s'\n",
+                                                     ammo_name,
+                                                     cargo_name));
+            }
+         }
+      }
+
+
+   }  // while end
+
+   // process the hard point types in the cargo_hardpoints.ini file
+   count = 0;
+   while (INIFile.NumberedExists(hardpoint_file, "Mountpoints", "hardpoint_type", count)) {
+      hardpoint_type = INIFile.NumberedString(hardpoint_file, "Mountpoints", "hardpoint_type", count, "");
+      template_name = INIFile.NumberedString(hardpoint_file, "Mountpoints", "template", count, "");
+      ++count;
+
+      // Validate there are no typo errors.
+      subsim_file = INIFile.Create(template_name);
+      if (none == subsim_file) {
+         debug {
+            Debug.PrintString(String.FormatStrStr("tsLoadoutGui.AttachCargoHardpoint Error subsim INI '%s' does not exist in mountpoint entry '%s'\n",
+                                                  template_name,
+                                                  cargo_name));
+         }
+      }
+
+      INIFile.Destroy(subsim_file);
+
+      mountpoint = Sim.Create("ini:/sims/nav/waypoint", hardpoint_type);
+      Object.AddStringProperty(mountpoint,"mountpoint_name", template_name);
+      List.AddTail(mountpoint_list, mountpoint);
+   }  // while end
+
+   Global.CreateList("gt_loadoutgui_mountpoint_list", GA_Write|GA_NoSave, mountpoint_list);
+
+   INIFile.Destroy(hardpoint_file);
+   debug Debug.PrintString(" tsLoadoutGui.AttachCargoHardpoint End\n");
+}
+//[cf]
+
+
+//*******************************************************************************
+// 
+
+//*******************************************************************************
+
+
+//[of]:float int2float(int value)
+float int2float(int value)
+{
+   return value;
+}
+//[cf]
+
+
+//[of]:int float2int(float value)
+int float2int(float value)
+{
+   return value;
+}
+//[cf]
+
+
+//[of]:hwindow create_border_button(int x, int y, int width, int height, hwindow parent, string name, string function)
+hwindow create_border_button(int x, int y, int width, int height,
+                             hwindow parent,
+                             string name,
+                             string function)
+{
+   hwindow button, border;
+   int button_x, button_y, button_width, button_height;
+
+   // We need to change the button size to make room for the border.
+   button_x = x + 8;
+   button_y = y + 8;
+
+   button_width = width - 16;
+   button_height = height - 16;
+
+   button = GUI.CreateButton( button_x,
+                              button_y,
+                              button_width,
+                              button_height,
+                              parent);
+
+
+   GUI.SetWindowTitle(button, name);
+
+   GUI.SetWindowFont(button, Global.String("GUI_title_font"));
+
+   GUI.SetButtonFunctionPog(button, function);
+
+//   tsGui.SetStandardWindowColours(button);
+
+   // Add the border
+   border = GUI.CreateBorder(button);
+
+   // we still return the button, because the function might need to change
+   // or something. This is one of those no good choice decisions.
+
+   tsGui.SetStandardStateColours(button);
+
+   return button;
+}
+//[cf]
+
+
+//[of]:StartScreen()
+StartScreen()
+{
+    GUI.PopScreensTo("icSpaceFlightScreen");
+    GUI.OverlayScreen("icPDAOverlayManager");
+    iGUI.OverlayCustomScreen( "tsLoadoutGui.MainWindow" );
+}
+//[cf]
+
+
+//[of]:ExitScreen()
+ExitScreen()
+{
+   UniGUI.UniGUIRemoveScreen();
+}
+//[cf]
+
+
+//[of]:select_system(hsubsim subsim)
+select_system(hsubsim subsim)
+{
+   hwindow remove_button = GUI.Cast(Global.Handle("gt_loadoutgui_remove_button"));
+   hcargo return_cargo;
+   hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
+
+
+   Global.SetHandle("gt_loadoutgui_subsim_select", subsim);
+
+   return_cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
+
+   if ((none != return_cargo)&&(allow_loadout(ship))) {
+      // Allow remove if subsim exists in inventory (not mountpoint).
+      show_window(remove_button);
+   }else {
+      hide_window(remove_button);
+   }
+
+   if (none != return_cargo) {
+      update_cargo_info(return_cargo);
+   }
+
+   // Find matching equipment for the newly selected ship system.
+   create_equipment_list();
+
+}
+//[cf]
+
+clear_system()
+{
+   Global.SetHandle("gt_loadoutgui_subsim_select", none);
+}
+
+//[of]:OnSystemPress()
+OnSystemPress()
+{
+   hwindow button = GUI.FocusedWindow();
+   hsubsim subsim;
+
+   subsim = Subsim.Cast(Object.HandleProperty(button,"gt_loadoutgui_subsim"));
+
+   select_system(subsim);
+}
+//[cf]
+
+select_equipment(hcargo cargo)
+{
+   // Set the value for the replace or remove button.
+   Global.SetHandle("gt_loadoutgui_equipment_select", cargo);
+
+   // We also steal the inventory information screen and display
+   // The selected cargo type. But only if the player makes
+   // the equipment selection.
+   Global.SetHandle("gt_loadoutgui_inventory_select", cargo);
+
+   update_cargo_info(cargo);
+}
+
+clear_equipment()
+{
+   Global.SetHandle("gt_loadoutgui_equipment_select", none);
+}
+
+//[of]:OnEquipmentPress()
+OnEquipmentPress()
+{
+   hwindow button = GUI.FocusedWindow();
+   hcargo cargo;
+
+
+   cargo = iCargo.Cast(Object.HandleProperty(button,"gt_loadoutgui_equipment"));
+
+   select_equipment(cargo);
+}
+//[cf]
+
+
+//[of]:task replace_task()
+task replace_task()
+{
+   hsubsim subsim = Subsim.Cast(Global.Handle("gt_loadoutgui_subsim_select"));
+   hcargo cargo = iCargo.Cast(Global.Handle("gt_loadoutgui_equipment_select"));
+   hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
+   string template_name, hardpoint_type;
+   hcargo return_cargo;
+   hsubsim new_subsim;
+   bool no_error = true;
+
+   if (none == cargo) {
+      debug Debug.PrintString("tsLoadoutGui.OnReplacePress error cargo\n");
+      no_error = false;
+   }
+
+   if (none == ship) {
+      debug Debug.PrintString("tsLoadoutGui.OnReplacePress error ship\n");
+      no_error = false;
+   }
+
+   if (none == subsim) {
+      debug Debug.PrintString("tsLoadoutGui.OnReplacePress error subsim\n");
+      no_error = false;
+   }
+
+   if (no_error) {
+      // Check the hardpoint types of the two systems match, in case of menu error
+      if (Object.StringProperty(subsim, "hardpoint_type") != Object.StringProperty(cargo, "hardpoint_type")){
+         no_error = false;
+      }
+   }
+
+   if (no_error) {
+
+      template_name = Object.StringProperty(cargo,"template_name");
+
+      if ("" != template_name) {
+
+         // remove subsim from inventory.
+         iInventory.Add(Object.IntProperty(cargo,"type"), -1);
+
+         // put the removed subsim into inventory plus ammo.
+         store_subsim(subsim);      
+      }else {
+         debug Debug.PrintString("tsLoadoutGui.OnReplacePress error template\n");
+         no_error = false;
+      }
+   }
+
+   if (no_error) {
+
+      new_subsim = tsShip.ReplaceSubsim(ship, subsim, template_name);
+
+      // Attach the hardpoint type to the new subsim to allow it to be changed again.
+      Object.AddStringProperty(new_subsim, "hardpoint_type", Object.StringProperty(cargo, "hardpoint_type"));
+
+      tsShip.LinkPlayerWeapons(ship);
+
+      // Allow the new systems time to be created and placed. Then update the menu items.
+      Task.Sleep(Task.Current(), 0.1);
+
+      // Fill the new subsim with ammo from inventory.
+      rearm_subsim(new_subsim, true);
+
+      // beam replacement can swap subsims, to retag the ship.
+      tag_equipment(ship);
+
+      if (!Global.Bool("tsdisable_loadout_turrets"))
+      {
+         // Try to get turret systems to fire on targets.
+         iShip.WeaponTargetsFromContactList(ship);
+      }
+
+
+      // Tell the systems menu where to focus
+      Global.SetHandle("gt_loadoutgui_subsim_new", new_subsim);
+   }
+
+   // Clear all old selections
+   clear_system();
+   clear_equipment();
+
+   create_ship_systems_list();
+
+   create_equipment_list();
+
+   create_player_inventory_list();
+
+   update_ship_info();
+
+   Global.SetBool("gt_loadoutgui_allow_replace", true);
+}
+//[cf]
+
+
+//[of]:OnReplacePress()
+OnReplacePress()
+{
+   debug Debug.PrintString("tsLoadoutGui.OnReplacePress\n");
+
+   if (Global.Bool("gt_loadoutgui_allow_replace")) {
+      Global.SetBool("gt_loadoutgui_allow_replace", false);
+      Task.Detach(start replace_task());
+   }
+}
+//[cf]
+
+
+//[of]:OnRepairPress()
+OnRepairPress()
+{
+
+
+}
+//[cf]
+
+
+//[of]:OnRearmPress()
+OnRearmPress()
+{
+   hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
+   hwindow rearm_button = GUI.Cast(Global.Handle("gt_loadoutgui_rearm_button"));
+
+   rearm_ship(ship);
+
+   // The ship status has changed, force an update.
+   select_ship(ship);
+
+   // We must have used up some ammo.
+   create_player_inventory_list();
+}
+//[cf]
+
+
+//[of]:OnRefuelPress()
+OnRefuelPress()
+{
+
+
+}
+//[cf]
+
+
+//[of]:OnRefuelPress()
+task remove_task()
+{
+   hsubsim subsim = Subsim.Cast(Global.Handle("gt_loadoutgui_subsim_select"));
+   hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
+   hcargo return_cargo;
+   string mountpoint_template, hardpoint_type;
+   hsubsim new_subsim = none;
+   bool no_error = true;
+
+
+   if (none == ship) {
+      debug Debug.PrintString("tsLoadoutGui.OnRemovePress error ship\n");
+      no_error = false;
+   }
+
+   if (none == subsim) {
+      debug Debug.PrintString("tsLoadoutGui.OnRemovePress error subsim\n");
+      no_error = false;
+   }
+
+   if (!store_subsim(subsim)) {
+      debug Debug.PrintString("tsLoadoutGui.OnRemovePress error store_subsim\n");
+      no_error = false;
+   }
+
+   // Only swap if there are no errors.
+   if (no_error) {
+
+      hardpoint_type = Object.StringProperty(subsim, "hardpoint_type");
+
+      mountpoint_template = get_mountpoint_template(hardpoint_type);
+
+      // We replace the ship system with a mountpoint. 
+      new_subsim = tsShip.ReplaceSubsim(ship, subsim, mountpoint_template);
+
+      Object.AddStringProperty(new_subsim, "hardpoint_type", hardpoint_type);
+
+      tsShip.LinkPlayerWeapons(ship);
+
+      // Allow the new systems time to be created and placed. Then update the menu items.
+      Task.Sleep(Task.Current(), 0.1);
+
+      // beam replacement can swap subsims, to retag the ship.
+      tag_equipment(ship);
+   }
+
+   // Clear all old selections
+   clear_system();
+   clear_equipment();
+   
+   // Tell the systems menu where to focus
+   Global.SetHandle("gt_loadoutgui_subsim_new", new_subsim);
+
+   // Refresh all the lists to show the changes.
+   create_ship_systems_list();
+
+   create_equipment_list();
+
+   create_player_inventory_list();
+
+   update_ship_info();
+
+   // Allow remove/replace buttons to function again.
+   Global.SetBool("gt_loadoutgui_allow_replace", true);
+}
+//[cf]
+
+// Replaces a subsim into the inventory, including any ammo
+// Returns true if it was a Loadout supported subsim
+//[of]:store_subim()
+bool store_subsim(hsubsim subsim)
+{
+   hcargo return_cargo;
+   int ammo_type, ammo_count;
+
+   return_cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
+
+   if (none == return_cargo) {
+      // If the item to be removed is not a loadout supported subsim, exit.
+      // We should not ever be here, but this is a safety check.
+      return false;
+   }
+
+   iInventory.Add(Object.IntProperty(return_cargo,"type"), 1);
+
+   ammo_type = Object.IntProperty(return_cargo,"ammo_type");
+
+   if (ammo_type != 0) {
+      if (Object.PropertyExists(subsim, "ammo_count")) {
+         // Subsim uses ammo, so put it back into storage.
+         ammo_count = Object.IntProperty(subsim, "ammo_count");
+         iInventory.Add(ammo_type, ammo_count);
+      }
+   }
+
+   return true;
+
+}
+//[cf]
+
+
+//[of]:OnRemovePress()
+OnRemovePress()
+{
+   debug Debug.PrintString("tsLoadoutGui.OnRemovePress\n");
+
+   // block other removal attempts until this subsim has been removed.
+   if (Global.Bool("gt_loadoutgui_allow_replace")) {
+      Global.SetBool("gt_loadoutgui_allow_replace", false);
+      Task.Detach(start remove_task());
+   }
+}
+//[cf]
+
+
+
+
+//[of]:OnShipPress()
+update_ship_info()
+{
+   hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
+   hwindow ship_info = GUI.Cast(Global.Handle("gt_loadoutgui_ship_info"));
+   string text;
+   int cost;
+
+   text = String.Join(text,"Ship Info ");
+   text = String.Join(text,Text.Field(Sim.Name(ship), FT_Text));
+
+   text = String.Join(text, ship_status2string(ship));
+
+   if (Global.Bool("tsloadout_no_dock")) {
+      text = String.Join(text,"<p>Debug Flag Allows Loadout at any station.");
+   }
+   if (!allow_rearming(ship)) {
+      text = String.Join(text,"<p>To Rearm");
+      text = String.Join(text,"<br>Move ship near stations with shipyard arm docking ports to rearm.");
+   }
+   if (!allow_loadout(ship)) {
+      text = String.Join(text,"<p>To Change Loadout");
+      text = String.Join(text,"<br>Dock ship to stations with shipyard arm docking ports to change ship equipment.");
+   }
+
+   text = tsString.Htmlize(text);
+
+   GUI.SetTextWindowString( ship_info, text);
+}
+
+select_ship(hship ship)
+{
+   int cost;
+   hwindow rearm_button = GUI.Cast(Global.Handle("gt_loadoutgui_rearm_button"));
+
+
+   Global.SetHandle("gt_loadoutgui_ship_select", ship);
+
+   tag_equipment(ship);
+
+   if (needs_rearm(ship)&&allow_rearming(ship)) {
+      show_window(rearm_button);
+   }else{
+      hide_window(rearm_button);
+   }
+
+   // Clear the two menu items relating to equipment
+   clear_system();
+   clear_equipment();
+
+   update_ship_info();
+
+   create_ship_systems_list();
+
+   create_equipment_list();
+}
+
+clear_ship()
+{
+   Global.SetHandle("gt_loadoutgui_ship_select", none);
+}
+
+OnShipPress()
+{
+   hwindow button = GUI.FocusedWindow();
+   hship ship;
+
+   ship = iShip.Cast(Object.HandleProperty(button,"gt_loadoutgui_ship"));
+
+   select_ship(ship);
+}
+//[cf]
+
+
+//[of]:OnInventoryItemPress()
+update_cargo_info(hcargo cargo)
+{
+   hwindow equip_info = GUI.Cast(Global.Handle("gt_loadoutgui_item_info"));
+   string text, subsim_template;
+
+   if (none == cargo) {
+      text = tsString.Htmlize("");
+      GUI.SetTextWindowString( equip_info, text);
+      return;
+   }
+
+   text = iCargo.Name(cargo);
+   
+   subsim_template = Object.StringProperty(cargo, "template_name");
+
+   if (subsim_template != "") {
+      text = String.Join(text, tsDescribeINI.Subsystem(subsim_template));
+   }
+
+   text = tsString.Htmlize(text);
+
+   GUI.SetTextWindowString( equip_info, text);
+
+}
+
+
+OnInventoryItemPress()
+{
+   hwindow button = GUI.FocusedWindow();
+   hcargo cargo;
+
+   cargo = iCargo.Cast(Object.HandleProperty(button,"gt_loadoutgui_inventory"));
+
+   update_cargo_info(cargo);
+}
+//[cf]
+
+
+// Search the cargo for the cargo type that creates
+// this kind of subsystem. Then return that cargo.
+//[of]:hcargo subsim2cargo(string subsim_template)
+hcargo subsim2cargo(string subsim_template)
+{
+   hcargo cargo;
+   int i;
+
+   if ("" == subsim_template) {
+      return none;
+   }
+
+   for (i=CT_SecretData;i<=CT_AdvancedHullMaterialRefit;++i)
+   {
+      cargo = iCargo.Find(i);
+      if (none != cargo) {
+         if (Object.StringProperty(cargo,"template_name") == subsim_template){
+            return cargo;
+         }
+      }
+   }
+
+   return none;
+}
+//[cf]
+
+
+// Search all cargo types for those that have a matching
+// hardpoint type property.
+// An empty string for a hardpoint returns no equipment.
+//[of]:list find_equipment(string hardpoint_type)
+list find_equipment(string hardpoint_type)
+{
+   list matching_equipment;
+   hcargo cargo;
+   int i, number;
+
+   if ("" == hardpoint_type) {
+      return matching_equipment;
+   }
+
+   for (i=CT_SecretData;i<=CT_AdvancedHullMaterialRefit;++i)
+   {
+      cargo = iCargo.Find(i);
+      if (none != cargo) {
+         if (Object.StringProperty(cargo,"hardpoint_type") == hardpoint_type) {
+            number = iInventory.NumberOfCargoType(i);
+            if (number > 0) {
+               List.AddTail(matching_equipment, cargo);
+            }
+         }
+      }
+   }
+
+   return matching_equipment;
+}
+//[cf]
+
+
+//[of]:create_equipment_list()
+create_equipment_list()
+{
+   hwindow list_parent = GUI.Cast(Global.Handle("gt_loadoutgui_equipment_parent"));
+   hwindow list_base = GUI.Cast(Global.Handle("gt_loadoutgui_equipment_base"));
+   hwindow replace_button = GUI.Cast(Global.Handle("gt_loadoutgui_replace_button"));
+   hwindow list_box;
+   hwindow button;
+
+   int i, count, index;
+	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
+   int button_width, height, list_x, list_y;
+   list equipment_list;
+   string name, hardpoint_type;
+   hsubsim subsim;
+   hcargo cargo;
+   hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
+
+   // Remove the prior inventory list.
+   if (none != list_base) {
+      GUI.DeleteWindow(list_base);
+   }
+
+
+   subsim = Subsim.Cast(Global.Handle("gt_loadoutgui_subsim_select"));
+
+   if (subsim == none) {
+      return;
+   }
+
+   hardpoint_type = Object.StringProperty(subsim,"hardpoint_type");
+
+   // Find all equipment in the player inventory that can mount on this hardpoint.
+   equipment_list = find_equipment(hardpoint_type);
+
+   count = List.ItemCount(equipment_list);
+   if (count < 1) {
+      hide_window(replace_button);
+      return;
+   }
+
+   if (allow_loadout(ship)) {
+      show_window(replace_button);
+   }
+
+   
+   list_base = GUI.CreateWindow(0, 
+                                0,
+                                GUI.WindowCanvasWidth( list_parent),
+                                GUI.WindowCanvasHeight( list_parent),
+                                list_parent);
+
+
+   Global.CreateHandle("gt_loadoutgui_equipment_base",GA_Write|GA_NoSave, list_base);
+
+   // Set up the button and list sizes now.
+   button_width = GUI.WindowCanvasWidth( list_base) - scrollbar_width;
+   button_width -= 4;
+
+   list_box = GUI.CreateListBox( 0, 
+                                 0,
+                                 button_width,
+                                 GUI.WindowCanvasHeight( list_base),
+                                 list_base,
+                                 true,
+                                 false);
+
+	// Attach a scrollbar to the list box. from LFPlus.
+	GUI.CreateVerticalScrollbar( 
+		GUI.WindowCanvasWidth( list_base ) - scrollbar_width, 
+		0,
+		scrollbar_width, 
+		GUI.WindowCanvasHeight( list_base ),
+		list_base,
+		list_box,
+		Global.Float( "GUI_scrollbar_buttonratio" ),
+		"" );
+
+   count = List.ItemCount(equipment_list);
+   for (i=0;i<count;++i) {
+      cargo = iCargo.Cast(List.GetNth(equipment_list,i));
+
+      name = iCargo.Name(cargo);
+
+      button = iGUI.CreateAndInitialiseRectangularInverseRadioButton( none, 0, 0, 
+                                                                      button_width, 
+                                                                      name,
+                                                                      false );
+      // Attach ship for later handling.
+      Object.AddHandleProperty(button,"gt_loadoutgui_equipment",cargo);
+
+      GUI.SetInputOverrideFunctions( button,
+											"", 
+											"",
+											"", 
+											"", 
+											"", 
+											"",
+											"tsLoadoutGui.OnEquipmentPress",
+											"",
+											"" );
+
+      GUI.AddListBoxEntry(list_box, button);
+   }   
+
+   cargo = iCargo.Cast(List.Head(equipment_list));
+   Global.SetHandle("gt_loadoutgui_equipment_select",cargo);
+   GUI.SelectListBoxEntry(list_box, 0);
+
+}
+//[cf]
+
+
+//[of]:create_ship_systems_list()
+create_ship_systems_list()
+{
+   hwindow list_parent = GUI.Cast(Global.Handle("gt_loadoutgui_systems_parent"));
+   hwindow list_base = GUI.Cast(Global.Handle("gt_loadoutgui_systems_base"));
+   hwindow remove_button = GUI.Cast(Global.Handle("gt_loadoutgui_remove_button"));
+   hwindow list_box;
+   hwindow button;
+
+   int i, count, index;
+	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
+   int button_width, height, list_x, list_y;
+
+   list subsim_list;
+   string name;
+
+   hship ship = iShip.Cast(Global.Handle("gt_loadoutgui_ship_select"));
+   hsubsim subsim;
+   hsubsim new_subsim;
+
+
+   // See if there was a new subsim swapped onto the ship and
+   // remember it for selection in the list. Clear the request.
+   new_subsim = Subsim.Cast(Global.Handle("gt_loadoutgui_subsim_new"));
+   Global.SetHandle("gt_loadoutgui_subsim_new", none);
+
+   // Pull the list of ship systems.
+   subsim_list = hardpoint_list(ship);
+
+   // Remove the prior inventory list.
+   if (none != list_base) {
+      GUI.DeleteWindow(list_base);
+   }
+
+   count = List.ItemCount(subsim_list);
+   if (count == 0) {
+      // There are no hardpoints on this ship. Exit.
+
+      hide_window(remove_button);
+
+      return;
+   }
+
+   if (allow_loadout(ship)) {
+      show_window(remove_button);   
+   }
+
+
+
+   list_base = GUI.CreateWindow(0, 
+                                0,
+                                GUI.WindowCanvasWidth( list_parent),
+                                GUI.WindowCanvasHeight( list_parent),
+                                list_parent);
+
+
+   Global.CreateHandle("gt_loadoutgui_systems_base",GA_Write|GA_NoSave,list_base);
+
+   // Set up the button and list sizes now.
+   button_width = GUI.WindowCanvasWidth( list_base) - scrollbar_width;
+   button_width -= 4;
+
+
+   list_box = GUI.CreateListBox( 0, 
+                                 0,
+                                 button_width,
+                                 GUI.WindowCanvasHeight( list_base),
+                                 list_base,
+                                 true,
+                                 false);
+
+	// Attach a scrollbar to the list box. from LFPlus.
+	GUI.CreateVerticalScrollbar( 
+		GUI.WindowCanvasWidth( list_base ) - scrollbar_width, 
+		0,
+		scrollbar_width, 
+		GUI.WindowCanvasHeight( list_base ),
+		list_base,
+		list_box,
+		Global.Float( "GUI_scrollbar_buttonratio" ),
+		"" );
+
+
+   index = 0;
+   subsim_list = List.SortByStringProperty(subsim_list,"name");
+
+   for (i=0;i<count;++i) {
+      subsim = Subsim.Cast(List.GetNth(subsim_list,i));
+
+      // Try to reselect a just replaced subsim for player clarity.
+      if ((new_subsim != none)&&(subsim == new_subsim)) {
+         index = i;
+      }
+
+      name = Text.Field(Object.StringProperty(subsim,"name"), FT_Text);
+      name = String.Join(name,Text.Field(Object.StringProperty(subsim,"null_name"), FT_Text));
+      name = String.Left(name, 30);
+
+      button = iGUI.CreateAndInitialiseRectangularInverseRadioButton( none, 0, 0, 
+                                                                      button_width, 
+                                                                      name,
+                                                                      false );
+      // Attach subsim for later handling.
+      Object.AddHandleProperty(button,"gt_loadoutgui_subsim",subsim);
+
+      GUI.SetInputOverrideFunctions( button,
+											"", 
+											"",
+											"", 
+											"", 
+											"", 
+											"",
+											"tsLoadoutGui.OnSystemPress",
+											"",
+											"" );
+
+      GUI.AddListBoxEntry(list_box, button);
+   }   
+
+   subsim = Subsim.Cast(List.GetNth(subsim_list,index));
+   GUI.SelectListBoxEntry(list_box, index);
+
+   select_system(subsim);
+}
+//[cf]
+
+
+//[of]:create_player_fleet_list()
+create_player_fleet_list()
+{
+   hwindow list_parent = GUI.Cast(Global.Handle("gt_loadoutgui_player_fleet_parent"));
+   hwindow list_base = GUI.Cast(Global.Handle("gt_loadoutgui_player_fleet_base"));
+   hwindow list_box;
+   hwindow button;
+
+   int i, count, index;
+	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
+   int button_width, height, list_x, list_y;
+   list fleet_list, wingman_list;
+   hship ship;
+   string name;
+   hship player = iShip.FindPlayerShip();
+
+
+
+
+
+   // Find all the player fleet ships that are nearby.
+   fleet_list = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(tsShip.PlayerFleet()), player, 20km, TM_Ship));
+   List.AddHead(fleet_list, player);
+
+
+   // Remove the prior inventory list.
+   if (none != list_base) {
+      GUI.DeleteWindow(list_base);
+   }
+
+   list_base = GUI.CreateWindow(0, 
+                                0,
+                                GUI.WindowCanvasWidth( list_parent),
+                                GUI.WindowCanvasHeight( list_parent),
+                                list_parent);
+
+
+   Global.CreateHandle("gt_loadoutgui_player_fleet_base",GA_Write|GA_NoSave, list_base);
+
+   // Set up the button and list sizes now.
+   button_width = GUI.WindowCanvasWidth( list_base) - scrollbar_width;
+   button_width -= 4;
+
+
+   list_box = GUI.CreateListBox( 0, 
+                                 0,
+                                 button_width,
+                                 GUI.WindowCanvasHeight( list_base),
+                                 list_base,
+                                 true,
+                                 false);
+
+	// Attach a scrollbar to the list box. from LFPlus.
+	GUI.CreateVerticalScrollbar( 
+		GUI.WindowCanvasWidth( list_base ) - scrollbar_width, 
+		0,
+		scrollbar_width, 
+		GUI.WindowCanvasHeight( list_base ),
+		list_base,
+		list_box,
+		Global.Float( "GUI_scrollbar_buttonratio" ),
+		"" );
+
+  
+   count = List.ItemCount(fleet_list);
+   for (i=0;i<count;++i) {
+      ship = iShip.Cast(List.GetNth(fleet_list,i));
+
+      name = Text.Field(Sim.Name(ship), FT_Text);
+
+      button = iGUI.CreateAndInitialiseRectangularInverseRadioButton( none, 0, 0, 
+                                                                      button_width, 
+                                                                      name,
+                                                                      false );
+      // Attach ship for later handling.
+      Object.AddHandleProperty(button,"gt_loadoutgui_ship",ship);
+
+      GUI.SetInputOverrideFunctions( button,
+											"", 
+											"",
+											"", 
+											"", 
+											"", 
+											"",
+											"tsLoadoutGui.OnShipPress",
+											"",
+											"" );
+
+      GUI.AddListBoxEntry(list_box, button);
+
+   }   
+
+   index = 0;
+   ship = iShip.Cast(List.Head(fleet_list));
+
+   select_ship(ship);
+
+   GUI.SelectListBoxEntry(list_box, index);
+}
+//[cf]
+
+
+// This function builds a list of all the cargo items in the player
+// inventory that are loadout supported systems.
+//[of]:set systems_inventory()
+set systems_inventory()
+{
+   int total = CT_AdvancedHullMaterialRefit;
+   int i, number, cargo_type;
+   hcargo cargo;
+   set all_cargo;
+
+   for (i=CT_WasteBlocks;i<total;++i) {
+      cargo = iCargo.Find(i);
+      number = iInventory.NumberOfCargoType(i);
+
+      if (number > 0) {
+         if (Object.PropertyExists(cargo, "hardpoint_type")){
+            Set.Add(all_cargo, cargo);
+         }
+      }
+   }
+   return all_cargo;
+}
+//[cf]
+
+
+//[of]:create_player_inventory_list()
+create_player_inventory_list()
+{
+   hwindow list_parent = GUI.Cast(Global.Handle("gt_loadoutgui_psystems_inv_parent"));
+   hwindow list_base = GUI.Cast(Global.Handle("gt_loadoutgui_psystems_inv_base"));
+   hwindow list_box;
+   hwindow button;
+
+   hcargo cargo;
+   int i, count;
+	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
+
+   int button_width, height, list_x, list_y;
+
+   string name;
+   list cargo_list;
+
+   // Remove the prior inventory list.
+   if (none != list_base) {
+      GUI.DeleteWindow(list_base);
+   }
+
+   list_base = GUI.CreateWindow(0, 
+                                0,
+                                GUI.WindowCanvasWidth( list_parent),
+                                GUI.WindowCanvasHeight( list_parent),
+                                list_parent);
+
+
+   Global.CreateHandle("gt_loadoutgui_psystems_inv_base",GA_Write|GA_NoSave, list_base);
+
+   // Set up the button and list sizes now.
+   button_width = GUI.WindowCanvasWidth( list_base) - scrollbar_width;
+   button_width -= 4;
+
+
+   list_box = GUI.CreateListBox( 0, 
+                                 0,
+                                 button_width,
+                                 GUI.WindowCanvasHeight( list_base),
+                                 list_base,
+                                 true,
+                                 false);
+
+	// Attach a scrollbar to the list box. from LFPlus.
+	GUI.CreateVerticalScrollbar( 
+		GUI.WindowCanvasWidth( list_base ) - scrollbar_width, 
+		0,
+		scrollbar_width, 
+		GUI.WindowCanvasHeight( list_base ),
+		list_base,
+		list_box,
+		Global.Float( "GUI_scrollbar_buttonratio" ),
+		"" );
+
+
+   cargo_list = List.FromSet(systems_inventory());
+
+   cargo_list = List.SortByStringProperty(cargo_list, "name");
+
+   count = List.ItemCount(cargo_list);
+   for (i=0;i<count;++i) {
+      cargo = iCargo.Cast(List.GetNth(cargo_list,i));
+
+      name = String.Join(iCargo.Name(cargo),
+                         String.FormatInt(" %d",
+                                          iInventory.NumberOfCargoType(Object.IntProperty(cargo,"type"))));
+
+      button = iGUI.CreateAndInitialiseRectangularInverseRadioButton( none, 0, 0, 
+                                                                      button_width, 
+                                                                      name,
+                                                                      false );
+
+      Object.AddHandleProperty(button, "gt_loadoutgui_inventory", cargo);
+
+      GUI.SetInputOverrideFunctions( button,
+											"", 
+											"",
+											"", 
+											"", 
+											"", 
+											"",
+											"tsLoadoutGui.OnInventoryItemPress",
+											"",
+											"" );
+
+      GUI.AddListBoxEntry(list_box, button);
+   }   
+
+   cargo = iCargo.Cast(List.Head(cargo_list));
+   Global.CreateHandle("gt_loadoutgui_inventory_select", GA_Write|GA_NoSave, cargo);
+   GUI.SelectListBoxEntry(list_box, 0);
+}
+//[cf]
+ 
+
+//[of]:MainWindow()
+MainWindow()
+{
+   hwindow lh_shady, rh_shady;
+   hwindow list_title;
+   hwindow fac_title;
+
+   hwindow splitter;
+   hwindow top_splitter;
+   hwindow bottom_splitter;
+   hwindow button;
+   hwindow list_parent;
+
+   hwindow item_info;
+   hwindow ship_info;
+
+   string title_font = Global.String( "GUI_subtitle_font" );
+
+   int rwidth, rheight, rx, ry;
+
+   int lwidth, lheight, mid_width;
+
+   int lshady_width = 525;
+
+   int text_width;
+	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
+
+   debug Debug.PrintString("tsLoadoutGui.MainWindow\n");
+
+
+   ///***********************************
+   // Non GUI interfacing and preperation here.
+
+   // This protects from button double clicks
+   Global.CreateBool("gt_loadoutgui_allow_replace", GA_Write|GA_NoSave, true);
+
+   // This will be the currently selected ship
+   Global.CreateHandle("gt_loadoutgui_ship_select", GA_Write|GA_NoSave, none);
+
+   // This will be the subsim that gets replaced.
+   Global.CreateHandle("gt_loadoutgui_subsim_select", GA_Write|GA_NoSave, none);
+
+   // This will be the equipment to replace the subsim
+   Global.CreateHandle("gt_loadoutgui_equipment_select",GA_Write|GA_NoSave, none);
+
+   // This will be the subsim to replace the old subsim
+   Global.CreateHandle("gt_loadoutgui_subsim_new", GA_Write|GA_NoSave, none);
+
+
+   ///***********************************
+   // GUI setup here.
+
+
+   // Set right hand shady bar width.
+   lh_shady = iGUI.CreateWideShadyBar();
+
+
+   // The right hand area is split into two halfs.
+   // The inventory half, and the info half
+   GUI.SetShadyBarWidth(lshady_width);
+   
+
+
+
+   rh_shady = iGUI.CreateShadyBarRight();
+   
+   tsGui.CreateTitle(lh_shady,Text.Field("gt_loadoutgui_title",FT_Text));
+   tsGui.CreateSubtitle(lh_shady,Text.Field("gt_loadoutgui_subtitle",FT_Text));
+
+   tsGui.CreateExitButton(lh_shady, 
+                             Text.Field("gt_loadoutgui_exit",FT_Text), 
+                             "tsLoadoutGui.ExitScreen" );   
+
+
+   //************ 
+   //Setup the inventory half of the right hand side.
+
+   lheight = GUI.WindowCanvasHeight(lh_shady);
+   lheight = lheight - Global.Int("EpicGui_content_drop");
+   lheight = lheight - Global.Int("EpicGui_content_footer");
+
+   lwidth = lshady_width/2;
+   
+   mid_width = lshady_width - lwidth;
+
+
+
+   //*******************
+   // Leftmost Column 
+   // Setup the Player Fleet and repair buttons in the far left column
+
+   splitter = GUI.CreateSplitterWindow( Global.Int("EpicGui_content_indent"), 
+                                        Global.Int("EpicGui_content_drop"),
+                                        lwidth - Global.Int("EpicGui_content_indent"), 
+                                        lheight,
+                                        lh_shady,
+                                        lheight/3,
+                                        false);
+
+
+   // This area is the player fleet list
+   top_splitter = GUI.SplitterWindowTopWindow(splitter);
+
+   
+   // Set the list box title.
+   list_title = iGUI.CreateAndInitialiseStaticWindow(0,
+                                                        0,
+                                                        GUI.WindowCanvasWidth( top_splitter),
+                                                        20,
+                                                        top_splitter,
+                                                        title_font,
+                                                        Text.Field("gt_loadoutgui_fleet_list",FT_Text));
+
+   // Remove text centering.
+   GUI.SetWindowTextFormatting( list_title, false, 0);
+
+
+   // Place the player fleet list.
+   list_parent = GUI.CreateWindow(0,
+                                  20,
+                                  GUI.WindowCanvasWidth( top_splitter),
+                                  GUI.WindowCanvasHeight( top_splitter)-20,
+                                  top_splitter);
+
+   Global.CreateHandle("gt_loadoutgui_player_fleet_parent",GA_Write|GA_NoSave, list_parent);
+
+
+
+
+
+   // This is the area that displays the current ships state.
+   bottom_splitter = GUI.SplitterWindowBottomWindow(splitter);
+
+   ship_info = GUI.CreateTextWindow( 0,
+                                      0,
+                                      GUI.WindowCanvasWidth( bottom_splitter),
+                                      GUI.WindowCanvasHeight( bottom_splitter) - 90,
+                                      bottom_splitter );   
+
+   GUI.SetWindowFont( ship_info, Global.String( "GUI_detail_font" ) );
+
+   Global.CreateHandle("gt_loadoutgui_ship_info",GA_Write|GA_NoSave, ship_info);
+
+
+
+   // Place the fuel, rearm, and repair buttons.
+   button = create_border_button(0, 
+                                 GUI.WindowCanvasHeight( bottom_splitter) - 90,
+                                 GUI.WindowCanvasWidth( bottom_splitter),
+                                 30,
+                                 bottom_splitter, 
+                                 Text.Field("gt_loadoutgui_refuel",FT_Text),
+                                  "tsLoadoutGui.OnRefuelPress");
+
+   Global.CreateHandle("gt_loadoutgui_refuel_button",GA_Write|GA_NoSave, button);
+
+   hide_window(button);
+
+   button = create_border_button(0, 
+                                 GUI.WindowCanvasHeight( bottom_splitter) - 60,
+                                 GUI.WindowCanvasWidth( bottom_splitter),
+                                 30,
+                                 bottom_splitter, 
+                                 Text.Field("gt_loadoutgui_rearm",FT_Text),
+                                  "tsLoadoutGui.OnRearmPress");
+
+   Global.CreateHandle("gt_loadoutgui_rearm_button",GA_Write|GA_NoSave, button);
+   hide_window(button);
+
+   button = create_border_button(0, 
+                                 GUI.WindowCanvasHeight( bottom_splitter) - 30,
+                                 GUI.WindowCanvasWidth( bottom_splitter),
+                                 30,
+                                 bottom_splitter, 
+                                 Text.Field("gt_loadoutgui_repair",FT_Text),
+                                  "tsLoadoutGui.OnRepairPress");
+
+   Global.CreateHandle("gt_loadoutgui_repair_button",GA_Write|GA_NoSave, button);
+
+   hide_window(button);
+
+   //***************************************
+   // Create the second leftmost column
+   // This column has the ship systems list, replacement equipment list, and the replace button.
+
+   splitter = GUI.CreateSplitterWindow( Global.Int("EpicGui_content_indent") + lwidth, 
+                                        Global.Int("EpicGui_content_drop"),
+                                        mid_width - Global.Int("EpicGui_content_indent"), 
+                                        lheight,
+                                        lh_shady,
+                                        lheight/3,
+                                        false);
+
+
+   // These are the ship system and replacement equipment windows.
+   top_splitter = GUI.SplitterWindowTopWindow(splitter);
+
+   // Set the list box title.
+   list_title = iGUI.CreateAndInitialiseStaticWindow(0,
+                                                        0,
+                                                        GUI.WindowCanvasWidth( top_splitter),
+                                                        20,
+                                                        top_splitter,
+                                                        title_font,
+                                                        Text.Field("gt_loadoutgui_systems_list",FT_Text));
+
+   // Remove text centering.
+   GUI.SetWindowTextFormatting( list_title, false, 0);
+
+
+   // Place ship systems list here
+   list_parent = GUI.CreateWindow(0,
+                                  20,
+                                  GUI.WindowCanvasWidth( top_splitter),
+                                  GUI.WindowCanvasHeight( top_splitter)-20,
+                                  top_splitter);
+
+   Global.CreateHandle("gt_loadoutgui_systems_parent",GA_Write|GA_NoSave, list_parent);
+
+
+
+
+   bottom_splitter = GUI.SplitterWindowBottomWindow(splitter);
+
+   // Set the list box title.
+   list_title = iGUI.CreateAndInitialiseStaticWindow(0,
+                                                        0,
+                                                        GUI.WindowCanvasWidth( bottom_splitter),
+                                                        20,
+                                                        bottom_splitter,
+                                                        title_font,
+                                                        Text.Field("gt_loadoutgui_equipment_list",FT_Text));
+
+   // Remove text centering.
+   GUI.SetWindowTextFormatting( list_title, false, 0);
+
+
+
+   // Generate and place the replacement equipment list here
+   list_parent = GUI.CreateWindow(0,
+                                  20,
+                                  GUI.WindowCanvasWidth( bottom_splitter),
+                                  GUI.WindowCanvasHeight( bottom_splitter) - 80,
+                                  bottom_splitter);
+
+   Global.CreateHandle("gt_loadoutgui_equipment_parent",GA_Write|GA_NoSave, list_parent);
+
+
+
+
+   button = create_border_button(0, 
+                                 GUI.WindowCanvasHeight( bottom_splitter)-60,
+                                 GUI.WindowCanvasWidth( bottom_splitter),
+                                 30,
+                                 bottom_splitter, 
+                                 Text.Field("gt_loadoutgui_replace",FT_Text), 
+                                 "tsLoadoutGui.OnReplacePress");
+
+   Global.CreateHandle("gt_loadoutgui_replace_button",GA_Write|GA_NoSave, button);
+
+   hide_window(button);
+
+   button = create_border_button(0, 
+                                 GUI.WindowCanvasHeight( bottom_splitter)-30,
+                                 GUI.WindowCanvasWidth( bottom_splitter),
+                                 30,
+                                 bottom_splitter, 
+                                 Text.Field("gt_loadoutgui_remove",FT_Text), 
+                                 "tsLoadoutGui.OnRemovePress");
+
+   Global.CreateHandle("gt_loadoutgui_remove_button",GA_Write|GA_NoSave, button);
+
+   hide_window(button);
+
+
+   ///****************************************
+   // Create the player inventory information in the far right column.
+
+
+   rheight = GUI.WindowCanvasHeight(rh_shady);
+   rheight = rheight - Global.Int("EpicGui_content_drop");
+   rheight = rheight - Global.Int("EpicGui_content_footer");
+   rwidth = GUI.WindowCanvasWidth(rh_shady);
+
+
+   splitter = GUI.CreateSplitterWindow( Global.Int("EpicGui_content_indent"), 
+                                        Global.Int("EpicGui_content_drop"),
+                                        rwidth - Global.Int("EpicGui_content_indent"), 
+                                        rheight,
+                                        rh_shady,
+                                        rheight/2,
+                                        false);
+
+
+   // This area is the players ship systems inventory
+   top_splitter = GUI.SplitterWindowTopWindow(splitter);
+
+   
+   // Set the list box title.
+   list_title = iGUI.CreateAndInitialiseStaticWindow(0,
+                                                        0,
+                                                        GUI.WindowCanvasWidth( top_splitter),
+                                                        20,
+                                                        top_splitter,
+                                                        title_font,
+                                                        Text.Field("gt_loadoutgui_your_equipment",FT_Text));
+   GUI.SetWindowTextFormatting( list_title, false, 0);
+
+   // Create the base window for the player systems inventory box
+   list_parent = GUI.CreateWindow(0,
+                                  20,
+                                  GUI.WindowCanvasWidth( top_splitter),
+                                  GUI.WindowCanvasHeight( top_splitter) - 20,
+                                  top_splitter);
+
+
+   Global.CreateHandle("gt_loadoutgui_psystems_inv_parent",GA_Write|GA_NoSave, list_parent);
+   
+
+   
+
+   // 
+   bottom_splitter = GUI.SplitterWindowBottomWindow(splitter);
+
+   list_title = iGUI.CreateAndInitialiseStaticWindow(0,
+                                                        0,
+                                                        GUI.WindowCanvasWidth( bottom_splitter),
+                                                        20,
+                                                        bottom_splitter,
+                                                        title_font,
+                                                        Text.Field("gt_loadoutgui_equipment_info",FT_Text));
+
+
+   text_width = GUI.WindowCanvasWidth(bottom_splitter);
+   text_width = text_width - 4;
+   text_width = text_width - scrollbar_width;
+
+   item_info = GUI.CreateTextWindow( 0,
+                                     21,
+                                     text_width,
+                                     GUI.WindowCanvasHeight(bottom_splitter)-21,
+                                     bottom_splitter);   
+
+
+   GUI.CreateVerticalScrollbar( 0 + text_width + 4,
+                                21,
+                                scrollbar_width, 
+                                GUI.WindowCanvasHeight(bottom_splitter) - 21,
+                                bottom_splitter,
+                                item_info,
+                                Global.Float( "GUI_scrollbar_buttonratio" ),
+                                "");
+
+   Global.CreateHandle("gt_loadoutgui_item_info",GA_Write|GA_NoSave, item_info);
+
+
+   // Now that all the GUI elements exist, fill them in with the correct information.
+   create_player_fleet_list();
+
+   create_ship_systems_list();
+
+   create_equipment_list();
+
+   create_player_inventory_list();
+
+}
+//[cf]
+
+
+// Returns a list of subsims that can be replaced
+//[of]:list hardpoint_list(hship ship)
+list hardpoint_list(hship ship)
+{
+   int subsim_count = Sim.SubsimCount(ship);
+   int i;
+   hsubsim subsim;
+   list hardpoints;
+
+   for (i=0;i<subsim_count;++i) {
+      subsim = Sim.NthSubsim(ship,i);
+
+      if (Object.PropertyExists(subsim,"hardpoint_type")) {
+         List.AddTail(hardpoints, subsim);
+      }
+   }
+
+   return hardpoints;
+}
+//[cf]
+
+
+// Returns the price of the refuel job of the currently selected ship.
+//[of]:int refuel_cost(hship ship)
+int refuel_cost(hship ship)
+{
+
+
+   return 0;
+}
+//[cf]
+
+
+// Cost to repair the player ship.
+//[of]:int repair_cost(hship ship)
+int repair_cost(hship ship)
+{
+
+
+   return 0;
+}
+//[cf]
+
+
+// Cost to replace ammo and missiles.
+//[of]:int needs_rearm(hship ship)
+bool needs_rearm(hship ship)
+{
+
+   int subsim_count = Sim.SubsimCount(ship);
+   int i, ammo_count, ammo_cost, max_ammo;
+   hsubsim subsim;
+   hcargo cargo;
+
+   for (i=0;i<subsim_count;++i) {
+      subsim = Sim.NthSubsim(ship,i);
+
+      if (Object.PropertyExists(subsim, "ammo_count")) {
+         ammo_count = Object.IntProperty(subsim, "ammo_count");
+         max_ammo = Object.IntProperty(subsim, "max_ammo_count");
+
+         if (ammo_count < max_ammo) {
+            // Found an ammo using subsim that is below max
+
+            return true;
+         }
+      }
+   }
+
+   return false;
+}
+//[cf]
+
+
+//[of]:rearm_ship(hship ship)
+rearm_ship(hship ship)
+{
+   int subsim_count = Sim.SubsimCount(ship);
+   int i, max_ammo;
+   hsubsim subsim;
+
+   atomic {
+      for (i=0;i<subsim_count;++i) {
+         subsim = Sim.NthSubsim(ship,i);
+
+         rearm_subsim(subsim, false);
+      }
+   }
+} 
+//[cf]
+
+
+//[of]:rearm_subsim(hsubsim subsim)
+// try to reload the subsystem out of the player inventory.
+rearm_subsim(hsubsim subsim, bool empty_subsim)
+{
+   hcargo cargo;
+   int ammo_type, ammo_count, ammo_inv, max_ammo;
+
+   if (Object.PropertyExists(subsim, "ammo_count")) {
+      // This subsim uses ammo, we need to lookup the type.
+      cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
+      ammo_type = Object.IntProperty(cargo,"ammo_type");
+
+      if (ammo_type != 0) {
+
+         ammo_inv = iInventory.NumberOfCargoType(ammo_type);
+         max_ammo = Object.IntProperty(subsim, "max_ammo_count");
+
+         // new subsims carry over no ammo
+         if (empty_subsim) {
+            ammo_count = 0;
+         }else {
+            ammo_count = Object.IntProperty(subsim, "ammo_count");
+         }
+
+         // the player does not have enough to fill the subsim
+         if (max_ammo > (ammo_inv + ammo_count)) {
+            max_ammo = ammo_inv + ammo_count;
+         }
+
+         // Set the subsim to have the same amount.
+         Object.SetIntProperty(subsim, "ammo_count", max_ammo);
+
+         // remove any prior ammo from amount to take out of inventory.
+         max_ammo = max_ammo - ammo_count;
+
+         // Remove the lower amount from inventory.
+         iInventory.Add(ammo_type,-1*max_ammo);
+      }
+   }
+}
+//[cf]
+
+
+//[of]:string get_mountpoint_template(string hardpoint_type)
+string get_mountpoint_template(string hardpoint_type)
+{
+   list mountpoints = Global.List("gt_loadoutgui_mountpoint_list");
+   int total, i;
+   hsim mountpoint;
+
+   total = List.ItemCount(mountpoints);
+   for (i=0;i<total;++i) {
+      mountpoint = Sim.Cast(List.GetNth(mountpoints, i));
+
+      if (Sim.Name(mountpoint) == hardpoint_type) {
+         return Object.StringProperty(mountpoint, "mountpoint_name");
+      }
+   }
+
+   return "";
+}
+//[cf]
+
+
+//[of]:string get_mountpoint_type(hsubsim subsim)
+string get_mountpoint_type(hsubsim subsim)
+{
+   list mountpoints = Global.List("gt_loadoutgui_mountpoint_list");
+   string template_name;
+   int total, i;
+   hsim mountpoint;
+
+   template_name = Object.StringProperty(subsim, "subsim_template");
+
+   total = List.ItemCount(mountpoints);
+   for (i=0;i<total;++i) {
+      mountpoint = Sim.Cast(List.GetNth(mountpoints, i));
+      if (template_name == Object.StringProperty(mountpoint, "mountpoint_name")){
+         return Sim.Name(mountpoint);
+      }
+   }
+
+   return "";
+}
+//[cf]
+
+
+// Pull the ships equipment and place it into inventory.
+// Used mainly for selling player ships. Could also work
+// for stripping captures.
+
+//[of]:RemoveEquipment(hship ship)
+RemoveEquipment(hship ship)
+{
+   list ship_systems;
+   hsubsim subsim, new_subsim;
+
+   int i, total;
+   hcargo return_cargo;
+   string mountpoint_template, hardpoint_type;
+
+   ship_systems = hardpoint_list(ship);
+
+   total = List.ItemCount(ship_systems);
+   for (i=0;i<total;++i) {
+      subsim = Subsim.Cast(List.GetNth(ship_systems, i));
+
+      // Put the subsim and ammo back into inventory.
+      store_subsim(subsim);
+
+      hardpoint_type = Object.StringProperty(subsim, "hardpoint_type");      
+
+      // Lookup the replacement mountpoint type.
+      mountpoint_template = get_mountpoint_template(hardpoint_type);
+
+      // Remove it from the ship.
+      new_subsim = tsShip.ReplaceSubsim(ship, subsim, mountpoint_template);
+
+      Object.AddStringProperty(new_subsim, "hardpoint_type", hardpoint_type);
+   }
+}
+//[cf]
+
+
+// Attach the cargo index property to the subsims.
+//[of]:tag_equipment(hship ship)
+tag_equipment(hship ship)
+{
+   list ship_systems;
+   hsubsim subsim;
+   int i, total;
+   hcargo cargo;
+   string hardpoint_type;
+
+
+   for (i=0;i<Sim.SubsimCount(ship);++i) {
+      subsim = Sim.NthSubsim(ship,i);
+
+      // If the subsim is a mountpoint, attach the hardpoint type for future reference.
+      hardpoint_type = get_mountpoint_type(subsim);
+
+      if ("" != hardpoint_type) {
+         Object.AddStringProperty(subsim,"hardpoint_type", hardpoint_type);
+      }else {
+         // If not a mountpoint, then we want to check if loadout supports 
+         // changing this kind of subsim.
+
+         cargo = subsim2cargo(Object.StringProperty(subsim, "subsim_template"));
+
+         if (none != cargo) {
+            // There is cargo for this subsim, attach the needed hardpoint type property.
+            Object.AddStringProperty(subsim, "hardpoint_type", Object.StringProperty(cargo,"hardpoint_type"));
+            Object.AddIntProperty(subsim, "cargo_index", Object.IntProperty(cargo,"type"));
+         }
+         // else, not a supported subsim, so don't attach anything and it won't show to the player
+         // for removal or replacement.
+      }
+   }
+}
+//[cf]
+
+
+bool allow_loadout(hship ship)
+{
+   hship player = iShip.FindPlayerShip();
+   hhabitat station;
+
+   // if the debug global is set, always allow loadout.
+   if (Global.Bool("tsloadout_no_dock")) {
+      return true;
+   }
+   // We allow loadout if the ship is docked to a station that is within 20km of the player. 
+   // We allow loadout if a station is a type that supports doing loadouts.
+   // Otherwise, we don't allow it. 
+
+   // If the wingman is docked and the player is within 100km.
+   station = iHabitat.Nearest( iSim.SimsInRadius(ship, 20km, T_Station), ship);
+   if (station != none) {   
+      if (iSim.IsDockedToStructure(ship, station)) {
+         if (tsEconUtil.IsAllowedLoadout(tsLProduction.GetType(station))) {
+            if (Sim.DistanceBetween(player, station) < 100km) {
+               return true;
+            }
+         }
+      }
+   }
+
+   return false;
+}
+
+bool allow_rearming(hship ship)
+{
+   hship player = iShip.FindPlayerShip();
+   hhabitat station;
+   
+   // if the debug global is set, always allow rearming.
+   if (Global.Bool("tsloadout_no_dock")) {
+      return true;
+   }
+
+   // We allow rearming within 20km of a station that is within 100km of the player.
+   // We allow rearming if the station is a type that allows rearming.
+   // If the wingman is docked and the player is within 100km.
+   station = iHabitat.Nearest(iSim.SimsInRadius(ship, 20km, T_Station), ship);
+   if (station != none) {
+      if (tsEconUtil.IsAllowedLoadout(tsLProduction.GetType(station))) {
+         if (Sim.DistanceBetween(player, station) < 100km) {
+            return true;
+         }
+      }
+   }
+   return false;
+}
+
+// builds a text representation of a ships current 
+// hit points, fuel, heat and power levels.
+string ship_status2string(hship ship)
+{
+   int subsim_count = Sim.SubsimCount(ship);
+   int i;
+   hsubsim subsim;
+   float power, output_power, heat_rate, heat_loss_rate;
+   string text;
+
+   power = 0;
+   output_power = 0;
+   heat_rate = 0;
+   heat_loss_rate = 0;
+
+   for (i=0;i<subsim_count;++i) {
+      subsim = Sim.NthSubsim(ship,i);
+
+      heat_rate = heat_rate + Object.FloatProperty(subsim, "heat_rate");
+      heat_loss_rate = heat_loss_rate + Object.FloatProperty(subsim, "heat_loss_rate");
+
+      power = power + Object.FloatProperty(subsim, "power");
+      output_power = output_power + Object.FloatProperty(subsim, "output_power");      
+   }
+
+   text = String.FormatInt("<p>Heat Sink Rate: %d", float2int(heat_loss_rate));
+   text = String.Join(text, String.FormatInt("<br>Heat Build Rate: %d", float2int(heat_rate)));
+   
+   text = String.Join(text, String.FormatInt("<p>Reactor Power: %d", float2int(output_power)));
+   text = String.Join(text, String.FormatInt("<br>Power Draw: %d", float2int(power)));
+
+   return text;
+}
+
+
+//
+// Fn: hide_window
+// Desc: Make window invisible and prevent it getting focus
+//
+//[of]:hide_window( hwindow win )
+hide_window( hwindow win )
+{
+	GUI.SetVisible( win, false );
+	GUI.SetWindowAcceptFocus( win, false );
+}
+//[cf]
+
+
+//
+// Fn: show_window
+// Desc: Make window visible and allow focus
+//
+//[of]:show_window( hwindow win )
+show_window( hwindow win )
+{
+	GUI.SetVisible( win, true );
+	GUI.SetWindowAcceptFocus( win, true );
+}
+//[cf]
+
+
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

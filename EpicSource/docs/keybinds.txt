@@ -1,0 +1,45 @@
+
+; These keybinds are for controlling player wingmen.
+; All the standard wingman keybinds need to be commented out.
+
+[tWingComm.ClearCommand]
+Keyboard, Backquote
+
+[tWingComm.KeyOne]
+Keyboard, 1
+
+[tWingComm.KeyTwo]
+Keyboard, 2
+
+[tWingComm.KeyThree]
+Keyboard, 3
+
+[tWingComm.KeyFour]
+Keyboard, 4
+
+[tWingComm.KeyFive]
+Keyboard, 5
+
+[tWingComm.KeySix]
+Keyboard, 6
+
+[tWingComm.KeySeven]
+Keyboard, 7
+
+[tWingComm.KeyEight]
+Keyboard, 8
+
+[tWingComm.KeyNine]
+Keyboard, 9
+
+[tWingComm.KeyZero]
+Keyboard, 0
+
+; Opens or closes the player (UniGUI) menu.
+[zzUniGUI.UniGUIToggle]
+Keyboard, O
+
+; Requests communication with the players current target
+; if the target supports comms, a dialog will begin.
+[RequestCommunication]
+Keyboard, C, CTRL

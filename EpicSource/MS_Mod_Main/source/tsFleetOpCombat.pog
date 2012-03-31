@@ -1,0 +1,241 @@
+/*******************************************************************************************/
+//
+// tsFleetOpCombat
+// 
+// This module implements simulated combat between two fleet operations or a 
+// fleet operation and a station. It resolves the combat, doing damage. 
+// 
+// Handling of death is left to the update functions.
+// 
+// To keep things simple, flat percentage damage is used. Later some random chance might
+// be thrown in.
+// 
+// March 2006
+//******************************************************************************************/
+
+package tsFleetOpCombat;
+
+
+uses  Sim,
+iSim,
+Debug,
+Global,
+iGame,
+iFaction,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+State,
+Text,
+Math,
+iShip,
+iHabitat,
+iMapEntity,
+   iHUD,
+   iComms,
+   tsStationEnum,
+   tsStation,
+   tsFaction,
+   tsTime,
+   tsFleetOp,
+   tsLCenter,
+   tsLFleet,
+   tsLProduction;
+
+
+ 
+
+
+provides Offense,
+         Defense,
+         Station,
+         SetDistressFlags;
+
+
+//*******************************************************************************************/         
+//
+//*******************************************************************************************/
+
+// This strategy is used by an operation intent on doing
+// maximum damage. And also taking maximum damage.
+Offense (hmapentity location, hisim attacking_op, hisim defending_op)
+{
+   int attackers, attack_value;
+   int defenders, defense_value;
+
+   // We use 25% damage when attacking
+   attackers = tsLFleet.Fleets(attacking_op);
+   attack_value = attackers/4;
+
+   defenders = tsLFleet.Fleets(defending_op);
+   defense_value = defenders/4;
+
+   tsLFleet.ChangeFleets(attacking_op, -1*defense_value);
+   tsLFleet.ChangeFleets(defending_op, -1*attack_value);
+
+   // Add the destroyed ships to the locations total wreckage.
+   tsLFleet.ChangeWrecks(location, defense_value + attack_value);
+}
+
+
+// This strategy is used by an operation that is fleeing
+// either a stronger force, or is just cowardly.
+// It does less damage, and takes less damage.
+Defense(hmapentity location, hisim defending_op, hisim hostile_op)
+{
+   int attackers, attack_value;
+   int defenders, defense_value;
+
+   // We use 10% damage when dodging
+   attackers = tsLFleet.Fleets(hostile_op);
+   attack_value = attackers/10;
+
+   defenders = tsLFleet.Fleets(defending_op);
+   defense_value = defenders/10;
+
+   tsLFleet.ChangeFleets(hostile_op, -1*defense_value);
+   tsLFleet.ChangeFleets(defending_op, -1*attack_value);
+
+   // Add the destroyed ships to the locations total wreckage.
+   tsLFleet.ChangeWrecks(location, defense_value + attack_value);
+}
+
+
+// This is used to resolve the special case of 
+// attacks against a station.
+
+// Some stations are armed, and add to thier attack.
+// Station defenders always suffer half damage. 
+// (it is easy for them to retreat, the attackers are
+// focusing on the station).
+
+// if all defending fleets are destroyed, the 
+// bool returns true. Then the attacker gets to choose
+// to capture, destroy, or abandon the station.
+bool Station(hisim attacking_op, hhabitat station)
+{
+   int attackers, attack_value;
+   int defenders, defense_value;
+
+   // attackers do 25% damage, but only half effect.
+   attackers = tsLFleet.Fleets(attacking_op);
+   attack_value = attackers/8;
+
+   // defenders get the station guns bonus.
+   defenders = tsLFleet.Fleets(station);
+   defenders = defenders + 200;
+   defense_value = defenders/4;
+
+   // Remove the ships the station shoots down.
+   tsLFleet.ChangeFleets(attacking_op, -1*defense_value);
+
+   // Add those ships to the total wrecks near the station.
+   tsLFleet.ChangeWrecks(station, defense_value);
+
+   // Remove the damage points from the stations fleets.
+   tsLFleet.ChangeFleets(station, -1*attack_value);
+
+   if (tsLFleet.Fleets(station) == 0) {
+      return true;
+   }
+
+   return false;
+}
+
+
+// This function is used 
+bool SetDistressFlags(hmapentity location)
+{
+   set fleets, remaining, hostile, cleared;
+   hisim first_fleet, second_fleet;
+   hfaction first_faction, second_faction;
+   bool any_hostiles;
+
+   // Get the set of operations at this location
+
+   // Check each operation against the station and the others.
+   // if dislike or lower, put in the distress set.
+   // if not ever distresse, put in the clear set.
+
+   // set all distressed stations and operations to distress.
+   // set all clear stations and operations to clear.
+
+   fleets = Set.FromList(tsFleetOp.StationOperations(location));
+   // Put the station into consideration.
+   Set.Add(fleets, location);
+
+   cleared = fleets;
+
+   while (!Set.IsEmpty(fleets)) {
+      first_fleet = iSim.Cast(Set.FirstElement(fleets));
+      Set.Remove(fleets, first_fleet);
+
+      first_faction = iSim.Faction(first_fleet);
+
+      remaining = fleets;
+
+      // Compare this fleet against the rest. If any are hostile, 
+      // remember both.
+      while (!Set.IsEmpty(remaining)) {
+         second_fleet = iSim.Cast(Set.FirstElement(remaining));
+         Set.Remove(remaining, second_fleet);
+
+         second_faction = iSim.Faction(second_fleet);
+
+         if ((iFaction.Feeling(first_faction, second_faction) < -0.2) ||
+             (iFaction.Feeling(second_faction, first_faction) < -0.2)){
+
+            Set.Add(hostile, first_fleet);
+            Set.Add(hostile, second_fleet);            
+         }
+      }
+   }
+
+   any_hostiles = Set.IsEmpty(hostile);
+
+   // Cleared fleets are any not set to hostile.
+   Set.Difference(cleared, hostile);
+
+   while (!Set.IsEmpty(hostile)) {
+      first_fleet = iSim.Cast(Set.FirstElement(hostile));
+      Set.Remove(hostile, first_fleet);
+
+      tsLFleet.SetDistress(first_fleet, true);
+
+      /*
+      debug {
+         Debug.PrintHandle(first_fleet);
+         Debug.PrintString(" hostile found");
+         Debug.PrintString("\n");
+      }
+      */
+   }
+
+   while (!Set.IsEmpty(cleared)) {
+      first_fleet = iSim.Cast(Set.FirstElement(cleared));
+      Set.Remove(cleared, first_fleet);
+
+      tsLFleet.SetDistress(first_fleet, false);
+
+      /*
+      debug {
+         Debug.PrintHandle(first_fleet);
+         Debug.PrintString(" clear found");
+         Debug.PrintString("\n");
+      }
+      */
+   }
+
+   return any_hostiles;
+}
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

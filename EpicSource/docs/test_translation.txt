@@ -1,0 +1,611 @@
+		   SCRIPT:   [unknown] CT_Invalid::
+SCRIPT:   [unknown] CT_WasteBlocks:Waste Blocks:
+SCRIPT:   [unknown] CT_PlasticWaste:Plastic Waste:
+SCRIPT:   [unknown] CT_OrganicPulp:Organic Pulp:
+SCRIPT:   [unknown] CT_WastePaper:Waste Paper:
+SCRIPT:   [unknown] CT_DiseasedSewage:Diseased Sewage:
+SCRIPT:   [unknown] CT_FrozenSewage:Frozen Sewage:
+SCRIPT:   [unknown] CT_RawSewage:Raw Sewage:
+SCRIPT:   [unknown] CT_SugarCane:Sugar Cane:
+SCRIPT:   [unknown] CT_Fish:Fish:
+SCRIPT:   [unknown] CT_Fruit:Fruit:
+SCRIPT:   [unknown] CT_Grain:Grain:
+SCRIPT:   [unknown] CT_Meat:Meat:
+SCRIPT:   [unknown] CT_Potatoes:Potatoes:
+SCRIPT:   [unknown] CT_Rice:Rice:
+SCRIPT:   [unknown] CT_Soya:Soya:
+SCRIPT:   [unknown] CT_Vegetables:Vegetables:
+SCRIPT:   [unknown] CT_EdibleFungi:Edible Fungi:
+SCRIPT:   [unknown] CT_FoodBlocks:Food Blocks:
+SCRIPT:   [unknown] CT_FoodPills:Food Pills:
+SCRIPT:   [unknown] CT_MealInABar:Meal-in-a-Bar:
+SCRIPT:   [unknown] CT_PseudoShake:Pseudo Shake:
+SCRIPT:   [unknown] CT_RecoveredMeat:Recovered Meat:
+SCRIPT:   [unknown] CT_SyntheticCheese:Synthetic Cheese:
+SCRIPT:   [unknown] CT_SyntheticProtein:Synthetic Protein:
+SCRIPT:   [unknown] CT_SurvivalRations:Survival Rations:
+SCRIPT:   [unknown] CT_DrinkingWater:Drinking Water:
+SCRIPT:   [unknown] CT_Apes:Apes:
+SCRIPT:   [unknown] CT_Birds:Birds:
+SCRIPT:   [unknown] CT_DonorPigs:Donor Pigs:
+SCRIPT:   [unknown] CT_DrugLeeches:Drug Leeches:
+SCRIPT:   [unknown] CT_Giraffes:Giraffes:
+SCRIPT:   [unknown] CT_Horses:Horses:
+SCRIPT:   [unknown] CT_Lions:Lions:
+SCRIPT:   [unknown] CT_Weasels:Weasels:
+SCRIPT:   [unknown] CT_Yaks:Yaks:
+SCRIPT:   [unknown] CT_Zebras:Zebras:
+SCRIPT:   [unknown] CT_AttackDogs:Attack Dogs:
+SCRIPT:   [unknown] CT_BiomassProcessingWorms:Biomass Pro-Worms:
+SCRIPT:   [unknown] CT_Camels:Camels:
+SCRIPT:   [unknown] CT_CancerMice:Cancer Mice:
+SCRIPT:   [unknown] CT_Chickens:Chickens:
+SCRIPT:   [unknown] CT_Cows:Cows:
+SCRIPT:   [unknown] CT_Dogs:Dogs:
+SCRIPT:   [unknown] CT_EngineeredInsects:Modified Insects:
+SCRIPT:   [unknown] CT_Goats:Goats:
+SCRIPT:   [unknown] CT_Insects:Insects:
+SCRIPT:   [unknown] CT_Pigs:Pigs:
+SCRIPT:   [unknown] CT_Rodents:Rodents:
+SCRIPT:   [unknown] CT_Primates:Primates:
+SCRIPT:   [unknown] CT_HYL:HYL:
+SCRIPT:   [unknown] CT_Foetuses:Foetuses:
+SCRIPT:   [unknown] CT_CloneBoneTissue:Clone Bone Tissue:
+SCRIPT:   [unknown] CT_CloneEyes:Clone Eyes:
+SCRIPT:   [unknown] CT_CloneGlands:Clone Glands:
+SCRIPT:   [unknown] CT_CloneHearts:Clone Hearts:
+SCRIPT:   [unknown] CT_CloneIntestines:Clone Intestines:
+SCRIPT:   [unknown] CT_CloneKidneys:Clone Kidneys:
+SCRIPT:   [unknown] CT_CloneLimbs:Clone Limbs:
+SCRIPT:   [unknown] CT_CloneLivers:Clone Livers:
+SCRIPT:   [unknown] CT_CloneLungs:Clone Lungs:
+SCRIPT:   [unknown] CT_CloneSkin:Clone Skin:
+SCRIPT:   [unknown] CT_VatGrownMuscle:Vat-grown Muscle:
+SCRIPT:   [unknown] CT_BlankTissueCulture:Tissue Culture:
+SCRIPT:   [unknown] CT_CommonStrandMaterial:Strand Material:
+SCRIPT:   [unknown] CT_DNAChangers:DNA Changers:
+SCRIPT:   [unknown] CT_DNASequencers:DNA Sequencers:
+SCRIPT:   [unknown] CT_DNATattoos:DNA Tattoos:
+SCRIPT:   [unknown] CT_GeneticMarkerAgents:Gene-Markers:
+SCRIPT:   [unknown] CT_GeneticRejuvinations:Gene Rejuvenators:
+SCRIPT:   [unknown] CT_TransplantEyes:Transplant Eyes:
+SCRIPT:   [unknown] CT_TransplantGlands:Transplant Glands:
+SCRIPT:   [unknown] CT_TransplantHearts:Transplant Hearts:
+SCRIPT:   [unknown] CT_TransplantIntestine:Transplant Limbs:
+SCRIPT:   [unknown] CT_TransplantKidneys:Transplant Kidneys:
+SCRIPT:   [unknown] CT_TransplantLivers:Transplant Livers:
+SCRIPT:   [unknown] CT_TransplantLungs:Transplant Lungs:
+SCRIPT:   [unknown] CT_TransplantSkin:Transplant Skin:
+SCRIPT:   [unknown] CT_Houseplants:Houseplants:
+SCRIPT:   [unknown] CT_PotPlants:Pot Plants:
+SCRIPT:   [unknown] CT_Seedlings:Seedlings:
+SCRIPT:   [unknown] CT_Seeds:Seeds:
+SCRIPT:   [unknown] CT_Algae:Algae:
+SCRIPT:   [unknown] CT_PlantPulp:Plant Pulp:
+SCRIPT:   [unknown] CT_Woodpulp:Woodpulp:
+SCRIPT:   [unknown] CT_Trees:Trees:
+SCRIPT:   [unknown] CT_SlimeMould:Slime Mould:
+SCRIPT:   [unknown] CT_Yeast:Yeast:
+SCRIPT:   [unknown] CT_NitroBacteria:Nitro Bacteria:
+SCRIPT:   [unknown] CT_SoilBacteria:Soil Bacteria:
+SCRIPT:   [unknown] CT_TerraformingBacteria:T-Form Bacteria:
+SCRIPT:   [unknown] CT_RecyclingBacteria:Recyc Bacteria:
+SCRIPT:   [unknown] CT_AnimalFeed:Animal Feed:
+SCRIPT:   [unknown] CT_Compost:Compost:
+SCRIPT:   [unknown] CT_Fertiliser:Fertiliser:
+SCRIPT:   [unknown] CT_Soil:Soil:
+SCRIPT:   [unknown] CT_SportingBodyArmour:Body Armour:
+SCRIPT:   [unknown] CT_Footballs:Footballs:
+SCRIPT:   [unknown] CT_GolfSupplies:Golf Supplies:
+SCRIPT:   [unknown] CT_NullBox:Null Box:
+SCRIPT:   [unknown] CT_PaintGuns:Paint Guns:
+SCRIPT:   [unknown] CT_Scuba:Scuba:
+SCRIPT:   [unknown] CT_TennisEquipment:Tennis Equipment:
+SCRIPT:   [unknown] CT_SportsClothes:Sports Clothes:
+SCRIPT:   [unknown] CT_ZeroGGymnasia:Zero-G Gymnasia:
+SCRIPT:   [unknown] CT_SportingWeapons:Sporting Weapons:
+SCRIPT:   [unknown] CT_Antiques:Antiques:
+SCRIPT:   [unknown] CT_Paintings:Paintings:
+SCRIPT:   [unknown] CT_Sculpture:Sculpture:
+SCRIPT:   [unknown] CT_Caviar:Caviar:
+SCRIPT:   [unknown] CT_Chocolate:Chocolate:
+SCRIPT:   [unknown] CT_Lobster:Lobster:
+SCRIPT:   [unknown] CT_RealCoffee:Real Coffee:
+SCRIPT:   [unknown] CT_RealMeat:Real Meat:
+SCRIPT:   [unknown] CT_RealTea:Real Tea:
+SCRIPT:   [unknown] CT_Shellfish:Shellfish:
+SCRIPT:   [unknown] CT_Milk:Milk:
+SCRIPT:   [unknown] CT_Spices:Spices:
+SCRIPT:   [unknown] CT_Game:Game:
+SCRIPT:   [unknown] CT_Cigarettes:Cigarettes:
+SCRIPT:   [unknown] CT_Cigars:Cigars:
+SCRIPT:   [unknown] CT_LeafTobacco:Leaf Tobacco:
+SCRIPT:   [unknown] CT_Aphrodisiacs:Aphrodisiacs:
+SCRIPT:   [unknown] CT_Caffeine:Caffeine:
+SCRIPT:   [unknown] CT_PhysicalEnhancers:Physical Enhancers:
+SCRIPT:   [unknown] CT_ErzatzCoffee:Ersatz Coffee:
+SCRIPT:   [unknown] CT_Euphorics:Euphorics:
+SCRIPT:   [unknown] CT_Halluciogenics:Hallucinogenics:
+SCRIPT:   [unknown] CT_MemoryEnhancers:Memory Enhancers:
+SCRIPT:   [unknown] CT_MoodEnhancers:Mood Enhancers:
+SCRIPT:   [unknown] CT_MoodStabilsers:Mood Stabilisers:
+SCRIPT:   [unknown] CT_Stimulants:Stimulants:
+SCRIPT:   [unknown] CT_Tranquilisers:Tranquilisers:
+SCRIPT:   [unknown] CT_Spirits:Spirits:
+SCRIPT:   [unknown] CT_Wine:Wine:
+SCRIPT:   [unknown] CT_Champagne:Champagne:
+SCRIPT:   [unknown] CT_Scotch:Scotch:
+SCRIPT:   [unknown] CT_RealBeer:Real Beer:
+SCRIPT:   [unknown] CT_ZeroBrew:Zero Brew:
+SCRIPT:   [unknown] CT_Fur:Fur:
+SCRIPT:   [unknown] CT_FurCoats:Fur Coats:
+SCRIPT:   [unknown] CT_Vatfur:Vatfur:
+SCRIPT:   [unknown] CT_GoldJewellery:Gold Jewellery:
+SCRIPT:   [unknown] CT_ValuableJewellery:Valuable Jewellery:
+SCRIPT:   [unknown] CT_SmartJewels:Smart Jewels:
+SCRIPT:   [unknown] CT_Watches:Watches:
+SCRIPT:   [unknown] CT_Books:Books:
+SCRIPT:   [unknown] CT_Cosmetics:Cosmetics:
+SCRIPT:   [unknown] CT_DesignerClothes:Designer Clothes:
+SCRIPT:   [unknown] CT_MusicalInstruments:Music Instruments:
+SCRIPT:   [unknown] CT_Perfume:Perfume:
+SCRIPT:   [unknown] CT_Toys:Toys:
+SCRIPT:   [unknown] CT_NaturalFibreClothing:Natural Clothing:
+SCRIPT:   [unknown] CT_LuxuryFurniture:Luxury Furniture:
+SCRIPT:   [unknown] CT_CorporateData:Corporate Data:
+SCRIPT:   [unknown] CT_XenoData:Xeno Data:
+SCRIPT:   [unknown] CT_ResearchData:Research Data:
+SCRIPT:   [unknown] CT_PersonalData:Personal Data:
+SCRIPT:   [unknown] CT_Mail:Mail:
+SCRIPT:   [unknown] CT_ConfidentialData:Confidential Data:
+SCRIPT:   [unknown] CT_GovernmentData:Government Data:
+SCRIPT:   [unknown] CT_PoliceData:Police Data:
+SCRIPT:   [unknown] CT_MilitaryIntelligence:Military Data:
+SCRIPT:   [unknown] CT_SecretData:Secret Data:
+SCRIPT:   [unknown] CT_SeekerMineBlueprints:Seek Mine Blueprints:
+SCRIPT:   [unknown] CT_GnatBlueprint:Gnat Blueprints:
+SCRIPT:   [unknown] CT_HarrowerBlueprint:Harrower Blueprints:
+SCRIPT:   [unknown] CT_HammerBlueprint:Hammer Blueprints:
+SCRIPT:   [unknown] CT_SeekerBlueprint:Seeker Msl. Blueprints:
+SCRIPT:   [unknown] CT_LDSiShortBlueprints:LDSi Short Blueprints:
+SCRIPT:   [unknown] CT_AssaultCannonAmmoBlueprints:G.C. Ammo Blueprints:
+SCRIPT:   [unknown] CT_TurretFighterBlueprints:T-Fighter Blueprints:
+SCRIPT:   [unknown] CT_RemoteFighterBlueprints:REM Fighter Blueprints:
+SCRIPT:   [unknown] CT_FlareBlueprints:Flare Blueprints:
+SCRIPT:   [unknown] CT_AchillesBlueprints:Achilles Blueprints:
+SCRIPT:   [unknown] CT_AntimatterMineBlueprints:A-M Mine Blueprints:
+SCRIPT:   [unknown] CT_AntimatterMissileBlueprints:A-M Msl. Blueprints:
+SCRIPT:   [unknown] CT_BlizzardMissileBlueprints:Blizzard Blueprints:
+SCRIPT:   [unknown] CT_DeadshotBlueprints:Deadshot Blueprints:
+SCRIPT:   [unknown] CT_DeathblowBlueprints:Deathblow Blueprints:
+SCRIPT:   [unknown] CT_DecoyBlueprints:Decoy Blueprints:
+SCRIPT:   [unknown] CT_DisruptorBlueprints:Disruptor Blueprints:
+SCRIPT:   [unknown] CT_LDSi3000Blueprints:LDSi 3000 Blueprints:
+SCRIPT:   [unknown] CT_LDSiMineBlueprints:LDSi Mine Blueprints:
+SCRIPT:   [unknown] CT_LDSiMissileBlueprints:LDSi Msl. Blueprints:
+SCRIPT:   [unknown] CT_SniperCannonAmmoBlueprints:Sniper Rnd. Blueprints:
+SCRIPT:   [unknown] CT_MiningChargeBlueprints:Charge Blueprints:
+SCRIPT:   [unknown] CT_ProximityMineBlueprints:Prox. Mine Blueprints:
+SCRIPT:   [unknown] CT_PulsarBlueprints:Pulsar Blueprints:
+SCRIPT:   [unknown] CT_RemoteMissileBlueprints:Rem. Msl. Blueprints:
+SCRIPT:   [unknown] CT_RemoteProbeBlueprints:Rem. Probe Blueprints:
+SCRIPT:   [unknown] CT_SmartDecoyBlueprints:AI Decoy Blueprints:
+SCRIPT:   [unknown] CT_Autopilots:Autopilots:
+SCRIPT:   [unknown] CT_MatchVelocityAutopilot:Pursuit Autopilot:
+SCRIPT:   [unknown] CT_StealthProgram:Stealth Module:
+SCRIPT:   [unknown] CT_SelfDefenceSoftware:Self-Defence Module:
+SCRIPT:   [unknown] CT_EngineManagementProgram:Drive Manager:
+SCRIPT:   [unknown] CT_OcclusionMonitoringSoftware:Occlusion Monitor:
+SCRIPT:   [unknown] CT_MilitaryTrackingProgram:Navy Tracker:
+SCRIPT:   [unknown] CT_MissileAI:Missile AI:
+SCRIPT:   [unknown] CT_UtilitySoftware:Utility Software:
+SCRIPT:   [unknown] CT_ComputerGames:Computer Games:
+SCRIPT:   [unknown] CT_NewsVids:News Vids:
+SCRIPT:   [unknown] CT_EntertainmentVids:Edutainment Vids:
+SCRIPT:   [unknown] CT_InteractiveText:Interactive Text:
+SCRIPT:   [unknown] CT_MusicRecordings:Music Recordings:
+SCRIPT:   [unknown] CT_CorporatePropaganda:Corp Propaganda:
+SCRIPT:   [unknown] CT_CapsuleDriveGenerators:Cap Drive Generators:
+SCRIPT:   [unknown] CT_LDSClass1Drive:LDS Class 1:
+SCRIPT:   [unknown] CT_PowerPlant:Reactors:
+SCRIPT:   [unknown] CT_ShipsDrive:Basic Drive:
+SCRIPT:   [unknown] CT_ManoeuvreThrusters:Basic Thrusters:
+SCRIPT:   [unknown] CT_AlphaHeatSink:Alpha Heat-Sink:
+SCRIPT:   [unknown] CT_BetaHeatSink:Beta Heat-Sink:
+SCRIPT:   [unknown] CT_ColdGasThrusters:Cold-Gas Thrusters:
+SCRIPT:   [unknown] CT_MilitaryJumpCapacitor:Navy Capsule Drive:
+SCRIPT:   [unknown] CT_LDSClass2Drive:LDS Class 2:
+SCRIPT:   [unknown] CT_LDSClass3Drive:LDS Class 3:
+SCRIPT:   [unknown] CT_SealedHeatSink:Sealed Heat-Sink:
+SCRIPT:   [unknown] CT_CapsuleDrive:Capsule Drive:
+SCRIPT:   [unknown] CT_ImprovedManoeuverThrusters:Advanced Thrusters:
+SCRIPT:   [unknown] CT_PursuitDrivers:Pursuit Drive:
+SCRIPT:   [unknown] CT_InterceptorDrivers:Interceptor Drive:
+SCRIPT:   [unknown] CT_GammaHeatSink:Gamma Heat-Sink:
+SCRIPT:   [unknown] CT_DeltaHeatSink:Delta Heat-Sink:
+SCRIPT:   [unknown] CT_AdvancedHeatSink:Advanced Heat Sink:
+SCRIPT:   [unknown] CT_OmegaHeatSink:Omega Heat-Sink:
+SCRIPT:   [unknown] CT_HeatSinkSupercooler:Heat-Sink Supercooler:
+SCRIPT:   [unknown] CT_ActiveCooler:Active Cooler:
+SCRIPT:   [unknown] CT_EmergencyCoolingPod:Coolant Pod:
+SCRIPT:   [unknown] CT_AntimatterPowerPod:Antimatter Power Pod:
+SCRIPT:   [unknown] CT_HighYieldFusionInjector:High-Yield Injector:
+SCRIPT:   [unknown] CT_SNRVReloadPod:SnRV Reload Pod:
+SCRIPT:   [unknown] CT_Thrusterpods:Thruster Boost Pods:
+SCRIPT:   [unknown] CT_DockOnAutoTurret:Docking Auto Turret:
+SCRIPT:   [unknown] CT_SecondaryRing:Secondary Ring:
+SCRIPT:   [unknown] CT_CapsuleDriveParts:Cap Drive Parts:
+SCRIPT:   [unknown] CT_LDSCarrierFields:LDS Carrier Fields:
+SCRIPT:   [unknown] CT_LDSFieldGenerators:LDS Generators:
+SCRIPT:   [unknown] CT_LDSFieldNodes:LDS Field Nodes:
+SCRIPT:   [unknown] CT_LDSGeneratorParts:LDS Generator Parts:
+SCRIPT:   [unknown] CT_ShipInstruments:Ship Instruments:
+SCRIPT:   [unknown] CT_ShipSystems:Ship Systems:
+SCRIPT:   [unknown] CT_AISystems:AI Systems:
+SCRIPT:   [unknown] CT_CompParts:Comp Parts:
+SCRIPT:   [unknown] CT_ShipCPUGradeI:CPU Grade 1:
+SCRIPT:   [unknown] CT_ShipCPUGradeII:CPU Grade 2:
+SCRIPT:   [unknown] CT_ShipCPUGradeIII:CPU Grade 3:
+SCRIPT:   [unknown] CT_ShipCPUGradeIV:CPU Grade 4:
+SCRIPT:   [unknown] CT_ShipCPUGradeV:CPU Grade 5:
+SCRIPT:   [unknown] CT_CompactShipAI:Compact AI:
+SCRIPT:   [unknown] CT_ShipMemoryModule:Memory Module:
+SCRIPT:   [unknown] CT_CPUCores:CPU Cores:
+SCRIPT:   [unknown] CT_CPUParts:CPU Parts:
+SCRIPT:   [unknown] CT_AudioEquipment:Audio Equipment:
+SCRIPT:   [unknown] CT_AudioVisualEquipment:AV Equipment:
+SCRIPT:   [unknown] CT_DataConsoles:Data Consoles:
+SCRIPT:   [unknown] CT_DataScreens:Data Screens:
+SCRIPT:   [unknown] CT_PersonalCommunicators:Mobile Comms.:
+SCRIPT:   [unknown] CT_BodyComps:Body Comps:
+SCRIPT:   [unknown] CT_HandheldScientificInstruments:Sci. Instruments:
+SCRIPT:   [unknown] CT_DataCards:Data Cards:
+SCRIPT:   [unknown] CT_DataChips:Data Chips:
+SCRIPT:   [unknown] CT_DataModules:Data Modules:
+SCRIPT:   [unknown] CT_MemoryModules:Memory Modules:
+SCRIPT:   [unknown] CT_NanoAssemblers:Nano Assemblers:
+SCRIPT:   [unknown] CT_NanoFactories:Nano Factories:
+SCRIPT:   [unknown] CT_NanoProgrammers:Nano Programmers:
+SCRIPT:   [unknown] CT_NanoSurgeons:Nano Surgeons:
+SCRIPT:   [unknown] CT_NeuroConnectors:Neuroconnectors:
+SCRIPT:   [unknown] CT_PreprogrammedNanotech:Preprog Nanotech:
+SCRIPT:   [unknown] CT_TerraformingNanotech:T-Form Nanotech:
+SCRIPT:   [unknown] CT_GeneWriters:Gene Writers:
+SCRIPT:   [unknown] CT_CryogenicTanks:Cryogenic Tanks:
+SCRIPT:   [unknown] CT_Medkits:Medkits:
+SCRIPT:   [unknown] CT_OrganMatrices:Organ Matrices:
+SCRIPT:   [unknown] CT_RemoteTables:Remote Tables:
+SCRIPT:   [unknown] CT_Autodocs:Autodocs:
+SCRIPT:   [unknown] CT_Autosurgs:Autosurgs:
+SCRIPT:   [unknown] CT_HKCounters:HK Counters:
+SCRIPT:   [unknown] CT_MolecularImagers:Molecular Imagers:
+SCRIPT:   [unknown] CT_NanosurgeryEquipment:Nanosurgery Kits:
+SCRIPT:   [unknown] CT_NMRs:NMRs:
+SCRIPT:   [unknown] CT_SurgeryKits:Surgery Kits:
+SCRIPT:   [unknown] CT_CyberEyes:Cyber Eyes:
+SCRIPT:   [unknown] CT_CyberLimbs:Cyber Limbs:
+SCRIPT:   [unknown] CT_CyberneticJackPlugs:Cybernetic Jacks:
+SCRIPT:   [unknown] CT_CyberneticOrgans:Cybernetic Organs:
+SCRIPT:   [unknown] CT_RoboticArms:Robotic Arms:
+SCRIPT:   [unknown] CT_RoboticChassis:Robotic Chassis:
+SCRIPT:   [unknown] CT_RoboticCPUs:Robotic CPUs:
+SCRIPT:   [unknown] CT_RoboticSensors:Robotic Sensors:
+SCRIPT:   [unknown] CT_DomesticRobots:Domestic Robots:
+SCRIPT:   [unknown] CT_ConstructionRobots:Robo-Constructors:
+SCRIPT:   [unknown] CT_SecurityRobots:Security Robots:
+SCRIPT:   [unknown] CT_AstronomicalInstruments:Astro-Instruments:
+SCRIPT:   [unknown] CT_ShortRangeActiveSensors:Active 1 Sensors:
+SCRIPT:   [unknown] CT_ShortrangePassiveSensors:Passive 1 Sensors:
+SCRIPT:   [unknown] CT_UCPScanner:UCP Scanner:
+SCRIPT:   [unknown] CT_PassiveSensorPackage:Passive 2 Sensors:
+SCRIPT:   [unknown] CT_IFFBeacon:IFF Beacon:
+SCRIPT:   [unknown] CT_ActiveSensorPackage:Active 2 Sensors:
+SCRIPT:   [unknown] CT_AdvancedActiveSensors:Active 3 Sensors:
+SCRIPT:   [unknown] CT_AdvancedPassiveSensors:Passive 3 Sensors:
+SCRIPT:   [unknown] CT_MilitaryGradeActiveSensors:Active 4 Sensors:
+SCRIPT:   [unknown] CT_MilitaryGradePassiveSensors:Passive 4 Sensors:
+SCRIPT:   [unknown] CT_LongRangePassiveSensors:Active 5 Sensors:
+SCRIPT:   [unknown] CT_LongRangeActiveSensors:Passive 5 Sensors:
+SCRIPT:   [unknown] CT_SensorDisruptor:Signal Mask 1:
+SCRIPT:   [unknown] CT_HighPowerSensorDisruptor:Signal Mask 2:
+SCRIPT:   [unknown] CT_AdvancedSensorDisruptor:Signal Mask 3:
+SCRIPT:   [unknown] CT_MarauderCommsScrambler:Comms Scrambler:
+SCRIPT:   [unknown] CT_HyperspaceTracker:Capsule Space Tracker:
+SCRIPT:   [unknown] CT_LaserDetectors:Laser Detectors:
+SCRIPT:   [unknown] CT_MonitoringDevices:Monitoring Units:
+SCRIPT:   [unknown] CT_BricABrac:Bric-a-Brac:
+SCRIPT:   [unknown] CT_OfficeSupplies:Office Supplies:
+SCRIPT:   [unknown] CT_ReligiousMaterial:Religious Goods:
+SCRIPT:   [unknown] CT_Clothing:Clothing:
+SCRIPT:   [unknown] CT_DisposableClothing:Disposa-Suits:
+SCRIPT:   [unknown] CT_HandTools:Hand Tools:
+SCRIPT:   [unknown] CT_Uniforms:Uniforms:
+SCRIPT:   [unknown] CT_Furniture:Furniture:
+SCRIPT:   [unknown] CT_CleaningProducts:Cleaning Products:
+SCRIPT:   [unknown] CT_HygieneGoods:Hygiene Goods:
+SCRIPT:   [unknown] CT_HumanitarianAid:Humanitarian Aid:
+SCRIPT:   [unknown] CT_WoundDressings:Wound Dressings:
+SCRIPT:   [unknown] CT_Anaesthetics:Anaesthetics:
+SCRIPT:   [unknown] CT_Antibiotics:Antibiotics:
+SCRIPT:   [unknown] CT_Antiseptics:Antiseptics:
+SCRIPT:   [unknown] CT_Immunosuppressives:ImmunoSupps:
+SCRIPT:   [unknown] CT_MedicalDrugs:Medical Drugs:
+SCRIPT:   [unknown] CT_Vaccines:Vaccines:
+SCRIPT:   [unknown] CT_AntiAgingTreatments:Anti-aging Drugs:
+SCRIPT:   [unknown] CT_RejuvenationTratments:Rejuve Treatments:
+SCRIPT:   [unknown] CT_PainKillers:Pain Killers:
+SCRIPT:   [unknown] CT_EmergencySpaceSuits:Crisis Vac Suits:
+SCRIPT:   [unknown] CT_PersonalGasJets:Personal Gas Jets:
+SCRIPT:   [unknown] CT_SpaceSuits:Vac Suits:
+SCRIPT:   [unknown] CT_SuitPatches:Vac Suit Patches:
+SCRIPT:   [unknown] CT_SurvivalBubbles:Survival Bubbles:
+SCRIPT:   [unknown] CT_SurvivalPacks:Survival Packs:
+SCRIPT:   [unknown] CT_SurvivalCloaks:Survival Cloaks:
+SCRIPT:   [unknown] CT_EmergencyHeaters:Emergency Heaters:
+SCRIPT:   [unknown] CT_FieldGenerators:Field Generators:
+SCRIPT:   [unknown] CT_ReactorParts:Reactor Parts:
+SCRIPT:   [unknown] CT_ReactorSpares:Reactor Spares:
+SCRIPT:   [unknown] CT_ReactorTargets:Reactor Targets:
+SCRIPT:   [unknown] CT_FissionGenerators:Fission Generators:
+SCRIPT:   [unknown] CT_FusionGenerators:Fusion Generators:
+SCRIPT:   [unknown] CT_Batteries:Batteries:
+SCRIPT:   [unknown] CT_SolarPanels:Solar Panels:
+SCRIPT:   [unknown] CT_Solettas:Solettas:
+SCRIPT:   [unknown] CT_AtmosphericScrubbers:Atmos Scrubbers:
+SCRIPT:   [unknown] CT_PlanetHeaters:Planet Heaters:
+SCRIPT:   [unknown] CT_CFCGenerators:CFC Generators:
+SCRIPT:   [unknown] CT_HydroponicsEquipment:Hydroponics Kits:
+SCRIPT:   [unknown] CT_Biovators:Biovators:
+SCRIPT:   [unknown] CT_AgriHarvestors:Agri Harvestors:
+SCRIPT:   [unknown] CT_Tractors:Tractors:
+SCRIPT:   [unknown] CT_TractorParts:Tractor Parts:
+SCRIPT:   [unknown] CT_Aerodynes:Aerodynes:
+SCRIPT:   [unknown] CT_Aircars:Aircars:
+SCRIPT:   [unknown] CT_Dirigibles:Dirigibles:
+SCRIPT:   [unknown] CT_GroundCars:Ground Cars:
+SCRIPT:   [unknown] CT_ConstructionVehicles:Construction ATVs:
+SCRIPT:   [unknown] CT_Hovercars:Hovercars:
+SCRIPT:   [unknown] CT_Hovercraft:Hovercraft:
+SCRIPT:   [unknown] CT_Rotorcraft:Rotorcraft:
+SCRIPT:   [unknown] CT_Trucks:Trucks:
+SCRIPT:   [unknown] CT_LasTanks:LasTanks:
+SCRIPT:   [unknown] CT_Lathes:Lathes:
+SCRIPT:   [unknown] CT_MicroengineeringTools:MicroEng Tools:
+SCRIPT:   [unknown] CT_Drillers:Drillers:
+SCRIPT:   [unknown] CT_HabitationPods:Habitation Pods:
+SCRIPT:   [unknown] CT_HousingModules:Housing Modules:
+SCRIPT:   [unknown] CT_LifeSupportSystems:Enviro Systems:
+SCRIPT:   [unknown] CT_StationComponents:Station Components:
+SCRIPT:   [unknown] CT_PrefabricatedStationModules:Prefab Modules:
+SCRIPT:   [unknown] CT_StationConnectors:Station Connectors:
+SCRIPT:   [unknown] CT_PrefabricatedHousing:Prefab Housing:
+SCRIPT:   [unknown] CT_Recyclers:Recyclers:
+SCRIPT:   [unknown] CT_VaccumeDomes:Vaccuum Domes:
+SCRIPT:   [unknown] CT_ArmourPatches:Armour Patches:
+SCRIPT:   [unknown] CT_ArmourPlates:Armour Plates:
+SCRIPT:   [unknown] CT_Hullplates:Hullplates:
+SCRIPT:   [unknown] CT_HullRepairKits:Hull Repair Kits:
+SCRIPT:   [unknown] CT_Conduits:Conduits:
+SCRIPT:   [unknown] CT_FloorGrids:Floor Grids:
+SCRIPT:   [unknown] CT_GravGrids:Grav Grids:
+SCRIPT:   [unknown] CT_Wiring:Wiring:
+SCRIPT:   [unknown] CT_EarthMovers:Earth Movers:
+SCRIPT:   [unknown] CT_HandDrills:Hand Drills:
+SCRIPT:   [unknown] CT_LaserDrills:Laser Drills:
+SCRIPT:   [unknown] CT_MiningDisplacers:Mining Displacers:
+SCRIPT:   [unknown] CT_MiningDrones:Mining Drones:
+SCRIPT:   [unknown] CT_VehicleDrills:Vehicle Drills:
+SCRIPT:   [unknown] CT_Rubble:Rubble:
+SCRIPT:   [unknown] CT_Aggregates:Aggregates:
+SCRIPT:   [unknown] CT_RockDust:Rock Dust:
+SCRIPT:   [unknown] CT_Sand:Sand:
+SCRIPT:   [unknown] CT_NeutroniumOre:Neutronium Ore:
+SCRIPT:   [unknown] CT_GoldOre:Gold Ore:
+SCRIPT:   [unknown] CT_CommonOre:Common Ore:
+SCRIPT:   [unknown] CT_SilverOre:Silver Ore:
+SCRIPT:   [unknown] CT_PlatinumOre:Platinum Ore:
+SCRIPT:   [unknown] CT_RadioactiveOre:Radioactive Ore:
+SCRIPT:   [unknown] CT_UnprocessedGas:Unprocessed Gas:
+SCRIPT:   [unknown] CT_Air:Air:
+SCRIPT:   [unknown] CT_Helium3:Helium3:
+SCRIPT:   [unknown] CT_BlockIce:Block Ice:
+SCRIPT:   [unknown] CT_CrushedIce:Crushed Ice:
+SCRIPT:   [unknown] CT_DirtyIce:Dirty Ice:
+SCRIPT:   [unknown] CT_DeionisedWater:De-ionised Water:
+SCRIPT:   [unknown] CT_Carbon:Carbon:
+SCRIPT:   [unknown] CT_Nitrates:Nitrates:
+SCRIPT:   [unknown] CT_Oxygen:Oxygen:
+SCRIPT:   [unknown] CT_Phosphates:Phosphates:
+SCRIPT:   [unknown] CT_Sulphur:Sulphur:
+SCRIPT:   [unknown] CT_Alkalines:Alkalines:
+SCRIPT:   [unknown] CT_Sodium:Sodium:
+SCRIPT:   [unknown] CT_Phosphides:Phosphides:
+SCRIPT:   [unknown] CT_Sulfides:Sulfides:
+SCRIPT:   [unknown] CT_Tellurides:Tellurides:
+SCRIPT:   [unknown] CT_InorganicAcids:Inorganic Acids:
+SCRIPT:   [unknown] CT_Intermetallics:Intermetallics:
+SCRIPT:   [unknown] CT_BattleScrap:Battle Scrap:
+SCRIPT:   [unknown] CT_CompactedScrapMetal:Compacted Scrap:
+SCRIPT:   [unknown] CT_MisCasts:Miscasts:
+SCRIPT:   [unknown] CT_ScrapMetal:Scrap Metal:
+SCRIPT:   [unknown] CT_Gold:Gold:
+SCRIPT:   [unknown] CT_Platinum:Platinum:
+SCRIPT:   [unknown] CT_Silver:Silver:
+SCRIPT:   [unknown] CT_MetalBars:Metal Bars:
+SCRIPT:   [unknown] CT_MetalBillets:Metal Billets:
+SCRIPT:   [unknown] CT_MetalRods:Metal Rods:
+SCRIPT:   [unknown] CT_Wire:Wire:
+SCRIPT:   [unknown] CT_Rivets:Rivets:
+SCRIPT:   [unknown] CT_RadioactiveWaste:Radioactive Waste:
+SCRIPT:   [unknown] CT_Uranium:Uranium:
+SCRIPT:   [unknown] CT_Plutonium:Plutonium:
+SCRIPT:   [unknown] CT_FissionInitiators:Fission Initiators:
+SCRIPT:   [unknown] CT_Neutronium:Neutronium:
+SCRIPT:   [unknown] CT_ExoticMetals:Exotic Metals:
+SCRIPT:   [unknown] CT_RareMetals:Rare Metals:
+SCRIPT:   [unknown] CT_FeedStock:Feed Stock:
+SCRIPT:   [unknown] CT_PressurisedHydrocarbonGas:Pressurised CH4 Gas:
+SCRIPT:   [unknown] CT_Oil:Oil:
+SCRIPT:   [unknown] CT_Petroleum:Petroleum:
+SCRIPT:   [unknown] CT_PlasticBars:Plastic Bars:
+SCRIPT:   [unknown] CT_PlasticBlocks:Plastic Blocks:
+SCRIPT:   [unknown] CT_PlasticCables:Plastic Cables:
+SCRIPT:   [unknown] CT_PlasticGel:Plastic Gel:
+SCRIPT:   [unknown] CT_PlasticPellets:Plastic Pellets:
+SCRIPT:   [unknown] CT_LiquifiedFuel:Liquified Fuel:
+SCRIPT:   [unknown] CT_LiquifiedFusionPremix:Fusion Premix:
+SCRIPT:   [unknown] CT_BoosterAgent:Booster Agent:
+SCRIPT:   [unknown] CT_FuelPellets:Fuel Pellets:
+SCRIPT:   [unknown] CT_FuelRods:Fuel Rods:
+SCRIPT:   [unknown] CT_FloorPlates:Floor Plates:
+SCRIPT:   [unknown] CT_Girders:Girders:
+SCRIPT:   [unknown] CT_WallPlates:Wall Plates:
+SCRIPT:   [unknown] CT_BeanstalkWire:Beanstalk Wire:
+SCRIPT:   [unknown] CT_FoamMetal:Foam Metal:
+SCRIPT:   [unknown] CT_MacroCrystallineMetals:Crystalline Metals:
+SCRIPT:   [unknown] CT_Monowire:Monowire:
+SCRIPT:   [unknown] CT_HeavyGirders:Heavy Girders:
+SCRIPT:   [unknown] CT_CutGemstones:Cut Gemstones:
+SCRIPT:   [unknown] CT_IndustrialGemstones:Industrial Gems:
+SCRIPT:   [unknown] CT_UncutGemstones:Uncut Gemstones:
+SCRIPT:   [unknown] CT_AntimatterContainers:Antimatter Equip.:
+SCRIPT:   [unknown] CT_Antimatter:Antimatter:
+SCRIPT:   [unknown] CT_AntimatterPods:Antimatter Pods:
+SCRIPT:   [unknown] CT_APCs:APCs:
+SCRIPT:   [unknown] CT_TurretFighter:Turret Fighter:
+SCRIPT:   [unknown] CT_RemoteFighter:REM Fighter:
+SCRIPT:   [unknown] CT_ArtilleryFVs:Artillery FVs:
+SCRIPT:   [unknown] CT_FireSupportFVs:Fire Support FVs:
+SCRIPT:   [unknown] CT_GravTanks:Grav Tanks:
+SCRIPT:   [unknown] CT_HoverTanks:Hover Tanks:
+SCRIPT:   [unknown] CT_Tanks:Tanks:
+SCRIPT:   [unknown] CT_TankParts:Tank Parts:
+SCRIPT:   [unknown] CT_AntimatterFuses:Antimatter Fuses:
+SCRIPT:   [unknown] CT_TwinPackMissileLauncher:Twinpack Launcher:
+SCRIPT:   [unknown] CT_LDSiShortMissiles:Short Range LDSi Pack:
+SCRIPT:   [unknown] CT_LDSiShortMissile:Short Range LDSi Msl.:
+SCRIPT:   [unknown] CT_Flares:Flare Pack:
+SCRIPT:   [unknown] CT_Flare:Flare:
+SCRIPT:   [unknown] CT_SeekerMissiles:Seeker Missiles:
+SCRIPT:   [unknown] CT_SeekerMissile:Seeker Msl.:
+SCRIPT:   [unknown] CT_HarrowerMissiles:Harrower Pack:
+SCRIPT:   [unknown] CT_HarrowerMissile:Harrower Msl.:
+SCRIPT:   [unknown] CT_GnatRockets:Gnat Pack:
+SCRIPT:   [unknown] CT_GnatRocket:Gnat Rkt:
+SCRIPT:   [unknown] CT_HammerRockets:Hammer Pack:
+SCRIPT:   [unknown] CT_HammerRocket:Hammer Rkt:
+SCRIPT:   [unknown] CT_LDSiMissiles:LDSi Pack:
+SCRIPT:   [unknown] CT_LDSiMissile:LDSi Msl.:
+SCRIPT:   [unknown] CT_MiningCharges:Mining Charge Pack:
+SCRIPT:   [unknown] CT_MiningCharge:Mining Charge:
+SCRIPT:   [unknown] CT_TripackMissileLauncher:Tripack Launcher:
+SCRIPT:   [unknown] CT_BlizzardRocketPod:Blizzard Pack:
+SCRIPT:   [unknown] CT_BlizzardRocket:Blizzard Rkt:
+SCRIPT:   [unknown] CT_RemoteProbes:REM Probe Pack:
+SCRIPT:   [unknown] CT_RemoteProbe:REM Probe:
+SCRIPT:   [unknown] CT_RemoteMissiles:REM Msl. Pack:
+SCRIPT:   [unknown] CT_RemoteMissile:REM Msl.:
+SCRIPT:   [unknown] CT_DeadshotMissiles:Deadshot Pack:
+SCRIPT:   [unknown] CT_DeadshotMissile:Deadshot Msl.:
+SCRIPT:   [unknown] CT_LDSi3000Missiles:LDSi 3000 Pack:
+SCRIPT:   [unknown] CT_LDSi3000Missile:LDSi 3000 Msl.:
+SCRIPT:   [unknown] CT_QuadpackMissileLauncher:Quadpack Launcher:
+SCRIPT:   [unknown] CT_DeathblowRemote:Death-Blow REM Pack:
+SCRIPT:   [unknown] CT_DeathblowRemoteMissile:Death-Blow REM Msl.:
+SCRIPT:   [unknown] CT_AntimatterRemote:Antimatter REM Pack:
+SCRIPT:   [unknown] CT_AntimatterRemoteMissile:Antimatter REM Msl.:
+SCRIPT:   [unknown] CT_InternalMissileMagazine:Internal Magazine:
+SCRIPT:   [unknown] CT_DisruptorMissiles:Disruptor Pack:
+SCRIPT:   [unknown] CT_DisruptorMissile:Disruptor Msl.:
+SCRIPT:   [unknown] CT_SmartDecoy:Smart AI Decoy Pack:
+SCRIPT:   [unknown] CT_SmartDecoyCountermeasure:Smart AI Decoy:
+SCRIPT:   [unknown] CT_Decoys:ECM Decoy Pack:
+SCRIPT:   [unknown] CT_Decoy:ECM Decoy:
+SCRIPT:   [unknown] CT_PulsarDisruptors:Pulsar Pack:
+SCRIPT:   [unknown] CT_PulsarDisruptor:Pulsar Msl.:
+SCRIPT:   [unknown] CT_HullMissileHardPoint:Hull Msl. Hard-Point:
+SCRIPT:   [unknown] CT_AchillesShieldDisruptors:Achilles Shield Pack:
+SCRIPT:   [unknown] CT_AchillesShieldDisruptor:Achilles Shield Msl.:
+SCRIPT:   [unknown] CT_ProximityMines:Proximity Mine Pack:
+SCRIPT:   [unknown] CT_ProximityMine:Proximity Mine:
+SCRIPT:   [unknown] CT_AntimatterMines:Antimatter Mine Pack:
+SCRIPT:   [unknown] CT_AntimatterMine:Antimatter Mine:
+SCRIPT:   [unknown] CT_LDSIMines:LDSi Mine Pack:
+SCRIPT:   [unknown] CT_LDSIMine:LDSi Mine:
+SCRIPT:   [unknown] CT_SeekerMines:Seeker Mine Pack:
+SCRIPT:   [unknown] CT_SeekerMine:Seeker Mine:
+SCRIPT:   [unknown] CT_LDSIWarheads:LDSI Warheads:
+SCRIPT:   [unknown] CT_MissileParts:Missile Parts:
+SCRIPT:   [unknown] CT_MissileThrusters:Missile Thrusters:
+SCRIPT:   [unknown] CT_MissileWarheads:Missile Warheads:
+SCRIPT:   [unknown] CT_CombatPowersuits:Combat Powersuits:
+SCRIPT:   [unknown] CT_SidearmClips:Sidearm Clips:
+SCRIPT:   [unknown] CT_BattlePacks:BattlePacks:
+SCRIPT:   [unknown] CT_Explosives:Explosives:
+SCRIPT:   [unknown] CT_Grenades:Grenades:
+SCRIPT:   [unknown] CT_HandWeapons:Hand Weapons:
+SCRIPT:   [unknown] CT_ManpackMissiles:Manpack Missiles:
+SCRIPT:   [unknown] CT_BiologicalWeaponsAgents:BioWeapon Agents:
+SCRIPT:   [unknown] CT_ChemicalWeaponsAgents:ChemoWeapon Agents:
+SCRIPT:   [unknown] CT_NeutronWarheads:Neutron Warheads:
+SCRIPT:   [unknown] CT_DirtyFissionWarheads:Fission Warheads:
+SCRIPT:   [unknown] CT_HostileTerraformingAgents:Hostile TF Agents:
+SCRIPT:   [unknown] CT_NanotechWeapons:Nanotech Weapons:
+SCRIPT:   [unknown] CT_AcceleratorRings:Accelerator Rings:
+SCRIPT:   [unknown] CT_NeutronBeamCannon:Neutron PBC:
+SCRIPT:   [unknown] CT_WeaponLinkHardware:Weapon Link:
+SCRIPT:   [unknown] CT_CommunicationsLaser:Comms Laser:
+SCRIPT:   [unknown] CT_TrackingComputer:Tracking System:
+SCRIPT:   [unknown] CT_ParticleBeamCannon:PBC:
+SCRIPT:   [unknown] CT_MiningLasers:Mining Laser:
+SCRIPT:   [unknown] CT_AssaultCannon:Gatling Cannon:
+SCRIPT:   [unknown] CT_AssaultCannonAmmo:Gatling Cannon Ammo:
+SCRIPT:   [unknown] CT_AssaultCannonAmmoRound:Gatling Cannon Round:
+SCRIPT:   [unknown] CT_LightPBC:Light PBC:
+SCRIPT:   [unknown] CT_CooledPBC:Cryo PBC:
+SCRIPT:   [unknown] CT_RapidFirePBC:Rapid Fire PBC:
+SCRIPT:   [unknown] CT_LongRangeCannon:Sniper Cannon:
+SCRIPT:   [unknown] CT_CuttingBeam:Cutting Beam:
+SCRIPT:   [unknown] CT_WideanglePBC:Wide Arc PBC:
+SCRIPT:   [unknown] CT_EnhancedAimPBC:Imaging Module:
+SCRIPT:   [unknown] CT_QuadLightPBC:Quad Light PBC:
+SCRIPT:   [unknown] CT_HeavyBeamCannon:Heavy PBC:
+SCRIPT:   [unknown] CT_LongRangeCannonAmmo:Sniper Cannon Ammo:
+SCRIPT:   [unknown] CT_LongRangeCannonAmmoRound:Sniper Cannon Round:
+SCRIPT:   [unknown] CT_TargetedPBC:Recoil-Damped PBC:
+SCRIPT:   [unknown] CT_AssaultCannonRingModel:Assault Cannon:
+SCRIPT:   [unknown] CT_PulseAcceleratedPBC:Pulse-Acc PBC:
+SCRIPT:   [unknown] CT_AntimatterParticleBeam:Antimatter PBC:
+SCRIPT:   [unknown] CT_AntimatterStreamer:Antimatter Stream:
+SCRIPT:   [unknown] CT_Accumulators:Accumulators:
+SCRIPT:   [unknown] CT_PointDefenceTurret:Point Defence Turret:
+SCRIPT:   [unknown] CT_FireControlSensors:FireCon Sensors:
+SCRIPT:   [unknown] CT_PBCAccelerators:PBC Accelerators:
+SCRIPT:   [unknown] CT_PlasmaStorageRings:Plasma Rings:
+SCRIPT:   [unknown] CT_GatlingPBCs:Gatling PBC Parts:
+SCRIPT:   [unknown] CT_HeavyPBCs:Heavy PBC Parts:
+SCRIPT:   [unknown] CT_LightPBCs:Light PBC Parts:
+SCRIPT:   [unknown] CT_PBCs:PBC Parts:
+SCRIPT:   [unknown] CT_MeteorShield:Meteor LDA:
+SCRIPT:   [unknown] CT_Level1AutorepairSystem:Autorepair 1:
+SCRIPT:   [unknown] CT_DefenceShield:Defense LDA:
+SCRIPT:   [unknown] CT_Level2AutorepairSystem:Autorepair 2:
+SCRIPT:   [unknown] CT_RepairControlProgram:Repair Expert System:
+SCRIPT:   [unknown] CT_LightDefenceShield:Light LDA:
+SCRIPT:   [unknown] CT_InstantShieldControl:Instant Shield Control:
+SCRIPT:   [unknown] CT_ReactorHardening:Reactor Hardening:
+SCRIPT:   [unknown] CT_ArmouredHullPlates:Hull Armour:
+SCRIPT:   [unknown] CT_Level3Autorepairsystem:Autorepair 3:
+SCRIPT:   [unknown] CT_LowSignatureHullplates:Low-Sig Hull Plates:
+SCRIPT:   [unknown] CT_MilitaryShields:Navy LDA:
+SCRIPT:   [unknown] CT_ShieldSynchroniser:Shield Synchroniser:
+SCRIPT:   [unknown] CT_Level4Autorepairsystem:Autorepair 4:
+SCRIPT:   [unknown] CT_CombatShields:Combat LDA:
+SCRIPT:   [unknown] CT_MilitaryAggressorShields:Navy Aggr Shield:
+SCRIPT:   [unknown] CT_AggressorShieldUpgrade:Aggressor Shield:
+SCRIPT:   [unknown] CT_MinersShield:Mining LDA:
+SCRIPT:   [unknown] CT_Level5Autorepairsystem:Autorepair 5:
+SCRIPT:   [unknown] CT_ParticleScreenShieldUpgrade:Particle Screen:
+SCRIPT:   [unknown] CT_AssaultShield:Assault LDA:
+SCRIPT:   [unknown] CT_PowerPlantAutorepair:Reactor Autorepair:
+SCRIPT:   [unknown] CT_ShieldBooster:Shield Booster:

@@ -1,0 +1,301 @@
+//*******************************************************************************************/
+//
+// tsStarSystem
+//
+// This module does system setup tasks when a player arrives in a new system.
+// 
+// 
+//
+// May 2005, Jon Freise
+// Rewrite December 2007, jf
+//******************************************************************************************/
+
+package tsStarSystem;
+
+// Imports
+uses  Sim,
+      iShip,
+      iSim,
+      Debug,
+      Global,
+      GUI,
+      iGame,
+      iGUI,
+      iHUD,
+      iHabitat,
+      iMapEntity,
+      iLagrangePoint,
+      iFaction,
+      INIFile,
+      Input,
+      List,
+      Object,
+      String,
+      Task,
+      State,
+      Text,
+      iUtilities,
+      iCargo,
+      iInventory,
+      iComms,
+      Math,
+      iPilotSetup,
+      iMusic,
+      iMod,
+      iShipCreation,
+      iDockport,
+      iRegion,
+      tsFaction,
+      tsStationEnum,
+      tsStation,
+      tsLProduction,
+      tsCapsuleJump;
+
+
+
+// Exports
+provides Government,
+         SetGovernment,
+         FindGovernment,
+         IsKnown,
+         SetKnown,
+         UpdateSystem,
+         StarSystems;
+
+// Prototypes
+prototype hfaction FindGovernment(string system);
+
+prototype bool IsKnown(string system);
+
+prototype SetKnown(string system, bool known);
+
+
+// Update system is called when the player enters a system.
+// It sets up any information that is needed for system operation.
+//[of]:UpdateSystem()
+UpdateSystem()
+{
+   list station_list;
+   hhabitat station;
+   int i, total;
+   string system = iSim.ActiveWorld();
+   hregion region;
+
+	set lpoints, local_set;
+	hlagrangepoint lpoint, destination;
+
+   FindGovernment(system);
+
+   if (!tsCapsuleJump.IsCapsuleSpace(system)) {
+      SetKnown(system, true);
+   }
+
+	// added the following to totally remove the "Choose Destination" option in the ps NAV
+	// works with some redundency with tsCapsuleJump
+   lpoints = iMapEntity.SystemLagrangePointsInSystem(system);
+
+	while (!Set.IsEmpty(lpoints)) {
+		lpoint = iLagrangePoint.Cast(Set.FirstElement(lpoints));	
+		iLagrangePoint.SetUsable(lpoint, false);
+		local_set = iLagrangePoint.LocalDestinations(lpoint);
+
+		Set.Remove(lpoints, lpoint);
+
+		while (!Set.IsEmpty(local_set)) {
+			destination = iLagrangePoint.Cast(Set.FirstElement(local_set));
+			Set.Remove(local_set, destination);
+
+			Debug.PrintString("tsStarSystem - Lagrange destination being removed: ");
+			Debug.PrintHandle(destination);
+			Debug.PrintString("\n");
+		}
+
+		Debug.PrintString("tsStarSystem - Lagrange being set disabled : ");
+		Debug.PrintHandle(lpoint);
+		Debug.PrintString("\n");
+	}
+
+	
+
+
+   // Setup the traffic control fields around all the active stations.
+   station_list = List.FromSet(iMapEntity.SystemHabitats());
+   total = List.ItemCount(station_list);
+
+   for (i=0;i<total;++i) {
+      station = iHabitat.Cast(List.GetNth(station_list,i));
+
+      // If this is an active station,
+      // and the right type, 
+      // put an Traffic Control field around it.
+      if (ESS_Normal == tsStation.Status(station)) {
+	   // removed the exclusion on Mines, as now they have a station component
+         if (ESC_Mine != tsStation.Category(station)) {
+
+            region = iRegion.CreateTrafficControl(station, 15km, 500);
+	   // added different LDSIregion for Mines, because of their asteroid fields
+         } else {
+            region = iRegion.CreateTrafficControl(station, 20km, 200);
+
+	   }
+      }
+   }
+}
+//[cf]
+
+
+// Returns the government of the active system.
+//[of]:hfaction Government()
+hfaction Government(string system)
+{
+   return iFaction.Cast(Global.Handle("gt_esyssetup_system_gov"));
+}
+//[cf]
+
+
+//Sets the government of the active system.
+//[of]:SetGovernment(hfaction government_faction)
+SetGovernment(string system, hfaction government_faction)
+{
+   if (Global.Exists("gt_esyssetup_system_gov")) {
+      Global.SetHandle("gt_esyssetup_system_gov", government_faction);
+   }else{
+      Global.CreateHandle("gt_esyssetup_system_gov",GA_Write|GA_NoSave, government_faction);
+   }
+}
+//[cf]
+
+
+// Find government looks through the system and finds the government stations.
+// The first government station found wins.
+//[of]:FindGovernment()
+hfaction FindGovernment(string system)
+{
+   list station_list;
+   int i, total, station_type;
+   hhabitat station;
+   hfaction gov_faction;
+
+
+   station_list = List.FromSet(iMapEntity.SystemHabitatsInSystem(system));
+
+   total = List.ItemCount(station_list);
+   for (i=0;i<total;++i) {
+      station = iHabitat.Cast(List.GetNth(station_list, i));
+
+      station_type = tsLProduction.GetType(iSim.Cast(station));
+
+      switch (station_type) {
+      case ept_Outpost:
+      case ept_RegionalDepartment:
+      case ept_SystemAdministration:
+      case ept_ClusterAdministration:
+
+         gov_faction = iSim.Faction(station);
+         SetGovernment(system, gov_faction);
+         return gov_faction;
+         break;
+      default:
+         break;
+      }
+   }
+
+   SetGovernment(system, tsFaction.EmptyFaction());
+
+   return tsFaction.EmptyFaction();
+}
+//[cf]
+
+
+// Returns a boolean of if the system is known
+//[of]:bool IsKnown(string system)
+bool IsKnown(string system)
+{
+   return Global.Bool(String.Join("gt_eknown",system));
+}
+//[cf]
+
+
+// Sets a system as known
+//[of]:SetKnown(string system, bool known)
+SetKnown(string system, bool known)
+{
+   string name = String.Join("gt_eknown",system);
+
+   if (Global.Exists(name)) {
+      Global.SetBool(name, known);
+   }else {
+      Global.CreateBool(name,GA_Write,known);
+   }
+}
+//[cf]
+
+
+
+hsim restore_system(string system_name)
+{
+   return none;
+}
+
+
+// Use the cluster name to look up the save id values.
+RestoreSystems()
+{
+   hinifile geog;
+   hsim system;
+   string system_name;
+   list system_list;
+   int count,i,total;
+   bool visible;
+
+   debug Debug.PrintString("tsStarSystem.RestoreSystems\n");
+
+   geog = INIFile.Create("ini:/geog/clusters");
+
+   if (none == geog) {
+      debug Debug.PrintString("Station: Geog file not found!\n");      
+   }
+
+   count = 0;
+   while (INIFile.NumberedExists(geog,"badlands","system",count)) {
+      system_name = INIFile.NumberedString(geog,"badlands","system",count,"invalid");
+
+      if (!tsCapsuleJump.IsCapsuleSpace(system_name)) {
+         system = restore_system(system_name);
+         List.AddTail(system_list, system);
+      }
+
+      ++count;
+   }
+
+   Global.CreateList("tsstarsystem_system_list", GA_Write|GA_NoSave, system_list);
+
+   INIFile.Destroy(geog);
+}
+
+
+
+SaveSystems()
+{
+
+}
+
+
+
+list StarSystems()
+{
+   return Global.List("tsstarsystem_system_list");
+}
+
+
+
+
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

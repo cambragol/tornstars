@@ -1,0 +1,554 @@
+/*******************************************************************************************/
+//
+// tsFleetOpSave
+//
+// Does save and restore for Underworld Operations.
+// 
+// 
+// 
+//
+// 
+//	
+// 
+//
+// April, 2004 Jon Freise
+//******************************************************************************************/
+
+package tsFleetOpSave;
+
+
+uses  Sim,
+iSim,
+Debug,
+Global,
+iGame,
+iFaction,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+State,
+Text,
+Math,
+iShip,
+iHabitat,
+iMapEntity,
+   tsFaction,
+   CargoTypes,
+   iCargo,
+   tsEconUtil,
+   tsStationEnum,
+   tsFleetOpEnum,
+   tsFleetOp,
+   tsLRoot,
+   tsLProduction,
+   tsLCenter,
+   tsLFleet,
+   tsFleetOpCall;
+
+
+
+
+provides 
+   Save,
+   Restore,
+   BaseEnter, 
+   BaseExit,
+   SessionStart,
+   ReadNewOperations,
+   DisplayOps,
+   DisplayStationOps;
+
+
+
+//*******************************************************************************************/         
+//
+//*******************************************************************************************/
+
+
+
+//*******************************************************************************************/
+// 
+//*******************************************************************************************/
+
+prototype read_system(string station_file, string system_name);
+
+prototype restore_file();
+
+prototype restore_save();
+
+prototype save_op(hisim operation);
+
+prototype hisim restore_op(int id);
+
+
+
+/*
+   Saving will use the id of the operation to complete all save info.
+   
+   // Need a list of id numbers to save.
+*/
+
+/* save at exit space event */
+
+Save()
+{
+   int op_count, opnum, id;
+   list op_list;
+
+   hisim operation;
+
+   // Get list of operations
+   // Get count of operations
+   // Save count
+   debug Debug.PrintString("UnderOp: Save\n");
+
+   // Tell restore code we can restore safely.
+   Global.SetBool("gt_underop_first_create", false);
+
+   op_list = Global.List("gt_underop_all_list");
+   op_count = List.ItemCount(op_list);
+
+   Global.CreateInt("gt_underop_opcount",GA_Write,op_count);
+
+   // Loop saving each operation
+   for (opnum=0;opnum<op_count;++opnum) {
+      operation = iSim.Cast(List.GetNth(op_list,opnum));
+
+      id = tsLRoot.GetId(operation);
+      Global.CreateInt(String.FormatInt("gt_underop_opid%d",opnum),GA_Write,id);
+
+      save_op(operation);
+   }
+}
+
+
+/* restore the operations from a prior save game. */
+restore_save()
+{
+   list empty_list;
+
+   int id ,opnum,op_count;
+   hisim operation, faction;
+
+   debug Debug.PrintString("UnderOp.restore_save\n");
+
+   if (!Global.Exists("gt_underop_opcount")) {
+      // Nothing has been saved, bail.
+      debug Debug.PrintString("Error UnderOp.restore_save no saved data\n");
+      return;
+   }
+
+   op_count = Global.Int("gt_underop_opcount");
+
+   for (opnum=0;opnum<op_count;++opnum) {
+      id = Global.Int(String.FormatInt("gt_underop_opid%d",opnum));
+
+      operation = restore_op(id);
+   }
+}
+
+
+
+
+save_op(hisim operation)
+{
+
+   int id;
+   
+   string faction_name, station_name, system_name;
+   bool known;
+
+   hhabitat owner = tsFleetOp.Supporter(operation);
+
+//   debug Debug.PrintString("UnderOp.SaveOp\n");
+
+   id = tsLRoot.GetId(operation);
+
+   known = tsFleetOp.IsKnown(operation);
+   Global.CreateBool(String.FormatInt("gt_underop_%d_known",id), GA_Write, known);
+
+   Global.CreateString(String.FormatInt("gt_underop_%d_faction",id), 
+                       GA_Write, 
+                       iFaction.Name(iSim.Faction(operation)));
+
+   Global.CreateString(String.FormatInt("gt_underop_%d_name",id), 
+                       GA_Write, 
+                       tsFleetOp.Name(operation));
+
+   Global.CreateString(String.FormatInt("gt_underop_%d_template",id), 
+                       GA_Write, 
+                       tsFleetOp.ShipTemplate(operation));
+
+
+   Global.CreateInt(String.FormatInt("gt_underop_%d_wake",id), 
+                    GA_Write, 
+                    tsFleetOp.WakeTimer(operation));
+
+   Global.CreateInt(String.FormatInt("gt_underop_%d_event",id), 
+                    GA_Write, 
+                    tsFleetOp.EventTimer(operation));
+
+
+   Global.CreateString(String.FormatInt("gt_underop_%d_owner",id), 
+                       GA_Write, 
+                       Sim.Name(owner));
+
+
+   Global.CreateString(String.FormatInt("gt_underop_%d_system",id), 
+                       GA_Write, 
+                       iSim.WorldName(owner));
+
+
+
+   tsLProduction.Save(operation);
+
+   tsLFleet.Save(operation);
+
+   tsLCenter.Save(operation);
+
+   tsFleetOpCall.Save(operation);
+}
+
+
+hisim restore_op(int id)
+{
+   hisim operation, station;
+   bool known;
+   int event_day, wake_day;
+   hfaction faction;
+   string global_name, faction_name, owner_name, system_name;
+   string ship_template, op_name;
+   hhabitat supporter_station;
+   
+   global_name = String.FormatInt("gt_underop_%d_known", id);
+   known = Global.Bool(global_name);
+   Global.Destroy(global_name);
+
+   global_name = String.FormatInt("gt_underop_%d_name", id);
+   op_name = Global.String(global_name);
+   Global.Destroy(global_name);
+
+   global_name = String.FormatInt("gt_underop_%d_template", id);
+   ship_template = Global.String(global_name);
+   Global.Destroy(global_name);
+
+   global_name = String.FormatInt("gt_underop_%d_faction", id);
+   faction_name = Global.String(global_name);
+   Global.Destroy(global_name);
+
+
+   global_name = String.FormatInt("gt_underop_%d_wake", id);
+   wake_day = Global.Int(global_name);
+   Global.Destroy(global_name);
+
+   global_name = String.FormatInt("gt_underop_%d_event", id);
+   event_day = Global.Int(global_name);
+   Global.Destroy(global_name);
+
+
+   global_name = String.FormatInt("gt_underop_%d_owner", id);
+   owner_name = Global.String(global_name);
+   Global.Destroy(global_name);
+
+   global_name = String.FormatInt("gt_underop_%d_system", id);
+   system_name = Global.String(global_name);
+   Global.Destroy(global_name);
+
+   faction = iFaction.Find(faction_name);
+
+   if (none == faction) {
+      debug Debug.PrintString("tsFleetOp.restore_op invalid faction restore\n");
+      debug Debug.PrintString(faction_name);
+      debug Debug.PrintString(" \n");
+   }
+
+   operation = tsFleetOp.Create(id, faction, known, wake_day);
+
+   tsFleetOp.SetName(operation, op_name);
+
+   tsFleetOp.SetShipTemplate(operation, ship_template);
+
+   tsFleetOp.SetEventTimer(operation, event_day);
+
+   tsLProduction.Restore(operation);
+
+   tsLFleet.Restore(operation);
+
+   tsLCenter.Restore(operation);
+
+//   station = tsLCenter.GetCenter(operation);
+   supporter_station = iHabitat.Cast(iMapEntity.FindByNameInSystem(owner_name, system_name));
+
+   if (none == supporter_station) {
+      debug {
+         Debug.PrintString("tsFleetOpSave.restore missing supporter station\n");
+         Debug.PrintString(owner_name);
+         Debug.PrintString(" ");
+         Debug.PrintString(system_name);
+         Debug.PrintString("\n");
+      }
+   }
+
+   tsFleetOp.SetSupporter(operation, supporter_station);
+
+
+   // Last call restores any special information that this type of operation needs.
+   // Must happen after tsLProduction.Restore.
+   tsFleetOpCall.Restore(operation);
+
+   return operation;
+}
+
+
+
+
+
+restore_file()
+{
+   hinifile geog = INIFile.Create("ini:/geog/clusters");
+   int count;
+   string system_name, station_file;
+   list empty_list;
+
+   count = 0;
+   while (INIFile.NumberedExists(geog,"badlands","system",count)) {
+      system_name = INIFile.NumberedString(geog,"badlands","system",count,"invalid");
+
+      station_file = String.Join("ini", String.TrimLeft(system_name,3));
+      read_system(station_file, system_name);
+
+      ++count;
+   }
+
+   INIFile.Destroy(geog);
+}
+
+/*
+These are placed in the system file, along with the 
+starting stations.
+
+[Operations]
+name[0]=first_name
+
+[first_name]   
+station=name_of_station
+type=op_type_int
+faction=name_of_owner
+
+*/
+
+read_system(string station_file, string system_name)
+{
+   hinifile system_ini = INIFile.Create(station_file);
+   int op_count, op_type;
+   string station_name, name, faction_name;
+   hisim operation;
+   hmapentity center;
+   hfaction faction;
+   list empty_list;
+
+
+
+   if (none == system_ini) {
+   debug {
+       Debug.PrintString("Error UnderOp.read_system no system file.ini\n");
+      Debug.PrintString("UnderOp reading:");
+      Debug.PrintString(station_file);
+      Debug.PrintString("\n");      
+      Debug.PrintString(system_name);
+      Debug.PrintString("\n");      
+   }
+      return;
+   }
+
+   op_count = 0;
+   while (INIFile.NumberedExists(system_ini, "starting_stations", "op_type", op_count)) {
+      op_type = INIFile.NumberedInt(system_ini, "starting_stations", "op_type", op_count,0);
+
+      station_name = INIFile.NumberedString(system_ini,"starting_stations", "op_parent", op_count, "none");
+      faction_name = INIFile.NumberedString(system_ini,"starting_stations", "op_faction", op_count, "none");
+
+      center = iMapEntity.FindByNameInSystem(station_name, system_name);
+
+      if (none == center) {
+         debug {
+             Debug.PrintString("ERROR tsFleetOpSave.read_system missing parent sim ");
+             Debug.PrintString(station_name);
+             Debug.PrintString("\n");
+         }
+      }
+
+      faction = tsFaction.EFind(faction_name);
+      
+      operation = tsFleetOpCall.New(op_type, faction, center);
+
+
+      /*
+      debug {
+         Debug.PrintString("UnderOp NewOp:");
+         Debug.PrintString(station_name);
+         Debug.PrintString("\n");      
+      }
+      */
+
+      ++op_count;
+   }
+
+   INIFile.Destroy(system_ini);
+}
+
+
+
+// Happens at system enter.
+Restore()
+{
+
+   if (Global.Bool("gt_underop_restore_done")) {
+      // system enter will happen many times, we don't want to 
+      // reinit the stations unless the player has returned to base.
+      // This global locks out repeated restores. Set false
+      // by session enter (load) and base exit.
+      return;
+   }
+
+   Global.SetBool("gt_underop_restore_done", true);
+
+
+   // If the first restore after a new game, read the stations out of
+   // an INI file for extra information.
+   if (Global.Bool("gt_underop_first_create")){
+      restore_file();
+   }else {
+      restore_save();
+   }
+}
+
+
+
+// Must be called by a new game to cause the ini files to be read and the 
+// new stations to be created. This is only done after a new game is
+// started.
+
+ReadNewOperations()
+{
+   Global.CreateBool("gt_underop_first_create",GA_Write,true);
+}
+
+BaseExit()
+{
+   list empty_list;
+
+   // We need to force a restore from save when we exit.
+   // Because the ops will have been culled. 
+   Global.CreateBool("gt_underop_restore_done",GA_Write|GA_NoSave, false);
+}
+
+
+SessionStart()
+{
+   Global.CreateBool("gt_underop_restore_done",GA_Write|GA_NoSave, false);
+}
+
+
+// Because all stations are destroyed when the base is entered, the 
+// operations need to go also to keep the systems the same.
+BaseEnter()
+{
+   list op_list, empty_list;
+   int i, total;
+   hisim op;
+
+   op_list = tsFleetOp.OperationList();
+
+   while (!List.IsEmpty(op_list)) {
+      op = iSim.Cast(List.Tail(op_list));
+      List.Remove(op_list, op);
+
+      Sim.Destroy(op);
+   }
+
+   // Clear out the op list so the next restore will be fresh.
+   Global.CreateList("gt_underop_all_list",GA_Write, empty_list);
+}
+
+
+
+
+DisplayOps()
+{
+   int op_count, link_count, opnum, linknum;
+   list op_list, link_list;
+
+   hisim operation;
+
+   int iproperty;
+   string sproperty;
+
+   debug Debug.PrintString("UnderOp.DisplayOps\n");
+   // Get list of operations
+   // Get count of operations
+   // Save count
+   op_list = tsFleetOp.OperationList();
+   op_count = List.ItemCount(op_list);
+   // Loop saving each operation
+   for (opnum=0;opnum<op_count;++opnum) {
+      operation = iSim.Cast(List.GetNth(op_list,opnum));
+      debug{
+         Debug.PrintString(String.FormatInt("Op %d ",tsLRoot.GetId(operation)));
+         Debug.PrintHandle(operation);
+         Debug.PrintString("\n");
+         Debug.PrintString(Text.Field(iFaction.Name(iSim.Faction(operation)),FT_Text));
+         
+         Debug.PrintString(" owner\n");
+
+         Debug.PrintString(tsEconUtil.StationIntToString(tsLProduction.GetType(operation)));
+         Debug.PrintString("\n");
+      }
+   }
+}
+
+
+DisplayStationOps()
+{
+   int op_count, link_count, opnum, linknum;
+   list op_list, link_list;
+
+   hisim operation;
+
+   int iproperty;
+   string sproperty;
+   hhabitat station;
+   hship player = iShip.FindPlayerShip();
+
+
+   debug Debug.PrintString("UnderOp.DisplayStationOps\n");
+
+   // Get list of operations
+   // Get count of operations
+   // Save count
+   station = iHabitat.Nearest(iMapEntity.SystemHabitats(), player);
+   op_list = tsFleetOp.StationOperations(iSim.Cast(station));
+   op_count = List.ItemCount(op_list);
+
+
+   // Loop saving each operation
+   for (opnum=0;opnum<op_count;++opnum) {
+      operation = iSim.Cast(List.GetNth(op_list,opnum));
+      debug{
+         Debug.PrintString(String.FormatInt("Op %d ",tsLRoot.GetId(operation)));
+         Debug.PrintHandle(operation);
+         Debug.PrintString("\n");
+         Debug.PrintString(Text.Field(iFaction.Name(iSim.Faction(operation)),FT_Text));
+         
+         Debug.PrintString(" owner\n");
+
+         Debug.PrintString(tsEconUtil.StationIntToString(tsLProduction.GetType(operation)));
+         Debug.PrintString("\n");
+      }
+   }
+}
+
+

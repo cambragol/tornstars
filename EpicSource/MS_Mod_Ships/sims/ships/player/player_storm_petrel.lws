@@ -1,0 +1,279 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 0
+PreviewLastFrame 100
+PreviewFrameStep 1
+FramesPerSecond 25
+
+AddNullObject hardpoint_leftwing
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  -16.25 -1.04 -14.65 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject hardpoint_rightwing
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  16.25 -1.04 -14.75 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject dockport
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -2.96 -22.45313 0 89.99999 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject heatsink
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -29.7 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject lds
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 4.025 -30.6 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject drive
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 4.250001 -39.1 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject capsule_drive
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0.1 -34.05 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject left_upper_hardpoint
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  -2.2 7.8 -9.2 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject right_upper_hardpoint
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  2.2 7.8 -9.2 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject upper_pylon
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 13.7 -20 0 0 -89.99999 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject crew
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 2.15 21.1 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject autorepair
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 2.275 12.675 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject cpu
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0.7250001 15.975 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject active_sensors
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -0.125 24.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject passive_sensors
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 2.25 8.975 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject shield_upper
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 4.1 -2 0 -74.7 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject hardpoint_leftwingtip
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -26.1 -9.1 -3.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject hardpoint_rightwingtip
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  26.05 -9.1 -3.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject aft_decoy_hardpoint
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0.05782162 8.45 -24.66513 0 -130.8 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject G:\resource\avatars\interceptor\Interceptor_RTO_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 2 2 2
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AmbientColor 255 255 255
+AmbIntensity 0.25
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1
+LightType 0
+ShadowType 1
+
+ShowCamera 1 7
+CameraMotion (unnamed)
+  9
+  1
+  0 0.5266764 -40.54919 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ZoomFactor 3.2
+Resolution 1
+CustomSize 752 576
+PixelAspectRatio -1
+CustomPixelRatio 1.0186
+MaskPosition 0 0 752 576
+MotionBlur 0
+FieldRendering 0
+SegmentMemory 8000000
+ApertureHeight 0.015
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 0
+RayTraceOptimization 1
+DataOverlayLabel  
+SaveRGB 0
+SaveAlpha 0
+
+ViewType 7
+ViewAimpoint 0.72905 10.55 -24.99062
+ViewDirection -10.92747 0.2041986 0
+ViewZoomFactor 2.023107
+
+GridNumber 40
+GridSize 5
+CameraViewBG 0
+ShowMotionPath 1
+ShowFogRadius 0
+ShowFogEffect 0
+ShowSafeAreas 0
+ShowFieldChart 0

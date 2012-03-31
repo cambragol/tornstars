@@ -1,0 +1,68 @@
+
+Here are the new files you need to run the EconSim. The MS_Mod_Main 
+and MS_Mod_Debug files just replace the ones you currently have.
+The MS_Mod_StationTest is a new cluster made just to test each station.
+if you have the debug keybinds installed you can hyper jump from station
+to station using ctrl-alt-G which makes testing your economic flows much, 
+much easier.
+
+I put the editied cargo_category.ini file in the MS_Mod_StationTest folder. 
+And the new trade data is located there as well.
+
+
+cargo_category.ini
+
+Check out this file to see the new name format. (more on that topic below)
+As you can see, it is not much different. This file has been checked and
+all typo errors have been removed. It is fully working. However, there are
+some errors in the file that only you can fix. Duplicates and some player
+systems have been overwritten.
+
+There is some extra name checking in the econ code. If you search the 
+log file for the word "Error" you can find some mistakes that the
+econ code has caught. Change the categories file until all these errors
+ are gone. 
+
+
+SCRIPT:   [unknown] tEconSmall.CreateCategories
+SCRIPT:   [unknown] Error: Duplicate cargo entry detected
+SCRIPT:   [unknown] ECC_Nanotechnology category CT_NanoAssemblers cargo
+
+The code check for these things:
+Typo errors in the cargo type names.
+Duplicate use of cargo pods in categories.
+Any use of player systems in the cargo.
+Any use of ammo storage items in the cargo.
+
+Are there other common errors that you have made before that we
+can look for in an automated fashion? People make mistakes, and 
+computers can be really good at finding the errors.
+
+I am attaching a file CargoTypes.h that contains the valid names
+that can be used for cargo pod entries. This is a little different
+than the names you were using before. There are no spaces and
+they must all start with a CT_ marker. Using these names
+is the key to the workaround I had to put in place to make the 
+econ sim immune from translation name changes.
+
+There are a few other areas that are commented out. Look for 
+;? commented question marks to find those spots quickly.
+
+
+trade_data.ini
+
+The new change here is that jump payments are now percent of cargo value.
+The value in the file is multiplied by the value of the cargo, so these
+values should always be greater than 1.0. 
+
+The very first value jump[0]=1.05 is used as the local system hauling fee. 
+When you purchase pods, this amount is lowered off the price. When you sell
+pods, you earn the full price. Thus the player can earn this much by doing
+cargo hauls within the same system. Be careful with this value. There are no
+costs to the player for local hauling planned into the MiddleStates release. 
+This could unbalance things.
+
+
+
+
+

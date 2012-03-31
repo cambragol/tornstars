@@ -1,0 +1,211 @@
+/*******************************************************************************************/
+//
+// tsFleetOpUpdate
+//
+// This package gives the operations the chance to move and respond.
+// 
+// 
+// March 2006
+//******************************************************************************************/
+
+package tsFleetOpUpdate;
+
+
+uses  Sim,
+iSim,
+Debug,
+Global,
+iGame,
+iFaction,
+INIFile,
+Input,
+List,
+Object,
+String,
+Task,
+State,
+Text,
+Math,
+iShip,
+iHabitat,
+iMapEntity,
+   iHUD,
+   iComms,
+   tsStationEnum,
+   tsStationFilter,
+   tsFaction,
+   tsTime,
+   tsFleetOp,
+   tsFleetOpCall,
+   tsLCenter,
+   tsLFleet;
+
+
+
+
+
+
+provides UpdateAll;
+
+prototype update_distress_calls();
+
+
+
+
+UpdateAll()
+{
+   int op_count, opnum;
+   list op_list;
+   hisim operation;
+   int timer, current_day;
+
+   current_day = tsTime.GetDay();
+
+   op_list = tsFleetOp.OperationList();
+   op_count = List.ItemCount(op_list);
+
+   debug {
+      Debug.PrintString(String.FormatInt("tsFleetOpUpdate.UpdateAll %d ops\n", op_count));
+   }
+
+   for (opnum=0;opnum<op_count;++opnum) {
+
+      operation = iSim.Cast(List.GetNth(op_list,opnum));
+
+      timer = tsFleetOp.WakeTimer(operation);
+      if (current_day >= timer) {
+
+         // This operation wants to take action.
+         tsFleetOpCall.Update(operation);
+      }
+   }
+
+   // Once all the operations have had a chance to move and fight, reset the player visible distress calls.
+   update_distress_calls();
+
+}
+
+update_distress_calls()
+{
+   int op_count, opnum, i, total;
+   list op_list, station_list, distress_list, old_distress_list;
+   hisim operation;
+   hisim center;
+   hisim waypoint;
+   hfaction player_faction = tsFaction.PlayerFaction();
+   hfaction op_faction;
+   string name;
+   set station_set;
+
+
+   old_distress_list = Global.List("tsfleetopupdate_distress_list");
+   total = List.ItemCount(old_distress_list);
+
+   // Destroy the distress waypoints that already exist.
+   for (i=0;i<total;++i) {
+      waypoint = iSim.Cast(List.GetNth(old_distress_list, i));
+      Sim.Destroy(waypoint);
+   }
+
+   // objects for the player to see.
+   op_list = tsFleetOp.OperationList();
+   op_count = List.ItemCount(op_list);
+
+   for (opnum=0;opnum<op_count;++opnum) {
+      operation = iSim.Cast(List.GetNth(op_list,opnum));
+
+      // if operation has a distress flag set.
+      if (tsLFleet.Distress(operation)) {
+
+         // if the operation is in the same system as the player.
+         center = tsLCenter.GetCenter(operation);
+         if (iSim.WorldName(center) == iSim.ActiveWorld()) {
+
+            // if the op has a friendly or better standing to the player.
+            op_faction = iSim.Faction(operation);
+            if (iFaction.Feeling(player_faction, op_faction) > 0.2){
+
+               // Found an operation in distress
+               debug {
+                  Debug.PrintString("Distress ");               
+                  Debug.PrintString(Text.Field(tsFleetOp.Name(operation),FT_Text));
+                  Debug.PrintString(" ");
+                  Debug.PrintString(Sim.Name(center));
+                  Debug.PrintString("\n");
+               }
+
+
+               // create a distress waypoint the player can see.
+               // put it near the station where the op is located.
+               
+               name = "SoS: ";
+               name = String.Join(name, Text.Field(tsFleetOp.Name(operation),FT_Text));
+               name = String.Join(name," at ");
+               name = String.Join(name,Text.Field(Sim.Name(center), FT_Text));
+
+               waypoint = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint", name));
+               Sim.SetCullable(waypoint, false);
+               iSim.SetFaction(waypoint, op_faction);
+               Sim.PlaceNear(waypoint, center, 10km);
+               iSim.SetSensorVisibility(waypoint, true);
+               List.AddTail(distress_list, waypoint);
+            }
+         }
+      }
+   }
+
+   // Now iterate through all the stations in the current system and update the distress levels of those as well.
+
+   // objects for the player to see.
+
+   station_set = iMapEntity.SystemHabitatsInSystem(iSim.ActiveWorld());
+   station_set = tsStationFilter.OnStatus(station_set, ESS_Normal|ESS_Building|ESS_Leaving|ESS_Fleeing);
+
+   op_list = List.FromSet(station_set);
+   op_count = List.ItemCount(op_list);
+
+   for (opnum=0;opnum<op_count;++opnum) {
+      operation = iSim.Cast(List.GetNth(op_list,opnum));
+
+      // if operation has a distress flag set.
+      if (tsLFleet.Distress(operation)) {
+
+         // if the op has a neutral or better standing to the player.
+         op_faction = iSim.Faction(operation);
+         if (iFaction.Feeling(player_faction, op_faction) > -0.2){
+
+            // Found a station in distress
+            debug {
+               Debug.PrintString("Station Distress ");               
+               Debug.PrintString(Sim.Name(operation));
+               Debug.PrintString("\n");
+            }
+
+            // create a distress waypoint the player can see.
+            // put it near the station giving the mayday.
+               
+            name = "SoS Station: ";
+            name = String.Join(name,Text.Field(Sim.Name(operation), FT_Text));
+
+            waypoint = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint", name));
+            Sim.SetCullable(waypoint, false);
+            iSim.SetFaction(waypoint, op_faction);
+            Sim.PlaceNear(waypoint, operation, 10km);
+            iSim.SetSensorVisibility(waypoint, true);
+            List.AddTail(distress_list, waypoint);
+         }
+      }
+   }
+
+   // post up the new list of distress waypoints.
+   Global.CreateList("tsfleetopupdate_distress_list", GA_NoSave|GA_Write, distress_list);
+}
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

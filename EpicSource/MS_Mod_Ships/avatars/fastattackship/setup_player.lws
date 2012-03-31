@@ -1,0 +1,1272 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 0
+PreviewLastFrame 100
+PreviewFrameStep 1
+FramesPerSecond 25
+
+AddNullObject <detail_switch min=0.0 max=0.01>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  -100 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.01 max=0.1>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.1 max=1.0>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  100 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ShadowOptions 7
+
+LoadObject C:\resource\avatars\fastattackship\FAS_Lod1_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 7
+ShadowOptions 7
+
+AddNullObject <scene name=FAS_Eng>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  -4.2 0 -30.3 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 7
+ShadowOptions 7
+
+AddNullObject <scene name=FAS_Eng>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  4.4 0 -30.3 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 7
+ShadowOptions 7
+
+AddNullObject LOD1_objecthandle
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 2
+ShadowOptions 7
+
+LoadObject C:\resource\avatars\fastattackship\FAS_Lod2_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 11
+ShadowOptions 7
+
+AddNullObject <scene name=FAS_Eng>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  -4.2 0 -30.3 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 11
+ShadowOptions 7
+
+AddNullObject <scene name=FAS_Eng>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  4.4 0 -30.3 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 11
+ShadowOptions 7
+
+AddNullObject LOD2_objecthandle
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 1
+ShadowOptions 7
+
+LoadObject C:\resource\avatars\fastattackship\FAS_Lod0_T.lwo
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 15
+ShadowOptions 7
+
+AddNullObject <scene name=FAS_LOD0_Eng>
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  -4.2 0 -30.3 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 15
+ShadowOptions 7
+
+AddNullObject <scene name=FAS_LOD0_Eng>
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  4.4 0 -30.3 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 15
+ShadowOptions 7
+
+AddNullObject LOD0_objecthandle
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 3
+ShadowOptions 7
+
+AddNullObject <anim channel="LX?+ RY?- ">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  -13.67633 0 -24.1 -89.99999 0 0 0 0 0
+  0 0 0 0 0
+  -13.67633 0 -24.1 -89.99999 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+ParentObject 15
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 0 0 45 0 0 2 4 6
+  0 0 0 0 0
+  0 0 0 45 0 0 2 4 6
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 38
+ShadowOptions 7
+
+AddNullObject <anim channel="LX?- RY?+ ">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  13.60394 0 -24.1 89.99999 0 0 0 0 0
+  0 0 0 0 0
+  13.60394 0 -24.1 89.99999 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+ParentObject 15
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 0 0 -45 0 0 2 4 6
+  0 0 0 0 0
+  0 0 0 -45 0 0 2 4 6
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 36
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 2 4 6
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 21
+ShadowOptions 7
+
+AddNullObject <anim channel="LY?- RR?- RP?-">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  6.1 4.150338 -18.1 89.99999 -89.99999 0 0 0 0
+  0 0 0 0 0
+  6.1 4.150338 -18.1 89.99999 -89.99999 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 15
+ShadowOptions 7
+
+AddNullObject <anim channel="LY?- RR?+ RP?-">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  -6.1 4.150338 -18.1 89.99999 -89.99999 0 0 0 0
+  0 0 0 0 0
+  -6.1 4.150338 -18.1 89.99999 -89.99999 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 15
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 2 4 6
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 22
+ShadowOptions 7
+
+AddNullObject <anim channel="LY?+ RR?+ RP?+">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  6.1 -4.150338 -18.1 89.99999 89.99999 0 0 0 0
+  0 0 0 0 0
+  6.1 -4.150338 -18.1 89.99999 89.99999 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 15
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 2 4 6
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 24
+ShadowOptions 7
+
+AddNullObject <anim channel="LY?+ RR?- RP?+">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  -6.1 -4.180324 -18.1 89.99999 89.99999 0 0 0 0
+  0 0 0 0 0
+  -6.1 -4.180324 -18.1 89.99999 89.99999 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 15
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 2 4 6
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 26
+ShadowOptions 7
+
+AddNullObject <anim channel="LY?- RR?- RP?+">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  7.8 3.370148 13.9 89.99999 -89.99999 0 0 0 0
+  0 0 0 0 0
+  7.8 3.370148 13.9 89.99999 -89.99999 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 15
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 0 0 0 -30 0 2 4 6
+  0 0 0 0 0
+  0 0 0 0 -30 0 2 4 6
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 30
+ShadowOptions 7
+
+AddNullObject <anim channel="LY?- RR?+ RP?+">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  -7.8 3.340162 13.9 89.99999 -89.99999 0 0 0 0
+  0 0 0 0 0
+  -7.8 3.340162 13.9 89.99999 -89.99999 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 15
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 0 0 0 30 0 2 4 6
+  0 0 0 0 0
+  0 0 0 0 30 0 2 4 6
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 28
+ShadowOptions 7
+
+AddNullObject <anim channel="LY?+ RR?+ RP?-">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  7.8 -3.340162 13.9 89.99999 89.99999 0 0 0 0
+  0 0 0 0 0
+  7.8 -3.340162 13.9 89.99999 89.99999 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 15
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 0 0 0 30 0 2 4 6
+  0 0 0 0 0
+  0 0 0 0 30 0 2 4 6
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 34
+ShadowOptions 7
+
+AddNullObject <anim channel="LY?+ RR?- RP?-">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  -7.8 -3.400135 13.9 89.99999 89.99999 0 0 0 0
+  0 0 0 0 0
+  -7.8 -3.400135 13.9 89.99999 89.99999 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 15
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 0 0 0 -30 0 2 4 6
+  0 0 0 0 0
+  0 0 0 0 -30 0 2 4 6
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 32
+ShadowOptions 7
+
+AddNullObject <anim channel="LX?- LZ?- RY?- ">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  12.79226 0 13 89.99999 0 0 0 0 0
+  0 0 0 0 0
+  12.79226 0 13 89.99999 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+ParentObject 15
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 2 4 6
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 18
+ShadowOptions 7
+
+AddNullObject <anim channel="LX?+ LZ?- RY?+ ">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  -12.7247 0 13 -89.99999 0 0 0 0 0
+  0 0 0 0 0
+  -12.7247 0 13 -89.99999 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+ParentObject 15
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar repeat=1 texture="jet_short">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 2 4 6
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 16
+ShadowOptions 7
+
+AddNullObject <node template=ini||audio|sfx|player_drive_fast_attack>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 6.705523e-008 -30.3 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject C:\resource\avatars\fastattackship\RT_CommandSection(Centred_NP)_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  1.14 0.46 -12.625 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 46
+ShadowOptions 7
+
+AddNullObject root
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject C:\resource\avatars\fastattackship\1_RT_CommandSection(Centred_NP)_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 35.3389 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 2
+ShadowOptions 7
+
+LoadObject C:\resource\avatars\fastattackship\2_RT_CommandSection(Centred)_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 35.2264 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 1
+ShadowOptions 7
+
+LoadObject C:\resource\avatars\fastattackship\Chair_RTO_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -1.14 -0.11 48.0764 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 3
+ShadowOptions 7
+
+LoadObject C:\resource\avatars\fastattackship\Adult_Cal_JB_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -0.35 -0.225 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 45
+ShadowOptions 7
+
+AddNullObject <node template=ini||audio|sfx|player_jets>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 7.400002 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 4
+ShadowOptions 7
+
+AddNullObject <node template=ini||audio|sfx|player_thrusters>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -6.75 7.4 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ShadowOptions 7
+
+AddNullObject <node template=ini||audio|sfx|player_afterburners>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -30.2 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ShadowOptions 7
+
+AmbientColor 255 255 255
+AmbIntensity 0.25
+
+AddLight
+LightName Light
+ShowLight 0 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1
+LightType 0
+ShadowType 1
+ShadowColor 0 0 0
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -10.15 0 21.00998 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 7
+LightColor 255 1 1
+LgtIntensity 0
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.09
+  16 1 0 0 0
+  0.09
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 1
+ShadowColor 0 0 0
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -14.25002 0 -18.51996 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 7
+LightColor 255 1 1
+LgtIntensity 0
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.09
+  16 1 0 0 0
+  0.09
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 1
+ShadowColor 0 0 0
+
+AddLight
+LightName GreenNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  10.15 0 21.11 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 7
+LightColor 1 255 1
+LgtIntensity 0
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.09
+  16 1 0 0 0
+  0.09
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 1
+ShadowColor 0 0 0
+
+AddLight
+LightName GreenNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  14.25 0 -18.52 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 7
+LightColor 1 255 1
+LgtIntensity 0
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.09
+  16 1 0 0 0
+  0.09
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 1
+ShadowColor 0 0 0
+
+AddLight
+LightName WhiteFlasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 -10.1 0.09999358 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 7
+LightColor 255 255 255
+LgtIntensity 0
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.2
+  16 1 0 0 0
+  0.2
+  17 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 6
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 1
+ShadowColor 0 0 0
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -10.15 0 21.00998 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 11
+LightColor 255 1 1
+LgtIntensity 0
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.09
+  16 1 0 0 0
+  0.09
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 1
+ShadowColor 0 0 0
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -14.25002 0 -18.51996 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 11
+LightColor 255 1 1
+LgtIntensity 0
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.09
+  16 1 0 0 0
+  0.09
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 1
+ShadowColor 0 0 0
+
+AddLight
+LightName GreenNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  10.15 0 21.11 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 11
+LightColor 1 255 1
+LgtIntensity 0
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.09
+  16 1 0 0 0
+  0.09
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 1
+ShadowColor 0 0 0
+
+AddLight
+LightName GreenNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  14.25 0 -18.52 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 11
+LightColor 1 255 1
+LgtIntensity 0
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.09
+  16 1 0 0 0
+  0.09
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 1
+ShadowColor 0 0 0
+
+AddLight
+LightName WhiteFlasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 -10.1 0.09999358 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 11
+LightColor 255 255 255
+LgtIntensity 0
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.2
+  16 1 0 0 0
+  0.2
+  17 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 6
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 1
+ShadowColor 0 0 0
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -10.15 0 21.00998 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 15
+LightColor 255 1 1
+LgtIntensity 0
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.09
+  16 1 0 0 0
+  0.09
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 1
+ShadowColor 0 0 0
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -14.25002 0 -18.51996 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 15
+LightColor 255 1 1
+LgtIntensity 0
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.09
+  16 1 0 0 0
+  0.09
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 1
+ShadowColor 0 0 0
+
+AddLight
+LightName GreenNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  10.15 0 21.11 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 15
+LightColor 1 255 1
+LgtIntensity 0
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.09
+  16 1 0 0 0
+  0.09
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 1
+ShadowColor 0 0 0
+
+AddLight
+LightName GreenNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  14.25 0 -18.52 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 15
+LightColor 1 255 1
+LgtIntensity 0
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.09
+  16 1 0 0 0
+  0.09
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 1
+ShadowColor 0 0 0
+
+AddLight
+LightName WhiteFlasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 -10.1 0.09999358 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 15
+LightColor 255 255 255
+LgtIntensity 0
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.2
+  16 1 0 0 0
+  0.2
+  17 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10
+FlareDissolve 0
+LensFlareFade 6
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.22
+FlareStarFilter 2
+ShadowType 1
+ShadowColor 0 0 0
+
+ShowCamera 0 7
+CameraMotion (unnamed)
+  9
+  1
+  0 0.25 -247.308 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ZoomFactor 3.2
+Resolution 1
+CustomSize 752 576
+PixelAspectRatio -1
+CustomPixelRatio 1.0186
+MaskPosition 0 0 752 576
+MotionBlur 0
+FieldRendering 0
+SegmentMemory 8000000
+ApertureHeight 0.015
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 0
+RayRecursionLimit 16
+RayTraceOptimization 1
+DataOverlayLabel  
+SaveRGB 0
+SaveAlpha 0
+
+ViewType 7
+CenterItem 1
+ViewAimpoint 87.2753 0 13
+ViewDirection -2.811727 -0.3560474 0
+ViewZoomFactor 13.53915
+
+GridNumber 40
+GridSize 10
+CameraViewBG 0
+ShowMotionPath 1
+ShowFogRadius 0
+ShowFogEffect 0
+ShowSafeAreas 0
+ShowFieldChart 0

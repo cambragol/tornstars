@@ -1,0 +1,468 @@
+/*******************************************************************************************/
+//
+// tsFoFreeMiner.pog
+// 
+// Torn Stars Fleet Operation Free Trader Wandering Group
+// 
+// The Merc operation moves around stations looking for hire.
+// It will align and protect its supporting station until hired.
+// 
+// The Patrol behavior is to move often around the neutral or better stations 
+// within the same planet as its home station. The Merc group is not looking to attack
+// hostile stations or visit hostile stations.
+//
+// If the FreeMiner Group is outnumbered, it will flee home.
+// If the FreeMiner Group is wounded half it will flee home.
+//
+// March 2006
+// June 2009 - Created from a modified from the Merc base
+// Sept 2011 - Created from a modified version of FreeMiner base
+//******************************************************************************************/
+
+package tsFoFreeMiner;
+
+
+uses  Sim,
+Set,
+   iSim,
+   Debug,
+   Global,
+   iGame,
+   iFaction,
+   INIFile,
+   Input,
+   List,
+   Object,
+   String,
+   Task,
+   State,
+   Text,
+   Math,
+   iShip,
+   iHabitat,
+   iMapEntity,
+   iCargo,
+   iCargoScript,
+   iHUD,
+   iComms,
+
+iLagrangePoint,
+   
+   tsStationEnum,
+   tsStation,
+   tsFaction,
+   tsTime,
+   tsFleetOp,
+   tsLRoot,
+   tsLCenter,
+   tsLProduction,
+   tsLFleet,
+   tsStationFilter,
+   tsEconUtil,
+   tsShipName,
+   tsShipCreationEnum,
+   tsShipCreation,
+   tsFleetOpCombat,
+   tsFleetOpPhysical,
+
+tsCapsuleJump,
+
+   tsDebug;
+
+
+
+
+provides New,
+         Save,
+         Restore,
+         Update,
+         PlayerNear;
+
+
+prototype hhabitat find_patrol_station(hisim operation, hmapentity center, string system_name, float distance);
+
+prototype hlagrangepoint find_patrol_lpoint(hisim operation, string system_name);
+
+prototype hhabitat find_safe_station(hisim operation, hmapentity center, string system_name);
+
+//*******************************************************************************************/         
+//
+//*******************************************************************************************/
+
+New(hisim operation)
+{
+   string ship_name, ship_template, op_type, ship_class;
+   hfaction faction;
+
+
+   ship_class = tsFleetOp.GetOperationShipClass(operation);
+
+   faction = iSim.Faction(operation);
+
+   // We pick a police name for ourselves. 
+   // using a large number means we get a random name.
+   ship_name = tsShipName.ShipName("stepson", 10000);
+
+   // We pick a warship for center vessel.
+   ship_template = tsShipCreation.GetShip(faction, tsShipCreation.String2ShipType(ship_class));
+
+   tsFleetOp.SetName(operation, ship_name);
+   tsFleetOp.SetShipTemplate(operation, ship_template);
+
+   tsLFleet.SetMaxFleets(operation, Math.RandomInt(50,(tsFleetOp.GetOperationMaxFleets(operation))));
+
+
+   tsLFleet.SetFleets(operation, tsLFleet.MaxFleets(operation));
+
+debug Debug.PrintString("tsFoFreeMiner.New: Max Fleets =.\n");
+debug Debug.PrintInt(tsLFleet.MaxFleets(operation));
+debug Debug.PrintString("\n");
+debug Debug.PrintString("tsFoFreeMiner.New: Random Fleets =.\n");
+debug Debug.PrintInt(tsLFleet.Fleets(operation));
+debug Debug.PrintString("\n");
+
+  // tsLFleet.SetFleets(operation, tsFleetOp.GetOperationMaxFleets(operation));
+
+}
+
+
+
+Save(hisim operation)
+{
+
+}
+
+
+
+Restore(hisim operation)
+{
+   
+}
+
+
+
+Update(hisim operation)
+{
+   hmapentity center = tsLCenter.GetCenter(operation);
+
+hhabitat target_station;
+hlagrangepoint target_lpoint;
+
+   hhabitat supporter_station;
+   bool hostiles, wounded, dying, home, out_gunned, need_patrol;
+   bool move_home, stay_still, move_safe;
+   list local_operations;
+   hisim visitor;
+   hfaction faction, visitor_faction;
+   int fleets, hostile_fleets, total_hostiles;
+   int i, total;
+   int current_day = tsTime.GetDay();
+   int patrol_day;
+   int update_delay = 1;
+	int max_days_to_stay_at_station = 7;
+	float whimp_adjustment = 1.25;
+
+
+   tsDebug.PrintString("tsFoFreeMiner_debug","tsFoFreeMiner.Update\n");
+
+   
+   faction = iSim.Faction(operation);
+
+   // Here we look up what other operations are nearby. 
+   // Any combat between this and other operations happens here.
+
+   local_operations = tsFleetOp.StationOperations(center);
+   List.Remove(local_operations, operation);
+   total = List.ItemCount(local_operations);
+
+   hostiles = false;
+   total_hostiles = 0;
+
+   for (i=0;i<total;++i) {
+      visitor = iSim.Cast(List.GetNth(local_operations,i));
+      visitor_faction = iSim.Faction(visitor);
+
+      if (iFaction.Feeling(visitor_faction, faction) < -0.2) {
+         // There are hostile forces at this station
+         fleets = tsLFleet.Fleets(operation);            // our fleet size
+         hostile_fleets = tsLFleet.Fleets(visitor);      // hostiles fleet size
+
+			// Free Traders are basically whimps. Only fight if have a massive advantage
+         if (fleets > (hostile_fleets * whimp_adjustment)) {
+            // We have the advantage, pound them.
+            tsFleetOpCombat.Offense(center, operation, visitor);
+         }else {
+            // We are outnumbered, so switch to evasive tactics.
+            tsFleetOpCombat.Defense(center, operation, visitor);
+         }
+         // Remember this total, so we can choose to flee later.
+         total_hostiles += hostile_fleets;
+         hostiles = true;
+      }
+   }
+
+   // get the updated fleets value after damage has been done from
+   // any hostile visitors
+   fleets = tsLFleet.Fleets(operation);
+
+   if (fleets == 0) {
+      // Ouch, we died.
+      tsDebug.PrintString("tsFoFreeMiner_debug","tsFoFreeMiner lost fleets and died\n");
+
+      tsFleetOp.DestroyOp(operation);
+      return;
+   }
+
+   // Check if we are outnumbered.
+   if (fleets < (total_hostiles * whimp_adjustment)) {
+      out_gunned = true;
+   }else {
+      out_gunned = false;
+   }
+
+
+   if (fleets < (tsLFleet.MaxFleets(operation))) {
+      wounded = true;
+   }else {
+      wounded = false;
+   }
+
+   // dying when half damaged
+   if (fleets < (tsLFleet.MaxFleets(operation)/2)) {
+      dying = true;
+   }else {
+      dying = false;
+   }
+
+   supporter_station = tsFleetOp.Supporter(operation);
+
+   // Are we home?
+   if (center == iMapEntity.Cast(supporter_station)) {
+      home = true;
+   }else {
+      home = false;
+   }
+
+   move_home = false; // Move to home base
+   move_safe = false; // Move to safe location (for repair)
+   stay_still = false;
+
+   // 
+   if ((dying || wounded) && !home) {
+      move_home = true;
+   }else if (wounded && home) {
+      // Stay right here.
+      stay_still = true;
+   }else if (out_gunned) {
+      move_home = true;
+   }
+
+   // Repair some fleets. Double rate if at home.
+   if (home) {
+      tsLFleet.ChangeFleets(operation, 20 * update_delay);
+   }else {
+      tsLFleet.ChangeFleets(operation, 10 * update_delay);
+   }
+
+   if (move_home) {
+
+      tsLCenter.SetCenter(operation, supporter_station);
+      tsFleetOpCombat.SetDistressFlags(supporter_station);
+
+	debug Debug.PrintString("tsFoFreeMiner.Return Home\n");
+
+
+      tsDebug.PrintString("tsFoFreeMiner_debug","tsFoFreeMiner moving home\n");
+      tsDebug.PrintHandle("tsFoFreeMiner_debug",supporter_station);
+      tsDebug.PrintString("tsFoFreeMiner_debug"," supporter station\n");
+
+   }else if (!stay_still) {
+
+      // Move every X days, patrolling near our patrol station.
+      patrol_day = tsFleetOp.EventTimer(operation);
+      if (patrol_day == 0) {
+         patrol_day = Math.RandomInt(1,max_days_to_stay_at_station);
+         tsFleetOp.SetEventTimer(operation, patrol_day);
+      }
+
+      if (current_day > patrol_day) {
+
+         // Move to another station near our station.
+         tsFleetOp.SetEventTimer(operation, current_day + max_days_to_stay_at_station);
+
+         // Patrol stations near our own, avoiding dislike or lower stations.
+
+	if (Math.RandomInt(1,100) > 20) {
+         	target_station = find_patrol_station(operation, center, iSim.WorldName(center), 500000000km);
+
+ 	   if (target_station) {
+            tsLCenter.SetCenter(operation, target_station);
+            tsFleetOpCombat.SetDistressFlags(target_station);
+
+            tsDebug.PrintString("tsFoFreeMiner_debug","tsFoFreeMiner new patrol\n");
+            tsDebug.PrintHandle("tsFoFreeMiner_debug",target_station);
+            tsDebug.PrintString("tsFoFreeMiner_debug"," new station\n");
+         }
+
+	}
+	else {
+		target_lpoint = find_patrol_lpoint(operation, iSim.WorldName(center));
+		tsLCenter.SetCenter(operation, target_lpoint);
+
+ 		tsDebug.PrintString("tsFoFreeMiner_debug","tsFoFreeMiner move to lpoint\n");
+            tsDebug.PrintHandle("tsFoFreeMiner_debug",target_lpoint);
+            tsDebug.PrintString("tsFoFreeMiner_debug","\n");
+
+
+	}
+        
+      }
+   }else {
+      tsDebug.PrintString("tsFoFreeMiner_debug","tsFoFreeMiner stay still\n");
+   }
+
+   // Set next wakeup date.
+   tsFleetOp.SetWakeTimer(operation, current_day + update_delay);
+}
+
+
+
+
+
+// Called when the player is near the operation
+PlayerNear(hisim operation)
+{
+   debug Debug.PrintString("tsFoFreeMiner.PlayerNear: Player near operation, instantiate physical sims.\n");
+   tsFleetOpPhysical.MakeOpPhysical(operation);
+}
+
+
+// patrol the neutral or better stations at close distance to their home station.
+hhabitat find_patrol_station(hisim operation, hmapentity center, string system_name, float distance)
+{
+   	set habitats;
+	hhabitat choice;
+
+	// This type of 'ranged' search for stations is turned off to allow more interstellar movement
+	// Similar movement could be simulated by OnGreaterFeeling
+   	// Search system stations and find a normal status station where we can live.
+   	/*habitats = tsStationFilter.OnStatus(iSim.SimsInRadius( center,
+                                                         distance,
+                                                         T_Station), ESS_Normal);*/
+
+	// This operation will go to any friendly, functioning station
+	// Different types of 'Free' operations can be customized at this point
+	habitats = tsStationFilter.OnStatus(iMapEntity.SystemHabitatsInSystem(system_name), ESS_Normal);
+                                     
+   	Set.Remove(habitats, center);
+   	// We can hang out at neutral or better stations. We avoid people trying to
+  	// kill us.
+  	habitats = tsStationFilter.OnGreaterFeeling(habitats,
+                                              iSim.Faction(operation),
+                                              tsFaction.Type2LowerLevel(FT_Dislike));
+	// added for testing
+	// habitats = tsStationFilter.OnPodSpewer(habitats);
+
+   choice = iHabitat.Random(habitats);
+
+   debug Debug.PrintString("tsFoFreeMiner.Chose to travel to station .\n");
+	debug Debug.PrintHandle(choice);
+	debug Debug.PrintString(" in ");
+	debug Debug.PrintString(system_name);
+   debug Debug.PrintString("\n");
+
+	return choice;
+		
+}
+
+
+
+// chose an lpoint to leave the system and find employment elsewhere
+hlagrangepoint find_patrol_lpoint(hisim operation, string system_name)
+{
+   
+hlagrangepoint choice;
+
+
+// added for Lpoint functions
+
+
+hlagrangepoint lagrange_start, lagrange_end;
+list lagrange_destination_list;
+set lagrange_local_destination_set, lagrange_destination_set;
+string lagrange_end_string, lagrange_end_system_string, system;
+int list_length, list_total, i;
+hobject lagrange_end_ent;
+
+
+
+// added for Lpoint functions
+
+	//find out where this operation is
+	system = tsLCenter.GetSystemName(operation);
+
+
+		debug Debug.PrintString("tsFoFreeMiner.ship_controller: Fleet use Lpoint\n");
+		
+		//Make sure we are checking for lpoints in the system that the operation is actually in
+		//Only choose non-hidden, public lpoints
+	while (list_total == 0) {
+		lagrange_start = iLagrangePoint.Random(iMapEntity.SystemLagrangePointsInSystem(system));
+					/*while (iMapEntity.IsHidden(lagrange_start)) {
+						lagrange_start = iLagrangePoint.Random(iMapEntity.SystemLagrangePointsInSystem(system));
+					}*/
+		
+		
+		lagrange_destination_list = tsCapsuleJump.KnownList(lagrange_start);  //Interstellar
+		
+		//This is likely unnecessary and reflects my early misunderstand of for statements
+		list_length = List.ItemCount(lagrange_destination_list);
+		list_total = list_length;
+	}
+			//Build a list of routes for the lagrange_start
+			//No need to remove later as these are not actually added to the lpoint
+			for (i=0; i<list_total; ++i) {
+
+				debug Debug.PrintString("tsFoFreeMiner.Making a list.\n");
+				debug Debug.PrintInt(i);
+				debug Debug.PrintString("\n");
+
+
+				lagrange_end_ent = Sim.Cast(List.GetNth(lagrange_destination_list, i));
+				lagrange_end_string = Object.StringProperty(lagrange_end_ent, "gtRouteLpoint");
+				lagrange_end_system_string = Object.StringProperty(lagrange_end_ent, "gtRouteSystem");
+		
+		
+				lagrange_end = iLagrangePoint.Cast(iMapEntity.FindByNameInSystem(lagrange_end_string, lagrange_end_system_string));
+				Set.Add(lagrange_destination_set, lagrange_end);
+
+			}
+
+		lagrange_local_destination_set = iLagrangePoint.LocalDestinations(lagrange_start);
+		//Remove the starting lagrange point as we are looking for destinations only
+		//Set.Remove(lagrange_local_destination_set, lagrange_start);
+			//Makes sure that the local destination set is not empty, only use the interstellar if it is
+			if (!Set.IsEmpty(lagrange_local_destination_set)) {
+				Set.Union(lagrange_destination_set, lagrange_local_destination_set);
+			}
+
+	choice = iLagrangePoint.Random(lagrange_destination_set);
+
+   debug Debug.PrintString("tsFoFreeMiner.Chose to travel to Lpoint .\n");
+	debug Debug.PrintHandle(choice);
+	debug Debug.PrintString(" in ");
+	debug Debug.PrintString(lagrange_end_system_string );
+   debug Debug.PrintString("\n");
+
+	return choice;
+		
+}
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+

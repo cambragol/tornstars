@@ -1,0 +1,421 @@
+//*******************************************************************************************/
+//
+// tsPcTankerShip
+//
+// This pog object implements ships that can be hired by the player to become wingmen.
+// 
+//
+// March 2005, Jon Freise
+//******************************************************************************************/
+
+package tsPcTankerShip;
+
+uses    Sim,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        GUI,
+        iGUI,
+        iHUD,
+        INIFile,
+        Input,
+        List,
+        Object,
+        String,
+        Task,
+        Text,
+        Math,
+        iShipCreation,
+        iComms,
+        iConversation,
+        iLagrangePoint,
+        iAI,
+
+        tsShipComms,
+        tsShipEnum,
+        tsShip,
+        tsPlayerFleet,
+        tsFaction,
+        tsMoney,
+        tsShipName,
+        tsPcOwner,
+        tsCull;
+
+
+
+provides PogCreate,
+         PogStart,
+         TankerComms;
+
+
+
+
+// Read the INI file and setup the ship
+prototype setup_tanker_ship(hship ship);
+
+
+// Fuel the ships the player has commanded.
+prototype task fuel_list(hship ship, float fuel_cost, list target_list);
+
+prototype hmapentity nearby_location(hisim center);
+
+
+hsim PogCreate(string template_name, string object_name)
+{
+
+   hinifile object_file;
+   string name, file_name;
+   string item_template, pog_class;
+   hsim item;
+
+   debug Debug.PrintString("tsPcTankerShip.PogCreate\n");
+
+   object_file = INIFile.Create(template_name);
+
+   if (none == object_file) {
+      debug {
+         Debug.PrintString("tsPcTankerShip.PogCreate, failed to find object file\n");
+      }
+
+      return none;
+   }
+
+   // Pull needed items out of template file. Create the object.
+   // Attach them
+
+   pog_class = INIFile.String(object_file, "PogClass","name","none");
+
+
+   ///********************
+   // This block of code is class dependent. The rest must be done to adhere
+   // to the pog otbject calling conventions.
+
+   item_template = INIFile.String(object_file, "Properties","template","none");
+
+   INIFile.Destroy(object_file);
+
+
+
+
+
+   name = tsShipName.ShipName( "general", Math.RandomInt(0, 343));
+
+   item = Sim.Create(item_template, "Refuel Tanker");
+
+   if (none == item) {
+      debug {
+         Debug.PrintString("PogClass.PogCreate, bad object template\n");
+      }
+      return none;
+   }
+   ///********************
+
+
+   // All 
+   Object.AddStringProperty(item, "gt_pog_object_class", pog_class);
+   Object.AddStringProperty(item, "gt_pog_object_template", template_name);
+
+
+   return item;
+}
+
+
+/*
+This function is called after the ship has been placed. 
+
+*/
+task PogStart(hsim pog_object)
+{
+   debug Debug.PrintString("tsPcTankerShip: starting\n");
+
+   ///***************************************
+   // This part of the start code is object dependent. The prior pieces must
+   // be done to adhere to the pog class calling convention.
+
+   setup_tanker_ship(iShip.Cast(pog_object));
+
+   ///***************************************
+}
+
+/*
+; 
+; Example INI file for setting up a hired ship.
+; One of these template files should be created
+; for each kind of ship that can be hired.
+; Freighter, warship, etc.
+
+[PogClass]
+name=tsPcTankerShip
+
+[Properties]
+
+template=ini:/sims/ships/utility/freighter
+
+ship_template="ship ini string"
+hiring_fee=integer one time hiring fee
+upkeep_fee=integer daily cost to support the ship
+faction_standing=float, minimum faction standing the player must have
+
+; This code will be called by the players communication subsystem
+; It will check to see if the player has a high enough standing to hire the ship.
+; Then it will offer the player the choice of hiring. It will display fee info.
+; 
+comm_start_function="tTankerShipComm.Freighter"
+
+
+*/
+
+
+
+// Read the ini file, setup the object. 
+setup_tanker_ship(hship ship)
+{
+   hinifile control_file;
+   string template_file_name, comm_function;
+   float faction_standing, fuel_cost;
+   hfaction faction;
+   hmapentity location;
+   hsim owner;
+
+   template_file_name = Object.StringProperty(ship, "gt_pog_object_template");
+
+
+   tsShipComms.AddComms(ship, "tsPcTankerShip.TankerComms");
+
+   tsShipComms.DisplayComms(ship, true);
+
+
+
+   location = nearby_location(ship);
+
+   // The tanker has the same faction as the owning producer. Typically the station.
+   // Could be an operation.
+   owner = Sim.Cast(tsPcOwner.Owner(ship));
+   faction = iSim.Faction(iSim.Cast(owner));
+
+   iSim.SetFaction(iSim.Cast(ship), faction);
+
+   tsCull.AddSim(iSim.Cast(location), ship);
+
+}
+
+
+
+
+
+task TankerComms()
+{
+   hship ship;
+   hship wingman;
+   hfaction player = tsFaction.PlayerFaction();
+   hfaction source_faction;
+   string ask_string, response_string;
+   int fleet_total, i, answer, ship_number;
+   float fuel_cost;
+   hhabitat station;
+   list player_fleet = tsShip.PlayerFleet();
+   list target_fleet;
+   int level;
+   hinifile tanker_file;
+
+
+   ship = iShip.Cast(tsShipComms.CommsSource());
+   station = iHabitat.Nearest(iMapEntity.SystemHabitats(),ship);
+   
+   source_faction = iSim.Faction(ship);
+
+   // Restrict ships to those near the target fleet.
+   player_fleet = List.FromSet(iSim.SimsInRadiusFromSet(Set.FromList(player_fleet), 
+                                                        ship, Global.Float("gt_distance_wakeup"), TM_Ship));
+   List.Remove(player_fleet, iShip.FindPlayerShip());
+   fleet_total = List.ItemCount(player_fleet);
+
+
+   // Open up the tanker INI file and read the fuel cost.
+   // We do this at the moment of purchase, just in case the player has
+   // increased standing while at the station and expects a discount.
+   tanker_file = INIFile.Create(Object.StringProperty(ship, "gt_pog_object_template"));
+
+   level = iFaction.FeelingType(iFaction.Feeling(source_faction, player));
+
+   fuel_cost = INIFile.Float(tanker_file, "FuelCost", tsFaction.Level2String(level), 1.0);
+
+   INIFile.Destroy(tanker_file);
+
+
+
+
+   // Turn off the comms display, now that the player knows he can talk to this ship.
+   tsShipComms.DisplayComms(ship, false);
+
+
+
+
+
+   // Start the conversation.
+   iConversation.Begin();
+
+   // pcts_player_refuses, "No, Thank you."
+   iConversation.AddResponse(
+       "pcts_player_refuses",       
+       "pcts_player_refuses");
+
+
+   // pcts_yes_fuel_fleet, "Yes, fuel the whole fleet"
+   iConversation.AddResponse(
+       "pcts_yes_fuel_fleet", 
+       "pcts_yes_fuel_fleet"); 
+
+
+   // pcts_yes_fuel_me, "Yes, fuel just my ship"
+   iConversation.AddResponse(
+      "pcts_yes_fuel_me",
+      "pcts_yes_fuel_me");
+
+
+
+   // Add a response for each wingman in the player fleet.
+    for (i=0;i<fleet_total;++i)
+    {
+       wingman = iShip.Cast(List.GetNth(player_fleet,i));
+
+       ask_string = String.Join("Fuel ", Text.Field(Sim.Name(wingman),FT_Text));
+       response_string = String.Join("Fuel only ", Text.Field(Sim.Name(wingman),FT_Text));
+
+       iConversation.AddResponse(
+          ask_string,
+          response_string);
+    }
+
+    // pcts_ask_player, "Do you need to refuel your ships?"
+
+    // Ask the player a question and switch on their response.
+    answer = iConversation.Ask( ship, "", "pcts_ask_player" );
+
+    switch ( answer)
+    {
+    case 1 :
+
+        // pcts_player_refuse_reply, "Maybe Next Time"
+       iConversation.Say(ship,"", "pcts_player_refuse_reply");
+       break;
+
+    case 2 :
+        // pcts_player_fuel_all, "Fueling All Ships"
+       iConversation.Say(ship,"", "pcts_player_fuel_all");
+
+       List.AddHead(player_fleet, iShip.FindPlayerShip());
+       Task.Detach( start fuel_list(ship, fuel_cost, player_fleet));
+       break;
+    case 3:
+        // pcts_player_fuel_you, "Fueling You"
+       iConversation.Say(ship,"", "pcts_player_fuel_you");
+
+       List.AddHead(target_fleet, iShip.FindPlayerShip());
+       Task.Detach( start fuel_list(ship, fuel_cost, target_fleet));
+       break;
+
+    default :
+       // Player said Fuel Specific wingman
+       
+       ship_number = answer - 4;
+
+       // Check the answer is less than the number of wingmen.
+       if (ship_number < fleet_total)
+       {
+          wingman = iShip.Cast(List.GetNth(player_fleet, ship_number));
+
+          List.AddHead(target_fleet, wingman);
+          Task.Detach(start fuel_list(ship, fuel_cost, target_fleet));
+
+          // pcts_fueling, "Fueling "
+          response_string = Text.Field("pcts_fueling", FT_Text);
+          response_string = String.Join(response_string, Text.Field(Sim.Name(wingman),FT_Text));
+
+          // Announce that we are fueling that ship.
+          iConversation.Say(ship,"", response_string );          
+       }else {
+           // pcts_invalid_value, "Tanker Invalid Ship Specified"
+          iConversation.Say(ship,"", "pcts_invalid_value" );          
+       }
+       break;
+    }
+
+    // Finish the conversation.
+    iConversation.End();
+}
+
+
+// this task will attempt to fuel each of the ships in the target list.
+task fuel_list(hship ship, float fuel_cost, list target_list)
+{
+   hship target;
+   int total, i, cost;
+   float max_fuel, fuel_needed;
+   bool failed = false;
+
+   Task.Sleep(Task.Current(), 2.0);
+
+   total = List.ItemCount(target_list);
+
+   for (i=0;i<total;++i)
+   {
+      target = iShip.Cast(List.GetNth(target_list, i));
+      
+      max_fuel = tsShip.FuelMax(target);
+
+      atomic {
+         fuel_needed = max_fuel - tsShip.Fuel(target);
+         
+         cost = fuel_needed * fuel_cost;
+
+         if (cost < tsMoney.ShipAccount())
+         {
+            // Player can afford transfer, fill up wingman
+            tsShip.SetFuel(target, max_fuel );
+            tsMoney.ChangeShipAccount(-1*cost);
+         }else {
+            failed = true;
+         }
+      }
+   }
+
+   if (failed)
+   {
+       // pcts_player_low_credits, "You don't have enough credits to finish fueling"
+      iComms.Shout(ship, "", "pcts_player_low_credits");
+   }else {
+       // pcts_fueling_complete, "Fueling complete"
+      iComms.Shout(ship, "", "pcts_fueling_complete");
+   }
+
+   Task.Sleep(Task.Current(), 2.0);
+}
+
+
+// Finds the closest location or station.
+hmapentity nearby_location(hisim center)
+{
+   hlagrangepoint lpoint;
+   hhabitat habitat;
+
+   lpoint = iLagrangePoint.Nearest(iMapEntity.SystemLagrangePoints(), center);
+   habitat = iHabitat.Nearest(iMapEntity.SystemHabitats(), center);
+
+   if (Sim.DistanceBetween(habitat, center) < Sim.DistanceBetween(lpoint, center)) {
+      return habitat;
+   }
+
+   return lpoint;
+}
+
+
+/*   
+
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+

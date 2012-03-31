@@ -1,0 +1,1279 @@
+//*******************************************************************************************/
+//
+// tsEquipSell.pog
+//
+// This module allows the player to sell equipment to stations and trade ships.
+// 
+// 
+//
+// Dec 2007, jon freise
+//******************************************************************************************/
+
+package tsEquipSell;
+
+uses	Sim,
+		iShip,
+		iSim,
+		Debug,
+		Global,
+		GUI,
+		iDirector,
+		iGame,
+		iGUI,
+		iHUD,
+		iHabitat,
+		iMapEntity,
+		INIFile,
+		Input,
+		List,
+		Object,
+		String,
+		Task,
+		Text,
+		iUtilities,
+		iCargo,
+		iInventory,
+		iComms,
+		Math,
+      iDockPort,                
+      CargoTypes,
+
+		UniGUI,
+      tsSpewerOps,
+      tsMegaTrucking,
+      tsStationEnum,
+      tsStation,
+      tsGuiEnum,
+      tsGui,
+      tsFaction,
+      tsLProduction,
+      tsEconomy,
+      tsEconUtil,
+      tsMoney,
+      tsPodUtil,
+      tsLTrade,
+      tsString, 
+      tsDescribeINI;
+
+
+
+
+provides TradeWindow,
+         RunCheck,
+         TradeObjectStart,
+         StartScreen,
+         OnStationPress,
+         OnOfferPress,
+         OnOfferAllPress,
+         OnRemovePress,
+         OnRemoveAllPress,
+         OnOfferedItemPress,
+         OnSellPress,
+         OnBuyScreen,
+         OnInventoryPress,
+         SessionStart,
+         SessionEnd,
+         ExitScreen;
+
+
+prototype create_ordered_inventory_list();
+
+prototype create_player_equipment_list();
+
+prototype int index_from_name(list item_list, string property, string name);
+
+prototype task screen_refresh();
+
+prototype select_ordered_inventory(hcargo cargo);
+
+
+RunCheck()
+{
+   // Only allow when the player is docked to a valid station
+   // or trade ship.
+   hmapentity station;
+   hship player = iShip.FindPlayerShip();
+   hfaction station_faction;
+
+   bool allow_trade = true;
+
+   station = iHabitat.Nearest(iMapEntity.SystemHabitats(), player);
+   
+   if (Sim.DistanceBetween(player, station) > 20km) {
+      allow_trade = false;
+   }
+
+   // Don't allow the player to trade when the station is not
+   // operating (destroyed or under construction). 
+   if (tsStation.Status(iHabitat.Cast(station)) != ESS_Normal) {
+      allow_trade = false;
+   }
+
+   // If the player owns this station, do not allow trade.
+   if (station_faction == tsFaction.PlayerFaction()){
+      allow_trade = false;
+   }
+
+   // If no one owns this station (it was abandond) do not allow trade.
+   if (station_faction == tsFaction.EmptyFaction()){
+      allow_trade = false;
+   }
+
+   Global.SetBool("g_zz_ug_passme", allow_trade);
+}
+
+
+// Load the text files we wil need.
+SessionStart()
+{
+   Text.Add("csv:/text/gt_equip_sell");
+}
+
+
+// Unload any text files.
+SessionEnd()
+{
+   Text.Remove("csv:/text/gt_equip_sell");
+}
+
+
+float int2float(int value)
+{
+   return value;
+}
+
+
+int float2int(float value)
+{
+   return value;
+}
+
+
+float price_adjust()
+{
+   return Global.Float("gt_equipsell_price_adjust");
+}
+
+
+set_price_adjust(float adjust)
+{
+   Global.CreateFloat("gt_equipsell_price_adjust", GA_Write|GA_NoSave, adjust);
+}
+
+
+
+
+ordered_set_add(hcargo cargo)
+{
+   set order_set;
+
+   atomic {
+      if (Global.Exists("gt_equipsell_ordered_items")){
+         order_set = Global.Set("gt_equipsell_ordered_items");
+         Set.Add(order_set, cargo);
+         Global.SetSet("gt_equipsell_ordered_items", order_set);
+      }else {
+         Set.Add(order_set, cargo);
+         Global.CreateSet("gt_equipsell_ordered_items",GA_Write|GA_NoSave, order_set);
+      }
+   }
+}
+
+
+ordered_set_remove(hcargo cargo)
+{
+   set order_set;
+   int count;
+
+   atomic {
+      count = Object.IntProperty(cargo,"gt_etrade_amount");
+      if (count <= 0) {
+         order_set = Global.Set("gt_equipsell_ordered_items");
+         Set.Remove(order_set, cargo);
+         Global.SetSet("gt_equipsell_ordered_items", order_set);
+      }
+   }
+}
+
+
+
+set ordered_set()
+{
+   return Global.Set("gt_equipsell_ordered_items");
+}
+
+clear_set()
+{
+   Global.Destroy("gt_equipsell_ordered_items");
+}
+
+
+
+hwindow create_border_button(int x, int y, int width, int height, hwindow parent, string name, string function)
+{
+   hwindow button, border;
+   int button_x, button_y, button_width, button_height;
+
+   // We need to change the button size to make room for the border.
+   button_x = x + 8;
+   button_y = y + 8;
+
+   button_width = width - 16;
+   button_height = height - 16;
+
+   button = GUI.CreateButton( button_x,
+                              button_y,
+                              button_width,
+                              button_height,
+                              parent);
+
+
+   GUI.SetWindowTitle(button, name);
+
+   GUI.SetWindowFont(button, Global.String("GUI_title_font"));
+
+   GUI.SetButtonFunctionPog(button, function);
+
+//   tsGui.SetStandardWindowColours(button);
+
+   // Add the border
+   border = GUI.CreateBorder(button);
+
+   // we still return the button, because the function might need to change
+   // or something. This is one of those no good choice decisions.
+
+   tsGui.SetStandardStateColours(button);
+
+   return button;
+}
+
+
+TradeObjectStart(hisim trade_object)
+{
+
+   if (tsLTrade.IsTradeCenter(trade_object)) {
+      Global.CreateHandle("g_epic_trade_start_object", GA_Write|GA_NoSave, trade_object);
+
+      GUI.PopScreensTo("icSpaceFlightScreen");
+      GUI.OverlayScreen("icPDAOverlayManager");
+      iGUI.OverlayCustomScreen( "tsEquipSell.TradeWindow" );
+   }
+}
+
+
+
+StartScreen()
+{
+   hmapentity station;
+   hship player = iShip.FindPlayerShip();
+
+   station = iHabitat.Nearest(iMapEntity.SystemHabitats(), player);
+   
+   //if (iSim.IsDockedToStructure(player, station)) {
+
+      Global.CreateHandle("g_epic_trade_start_object",GA_Write|GA_NoSave, station);
+
+      GUI.PopScreensTo("icSpaceFlightScreen");
+      GUI.OverlayScreen("icPDAOverlayManager");
+      iGUI.OverlayCustomScreen( "tsEquipSell.TradeWindow" );
+//   }
+}
+
+ExitScreen()
+{
+   UniGUI.UniGUIRemoveScreen();
+}
+
+// This function builds a list of all the cargo items in the player
+// inventory that are ship systems.
+set systems_inventory()
+{
+   int total = CT_AdvancedHullMaterialRefit;
+   int i, number, cargo_type;
+   hcargo cargo;
+   set all_cargo;
+
+   for (i=CT_WasteBlocks;i<total;++i) {
+      cargo = iCargo.Find(i);
+      number = iInventory.NumberOfCargoType(i);
+
+      if (number > 0) {
+         if (iCargo.PlayerSystem(cargo)) {
+            Set.Add(all_cargo, cargo);
+         }
+      }
+   }
+   return all_cargo;
+}
+
+clear_inventory()
+{
+   int total = CT_AdvancedHullMaterialRefit;
+   int i;
+   hcargo cargo;
+   set all_cargo;
+
+   for (i=CT_Invalid;i<total;++i) {
+      cargo = iCargo.Find(i);
+
+      Object.AddIntProperty(cargo,"gt_etrade_amount",0);
+      Object.SetIntProperty(cargo,"gt_etrade_amount",0);
+   }
+}
+
+update_cargo_info(hcargo cargo)
+{
+   hwindow cargo_info = GUI.Cast(Global.Handle("gt_equipsell_cargo_info"));
+   string text;
+   int price;
+
+   // Price minus sellers hauling fee discount.
+   price = float2int(price_adjust() * int2float(tsEconomy.CargoPrice(cargo)));
+
+   text = String.Join(iCargo.Name(cargo),"<p>");
+
+   text = String.Join(text,Text.Field("gt_equipsell_price",FT_Text));
+   text = String.Join(text,String.FormatInt(" %d<p>",price));
+
+   text = tsString.Htmlize(text);
+
+   GUI.SetTextWindowString( cargo_info, text);
+}
+
+update_equip_info(hcargo cargo)
+{
+   hwindow equip_info = GUI.Cast(Global.Handle("gt_equipsell_equip_window"));
+   string text, subsim_template;
+
+   if (none == cargo) {
+      text = tsString.Htmlize("");
+      GUI.SetTextWindowString( equip_info, text);
+      return;
+   }
+
+   text = iCargo.Name(cargo);
+   
+   subsim_template = Object.StringProperty(cargo, "template_name");
+
+   if (subsim_template != "") {
+      text = String.Join(text, tsDescribeINI.Subsystem(subsim_template));
+   }
+
+   text = tsString.Htmlize(text);
+
+   GUI.SetTextWindowString( equip_info, text);
+
+}
+
+OnInventoryPress()
+{
+   hwindow button = GUI.FocusedWindow();
+   hcargo cargo = iCargo.Cast(Object.HandleProperty(button,"gt_equipsell_cargo"));
+
+   update_equip_info(cargo);
+}
+
+
+
+// Should display the total price
+update_order_info()
+{
+   hwindow order_info = GUI.Cast(Global.Handle("gt_equipsell_order_info"));
+   list player_order = List.FromSet(ordered_set());
+   string text, price_string, funds_string;
+   int total,i, price, pods, number, funds, value, pod_price;
+   hcargo cargo;
+
+
+   // Sum up total price of cargo purchased.
+   price = 0;
+   pods = 0;
+   total = List.ItemCount(player_order);
+   for (i=0;i<total;++i) {
+      cargo = iCargo.Cast(List.GetNth(player_order,i));
+      number = Object.IntProperty(cargo,"gt_etrade_amount");
+      pods += number;
+      pod_price = float2int(price_adjust()* int2float(tsEconomy.CargoPrice(cargo)));
+      value = number * pod_price;
+      price += value;
+   }
+
+   price_string = "";
+   price_string = String.Join(price_string, Text.Field("gt_equipsell_total_price",FT_Text));
+   price_string = String.Join(price_string, String.FormatInt(" %d<p> ",price));
+
+   funds = tsMoney.ShipAccount();
+   funds_string = "";
+   funds_string = String.Join(funds_string,Text.Field("gt_equipsell_funds", FT_Text));
+   funds_string = String.Join(funds_string, String.FormatInt(" %d", funds));
+
+
+   text = "";
+   text = String.Join(text, Text.Field("gt_equipsell_current_order", FT_Text));
+   text = String.Join(text, "<p>");
+   text = String.Join(text, Text.Field("gt_equipsell_total_pods",FT_Text));
+   text = String.Join(text, String.FormatInt(" %d<p> ",pods));
+   text = String.Join(text, price_string);
+   text = String.Join(text, funds_string);
+
+   text = tsString.Htmlize(text);
+
+   GUI.SetTextWindowString( order_info, text);
+}
+
+
+order_item(hcargo cargo, int amount)
+{
+   int count, inv_count, cargo_type;
+
+   cargo_type = Object.IntProperty(cargo,"type");
+
+
+   count = Object.IntProperty(cargo,"gt_etrade_amount");
+
+   count = count + amount;
+
+   inv_count = iInventory.NumberOfCargoType(cargo_type);
+
+   // Don't let the player sell more than they have.
+   if (inv_count < count) {
+      count = inv_count;
+   }
+
+   Object.SetIntProperty(cargo,"gt_etrade_amount",count);
+
+   ordered_set_add(cargo);
+
+   create_ordered_inventory_list();
+
+   update_order_info();
+
+   create_player_equipment_list();
+}
+
+
+// When a new item is selected, update the cargo info box.
+// Set the item as a global for the order button to find.
+select_station_inventory(hcargo cargo)
+{
+   update_cargo_info(cargo);
+
+   update_equip_info(cargo);
+
+   Global.CreateHandle("gt_equipsell_station_select",GA_Write|GA_NoSave, cargo);
+}
+
+// Translates a selection press into an update call.
+OnStationPress()
+{
+   hwindow button = GUI.FocusedWindow();
+   hcargo cargo = iCargo.Cast(Object.HandleProperty(button,"gt_equipsell_cargo"));
+
+   select_station_inventory(cargo);
+}
+
+
+OnOfferPress()
+{
+   hcargo cargo = iCargo.Cast(Global.Handle("gt_equipsell_station_select"));
+
+   // Pressed before a cargo item was selected.
+   if (none == cargo) {
+      return;
+   }
+
+   select_ordered_inventory(cargo);
+
+   order_item(cargo, 1);
+}
+
+OnOfferAllPress()
+{
+   hcargo cargo = iCargo.Cast(Global.Handle("gt_equipsell_station_select"));
+
+   // Pressed before a cargo item was selected.
+   if (none == cargo) {
+      return;
+   }
+
+   select_ordered_inventory(cargo);
+
+   order_item(cargo, 10);
+}
+
+
+
+remove_item(hcargo cargo, bool remove_all)
+{
+   int count;
+
+   if (remove_all) {
+      count = 0;
+   }else {
+      count = Object.IntProperty(cargo,"gt_etrade_amount");
+      --count;
+      if (count < 0) {
+         count = 0;
+      }
+   }
+
+   Object.SetIntProperty(cargo,"gt_etrade_amount",count);
+
+   ordered_set_remove(cargo);
+
+   create_ordered_inventory_list();
+
+   create_player_equipment_list();
+}
+
+
+select_ordered_inventory(hcargo cargo)
+{
+
+   update_cargo_info(cargo);
+
+   update_equip_info(cargo);
+
+   Global.CreateHandle("gt_equipsell_ordered_select",GA_Write|GA_NoSave, cargo);
+}
+
+OnOfferedItemPress()
+{
+   hwindow button = GUI.FocusedWindow();
+   hcargo cargo = iCargo.Cast(Object.HandleProperty(button,"gt_equipsell_cargo"));
+
+   select_ordered_inventory(cargo);
+}
+
+OnRemovePress()
+{
+   hcargo cargo = iCargo.Cast(Global.Handle("gt_equipsell_ordered_select"));
+
+   // Nothing selected yet.
+   if (none == cargo) {
+      return;
+   }
+
+   remove_item(cargo, false);
+
+   update_order_info();
+}
+
+
+OnRemoveAllPress()
+{
+   hcargo cargo = iCargo.Cast(Global.Handle("gt_equipsell_ordered_select"));
+
+   // Nothing selected yet.
+   if (none == cargo) {
+      return;
+   }
+
+   remove_item(cargo, true);
+
+   update_order_info();
+}
+
+
+
+OnSellPress()
+{
+   hship player = iShip.FindPlayerShip();
+   list player_order = List.FromSet(ordered_set());
+   int total, i, price; 
+   int cargo_type, inventory, inventory_removed;
+   hcargo cargo;
+   hisim trade_center = iSim.Cast(Global.Handle("g_epic_trade_start_object"));
+
+
+   if (List.IsEmpty(player_order)) {
+      return;
+   }
+
+   // If the player is too far, refuse sale.
+   if (20km < Sim.DistanceBetween(player, trade_center)){
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+
+   // Pay the player for each pod that was actually removed.
+   total = List.ItemCount(player_order);
+   for (i=0;i<total;++i) {
+         cargo = iCargo.Cast(List.GetNth(player_order,i));
+
+         inventory_removed = Object.IntProperty(cargo,"gt_etrade_amount");
+
+         cargo_type = Object.IntProperty(cargo,"type");
+
+         inventory = iInventory.NumberOfCargoType(cargo_type);
+
+         if (inventory_removed > inventory) {
+            inventory_removed = inventory;
+         }
+		 
+         price = float2int(price_adjust()* int2float(tsEconomy.CargoPrice(cargo)));
+         tsMoney.ChangeShipAccount(price*inventory_removed);         
+
+         // Pull the systems out of inventory
+         iInventory.Add(cargo_type, -1*inventory_removed);
+
+         // Clear the amount for next purchase.
+         Object.SetIntProperty(cargo,"gt_etrade_amount",0);
+      }
+
+   clear_set();
+
+   create_ordered_inventory_list();
+
+   update_order_info();
+
+   // We might have a problem, because it takes time for the pods to exist.
+   create_player_equipment_list();
+
+}
+
+
+OnBuyScreen()
+{
+
+   GUI.RemoveOverlaysAfter("icSpaceFlightScreenOverlay");
+   GUI.PopScreensTo("icSpaceFlightScreen");
+   GUI.OverlayScreen("icPDAOverlayManager");
+   iGUI.OverlayCustomScreen( "tsEquipBuy.TradeWindow" );
+}
+
+
+
+create_ordered_inventory_list()
+{
+   hwindow list_parent = GUI.Cast(Global.Handle("gt_equipsell_ordered_inv_parent"));
+   hwindow list_base = GUI.Cast(Global.Handle("gt_equipsell_ordered_inv_base"));
+   hwindow list_box;
+   hwindow button;
+
+   hcargo cargo;
+   hcargo selected_cargo;
+   int i, count, selected_index;
+	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
+
+   int button_width, height, list_x, list_y;
+
+   string name;
+   list cargo_list = List.FromSet(ordered_set());
+   bool selection_found = false;
+
+   // Remove the prior inventory list.
+   if (none != list_base) {
+      GUI.DeleteWindow(list_base);
+   }
+
+   list_base = GUI.CreateWindow(0, 
+                                0,
+                                GUI.WindowCanvasWidth( list_parent),
+                                GUI.WindowCanvasHeight( list_parent),
+                                list_parent);
+
+   Global.CreateHandle("gt_equipsell_ordered_inv_base",GA_Write|GA_NoSave, list_base);
+
+
+   // Set up the button and list sizes now.
+   button_width = GUI.WindowCanvasWidth( list_base) - scrollbar_width;
+   button_width -= 4;
+
+
+   list_box = GUI.CreateListBox( 0, 
+                                 0,
+                                 button_width,
+                                 GUI.WindowCanvasHeight( list_base),
+                                 list_base,
+                                 true,
+                                 false);
+
+	// Attach a scrollbar to the list box. from LFPlus.
+	GUI.CreateVerticalScrollbar( 
+		GUI.WindowCanvasWidth( list_base ) - scrollbar_width, 
+		0,
+		scrollbar_width, 
+		GUI.WindowCanvasHeight( list_base ),
+		list_base,
+		list_box,
+		Global.Float( "GUI_scrollbar_buttonratio" ),
+		"" );
+
+
+   cargo_list = List.SortByStringProperty(cargo_list, "name");
+
+   selected_cargo = iCargo.Cast(Global.Handle("gt_etradebuy_ordered_select"));
+   selected_index = 0;
+   selection_found = false;
+
+   count = List.ItemCount(cargo_list);
+   for (i=0;i<count;++i) {
+      cargo = iCargo.Cast(List.GetNth(cargo_list,i));
+
+      name = String.Join(iCargo.Name(cargo),
+                         String.FormatInt(" %d",Object.IntProperty(cargo,"gt_etrade_amount")));
+
+      button = iGUI.CreateAndInitialiseRectangularInverseRadioButton( none, 0, 0, 
+                                                                      button_width, 
+                                                                      name,
+                                                                      false );
+      // We will need to be able to look up the cargo 
+      // for buying and selling later.
+      Object.AddHandleProperty(button,"gt_equipsell_cargo",cargo);
+
+      GUI.SetInputOverrideFunctions( button,
+											"", 
+											"",
+											"", 
+											"", 
+											"", 
+											"",
+											"tsEquipSell.OnOfferedItemPress",
+											"",
+											"" );
+
+      GUI.AddListBoxEntry(list_box, button);
+
+
+      if (cargo == selected_cargo) {
+         selected_index = i;
+         selection_found = true;
+      }
+   }   
+
+   GUI.SelectListBoxEntry(list_box, selected_index);
+
+   // If the cargo that was previously selected is not longer in the list
+   // a new cargo that is in the list must be selected. This bit of code
+   // forces the selection to be the first item in the list, which is 
+   // what is going to be highlighted in this case. 
+   if (!selection_found) {
+      cargo = iCargo.Cast(List.GetNth(cargo_list, 0));
+      select_ordered_inventory(cargo);
+   }
+
+}
+
+
+// Create a list of player equipment that the player can offer for sale.
+// Stations will purchase any equipment the player is willing to sell. 
+create_player_equipment_list()
+{
+   hwindow list_parent = GUI.Cast(Global.Handle("gt_equipsell_ppods_inv_parent"));
+   hwindow list_base = GUI.Cast(Global.Handle("gt_equipsell_ppods_inv_base"));
+   hwindow list_box;
+   hwindow button;
+
+   hcargo cargo;
+   int i, count, index;
+	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
+
+   int button_width, height, list_x, list_y;
+   int inv_count, cargo_type;
+   string name;
+   list cargo_list;
+   hship player = iShip.FindPlayerShip();
+   bool legal = Global.Bool("gt_equipsell_legal");
+
+
+   // Remove the prior inventory list.
+   if (none != list_base) {
+      GUI.DeleteWindow(list_base);
+   }
+
+   list_base = GUI.CreateWindow(0, 
+                                0,
+                                GUI.WindowCanvasWidth( list_parent),
+                                GUI.WindowCanvasHeight( list_parent),
+                                list_parent);
+
+
+   Global.CreateHandle("gt_equipsell_ppods_inv_base",GA_Write|GA_NoSave, list_base);
+
+   // Set up the button and list sizes now.
+   button_width = GUI.WindowCanvasWidth( list_base) - scrollbar_width;
+   button_width -= 4;
+
+
+   list_box = GUI.CreateListBox( 0, 
+                                 0,
+                                 button_width,
+                                 GUI.WindowCanvasHeight( list_base),
+                                 list_base,
+                                 true,
+                                 false);
+
+	// Attach a scrollbar to the list box. from LFPlus.
+	GUI.CreateVerticalScrollbar( 
+		GUI.WindowCanvasWidth( list_base ) - scrollbar_width, 
+		0,
+		scrollbar_width, 
+		GUI.WindowCanvasHeight( list_base ),
+		list_base,
+		list_box,
+		Global.Float( "GUI_scrollbar_buttonratio" ),
+		"" );
+
+
+   cargo_list = List.FromSet(systems_inventory());
+   cargo_list = List.SortByStringProperty(cargo_list, "name");
+
+   count = List.ItemCount(cargo_list);
+   for (i=0;i<count;++i) {
+      cargo = iCargo.Cast(List.GetNth(cargo_list,i));
+
+      name = iCargo.Name(cargo);
+
+      cargo_type = Object.IntProperty(cargo,"type");
+
+      inv_count = iInventory.NumberOfCargoType(cargo_type);
+
+      inv_count = inv_count - Object.IntProperty(cargo,"gt_etrade_amount");
+         
+      name = String.Join(name, String.FormatInt(" %d", inv_count));
+
+
+      button = iGUI.CreateAndInitialiseRectangularInverseRadioButton( none, 0, 0, 
+                                                                      button_width, 
+                                                                      name,
+                                                                      false );
+      // We will need to be able to look up the cargo 
+      // for buying and selling later.
+      Object.AddHandleProperty(button,"gt_equipsell_cargo",cargo);
+
+      GUI.SetInputOverrideFunctions( button,
+											"", 
+											"",
+											"", 
+											"", 
+											"", 
+											"",
+											"tsEquipSell.OnStationPress",
+											"",
+											"" );
+
+      GUI.AddListBoxEntry(list_box, button);
+   }   
+
+   // We need to pick an entry to highlight. 
+
+   cargo = iCargo.Cast(Global.Handle("gt_equipsell_station_select"));
+
+   if (none == cargo) {
+      // If this is the very first time this list is created, we just choose the first item.
+      // Then we update the cargo info to match.
+      index = 0;
+      cargo = iCargo.Cast(List.Head(cargo_list));
+      select_station_inventory(cargo);
+   }else {
+      index = index_from_name(cargo_list, "name", iCargo.Name(cargo));
+   }
+
+   GUI.SelectListBoxEntry(list_box, index);
+
+}
+
+
+
+int index_from_name(list item_list, string property, string name)
+{
+   int total, i;
+   hobject item;
+
+   total = List.ItemCount(item_list);
+   for (i=0;i<total;++i) {
+      item = List.GetNth(item_list,i);
+      if (name == Object.StringProperty(item,property)) {
+         return i;
+      }
+   }
+
+   return 0;
+}
+
+
+TradeWindow()
+{
+   hwindow lh_shady, rh_shady;
+   hwindow trade_list_box;
+   hwindow station_title;
+   hwindow fac_title;
+
+   hwindow splitter;
+   hwindow top_splitter;
+   hwindow bottom_splitter;
+   hwindow button;
+   hwindow list_parent;
+   hwindow cargo_info;
+   hwindow order_info;
+   hwindow trade_center_info;
+   hwindow equipment_info_window;
+
+   set trade_set;
+   hisim trade_center = iSim.Cast(Global.Handle("g_epic_trade_start_object"));
+   hsim waypoint;
+   string trade_center_string, trade_faction_name;
+   hfaction faction;
+   string title_font = Global.String( "GUI_subtitle_font" );
+
+   int rwidth, rheight, rx, ry;
+
+   int lwidth, lheight, mid_width;
+
+   int lshady_width = 525;
+
+   hfaction player_faction = iFaction.Find("Player");
+   hfaction trade_faction = iSim.Faction(trade_center);
+   float player_standing;
+
+	int scrollbar_width = Global.Int( "GUI_scrollbar_width" );	// Scrollbar width
+   int text_width;
+
+
+   debug Debug.PrintString("Purchase Window\n");
+
+
+   ///***********************************
+   // Non GUI interfacing and preperation here.
+
+   // Clear prior purchase amounts from cargo objects.
+   clear_inventory();
+
+   clear_set();
+
+   Global.Destroy("gt_equipsell_ordered_select");
+   Global.Destroy("gt_equipsell_station_select");
+
+   player_standing = iFaction.Feeling(trade_faction, player_faction);
+
+   Global.CreateFloat("gt_equipsell_standing",GA_Write|GA_NoSave, player_standing);
+
+   Global.CreateBool("gt_equipsell_legal",GA_Write|GA_NoSave, tsFaction.IsCriminal(trade_faction));
+
+   set_price_adjust(tsEconomy.SellAdjustment(trade_center));
+   ///***********************************
+   // GUI setup here.
+
+
+   // Set right hand shady bar width.
+   lh_shady = iGUI.CreateWideShadyBar();
+
+
+   // The right hand area is split into two halfs.
+   // The inventory half, and the info half
+   GUI.SetShadyBarWidth(lshady_width);
+
+   rh_shady = iGUI.CreateShadyBarRight();
+   
+   tsGui.CreateTitle(lh_shady,Text.Field("gt_equipsell_title",FT_Text));
+   tsGui.CreateSubtitle(lh_shady,Text.Field("gt_equipsell_subtitle",FT_Text));
+
+   tsGui.CreateExitButton(lh_shady, 
+                             Text.Field("gt_equipsell_exit",FT_Text), 
+                             "tsEquipSell.ExitScreen" );   
+
+
+   //************ 
+   //Setup the inventory half of the right hand side.
+
+   lheight = GUI.WindowCanvasHeight(lh_shady);
+   lheight = lheight - Global.Int("EpicGui_content_drop");
+   lheight = lheight - Global.Int("EpicGui_content_footer");
+
+   lwidth = lshady_width - 200;
+
+   mid_width = lshady_width - lwidth;
+
+
+
+     //**************
+   // Create the second column of the left side window.
+   // This column contains all the info screens and purchase buttons.
+
+   splitter = GUI.CreateSplitterWindow( Global.Int("EpicGui_content_indent") + lwidth, 
+                                        Global.Int("EpicGui_content_drop"),
+                                        mid_width - Global.Int("EpicGui_content_indent"), 
+                                        lheight,
+                                        lh_shady,
+                                        lheight/2,
+                                        false);
+
+
+   // This is the station and cargo info windows.
+   top_splitter = GUI.SplitterWindowTopWindow(splitter);
+
+   // Create the Trade Center Info Box, with name and faction information.
+
+   trade_center_string = Text.Field(Sim.Name(trade_center), FT_Text);
+   trade_center_string = String.Join(trade_center_string,"<p>");
+   trade_center_string = String.Join(trade_center_string, 
+                                     Text.Field(iFaction.Name(trade_faction), FT_Text));
+   trade_center_string = String.Join(trade_center_string,"<p>");
+   trade_center_string = String.Join(trade_center_string,
+                                     Text.Field(tsFaction.Feeling2String(player_standing), FT_Text));
+   trade_center_string = tsString.Htmlize(trade_center_string);
+
+   trade_center_info = GUI.CreateTextWindow( 0,
+                                             0,
+                                             GUI.WindowCanvasWidth( top_splitter),
+                                             GUI.WindowCanvasHeight( top_splitter)/2,
+                                             top_splitter ); 
+
+   GUI.SetTextWindowString(trade_center_info, trade_center_string);
+
+   // Create the Cargo Info Box, name and price of item.
+   cargo_info = GUI.CreateTextWindow( 0,
+                                      GUI.WindowCanvasHeight( top_splitter)/2,
+                                      GUI.WindowCanvasWidth( top_splitter),
+                                      GUI.WindowCanvasHeight( top_splitter)/2,
+                                      top_splitter );   
+
+   GUI.SetWindowFont( cargo_info, Global.String( "GUI_detail_font" ) );
+
+   Global.CreateHandle("gt_equipsell_cargo_info",GA_Write|GA_NoSave, cargo_info);
+
+   // Create the Offer Info Box, total order information.
+   bottom_splitter = GUI.SplitterWindowBottomWindow(splitter);
+
+   order_info = GUI.CreateTextWindow( 0,
+                                      0,
+                                      GUI.WindowCanvasWidth( bottom_splitter),
+                                      GUI.WindowCanvasHeight( bottom_splitter)/2,
+                                      bottom_splitter );   
+
+   GUI.SetWindowFont( order_info, Global.String( "GUI_detail_font" ) );
+
+   Global.CreateHandle("gt_equipsell_order_info",GA_Write|GA_NoSave, order_info);
+
+   // Put up the order info area.
+   update_order_info();
+
+
+   button = create_border_button(0, 
+                                 GUI.WindowCanvasHeight( bottom_splitter)-30,
+                                 GUI.WindowCanvasWidth( bottom_splitter),
+                                 30,
+                                 bottom_splitter, 
+                                 Text.Field("gt_equipsell_purchase_all",FT_Text), 
+                                 "tsEquipSell.OnSellPress");
+
+
+
+
+   //*******************
+   // Setup the cargo list boxes in the far left column.
+
+   splitter = GUI.CreateSplitterWindow( Global.Int("EpicGui_content_indent"), 
+                                        Global.Int("EpicGui_content_drop"),
+                                        lwidth - Global.Int("EpicGui_content_indent"), 
+                                        lheight,
+                                        lh_shady,
+                                        lheight/2,
+                                        false);
+
+
+   // This area is the station inventory for sale. 
+   top_splitter = GUI.SplitterWindowTopWindow(splitter);
+
+   
+   // Set the list box title.
+   station_title = iGUI.CreateAndInitialiseStaticWindow(0,
+                                                        0,
+                                                        GUI.WindowCanvasWidth( top_splitter),
+                                                        20,
+                                                        top_splitter,
+                                                        title_font,
+                                                        Text.Field("gt_equipsell_your_cargo_pods",FT_Text));
+
+   // Remove text centering.
+   GUI.SetWindowTextFormatting( station_title, false, 0);
+
+
+   button = create_border_button(0, 
+                                 GUI.WindowCanvasHeight( top_splitter) - 60,
+                                 GUI.WindowCanvasWidth( top_splitter),
+                                 30,
+                                 top_splitter, 
+                                 Text.Field("gt_equipsell_offer_item",FT_Text),
+                                  "tsEquipSell.OnOfferPress");
+
+   button = create_border_button(0, 
+                                 GUI.WindowCanvasHeight( top_splitter) - 30,
+                                 GUI.WindowCanvasWidth( top_splitter),
+                                 30,
+                                 top_splitter, 
+                                 Text.Field("gt_equipsell_offer_all_item",FT_Text),
+                                  "tsEquipSell.OnOfferAllPress");
+
+
+   
+   // The player pods that can be offered for sale.
+   list_parent = GUI.CreateWindow(0,
+                                  20,
+                                  GUI.WindowCanvasWidth( top_splitter),
+                                  GUI.WindowCanvasHeight( top_splitter) - 100,
+                                  top_splitter);
+
+
+   Global.CreateHandle("gt_equipsell_ppods_inv_parent",GA_Write|GA_NoSave, list_parent);
+
+
+   create_player_equipment_list();
+
+
+
+
+   // This area is the items the player has ordered, but not yet purchased.
+   bottom_splitter = GUI.SplitterWindowBottomWindow(splitter);
+
+   
+   // Set the list box title.
+   station_title = iGUI.CreateAndInitialiseStaticWindow(0,
+                                                        0,
+                                                        GUI.WindowCanvasWidth( bottom_splitter),
+                                                        20,
+                                                        bottom_splitter,
+                                                        title_font,
+                                                        Text.Field("gt_equipsell_your_order",FT_Text));
+
+   // Remove text centering.
+   GUI.SetWindowTextFormatting( station_title, false, 0);
+
+
+   button = create_border_button(0, 
+                                 GUI.WindowCanvasHeight( bottom_splitter) - 60,
+                                 GUI.WindowCanvasWidth( bottom_splitter),
+                                 30,
+                                 bottom_splitter, 
+                                 Text.Field("gt_equipsell_remove_item",FT_Text),
+                                 "tsEquipSell.OnRemovePress");
+
+   button = create_border_button(0, 
+                                 GUI.WindowCanvasHeight( bottom_splitter) - 30,
+                                 GUI.WindowCanvasWidth( bottom_splitter),
+                                 30,
+                                 bottom_splitter, 
+                                 Text.Field("gt_equipsell_remove_all_item",FT_Text),
+                                 "tsEquipSell.OnRemoveAllPress");
+
+
+   list_parent = GUI.CreateWindow(0,
+                                  20,
+                                  GUI.WindowCanvasWidth( bottom_splitter),
+                                  GUI.WindowCanvasHeight( bottom_splitter) - 100,
+                                  bottom_splitter);
+
+
+   Global.CreateHandle("gt_equipsell_ordered_inv_parent",GA_Write|GA_NoSave, list_parent);
+
+
+
+
+
+
+
+
+   ///****************************************
+   // Create the player inventory information in the far right column.
+
+
+   rheight = GUI.WindowCanvasHeight(rh_shady);
+   rheight = rheight - Global.Int("EpicGui_content_drop");
+   rheight = rheight - Global.Int("EpicGui_content_footer");
+   rwidth = GUI.WindowCanvasWidth(rh_shady);
+
+
+   button = create_border_button(Global.Int("EpicGui_content_indent"), 
+                                 GUI.WindowCanvasHeight(rh_shady) - Global.Int("EpicGui_content_footer"),
+                                 rwidth - Global.Int("EpicGui_content_indent"),
+                                 30,
+                                 rh_shady, 
+                                 Text.Field("gt_equipsell_buy_screen",FT_Text),
+                                 "tsEquipSell.OnBuyScreen");
+   
+
+   splitter = GUI.CreateSplitterWindow( Global.Int("EpicGui_content_indent"), 
+                                        Global.Int("EpicGui_content_drop"),
+                                        rwidth - Global.Int("EpicGui_content_indent"), 
+                                        rheight - 40,
+                                        rh_shady,
+                                        rheight/2,
+                                        false);
+
+
+   // This area is the players ship systems inventory
+   top_splitter = GUI.SplitterWindowTopWindow(splitter);
+
+   
+/*
+   // Set the list box title.
+   station_title = iGUI.CreateAndInitialiseStaticWindow(0,
+                                                        0,
+                                                        GUI.WindowCanvasWidth( top_splitter),
+                                                        20,
+                                                        top_splitter,
+                                                        title_font,
+                                                        Text.Field("gt_equipsell_your_equipment",FT_Text));
+
+
+   // Create the base window for the player systems inventory box
+   list_parent = GUI.CreateWindow(0,
+                                  20,
+                                  GUI.WindowCanvasWidth( top_splitter),
+                                  GUI.WindowCanvasHeight( top_splitter) - 20,
+                                  top_splitter);
+
+
+   Global.CreateHandle("gt_equipsell_psystems_inv_parent",GA_Write|GA_NoSave, list_parent);
+   
+*/
+
+      // Bottom Splitter. 
+   bottom_splitter = GUI.SplitterWindowBottomWindow(splitter);
+
+   // Set the list box title.
+   station_title = iGUI.CreateAndInitialiseStaticWindow(0,
+                                                        0,
+                                                        GUI.WindowCanvasWidth( bottom_splitter),
+                                                        20,
+                                                        bottom_splitter,
+                                                        title_font,
+                                                        Text.Field("gt_equipsell_equipment_info",FT_Text));
+
+
+   text_width = GUI.WindowCanvasWidth(bottom_splitter);
+   text_width = text_width - 4;
+   text_width = text_width - scrollbar_width;
+
+   equipment_info_window = GUI.CreateTextWindow( 0,
+                                                 21,
+                                                 text_width,
+                                                 GUI.WindowCanvasHeight(bottom_splitter)-21,
+                                                 bottom_splitter);   
+
+
+   Global.CreateHandle("gt_equipsell_equip_window",GA_Write|GA_NoSave, equipment_info_window);
+
+   GUI.CreateVerticalScrollbar( 0 + text_width + 4,
+                                21,
+                                scrollbar_width, 
+                                GUI.WindowCanvasHeight(bottom_splitter) - 21,
+                                bottom_splitter,
+                                equipment_info_window,
+                                Global.Float( "GUI_scrollbar_buttonratio" ),
+                                "");
+}
+
+
+
+
+
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/

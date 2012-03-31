@@ -1,0 +1,1165 @@
+//*******************************************************************************************/
+//
+// tsPodUtil
+//
+// Utility functions for manipulating cargo pods.
+// 
+// 
+// 
+//
+// Jan 2003, Jon Freise
+// Nov 2011, Jesse Dallin - modified to add category based pod creation
+
+// Notes:
+// What we know about cargo pods:
+// Pods have an integer "cargo" property that holds the current cargo type integer.
+// Pod names are the string name for the cargo type. For instance "Fruit" is the name
+// of type CT_Fruit, value 10.
+// Pods have an integer "cargo_faction" property that is the ieAllegiance value of the 
+// cargo. This is used to display the Shipper.
+
+// April 2005, Jon Freise
+// Notes on cargo pods and meaning of cargo data.
+// The owner of a cargo pod is changed to "Player" when the player has control of the
+// cargo pod. This must be done by purchasing a pod, or by hacking a stolen pod.
+
+// A stolen pod will have a different shipper faction than owner. 
+// The player cannot sell this kind of pod legally.
+//
+// This is a change from prior, when external faction would indicate 
+// stolen pods.
+//
+// This change makes it easy to know when the player controls a cargo pod.
+// And it is much faster for knowing if a pod is legal or illegal.
+//******************************************************************************************/
+
+package tsPodUtil;
+
+uses    Sim,
+        Task,
+        iAI,
+        iShip,
+        iSim,
+        Debug,
+        Global,
+        Input,
+        List,
+        Object,
+        String,
+        Text,
+        iCargo,
+        iInventory,
+        iAI,
+        INIFile,
+        iUtilities,
+        iRemotePilot,
+        iHUD,
+	  iComms,
+//        CargoTypes,
+        tsFaction,
+        tsShip,
+	  tsShipCreationEnum,
+	  tsShipCreation,
+        ECargoTypes,
+
+//  SRC hacks added starting 2012-March-19
+	  iDockport,
+//  SRC hacks added starting 2012-March-19
+	  tsEconomy;
+//        ECargoScript;
+
+        
+provides CreateCargoPod, 
+         CreatePodShipper,
+         CreateCargoPodCustom,
+
+         PodCargo,
+         PlayerPodCargoSet, 
+         PlayerPods,
+         LegalPods,
+         IllegalPods,
+         UndockedPodList,
+         TaggedPodList,
+         NumberOfCargoType,
+         RemoveType,
+         AnyPlayerPodsIllegal,
+         ShipPods,      
+         DropCargo,
+
+         AutodockPod,
+         DockPorts,
+	   AsteroidDockPorts,
+	   UnloadDockPorts,
+	   UniversalDockPorts,
+         ClaimPods,
+         LoadDone,
+         FreePods,
+    
+         HackLevel,
+         SetHackLevel,
+         IsHackAllowed,
+         RemoveHack,
+         HackTargetPod,
+         HackNearbyPods,
+         TogglePodTag,
+
+
+// SRC hacks added starting 2012-March-19 and following
+
+
+
+	   InitializeKeyBindings,
+         LoadPodsToPlayerShip,
+         PlayerShipDropCargo,
+         DockTargetPodToPlayerShip;
+
+
+prototype InitializeKeyBindings();
+prototype LoadPodsToPlayerShip();
+prototype PlayerShipDropCargo();
+prototype DockTargetPodToPlayerShip();
+
+
+// SRC hacks added starting 2012-March-19
+
+
+         
+
+prototype hsim CreateCargoPod(int cargo_enum, string owner_faction, string cargo_faction);
+prototype set PlayerPods(hisim center, float distance);
+
+prototype task autodock_task(hship pod, hsim ship);
+prototype set DockPorts(hship ship);
+prototype set AsteroidDockPorts(hhabitat station);
+prototype set UniversalDockPorts(hhabitat station);
+prototype set UnloadDockPorts(hhabitat station);
+
+
+prototype AutodockPod(hship pod, hsim ship, hdockport target);
+
+//******************************************************************************************/
+// 
+
+
+
+InitializeKeyBindings()
+{
+   Input.BindKey( "tsPodUtil.LoadPodsToPlayerShip", "tsPodUtil.LoadPodsToPlayerShip");
+   Input.BindKey( "tsPodUtil.PlayerShipDropCargo", "tsPodUtil.PlayerShipDropCargo");
+   Input.BindKey( "tsPodUtil.DockTargetPodToPlayerShip", "tsPodUtil.DockTargetPodToPlayerShip");
+}
+
+
+//******************************************************************************************/
+hsim CreateCargoPod(int cargo_enum, string owner_faction, string cargo_faction)
+{
+   hsim pod;
+   hcargo cargo;
+   string cargo_name, category_name;
+   hinifile category_file = INIFile.Create("ini:/cargo_category");
+
+
+   cargo = iCargo.Find(cargo_enum);
+   cargo_name = ECargoTypes.CargoString2DBKey(ECargoTypes.CargoType2String(cargo_enum));
+
+	category_name = tsEconomy.CategoryName(cargo);
+
+	if ("" == category_name) {
+		pod = Sim.Create("ini:/sims/ships/utility/containerpod", cargo_name);
+		iSim.SetFaction(iSim.Cast(pod), iFaction.Find(owner_faction));
+	}
+	else {	
+		pod = Sim.Create(tsShipCreation.GetShip(iFaction.Find(owner_faction), tsShipCreation.String2ShipType(category_name)), cargo_name);
+		iSim.SetFaction(iSim.Cast(pod), iFaction.Find(owner_faction));
+	}
+   Object.AddIntProperty(pod,"cargo", cargo_enum);
+   Object.AddIntProperty(pod,"cargo_faction",iFaction.Allegiance(iFaction.Find(cargo_faction)));
+
+   return pod;
+}
+        
+hsim CreatePodShipper(int cargo_enum, string owner_faction, int shipper_allegiance)
+{
+   hsim pod;
+   hcargo cargo;
+   string cargo_name;
+
+   cargo = iCargo.Find(cargo_enum);
+
+   cargo_name = ECargoTypes.CargoString2DBKey(ECargoTypes.CargoType2String(cargo_enum));
+
+   pod = Sim.Create("ini:/sims/ships/utility/freightpod", cargo_name);
+
+   iSim.SetFaction(iSim.Cast(pod), iFaction.Find(owner_faction));
+
+   Object.AddIntProperty(pod,"cargo", cargo_enum);
+   Object.AddIntProperty(pod,"cargo_faction", shipper_allegiance);
+
+   return pod;
+}
+
+hship CreateCargoPodCustom(int cargo_enum, string owner_faction, string cargo_faction, string pod_template)
+{
+   hship pod;
+   hcargo cargo;
+   string cargo_name;
+
+   cargo = iCargo.Find(cargo_enum);
+
+   cargo_name = ECargoTypes.CargoString2DBKey(ECargoTypes.CargoType2String(cargo_enum));
+
+   pod = tsShip.Create(pod_template, cargo_name);
+
+   iSim.SetFaction(iSim.Cast(pod), iFaction.Find(owner_faction));
+   Object.AddIntProperty(pod,"cargo", cargo_enum);
+   Object.AddIntProperty(pod,"cargo_faction",iFaction.Allegiance(iFaction.Find(cargo_faction)));
+
+   return pod;
+}
+
+
+hcargo PodCargo(hisim pod)
+{
+   return iCargo.Find(Object.IntProperty(pod,"cargo"));
+}
+//****************************************************************************************
+
+// Finds a set of all cargo types represented by player pods within x dist of center.
+// These include all pods docked to player ships.
+
+//****************************************************************************************
+
+// Returns all cargo pods docked to a ship.
+set ShipPods(hship ship)
+{
+   set pods;
+   set docked_pods;
+   hsim child;
+
+   // Search all subsims for cargo pods.
+   
+   pods = Sim.Children(ship);
+
+   while (!Set.IsEmpty(pods)) {
+      child = Sim.Cast(Set.FirstElement(pods));
+      Set.Remove(pods, child);
+
+      if (T_CargoPod == iSim.Type(child)) {
+         Set.Add(docked_pods, child);
+      }
+   }
+
+   return docked_pods;
+}
+
+
+set PlayerPodCargoSet(hisim center, float dist)
+{
+   list pod_list;
+   set cargo_set;
+   int i, count, cargo_number;
+   hsim pod;
+
+   debug Debug.PrintString("PodUtil: pod cargo set\n");
+
+   pod_list = List.FromSet(PlayerPods(center, dist));
+
+   // for each item, find the cargo object, add to the set.
+   count = List.ItemCount(pod_list);
+   for (i=0;i<count;++i) {
+      pod = Sim.Cast(List.GetNth(pod_list,i));
+      Set.Add(cargo_set,iCargo.Find(Object.IntProperty(pod,"cargo")));
+   }
+
+   return cargo_set;
+}
+
+int PlayerPodsOfType(hisim center, float distance, int cargo_type)
+{
+   int i, count, cargo_count;
+   list pod_list;
+   hsim pod;
+
+   cargo_count=0;
+   pod_list = List.FromSet(PlayerPods(center, distance));
+   count = List.ItemCount(pod_list);
+   for (i=0;i<count;++i) {
+      pod = Sim.Cast(List.GetNth(pod_list,i));
+      if (Object.IntProperty(pod,"cargo") == cargo_type){
+         ++cargo_count;
+      }
+   }
+
+   return cargo_count;
+}
+
+
+
+set LegalPods(set all_pods)
+{
+   list pod_list;
+   set legal_set;
+   int i, total, possesor, owner;
+   hisim pod;
+
+   pod_list = List.FromSet(all_pods);
+   total = List.ItemCount(pod_list);
+   for (i=0;i<total;++i) {
+      pod = iSim.Cast(List.GetNth(pod_list, i));
+      owner = Object.IntProperty(pod,"cargo_faction");
+      possesor = iFaction.Allegiance(iSim.Faction(pod));
+      if (owner == possesor) {
+         Set.Add(legal_set, pod);
+      }
+   }
+
+   return legal_set;
+}
+
+
+set IllegalPods(set all_pods)
+{
+   list pod_list;
+   set ilegal_set;
+   int i, total, possesor, owner;
+   hisim pod;
+
+   pod_list = List.FromSet(all_pods);
+   total = List.ItemCount(pod_list);
+   for (i=0;i<total;++i) {
+      pod = iSim.Cast(List.GetNth(pod_list, i));
+      owner = Object.IntProperty(pod,"cargo_faction");
+      possesor = iFaction.Allegiance(iSim.Faction(pod));
+      if (owner != possesor) {
+         Set.Add(ilegal_set, pod);
+      }
+   }
+
+   return ilegal_set;
+}
+
+
+
+set PlayerPods(hisim center, float distance)
+{
+   set pod_set;
+   hfaction player_faction = iFaction.Find("Player");
+   
+
+   list pod_list;
+   int i, pod_list_size;
+   hobject thispod;   
+
+	pod_set = iSim.SimsInRadiusOfFaction(center, distance, player_faction);
+	pod_set = iSim.SimsInRadiusFromSet(pod_set, center, distance, T_CargoPod);
+
+	pod_list = List.FromSet(pod_set);
+	pod_list_size = List.ItemCount(pod_list);
+
+   for(i = 0; i < pod_list_size; ++i)
+   {
+	   thispod = List.GetNth(pod_list, i);
+	   if(Object.BoolProperty(thispod, "md_epic_podsold"))	// Filter out sold pods
+		   Set.Remove(pod_set, thispod);
+	   if(Sim.TemplateName(Sim.Cast(thispod)) == "ini:/sims/ships/utility/megapod_open_rotated" )	// And megapods
+		   Set.Remove(pod_set, thispod);
+   }
+
+   return pod_set;
+}
+
+
+
+list UndockedPodList(hisim center, float dist)
+{
+	int i, tpod;
+   set final_set;
+	list pod_list;
+	hisim pod;
+
+   debug Debug.PrintString("PodUtil.UndockedPodList\n");
+
+	pod_list = List.FromSet(PlayerPods(center, dist));
+	tpod = List.ItemCount(pod_list);
+
+	for (i=0;i<tpod;++i)  {
+		pod = iSim.Cast(List.GetNth(pod_list,i));
+      
+      debug Debug.PrintHandle(pod);
+      debug Debug.PrintString(" test\n");
+
+      // Reject pods docked to any object.
+		if (!iSim.IsDocked(pod) || Object.PropertyExists(pod, "md_epic_slotin")) {
+         Set.Add(final_set, pod);
+		}
+	}
+
+	return List.FromSet(final_set);
+}
+
+
+// Returns a list of tagged pods, or all the pods if none are tagged.
+list TaggedPodList(hisim center, float dist)
+{
+   list pod_list, final_list;
+   int i, total;
+   hship pod;
+
+   pod_list = UndockedPodList(center, dist);
+
+   total = List.ItemCount(pod_list);
+
+   for (i=0;i<total;++i) {
+      pod = iShip.Cast(List.GetNth(pod_list, i));
+      
+      if (iSim.IsMissionCritical(pod)) {
+         List.AddTail(final_list, pod);
+      }
+   }
+
+   // If there are any pods tagged, just return those.
+   if (List.ItemCount(final_list) > 0) {
+      return final_list;
+   }
+
+   // Otherwise, return the whole list of player pods.
+   return pod_list;
+}
+
+//**************************************************************
+
+// This group of functions are similar to the inventory code
+// and give inventory functions to hauled pods.
+
+
+
+//**************************************************************
+// Returns the number of pods of a requested inventory type.
+
+//**************************************************************
+int NumberOfCargoType(hisim center, float radius, int type, bool legit)
+{
+	list pod_list;
+   string cargo_name;
+   int i, total, cargo_type, pod_count;
+	hsim pod;
+   
+
+   if (legit) {
+      pod_list = List.FromSet(LegalPods(PlayerPods(center, radius)));
+   }else {
+      pod_list = List.FromSet(PlayerPods(center, radius));
+   }
+   
+	pod_count = 0;
+	total = List.ItemCount(pod_list);
+   for (i=0;i<total;++i)
+   {
+		pod = Sim.Cast(List.GetNth(pod_list,i));
+      cargo_type = Object.IntProperty(pod,"cargo");
+		if (type == cargo_type)
+		{ // Found a pod of correct type, count it.
+			++pod_count;
+		}
+   }
+   return pod_count;
+}
+
+int RemoveType(hisim center, float radius, int type, int number, bool legit) 
+{
+	list pod_list;
+   string cargo_name;
+   int i, total, cargo_type, pod_count;
+	hisim pod;
+   hisim ship;
+
+   if (legit) {
+      pod_list = List.FromSet(LegalPods(PlayerPods(center, radius)));
+   }else {
+      pod_list = List.FromSet(PlayerPods(center, radius));
+   }
+
+   
+	pod_count = 0;
+	total = List.ItemCount(pod_list);
+   for (i=0;i<total;++i)
+   {
+		pod = iSim.Cast(List.GetNth(pod_list,i));
+
+		if (type == Object.IntProperty(pod,"cargo"))
+		{ 
+         
+         if (iSim.IsDocked(iSim.Cast(pod))) {
+            ship = iSim.Cast(Sim.Parent(pod));
+            iSim.SetDockingLock(pod, ship, false);
+            iSim.Undock(pod, ship);
+         }
+
+         // Found a pod of correct type, remove it.
+         Sim.Destroy(pod);
+
+         ++pod_count;
+         if (pod_count >= number) {
+            // removed all the pods we need to, leave.
+            return pod_count;
+         }
+		}
+   }
+
+   return pod_count;
+}
+
+
+
+bool AnyPlayerPodsIllegal(hisim center, float radius)
+{
+   set pods = IllegalPods(PlayerPods(center, radius));
+
+   if (Set.IsEmpty(pods)) {
+      return false;
+   }
+
+   return true;
+}
+
+
+bool IsHackAllowed(hship pod) 
+{
+   return Object.PropertyExists(pod, "cargo_hack_level");
+}
+
+RemoveHack(hship pod)
+{
+   Object.RemoveProperty(pod, "cargo_hack_level");
+}
+
+
+int HackLevel(hship pod)
+{
+   return Object.IntProperty(pod,"cargo_hack_level");
+}
+
+
+SetHackLevel(hship pod, int level)
+{
+   Object.AddIntProperty(pod,"cargo_hack_level", level);
+}
+
+
+
+// Claims a set of pods and gives them docking orders to the ship.
+// Protects against multiple ships using this command
+// to load the same pod.
+set ClaimPods(hship ship, set pods)
+{
+   int i, pod_count, port_count;
+   hship pod;
+   hdockport dock;
+   set final_pods, return_set, dock_ports;
+
+
+   dock_ports = DockPorts(ship);
+
+   // We need to find and claim a number of pods equal to our port
+   // count; This has to happen atomically, because others are trying
+   // to also load these pods.
+   port_count = Set.ItemCount(dock_ports);
+
+   while (!Set.IsEmpty(pods) && (Set.ItemCount(final_pods) < port_count)) {
+      pod = iShip.Cast(Set.FirstElement(pods));
+      Set.Remove(pods, pod);
+
+      atomic {
+         if (!Object.PropertyExists(pod,"gt_load_flag")) {
+            Object.AddBoolProperty(pod, "gt_load_flag", true);
+            Set.Add(final_pods, pod);
+         }
+      }
+   }
+
+   while (!(Set.IsEmpty(dock_ports) || Set.IsEmpty(final_pods))) {
+      // Match up the pods and dockports one to one,
+      // and send the pods to dock with them.
+      dock = iDockport.Cast(Set.FirstElement(dock_ports));
+      Set.Remove(dock_ports, dock);
+      pod = iShip.Cast(Set.FirstElement(final_pods));
+      Set.Remove(final_pods, pod);
+      AutodockPod(pod, ship, dock);
+
+      Set.Add(return_set, pod);
+   }
+
+   return return_set;
+}
+
+FreePods(set cargo_pods)
+{
+   hship pod;
+   list pod_list = List.FromSet(cargo_pods);
+   int i, total;
+
+   total = List.ItemCount(pod_list);
+   for (i=0;i<total;++i) {
+      pod = iShip.Cast(List.GetNth(pod_list,i));
+      Set.Remove(cargo_pods, pod);
+      iAI.PurgeOrders(pod);
+   }
+}
+
+// Checks if the cargo pods have docked.
+// Also returns true if the cargo pods are no longer attempting to dock.
+bool LoadDone(set cargo_pods)
+{
+   hship pod;
+   list pod_list = List.FromSet(cargo_pods);
+   int i, total;
+   set final_set = Set.FromList(pod_list);
+
+   total = List.ItemCount(pod_list);
+   for (i=0;i<total;++i) {
+      pod = iShip.Cast(List.GetNth(pod_list,i));
+
+      if (Sim.IsDead(pod)) {
+         Set.Remove(final_set, pod);
+      }else if (iSim.IsDocked(pod)) {
+         Set.Remove(final_set, pod);
+      }else if (OT_None == iAI.CurrentOrderType(pod)) {
+         Set.Remove(final_set, pod);
+      }
+   }
+
+   return Set.IsEmpty(final_set);
+}
+ 
+
+// Tries to pilot a pod to a target ship.
+AutodockPod(hship pod, hsim ship, hdockport target)
+{
+   hdockport pod_dockport;
+
+   // Attach pilots to the cargo.
+   iShip.InstallAIPilot( pod, 0.25, 4.0, 0.1,"","","","");
+
+   /*
+   pod_dockport = iDockport.Cast(Set.FirstElement(iDockport.DockportsOfType(pod,
+                                                             DT_Cargo,
+                                                             DS_Free)));
+                                                             */
+
+   pod_dockport = iDockport.Cast(Set.FirstElement(DockPorts(pod)));
+   // Give dock orders to the cargo.
+   //iAI.GiveDockOrder(pod, target);
+
+   debug {
+      Debug.PrintHandle(pod);
+      Debug.PrintString(" pod\n");
+      Debug.PrintHandle(pod_dockport);
+      Debug.PrintString(" pod dock\n");
+      Debug.PrintHandle(target);
+      Debug.PrintString(" cargo dock\n");
+   }
+
+  // iAI.GiveDockOrderWithDockport( pod_dockport, target );
+   iAI.GiveReservedDockOrder( pod, ship );
+   Task.Detach(start autodock_task(pod, ship));
+
+}
+
+
+// Follows a pod to a target ship, lock down the sim once it arrives.
+task autodock_task(hship pod, hsim ship)
+{
+   while (1) {
+      Task.Sleep(Task.Current(),1);
+
+      if (Sim.IsDead(ship)) {
+         // We cannot ever dock.
+         iAI.PurgeOrders(pod);
+         iShip.RemovePilot(pod);
+
+         Object.RemoveProperty(pod, "gt_load_flag");
+         return;
+      }
+
+      if (Sim.IsDead(pod)) {
+         // our pod was destroyed.
+         return;
+      }
+
+      // Wait for the pod to dock. 
+      if (iSim.IsDocked(pod)) {
+         iShip.RemovePilot(pod);
+
+         Object.RemoveProperty(pod, "gt_load_flag");
+         iSim.SetDockingLock(pod, iSim.Cast(ship), true);
+         // Turn off the stolen cargo marker.
+         iSim.SetMissionCritical(pod, false);
+         // then exit the watch task.
+         return;
+      }else if (OT_None == iAI.CurrentOrderType(pod)) {
+         // if our pod has halted before dock, then
+         // free the pod to allow another chance to pick it up.
+         iShip.RemovePilot(pod);
+         Object.RemoveProperty(pod, "gt_load_flag");
+      }
+   }
+}
+
+
+
+// Returns a set of cargo pod docking ports
+set DockPorts(hship ship)
+{
+   int i, total;
+   hsubsim sub;
+   set dock_ports;
+
+   total = Sim.SubsimCount(ship);
+   for (i=0;i<total;++i) {
+      sub = Sim.NthSubsim(ship,i);
+      if ("system_cargo_port" == Object.StringProperty(sub,"name")) {
+         if (DS_Free == iDockport.Status(iDockport.Cast(sub))) {
+            Set.Add(dock_ports, sub);
+            //debug Debug.PrintString("Found Free Dockport\n");
+         }
+      }
+   }
+   return dock_ports;
+}
+
+
+
+// Returns a set of asteroid docking ports
+set AsteroidDockPorts(hhabitat station)
+{
+   int i, total;
+   hsubsim sub;
+   set dock_ports;
+
+   total = Sim.SubsimCount(station);
+   for (i=0;i<total;++i) {
+      sub = Sim.NthSubsim(station,i);
+      if ("system_asteroid_port" == Object.StringProperty(sub,"name")) {
+         if (DS_Free == iDockport.Status(iDockport.Cast(sub))) {
+            Set.Add(dock_ports, sub);
+            //debug Debug.PrintString("Found Free Dockport\n");
+         }
+      }
+   }
+   return dock_ports;
+}
+
+// Returns a set of asteroid docking ports
+set UnloadDockPorts(hhabitat station)
+{
+   int i, total;
+   hsubsim sub;
+   set dock_ports;
+
+   total = Sim.SubsimCount(station);
+   for (i=0;i<total;++i) {
+      sub = Sim.NthSubsim(station,i);
+      if ("system_unload_port" == Object.StringProperty(sub,"name")) {
+         if (DS_Free == iDockport.Status(iDockport.Cast(sub))) {
+            Set.Add(dock_ports, sub);
+            //debug Debug.PrintString("Found Free Dockport\n");
+         }
+      }
+   }
+   return dock_ports;
+}
+
+// Returns a set of asteroid docking ports
+set UniversalDockPorts(hhabitat station)
+{
+   int i, total;
+   hsubsim sub;
+   set dock_ports;
+
+   total = Sim.SubsimCount(station);
+   for (i=0;i<total;++i) {
+      sub = Sim.NthSubsim(station,i);
+      if ("system_dock_port" == Object.StringProperty(sub,"name")) {
+         if (DS_Free == iDockport.Status(iDockport.Cast(sub))) {
+            Set.Add(dock_ports, sub);
+            //debug Debug.PrintString("Found Free Dockport\n");
+         }
+      }
+   }
+   return dock_ports;
+}
+
+
+
+
+
+hack_pod(hship target_pod)
+{
+   hfaction player_faction = iFaction.Find("Player");
+
+   if (none == target_pod) {
+      return;
+   }
+
+   if (T_CargoPod != iSim.Type(target_pod)) {
+      return;
+   }
+
+   if (!IsHackAllowed(target_pod)) {
+      // This pod is not open to pirating.
+      return;
+   }
+
+   // Reject mega pods.
+   if ("ini:/sims/ships/utility/megapod_open_rotated" == Sim.TemplateName(target_pod)){
+      return;
+   }
+
+   if (iSim.Faction(target_pod) == player_faction) {
+      // Player already owns this pod.
+      return;
+   }
+
+   iSim.SetFaction(target_pod, player_faction);
+   
+   // Make this newly stolen pod visible to the player
+   iSim.SetMissionCritical(target_pod, true);
+
+}
+
+
+// The pod must be close to the player, 20km.
+HackTargetPod()
+{
+   hship player = iShip.FindPlayerShip();
+   hship target_pod;
+
+
+   target_pod = iShip.Cast(iShip.CurrentTarget(player));
+
+   if (Sim.DistanceBetween(target_pod, player) > 20km) {
+      iHUD.Print("20km Range");
+      iHUD.PlayAudioCue(AC_InvalidInput);
+      return;
+   }
+
+   hack_pod(target_pod);
+}
+
+
+
+
+// The standard select one at a time is too slow for combat.
+// This command will hack all pods within 20km.
+// Don't take any pods that are already player pods.
+HackNearbyPods()
+{
+   hship player = iShip.FindPlayerShip();
+   hship target_pod;
+   hfaction player_faction = iFaction.Find("Player");
+   list nearby_pods;
+   int total, i;
+
+   nearby_pods = List.FromSet(iSim.SimsInRadius(player, 20km, T_CargoPod));
+   total = List.ItemCount(nearby_pods);
+
+   for (i=0;i<total;++i) {
+      target_pod = iShip.Cast(List.GetNth(nearby_pods, i));
+
+      hack_pod(target_pod);
+   }
+}
+
+
+
+// Checks if a player is trapped in a REM link to a newly docked
+// cargo pod. If the prior state was undocked, it drops the player.
+// This function is called from the player watch task.
+CheckPlayerREM()
+{
+   hship remote_ship;
+
+   // No remote link, clear state and leave.
+   if (!iRemotePilot.RemoteActive()) {
+      Global.SetInt("gt_pod_util_remote",0);
+      return;
+   }
+
+   remote_ship = iRemotePilot.ReturnCurrentRemoteVessel();
+
+   // Remote is not a pod, clear state and leave.
+   if (T_CargoPod != iSim.Type(remote_ship)) {
+      Global.SetInt("gt_pod_util_remote",0);
+      return;
+   }
+
+   // First time, so create the global.
+   if (!Global.Exists("gt_pod_util_remote")){
+      Global.CreateInt("gt_pod_util_remote",GA_Write|GA_NoSave,0);
+   }
+
+   // The interesting stuff. The player is piloting a pod
+   // by remote.
+   switch (Global.Int("gt_pod_util_remote")) {
+   case 0:
+      // Player just made a conection.
+      // if the pod is undocked, set state to 1.
+      // if the pod is docked, set state to 2.
+      if (iSim.IsDocked(remote_ship)) {
+         Global.SetInt("gt_pod_util_remote",2);
+      }else {
+         Global.SetInt("gt_pod_util_remote",1);
+      }
+      break;
+   case 1:
+      // pod was undocked.
+      // if the pod docks, free the player;
+      if (iSim.IsDocked(remote_ship)) {
+         iRemotePilot.DeactivateConnection();
+      }
+      break;
+   case 2:
+         // pod started docked. Wait for player to undock it.
+         // if the pod undocks, set state 1.
+      if (!iSim.IsDocked(remote_ship)) {
+            Global.SetInt("gt_pod_util_remote",1);
+      }
+      break;
+   default:
+      Global.SetInt("gt_pod_util_remote",0);
+      break;
+   }
+}
+
+
+// Called by the subtarget command to 
+// toggle the tagging on a cargo pod.
+TogglePodTag()
+{
+
+   hship player = iShip.FindPlayerShip();
+   hship target_pod;
+   hfaction player_faction = tsFaction.PlayerFaction();
+
+
+   target_pod = iShip.Cast(iShip.CurrentTarget(player));
+
+   if (none == target_pod) {
+      return;
+   }
+
+   // Must be cargo pod
+   if (T_CargoPod != iSim.Type(target_pod)) {
+      return;
+   }
+
+   // Must belong to the player
+   if (player_faction != iSim.Faction(target_pod)) {
+      return;
+   }
+
+   // no megapods
+   if ("ini:/sims/ships/utility/megapod_open_rotated" == Sim.TemplateName(target_pod)){	
+      return;
+   }
+
+   // player must be close to tag
+   if (5km < Sim.DistanceBetween(target_pod, player)) {
+      return;
+   }
+
+   // Tagging sets mission critical
+   if (iSim.IsMissionCritical(target_pod)) {
+      iSim.SetMissionCritical(target_pod, false);
+   }else {
+      iSim.SetMissionCritical(target_pod, true);
+   }     
+
+}
+
+
+
+// This function kicks the cargo off of a ship, 
+// and setting the pods to be possibly stolen 
+// by the player.
+DropCargo(hship freighter)
+{
+   list children;
+   int total_pods, j;
+   hship pod;
+
+   children = List.FromSet(Sim.Children(freighter));
+   total_pods = List.ItemCount(children);
+
+   for (j=0;j<total_pods;++j) {
+      pod = iShip.Cast(List.GetNth(children,j));
+      if (T_CargoPod == iSim.Type(pod)) {
+         iSim.SetDockingLock(freighter, pod, false);
+         iShip.UndockSelf(pod);
+
+         SetHackLevel(pod, 0);
+      }
+   }
+}
+
+
+
+// Keybindable function to dock a single layer of pods to the player ship
+
+
+LoadPodsToPlayerShip()
+{
+   hship player_ship = iShip.FindPlayerShip();
+   set my_pods = PlayerPods( iSim.Cast(player_ship), 20km);
+   set load_pods, dock_port_set;
+
+	// Are there any pods in range
+	if (Set.ItemCount(my_pods) == 0){
+	   	iComms.Shout(none, "name_az", "tspu_no_pods_within_range");
+	   	return;
+  	}
+
+	//Does Player have a free dockport?
+   	dock_port_set = DockPorts(player_ship);
+
+   	if (Set.ItemCount(dock_port_set) == 0){
+      	iHUD.Print("No Available Dockport");
+      	iHUD.PlayAudioCue(AC_InvalidInput);
+		iComms.Shout(none, "name_az", "tspu_no_available_dockport");
+
+      	return;
+   	}
+
+	if (Set.ItemCount(dock_port_set) > Set.ItemCount(my_pods)) {
+		iComms.Shout(none, "name_az", "tspu_loading_a_partial_load");
+		load_pods = ClaimPods(player_ship, my_pods);
+   		iHUD.Print(String.FormatInt("DOCKING %d CARGO CONTAINERS ",Set.ItemCount(load_pods)));
+
+		return;
+	}
+
+	if (Set.ItemCount(dock_port_set) < Set.ItemCount(my_pods)) {
+		iComms.Shout(none, "name_az", "tspu_loading_as_many_as_can");
+		load_pods = ClaimPods(player_ship, my_pods);
+   		iHUD.Print(String.FormatInt("DOCKING %d CARGO CONTAINERS ",Set.ItemCount(load_pods)));
+
+		return;
+	}
+
+   load_pods = ClaimPods(player_ship, my_pods);
+   iHUD.Print(String.FormatInt("DOCKING %d CARGO CONTAINERS ",Set.ItemCount(load_pods)));
+   iComms.Shout(none, "name_az", "tspu_loading_all_cargo_pods");
+
+
+}
+
+
+
+// Player ship rapidly unlocks/undocks its docked pods
+// (single layer of pods only in this revision)
+
+PlayerShipDropCargo()
+{
+   list children;
+   int total_pods, j;
+   hship pod;
+
+   hship player_ship = iShip.FindPlayerShip();
+
+   children = List.FromSet(Sim.Children(player_ship));
+   total_pods = List.ItemCount(children);
+
+   for (j=0;j<total_pods;++j) {
+      pod = iShip.Cast(List.GetNth(children,j));
+      if (T_CargoPod == iSim.Type(pod)) {
+         iSim.SetDockingLock(player_ship, pod, false);
+         iShip.UndockSelf(pod);
+      }
+   }
+
+   if (total_pods == 0){
+	   iComms.Shout(none, "name_az", "tspu_no_pods_loaded");
+	   return;
+   }
+
+   iHUD.Print(String.FormatInt("UNDOCKING %d CARGO CONTAINERS ",total_pods));
+   iComms.Shout(none, "name_az", "tspu_undocking_the_cargo_pod");
+
+}
+
+
+
+// Current player ship target, if a cargo pod, will be
+// docked to the player ship. If pod is not already of the
+// Player's faction it will be hacked prior to docking
+
+DockTargetPodToPlayerShip()
+{
+   hdockport dock_port;
+   set dock_port_set;
+
+   hship player_ship = iShip.FindPlayerShip();
+   hship target_pod = iShip.Cast(iShip.CurrentTarget(player_ship));
+
+   //Close enough?
+   if (Sim.DistanceBetween(target_pod, player_ship) > 20km) {
+      iHUD.Print("Target Beyond 20km Range");
+      iHUD.PlayAudioCue(AC_InvalidInput);
+	iComms.Shout(none, "name_az", "tspu_need_to_move_closer");
+
+      return;
+   }
+
+   //Is this a cargo pod?
+   if ( iSim.Type( iSim.Cast( target_pod ) ) != T_CargoPod ) {
+      iHUD.Print("Target Not a Cargo Container");
+      iHUD.PlayAudioCue(AC_InvalidInput);
+	iComms.Shout(none, "name_az", "tspu_that_is_not_cargopod");
+
+      return;
+   }
+
+   //Does Player have a free dockport?
+   dock_port_set = DockPorts(player_ship);
+
+   if (Set.ItemCount(dock_port_set) == 0){
+      iHUD.Print("No Available Dockport");
+      iHUD.PlayAudioCue(AC_InvalidInput);
+	iComms.Shout(none, "name_az", "tspu_no_available_dockport");
+
+      return;
+   }
+
+
+   //Does player own this pod?
+   if (iFaction.Find("Player") != iSim.Faction(iSim.Cast(target_pod))){
+		HackTargetPod();
+   }
+
+   //Player hacked or owns pod now
+   if (iFaction.Find("Player") == iSim.Faction(iSim.Cast(target_pod))){
+
+		//Dock Pod to Player Ship
+   		dock_port = iDockport.Cast(Set.FirstElement(dock_port_set));
+   		AutodockPod(target_pod, player_ship, dock_port);
+   		iHUD.Print(String.FormatInt("DOCKING %d CARGO CONTAINERS ",1));
+   		iComms.Shout(none, "name_az", "tspu_docking_the_cargo_pod");
+
+		return;
+   }
+
+   // Player couldn't hack pod or doesn't own it.  Exit.
+   iComms.Shout(none, "name_az", "tspu_cannot_hack_that_pod");
+
+   return;
+
+}
+
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+

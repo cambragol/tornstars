@@ -1,0 +1,314 @@
+/*******************************************************************************************/
+//
+// tsFleetOpCall
+// 
+// This module is a dispatch module that branches common calls to the various types
+// of operations. We don't have objects in POG so we need to make do with older
+// strategies like this one.
+// 
+// March 2006
+//******************************************************************************************/
+
+package tsFleetOpCall;
+
+
+// Imports
+uses  Sim,
+	iSim,
+	Debug,
+	Global,
+	iGame,
+	iFaction,
+	INIFile,
+	Input,
+	List,
+	Object,
+	String,
+	Task,
+	State,
+	Text,
+	Math,
+	iShip,
+	iHabitat,
+	iMapEntity,
+	iHUD,
+	iComms,
+	tsStationEnum,
+	tsStation,
+	tsFaction,
+	tsTime,
+	tsFleetOp,
+	tsLCenter,
+	tsLProduction,
+	tsFoEmbezzle,
+	tsFoFleetAttack,
+	tsFoFleetDefense,
+	tsFoProtection,
+	tsFoThugs,
+	tsFoRaider,
+	tsFoCustoms,
+	tsFoPatrol,
+   tsFoConstruction,
+   tsFoTanker,
+   tsFoTrade,
+   tsFoArmsDealer,
+   tsFoMerc,
+	tsFoFreeTrader,
+	tsFoFreeMiner,
+	tsFoFreeTanker,
+	tsFoFreeScience,
+	tsFoFreeMerchant;
+
+
+// Exports
+provides New,
+         Save,
+         Restore,
+         Update,
+         PlayerNear;
+
+
+ 
+
+
+//*******************************************************************************************/         
+//
+//*******************************************************************************************/
+
+
+// Sets up the information that is needed by each type of operation.
+// This is done once at creation time.
+// After this, all information should be recovered in save and restore.
+// Note: operation_type is of enum eProductionType
+//[of]:hisim New(int operation_type, hfaction faction, hmapentity center)
+hisim New(int operation_type, hfaction faction, hmapentity center)
+{
+   hisim operation;
+
+   operation = tsFleetOp.NewOp(operation_type, faction, center);
+
+   switch (operation_type) {
+
+   case ept_EmbezzleOp: tsFoEmbezzle.New(operation); break;
+   case ept_CustomsOp: tsFoCustoms.New(operation);break;
+   case ept_TankerOp: tsFoTanker.New(operation); break;
+   case ept_TradeOp: tsFoTrade.New(operation); break;
+
+   case ept_ThugsOp: tsFoThugs.New(operation);break;
+   case ept_PatrolOp: tsFoPatrol.New(operation);break;
+
+   case ept_RaiderOp: tsFoRaider.New(operation);break;
+   case ept_ProtectionOp: tsFoProtection.New(operation);break;
+
+   case ept_FleetAttackOp: tsFoFleetAttack.New(operation);break;
+   case ept_FleetDefenseOp: tsFoFleetDefense.New(operation);break;
+   case ept_StationConstructionOp: tsFoConstruction.New(operation);break;
+   case ept_StationRepairOp: tsFoConstruction.New(operation);break;
+   
+   case ept_ArmsDealerOp: tsFoArmsDealer.New(operation);break;
+   case ept_MercOp: tsFoMerc.New(operation);break;
+	
+	case ept_FreeTraderOp: tsFoFreeTrader.New(operation);break;
+	case ept_FreeMinerOp: tsFoFreeMiner.New(operation);break;
+	case ept_FreeTankerOp: tsFoFreeTanker.New(operation);break;
+	case ept_FreeScienceOp: tsFoFreeScience.New(operation);break;
+	case ept_FreeMerchantOp: tsFoFreeMerchant.New(operation);break;
+
+
+
+   default:
+      debug {
+         Debug.PrintString(String.FormatInt("tsFleetOpCall.New invalid op type %d\n", operation_type));
+      }
+      break;
+   }
+
+   return operation;
+}
+//[cf]
+
+
+//[of]:Save(hisim operation)
+Save(hisim operation)
+{
+   int operation_type = tsLProduction.GetType(operation);
+
+   switch (operation_type) {
+
+   case ept_EmbezzleOp: tsFoEmbezzle.Save(operation);break;
+   case ept_CustomsOp: tsFoCustoms.Save(operation);break;
+   case ept_TankerOp: tsFoTanker.Save(operation); break;
+   case ept_TradeOp: tsFoTrade.Save(operation); break;
+
+   case ept_ThugsOp: tsFoThugs.Save(operation);break;
+   case ept_PatrolOp: tsFoPatrol.Save(operation);break;
+   
+   case ept_RaiderOp: tsFoRaider.Save(operation);break;
+   case ept_ProtectionOp: tsFoProtection.Save(operation);break;
+   
+   case ept_FleetAttackOp: tsFoFleetAttack.Save(operation);break;
+   case ept_FleetDefenseOp: tsFoFleetDefense.Save(operation);break;
+
+   case ept_StationConstructionOp: tsFoConstruction.Save(operation);break;
+   case ept_StationRepairOp: tsFoConstruction.Save(operation);break;
+
+   case ept_ArmsDealerOp: tsFoArmsDealer.Save(operation);break;
+   case ept_MercOp: tsFoMerc.Save(operation);break;
+	case ept_FreeTraderOp: tsFoFreeTrader.Save(operation);break;
+	case ept_FreeMinerOp: tsFoFreeMiner.Save(operation);break;
+	case ept_FreeTankerOp: tsFoFreeTanker.Save(operation);break;
+	case ept_FreeScienceOp: tsFoFreeScience.Save(operation);break;
+	case ept_FreeMerchantOp: tsFoFreeMerchant.Save(operation);break;
+
+
+   default:
+      debug {
+         Debug.PrintString(String.FormatInt("tsFleetOpCall.Save invalid op type %d\n", operation_type));
+      }
+      break;
+   }
+}
+//[cf]
+
+
+
+//[of]:Restore(hisim operation)
+Restore(hisim operation)
+{
+   int operation_type = tsLProduction.GetType(operation);
+
+   switch (operation_type) {
+   case ept_EmbezzleOp: tsFoEmbezzle.Restore(operation);break;
+   case ept_CustomsOp: tsFoCustoms.Restore(operation);break;
+   case ept_TankerOp: tsFoTanker.Restore(operation); break;
+   case ept_TradeOp: tsFoTrade.Restore(operation); break;
+
+   case ept_ThugsOp: tsFoThugs.Restore(operation);break;
+   case ept_PatrolOp: tsFoPatrol.Restore(operation);break;
+
+   case ept_RaiderOp: tsFoRaider.Restore(operation);break;
+   case ept_ProtectionOp: tsFoProtection.Restore(operation);break;
+
+   case ept_FleetAttackOp: tsFoFleetAttack.Restore(operation);break;
+   case ept_FleetDefenseOp: tsFoFleetDefense.Restore(operation);break;
+
+   case ept_StationConstructionOp: tsFoConstruction.Restore(operation);break;
+   case ept_StationRepairOp: tsFoConstruction.Restore(operation);break;
+
+   case ept_ArmsDealerOp: tsFoArmsDealer.Restore(operation);break;
+   case ept_MercOp: tsFoMerc.Restore(operation);break;
+	case ept_FreeTraderOp: tsFoFreeTrader.Restore(operation);break;
+	case ept_FreeMinerOp: tsFoFreeMiner.Restore(operation);break;
+	case ept_FreeTankerOp: tsFoFreeTanker.Restore(operation);break;
+	case ept_FreeScienceOp: tsFoFreeScience.Restore(operation);break;
+	case ept_FreeMerchantOp: tsFoFreeMerchant.Restore(operation);break;
+
+
+   default:
+      debug {
+         Debug.PrintString(String.FormatInt("tsFleetOpCall.Restore invalid op type %d\n", operation_type));
+      }
+      break;
+   }
+}
+//[cf]
+
+
+
+//[of]:Update(hisim operation)
+Update(hisim operation)
+{
+   int operation_type = tsLProduction.GetType(operation);
+
+   switch (operation_type) {
+   case ept_EmbezzleOp: tsFoEmbezzle.Update(operation);break;
+   case ept_CustomsOp: tsFoCustoms.Update(operation);break;
+   case ept_TankerOp: tsFoTanker.Update(operation); break;
+   case ept_TradeOp: tsFoTrade.Update(operation); break;
+
+   case ept_ThugsOp: tsFoThugs.Update(operation);break;
+   case ept_PatrolOp: tsFoPatrol.Update(operation);break;
+
+   case ept_RaiderOp: tsFoRaider.Update(operation);break;
+   case ept_ProtectionOp: tsFoProtection.Update(operation);break;
+
+   case ept_FleetAttackOp: tsFoFleetAttack.Update(operation);break;
+   case ept_FleetDefenseOp: tsFoFleetDefense.Update(operation);break;
+
+   case ept_StationConstructionOp: tsFoConstruction.Update(operation);break;
+   case ept_StationRepairOp: tsFoConstruction.Update(operation);break;
+
+   case ept_ArmsDealerOp: tsFoArmsDealer.Update(operation);break;
+   case ept_MercOp: tsFoMerc.Update(operation);break;
+	case ept_FreeTraderOp: tsFoFreeTrader.Update(operation);break;
+	case ept_FreeMinerOp: tsFoFreeMiner.Update(operation);break;
+	case ept_FreeTankerOp: tsFoFreeTanker.Update(operation);break;
+	case ept_FreeScienceOp: tsFoFreeScience.Update(operation);break;
+	case ept_FreeMerchantOp: tsFoFreeMerchant.Update(operation);break;
+
+
+   default:
+      
+      debug {
+         Debug.PrintString(String.FormatInt("tsFleetOpCall.Update invalid op type %d\n", operation_type));
+      }
+      break;
+   }
+}
+
+
+//[cf]
+
+// Called when the player is near an operation center
+//[of]:PlayerNear(hisim operation)
+PlayerNear(hisim operation)
+{
+   int operation_type = tsLProduction.GetType(operation);
+   
+   switch (operation_type) {
+   case ept_EmbezzleOp: tsFoEmbezzle.PlayerNear(operation);break;
+   case ept_CustomsOp: tsFoCustoms.PlayerNear(operation);break;
+   case ept_TankerOp: tsFoTanker.PlayerNear(operation); break;
+   case ept_TradeOp: tsFoTrade.PlayerNear(operation); break;
+
+   case ept_ThugsOp: tsFoThugs.PlayerNear(operation);break;
+   case ept_PatrolOp: tsFoPatrol.PlayerNear(operation);break;
+
+   case ept_RaiderOp: tsFoRaider.PlayerNear(operation);break;
+   case ept_ProtectionOp: tsFoProtection.PlayerNear(operation);break;
+
+   case ept_FleetAttackOp: tsFoFleetAttack.PlayerNear(operation);break;
+   case ept_FleetDefenseOp: tsFoFleetDefense.PlayerNear(operation);break;
+
+   // Are these actually used now that stations are not destructable?
+   //case ept_StationConstructionOp: tsFoConstruction.PlayerNear(operation);break;
+   //case ept_StationRepairOp: tsFoConstruction.PlayerNear(operation);break;
+
+   case ept_ArmsDealerOp: tsFoArmsDealer.PlayerNear(operation);break;
+   case ept_MercOp: tsFoMerc.PlayerNear(operation);break;
+	case ept_FreeTraderOp: tsFoFreeTrader.PlayerNear(operation);break;
+	case ept_FreeMinerOp: tsFoFreeMiner.PlayerNear(operation);break;
+	case ept_FreeTankerOp: tsFoFreeTanker.PlayerNear(operation);break;
+	case ept_FreeScienceOp: tsFoFreeScience.PlayerNear(operation);break;
+	case ept_FreeMerchantOp: tsFoFreeMerchant.PlayerNear(operation);break;
+
+
+   default:
+      
+      debug {
+         Debug.PrintString(String.FormatInt("tsFleetOpCall.PlayerNear invalid op type %d\n", operation_type));
+      }
+      break;
+   }
+}
+//[cf]
+
+
+
+
+/*  
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
