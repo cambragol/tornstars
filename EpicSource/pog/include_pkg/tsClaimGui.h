@@ -28,5 +28,7 @@ prototype tsClaimGui.Exit();
 
 prototype tsClaimGui.StartScreen();
 
+prototype tsClaimGui.RunCheck();
+
 // EOF /////////////////////////////////////////////////////////////////////////
 

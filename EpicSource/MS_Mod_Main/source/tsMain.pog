@@ -29,6 +29,7 @@ uses
    iBaseGUI,
    iLagrangePoint,
    iAI,
+iDirector,
 Global,
 
    tsTime,
@@ -274,6 +275,9 @@ SpaceEnter()
 
    tsNavGui.Initialise();
 
+	//Added for start screen effects
+	tsStartGui.StartDolly();
+
    atomic debug Debug.PrintString("tsMain.SpaceEnter ----------------End----------------\n");
 }
 //[cf]
@@ -316,6 +320,9 @@ FinalSetup()
    tsLoadoutGui.AttachCargoHardpoint();
 
    tsCrewSpeak.Init();
+
+
+
 
    tsStartGui.FinalSetup();
 

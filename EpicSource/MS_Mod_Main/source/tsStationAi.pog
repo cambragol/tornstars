@@ -326,7 +326,7 @@ task Comms() {
 			break;
 		}
 
-		if (iSim.IsDocked(iSim.Cast(player_ship))) {
+		if (iSim.IsDockedTo(iSim.Cast(player_ship), station)) {
 		
 			//Player is already docked
             	iConversation.Say(ship,"", "pcsa_station_you_are_already_docked");
@@ -397,7 +397,7 @@ task Comms() {
 			break;
 		}
 
-		if (iSim.IsDocked(iSim.Cast(player_ship))) {
+		if (iSim.IsDockedTo(iSim.Cast(player_ship), station)) {
 		 
 			//Player is already docked
             	iConversation.Say(ship,"", "pcsa_station_you_are_already_docked");

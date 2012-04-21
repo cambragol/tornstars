@@ -16,6 +16,7 @@ package tsStartGui;
 uses	Sim,  
 		iShip,
 		iSim,
+	Sim,
 		Debug,
 		Global,
 		GUI,
@@ -30,8 +31,11 @@ uses	Sim,
 		Object,
 		String,
 		Task,
+		Math,
 		Text,
 		iAI,
+		Set,
+		iDirector,
 		iCargo,
 		iInventory,
 		CargoTypes,
@@ -43,6 +47,7 @@ uses	Sim,
 		tsGui,
 		tsShip,
 		tsPlayerFleet,
+		tsStationEnv,
 		tsMoney;
 //[cf]
 
@@ -52,6 +57,7 @@ provides DisplayWindow,
          OnButtonPress,
          StartGame,
          NewGame,
+	   StartDolly,
          FinalSetup;
 //[cf]
  
@@ -65,6 +71,9 @@ prototype add_player_cargo(string entry_key, hinifile start_file);
 prototype add_player_wingmen(string entry_key, hinifile start_file);
 prototype add_cargo_pods(string entry_key, hinifile start_file);
 prototype adjust_player_standing(string entry_key, hinifile start_file);
+prototype task dolly();
+prototype StartDolly();
+prototype EndDolly();
 
 
 //[of]:NewGame()
@@ -153,7 +162,7 @@ hwindow CreateOptionList(hwindow parent, int x, int y, int width, int height, st
    base_win = GUI.CreateWindow(x, y, width, height, parent);
 
    // Create the parent listbox
-   list_box = GUI.CreateListBox( 0, 0,
+   list_box = GUI.CreateListBox( 0, 100,
                                  cwidth, height,
                                  base_win,
                                  true,
@@ -332,10 +341,11 @@ DisplayWindow()
 
 
    help_window_base = GUI.CreateWindow( width,
-                                        Global.Int("EpicGui_content_drop"),
+                                        160,
                                         width,
                                         height,
                                         shady_bar);
+
 
    Global.CreateHandle("gt_startgui_help_window_base",GA_Write|GA_NoSave, help_window_base);
 
@@ -363,7 +373,7 @@ DisplayWindow()
                                 "" );
 
    Global.CreateHandle("gt_startgui_text_win", GA_Write|GA_NoSave, help_window);
-
+	
 }
 //[cf]
 
@@ -371,11 +381,167 @@ DisplayWindow()
 //[of]:StartScreen()
 StartScreen()
 {
+
+
    GUI.PopScreensTo("icSpaceFlightScreen");
-   GUI.OverlayScreen("icPDAOverlayManager");
+   //GUI.OverlayScreen("icPDAOverlayManager");
    iGUI.OverlayCustomScreen( "tsStartGui.DisplayWindow" );
+ 
 }
 //[cf]
+
+
+//[of]:StartDolly()
+StartDolly()
+{
+	htask t;
+
+	t = start dolly();
+	//Task.Detach(t);
+	//Object.SetHandleProperty(player, "jd_movie_switcher", t);
+
+}
+//[cf]
+
+
+//[of]:EndDolly()
+EndDolly()
+{
+	//htask t;
+
+    	debug Debug.PrintString("tsStartGui.setup_player: End director mode.\n");
+    	//t = Task.Cast(Object.HandleProperty(player, "jd_movie_switcher"));
+	//t = call dolly();
+    	//Task.Halt(t);
+
+	//Turn off the director mode from the start screen
+	iDirector.End();
+
+}
+//[cf]
+
+
+task dolly()
+{
+    	float pause_time = 2.0;            // loop pause in seconds
+	hsim view_point, start_point, camera;
+	int movie;
+	set planets, moons, asteroids;
+	hbody planet, next_planet;
+	int count = 1; 
+	hship player;
+	hinifile player_config = INIFile.Create("ini:/player_start");
+	string system;
+   	system = INIFile.String(player_config, "Player","start_system","map:/geog/middle/emerald_sys");
+	INIFile.Destroy(player_config);
+	player = iShip.FindPlayerShip();
+	count = 0;
+
+	camera = iDirector.CreateDolly();
+	planets = iMapEntity.SystemBodies();
+	planet = iBody.Random(planets);
+	next_planet = iBody.Random(planets);
+
+	iDirector.Begin();
+	iDirector.SetDollyCamera(camera);
+ 
+	iDirector.SetFocus(iSim.Cast(planet));
+	iDirector.SetSecondaryFocus(next_planet);
+
+	iDirector.SetCamera(CAM_TwoShot);
+	iDirector.FadeIn(3, 0.0, 0.0, 0.0); 
+
+	while(system == iMapEntity.SystemName()){
+		++count;
+		if(count == 4){
+			iDirector.FadeOut(6, 0.0, 0.0, 0.0); 
+		} else if (count == 7) {
+
+			movie = Math.RandomInt(0,2);
+				if (movie == 0){
+				
+					planet = iBody.Random(planets);
+					moons = iMapEntity.SystemHabitats();
+					next_planet = iBody.Random(moons);
+
+					tsStationEnv.SetupEnv(next_planet);
+
+   					start_point = Sim.Create("ini:/sims/nav/waypoint","close view");
+   					Sim.PlaceNear(start_point, next_planet, Object.FloatProperty(next_planet, "radius")*3);
+
+					Sim.PlaceAt (player, start_point);
+			
+					view_point = Sim.Create("ini:/sims/nav/waypoint","distant view");
+   					Sim.PlaceNear(view_point, start_point, Object.FloatProperty(next_planet, "radius")*2);
+			
+					iDirector.Begin();
+						iDirector.SetFocus(next_planet);
+						iDirector.SetSecondaryFocus(camera);
+						iDirector.FadeIn(6, 0.0, 0.0, 0.0); 
+						iDirector.SetDirection(camera, start_point, view_point, 15, 2);
+					count = 0;
+
+				}
+				if (movie == 1){
+
+					planet = iBody.Random(planets);
+					moons = iMapEntity.SystemHabitats();
+					next_planet = iBody.Random(moons);
+					
+					tsStationEnv.SetupEnv(next_planet);
+
+   					start_point = Sim.Create("ini:/sims/nav/waypoint","close view");
+   					Sim.PlaceNear(start_point, next_planet, Object.FloatProperty(next_planet, "radius")*3);
+
+					Sim.PlaceAt (player, start_point);
+			
+					//view_point = Sim.Create("ini:/sims/nav/waypoint","distant view");
+   					//Sim.PlaceNear(view_point, start_point, Object.FloatProperty(next_planet, "radius")*2);
+			
+					iDirector.Begin();
+						iDirector.SetFocus(next_planet);
+						iDirector.SetSecondaryFocus(planet);
+						iDirector.FadeIn(6, 0.0, 0.0, 0.0); 
+						//iDirector.SetDirection(camera, start_point, view_point, 15, 2);
+					count = 0;
+
+				}
+				if (movie == 2){
+				
+					planet = iBody.Random(planets);
+					moons = iBody.OrbitingBodies(planet);
+					Set.Union(moons, planets);
+					asteroids = iMapEntity.SystemHabitats();
+					Set.Union(moons, asteroids);
+					next_planet = iBody.Random(moons);
+
+   					start_point = Sim.Create("ini:/sims/nav/waypoint","close view");
+   					Sim.PlaceNear(start_point, planet, Object.FloatProperty(planet, "radius")*3);
+
+					view_point = Sim.Create("ini:/sims/nav/waypoint","distant view");
+   					Sim.PlaceNear(view_point, start_point, Object.FloatProperty(planet, "radius")*2);
+			
+					iDirector.Begin();
+						iDirector.SetFocus(next_planet);
+						iDirector.SetSecondaryFocus(camera);
+						iDirector.FadeIn(6, 0.0, 0.0, 0.0); 
+						iDirector.SetDirection(camera, start_point, view_point, 15, 2);
+					count = 0;
+
+
+				}
+
+
+
+		}
+        // Put some wait time into the loop.
+        Task.Sleep(Task.Current(), pause_time);
+    }
+
+	iDirector.End();
+ 
+
+}	
 
 
 //[of]:StartGame()
@@ -536,6 +702,9 @@ task setup_player()
 
    // Curtains close for to rearrange the set.
    iGame.EnableBlackout(true);
+
+	EndDolly();
+	
 
    entry_key = Global.String("gt_startgui_entry_key");
 

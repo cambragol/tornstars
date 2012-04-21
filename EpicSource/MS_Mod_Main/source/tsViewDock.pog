@@ -93,7 +93,7 @@ task pull_back()
 
 	iDirector.SetFocus(player);
 	iDirector.SetSecondaryFocus(dolly);
-	iDirector.SetCamera(CAM_Dolly);
+	iDirector.SetCamera(CAM_InverseTwoShot);
 
    Task.Sleep(Task.Current(), 1.0);
 

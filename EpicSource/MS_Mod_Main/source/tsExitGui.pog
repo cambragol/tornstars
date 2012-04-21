@@ -123,8 +123,8 @@ OnQuitPress()
 
    iGame.SaveGame( 0, String.Join(name, " Last Quit" ));   
 
-
-   GUI.PopScreensTo("icSPMainPDAScreen");
+	GUI.ClearAllScreens();
+   //GUI.PopScreensTo("icSPMainPDAScreen");
 }
 
 

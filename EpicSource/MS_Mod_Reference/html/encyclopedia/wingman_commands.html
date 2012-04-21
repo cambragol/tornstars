@@ -17,7 +17,7 @@ Command Groups
 
 <P>
 All player wingmen must belong to a Command Group. 
-These groups correspond to number keys 1, 2, 3 to 0. 
+These groups correspond to number keys 1 through to 0. 
 Commands apply to a whole group. 
 Wingmen can only belong to one group at a time. 
 When you first purchase a wingman they will start in group 0.
@@ -39,21 +39,21 @@ Here are the commands:
 <br>
 1.	Halt and Stop.
 <br>
-2.	Formate with me and Protect me.
+2.	Formate submenu.
 <br>
 3.	Attack my current target.
 <br>
 4.	Defend my current target.
 <br>
-5.	Dock with my current target.
+5.	Dock submenu.
 <br>
 6.	Approach (fly to) my current target.
 <br>
-7.	Unused.
+7.	Mining submenu.
 <br>
-8.	Special combat commands submenu.
+8.	Unsued
 <br>
-9.	Cargo handling submenu.
+9.	Cargo submenu.
 <br>
 10.	Group handling submenu.
 
@@ -74,8 +74,8 @@ The second keypress is the command you would like to give.
 Most commands complete at this point, and your wingmen will take action.
 
 <P>
-As an example: Pressing 1 selects group 1 and then pressing 2 orders the selected 
-group to formate with your ship. 
+As an example: Pressing 1 selects group 1 and then pressing 1 again orders the selected 
+group to halt. 
 
 <P>
 Some commands need further menu input (such as cargo and group commands). 
@@ -88,39 +88,126 @@ Useful to know if you accidentally start an "attack my target" command and reall
 wanted a "defend my target" command.
 
 <P>
+
 <b>
-Group Submenu
+Formate Submenu
+</b>
+
+<p>
+The Formate submenu has only two sub commands: Follow Me and Defend Me.
+<P>
+
+<b>
+Follow Me
+</b>
+<p>
+The Follow Me command will set the wingman to passively follow the player whereever he goes.  
+<p>
+
+<b>
+Defend Me
+</b>
+<p>
+The Defend Me command sets the wingman to actively escort and protect 
+<p>
+
+Here are the formate commands summarized:
+<br>
+1.	Follow Me.
+<br>
+2.	Defend Me.
+<br>
+<p>
+
+<b>
+Mining Submenu
 </b>
 
 <P>
-The "Group Commands" are special. 
-They are used to add and remove ships from a group. 
-With group commands, the first key press selects the group you want to operate 
-on (instead of the group you will give an order to). 
+The mining commands give the player access to commands for science, prospector and mining ships.
 
 <P>
-For example, to add a wingman to group one, you first target one of your wingmen.
-<br>
-Then you would press 1 to select "Group one". 
-<br>
-Then press 0 for "Group commands".
-<br>
-Then press 0 for the group subcommand "Add ship to group".
+<b>
+Scan Space
+</b>
 
 <P>
-Removing a ship from a group will automatically add the ship to group zero. 
-This is because all player wingmen must always belong to a group and
-group zero is the default group.
+Science or prospector ships can be ordered to scan space.  They will use specialized long range scanners to search for possible asteroids, asteroid belts, or asteroid fields.
+<P>
+Their range is limited so it is best to approach a major planet or moon, perform a scan, and if negative move on to another planet or moon.
+<P>
+If asteroids are detected, they will be added to your navigation computer for approach and study.
 
 <P>
+<b>
+Study Asteroid
+</b>
+
+<P>
+If an unclaimed asteroid has been found, a science or prospector ship can be ordered to study it.  The so ordered craft will attach to the asteroid and begin to perform tests to ascertain the mineral content of the asteroid.
+<p>
+Depending on the class and experience of the ship and crew of the science or prospector ship, the study may take up to several days.  The ship will contact the player by email when its survey is complete.
+<P>
+Once a survey is completed the player will have claimed the asteroid.  They now effectively own it and can exploit it for its mineral content, or can sell the claimed asteroid, as a claim, at any station.
+<p>
+<b>
+Start Mining
+</b>
+
+<P>
+This command can only be issued to mining and prospector ships.  If there is a player owned 'mine', that was previously studied and claimed, nearby, the ship or ships will automatically dock to it and begin mining.  Thereafter they will produce ore from the mine every few days.  The number and frequency of ore they produce will depend on the quality and type of the ship that is mining.
+<p>
+Mining ships will need to be kept fueled by the player at all times or they will shut down operation.
+<p>
+
+Here are the mining commands summarized:
+<br>
+1.	Scan Space.
+<br>
+2.	Study Asteroid.
+<br>
+3.    Start Mining.
+<br>
+
+<p>
 <b>
 Cargo Submenu
 </b>
 
 <P>
-The cargo commands allow the player to move around large numbers of cargo pods quickly and easily.
+The cargo commands allow the player to move around large numbers of cargo pods quickly and easily.  Additionally it contains all the sub commands related to fueling and refueling ships.
 
 <P>
+
+<b>
+Fuel All
+</b>
+
+<p>
+This command will only be accepted by Tanker class ships that have fuel.  Given the command, they will fly to each wingman in the fleet and fuel it to maximum fuel.  They will also fuel the player ship.
+<p>
+
+<b>
+Fuel Me
+</b>
+
+<p>This command will instruct a Tanker ship to fuel the player ship only.  It will fill the player ship to maximum fuel.
+<p>
+
+<b>
+Fuel Target
+</b>
+
+<p>
+This command will order a Tanker ship to fuel only the ship currently target in the target list.  Only player ships will be accepted as viable targets.  The targeted ship will be filled to maximum fuel.
+<p>
+
+<b>
+Take Fuel
+</b>
+
+<p>
+This command will instruct a Tanker ship to drain all the fuel from the currently targeted ship.  Only ships in the player's fleet will be drained.
 <b>
 Dock All
 </b>
@@ -156,6 +243,49 @@ Dock Pod
 You can use the Dock Pod command to load just one pod. 
 Target the pod, then select the group to load the pod, then cargo commands, then Dock Pod. 
 The targeted pod will be loaded onto a freighter with an empty cargo dock.
+<p>
+Here are the Cargo commands summarized:
+<br>
+1.	Fuel All.
+<br>
+2.	Fuel Me.
+<br>
+3.    Fuel Target.
+<br>
+4.	Take Fuel.
+<br>
+5.	Dock All.
+<br>
+6.    Undock All.
+<br>
+7.    Dock Pod.
+<br>
+
+<b>
+Group Submenu
+</b>
+
+<P>
+The "Group Commands" are special. 
+They are used to add and remove ships from a group. 
+With group commands, the first key press selects the group you want to operate 
+on (instead of the group you will give an order to). 
+
+<P>
+For example, to add a wingman to group one, you first target one of your wingmen.
+<br>
+Then you would press 1 to select "Group one". 
+<br>
+Then press 0 for "Group commands".
+<br>
+Then press 0 for the group subcommand "Add ship to group".
+
+<P>
+Removing a ship from a group will automatically add the ship to group zero. 
+This is because all player wingmen must always belong to a group and
+group zero is the default group.
+
+<P>
 
 </BODY>
 </HTML>

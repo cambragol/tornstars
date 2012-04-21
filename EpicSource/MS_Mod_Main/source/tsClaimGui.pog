@@ -49,6 +49,7 @@ uses	Sim,
 
 
 provides DisplayWindow,
+	   RunCheck,
          OnClaimPress,
          OnAbandonPress,
          OnSellPress,
@@ -82,6 +83,44 @@ int float2int(float value)
 {
    return value;
 }
+
+
+RunCheck()
+{
+
+	// Only allow when the player is docked to a valid station
+   // or trade ship.
+   hmapentity station;
+   hship player = iShip.FindPlayerShip();
+   hfaction station_faction;
+
+   bool allow_claim_sell = true;
+
+   station = iHabitat.Nearest(iMapEntity.SystemHabitats(), player);
+   
+   if (Sim.DistanceBetween(player, station) > 20km) {
+      allow_claim_sell = false;
+   }
+
+   // Don't allow the player to trade when the station is not
+   // operating (destroyed or under construction). 
+   if (tsStation.Status(iHabitat.Cast(station)) != ESS_Normal) {
+      allow_claim_sell = false;
+   }
+
+   // If the player owns this station, do not allow trade.
+   if (station_faction == tsFaction.PlayerFaction()){
+      allow_claim_sell = false;
+   }
+
+   // If no one owns this station (it was abandond) do not allow trade.
+   if (station_faction == tsFaction.EmptyFaction()){
+      allow_claim_sell = false;
+   }
+
+   Global.SetBool("g_zz_ug_passme", allow_claim_sell);
+}
+
 
 
 
