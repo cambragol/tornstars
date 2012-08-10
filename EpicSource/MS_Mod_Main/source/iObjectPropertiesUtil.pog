@@ -1,0 +1,568 @@
+// Objects Properties Utilities (enhancement of the Object package)
+//
+// Arrays are zero indexed. i.e. the first position is index 0
+
+//Pkg Coded by the Torn Stars/Unstable Space team
+//
+// documented for dual use in vanilla EoC and possible re-use in Unstable Space
+// by SRC 2012 June
+
+//Pkg NOTES ON THE ARRAY METHOD
+//Pkg
+//Pkg Arrays are simulated using Object. package functions to create handle properties
+//Pkg of the desired type in a game object handle of the coder's choice. The choice of
+//Pkg game object handle is in principle arbitrary, since the handle simply is a container
+//Pkg to "hold" the array, but it may be useful to use a handle that is associated with
+//Pkg the data that the array represents. For example, if making arrays of the 
+//Pkg template[] and null[] numbered keys accessed from a ship .ini file, it would be
+//Pkg sensible to use as the "container" for these arrays the ship handle, or perhaps
+//Pkg alternately the hinifile handle of the inifile object into which the .ini data
+//Pkg was loaded prior to use of the INIFile package to access the data.
+//Pkg
+//Pkg HOW THE ARRAY CODE WORKS
+//Pkg
+//Pkg Arrays are collections of object handle properties which have the same array name
+//Pkg but successive array indices. Both array name and array index are part of the
+//Pkg handle property name. The various functions of the iArrayUtil package construct the 
+//Pkg needed handle property name from the coder-supplied array name and desired index.
+//Pkg In addition, every array_name has two index-less handle properties, an int property
+//Pkg which is set to the current highest index of the array and a string property which is
+//Pkg set to "int", "float", "bool", "string" or "handle", depending on the type of data stored
+//Pkg in the array.
+//Pkg
+//     COMMENT: these two properties cannot have the same name, can they? It is possible
+//     to have a two handle properties of different types but the same name? I think this is
+//     probably not possible
+//Pkg 
+//Pkg SUPPORTED ARRAY DATA TYPES
+//Pkg
+//Pkg iArrayUtil supports data types int, float, book and handle
+//Pkg
+//Pkg NOTE ON INDEX VALUES
+//Pkg
+//Pkg All arrays are zero-indexed: the first element of the array has array index 0
+//Pkg
+//Pkg CORRESPONDENCE WITH THE "LIST" PACKAGE
+//Pkg
+//Pkg In the interest of preserving similarity of coding style, an attempt has been made
+//Pkg to reproduce within iArrayUtil the functionality of the "List" package, with the added 
+//Pkg advantage that iArrayUtil produces the equivalent of "lists" of any desired data type.
+//Pkg 
+//Pkg The following "List" package functions are reproduced within iArrayUtil for each 
+//Pkg supported data type (Int, Float, Bool, String or Handle:
+//Pkg
+//Pkg  Function Name	Function Description
+//Pkg
+//Pkg  AddHead		Add an array member at the 0 index location, shifting all other members to higher index	
+//Pkg  AddTail          Add an array member at the N + 1 index location, N being the current highest index
+//Pkg  Append		
+//Pkg  Contains
+//Pkg  GetNthItem	Report the value of the Nth item (N - 1 index location) in the array
+//Pkg  Head		Report the value of the First item (0 index location) in the array
+//Pkg  ItemCount	Report the total number of items in the array
+//Pkg  Remove		Find the item and remove it from the array, re-indexing the array to fill the missing index 
+//Pkg  RemoveAll        Delete all items from the array. This preserves the array as a type definition with
+//Pkg                   no elements (max index location set to -1).
+//Pkg  RemoveHead       Delete the 0 index item and reindex the array
+//Pkg  RemoveTail       Delete the highest index item from the array
+//Pkg  RemoveNth        Delete the Nth item (N - 1 index location) from the array and re-index the array
+//Pkg  RemoveMembers    
+//Pkg  SetNth		Change the value stored in the Nth location (N - 1 index location) of the array
+//Pkg  Tail		Report the value of the highest index item in the array
+//Pkg
+//Pkg
+//Pkg  ADDITIONAL ARRAY FUNCTIONS
+//Pkg  
+//Pkg  AddArrayProperty Adds the array_name type to the object handle and sets the max index to -1
+//Pkg  RemoveArrayProperty  Removes all items from the array and deletes the array_name type and max index properties
+//Pkg                    from the object handle
+//Pkg  ElementIndex     Given an item that is believed to be present in the array, locate the first occurence of 
+//Pkg                    it and return its index. This is particularly useful when working with parallel arrays
+//Pkg                    in which one array serves an address function and the other array serves a data function 
+//Pkg  TwoColumnLookup  Given two arrays of equal length, use the first array as an address array to lookup up
+//Pkg                    the corresponding element in the second array
+
+package iObjectPropertiesUtil;
+
+uses
+   String,
+   List,
+   Object,
+   Debug,
+   Sim,
+   iHUD;
+
+provides
+   SetIntProperty,
+//
+   SetArrayString,
+   GetArrayString,
+   SetArrayHandle,
+   GetArrayHandle,
+   SetArrayBool,
+   GetArrayBool,
+   SetArrayInt,
+   GetArrayInt,
+   ShrinkArray,
+   DeleteArray,
+   ArraySize,
+//							
+   ItemCount,
+   AddArrayProperty,					//coded	2012/06/20
+   RemoveArrayProperty,					//coded 2012/06/20				
+   AddIntArrayPropertyTail,
+   AddFloatArrayPropertyTail,
+   AddBoolArrayPropertyTail,
+   AddStringArrayPropertyTail,					//coded 2012/06/20
+   AddHandleArrayPropertyTail;
+
+
+prototype bool SetIntProperty(hobject obj, string property_name, int value);
+		
+prototype int ItemCount(hobject obj, string array_name);
+					
+
+prototype int AddArrayProperty(hobject obj, string array_name, string array_type);
+prototype int RemoveArrayProperty(hobject obj, string array_name);
+
+prototype int AddIntArrayPropertyTail(hobject obj, string array_name, int value);
+prototype int AddFloatArrayPropertyTail(hobject obj, string array_name, float value);
+prototype int AddBoolArrayPropertyTail(hobject obj, string array_name, bool value);
+prototype int AddStringArrayPropertyTail(hobject obj, string array_name, string value);
+prototype int AddHandleArrayPropertyTail(hobject obj, string array_name, hobject value);
+
+
+
+
+
+//Doc Start
+//Doc Header bool SetIntProperty(hobject obj, string property_name, int value)
+//Doc
+//Doc Descr: Sets or adds an integer property in a handle. Returns a boolean
+//Doc  value describing the success or failure of the operation.
+//Doc
+//Doc SRC 2012/06/17
+//Doc
+//Doc INPUTS (arguments)
+//Doc
+//Doc obj           hobject  object handle to which to attach the array as a handle property
+//Doc property_name string   name of the integer property to set/add
+//Doc value         int      the value of the property to set
+//Doc
+//Doc OUTPUTs (returned)
+//Doc
+//Doc set_success   bool     if adding a property, this is the boolean return of the Object.AddIntProperty
+//Doc                        function. If changing a pre-existing value, this is the result of a test that
+//Doc                        the value was indeed changed.
+//Doc
+//Doc OUTPUTS (handle property)
+//Doc
+//Doc value         int      the int handle property "property_name" is set to  value
+//Doc
+//Doc Finish
+
+bool SetIntProperty(hobject obj, string property_name, int value){
+   int test_value;
+
+   if (Object.PropertyExists( obj, property_name)){
+      Object.SetIntProperty(obj, property_name, value);
+      test_value = Object.IntProperty(obj, property_name);
+      return (test_value == value);
+   }
+   return Object.AddIntProperty(obj, property_name, value);
+}
+
+
+
+
+//Doc Start
+//Doc Header int AddArrayProperty(hobject obj, string array_name, string array_type){
+//Doc
+//Doc Descr: Initialize a properties array in a handle by defining the array
+//Doc  name and type.
+//Doc
+//Doc SRC 2012/06/20
+//Doc
+//Doc INPUTS (arguments)
+//Doc
+//Doc obj          hobject      object handle to which to attach the array as a handle property
+//Doc array_name   string       name of the array to create
+//Doc array_type   string       type of array to create: "int", "float", "bool", "string", or "handle"
+//Doc
+//Doc OUTPUTS (returned)
+//Doc
+//Doc error_code   int	        Error code indicating completion status or encountered
+//Doc                           error
+//Doc			        -1: normal completion, no errors
+//Doc			        1: invalid requested array_name or array_type
+//Doc                           2: requested array_name or array_name_type property already exists
+//Doc			        3: error encountered creating handle property
+//Doc
+//Doc OUTPUTS (handle property)
+//Doc
+//Doc max_index    int          handle property containing the current highest array index
+//Doc                           The handle property name is same as the input array_name
+//Doc                           The vale of max_index is set to "-1" so that when the first
+//Doc                           array element is added, the max_index will increment to the
+//Doc                           proper value of "0".
+//Doc array_type   string       handle property containing the type of array 
+//Doc                           The handle property name is String.Join(array_name,"_TYPE")
+
+int AddArrayProperty(hobject obj, string array_name, string array_type){
+   string array_type_label;
+
+   if (array_name == "") return 1;
+
+   if ((array_type != "int")&&(array_type != "float")&&(array_type != "bool")&&
+       (array_type != "string")&&(array_type != "handle")) return 1;
+
+   array_type_label = String.Join(array_name, "_TYPE");
+
+   if (Object.PropertyExists(obj, array_name) || Object.PropertyExists(obj, array_type_label)) return 2;
+
+   if (!Object.AddIntProperty(obj, array_name, -1) ) return 3;
+							
+   if (!Object.AddStringProperty(obj, array_type_label, array_type) ){
+      Object.RemoveProperty(obj, array_name);		// remove the array from the handle
+      return 3;
+   }
+   
+   return -1;
+}
+
+
+//Doc Start
+//Doc Header int RemoveArrayProperty(hobject obj, string array_name)
+//Doc
+//Doc Descr: Remove the array name, array type and all array elements properties from 
+//Doc  the object handle
+//Doc
+//Doc SRC 2012/06/20
+//Doc
+//Doc INPUTS (arguments)
+//Doc
+//Doc obj          hobject      object handle to which to attach the array as a handle property
+//Doc array_name   string       name of the array to create
+//Doc
+//Doc OUTPUTS (returned)
+//Doc
+//Doc error_code   int	        Error code indicating completion status or encountered
+//Doc                           error
+//Doc			        -1: normal completion, no errors
+//Doc			        1: invalid requested array_name, or array_name does not exist
+//Doc                              as a handle property of obj
+//Doc
+//Doc Finish
+
+int RemoveArrayProperty(hobject obj, string array_name){
+   string array_type_label, element_name;
+   int max_index, index;
+
+   if ((array_name == "") || (!Object.PropertyExists(obj, array_name))) return 1;
+
+   max_index = Object.IntProperty(obj, array_name);
+
+   Object.RemoveProperty(obj, array_name);
+
+   Object.RemoveProperty(obj, String.Join(array_name, "_TYPE"));
+
+   if (max_index >=0){
+
+      for (index = 0; index <= max_index; ++index){
+         element_name = String.Join(String.Join(array_name,"_"),String.FromInt(index));
+         Object.RemoveProperty(obj, element_name);
+      }
+   }
+   
+   return -1;
+}
+
+
+
+int AddIntArrayPropertyTail(hobject obj, string array_name, int value){
+   return -1;
+}
+int AddFloatArrayPropertyTail(hobject obj, string array_name, float value){
+   return -1;
+}
+int AddBoolArrayPropertyTail(hobject obj, string array_name, bool value){
+   return -1;
+}
+
+//Doc Start
+//Doc Header int AddStringArrayPropertyTail(hobject obj, string array_name, string value);
+//Doc
+//Doc Descr: Adds an element to the tail (high index end) of a handle string
+//Doc  property array
+//Doc
+//Doc SRC 2012/06/20
+//Doc
+//Doc INPUTS (arguments)
+//Doc
+//Doc obj           hobject  object handle to which to the array is attached
+//Doc array_name    string   name of the string property array to which to add
+//Doc value         int      the value of the property to add
+//Doc
+//Doc OUTPUTs (returned)
+//Doc
+//Doc error_code    int     Error code describing the termination of the function
+//Doc                       -1: successful termination with no errors
+//Doc                        1: array_name does not exist as a property of obj
+//Doc                        2: array_name is not of type "string", or type cannot be determined
+//Doc                        3: bad value of max index
+//Doc                        4: new array element already exists (should not be) or cannot be added
+//Doc				or, after adding, does not read properly from the handle
+//Doc
+//Doc OUTPUTS (handle property)
+//Doc
+//Doc max_index     int     the integer property array_name" is set to N, where N is the current highest
+//Doc                        array index
+//Doc value         string  the string property "array_name_N" is set to  value
+//Doc
+//Doc Finish
+
+int AddStringArrayPropertyTail(hobject obj, string array_name, string value){
+   string name_type, array_type, tail_name;
+   int max_index, new_max_index;
+
+   iHUD.Print( String.Join(String.Join(" ObjectPropUtil: AddStringTail: array_name = ", array_name),   String.Join(" string value = ", value)));
+   if (!Object.PropertyExists(obj, array_name)){
+      iHUD.Print( "ObjectPropertiesUtil.AddStringArrayPropertyTail: array_name Property does not exist; ABORT");
+      return 1;
+   }
+   name_type = String.Join(array_name, "_TYPE");
+
+   if (Object.PropertyExists(obj, name_type)){
+      array_type = Object.StringProperty(obj, name_type);
+      if (array_type != "string"){
+         iHUD.Print(String.Join("ObjectPropertiesUtil.AddStringArrayPropertyTail: array_type shold be string, is: ", array_type));
+         return 2;
+      }
+   }	
+   else{						// cannot determine array type
+      iHUD.Print(" ObjectPropertiesUtil.AddStringArrayPropertyTail: name_type does not exist in object handle");
+      return 2;
+   }
+							// add the array tail element
+
+   max_index = Object.IntProperty(obj, array_name);
+   
+   if (max_index < -1) return 3;			// -1 is a legitimate max index for newly created arrays
+							// with no elements yet incorporated into the array
+
+   new_max_index = max_index + 1;
+
+   tail_name = String.Join(String.Join(array_name, "_"), String.FromInt(new_max_index));
+
+   if (Object.PropertyExists(obj, tail_name)) return 4;
+
+							// Add the string property and verify that it is there
+
+   if (!Object.AddStringProperty(obj, tail_name, value)) return 4;
+   if (Object.StringProperty(obj, tail_name) != value) return 4;
+
+   Object.SetIntProperty(obj, array_name, new_max_index);
+
+
+   return -1;
+}
+
+
+
+//
+
+int AddHandleArrayPropertyTail(hobject obj, string array_name, hobject value){
+   return -1;
+}
+
+
+
+//
+// String Arrays
+//
+SetArrayString(hobject obj, string array_name, int index, string value)
+{
+   string working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+   int current_highest_index = Object.IntProperty(obj, array_name);
+   
+   // does current highest index exist
+   if(!Object.PropertyExists( obj, array_name ))
+      Object.AddIntProperty( obj, array_name, 0 );
+
+   // if the array_name_index does not exists add it
+   if(Object.PropertyExists( obj, working_name ))
+      Object.SetStringProperty( obj, working_name, value );
+   else
+      Object.AddStringProperty( obj, working_name, value );
+   
+   // tell the array about its highest index
+   if(index > current_highest_index)
+      Object.SetIntProperty( obj, array_name, index );
+
+   // warn of gap creation
+   if(index > current_highest_index+1)
+      debug Debug.PrintString("tsArray.SetArrayString: WARNING: Index gap created\n");
+}
+
+
+string GetArrayString(hobject obj, string array_name, int index)
+{
+   string working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+   return Object.StringProperty( obj, working_name );
+}
+
+
+//
+// Handle Arrays
+//
+SetArrayHandle(hobject obj, string array_name, int index, hobject value)
+{
+   string working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+   int current_highest_index = Object.IntProperty(obj, array_name);
+   
+   // does current highest index exist
+   if(!Object.PropertyExists( obj, array_name ))
+      Object.AddIntProperty( obj, array_name, 0 );
+
+   // if the array_name_index does not exists add it
+   if(Object.PropertyExists( obj, working_name ))
+      Object.SetHandleProperty( obj, working_name, value );
+   else
+      Object.AddHandleProperty( obj, working_name, value );
+   
+   // tell the array about it's highest index
+   if(index > current_highest_index)
+      Object.SetIntProperty( obj, array_name, index );
+
+   // warn of gap creation
+   if(index > current_highest_index+1)
+      debug Debug.PrintString("tsArray.SetArrayHandle: WARNING: Index gap created\n");
+}
+
+
+hobject GetArrayHandle(hobject obj, string array_name, int index)
+{
+   string working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+   return Object.HandleProperty( obj, working_name );
+}
+
+
+//
+// Boolean Arrays
+//
+SetArrayBool(hobject obj, string array_name, int index, bool value)
+{
+   string working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+   int current_highest_index = Object.IntProperty(obj, array_name);
+   
+   // does current highest index exist
+   if(!Object.PropertyExists( obj, array_name ))
+      Object.AddIntProperty( obj, array_name, 0 );
+
+   // if the array_name_index does not exists add it
+   if(Object.PropertyExists( obj, working_name ))
+      Object.SetBoolProperty( obj, working_name, value );
+   else
+      Object.AddBoolProperty( obj, working_name, value );
+   
+   // tell the array about it's highest index
+   if(index > current_highest_index)
+      Object.SetIntProperty( obj, array_name, index );
+
+   // warn of gap creation
+   if(index > current_highest_index+1)
+      debug Debug.PrintString("tsArray.SetArrayHandle: WARNING: Index gap created\n");
+}
+
+
+bool GetArrayBool(hobject obj, string array_name, int index)
+{
+   string working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+   return Object.BoolProperty( obj, working_name );
+}
+
+
+//
+// Integer Arrays
+//
+SetArrayInt(hobject obj, string array_name, int index, int value)
+{
+   string working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+   int current_highest_index = Object.IntProperty(obj, array_name);
+   
+   // does current highest index exist
+   if(!Object.PropertyExists( obj, array_name ))
+      Object.AddIntProperty( obj, array_name, 0 );
+
+   // if the array_name_index does not exists add it
+   if(Object.PropertyExists( obj, working_name ))
+      Object.SetIntProperty( obj, working_name, value );
+   else
+      Object.AddIntProperty( obj, working_name, value );
+   
+   // tell the array about it's highest index
+   if(index > current_highest_index)
+      Object.SetIntProperty( obj, array_name, index );
+
+   // warn of gap creation
+   if(index > current_highest_index+1)
+      debug Debug.PrintString("tsArray.SetArrayHandle: WARNING: Index gap created\n");
+}
+
+
+int GetArrayInt(hobject obj, string array_name, int index)
+{
+   string working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+   return Object.IntProperty( obj, working_name );
+}
+
+
+//
+// Common Functions
+//
+int ArraySize(hobject obj, string array_name)
+{
+   return Object.IntProperty(obj, array_name);
+}
+
+ShrinkArray(hobject obj, string array_name, int size)
+{
+   string working_name;
+   int index;
+   int current_highest_index = Object.IntProperty(obj, array_name);
+   
+   // nothing to do?
+   if(current_highest_index <= size)
+      return;
+   
+   // you can't reduce below a single element array
+   if(size < 1)
+      return;
+   
+   // clean out the array items past the size limit
+   for(index=size; index<=current_highest_index; ++index)
+      working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+      Object.RemoveProperty( obj, working_name );   
+}
+
+
+DeleteArray(hobject obj, string array_name)
+{
+   string working_name;
+   int current_highest_index = Object.IntProperty(obj, array_name);
+   int index;
+   
+   // this will clean out the array from the object
+   for(index=0;index<=current_highest_index;++index)
+   {
+      working_name = String.FormatStrStr("%s_%s",array_name, String.FromInt( index ));
+      if(Object.PropertyExists( obj, working_name ))
+         Object.RemoveProperty( obj, working_name );
+   }
+   
+   // final removal
+   Object.RemoveProperty( obj, array_name );
+}
+
+
+

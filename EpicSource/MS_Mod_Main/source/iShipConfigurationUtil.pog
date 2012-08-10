@@ -1,0 +1,618 @@
+// iShipConfigurationUtil MOD - by SRC@torns-stars.org
+//  Rights?? Coplyleft, GNU Public License?
+// Original Material Copyright (c) 1999 Particle Systems Ltd.
+
+// Description: iShipConfigurationUtil provides functions useful compatible with
+// generic Edge of Chaos packages useful in managing ship-related
+// data.
+
+// NEEDED FUNCTIONS:
+
+// 1) & 2) given a subsim handle, return the template[] and null[] entries
+//  which correspond to this subsim
+//
+// Method: go through the ship .ini [Subsims] section, opening the template
+//  files and compating the name of the template object with the name of the
+//  subsim. This may not be a definitive comparison. If possible, also compare
+//  other information, such as the position and orientation of the subsim,
+//  if this information is available in the subsim handle properties and if
+//  it is also encoded in the ship .ini file (it could be copied over from
+//  the ship .lws file, which has positions and orientations for subsims
+//  which have physical forms in the game
+
+// Package name ///////////////////////////////////////////////////////////////
+
+package iShipConfigurationUtil;
+
+
+// Imports ////////////////////////////////////////////////////////////////////
+
+uses
+	List, String, Object, INIFile, Input, Sim, Subsim, iSim, iShip, iHUD, iINIFileUtil;
+
+//   Debug, Global, Math, 
+//	Stream, Task, Text, iAI, iWingmen, iInventory, iRemotePilot, iScriptedOrders, 
+//	iFormation, iGame, iShipCreation, iMultiplay, iPilotSetup, iTrafficScenario, iDirector, 
+//	iJafsScript, iUtilities, iComms, iStation,  iBackToBase, Global, 
+//	iLoadout,
+
+
+// Exports ////////////////////////////////////////////////////////////////////
+
+provides
+   EnterSpace,
+   PlayerShipIniURL,
+   CreatePlayerShipINIFile,
+   CreateAttachLocateOrientSubsim;
+
+
+// Local functions ////////////////////////////////////////////////////////////
+
+prototype EnterSpace();
+
+prototype int PlayerShipIniURL();
+prototype hinifile CreatePlayerShipINIFile();
+prototype hsubsim CreateAttachLocateOrientSubsim(hsim sim, string template,
+                                       float x, float y, float z, float yaw, float pitch, float roll );
+
+
+//Doc Start
+//Doc Header EnterSpace()
+//Doc
+//Doc Descr: identify the play ship .ini file and create a handle property containing
+//Doc  the URL of the player ship .ini file.
+//Doc
+//Doc SRC 2012/06/14
+//Doc
+//Doc INPUTS(handle properties)
+//Doc
+//Doc  brightness  float    player ship handle property that is accessed by the PlayerShipIniURL() function
+//Doc
+//DOc INPUTS(external data file)
+//Doc
+//Doc  ini:sims/ships/player/auxiliary_data/playership_iniURL_xref  .ini file which defines the properties
+//Doc                        used in the cross-reference search and also the cross reference data which is
+//Doc                        searched. See the header of the function PlayerShipIniURL() for specifics on
+//Doc                        the needed structure and data of this file.
+//Doc
+//Doc OUTPUTS (handle property)
+//Doc
+//Doc ship_iniURL string   file name (full URL in "ini:/,,," format) of the 
+//Doc                       player ship .ini configuration file.
+//Doc                       This is returned as a string handle property of the
+//Doc                       player-ship handle. The string property name is
+//Doc                       "ship_iniURL".
+//Doc
+//Doc
+//Doc Finish
+
+EnterSpace(){
+							
+   if ( -1 != PlayerShipIniURL()){			// identify the ship .ini file and write the URL
+   							// into the player ship handle as string property "ship_iniURL"
+      iHUD.Print("iShipConfigurationUtil.EnterSpace: Unable to make cross-reference for player ship"); 
+   }
+}
+
+
+//Doc Start
+//Doc Header int PlayerShipIniURL()
+//Doc
+//Doc Descr: Uses the "cross reference file" workaround to exactly identify the
+//Doc  .ini file used to create the player ship, then imports the .ini data into
+//Doc  and INIFile package data structure
+//Doc
+//Doc SRC 2012/06/12
+//Doc
+//Doc INPUTS
+//Doc
+//Doc none
+//Doc
+//Doc OUTPUTS (returned)
+//Doc
+//Doc error_code   int      Error code indicationg completion status
+//Doc                       -1: normal completion with no errors; ship inifile found
+//Doc                        1: unable to access the playership_iniURL_xref.ini resource
+//Doc                            or resource is corrupted or improperly formatted
+//Doc                        2: number keys xref_key_name[] or xref_key_type[] or ship_iniURL[] missing
+//Doc                           or misnumbered ( key names and types must have equal numbers of numbered keys)
+//Doc                        3: unrecognized xref_key_type
+//Doc                        4: one or more of the xref_key_names does not exist in the player ship handle
+//Doc                        5: no matches for the specified properties found in the [INIFile] section of
+//Doc                            the cross-reference file
+//Doc                        6: more than one match for the specied property(s) found in the [INIFile] section of
+//Doc                            the cross-reference file
+//Doc                        7: .ini file match found, but the specified properties in the ship handle do not match
+//Doc                            the corresponding property values in the .ini file, which implies that this is not
+//Doc                            the .ini file used to create the player ship
+//Doc                        8: unable to set string property "ship_iniURL" into the player ship handle
+//Doc
+//Doc OUTPUTS (handle property)
+//Doc
+//Doc ship_iniURL string   file name (full URL in "ini:/..." format) of the 
+//Doc                       player ship .ini configuration file.
+//Doc                       This is returned as a string handle property of the
+//Doc                       player-ship handle. The string property name is
+//Doc                       "ship_iniURL".
+//Doc                      
+//Doc Notes: This function REQUIRES:
+//Doc
+//Doc  A) there MUST be a new folder called 
+//Doc       
+//Doc    auxiliary_data
+//Doc
+//Doc     within the folder
+//Doc
+//Doc    sims/ships/player/
+//Doc
+//Doc    This new folder is used to hold a special configuration (.ini) file, which
+//Doc    contains the cross reference data used to identify the player-ship .ini file.
+//Doc
+//Doc    There can only be one of these files. If iINIFileUtil is being used with the
+//Doc    original EoC distribution as part of the EoCUTilities mod, use the /sims/ships/player
+//Doc    folder of the EoCUtilities mod.
+//Doc
+//Doc    If iINIFileUtil is being used with a mod such as Unstable Space, put the
+//Doc    auxiliary_data folder into a single /sims/ships/player folder of that mod.
+//Doc
+//Doc
+//Doc  B) There must be a file called ship_iniURL_xref.ini in the 
+//Doc    /sims/ships/player/auxiliary_data/  folder
+//Doc
+//Doc  This file must have two sections, one called [CrossReferenceKeys] and another called
+//Doc    [INIFile].
+//Doc  
+//Doc  The [CrossReferenceKeys] section must have a list of number keys with the name 
+//Doc
+//Doc  xref_key[].
+//Doc
+//Doc  These keys must correspond exactly to existing handle properties in the player ship handle.
+//Doc  A working example would be:
+//Doc
+//Doc  [CrossReferenceKeys]
+//Doc  xref_key_name[0]="name"
+//Doc  xref_key_type[0]="string"
+//Doc  xref_key_name[1]="brightness"
+//Doc  xref_key_type[1]="float"
+//Doc 
+//Doc  The [INIFile] section has keys with the above key names with assigned values that match
+//Doc  the actual values in the player ship handle. In order to be able to distinguish between
+//Doc  different player ships, it is important that the player ship handle values be different
+//Doc  for different ships. The use of multiple keys aids in this discrimination. For example,
+//Doc  the use of the ship "brightness" handle property as a cross reference key permits the
+//Doc  modder to slightly change the "brightness" property in the ship .ini file in order to
+//Doc  distinguish this player ship from other play ships with the same default brightness.
+//Doc
+//Doc  The keys in the [INIFile] section must have the key names defined in the [CrossReferenceKeys]
+//Doc  section. Accompanying each set of "lookup" keys is a data key called "ship_iniURL[]" which
+//Doc  contains URL of the corresponding ship .ini file.
+//Doc
+//Doc  IMPORTANT:  the key names defined in the [CrossReferenceKeys] must be ship properties specified
+//Doc  in the [Properties] of the .ini file used to create the ship. This is done to facilitate a
+//Doc  comparison of the ship handle properties with the stated properties in the .ini file that is
+//Doc  deduced from the cross referencing procedure. This is a final definitive check that the right
+//Doc  .ini file has been identified 
+//Doc
+//Doc  example [INIFile] section:
+//Doc
+//Doc  [INIFile]
+//Doc  name[0]=
+//Doc  brightness[0]=
+//Doc  ship_iniURL[0]=
+//DOc  ....
+//Doc  name[N]=
+//Doc  brightness[N]=
+//Doc  ship_iniURL[N]=
+//Doc
+//Doc  where the respective name[] values are the different names of different player ships, the
+//Doc  brightness[] values are the respective brightnesses (which may need to be altered slightly to
+//Doc  distinquish different player ships that may be assigned the same name by the game), and the
+//Doc  respective ship_iniURL[] values are the .ini file URLs of the respective player ships.
+//Doc 
+//Doc  name[n]=   the "name" property of the ship as defined in the ship .ini file
+//Doc                   by the [Properties]name= key. This can be redefined by game or mod code so that
+//Doc                   the value set here should be the expected value after any changes caused by game or mod
+//Doc                   code
+//Doc
+//Doc  brightness[n] the "brightness" of the ship as defined in the ship .ini file. The inclusion of a 2nd
+//Doc  xref_key is useful for cases in which different player ships are assigned the same name (this is the case,
+//Doc  for example, in the beta release of the Unstable Space mod). The modder should slightly adjust the value
+//Doc  of the brightness property in the ship .ini file so that different ships do not have the same value of the
+//Doc  brightness.
+//Doc  
+//Doc  ship_iniURL[n]= the pathname of the ship .ini file, in the format "ini:/sims/ships/player/ini_file_name
+//Doc
+//Doc  In order for this set of number keys to function as a cross-reference lookup table,
+//Doc  the combination of values of the defined set of xref_keys must be unique for each ship.
+//Doc
+//Doc  Final Comment: The above example gives a "two key" method for determining the player ship .ini file.
+//Doc  Some mods (and most importantly, vanilla EoC) change the name of the player ship from the property
+//Doc  specified in the [Properties] section of the ship .ini file. When this happens, the final check for
+//Doc  consistency will fail, since the "name" property in the ship handle will not match the "name" property
+//Doc  in the ship .ini file. It is safest to limit oneself to properties which are not changed by the game,
+//Doc  and the safest of all may be properties which are not "writable". The "brightness" property of the
+//Doc  iSim handle, for example, has "Read" ability but not "Write" ability. This property may be a robust
+//Doc  identifier for use in cross-referencing to identify the player ship .ini file.
+//Doc
+//Doc Finish
+
+int PlayerShipIniURL(){
+   hship player_ship;
+   string ship_ini_name_property, xref_alias, ship_iniURL, test_URL, xref_key_name, xref_key_type;
+
+//   string key_property_name, key_property_type, key_property_value_string, xref_value_string;
+   string xref_value_string;
+
+   float xref_value_float;
+   int xref_value_int;
+
+   hinifile xref_inifile, ship_inifile;
+   bool added_property, xref_key_matches, good_match;
+   int keyname_count, keytype_count, shipURL_count, i, j, max_URL_index, matches_count, i_first_match;
+   int error_return;
+
+   error_return = -1;					// assume no errors at the outset
+
+   player_ship = iShip.FindPlayerShip();
+
+   xref_inifile = INIFile.Create( "ini:/sims/ships/player/auxiliary_data/playership_iniURL_xref" );
+
+   if (!INIFile.NumberedExists( xref_inifile, "CrossReferenceKeys", "xref_key_name", 0) ||
+       !INIFile.NumberedExists( xref_inifile, "CrossReferenceKeys", "xref_key_type", 0)){
+      iHUD.Print("iShipConfigurationUtil.PlayerShipIniURL: cannot find  playership_iniURL_xref file");
+      INIFile.Destroy( xref_inifile );			// avoid memory leaks
+      return 1;
+   }
+
+							// Determine the number and names of the cross-reference keys
+							// check for errors in keys or key types
+
+
+							// Need to save these key names in a string array
+
+   xref_alias = "ini:/sims/ships/player/auxiliary_data/playership_iniURL_xref";
+
+   keyname_count = iINIFileUtil.CountNumber(xref_alias, "CrossReferenceKeys", "xref_key_name");
+   keytype_count = iINIFileUtil.CountNumber(xref_alias, "CrossReferenceKeys", "xref_key_type");
+   shipURL_count = iINIFileUtil.CountNumber(xref_alias, "INIFile", "ship_iniURL");
+
+   if (shipURL_count < 1){
+      INIFile.Destroy( xref_inifile );			// avoid memory leaks
+      return 2;
+   }
+
+   if ((keyname_count < 1) || (keyname_count != keytype_count)){
+      INIFile.Destroy( xref_inifile );			// avoid memory leaks
+      return 2;
+   }
+							// make sure that no key has an unrecognized type and
+							// that all key names are present in the player ship handle
+
+   for (i=0; i < keytype_count; ++i){
+      xref_key_type = INIFile.NumberedString(xref_inifile, "CrossReferenceKeys", "xref_key_type", i, "");
+
+      if ((xref_key_type != "int")&&(xref_key_type != "float")&&(xref_key_type != "string")){
+         INIFile.Destroy( xref_inifile );		// avoid memory leaks
+         return 3;
+      }
+
+      xref_key_name = INIFile.NumberedString(xref_inifile, "CrossReferenceKeys", "xref_key_name", i, "");
+
+
+
+      if (!Object.PropertyExists(player_ship, xref_key_name)){
+         INIFile.Destroy( xref_inifile );		// avoid memory leaks
+         return 4;
+      }
+
+
+   }   
+
+							// Loop through the ship URLs and count the number of matches
+
+   matches_count = 0;
+
+   for (i=0; i < shipURL_count; ++i){
+
+      good_match = true;				// assume a match, then disprove the assumption
+
+      for (j=0; j < keyname_count; ++j){		// Loop through the cross reference keys
+
+							// get the jth cross reference key from the xref inifile
+         xref_key_type = INIFile.NumberedString(xref_inifile, "CrossReferenceKeys", "xref_key_type", j, "");
+
+
+         xref_key_name = INIFile.NumberedString(xref_inifile, "CrossReferenceKeys", "xref_key_name", j, "");
+
+
+							// does this key exist in the xref INIFile section?
+
+
+         if (INIFile.NumberedExists( xref_inifile, "INIFile", xref_key_name, i )){
+
+
+            if (xref_key_type == "string"){
+
+               xref_value_string = Object.StringProperty(player_ship, xref_key_name);
+               
+               xref_key_matches = 
+                  (xref_value_string == INIFile.NumberedString( xref_inifile, "INIFile", xref_key_name, i, ""));
+
+            }
+            else if (xref_key_type == "float"){
+
+               xref_value_float = Object.FloatProperty(player_ship, xref_key_name);
+
+               xref_key_matches = 
+                  (xref_value_float == INIFile.NumberedFloat( xref_inifile, "INIFile", xref_key_name, i, -1.0));
+
+            }
+            else{					// xref_key is of type "int"
+
+               xref_value_int = Object.IntProperty(player_ship, xref_key_name);
+
+               xref_key_matches =
+                  (xref_value_int == INIFile.NumberedInt( xref_inifile, "INIFile", xref_key_name, i, -1));
+            }
+
+
+            if (!xref_key_matches) good_match = false;
+
+         }
+         else{						// the sought-for numbered key does not exist
+            good_match = false;
+         }
+
+
+      }
+
+
+      if (good_match){
+         matches_count += 1;
+         if (matches_count == 1) i_first_match = i;
+
+      }
+   }   
+
+
+							// get ship iniURL string from .ini file, or else error return
+
+   if (matches_count == 1){
+      if (INIFile.NumberedExists( xref_inifile, "INIFile", "ship_iniURL", i_first_match)) {
+         ship_iniURL = INIFile.NumberedString( xref_inifile, "INIFile", "ship_iniURL", i_first_match, "");
+      }
+   }
+   else if (matches_count > 1){
+      error_return = 6;
+   }
+   else{
+      error_return = 5;
+   }
+
+
+
+   if (error_return != -1){
+      INIFile.Destroy( xref_inifile );			// avoid memory leaks
+      return error_return;
+   }
+							
+
+							// verify that this iniURL exists and that all
+							// properties match
+
+
+   ship_inifile = INIFile.Create( ship_iniURL );
+
+							// Loop through the cross reference keys
+   good_match = true;
+
+
+
+   for (j=0; j < keyname_count; ++j){			// Loop through the cross reference keys
+
+							// get the jth cross reference key from the xref inifile
+      xref_key_type = INIFile.NumberedString(xref_inifile, "CrossReferenceKeys", "xref_key_type", j, "");
+
+
+      xref_key_name = INIFile.NumberedString(xref_inifile, "CrossReferenceKeys", "xref_key_name", j, "");
+
+
+							// does this key exist in the ship URL [Properties] section?
+
+
+      if (INIFile.Exists( ship_inifile, "Properties", xref_key_name )){
+
+
+         if (xref_key_type == "string"){
+
+
+            xref_value_string = Object.StringProperty(player_ship, xref_key_name);
+               
+            xref_key_matches = 
+               (xref_value_string == INIFile.String( ship_inifile, "Properties", xref_key_name, ""));
+
+         }
+         else if (xref_key_type == "float"){
+
+            xref_value_float = Object.FloatProperty(player_ship, xref_key_name);
+
+            xref_key_matches = 
+               (xref_value_float == INIFile.Float( ship_inifile, "Properties", xref_key_name, -1.0));
+         }
+         else{					// xref_key is of type "int"
+
+            xref_value_int = Object.IntProperty(player_ship, xref_key_name);
+
+            xref_key_matches =
+               (xref_value_int == INIFile.Int( ship_inifile, "Properties", xref_key_name, -1));
+         }
+
+
+         if (!xref_key_matches) good_match = false;
+
+      }
+      else{						// the sought-for property key does not exist
+         good_match = false;
+      }
+
+   }
+
+   if (good_match){					// ini file matches ship handle properties
+
+							// put the inifile name into the ship handle
+ 
+      if (Object.PropertyExists(player_ship, "ship_iniURL")){
+         Object.SetStringProperty( player_ship, "ship_iniURL", ship_iniURL); 
+      }
+      else{       
+         added_property = Object.AddStringProperty( player_ship, "ship_iniURL", ship_iniURL);
+      }
+							// verify that the property is there
+
+      test_URL = Object.StringProperty(player_ship, "ship_iniURL");
+
+      if (test_URL != ship_iniURL){
+        iHUD.Print(" Failed to export ini_filename to ship handle property");
+        error_return = 8;
+      }
+
+   }
+   else{						// ini file does not match ship handle properties
+
+      error_return = 7;
+
+   }
+
+
+
+   INIFile.Destroy( xref_inifile );			// avoid memory leaks
+   INIFile.Destroy( ship_inifile );			// avoid memory leaks
+
+
+
+   return error_return;
+}
+
+
+
+
+//Doc Start
+//Doc Header hinifile CreatePlayerShipINIFile()
+//Doc
+//Doc Descr: Reads the ship .ini resource URL from the player ship header and
+//Doc  creates the corresponding INIFile data structure. If the URL is not present
+//Doc  in the player ship header, attempt to identify it.
+//Doc
+//Doc SRC 2012/06/12
+//Doc
+//Doc INPUTS
+//Doc
+//Doc none
+//Doc
+//Doc OUTPUTS (returned)
+//Doc
+//Doc ship_INIfile hinifile INIFile data structure handle Created after the ship .ini file
+//Doc                       is located and verified.
+//Doc
+//Doc Notes: CAUTION: this function calls the INIFile.Create() function without a corresponing
+//Doc  INIFile.Destroy(). After calling this function, a INIFile.Destroy() call must take place
+//Doc  to avoid memory leakage.
+//Doc
+//Doc Finish
+
+
+
+hinifile CreatePlayerShipINIFile(){
+   hship player_ship;
+   string iniURL;
+   hinifile ship_INIfile;
+
+   iHUD.Print(" In function PlayerShipInifile");	// for my debug tests
+
+   ship_INIfile = none;
+
+   player_ship = iShip.FindPlayerShip();
+							// First check to see if the .ini filename is in the ship handle
+   if (Object.PropertyExists( player_ship, "ship_iniURL")){
+
+      iniURL = Object.StringProperty(player_ship, "ship_iniURL");
+
+      ship_INIfile = INIFile.Create( iniURL );
+							// verify that this resource looks like a .ini file
+      if ( INIFile.Exists(ship_INIfile, "Class", "name") ){
+         return ship_INIfile;
+      }
+      else{						// 
+         Object.RemoveProperty ( player_ship, "ship_iniURL" );
+         INIFile.Destroy(ship_INIfile);
+      }
+
+   }
+							// the iniURL in the ship header is not right; try to locate it again
+
+   
+   if (-1 == PlayerShipIniURL()){
+      iniURL = Object.StringProperty(player_ship, "ship_iniURL");      
+   }
+   else{
+      return none;
+   }
+
+   if ( iniURL != ""){
+      ship_INIfile = INIFile.Create( iniURL );
+   }
+   else{
+      return none;
+   }
+
+   return ship_INIfile;
+}
+
+
+
+//Doc Start
+//Doc hsubsim CreateAttachLocateOrientSubsim(hsim sim, string template,
+//Doc                 float x, float y, float z, float yaw, float pitch, float roll )
+//Doc
+//Doc Descr: Attach specified subsim to specified sim with specified name, position and
+//Doc  orientation.
+//Doc
+//Doc SRC 2012/07/12
+//Doc
+//Doc INPUTS
+//Doc
+//Doc sim        hsim     sim to which to attach the subsim
+//Doc template   string   the .ini URL of the subsim
+//Doc x          float    x position at which to locate the subsim
+//Doc y          float    y position at which to locate the subsim
+//Doc z          float    z position at which to locate the subsim
+//Doc yaw        float    yaw orientation angle of the subsim on the sim
+//Doc pitch      float    pitch orientation angle of the subsim on the sim
+//Doc roll       float    roll orientation angle of the subsim on the sim
+//Doc
+//Doc OUTPUTS (returned)
+//Doc
+//Doc new_subsim hsubsim  handle of the new subsim.
+//Doc
+//Doc
+//Doc Notes: CAUTION: this function calls the INIFile.Create() function without a corresponing
+//Doc  INIFile.Destroy(). After calling this function, a INIFile.Destroy() call must take place
+//Doc  to avoid memory leakage.
+//Doc
+//Doc Finish
+
+
+hsubsim CreateAttachLocateOrientSubsim(hsim sim, string template,
+         float x, float y, float z, float yaw, float pitch, float roll ){
+   hsubsim new_subsim; 
+
+   new_subsim = Subsim.Create( template );
+
+   Sim.AddSubsim( sim, new_subsim );
+
+   Subsim.Place( new_subsim, x, y, z );
+
+   Subsim.OrientateEuler( new_subsim, yaw, pitch, roll );
+
+   return new_subsim;
+}
