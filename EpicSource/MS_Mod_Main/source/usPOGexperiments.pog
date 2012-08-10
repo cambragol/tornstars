@@ -1,0 +1,575 @@
+//Pkg*******************************************************************************************/
+//Pkg
+//Pkg usPOGexperiments.pog
+//Pkg
+//Pkg 
+//Pkg
+//Pkg May 2012, SRC and other US users
+//Pkg
+//Pkg  Copyright announcement? Is it:
+//Pkg    public domain
+//Pkg    GNU general public licence?
+//Pkg    some other form of licence or rights assertion?  Consult with tornstars.com Admin
+//Pkg
+//Pkg******************************************************************************************/
+//Pkg Source code explanation:
+//Pkg
+//Pkg  This .pog file provides an annotated framework/template within which new POG coders may
+//Pkg  experiment with the creation of new functions for learning purposes and for potential
+//Pkg  future inclusion within the US code base (or, conceivably, within code modifications to
+//Pkg  the original EoC game).
+//Pkg
+//Pkg  
+//Pkg Explanation of proposed standard function header format:
+//Pkg
+//Pkg In the interest of standardized documentation of new functions (or potential retro-documentation
+//Pkg of functions in the enormous already-existing US code base), it is proposed that all functions
+//Pkg be provided with a consistently formatted header comment section which describes the function
+//Pkg arguments and operations and provides additional supplementary information that may be of interest
+//Pkg to other coders who may use the function in their own coding. The standard format also has the
+//Pkg advantage that it simplifies the creation of summary documentation using unix/linux shell scripts
+//Pkg written in a language such as perl. Such scripts could strip out the functional code and compress
+//Pkg the headers into text forms potentially useful as a documentation library.
+//Pkg
+//Pkg  PROPOSED STANDARD HEADER FORMAT (specific example taken from an experimental package called iDockingUtil.pog)
+//Pkg
+//Pkg  Outline of standard header format:
+//Pkg
+//Pkg  Each line of the proposed standard header begins witih the comment string "//Doc". The
+//Pkg  structure of the header is a series of sections, each of which is indicated by a section
+//Pkg  label word that begins in the 7th character location, separated from the "//Doc" by a
+//Pkg  single space. This 7th character location should only be used for the first letter of
+//Pkg  documentation header sections. All descriptive information should start in the 8th character
+//Pkg  location or further to the right.
+//Pkg
+//Pkg  The basic structure of the proposed standard documentation header is
+//Pkg
+//Pkg//Doc Start  [indicates that following lines are a documentation header]
+//Pkg//Doc Header [gives the function type, name and arguments, if any]
+//Pkg//Doc
+//Pkg//Doc Descr: [describes what the function does]
+//Pkg//Doc
+//Pkg//Doc Author [gives the author and creation date and last modifier and date last modified
+//Pkg//Doc
+//Pkg//Doc Inputs [gives all inputs used by the function, including passed arguments and globals]
+//Pkg//Doc 
+//Pkg//Doc Output [gives all outputs of the function, including returned item(s) and globals]
+//Pkg//Doc Notes: [provides additional information about the function]
+//Pkg//Doc
+//Pkg//Doc Keywords [provides searchable keys related to what the function does or other
+//Pkg                logical connections to the rest of the code base]
+//Pkg//Doc End    [indicates the conclusion of the documentation header] 
+//Pkg
+//Pkg
+//Pkg
+//Pkg  The proposed standard documentation header may be illustrated by this draft header of
+//Pkg  a function in the (at this writing) experimental development package iDockingUtil.pog:
+//Pkg
+//Pkg 
+//Pkg//Doc Start
+//Pkg//Doc Header int ReserveDockport(hdockport dockport, hdockport dockport_target)
+//Pkg//Doc
+//Pkg//Doc Descr: Create a "ReservedForDocking" handle property in a dockport handle.
+//Pkg//Doc
+//Pkg//Doc Author created SRC 2012/03/30, last modified SRC 2012/03/30
+//Pkg//Doc
+//Pkg//Doc Inputs(arguments)
+//Pkg//Doc
+//Pkg//Doc  dockport        hdockport   handle of the dockport to set as "ReservedForDocking"
+//Pkg//Doc  dockport_target hdockport   handle of the dockport that is to be docked to.
+//Pkg//Doc
+//Pkg//Doc Output(returned)
+//Pkg//Doc
+//Pkg//Doc  error_code      int         error code reporting error condition encountered during the
+//Pkg//Doc                              attempt to issue the dock order
+//Pkg//Doc
+//Pkg//Doc                              -1: no error condition encountered -- dock order issued
+//Pkg//Doc                               1: dockport is not in DS_Free status
+//Pkg//Doc                               2: attempt to create "ReservedForDocking" handle property  failed
+//Pkg//Doc                               3: created handle is incorrect; Reserved status deleted.
+//Pkg//Doc
+//Pkg//Doc Notes: If the dock order does not encounter an error condition, the two dockports are reserved
+//Pkg//Doc  using the new reservation method ("ReservedForDocking" handle property name) and the dock order
+//Pkg//Doc  is issued. The AutodockMonitorTask is then launched and detached. 
+//Pkg//Doc
+//Pkg//Doc Keywords: iDockingUtil, Dockports, Docking, Reserved
+//Pkg//Doc End
+//Pkg
+//Pkg
+//Pkg   Discussion of proposed standard function header documentation:
+//Pkg
+//Pkg   A) All text lines in the function header begin with //Doc to indicate that this line is part
+//Pkg      of a function documentation header
+//Pkg
+//Pkg   B) The function header begins with a documentation start statement: "//Doc Start" and ends with 
+//Pkg      a documentation finished statement: "//Doc End"
+//Pkg
+//Pkg   C) Immediately after the "Start" field is a line that specifies the function type, name and arguments. 
+//Pkg      This line begins with "//Doc Header" and contains the same information as in the prototype statement
+//Pkg      for this function
+//Pkg
+//Pkg   D) After the header definition is a line stating the function coder and date of  creation. This line
+//Pkg      begins with the text "//Doc Author.
+//Pkg
+//Pkg   E) After the author/date information are the function inputs, preceded by the line "//Doc Inputs".
+//Pkg      If the function inputs are all passed via arguments to the function, then this line should be
+//Pkg      written 
+//Pkg         "//Doc Inputs(arguments)". 
+//Pkg      If the function inputs are all passed via globals, then this line should be written 
+//Pkg         "//Doc Inputs(globals)".
+//Pkg      If the function inputs include both arguments and globals, then both statements should be
+//Pkg      present, with the (arguments) statement given first, with the passed arguments listed and
+//Pkg      explained, and then the (globals) statement should be given, with the globals listed and
+//Pkg      explained.
+//Pkg
+//Pkg      The format of each input definition (same format for arguments and globals) is
+//Pkg         Input variable name       input variable type   Description of input variable
+//Pkg      The formatting (column alignment) of these should be tidy, but can vary from function to function
+//Pkg      depending on the length of the variable names and the variable type descriptions
+//Pkg
+//Pkg      If there are no input variables, then the "inputs" section heading should simply be
+//Pkg      "//Doc Inputs" 
+//Pkg      and in the location of the first variable name in the example above, put "none" or "None" or "NONE".
+//Pkg
+//Pkg   F) After the function inputs statements comes the function output statement. POG functions only
+//Pkg      return a single variable (which might be a set or list of objects) or no variable at all. 
+//Pkg      The formatting of this part of the header documentation is the same as for the inputs.
+//Pkg      If there are special meanings assigned to different values of the returned variable, as in the
+//Pkg      example above, these should be enumerated as above.
+//Pkg      
+//Pkg      COMMENT: the use of diagnostic integer error codes as  returned variables in functions that do not need
+//Pkg      to return other information (recall that POG functions and only return one variable or handle)
+//Pkg      can be helpful in debugging and it is suggested that coders consider doing this as a matter of 
+//Pkg      standard coding practice.
+//Pkg 
+//Pkg   G) After the function output statement is the OPTIONAL "Notes" section which begins with "//Doc Notes:".
+//Pkg      The "Notes" section should including information that may be useful to other coders in understanding
+//Pkg      what the function does and perhaps also how the function accomplishes what it does if this is reckoned
+//Pkg      to be important or of interest to other coders. In-function comments are also useful and are encouraged
+//Pkg      as an aid to other coders in the event that a function needs to be debugged or otherwise modified.
+//Pkg
+//Pkg   H) After the "Notes" section is a "Keywords" section which gives a list of keywords related to what
+//Pkg      the function does or its relation to the rest of the code base. It is recommended that the first
+//Pkg      keyword always be the package that the function is part of. These keywords provide the potential
+//Pkg      for keyword-based searching, analogous to the "Search" function of the POG SDK. They might
+//Pkg      conceivably permit eventual creation of a US SDK that would help future US coders.
+//Pkg
+//Pkg   I) Between each interior section of the header is a single blank line "//Doc" to aid the eye in
+//Pkg      following the organization of the documentation.
+//Pkg
+
+
+// Name of package: the compiler pc.exe will produce a package file called uspogexperiments.pkg when
+// it compiles this source code file.
+
+package usPOGexperiments;
+
+
+//  The "uses" command instructs the POG compiler to look for header files which
+//  contain information about function calls defined within the corresponding .pog
+//  source code files and the corresponding binary executable functions (someone
+//  correct me [SRC] if I have this wrong) in the .pkg files.
+//
+//  Thus, for example, the function type and arguments of the iHUD.Print() command which 
+//  is used in the experimental template function "HelloWorld1()" defined below are defined 
+//  in the iHUD.h header file. The POG compiler needs to know to look for this when compiling
+//  usPOGexperiments.pog or it will report an undefined function at compile time.
+
+// Imports
+uses	 
+   Global,
+   iCargo,
+   iSim,
+   Subsim,
+   iDockport,
+   iShip,
+   Input,
+   INIFile,
+   Object,
+   Set,
+   Sim,
+   iHUD,
+   String,
+   tsMoney,
+   tsPlayerSave,
+   tsPodUtil,
+   iShipConfigurationUtil;
+
+//  The "provides
+
+// Exports 
+provides
+   InitializeKeyBindings,
+   GetPlayerShipIniURL,
+   HelloWorld0,
+   HelloWorld1,
+   check_tsPlayerSave_locate_free_pods,
+   check_globals,
+   remove_all_player_pods,
+   toggle_autosave_global,
+   add_million_credits,
+   playership_child_sims;
+        
+// The "prototype" command is used by the POG compiler to create the header file usPOGexperiments.h
+// which will be needed if the functions in usPOGexperiments.pog are to be employed in other packages.
+// I believe that it is also the case that if a  function defined later (closer to the end of this .pog
+// file) is used in a function defined earlier (closer to the beginning of this .pog file), the POG 
+// compiler will report an error unless that later-defined function has a prototype statement in this
+// section of the .pog file.
+//
+// My [SRC's] practice is to prototype every function I code, then there is never a question, and the
+// resulting .h header file contains a compact summary of all the functions in the corresponding package,
+// which can be useful for future reference.
+
+prototype InitializeKeyBindings();
+
+prototype GetPlayerShipIniURL();
+prototype HelloWorld0();
+prototype int HelloWorld1();
+
+prototype check_tsPlayerSave_locate_free_pods();
+prototype check_globals();
+
+prototype remove_all_player_pods();
+prototype toggle_autosave_global();
+
+prototype add_million_credits();
+prototype playership_child_sims();
+
+///////////////////////////////////////////////////////////////////////////////
+
+//  The "EnterSpace" command does not need to be present in every .pog file, but I find it a useful
+//  place to put the keybind initialization commands (the Input.Bindkey() function(s) below). 
+//
+//  The name "EnterSpace" refers to a game event (I believe the instant at which Cal leaves the
+//  BioBomber base) at which the old original EoC MultiMod package would execute this function in
+//  order to define the package key bindings and any other mod initializations that needed to be
+//  performed at that time.
+//  
+//
+//  NOTE: it is very important that you invoke the EnterSpace() function at the proper
+//  location within the US code. The package within which this invocation must take
+//  place is called
+//
+//  tsMain.pog
+//
+//  and the function invocaton will take the form:
+//
+// usPOGexperiments.InitializeKeyBindings();
+//
+// (or whatever name you prefer to call the initialization function).
+//
+// Note that when invoking a function from another package, you give the package
+// name followed by a period "." followed by the name of the function within the
+// package that you wish to invoke.
+//
+//  The game event at which you invoke the initialization function will depend on
+//  the nature of what you want to initialize. For the purposes of usPOGexperiments.pog,
+//  in which we will be coding and experimenting with keybindable functions, the
+//  "enter space" game event is suitable.
+//
+
+// ****************************************************************************
+// * 
+// ****************************************************************************
+
+//Doc Start
+//Doc Header InitializeKeyBindings()
+//Doc
+//Doc Descr: set keystroke bindings for usPOGexperiments.pog functions
+//Doc
+//Doc SRC 2012/05/23
+//Doc 
+//Doc INPUTS
+//Doc
+//Doc none
+//Doc
+//Doc OUTPUT/returns
+//Doc
+//Doc none
+//Doc Finish
+
+InitializeKeyBindings(){
+   Input.BindKey( "usPOGexperiments.GetPlayerShipIniURL","usPOGexperiments.GetPlayerShipIniURL");
+
+   Input.BindKey( "usPOGexperiments.HelloWorld0", "usPOGexperiments.HelloWorld0");
+   Input.BindKey( "usPOGexperiments.check_tsPlayerSave_locate_free_pods", "usPOGexperiments.check_tsPlayerSave_locate_free_pods");
+   Input.BindKey( "usPOGexperiments.check_globals", "usPOGexperiments.check_globals");
+   Input.BindKey( "usPOGexperiments.remove_all_player_pods", "usPOGexperiments.remove_all_player_pods");
+   Input.BindKey( "usPOGexperiments.toggle_autosave_global", "usPOGexperiments.toggle_autosave_global");
+   Input.BindKey( "usPOGexperiments.add_million_credits", "usPOGexperiments.add_million_credits");
+   Input.BindKey( "usPOGexperiments.playership_child_sims", "usPOGexperiments.playership_child_sims");
+
+
+}
+
+//Doc Start
+//Doc Header GetPlayerShipIniURL()
+//Doc
+//Doc Descr: read the iniURL from the player ship handle, if the property exists
+//Doc
+//Doc SRC 2012/08/07
+//Doc
+//Doc INPUTS(handle properties)
+//Doc
+//Doc ship_iniURL  string  The URL of the player ship template file  
+//Doc
+//Doc OUTPUT/returns
+//Doc
+//Doc none
+//Doc Finish
+
+GetPlayerShipIniURL(){
+   hship player_ship = iShip.FindPlayerShip();
+
+   if (Object.PropertyExists(player_ship, "ship_iniURL")){
+      iHUD.Print(Object.StringProperty(player_ship, "ship_iniURL"));
+   }
+   else{
+      iHUD.Print("Cannot find the ship_iniURL handle property");
+      iHUD.Print("Will attempt to perform the xref search NOW");
+      iHUD.Print(String.FormatInt(" XREF error code: %d", iShipConfigurationUtil.PlayerShipIniURL()));
+      if (Object.PropertyExists(player_ship, "ship_iniURL")){
+         iHUD.Print(Object.StringProperty(player_ship, "ship_iniURL"));
+      }
+      else{
+         iHUD.Print("STILL CANNOT FIND PLAYER SHIP URL");
+      }
+
+
+   }
+}
+
+
+//Doc Start
+//Doc Header HelloWorld0()
+//Doc
+//Doc Descr: Experimental/learning function to illustrate basic use of the iHUD.Print command
+//Doc  to briefly present information to the player.
+//Doc
+//Doc SRC 2012/05/22
+//Doc
+//Doc INPUTS
+//Doc
+//Doc none
+//Doc
+//Doc OUTPUT/returns
+//Doc
+//Doc none
+//Doc Finish
+
+HelloWorld0(){
+   iHUD.Print("Hello World");
+}
+
+
+
+//Doc Start
+//Doc Header int HelloWorld1()
+//Doc
+//Doc Descr: Experimental/learning function to illustrate basic use of the iHUD.Print command
+//Doc  to briefly present information to the player and to illustrate the return of an integer
+//Doc  variable to the calling routine.
+//Doc
+//Doc SRC 2012/05/22
+//Doc
+//Doc INPUTS
+//Doc
+//Doc none
+//Doc
+//Doc OUTPUT/returns
+//Doc
+//Doc error_code       int         error code reporting error condition encountered during the
+//Doc                              attempt to issue the dock order
+//Doc
+//Doc                              -1: no error condition encountered//Doc
+//Doc 
+//Doc Notes: There is no error condition that can occur within a function as simple as this one,
+//Doc  so there is no real need to have a returned variable at all. For the purpose of illustrating
+//Doc  an integer variable returning function definition, the variable "error_code" is returned
+//Doc  but is always assigned the "non error condition encountered" value of -1.
+//Doc Finish
+
+int HelloWorld1(){
+   int error_code = -1;
+   iHUD.Print("Hello World");
+   return error_code;
+}
+
+
+//Doc Start
+//Doc Header check_tsPlayerSave_locate_free_pods()
+//Doc
+//Doc Descr: test function to try to locate the CARGO BUG
+//Doc
+//Doc SRC 2012/05/22
+//Doc
+//Doc INPUTS
+//Doc
+//Doc none
+//Doc
+//Doc OUTPUT/returns
+//Doc 
+//Doc none
+//Doc
+//Doc Notes: a possible source of the cargo bug is:
+//Doc Finish
+
+check_tsPlayerSave_locate_free_pods(){
+   set player_free_pods = tsPlayerSave.locate_free_pods();
+   iHUD.Print(String.FormatInt(" Found %d player-owned cargo pods within range", Set.ItemCount(player_free_pods)));
+}
+
+//Doc Start
+//Doc Header check_globals()
+//Doc
+//Doc Descr: test function to try to locate the CARGO BUG
+//Doc
+//Doc SRC 2012/05/22
+//Doc
+//Doc Inputs (globals)
+//Doc
+//Doc  gt_option_autosave_on
+//Doc
+//Doc OUTPUT/returns
+//Doc 
+//Doc  none
+//Doc
+//Doc Notes: a possible source of the cargo bug is:
+//Doc Finish
+
+check_globals(){
+   bool test_bool;
+
+   if (Global.Exists("gt_option_autosave_on")){
+      test_bool = Global.Bool("gt_option_autosave_on");
+      if (test_bool){
+         iHUD.Print(" gt_option_autosave_on is set TRUE");
+      }
+      else{
+         iHUD.Print(" gt_option_autosave_on is set FALSE");
+      }
+   }
+   else{
+      iHUD.Print(" gt_option_autosave_on NOT SET");
+   }
+}
+
+
+
+//Doc Start
+//Doc Header remove_all_player_pods()
+//Doc
+//Doc Descr: remove from game all player pods within range
+//Doc
+//Doc SRC 2012/05/24
+//Doc
+//Doc Inputs
+//Doc
+//Doc  none
+//Doc
+//Doc OUTPUT/returns
+//Doc 
+//Doc  none
+//Doc Finish
+
+remove_all_player_pods(){
+   hsim pod;
+   set player_pods = tsPodUtil.PlayerPods( iSim.Cast(iShip.FindPlayerShip()), 100km);
+
+   while (!Set.IsEmpty(player_pods)){
+      pod = Sim.Cast(Set.FirstElement(player_pods));
+      Set.Remove(player_pods, pod);
+      Sim.Destroy(pod);
+   }
+}
+
+
+
+
+//Doc Start
+//Doc Header toggle_autosave_global()
+//Doc
+//Doc Descr: remove from game all player pods within range
+//Doc
+//Doc SRC 2012/05/24
+//Doc
+//Doc Inputs
+//Doc
+//Doc  none
+//Doc
+//Doc OUTPUT/returns
+//Doc 
+//Doc  none
+//Doc Finish
+
+toggle_autosave_global(){
+   bool test_bool;
+
+   if (Global.Exists("gt_option_autosave_on")){
+      if(Global.Bool("gt_option_autosave_on")){
+         Global.SetBool("gt_option_autosave_on", false);
+         iHUD.Print(" gt_option_autosave_on is toggled to FALSE");
+      }
+      else{
+         Global.SetBool("gt_option_autosave_on", true);
+         iHUD.Print(" gt_option_autosave_on is toggled to TRUE");
+      }
+   }
+   else{
+      iHUD.Print(" gt_option_autosave_on is NOT SET");
+   }
+}
+
+
+//Doc Start
+//Doc Header add_million_credits()
+//Doc
+//Doc Descr: add one million credits to the ship account
+//Doc
+//Doc SRC 2012/05/30
+//Doc
+//Doc Inputs
+//Doc
+//Doc  none
+//Doc
+//Doc OUTPUT/returns
+//Doc 
+//Doc  none
+//Doc Finish
+
+add_million_credits(){
+   int million_credits = 1000000;
+
+   tsMoney.ChangeShipAccount(million_credits);
+   iHUD.Print("1,000,000 credits added to ship account");
+}
+
+
+// TURRET EXPERIMENTS SECTIONS
+
+// 1) Identify all child sims on a ship
+
+//Doc Start
+//Doc Header playership_child_sims()
+//Doc
+//Doc Descr: identify the child sims on the player ship
+//Doc
+//Doc SRC 2012/06/05
+//Doc
+//Doc Inputs
+//Doc
+//Doc  none
+//Doc
+//Doc OUTPUT/returns
+//Doc 
+//Doc  none
+//Doc Finish
+
+playership_child_sims(){
+   hship player_ship = iShip.FindPlayerShip();
+   iHUD.Print(String.FormatInt(" Player ship has %d child sims", Sim.ChildCount(player_ship)));
+}
+
+
+
