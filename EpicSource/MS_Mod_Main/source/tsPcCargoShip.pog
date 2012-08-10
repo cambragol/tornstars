@@ -334,6 +334,8 @@ setup_ship(hisim marker)
    	hhabitat station, start_station;
 
    	habitats = iMapEntity.SystemHabitats();
+
+
    	start_station = iHabitat.Nearest(habitats, marker);
    	//station_faction = iSim.Faction(start_station);
 
@@ -435,11 +437,32 @@ setup_ship(hisim marker)
 
 /////////////////////Added for Cargo Hauling/////////////////////////////////////
 
+
+
+
+
+
+
    	// Now create the cargo and dock it to the freighter.
    	pod_count = Math.RandomInt(1,Set.ItemCount(tsPodUtil.DockPorts(patrol_ship)));
-   	cargo_set = create_input_cargo(station, patrol_ship, pod_count);
 
+		// This determines whether they are near a station or lpoint and deals with cargo accordingly		
+		if (nearby_location_station(patrol_ship, current_system) == true) {
+   	
+			cargo_set = create_input_cargo(station, patrol_ship, pod_count);
 
+		}
+	
+		else {	
+			habitats = iMapEntity.SystemHabitats();
+			habitats = tsStationFilter.OnPodSpewer(habitats);
+			habitats = tsStationFilter.OnStatusAndCategory(habitats, 2, 1|2|4|64);
+			station = iHabitat.Random(habitats);
+   			pod_count = Math.RandomInt(3,Set.ItemCount(tsPodUtil.DockPorts(patrol_ship)));
+			cargo_set = create_input_cargo(station, patrol_ship, pod_count);
+
+        	}
+	
 
 	// Added to adjust fleet size by cargo value
 
@@ -810,6 +833,9 @@ int wait_load = 0;
 		}
 	
 		else {	
+
+			//temporarily set station_choice to zero so that the operation will use the lpoint rather than leave
+			station_choice = 0;
 			state = change_state(state, eCS_LeaveArea, debug_on);
 
         	}
@@ -1393,10 +1419,13 @@ int wait_load = 0;
          		iAI.PurgeOrders(patrol_leader);
 			iAI.GiveApproachOrder( patrol_leader, marker );
 
-			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
+			//reset station choice in case operation started at lpoint and had the value set to zero
+			station_choice = 80;
+
+			/*if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    	tsDistance.CullingDistance()) {
 				iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_departing_area",speech_style,5));
-			}
+			}*/
 
               		state = change_state(state, eCS_WaitApproachLPoint, debug_on);
 
@@ -1404,6 +1433,9 @@ int wait_load = 0;
 		
 		// Second choice is a station	
 		else {
+
+				//reset station choice in case operation started at lpoint and had the value set to zero
+				station_choice = 80;
 
               		state = change_state(state, eCS_NextStation, debug_on);
 	

@@ -1,4 +1,4 @@
-//*******************************************************************************************/
+ //*******************************************************************************************/
 //
 // tsStationAi
 //
@@ -149,11 +149,13 @@ task station_watcher(hhabitat station)
 	  // This checks for docking requests and the status of dockports
 	  if ((Object.BoolProperty (station, "jd_ship_in_universal_queue")) && (!Set.IsEmpty(universal_dockports))) { 
 
-         		iConversation.OneLiner(station, "", tsString.CommsStringRandom("pcsa_station_dockport_now_free","",5));
-         		//iComms.Shout(station, "", tsString.CommsStringRandom("pcsa_station_dockport_now_free","",5));
+
 			toggle = true;
 			toggle_universal_dock(toggle, station);
 			Object.SetBoolProperty (station, "jd_ship_in_universal_queue", false);
+         		iConversation.OneLiner(station, "", tsString.CommsStringRandom("pcsa_station_dockport_now_free","",5));
+         		//iComms.Shout(station, "", tsString.CommsStringRandom("pcsa_station_dockport_now_free","",5));
+
 
 	  }
 
@@ -165,11 +167,12 @@ task station_watcher(hhabitat station)
 	  // This checks for docking requests and the status of dockports
 	  if ((Object.BoolProperty (station, "jd_ship_in_unload_queue")) && (!Set.IsEmpty(unload_dockports))) { 
 
-         		iConversation.OneLiner(station, "", tsString.CommsStringRandom("pcsa_station_dockport_now_free","",5));
-        		//iComms.Shout(station, "", tsString.CommsStringRandom("pcsa_station_dockport_now_free","",5));
 			toggle = true;
 			toggle_unload_dock(toggle, station);
 			Object.SetBoolProperty (station, "jd_ship_in_unload_queue", false);
+         		iConversation.OneLiner(station, "", tsString.CommsStringRandom("pcsa_station_dockport_now_free","",5));
+        		//iComms.Shout(station, "", tsString.CommsStringRandom("pcsa_station_dockport_now_free","",5));
+
 
 	  }
 
@@ -374,9 +377,10 @@ task Comms() {
 
 
             // Player wants a universal dock.
+		toggle_universal_dock(toggle, ship);
             iConversation.Say(ship,"", "pcsa_station_confirms_available_dockport");
 
-		toggle_universal_dock(toggle, ship);
+		
 
 		
             finished = true;
@@ -446,9 +450,9 @@ task Comms() {
 
 
             // Player wants a unload dock.
+		toggle_unload_dock(toggle, ship);
             iConversation.Say(ship,"", "pcsa_station_confirms_available_dockport");
 
-		toggle_unload_dock(toggle, ship);
 
 		
             finished = true;

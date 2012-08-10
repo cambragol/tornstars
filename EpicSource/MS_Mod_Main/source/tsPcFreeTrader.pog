@@ -568,6 +568,7 @@ float whimp_adjustment = 1.25;
 // It would be cool to add this to the ini file
 int station_choice = 75;
 
+
 	
    eCSScriptState state = eCS_Init;
 	eCSScriptState next_state = eCS_Init;
@@ -705,6 +706,7 @@ int station_choice = 75;
         marker = iSim.Cast(Sim.Create("ini:/sims/nav/waypoint", "patrol mark"));
 			Sim.SetCullable( marker, false );
 
+	  
         rotation = Math.Random(0,360);
 		 
 	max_request_for_business_count = max_request_for_business;
@@ -716,6 +718,9 @@ int station_choice = 75;
 	}
 	
 	else {	
+		
+		//temporarily set station_choice to zero so that the operation will use the lpoint rather than leave
+		station_choice = 0;
 		state = change_state(state, eCS_LeaveArea, debug_on);
 
         }
@@ -1069,6 +1074,7 @@ int station_choice = 75;
 	case eCS_LeaveArea:
 
 		debug Debug.PrintString("tsPcFreeTrader.ship_controller: eCS_LeaveArea\n");
+			
 
          		// Pick a non-hostile station that is near.
          		/*nearby_locations = iMapEntity.SystemHabitatsInSystem(current_system);
@@ -1100,10 +1106,13 @@ int station_choice = 75;
          		iAI.PurgeOrders(patrol_leader);
 			iAI.GiveApproachOrder( patrol_leader, marker );
 
-			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
+			//reset station choice in case operation started at lpoint and had the value set to zero
+			station_choice = 75;
+
+			/*if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    	tsDistance.CullingDistance()) {
 				iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_departing_area",speech_style,5));
-			}
+			}*/
 
               		state = change_state(state, eCS_WaitApproachLPoint, debug_on);
 
@@ -1111,6 +1120,9 @@ int station_choice = 75;
 		
 		// Second choice is a station	
 		else {
+
+				//reset station choice in case operation started at lpoint and had the value set to zero
+				station_choice = 75;
 
               		state = change_state(state, eCS_NextStation, debug_on);
 	
@@ -2490,7 +2502,7 @@ hship create_leader (hmapentity location, hisim operation, hgroup cull_group, st
    Sim.SetCullable(leader, false);
 
 
-	Sim.PlaceRelativeTo(leader, location, Math.Random(30000,-30000), Math.Random(-8000,8000), Math.Random(30000,-30000));
+	Sim.PlaceRelativeTo(leader, location, Math.RandomInt(30000,-30000), Math.RandomInt(30000,-30000), Math.Random(30000,-30000));
 
 	
    iShip.Attacked(leader);

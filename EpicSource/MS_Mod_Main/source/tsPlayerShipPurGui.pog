@@ -521,7 +521,8 @@ CancelBtn()
 	hide_window( button );		// cancel hidden
 	hide_window( cbtn );		// confirm hidden
 	show_window( sbtn );		// sell visible
-	show_window( bbtn );		// buy visible
+	//show_window( bbtn );		// buy visible
+	hide_window( bbtn );		// buy visible
 	Object.SetIntProperty( get_top_container(), "state", SE_NoAction );
 	debug Debug.PrintString("tsPlayerShipPurGui.CancelBtn: End\n");
 }

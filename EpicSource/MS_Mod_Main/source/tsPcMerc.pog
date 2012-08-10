@@ -714,6 +714,10 @@ int station_choice = 70;
 	}
 	
 	else {	
+
+		//temporarily set station_choice to zero so that the operation will use the lpoint rather than leave
+		station_choice = 0;
+
 		state = change_state(state, eCS_LeaveArea, debug_on);
 
         }
@@ -1105,10 +1109,13 @@ int station_choice = 70;
          		iAI.PurgeOrders(patrol_leader);
 			iAI.GiveApproachOrder( patrol_leader, marker );
 
-			if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
+			//reset station choice in case operation started at lpoint and had the value set to zero
+			station_choice = 70;
+
+			/*if (Sim.DistanceBetween(iShip.Cast(Group.Leader(patrol_group)), player) < 
                    	tsDistance.CullingDistance()) {
 				iComms.Shout(patrol_leader, "", tsString.CommsStringRandom("pcft_departing_area",speech_style,5));
-			}
+			}*/
 
               		state = change_state(state, eCS_WaitApproachLPoint, debug_on);
 
@@ -1116,6 +1123,9 @@ int station_choice = 70;
 		
 		// Second choice is a station	
 		else {
+
+				//reset station choice in case operation started at lpoint and had the value set to zero
+				station_choice = 70;
 
               		state = change_state(state, eCS_NextStation, debug_on);
 	

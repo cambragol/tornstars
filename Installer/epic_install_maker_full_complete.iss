@@ -296,7 +296,7 @@ Source: .\unstable_space_icon.ico; DestDir: {app}
 [INI]
 ;Filename: {app}\flux.ini; Section: icSolarSystem; Key: far_clip; String: 3e+0014
 Filename: {app}\flux.ini; Section: icSolarSystem; Key: far_clip; String: 2e5
-Filename: {app}\flux.ini; Section: FcInputMapper; Key: input_scheme_ini; String: configs/ts_dev_config.ini
+Filename: {app}\flux.ini; Section: FcInputMapper; Key: input_scheme_ini; String: configs/ts_joy_config.ini
 Filename: {app}\flux.ini; Section: icGUIMovie; Key: az; String: 1
 Filename: {app}\flux.ini; Section: icGUIMovie; Key: ocal; String: 1
 Filename: {app}\flux.ini; Section: icGUIMovie; Key: ycal; String: 1
