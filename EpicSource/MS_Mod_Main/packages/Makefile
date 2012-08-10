@@ -2,6 +2,7 @@
 #  Make file for constructing Epic: Middle States Main package.
 #
 
+# last modified 2012-May-23 SRC
 
 # Several environment variables need to be defined for this make script to run.
 # They depend on local install locations
@@ -68,7 +69,12 @@ vpath %.pog ../source
 #	tLProduction_t.pkg \
 
 
-PACKAGES = ECargoTypes.pkg \
+PACKAGES = usPOGexperiments.pkg \
+        iShipConfigurationUtil.pkg \
+        iINIFileUtil.pkg \
+        iObjectPropertiesUtil.pkg \
+        iStringUtil.pkg \
+	ECargoTypes.pkg \
 	UniGUI.pkg \
 	UniGUIBase.pkg \
 	UniGUIMisc.pkg \
@@ -210,7 +216,7 @@ PACKAGES = ECargoTypes.pkg \
 	zTestObject.pkg \
 	tsSystemDamage.pkg \
 	tssdGUI.pkg \
-	tsMain.pkg
+	tsMain.pkg 
 
 #
 # Convert the list of targets to lowercase.
