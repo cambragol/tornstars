@@ -9,6 +9,7 @@
 //[c]// directly. Save is the only current exception.
 //[c]//
 //[c]// Feb 2003, Jon Freise
+//[c]// minor amendments to SpaceEnter() 2012 Aug SRC
 //[c]//******************************************************************************************/
 
 // Package name
@@ -278,7 +279,14 @@ SpaceEnter()
 	//Added for start screen effects
 	tsStartGui.StartDolly();
 
+
+//    added SRC 2012-Aug-07
+   usPOGexperiments.InitializeKeyBindings();
+   iShipConfigurationUtil.EnterSpace();
+//
+
    atomic debug Debug.PrintString("tsMain.SpaceEnter ----------------End----------------\n");
+
 }
 //[cf]
 
