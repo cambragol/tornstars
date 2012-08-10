@@ -1,0 +1,983 @@
+// iINIFileUtil MOD - by SRC@torns-stars.org
+//  Rights?? Coplyleft, GNU Public License?
+// Original Material Copyright (c) 1999 Particle Systems Ltd.
+
+// Description: iINIFileUtil provides functions useful in accessing game
+// object configuration (.ini) files. 
+
+// Package name ///////////////////////////////////////////////////////////////
+
+package iINIFileUtil;
+
+
+// Imports ////////////////////////////////////////////////////////////////////
+
+uses
+	List, String, Object,  Task, INIFile, Input, Sim, Subsim, iSim, iShip, iHUD, iAI, 
+	Debug, Global, iGame, iPilotSetup, Text, iObjectPropertiesUtil, iStringUtil;
+
+//   Math, 
+//	Stream, iWingmen, iInventory, iRemotePilot, iScriptedOrders, 
+//	iFormation, iShipCreation, iMultiplay, iTrafficScenario, iDirector, 
+//	iJafsScript, iUtilities, iComms, iStation,  iBackToBase, Global, 
+//	iLoadout,
+//                                                  added as part of PodUtil	
+//	 Debug, iCargo;
+
+
+// Exports ////////////////////////////////////////////////////////////////////
+
+provides
+   CountNumber,
+   StringKeyLookupStringData,
+   StringFloatTwoKeyLookupStringData,
+   UniqueStringKeyLookupStringData,
+   NumberedKeyMaxIndex,
+   InstancesOfNumberedKeyStringValue,
+//   IndexOfNthInstanceOfNumberedKeyStringValue,
+//                                                   Modules which select INIFile data
+//							based on user-specified criteria
+   CheckSimpleKeyValueString,
+   ParseSectionKeysValues,
+   SelectSectionKeysValues;
+
+// Local functions ////////////////////////////////////////////////////////////
+
+prototype int CountNumber( string filename, string section, string key );
+
+prototype string StringKeyLookupStringData(hinifile ref_inifile, string ref_section, string ref_key, 
+  string search_value, hinifile lookup_inifile, string lookup_section, string lookup_key);
+
+prototype string StringFloatTwoKeyLookupStringData(hinifile ref_inifile, string ref_section, string ref_key_1, 
+      string search_value_1, string ref_key_2, float ref_value_2, 
+       hinifile lookup_inifile, string lookup_section, string lookup_key);
+
+
+prototype string UniqueStringKeyLookupStringData(hinifile ref_inifile, string ref_section, string ref_key, 
+  string search_value, hinifile lookup_inifile, string lookup_section, string lookup_key);
+
+prototype int NumberedKeyMaxIndex(hinifile inifile, string section, string key);
+
+prototype int InstancesOfNumberedKeyStringValue(hinifile inifile, string section, string key, string value);
+
+prototype int CheckSimpleKeyValueString(string simple_key_value);
+
+prototype int ParseSectionKeysValues(hobject obj, string sectionkeysvalues, string property_name);
+
+prototype int SelectSectionKeysValues(hinifile inifile, string sectionkeysvalues, string output_name);
+
+
+//prototype IndexOfNthInstanceOfNumberedKeyStringValue(hinifile inifile, string section, string key, string value, int n);
+
+
+//Doc Start
+//Doc Header int CountNumber( string filename, string section, string key )
+//Doc
+//Doc Descr: Determine the number of keys of a given [Section] and key-name that exist in the
+//Doc         specified .ini file. If there are gaps in the key numbering, the number of continuously
+//Doc         numbered keys starting with [0] will be returned.
+//Doc
+//Doc SRC 2012/07/14
+//Doc
+//Doc INPUTS (arguments)
+//Doc
+//Doc filename         string    the URL of the .ini file to examine
+//Doc section          string    the [Section] of the INIfile data structure to examine
+//Doc key              string    the key to count
+//Doc
+//Doc OUTPUTS (returned)
+//Doc
+//Doc number           int       the number of continuously numbered keys, starting at [0].
+//Doc
+//Doc Finish
+
+
+int CountNumber( string filename, string section, string key ){
+   hinifile inifile;
+   int i;
+
+   inifile = INIFile.Create(filename);
+
+   i = 0;
+
+   while (INIFile.NumberedExists(inifile, section, key, i)){
+      ++i;
+   }
+
+   INIFile.Destroy(inifile);
+
+   return i;
+}
+
+
+//Doc Start
+//Doc Header string StringKeyLookupStringData(hinifile ref_inifile, string ref_section, string ref_key, 
+//Doc               string search_value, hinifile lookup_inifile, string lookup_section, string lookup_key){
+//Doc
+//Doc Descr: Given a string type search term, locate the position of that term in a numbered INIFile string key
+//Doc         and return the string that is in the same index location of another INIFile numbered string key
+//Doc
+//Doc SRC 2012/06/14
+//Doc
+//Doc INPUTS (arguments)
+//Doc
+//Doc ref_inifile      hinifile  handle of the INIfile data structure within which to search 
+//Doc ref_section      string    the [Section] of the INIfile data structure within which to search
+//Doc ref_key          string    the key within which to search for the search_string
+//Doc search_value     string    the key value for which to searth
+//Doc lookup_inifile   hinifile  handle of the INIfile data structure within which to look
+//Doc lookup_section   string    the [Section] of the INIfile data structure from whcih to take the looked-up data 
+//Doc lookup_key       string    the key from which to take the looked-up data
+//DOc
+//Doc
+//Doc OUTPUTS (returned)
+//Doc
+//Doc key_value        string    the string value of the lookup key at the index location corresponding to the
+//Doc                            location of the search_value string in the reference INIfile[section]numbered-key
+//Doc                             data.
+//DOc
+//Doc                            ERROR Returns:
+//Doc
+//Doc 				 If either key does not exist or if the array lengths of the two keys are unequal
+//Doc				 an error message is returned:
+//Doc
+//Doc                            "ERROR: no reference key" is returned if the numbered reference key does not exist
+//Doc				 "ERROR: no lookup key" is returned if the numbered lookup key does not exist
+//Doc				 "ERROR: unequal column lengths" is returned if the reference and lookup keys have
+//Doc				  unequal numbers of elements
+//Doc                            "ERROR: search value not found" is returned if the search value is not present in
+//Doc				   the reference key column
+//Doc
+//Doc Notes: USAGE: this function will typically be used to access paired numbered keys within the
+//Doc  same section of the same INIfile. A common example would be the template[] and null[] keys of
+//Doc  the [Subsims] section of a ship configuration file, or the ship_name[] and ship_iniURL[] keys 
+//Doc  of the [INIFile] section of the shipname_iniURL_xref.ini file. However, it can be used to
+//Doc  do lookups between equal-sized numbered keys in different sections of the same INIfile, or even
+//Doc  in between sections in different INIfiles, should data structures be created which warranted such
+//Doc  operations.
+//Doc
+//Doc  CAUTION: this function does not have an error-return mode, so it is prudent to verify
+//Doc  that the reference key search value is already present in the reference data, and that the
+//Doc  lookup data numbered key has as many elements as the reference numbered key
+//Doc
+//Doc Finish
+
+string StringKeyLookupStringData(hinifile ref_inifile, string ref_section, string ref_key, 
+   string search_value, hinifile lookup_inifile, string lookup_section, string lookup_key){
+
+   string test_value, lookup_value;
+   int max_ref_index, max_lookup_index, ref_index;
+							// Preliminary checks
+   max_ref_index = NumberedKeyMaxIndex(ref_inifile, ref_section, ref_key);
+   max_lookup_index = NumberedKeyMaxIndex(lookup_inifile, lookup_section, lookup_key);
+
+
+   if (max_ref_index < 0) return "ERROR: no reference key";
+
+   if (max_lookup_index < 0) return "ERROR: no lookup key";
+
+   if (max_ref_index != max_lookup_index) return "ERROR: unequal column lengths";
+
+							// search for the search value
+
+   for (ref_index=0; ref_index<=max_ref_index; ++ref_index){
+
+      test_value = INIFile.NumberedString( ref_inifile, ref_section, ref_key, ref_index, "" );
+
+      if (test_value == search_value){
+         lookup_value = INIFile.NumberedString( lookup_inifile, lookup_section, lookup_key, ref_index, "" );
+         return lookup_value;
+      }
+   } 
+
+   return "ERROR: search value not found";
+}
+
+
+
+
+
+
+
+//Doc Start
+//Doc Header string StringFloatTwoKeyLookupStringData(hinifile ref_inifile, string ref_section_1, string ref_key_1, 
+//Doc               string search_value_1, string ref_key_2, float ref_value_2,
+//Doc               hinifile lookup_inifile, string lookup_section, string lookup_key){
+//Doc
+//Doc Descr: Given a string type search term, locate the position of that term in a numbered INIFile string key
+//Doc         and return the string that is in the same index location of another INIFile numbered string key
+//Doc
+//Doc SRC 2012/06/14
+//Doc
+//Doc INPUTS (arguments)
+//Doc
+//Doc ref_inifile      hinifile  handle of the INIfile data structure within which to search 
+//Doc ref_section_1    string    the [Section] of the INIfile data structure within which to search
+//Doc ref_key_1        string    the first key within which to search for the search_string
+//Doc search_value_1   string    the first key value for which to searth
+//Doc ref_key_2        string    the second key within which to search for the search_string
+//Doc search_value_2   float     the second key value for which to searth
+//Doc lookup_inifile   hinifile  handle of the INIfile data structure within which to look
+//Doc lookup_section   string    the [Section] of the INIfile data structure from whcih to take the looked-up data 
+//Doc lookup_key       string    the key from which to take the looked-up data
+//DOc
+//Doc
+//Doc OUTPUTS (returned)
+//Doc
+//Doc key_value        string    the string value of the lookup key at the index location corresponding to the
+//Doc                            location of the search_value string in the reference INIfile[section]numbered-key
+//Doc                             data.
+//DOc
+//Doc                            ERROR Returns:
+//Doc
+//Doc 				 If either key does not exist or if the array lengths of the two keys are unequal
+//Doc				 an error message is returned:
+//Doc
+//Doc                            "ERROR: no reference key" is returned if the numbered reference key does not exist
+//Doc				 "ERROR: no lookup key" is returned if the numbered lookup key does not exist
+//Doc				 "ERROR: unequal column lengths" is returned if the reference and lookup keys have
+//Doc				  unequal numbers of elements
+//Doc                            "ERROR: search value not found" is returned if the search value is not present in
+//Doc				   the reference key column
+//Doc
+//Doc Notes: USAGE: this function will typically be used to accessed paired numbered keys within the
+//Doc  same section of the same INIfile. A common example would be the template[] and null[] keys of
+//Doc  the [Subsims] section of a ship configuration file, or the ship_name[] and ship_iniURL[] keys 
+//Doc  of the [INIFile] section of the shipname_iniURL_xref.ini file. However, it can be used to
+//Doc  do lookups between equal-sized numbered keys in different sections of the same INIfile, or even
+//Doc  in between sections in different INIfiles, should data structures be created with warranted such
+//Doc  operations.
+//Doc
+//Doc  CAUTION: this function does not have an error-return mode, so it is prudent to verify
+//Doc  that the reference key search value is already present in the reference data, and that the
+//Doc  lookup data numbered key has as many elements as the reference numbered key
+//Doc
+//Doc Finish
+
+
+// FUNCTION DOES NOT WORK YET
+
+// for DOc -- the ref_key2 and ref_key_1 are assumed to be in the same section
+
+string StringFloatTwoKeyLookupStringData(hinifile ref_inifile, string ref_section, string ref_key_1, 
+      string search_value_1, string ref_key_2, float ref_value_2, 
+       hinifile lookup_inifile, string lookup_section, string lookup_key){
+
+   string test_value, lookup_value;
+   int max_ref_index, max_lookup_index, ref_index;
+							// Preliminary checks
+   max_ref_index = NumberedKeyMaxIndex(ref_inifile, ref_section, ref_key_1);
+   max_lookup_index = NumberedKeyMaxIndex(lookup_inifile, lookup_section, lookup_key);
+
+
+   if (max_ref_index < 0) return "ERROR: no reference key 1";
+
+   if (max_lookup_index < 0) return "ERROR: no lookup key";
+
+   if (max_ref_index != max_lookup_index) return "ERROR: unequal column lengths";
+
+							// search for the search value
+
+   for (ref_index=0; ref_index<=max_ref_index; ++ref_index){
+
+      test_value = INIFile.NumberedString( ref_inifile, ref_section, ref_key_1, ref_index, "" );
+
+      if (test_value == search_value_1){
+         lookup_value = INIFile.NumberedString( lookup_inifile, lookup_section, lookup_key, ref_index, "" );
+         return lookup_value;
+      }
+   } 
+
+   return "ERROR: search value not found";
+}
+
+
+
+
+
+
+//Doc Start
+//Doc Header string UniqueStringKeyLookupStringData(hinifile ref_inifile, string ref_section, string ref_key, 
+//Doc               string search_value, hinifile lookup_inifile, string lookup_section, string lookup_key){
+//Doc
+//Doc Descr: Given a string type search term, locate the position of that term in a numbered INIFile string key
+//Doc         and return the string that is in the same index location of another INIFile numbered string key.
+//Doc         This function differs from "StringKeyLookupStringData" in that it returns an error if the search_value 
+//Doc         appears more than once in the ref_key numbered key
+//Doc
+//Doc SRC 2012/06/14
+//Doc
+//Doc INPUTS (arguments)
+//Doc
+//Doc ref_inifile      hinifile  handle of the INIfile data structure within which to search 
+//Doc ref_section      string    the [Section] of the INIfile data structure within which to search
+//Doc ref_key          string    the key within which to search for the search_string
+//Doc search_value     string    the key value for which to searth
+//Doc lookup_inifile   hinifile  handle of the INIfile data structure within which to look
+//Doc lookup_section   string    the [Section] of the INIfile data structure from whcih to take the looked-up data 
+//Doc lookup_key       string    the key from which to take the looked-up data
+//DOc
+//Doc
+//Doc OUTPUTS (returned)
+//Doc
+//Doc key_value        string    the string value of the lookup key at the index location corresponding to the
+//Doc                            location of the search_value string in the reference INIfile[section]numbered-key
+//Doc                             data.
+//DOc
+//Doc                            ERROR Returns:
+//Doc
+//Doc 				 If either key does not exist or if the array lengths of the two keys are unequal
+//Doc				 an error message is returned:
+//Doc
+//Doc                            "ERROR: no reference key" is returned if the numbered reference key does not exist
+//Doc				 "ERROR: no lookup key" is returned if the numbered lookup key does not exist
+//Doc				 "ERROR: unequal column lengths" is returned if the reference and lookup keys have
+//Doc				  unequal numbers of elements
+//Doc                            "ERROR: search value not found" is returned if the search value is not present in
+//Doc				   the reference key column
+//Doc                            "ERROR: multipe instances of the search string in the reference numbered key" 
+//Doc                              is returned if the search string appears more than once in the reference key column
+//Doc
+//Doc Notes: USAGE: this function will typically be used to accessed paired numbered keys within the
+//Doc  same section of the same INIfile. A common example would be the template[] and null[] keys of
+//Doc  the [Subsims] section of a ship configuration file, or the ship_name[] and ship_iniURL[] keys 
+//Doc  of the [INIFile] section of the shipname_iniURL_xref.ini file. However, it can be used to
+//Doc  do lookups between equal-sized numbered keys in different sections of the same INIfile, or even
+//Doc  in between sections in different INIfiles, should data structures be created with warranted such
+//Doc  operations.
+//Doc
+//Doc  CAUTION: this function does not have an error-return mode, so it is prudent to verify
+//Doc  that the reference key search value is already present in the reference data, and that the
+//Doc  lookup data numbered key has as many elements as the reference numbered key
+//Doc
+//Doc Finish
+
+string UniqueStringKeyLookupStringData(hinifile ref_inifile, string ref_section, string ref_key, 
+   string search_value, hinifile lookup_inifile, string lookup_section, string lookup_key){
+
+   string test_value, lookup_value;
+   int max_ref_index, max_lookup_index, ref_index;
+							// Preliminary checks
+   max_ref_index = NumberedKeyMaxIndex(ref_inifile, ref_section, ref_key);
+   max_lookup_index = NumberedKeyMaxIndex(lookup_inifile, lookup_section, lookup_key);
+
+
+							// The two columns must have the same length
+
+   if (max_ref_index < 0) return "ERROR: no reference key";
+
+   if (max_lookup_index < 0) return "ERROR: no lookup key";
+
+   if (max_ref_index != max_lookup_index) return "ERROR: unequal column lengths";
+
+
+							// there must be exactly one instance of the ship name in the xref inifile
+
+   if ( 1 != InstancesOfNumberedKeyStringValue(ref_inifile, ref_section, ref_key, search_value)) 
+      return "ERROR: multiple instances of the search string in the reference numbered key";
+
+
+							// search for the search value
+
+   for (ref_index=0; ref_index<=max_ref_index; ++ref_index){
+
+      test_value = INIFile.NumberedString( ref_inifile, ref_section, ref_key, ref_index, "" );
+
+      if (test_value == search_value){
+         lookup_value = INIFile.NumberedString( lookup_inifile, lookup_section, lookup_key, ref_index, "" );
+         return lookup_value;
+      }
+   } 
+
+   return "ERROR: search value not found";
+}
+
+
+//Doc Start
+//Doc Header int NumberedKeyMaxIndex(hinifile inifile, string section, string key)
+//Doc
+//Doc Descr: Determine the size of an INIfile numbered key array
+//Doc
+//Doc SRC 2012/06/14
+//Doc
+//Doc INPUTS (arguments)
+//Doc
+//Doc inifile          hinifile  handle of the INIfile data structure within which to inquire
+//Doc section          string    the [Section] of the INIfile data structure within which to inquire
+//Doc key              string    the key for which to determine the size of the numbered array
+//DOc
+//Doc
+//Doc OUTPUTS (returned)
+//Doc
+//Doc key_max_index    int       the maximum index of the numbered key. If no numbered key exists that
+//Doc                            matches the input arguments, they error value -1 is returned
+//Doc
+//Doc Finish
+
+int NumberedKeyMaxIndex(hinifile inifile, string section, string key){
+   int current_index;
+
+   current_index = 0;
+
+   while( INIFile.NumberedExists( inifile, section, key, current_index ) ){
+      current_index += 1;
+   }
+   return (current_index - 1);
+}
+
+
+//Doc Start
+//Doc Header int InstancesOfNumberedKeyStringValue(hinifile inifile, string section, string key, string value)
+//Doc
+//Doc Descr: Determine the number of times the specified string value occurs in the specified inifile key array
+//Doc
+//Doc SRC 2012/06/14
+//Doc
+//Doc INPUTS (arguments)
+//Doc
+//Doc inifile          hinifile  handle of the INIfile data structure within which to inquire
+//Doc section          string    the [Section] of the INIfile data structure within which to inquire
+//Doc key              string    the key array within which to count the number of instances of the test value
+//DOc value            string    the string value to count within the key array
+//Doc
+//Doc OUTPUTS (returned)
+//Doc
+//Doc instance_count   int       the number of instances of "value" in the key array. If the key does not
+//Doc                            exist, the value -1 is returned.
+//Doc
+//Doc Finish
+
+int InstancesOfNumberedKeyStringValue(hinifile inifile, string section, string key, string value){
+   int current_index, instance_count;
+    
+   current_index = 0;
+   instance_count = 0;
+
+   while( INIFile.NumberedExists( inifile, section, key, current_index ) ){
+      if (value == INIFile.NumberedString( inifile, section, key, current_index, "" )) instance_count += 1;
+      current_index += 1;
+   }
+							
+   if (current_index == 0) return -1;			// error code return if the key does not exist
+
+   return instance_count;
+}
+
+
+//WORK HERE
+
+//Doc Start
+//Doc Header int IndexOfNthInstanceOfNumberedKeyStringValue(hinifile inifile, string section, string key, string value, int n)
+//Doc
+//Doc Descr: Determine the index of the Nth instance of the occurrence of the specified string value in the  specified 
+//Doc  numbered inifile key
+//Doc
+//Doc SRC 2012/06/17
+//Doc
+//Doc INPUTS (arguments)
+//Doc
+//Doc inifile          hinifile  handle of the INIfile data structure within which to inquire
+//Doc section          string    the [Section] of the INIfile data structure within which to inquire
+//Doc key              string    the key array within which to count the number of instances of the test value
+//DOc value            string    the string value to test for within the numbered key
+//Doc n                int       the instance for which to return the key index 
+//Doc
+//Doc OUTPUTS (returned)
+//Doc
+//Doc key_index        int       the index of the numbered key at which the Nth instance of the specified
+//Doc                            value occurs. If the Nth instance does not exist in the numbered key array,
+//Doc                            the value -1 is returned.
+//Doc
+//Doc Finish
+
+int IndexOfNthInstanceOfNumberedKeyStringValue(hinifile inifile, string section, string key, string value, int n){
+   int current_index, instance_count;
+    
+   current_index = 0;
+   instance_count = 0;
+
+   while( INIFile.NumberedExists( inifile, section, key, current_index ) ){
+      if (value == INIFile.NumberedString( inifile, section, key, current_index, "" )) instance_count += 1;
+      current_index += 1;
+   }
+							
+   if (current_index == 0) return -1;			// error code return if the key does not exist
+
+   return instance_count;
+}
+
+// PRIOR CODE NOT WORKING YET
+
+
+
+
+
+
+
+
+
+//Doc Start
+//Doc Header int CheckSimpleKeyValueString(string simple_key_value){
+//Doc
+//Doc Descr: Check the proper formatting of a string containing simple (ie, no logical expressions) 
+//Doc  keyname/value information. The check is performed by decoding the keyname/value, but the results
+//Doc  of the decoding are not returned; only a check integer is returned.
+//Doc
+//Doc SRC 2012/06/26
+//Doc
+//Doc INPUTS (arguments)
+//Doc
+//Doc simple_key_value string  the key=I/F/S:value formatted string to check.
+//Doc                          See the NOTES: section for the syntax of this instruction.
+//Doc
+//Doc
+//Doc OUTPUTS (returned)
+//Doc
+//Doc error_code       int     error code describing the results of the formatting check.
+//Doc                          -1: No formatting error encountered
+//Doc
+//Doc NOTES: SYNTAX OF THE keyname/value argument
+//Doc  
+//Doc  The "simple_key_value" argument must have the syntax
+//Doc
+//Doc  keyname{=Type:value}
+//Doc
+//Doc  where the expressions enclosed in braces {...} is optional. 
+//Doc
+//Doc  If the "=Type:value" specification is given for a key name, the "Type" string must be a
+//Doc  single character, either "I", "F", or "S" for int, float or string data types.
+//Doc
+//Doc  Note: numbered vector value specification is not supported at this time.
+
+int CheckSimpleKeyValueString(string simple_key_value){
+
+   int equals_loc, keyval_length;
+   string key_type, key_name, key_value;
+
+   string return_label = "iINIFileUtil.ParseSectionKeysValues:";
+
+   int no_error = -1;
+   int error_logical_operator_present = 1;
+   int error_no_key = 2;
+   int error_unrecognized_key_type = 3;
+
+   if ((iStringUtil.Locate(simple_key_value, "&&")>= 0) || 
+       (iStringUtil.Locate(simple_key_value, "||")>= 0)) return error_logical_operator_present;
+
+   keyval_length = String.Length(simple_key_value);
+
+   if (keyval_length < 1) return error_no_key;
+
+   equals_loc = iStringUtil.Locate(simple_key_value, "=");
+
+   if (equals_loc < 0) return no_error;
+   if (equals_loc < 2) return error_no_key;
+
+   key_type = String.Mid(simple_key_value, (equals_loc + 1), 2);
+
+   if ((key_type != "I:") && (key_type != "F:") && (key_type != "S:")) return error_unrecognized_key_type;
+
+   key_name = String.Mid(simple_key_value, 0, (equals_loc - 1));
+
+   if ( iStringUtil.NumberOfNonoverlappingInstances(key_name, " ") == String.Length(key_name)) return error_no_key;
+
+   key_value = String.Mid(simple_key_value, (equals_loc + 3), keyval_length - (equals_loc + 3));
+
+debug atomic Debug.PrintString( String.Join(String.Join( String.Join(" Decoded Key: ", key_name)," has type:value of "), String.Join(key_type, key_value)));
+
+   return no_error;
+}
+
+
+
+
+//Doc Start
+//Doc Header int ParseSectionKeysValues(hobject obj, string sectionkeysvalues, string property_name)
+//Doc
+//Doc Descr: Decode a string containing [Section]keyname/value information. The decoded section
+//Doc  and keyname/type/value information is passed to the calling routine in handle properties of
+//Doc  the obj object handle
+//Doc
+//Doc SRC 2012/06/25
+//Doc
+//Doc INPUTS (arguments)
+//Doc
+//Doc inifile           hinifile  handle of the INIfile data structure within which to inquire
+//Doc sectionkeysvalues string    the [Section]key(s)=I/F/S:values(s) specification of the search to make
+//DOc                             See the NOTES: section for the syntax of this instruction.
+//Doc property_name     string    the name prefix to use in the output handle properties that contain the
+//Doc                             parsed section, key names, key types and key values.
+//Doc
+//Doc
+//Doc OUTPUTS (returned)
+//Doc
+//Doc error_code        int       Error code indication the completion status of the function call
+//Doc                             -1: function completed with no errors
+//Doc                              1:
+//Doc
+//Doc
+//Doc
+//Doc OUTPUTS (handle properties)
+//Doc
+//Doc section_name      string    The decoded name of the [Section], stored as a string handle properting of
+//Doc                             object obj, under the handle property name "property_name:section". The 
+//Doc                             "property_name" string is the input string property_name (which may be null).
+//Doc key_name_N        string    The decoded name of the Nth key in the sectionkeysvalues specification, stored
+//Doc                             as a handle property of obj with the property name "property_name:keyname_N"
+//Doc key_type_N        string    For keys with a key-value specification, this is the data type of the Nth key value,
+//Doc                             either "int", "float" or "string", stored as a handle property of obj with the 
+//Doc                             property name "property_name:keytype_N"
+//Doc key_value_N       int,float For keys with a key-value specification, this is the specified value of the Nth key,
+//Doc                   or string stored as a handle property of obj with the property name "property_name:keyvalue_N"
+//Doc
+//Doc
+//Doc NOTES: SYNTAX OF THE sectionkeysvalues argument
+//Doc  
+//Doc  The sectionkeysvalues argument must have the syntax
+//Doc
+//Doc  [section]key1{=Type:value1}{&&key2{=Type:value2}}....{&&keyN}{=Type:valueN}
+//Doc
+//Doc  where expressions enclosed in braces {...} are optional. Multiple keys within the same
+//Doc  section can be specified; these are delimited with POG Logical ANDs ("&&") --- the use
+//Doc  of the POG logical operators is an intentional simularity for potential future use of
+//Doc  more complex logical expressions in the key section). At least one key 
+//Doc  name must be specified. For any key name that has its value specified by the "=value" 
+//Doc  expression,  the selection will be limited to those index values for which the specified 
+//Doc  numbered key has the specified value. For any key name that does not have its value spevified
+//Doc
+//Doc  If the "=Type:value" specification is given for a key name, the "Type" string must be a
+//Doc  single character, either "I", "F", or "S" for int, float or string data types.
+//Doc
+//Doc  Note: numbered vector value specification is not supported at this time.
+//Doc
+//Doc Note on method: The function first ascertains that all keys are validly formatted and then
+//Doc  (if there are no errors anywhere in the specifications) decodes them again and writes them
+//Doc  the object handle as properties
+//Doc
+//Doc Finish
+
+// separate string util function "ParseSectionKeysValues"
+
+int ParseSectionKeysValues(hobject obj, string sectionkeysvalues, string property_name){
+
+   int key_count, and_count, i_close, next_and_loc, equals_loc, keys_values_length, double_and_count, array_create_code, return_code;
+   string section, keys_values, temp_array_name, current_key;
+
+   string return_label = "iINIFileUtil.ParseSectionKeysValues:";
+
+   bool at_end;
+
+   int no_error = -1;
+   int error_no_section_start = 1;
+   int error_no_section_end = 2;
+   int error_no_keys = 3;
+
+   int error_temp_array_add;
+   int error_invalid_key_format;
+   int error_output_array_add;   
+
+   int error_unrecognized_key_type = 4;
+   int error_key_type_format = 5;
+   int error_undefined_key_value = 6;
+
+   key_count = 0;
+
+							// Decode and Validate the sectionkeysvalues parameter
+
+							// [Section] descriptor
+
+   if (String.Mid(sectionkeysvalues,0,1) != "[") return error_no_section_start;
+
+   i_close = iStringUtil.Locate(sectionkeysvalues, "]");
+
+   if (i_close >= 0){
+      section = String.Mid(sectionkeysvalues, 0, (i_close + 1));
+   }
+   else{
+      return error_no_section_end;
+   }
+
+debug atomic Debug.PrintString(String.Join("Section Label: ", section));
+   
+							// First key and optional Type/Value
+   
+   keys_values = String.Mid(sectionkeysvalues,(i_close + 1), (String.Length(sectionkeysvalues)-i_close));
+   keys_values_length = String.Length(keys_values);
+
+
+
+							// determine the number of keys
+
+   and_count = iStringUtil.NumberOfNonoverlappingInstances( keys_values, "&&");
+
+							// delete null initial or final keys (if "&&" is the first two
+							// or the last two characters of the string
+
+   if (keys_values_length > 2){				// check for "&&" in first two characters
+      if (String.Mid(keys_values, 0, 2) == "&&"){
+         keys_values_length -= 2;
+         keys_values = String.Mid(keys_values, 2, keys_values_length);
+         and_count -= 1;
+      }
+   }
+   if (keys_values_length > 2){				// check for "&&" in last two characters
+      if (String.Mid(keys_values, (keys_values_length - 2), 2) == "&&"){
+         keys_values_length -= 2;
+         keys_values = String.Mid(keys_values, 0, keys_values_length);
+         and_count -= 1;
+      }
+   }
+							// Delete any instances of "&&&&" which would be interpreted
+							// to be a null key
+
+   double_and_count = iStringUtil.NumberOfNonoverlappingInstances( keys_values, "&&&&");
+   do {
+      iStringUtil.Replace(keys_values, "&&&&", "&&");
+
+      double_and_count = iStringUtil.NumberOfNonoverlappingInstances( keys_values, "&&&&");
+
+   } while (double_and_count > 0);
+
+
+   if (keys_values_length < 1) return error_no_keys;
+
+							// the keys_values string should now contain non-null strings
+							// separated by "&&", or else a single non-null string
+
+							// create a temporary string array to hold the key strings that
+							// are found
+
+   temp_array_name = "TEMP_STRING_ARRAY";
+
+   if (Object.PropertyExists(obj, temp_array_name)){	// verify whether it is an array object and clean up
+      if (Object.PropertyExists(obj, String.Join(temp_array_name, "_TYPE"))){
+         iObjectPropertiesUtil.RemoveArrayProperty(obj, temp_array_name);
+      }
+      else{
+         Object.RemoveProperty(obj, temp_array_name);	// disregard error return
+      }
+   }
+
+   array_create_code = iObjectPropertiesUtil.AddArrayProperty(obj, temp_array_name, "string");
+   
+							// loop through the keys_values string
+
+   at_end = false;
+   return_code = -1;
+
+   do {							// get the next key/value string
+
+      next_and_loc = iStringUtil.Locate(keys_values, "&&");
+
+      if (next_and_loc < 0){
+         current_key = keys_values;
+         at_end = true;
+      }
+      else{
+         current_key = String.Mid(keys_values, 0, next_and_loc);
+      }
+							// if a valid key/value string, export it to the string array
+
+      if (-1 == CheckSimpleKeyValueString(current_key)){
+         if (-1 != iObjectPropertiesUtil.AddStringArrayPropertyTail(obj, temp_array_name, current_key)) return_code = error_temp_array_add;						   }
+      else{
+         return_code = error_invalid_key_format;
+      }
+
+   } while ( (!at_end)&&(return_code == -1));
+
+							// test for abort return on error encountered during test key decodes
+
+   if (return_code != -1){				// delete any handle string array properties already written
+      iObjectPropertiesUtil.RemoveArrayProperty(obj, temp_array_name);
+      return return_code;
+   }
+
+							// Now loop over the string array of key values
+// WORK HERE*******************************
+
+
+// Retrieve temp key values from the temp_array_name array and decode them again and write the outputs to
+// the object handle as properties
+
+
+
+
+   return no_error;
+}
+
+
+//Doc Start
+//Doc Header int SelectSectionKeysValues(hinifile inifile, string sectionkeysvalues, string output_name)
+//Doc
+//Doc Descr: Return an array of numbered key indexes (integer array handle property) for the numbered
+//Doc  keys that match the input [section]key(s)=value(s) specification. The output index array is stored
+//Doc  in the input hinifile handle under the name output_name.
+//Doc
+//Doc SRC 2012/06/17
+//Doc
+//Doc INPUTS (arguments)
+//Doc
+//Doc inifile           hinifile  handle of the INIfile data structure within which to inquire
+//Doc sectionkeysvalues string    the [Section]key(s)=I/F/S:values(s) specification of the search to make
+//Doc                              See the NOTES: section for the syntax of this instruction.
+//Doc
+//Doc
+//Doc OUTPUTS (returned)
+//Doc
+//Doc key_index        int       the index of the numbered key at which the Nth instance of the specified
+//Doc                            value occurs. If the Nth instance does not exist in the numbered key array,
+//Doc                            the value -1 is returned.
+//Doc
+//Doc NOTES: SYNTAX OF THE sectionkeysvalues argument
+//Doc  
+//Doc  The sectionkeysvalues argument must have the syntax
+//Doc
+//Doc  [section]key1{=Type:value1}{&&key2{=Type:value2}}....{&&keyN}{=Type:valueN}
+//Doc
+//Doc  where expressions enclosed in braces {...} are optional. Multiple keys within the same
+//Doc  section can be specified; these are delimited with POG Logical ANDs ("&&") --- the use
+//Doc  of the POG logical operators is an intentional simularity for potential future use of
+//Doc  more complex logical expressions in the key section). At least one key 
+//Doc  name must be specified. For any key name that has its value specified by the "=value" 
+//Doc  expression,  the selection will be limited to those index values for which the specified 
+//Doc  numbered key has the specified value. For any key name that does not have its value spevified
+//Doc
+//Doc  If the "=Type:value" specification is given for a key name, the "Type" string must be a
+//Doc  single character, either "I", "F", or "S" for int, float or string data types.
+//Doc
+//Doc  Note: numbered vector value specification is not supported at this time.
+//Doc  
+//DOc  EXAMPLE: Suppose that a ship .ini file has a [Subsims] section in which some of the template[]
+//Doc  items have null_position[] and null_orientation[] keys in addition to the null[] key. Suppose
+//Doc  that one wanted to select all such subsystems, regardless of the values of the template[],
+//Doc  null[], null_position[] or null_orientation[] numbered keys -- one simply wants a list of
+//Doc  all the index numbers of template[] items for which all four keys are defined.
+//Doc
+//Doc  In this case, the sectionkeysvalues string would be defined as
+//Doc
+//Doc  [Subsims]template&null&null_position&null_orientation
+//Doc
+//Doc  IMPORTANT: The first key name ("template" in the example above) is the primary search key
+//Doc  within the specified INIFile [section]. The searching will not work properly unless this
+//Doc  key is continuously numbered from the lowest existing index in the section to the highest
+//Doc  existing index. In the above case, [Subsims] sections of ship .ini files always have
+//Doc  continuously numbered "template" keys, but the other keys are not continuously numbered.
+//Doc  Subsystems which do not require a physical location on the ship will not have null[] keys,
+//Doc  for example.
+//Doc  If it is desired to search in a discontinuously numbered primary search key, this function 
+//Doc  cannot be used
+//Doc
+//Doc  IMPORTANT: It is assumed that the primary key index numbers begin with [0]
+//Doc
+//Doc ERRORS
+//Doc  [iINIFileUtil.SelectSectionKeysValues]
+//Doc  no_section_start="sectionkeysvalues argument does not begin with the character ["
+//Doc  
+//Doc Finish
+
+
+int SelectSectionKeysValues(hinifile inifile, string sectionkeysvalues, string output_name){
+   int key_count, i_key,  max_primary_index, primary_index, secondary_key_count, secondary_key_index;     
+   string primary_type, key_type;
+
+							// Decode and Validate the sectionkeysvalues parameter
+
+
+// call the  function "ParseSectionKeysValues"
+
+
+							// find a usable temporary array name to use to hold
+							// the key names and values
+
+
+							// Determine the index range of the primary key
+
+							// Loop over the primary key index range
+   for (primary_index = 0; primary_index <= max_primary_index; ++primary_index){
+
+							// test for existence or actual value of primary key?
+
+      if (primary_type != " "){				// the "no value test" condition is signaled by the key type
+							// defined to be " ", t single space character
+         if (primary_type == "I"){
+
+
+         }
+         else if (primary_type == "F"){
+
+
+         }
+         else if (primary_type == "S"){
+
+
+         }
+         else{						// should never get here
+
+         }
+
+      }
+
+							// For each  instance of the primary key, loop over all
+							// the secondary keys, testing for existence or actual value as appropriate
+      for (i_key = 2; i_key <= key_count; ++i_key){
+
+							// get the current key name, type and value
+
+         if (key_type != " "){				// the "no value test" condition is signaled by the key type
+							// defined to be " ", t single space character
+            if (key_type == "I"){
+
+
+            }
+            else if (key_type == "F"){
+
+
+            }
+            else if (key_type == "S"){
+
+
+            }
+            else{					// should never get here
+
+            }
+
+         }
+
+
+      }
+
+							// If passed all tests, promite this numbered-key index to the output
+							// array
+
+
+   }
+
+   return -1;
+}
+
+
+
+/* 
+THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED BY INFOGRAMES
+OR PARTICLE SYSTEMS LTD. 
+
+ELEMENTS TM & (C) INFOGRAMES AND PARTICLE SYSTEMS LTD.
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+// THIS MOD IS NOT MADE, DISTRIBUTED, OR SUPPORTED 
+// BY INFOGRAMES OR PARTICLE SYSTEMS LTD.
+
+
