@@ -21,6 +21,7 @@ uses
    GUI,
    Task,
    State,
+   INIFile,
    iSim,
    iShip,
    iFactionScript,
@@ -81,7 +82,9 @@ Global,
    tsLoadoutGui,
 	tsPodUtil,
    tsEquipSell,
-   tsEquipBuy;
+   tsEquipBuy,
+   iShipConfigurationUtil,
+   usPOGexperiments;
 
 
 // Exports
