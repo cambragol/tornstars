@@ -20,7 +20,7 @@ prototype hfaction tsStarSystem.Government( string system );
 
 prototype tsStarSystem.SetGovernment( string system, hfaction government_faction );
 
-prototype tsStarSystem.FindGovernment();
+prototype hfaction tsStarSystem.FindGovernment( string system );
 
 prototype bool tsStarSystem.IsKnown( string system );
 
@@ -29,8 +29,6 @@ prototype tsStarSystem.SetKnown( string system, bool known );
 prototype tsStarSystem.UpdateSystem();
 
 prototype list tsStarSystem.StarSystems();
-
-prototype tsStarSystem.DebugInfo();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

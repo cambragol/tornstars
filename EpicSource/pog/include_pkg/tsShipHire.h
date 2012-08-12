@@ -20,7 +20,7 @@ prototype tsShipHire.InitShipHire( hship ship );
 
 prototype tsShipHire.RemoveShipHire( hship ship );
 
-prototype task tsShipHire.Comms();
+prototype Comms tsShipHire.Comms();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

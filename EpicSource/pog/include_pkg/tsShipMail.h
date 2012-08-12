@@ -20,10 +20,6 @@ prototype tsShipMail.StartScreen();
 
 prototype tsShipMail.RunCheck();
 
-prototype int tsShipMail.SendEmail( string sender, string subject, string body, string reply_function, bool critical, bool html_body );
-
-prototype bool tsShipMail.Read( int mail_id );
-
 prototype tsShipMail.OnQuit();
 
 prototype tsShipMail.ShipMailScreen();
