@@ -53,7 +53,9 @@ CargoTypes,
 provides Save,
          Restore,
          RestoreOrders,
-         NewGame;
+         NewGame,
+	   locate_free_pods;
+
 
 
 prototype hship create_new_player();

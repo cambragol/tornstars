@@ -18,9 +18,9 @@
 
 prototype hsim tsPcPodScrapper.PogCreate( string template_name, string object_name );
 
-prototype task tsPcPodScrapper.PogStart( hsim pog_object );
+prototype PogStart tsPcPodScrapper.PogStart( hsim pog_object );
 
-prototype task tsPcPodScrapper.Comms();
+prototype Comms tsPcPodScrapper.Comms();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

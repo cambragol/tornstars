@@ -24,9 +24,9 @@ prototype tsStartGui.StartGame();
 
 prototype tsStartGui.NewGame();
 
-prototype tsStartGui.FinalSetup();
-
 prototype tsStartGui.StartDolly();
+
+prototype tsStartGui.FinalSetup();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

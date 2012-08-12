@@ -78,6 +78,8 @@ prototype hfaction tsFaction.EmptyFaction();
 
 prototype tsFaction.CopyFeelings( hfaction source, hfaction new_faction );
 
+prototype tsFaction.Reset();
+
 prototype eFeelingType tsFaction.String2Type( string level );
 
 prototype float tsFaction.String2Level( string level );

@@ -26,7 +26,5 @@ prototype tsCrewSpeak.AutopilotFormate();
 
 prototype tsCrewSpeak.AutopilotDock();
 
-prototype tsCrewSpeak.AutopilotMatchVelocity();
-
 // EOF /////////////////////////////////////////////////////////////////////////
 

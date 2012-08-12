@@ -18,9 +18,9 @@
 
 prototype hsim tsPcRumorSeller.PogCreate( string template_name, string object_name );
 
-prototype task tsPcRumorSeller.PogStart( hsim pog_object );
+prototype PogStart tsPcRumorSeller.PogStart( hsim pog_object );
 
-prototype task tsPcRumorSeller.Comms();
+prototype Comms tsPcRumorSeller.Comms();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

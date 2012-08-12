@@ -18,7 +18,7 @@
 
 prototype hsim tsPcFreeScience.PogCreate( string template_name, string object_name );
 
-prototype task tsPcFreeScience.PogStart( hsim pog_object );
+prototype PogStart tsPcFreeScience.PogStart( hsim pog_object );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

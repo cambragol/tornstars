@@ -20,9 +20,9 @@ prototype tsDebug.PrintString( string flag, string info );
 
 prototype tsDebug.PrintHandle( string flag, hobject item );
 
-prototype tsDebug.DumpListHandles( ref list a_list );
+prototype tsDebug.DumpSetHandles( set a_set );
 
-prototype tsDebug.DumpSetHandles( ref set a_set );
+prototype tsDebug.DumpListHandles( list a_list );
 
 prototype tsDebug.NewGame();
 

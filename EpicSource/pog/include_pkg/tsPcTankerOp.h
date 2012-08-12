@@ -18,9 +18,9 @@
 
 prototype hsim tsPcTankerOp.PogCreate( string template_name, string object_name );
 
-prototype task tsPcTankerOp.PogStart( hobject pog_object );
+prototype PogStart tsPcTankerOp.PogStart( hobject pog_object );
 
-prototype task tsPcTankerOp.TankerComms();
+prototype TankerComms tsPcTankerOp.TankerComms();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

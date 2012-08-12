@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/tsFoCustoms.h,v 1.1 2006/04/04 14:55:23 Owner Exp $
+// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////

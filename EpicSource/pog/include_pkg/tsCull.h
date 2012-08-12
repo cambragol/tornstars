@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/tsCull.h,v 1.2 2006/03/25 08:16:10 Owner Exp $
+// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////

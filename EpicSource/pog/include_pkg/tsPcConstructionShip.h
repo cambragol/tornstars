@@ -18,9 +18,9 @@
 
 prototype hsim tsPcConstructionShip.PogCreate( string template_name, string object_name );
 
-prototype task tsPcConstructionShip.PogStart( hsim pog_object );
+prototype PogStart tsPcConstructionShip.PogStart( hsim pog_object );
 
-prototype task tsPcConstructionShip.Comms();
+prototype Comms tsPcConstructionShip.Comms();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

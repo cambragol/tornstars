@@ -20,7 +20,7 @@ prototype string tsMegaTrucking.SlotFromInt( int slot );
 
 prototype tsMegaTrucking.MegaDockTest( hship minipod, hsim megapod );
 
-prototype task tsMegaTrucking.MegaPodDeath( hsim sim );
+prototype MegaPodDeath tsMegaTrucking.MegaPodDeath( hsim sim );
 
 prototype hsim tsMegaTrucking.CreateMegaPod();
 
@@ -38,7 +38,7 @@ prototype tsMegaTrucking.UnloadShip( hship freighter, hhabitat station, set pods
 
 prototype tsMegaTrucking.LoadShip( hship freighter, hhabitat station, set pods );
 
-prototype task tsMegaTrucking.SecurityWatch( hsim ship );
+prototype SecurityWatch tsMegaTrucking.SecurityWatch( hsim ship );
 
 prototype tsMegaTrucking.DitchPods( hship freighter );
 

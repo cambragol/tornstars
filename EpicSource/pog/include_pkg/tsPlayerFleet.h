@@ -22,7 +22,7 @@ prototype tsPlayerFleet.NewPlayerShip( hship ship );
 
 prototype tsPlayerFleet.SetupPlayer( hship ship );
 
-prototype task tsPlayerFleet.WingmanComms();
+prototype WingmanComms tsPlayerFleet.WingmanComms();
 
 prototype tsPlayerFleet.HireShip( hship ship );
 

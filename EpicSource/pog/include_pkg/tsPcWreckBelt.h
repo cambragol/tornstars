@@ -18,7 +18,7 @@
 
 prototype hsim tsPcWreckBelt.PogCreate( string template_name, string object_name );
 
-prototype task tsPcWreckBelt.PogStart( hsim pog_object );
+prototype PogStart tsPcWreckBelt.PogStart( hsim pog_object );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

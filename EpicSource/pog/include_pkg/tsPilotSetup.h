@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/tsPilotSetup.h,v 1.2 2006/03/28 13:28:59 Owner Exp $
+// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////
@@ -18,19 +18,19 @@
 
 prototype tsPilotSetup.SetupOperation( hship ship, float notice_level, float flee_level );
 
-prototype task tsPilotSetup.OperationDeath( hship ship );
+prototype OperationDeath tsPilotSetup.OperationDeath( hship ship );
 
 prototype tsPilotSetup.SetupCargo( hship cargo_ship, float notice_level, float flee_level );
 
-prototype task tsPilotSetup.CargoSelfPreserve( hship cargo_ship );
+prototype CargoSelfPreserve tsPilotSetup.CargoSelfPreserve( hship cargo_ship, hship agressor_ship );
 
-prototype task tsPilotSetup.CargoDeath( hship cargo_ship );
+prototype CargoDeath tsPilotSetup.CargoDeath( hship cargo_ship );
 
 prototype tsPilotSetup.SetupEscort( hship escort, float notice_level, float flee_level );
 
-prototype task tsPilotSetup.EscortSelfPreserve( hship escort );
+prototype EscortSelfPreserve tsPilotSetup.EscortSelfPreserve( hship escort, hship agressor_ship );
 
-prototype task tsPilotSetup.EscortDeath( hship escort );
+prototype EscortDeath tsPilotSetup.EscortDeath( hship escort );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

@@ -46,7 +46,7 @@ prototype tsSystemDamage.TrashSubsim();
 
 prototype tsSystemDamage.TestMisc();
 
-prototype task tsSystemDamage.TFighterDeathWrapper( hship tfighter );
+prototype TFighterDeathWrapper tsSystemDamage.TFighterDeathWrapper( hship tfighter );
 
 prototype int tsSystemDamage.Float2Int( float fl );
 

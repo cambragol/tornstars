@@ -24,5 +24,7 @@ prototype tsPlayerSave.RestoreOrders();
 
 prototype tsPlayerSave.NewGame();
 
+prototype set tsPlayerSave.locate_free_pods();
+
 // EOF /////////////////////////////////////////////////////////////////////////
 

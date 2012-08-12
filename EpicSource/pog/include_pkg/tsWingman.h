@@ -22,7 +22,7 @@ prototype tsWingman.Start( hship ship, ePlayerOrder order, hisim target );
 
 prototype hisim tsWingman.OrderTarget( hship ship );
 
-prototype tsWingman.CurrentOrder( hship ship );
+prototype ePlayerOrder tsWingman.CurrentOrder( hship ship );
 
 prototype tsWingman.Save( hship ship );
 

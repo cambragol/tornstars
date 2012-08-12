@@ -18,11 +18,11 @@
 
 prototype hsim tsPcWeaponSeller.PogCreate( string template_name, string object_name );
 
-prototype task tsPcWeaponSeller.PogStart( hsim pog_object );
+prototype PogStart tsPcWeaponSeller.PogStart( hsim pog_object );
 
-prototype task tsPcWeaponSeller.Comms();
+prototype Comms tsPcWeaponSeller.Comms();
 
-prototype task tsPcWeaponSeller.CriminalComms();
+prototype CriminalComms tsPcWeaponSeller.CriminalComms();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

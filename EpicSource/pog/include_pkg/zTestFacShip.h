@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/zTestFacShip.h,v 1.2 2005/05/13 09:42:05 Owner Exp $
+// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////
@@ -17,6 +17,16 @@
 // Functions ///////////////////////////////////////////////////////////////////
 
 prototype zTestFacShip.StartTest();
+
+prototype zTestFacShip.SetLove();
+
+prototype zTestFacShip.SetLike();
+
+prototype zTestFacShip.SetNeutral();
+
+prototype zTestFacShip.SetDislike();
+
+prototype zTestFacShip.SetHate();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

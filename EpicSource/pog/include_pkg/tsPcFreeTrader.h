@@ -18,7 +18,7 @@
 
 prototype hsim tsPcFreeTrader.PogCreate( string template_name, string object_name );
 
-prototype task tsPcFreeTrader.PogStart( hsim pog_object );
+prototype PogStart tsPcFreeTrader.PogStart( hsim pog_object );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

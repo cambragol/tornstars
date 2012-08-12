@@ -216,7 +216,16 @@ PACKAGES = usPOGexperiments.pkg \
 	zTestObject.pkg \
 	tsSystemDamage.pkg \
 	tssdGUI.pkg \
+<<<<<<< .mine
+	usPOGexperiments.pkg \
+	iStringUtil.pkg \
+	iShipConfigurationUtil.pkg \
+	iObjectPropertiesUtil.pkg \
+	iINIFileUtil.pkg \
+	tsMain.pkg
+=======
 	tsMain.pkg 
+>>>>>>> .r835
 
 #
 # Convert the list of targets to lowercase.
@@ -242,8 +251,8 @@ depends:
 # gets updated by svn so checking for differences is tricky to
 # do automaticly
 #
-clean-headers:
-	rm -vf $(CODE_PATH)/include_tmp/*.h
+#clean-headers:
+#	rm -vf $(CODE_PATH)/include_tmp/*.h
 
 
 include $(DEPEND)

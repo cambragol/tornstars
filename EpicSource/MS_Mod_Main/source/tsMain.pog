@@ -282,12 +282,21 @@ SpaceEnter()
 	//Added for start screen effects
 	tsStartGui.StartDolly();
 
+<<<<<<< .mine
+
+//    added SRC 2012-Aug-07
+	usPOGexperiments.InitializeKeyBindings();
+  	iShipConfigurationUtil.EnterSpace();
+//
+
+=======
 
 //    added SRC 2012-Aug-07
    usPOGexperiments.InitializeKeyBindings();
    iShipConfigurationUtil.EnterSpace();
 //
 
+>>>>>>> .r835
    atomic debug Debug.PrintString("tsMain.SpaceEnter ----------------End----------------\n");
 
 }

@@ -18,7 +18,7 @@
 
 prototype hsim tsPcAsteroidBelt.PogCreate( string template_name, string object_name );
 
-prototype task tsPcAsteroidBelt.PogStart( hsim pog_object );
+prototype PogStart tsPcAsteroidBelt.PogStart( hsim pog_object );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

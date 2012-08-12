@@ -18,9 +18,9 @@
 
 prototype hsim tsPcCustomsToll.PogCreate( string template_name, string object_name );
 
-prototype task tsPcCustomsToll.PogStart( hsim pog_object );
+prototype PogStart tsPcCustomsToll.PogStart( hsim pog_object );
 
-prototype task tsPcCustomsToll.Comm();
+prototype Comm tsPcCustomsToll.Comm();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 
