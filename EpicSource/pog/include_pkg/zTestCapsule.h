@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
+// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/zTestCapsule.h,v 1.1 2005/06/10 19:56:35 Owner Exp $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////
@@ -17,8 +17,6 @@
 // Functions ///////////////////////////////////////////////////////////////////
 
 prototype zTestCapsule.JumpTarget();
-
-prototype zTestCapsule.ListJumps();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

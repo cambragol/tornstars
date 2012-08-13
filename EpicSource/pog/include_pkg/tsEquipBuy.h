@@ -38,8 +38,6 @@ prototype tsEquipBuy.OnOrderedItemPress();
 
 prototype tsEquipBuy.OnPurchasePress();
 
-prototype tsEquipBuy.OnInventoryPress();
-
 prototype tsEquipBuy.OnSellScreen();
 
 prototype tsEquipBuy.SessionStart();

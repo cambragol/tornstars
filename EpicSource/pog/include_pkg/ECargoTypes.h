@@ -7,34 +7,25 @@
 //
 // Revision control information:
 //
-// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
+// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/ECargoTypes.h,v 1.2 2005/05/13 09:42:03 Owner Exp $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////
-
+uses iCargoScript;
 // Enumerated types ////////////////////////////////////////////////////////////
 
-
-enum eCargoCategory
-{
-};
-
-enum eCargoSuperSet
-{
-};
-
-enum eCargoType
-{
-};
-
 enum eCargoValue
-{
+{ ECV_Invalid,
+  ECV_Cheap,
+  ECV_Average,
+  ECV_Expensive,
+  ECV_Exorbitant
 };
+
 // Functions ///////////////////////////////////////////////////////////////////
-
-prototype eCargoValue ECargoTypes.Int2CargoValue( int to_cast );
-
 prototype string ECargoTypes.CargoString2DBKey( string to_cast );
+
+prototype eCargoValue Int2CargoValue ( int to_cast );
 
 prototype string ECargoTypes.CargoCategory2String( eCargoCategory to_cast );
 
@@ -53,8 +44,6 @@ prototype eCargoCategory ECargoTypes.String2CargoCategory( string to_cast );
 prototype eCargoSuperSet ECargoTypes.String2CargoSuperSet( string to_cast );
 
 prototype eCargoType ECargoTypes.String2CargoType( string to_cast );
-
-prototype ECargoTypes.Test();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

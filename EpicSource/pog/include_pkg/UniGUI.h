@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
+// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/UniGUI.h,v 1.2 2005/05/13 09:42:03 Owner Exp $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////

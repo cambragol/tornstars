@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
+// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/tsFoProtection.h,v 1.1 2006/04/04 14:55:23 Owner Exp $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////
@@ -24,7 +24,7 @@ prototype tsFoProtection.Restore( hisim operation );
 
 prototype tsFoProtection.Update( hisim operation );
 
-prototype tsFoProtection.PlayerNear( hisim operation );
+prototype tsFoProtection.PlayerNear( hsim operation );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

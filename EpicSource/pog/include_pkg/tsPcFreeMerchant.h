@@ -18,7 +18,7 @@
 
 prototype hsim tsPcFreeMerchant.PogCreate( string template_name, string object_name );
 
-prototype PogStart tsPcFreeMerchant.PogStart( hsim pog_object );
+prototype task tsPcFreeMerchant.PogStart( hsim pog_object );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

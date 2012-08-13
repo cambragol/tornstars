@@ -16,6 +16,10 @@
 
 // Functions ///////////////////////////////////////////////////////////////////
 
+prototype int tsBaseNet.SendBase( string sender, string subject, string body, string reply_function, hobject reply_object, bool html_body );
+
+prototype int tsBaseNet.GetReplyId();
+
 prototype hsim tsBaseNet.BaseNetAr();
 
 prototype tsBaseNet.StartBaseNet();
@@ -24,7 +28,7 @@ prototype tsBaseNet.GenerateMissions();
 
 prototype tsBaseNet.SendSelf();
 
-prototype PlayerAccept tsBaseNet.PlayerAccept();
+prototype tsBaseNet.PlayerAccept();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

@@ -50,11 +50,11 @@ prototype tsPodUtil.AutodockPod( hship pod, hsim ship, hdockport target );
 
 prototype set tsPodUtil.DockPorts( hship ship );
 
-prototype set tsPodUtil.AsteroidDockPorts( hhabitat station );
+prototype set tsPodUtil.AsteroidDockPorts( hhabitat ship );
 
-prototype set tsPodUtil.UnloadDockPorts( hhabitat station );
+prototype set tsPodUtil.UniversalDockPorts( hhabitat ship );
 
-prototype set tsPodUtil.UniversalDockPorts( hhabitat station );
+prototype set tsPodUtil.UnloadDockPorts( hhabitat ship );
 
 prototype set tsPodUtil.ClaimPods( hship ship, set pods );
 
@@ -76,9 +76,9 @@ prototype tsPodUtil.HackNearbyPods();
 
 prototype tsPodUtil.TogglePodTag();
 
-prototype tsPodUtil.InitializeKeyBindings();
-
 prototype tsPodUtil.LoadPodsToPlayerShip();
+
+prototype tsPodUtil.InitializeKeyBindings();
 
 prototype tsPodUtil.PlayerShipDropCargo();
 

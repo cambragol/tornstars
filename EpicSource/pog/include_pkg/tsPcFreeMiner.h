@@ -18,7 +18,7 @@
 
 prototype hsim tsPcFreeMiner.PogCreate( string template_name, string object_name );
 
-prototype PogStart tsPcFreeMiner.PogStart( hsim pog_object );
+prototype task tsPcFreeMiner.PogStart( hsim pog_object );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

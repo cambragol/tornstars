@@ -18,8 +18,6 @@
 
 prototype tsClaimGui.DisplayWindow();
 
-prototype tsClaimGui.RunCheck();
-
 prototype tsClaimGui.OnClaimPress();
 
 prototype tsClaimGui.OnAbandonPress();
@@ -29,6 +27,8 @@ prototype tsClaimGui.OnSellPress();
 prototype tsClaimGui.Exit();
 
 prototype tsClaimGui.StartScreen();
+
+prototype tsClaimGui.RunCheck();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

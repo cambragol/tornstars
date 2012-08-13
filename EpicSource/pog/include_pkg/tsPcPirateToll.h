@@ -18,9 +18,9 @@
 
 prototype hsim tsPcPirateToll.PogCreate( string template_name, string object_name );
 
-prototype PogStart tsPcPirateToll.PogStart( hsim pog_object );
+prototype task tsPcPirateToll.PogStart( hsim pog_object );
 
-prototype Comm tsPcPirateToll.Comm();
+prototype task tsPcPirateToll.Comm();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

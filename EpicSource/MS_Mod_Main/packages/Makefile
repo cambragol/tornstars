@@ -69,12 +69,7 @@ vpath %.pog ../source
 #	tLProduction_t.pkg \
 
 
-PACKAGES = usPOGexperiments.pkg \
-        iShipConfigurationUtil.pkg \
-        iINIFileUtil.pkg \
-        iObjectPropertiesUtil.pkg \
-        iStringUtil.pkg \
-	ECargoTypes.pkg \
+PACKAGES = ECargoTypes.pkg \
 	UniGUI.pkg \
 	UniGUIBase.pkg \
 	UniGUIMisc.pkg \
@@ -216,16 +211,12 @@ PACKAGES = usPOGexperiments.pkg \
 	zTestObject.pkg \
 	tsSystemDamage.pkg \
 	tssdGUI.pkg \
-<<<<<<< .mine
-	usPOGexperiments.pkg \
-	iStringUtil.pkg \
-	iShipConfigurationUtil.pkg \
 	iObjectPropertiesUtil.pkg \
+	iStringUtil.pkg \
 	iINIFileUtil.pkg \
+	iShipConfigurationUtil.pkg \
+	usPOGexperiments.pkg \
 	tsMain.pkg
-=======
-	tsMain.pkg 
->>>>>>> .r835
 
 #
 # Convert the list of targets to lowercase.
@@ -252,7 +243,7 @@ depends:
 # do automaticly
 #
 #clean-headers:
-#	rm -vf $(CODE_PATH)/include_tmp/*.h
+	rm -vf $(CODE_PATH)/include_tmp/*.h
 
 
 include $(DEPEND)

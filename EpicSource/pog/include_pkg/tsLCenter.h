@@ -26,7 +26,7 @@ prototype hmapentity tsLCenter.GetCenter( hisim producer );
 
 prototype tsLCenter.SetCenter( hisim producer, hmapentity center );
 
-prototype string tsLCenter.GetsStationName( hisim producer );
+prototype string tsLCenter.GetStationName( hisim producer );
 
 prototype string tsLCenter.GetSystemName( hisim producer );
 

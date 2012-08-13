@@ -18,11 +18,11 @@
 
 prototype hsim tsPcFenceShip.PogCreate( string template_name, string object_name );
 
-prototype PogStart tsPcFenceShip.PogStart( hobject pog_object );
+prototype task tsPcFenceShip.PogStart( hobject pog_object );
 
-prototype FenceComms tsPcFenceShip.FenceComms();
+prototype task tsPcFenceShip.FenceComms();
 
-prototype DeathScript tsPcFenceShip.DeathScript( hship fence );
+prototype task tsPcFenceShip.DeathScript( hship fence );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

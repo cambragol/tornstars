@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
+// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/zTestCargo.h,v 1.2 2005/05/13 09:42:05 Owner Exp $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////
@@ -16,25 +16,9 @@
 
 // Functions ///////////////////////////////////////////////////////////////////
 
-prototype zTestCargo.GiveMillion();
+prototype zTestCargo.RunCheck();
 
-prototype zTestCargo.SetThousand();
-
-prototype zTestCargo.UnhideStations();
-
-prototype zTestCargo.AdvanceDay();
-
-prototype zTestCargo.CreateCargo();
-
-prototype zTestCargo.CreateWingmen();
-
-prototype zTestCargo.CreateTargets();
-
-prototype zTestCargo.RefuelShips();
-
-prototype zTestCargo.EmptyShipsFuel();
-
-prototype zTestCargo.CreateFuelPod();
+prototype zTestCargo.TestProperties();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

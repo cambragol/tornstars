@@ -18,7 +18,7 @@
 
 prototype hsim tsPcGuards.PogCreate( string template_name, string object_name );
 
-prototype PogStart tsPcGuards.PogStart( hsim pog_object );
+prototype task tsPcGuards.PogStart( hsim pog_object );
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

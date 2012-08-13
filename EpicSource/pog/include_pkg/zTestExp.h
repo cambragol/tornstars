@@ -7,7 +7,7 @@
 //
 // Revision control information:
 //
-// $Header: /flux/src/compiler/TypeChecker.cpp 31    27/03/01 14:31 Will $
+// $Header: c:/epic/cvs/EpicSource/pog/include_pkg/zTestExp.h,v 1.1 2006/03/25 08:16:10 Owner Exp $
 //
 
 // Dependencies ////////////////////////////////////////////////////////////////
@@ -19,12 +19,6 @@
 prototype zTestExp.TestProperties();
 
 prototype zTestExp.TestOrder();
-
-prototype zTestExp.TestObjectAdd();
-
-prototype zTestExp.TestManyDays();
-
-prototype zTestExp.StartChannel();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 

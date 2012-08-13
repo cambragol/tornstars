@@ -18,9 +18,9 @@
 
 prototype hsim tsPcEmbezzleOp.PogCreate( string template_name, string object_name );
 
-prototype PogStart tsPcEmbezzleOp.PogStart( hobject pog_object );
+prototype task tsPcEmbezzleOp.PogStart( hobject pog_object );
 
-prototype FenceComms tsPcEmbezzleOp.FenceComms();
+prototype task tsPcEmbezzleOp.FenceComms();
 
 // EOF /////////////////////////////////////////////////////////////////////////
 
