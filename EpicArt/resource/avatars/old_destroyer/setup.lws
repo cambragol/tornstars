@@ -1,0 +1,835 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 1
+PreviewLastFrame 100
+PreviewFrameStep 1
+FramesPerSecond 25.000000
+
+AddNullObject <detail_switch min=0.0 max=0.01>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  -500 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.01 max=0.05>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.05 max=1.0>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  500 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\IW1Destroyer\RTO\0_Destroyer_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 3
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\IW1Destroyer\RTO\DestroyerGunMounts_rto_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject <anim channel="RWing_TurretX">
+ShowObject 5 2
+ObjectMotion (unnamed)
+  9
+  2
+  189.05 -67.9 -179 0 0 0 1 1 1
+  0 0 0 0 0
+  189.05 -67.9 -179 360 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 4
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\IW1Destroyer\RTO\DestroyerGunGimble_rto_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 6
+ShadowOptions 7
+
+AddNullObject <anim channel="RWing_TurretY">
+ShowObject 5 2
+ObjectMotion (unnamed)
+  9
+  2
+  0 -12.6409 0 0 -15 0 1 1 1
+  0 0 0 0 0
+  0 -12.6409 0 0 22.5 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 6
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\IW1Destroyer\RTO\DestroyerGun_rto_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 8
+ShadowOptions 7
+
+AddNullObject <anim channel="LWing_TurretX">
+ShowObject 5 2
+ObjectMotion (unnamed)
+  9
+  2
+  -189.05 -67.9 -179 0 0 0 1 1 1
+  0 0 0 0 0
+  -189.05 -67.9 -179 -360 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\IW1Destroyer\RTO\DestroyerGunGimble_rto_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 10
+ShadowOptions 7
+
+AddNullObject <anim channel="LWing_TurretY">
+ShowObject 5 2
+ObjectMotion (unnamed)
+  9
+  2
+  0 -12.6409 0 0 -15 0 1 1 1
+  0 0 0 0 0
+  0 -12.6409 0 0 22.5 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+ParentObject 10
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\IW1Destroyer\RTO\DestroyerGun_rto_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 12
+ShadowOptions 7
+
+AddNullObject <scene name=destroyer_eng0>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  -24 -6 -286 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject <scene name=destroyer_eng0>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  -48 -6 -286 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject <scene name=destroyer_eng0>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  48 -6 -286 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject <scene name=destroyer_eng0>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  24 -6 -286 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 4
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\IW1Destroyer\RTO\LOD1\1_Destroyer_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 2
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\IW1Destroyer\RTO\DestroyerGunMounts_rto_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 18
+ShadowOptions 7
+
+AddNullObject <anim channel="RWing_TurretX">
+ShowObject 5 2
+ObjectMotion (unnamed)
+  9
+  2
+  189.05 -67.9 -179 0 0 0 1 1 1
+  0 0 0 0 0
+  189.05 -67.9 -179 360 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 18
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\IW1Destroyer\RTO\DestroyerGunGimble_rto_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 20
+ShadowOptions 7
+
+AddNullObject <anim channel="RWing_TurretY">
+ShowObject 5 2
+ObjectMotion (unnamed)
+  9
+  2
+  0 -12.6409 0 0 -15 0 1 1 1
+  0 0 0 0 0
+  0 -12.6409 0 0 22.5 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 20
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\IW1Destroyer\RTO\DestroyerGun_rto_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 22
+ShadowOptions 7
+
+AddNullObject <anim channel="LWing_TurretX">
+ShowObject 5 2
+ObjectMotion (unnamed)
+  9
+  2
+  -189.05 -67.9 -179 0 0 0 1 1 1
+  0 0 0 0 0
+  -189.05 -67.9 -179 -360 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+ParentObject 18
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\IW1Destroyer\RTO\DestroyerGunGimble_rto_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 24
+ShadowOptions 7
+
+AddNullObject <anim channel="LWing_TurretY">
+ShowObject 5 2
+ObjectMotion (unnamed)
+  9
+  2
+  0 -12.6409 0 0 -15 0 1 1 1
+  0 0 0 0 0
+  0 -12.6409 0 0 22.5 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+ParentObject 24
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\IW1Destroyer\RTO\DestroyerGun_rto_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 26
+ShadowOptions 7
+
+AddNullObject <scene name=destroyer_eng>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  -24 -6 -286 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 18
+ShadowOptions 7
+
+AddNullObject <scene name=destroyer_eng>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  -48 -6 -286 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 18
+ShadowOptions 7
+
+AddNullObject <scene name=destroyer_eng>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  48 -6 -286 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 18
+ShadowOptions 7
+
+AddNullObject <scene name=destroyer_eng>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  24 -6 -286 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 18
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\IW1Destroyer\RTO\LOD2\2_Destroyer_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 1
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\IW1Destroyer\RTO\DestroyerGunMounts_rto_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 32
+ShadowOptions 7
+
+AddNullObject <anim channel="RWing_TurretX">
+ShowObject 5 2
+ObjectMotion (unnamed)
+  9
+  2
+  189.05 -67.9 -179 0 0 0 1 1 1
+  0 0 0 0 0
+  189.05 -67.9 -179 360 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 32
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\IW1Destroyer\RTO\DestroyerGunGimble_rto_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 34
+ShadowOptions 7
+
+AddNullObject <anim channel="RWing_TurretY">
+ShowObject 5 2
+ObjectMotion (unnamed)
+  9
+  2
+  0 -12.6409 0 0 -15 0 1 1 1
+  0 0 0 0 0
+  0 -12.6409 0 0 22.5 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 34
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\IW1Destroyer\RTO\DestroyerGun_rto_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 36
+ShadowOptions 7
+
+AddNullObject <anim channel="LWing_TurretX">
+ShowObject 5 2
+ObjectMotion (unnamed)
+  9
+  2
+  -189.05 -67.9 -179 0 0 0 1 1 1
+  0 0 0 0 0
+  -189.05 -67.9 -179 -360 0 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+ParentObject 32
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\IW1Destroyer\RTO\DestroyerGunGimble_rto_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 38
+ShadowOptions 7
+
+AddNullObject <anim channel="LWing_TurretY">
+ShowObject 5 2
+ObjectMotion (unnamed)
+  9
+  2
+  0 -12.6409 0 0 -15 0 1 1 1
+  0 0 0 0 0
+  0 -12.6409 0 0 22.5 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+ParentObject 38
+ShadowOptions 7
+
+LoadObject R:\Objects_IW2\Ships\IW1Destroyer\RTO\DestroyerGun_rto_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 40
+ShadowOptions 7
+
+AddNullObject <scene name=destroyer_eng>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  -24 -6 -286 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 32
+ShadowOptions 7
+
+AddNullObject <scene name=destroyer_eng>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  -48 -6 -286 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 32
+ShadowOptions 7
+
+AddNullObject <scene name=destroyer_eng>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  48 -6 -286 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 32
+ShadowOptions 7
+
+AddNullObject <scene name=destroyer_eng>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  24 -6 -286 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 32
+ShadowOptions 7
+
+AddNullObject root
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <node template=ini||audio|sfx|capital_drive>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -6.25 -274 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <node template=ini||audio|sfx|capital_rumble>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -15.5 -81.25 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ShadowOptions 7
+
+AmbientColor 255 255 255
+AmbIntensity 0.250000
+
+AddLight
+LightName Light
+ShowLight 0 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -85 -42.5 164 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 46
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.3
+  16 1 0 0 0
+  0.3
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -208 -35 -158 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 46
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.3
+  16 1 0 0 0
+  0.3
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName GreenNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  85 -42.5 164 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 46
+LightColor 1 255 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.3
+  16 1 0 0 0
+  0.3
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName GreenNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  208 -35 -158 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 46
+LightColor 1 255 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.3
+  16 1 0 0 0
+  0.3
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName WhiteFlasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 -61.5 6 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 46
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.75
+  16 1 0 0 0
+  0.75
+  17 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+ShowCamera 0 7
+CameraMotion (unnamed)
+  9
+  1
+  0 0.25 -247.308 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ZoomFactor 3.200000
+Resolution 1
+PixelAspectRatio 3
+SegmentMemory 1050000
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+FilmSize 2
+FieldRendering 0
+MotionBlur 0
+DepthOfField 0
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 0
+ClipRayColors 0
+DataOverlayLabel  
+FullSceneParamEval 0
+
+ViewMode 2
+ViewAimpoint -0.070017 0.000000 0.830498
+ViewDirection -2.949609 -0.415388 0.000000
+ViewZoomFactor 1.777779
+GridNumber 40
+GridSize 50.000000
+ShowMotionPath 1
+ShowBGImage 0
+ShowFogRadius 0
+ShowRedraw 0
+ShowSafeAreas 0
+ShowFieldChart 0

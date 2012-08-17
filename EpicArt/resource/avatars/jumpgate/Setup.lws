@@ -1,0 +1,713 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 1
+PreviewLastFrame 100
+PreviewFrameStep 1
+FramesPerSecond 25.000000
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\0_gate_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 13
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\0_guns_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 13
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\0_guns_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 -120 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 13
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\0_guns_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 -240 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 13
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\0_gate_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 -120 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 13
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\0_gate_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 -240 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 13
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\0_gate_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 13
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\0_gate_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 -120 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 13
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\0_gate_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 -240 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 13
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\0_guns_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 13
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\0_guns_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 -120 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 13
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\0_guns_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 -240 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 13
+ShadowOptions 7
+
+AddNullObject 0_object_handle
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 2 2 2
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 16
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.0 max=0.01>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  -3000 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.01 max=0.1>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.1 max=1.0>
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  3000 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\LOD1\1_gate_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\LOD1\1_guns_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\LOD1\1_guns_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 -120 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\LOD1\1_guns_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 -240 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\LOD1\1_gate_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 -120 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\LOD1\1_gate_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 -240 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\LOD1\1_gate_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\LOD1\1_gate_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 -120 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\LOD1\1_gate_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 -240 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\LOD1\1_guns_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\LOD1\1_guns_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 -120 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\LOD1\1_guns_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 -240 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+ShadowOptions 7
+
+AddNullObject 1_object_handle
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 2 2 2
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 15
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\LOD2\2_gate_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 31
+ShadowOptions 7
+
+AddNullObject 2_object_handle
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 2 2 2
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 14
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\LOD2\2_gate_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 120 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 31
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\LOD2\2_gate_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 -120 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 31
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\LOD2\2_gate_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 31
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\LOD2\2_gate_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 -120 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 31
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\LaGrangePtGate\RTO\LOD2\2_gate_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 120 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 31
+ShadowOptions 7
+
+AddNullObject root
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 2 2 2
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AmbientColor 255 255 255
+AmbIntensity 0.250000
+
+AddLight
+LightName Light
+ShowLight 0 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName End_Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  453 261.5 1075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 4
+ParentObject 37
+LightColor 1 1 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  1
+  0 1 0 0 0
+  2
+  1 0 0 0 0
+  2
+  3 1 0 0 0
+  1
+  4 1 0 0 0
+  1
+  25 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName End_Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -453 261.5 1075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 37
+LightColor 1 1 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  1
+  0 1 0 0 0
+  2
+  1 0 0 0 0
+  2
+  3 1 0 0 0
+  1
+  4 1 0 0 0
+  1
+  25 1 0 0 0
+EndBehavior 1
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName End_Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 -525 -1075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 4
+ParentObject 37
+LightColor 1 1 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  1
+  0 1 0 0 0
+  2
+  1 0 0 0 0
+  2
+  3 1 0 0 0
+  1
+  4 1 0 0 0
+  1
+  25 1 0 0 0
+EndBehavior 1
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName End_Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  453 261.5 -1075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 37
+LightColor 1 1 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  1
+  0 1 0 0 0
+  2
+  1 0 0 0 0
+  2
+  3 1 0 0 0
+  1
+  4 1 0 0 0
+  1
+  25 1 0 0 0
+EndBehavior 1
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName End_Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -453 261.5 -1075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 37
+LightColor 1 1 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  1
+  0 1 0 0 0
+  2
+  1 0 0 0 0
+  2
+  3 1 0 0 0
+  1
+  4 1 0 0 0
+  1
+  25 1 0 0 0
+EndBehavior 1
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName End_Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 -525 1075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 37
+LightColor 1 1 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  1
+  0 1 0 0 0
+  2
+  1 0 0 0 0
+  2
+  3 1 0 0 0
+  1
+  4 1 0 0 0
+  1
+  25 1 0 0 0
+EndBehavior 1
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+ShowCamera 0 7
+CameraMotion (unnamed)
+  9
+  1
+  0 445 -2936.602 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ZoomFactor 3.200000
+Resolution 1
+PixelAspectRatio 3
+SegmentMemory 10500000
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+FilmSize 2
+FieldRendering 0
+MotionBlur 0
+DepthOfField 0
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 0
+ClipRayColors 0
+DataOverlayLabel  
+FullSceneParamEval 0
+
+ViewMode 1
+ViewAimpoint 0.000000 0.000000 0.000000
+ViewDirection 0.073304 -0.589922 0.000000
+ViewZoomFactor 2.666667
+GridNumber 20
+GridSize 1000.000000
+ShowMotionPath 1
+ShowBGImage 0
+ShowFogRadius 0
+ShowRedraw 0
+ShowSafeAreas 0
+ShowFieldChart 0

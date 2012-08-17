@@ -1,0 +1,690 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 1
+PreviewLastFrame 100
+PreviewFrameStep 1
+FramesPerSecond 25.000000
+
+AddNullObject <detail_switch min=0.0 max=0.05>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -150 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.05 max=0.1>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.1 max=1.0>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  150 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\cab0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 36
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\EngMount0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 9.5 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\Engine0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -80.2583 -16.8822 -15.0688 180 0 -35 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 5
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\Engine0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  80.2583 -16.8822 -15.0688 180 0 35 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 5
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\Engine0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -76.4266 -73.0938 -15.0688 180 0 -145 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 5
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\Engine0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  76.4266 -73.0938 -15.0688 180 0 145 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 5
+ShadowOptions 7
+
+AddNullObject <scene name=freighter0_eng>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1.84 94 0 0 90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 6
+ShadowOptions 7
+
+AddNullObject <scene name=freighter0_eng>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1.84 94 0 0 90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 7
+ShadowOptions 7
+
+AddNullObject <scene name=freighter0_eng>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1.84 94 0 0 90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 8
+ShadowOptions 7
+
+AddNullObject <scene name=freighter0_eng>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1.84 94 0 0 90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 9
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\LOD1\cab1_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 38
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\LOD1\EngMount1_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 9.5 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 14
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\LOD1\Engine1_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -80.2583 -16.8822 -15.0688 180 0 -35 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 15
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\LOD1\Engine1_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  80.2583 -16.8822 -15.0688 180 0 35 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 15
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\LOD1\Engine1_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -76.4266 -73.0938 -15.0688 180 0 -145 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 15
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\LOD1\Engine1_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  76.4266 -73.0938 -15.0688 180 0 145 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 15
+ShadowOptions 7
+
+AddNullObject <scene name=freighter1_eng>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1.84 94 0 0 90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 16
+ShadowOptions 7
+
+AddNullObject <scene name=freighter1_eng>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1.84 94 0 0 90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 17
+ShadowOptions 7
+
+AddNullObject <scene name=freighter1_eng>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1.84 94 0 0 90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 18
+ShadowOptions 7
+
+AddNullObject <scene name=freighter1_eng>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1.84 94 0 0 90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 19
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\LOD2\cab2_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 37
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\LOD2\EngMount2_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 9.5 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 24
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\LOD2\Engine2_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -80.2583 -16.8822 -15.0688 180 0 -35 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 25
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\LOD2\Engine2_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  80.2583 -16.8822 -15.0688 180 0 35 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 25
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\LOD2\Engine2_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -76.4266 -73.0938 -15.0688 180 0 -145 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 25
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\LOD2\Engine2_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  76.4266 -73.0938 -15.0688 180 0 145 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 25
+ShadowOptions 7
+
+AddNullObject <scene name=freighter1_eng>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1.84 94 0 0 90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 26
+ShadowOptions 7
+
+AddNullObject <scene name=freighter1_eng>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1.84 94 0 0 90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 27
+ShadowOptions 7
+
+AddNullObject <scene name=freighter1_eng>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1.84 94 0 0 90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 28
+ShadowOptions 7
+
+AddNullObject <scene name=freighter1_eng>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1.84 94 0 0 90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+ShadowOptions 7
+
+AddNullObject root
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 0.5 0.5 0.5
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ShadowOptions 7
+
+AddNullObject <node template=ini||audio|sfx|heavy_fighter_drive>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -19.5 -23.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ShadowOptions 7
+
+AddNullObject ScalerHandle0
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 0.5 0.5 0.5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 3
+ShadowOptions 7
+
+AddNullObject ScalerHandle2
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 0.5 0.5 0.5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 1
+ShadowOptions 7
+
+AddNullObject ScalerHandle1
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 0.5 0.5 0.5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 2
+ShadowOptions 7
+
+AmbientColor 255 255 255
+AmbIntensity 0.250000
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -20.5 11.5 -62.69 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 34
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.09
+  16 1 0 0 0
+  0.09
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -15.8 -15 71.32999 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 34
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.09
+  16 1 0 0 0
+  0.09
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName GreenNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  20.5 11.5 -62.69 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 34
+LightColor 1 255 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.09
+  16 1 0 0 0
+  0.09
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName GreenNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  15.8 -15 71.33 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 34
+LightColor 1 255 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.09
+  16 1 0 0 0
+  0.09
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName WhiteFlasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 -42.5 -10 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 34
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.3
+  16 1 0 0 0
+  0.3
+  17 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+ShowCamera 1 7
+CameraMotion (unnamed)
+  9
+  1
+  0 0.25 -247.308 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ZoomFactor 3.200000
+Resolution 1
+PixelAspectRatio 3
+SegmentMemory 1050000
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+FilmSize 2
+FieldRendering 0
+MotionBlur 0
+DepthOfField 0
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 0
+ClipRayColors 0
+DataOverlayLabel  
+FullSceneParamEval 0
+
+ViewMode 3
+ViewAimpoint 20.092432 -21.685963 -10.200671
+ViewDirection -5.775295 -0.638789 0.000000
+ViewZoomFactor 6.000002
+GridNumber 40
+GridSize 100.000000
+ShowMotionPath 1
+ShowBGImage 0
+ShowFogRadius 0
+ShowRedraw 0
+ShowSafeAreas 0
+ShowFieldChart 0

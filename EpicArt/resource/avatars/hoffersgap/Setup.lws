@@ -1,0 +1,647 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 0
+PreviewLastFrame 0
+PreviewFrameStep 1
+FramesPerSecond 25.000000
+
+AddNullObject HoffersAsteroid
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\HoffersRockLeft.lwo
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\HoffersRockRight.lwo
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  150 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\LargeGantryA_LOD0_T.lwo
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  -4.999237 0 -0.08734398 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 8
+ShadowOptions 7
+
+AddNullObject LargeGantryA_3
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 1975 23.55411 0 0 -90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\Dome\RTO\Dome0_T.lwo
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 7
+ShadowOptions 7
+
+AddNullObject ReactorCore
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  -501.376 0 0 0 0 -90 0.5 0.5 0.5
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 70
+ShadowOptions 7
+
+AddNullObject LargeGantryA_1
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1690 335.0579 0 0 90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\LargeGantryA_LOD0_T.lwo
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 180 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ParentObject 17
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\LargeGantryA_LOD0_T.lwo
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 180 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ParentObject 5
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\LargeGantryA_LOD0_T.lwo
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 180 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ParentObject 14
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\LargeGantryA_LOD0_T.lwo
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 180 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ParentObject 15
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\LargeGantryA_LOD0_T.lwo
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 180 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ParentObject 16
+ShadowOptions 7
+
+AddNullObject LargeGantryA_4
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 620 -1716.555 0 90 90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ShadowOptions 7
+
+AddNullObject LargeGantryA_5
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 420 -70.20898 0 0 -90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ShadowOptions 7
+
+AddNullObject LargeGantryA_6
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -340 179.6544 0 180 90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ShadowOptions 7
+
+AddNullObject LargeGantryA_2
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 1630.057 0 0 90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\SmallGantryA_LOD0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 24
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\SmallGantryA_LOD0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 25
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\SmallGantryA_LOD0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 26
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\SmallGantryA_LOD0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 27
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\SmallGantryA_LOD0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 28
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\SmallGantryA_LOD0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+ShadowOptions 7
+
+AddNullObject SmallGantryA_1
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -145 980 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject SmallGantryA_2
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1480 -810 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject SmallGantryA_3
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -600 -680 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject SmallGantryA_4
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 1435 -790 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject SmallGantryA_5
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -50 -1255.565 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ShadowOptions 7
+
+AddNullObject SmallGantryA_6
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1020 225 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\SmallGantryB_LOD0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 34
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\SmallGantryB_LOD0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 35
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\SmallGantryB_LOD0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 36
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\SmallGantryB_LOD0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 37
+ShadowOptions 7
+
+AddNullObject SmallGantryB_1
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  4.996967 -1565 1049.826 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject SmallGantryB_2
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -830 1515 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject SmallGantryB_3
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -350 -2090 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject SmallGantryB_4
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 1715 810 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\SmallGantryC_LOD0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 42
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\SmallGantryC_LOD0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 43
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\SmallGantryC_LOD0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 44
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\SmallGantryC_LOD0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 45
+ShadowOptions 7
+
+AddNullObject SmallGantryC_1
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 640 570 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject SmallGantryC_2
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 755 -1015 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject SmallGantryC_3
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 1290 235 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject SmallGantryC_4
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 820 1515 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\SmallGantryD_LOD0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 50
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\SmallGantryD_LOD0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 51
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\SmallGantryD_LOD0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 52
+ShadowOptions 7
+
+LoadObject Objects_IW2\HoffasGap\RTO\SmallGantryD_LOD0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 53
+ShadowOptions 7
+
+AddNullObject SmallGantryD_1
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -670 915 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject SmallGantryD_2
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -795 -1265 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject SmallGantryD_3
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -1585 -284.6771 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ShadowOptions 7
+
+AddNullObject SmallGantryD_4
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 1330 1330 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AmbientColor 255 255 255
+AmbIntensity 0.250000
+
+AddLight
+LightName GreenNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  147.7 0 -72.3 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 128 255 0
+LgtIntensity 0.000000
+LightType 1
+ShadowType 1
+
+ShowCamera 1 7
+CameraMotion (unnamed)
+  9
+  1
+  0 0.25 -247.308 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ZoomFactor 3.200000
+Resolution 1
+PixelAspectRatio 3
+SegmentMemory 1050000
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+FilmSize 2
+FieldRendering 0
+MotionBlur 0
+DepthOfField 0
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 0
+DataOverlayLabel  
+FullSceneParamEval 0
+
+ViewMode 1
+ViewAimpoint -197.752014 85.000000 -205.154984
+ViewDirection -55.850414 -20.764158 -0.141372
+ViewZoomFactor 2.415111
+GridNumber 40
+GridSize 1000.000000
+ShowMotionPath 1
+ShowBGImage 0
+ShowFogRadius 0
+ShowRedraw 0
+ShowSafeAreas 0
+ShowFieldChart 0

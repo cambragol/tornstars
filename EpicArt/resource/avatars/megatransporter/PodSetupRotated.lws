@@ -1,0 +1,192 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 0
+PreviewLastFrame 1
+PreviewFrameStep 1
+FramesPerSecond 25.000000
+
+AddNullObject <detail_switch min=0.0 max=0.01>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -250 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.01 max=1.0>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  250 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\MegaTransporter\RTO\MegaPod_OPEN_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 90 0 90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 6
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\MegaTransporter\RTO\MegaPod_LDoor_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 24
+ParentObject 9
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\MegaTransporter\RTO\MegaPod_RDoor_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 24
+ParentObject 10
+ShadowOptions 7
+
+AddNullObject 0_PodOpenHandle
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 2
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\MegaTransporter\RTO\LOD2\MegaPod2_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 90 0 90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 8
+ShadowOptions 7
+
+AddNullObject 2_PodOpenHandle
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 1
+ShadowOptions 7
+
+AddNullObject <anim channel=door?+s(0.5)>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  -85 93 0 0 0 0 1 1 1
+  0 0 0 0 0
+  -85 93 0 0 0 145 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 24
+ParentObject 3
+ShadowOptions 7
+
+AddNullObject <anim channel=door?+s(0.5)>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  85 93 0 0 0 0 1 1 1
+  0 0 0 0 0
+  85 93 0 0 0 -145 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 24
+ParentObject 3
+ShadowOptions 7
+
+AmbientColor 255 255 255
+AmbIntensity 0.250000
+
+AddLight
+LightName Light
+ShowLight 0 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+ShowCamera 1 7
+CameraMotion (unnamed)
+  9
+  1
+  -50.54428 493.25 -484.65 23.2 37.79999 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ZoomFactor 3.200000
+Resolution 1
+PixelAspectRatio 3
+SegmentMemory 1050000
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+FilmSize 2
+FieldRendering 0
+MotionBlur 0
+DepthOfField 0
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 0
+ClipRayColors 0
+DataOverlayLabel  
+FullSceneParamEval 0
+
+ViewMode 3
+ViewAimpoint -0.634199 0.000000 1.331650
+ViewDirection -6.199420 -0.331613 0.000000
+ViewZoomFactor 2.666667
+GridNumber 40
+GridSize 100.000000
+ShowMotionPath 1
+ShowBGImage 0
+ShowFogRadius 0
+ShowRedraw 0
+ShowSafeAreas 0
+ShowFieldChart 0

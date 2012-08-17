@@ -1,0 +1,145 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 1
+PreviewLastFrame 100
+PreviewFrameStep 1
+FramesPerSecond 25.000000
+
+AddNullObject <anim channel=boom>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 0 0 0 22 0 1 1 1
+  0 0 0 0 0
+  0 0 0 0 12 0 1 1 1
+  1 1 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Tug\RTO\Tug_Engine_RTO_LOD1_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 1 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 1
+ShadowOptions 7
+
+AddNullObject <anim channel=flap>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 11.6 -38.5 0 -13.6 0 1 1 1
+  0 1 0 0 0
+  0 11.6 -38.5 0 12 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 2
+ShadowOptions 7
+
+AddNullObject <anim channel=flap>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 23.8 -38.2 0 25 0 1 1 1
+  0 1 0 0 0
+  0 23.8 -38.2 0 -12 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 2
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Tug\RTO\Tug_LowerBottyFlap_RTO_LOD1_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -11.6 38.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 3
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Tug\RTO\Tug_TopBottyFlap_RTO_LOD1_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -23.8 38.2 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject <scene name="engine_flame_lod1">
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 18.4 -48 0 0 0 1 1 1
+  0 1 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 2
+ShadowOptions 7
+
+ShowCamera 1 7
+CameraMotion (unnamed)
+  9
+  1
+  111.2739 74.89999 -330.6541 342.6998 20.20001 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ZoomFactor 3.200000
+Resolution 1
+PixelAspectRatio 3
+SegmentMemory 1050000
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+FilmSize 2
+FieldRendering 0
+MotionBlur 0
+DepthOfField 0
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 0
+ClipRayColors 0
+DataOverlayLabel  
+FullSceneParamEval 0
+
+ViewMode 3
+ViewAimpoint 43.287746 27.749731 -24.825090
+ViewDirection -8.564340 -0.188497 0.000000
+ViewZoomFactor 5.462058
+GridNumber 40
+GridSize 50.000000
+ShowMotionPath 1
+ShowBGImage 0
+ShowFogRadius 0
+ShowRedraw 0
+ShowSafeAreas 0
+ShowFieldChart 0

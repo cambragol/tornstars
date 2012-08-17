@@ -1,0 +1,576 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 1
+PreviewLastFrame 100
+PreviewFrameStep 1
+FramesPerSecond 25.000000
+
+AddNullObject Flashing_Light_Null
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 10.97999 2.8 0 0 0 1 1 1
+  0 0 0 0 0
+  0 10.97999 2.8 359 0 0 1 1 1
+  20 0 0 0 0
+EndBehavior 2
+LockedChannels 53
+ParentObject 3
+ShadowOptions 7
+
+AddNullObject Flashing_Light_Null
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 10.97999 -13.24001 0 0 0 1 1 1
+  0 0 0 0 0
+  0 10.97999 -13.24001 359 0 0 1 1 1
+  17 0 0 0 0
+EndBehavior 2
+LockedChannels 51
+ParentObject 3
+ShadowOptions 7
+
+AddNullObject Truck_Handle
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 51
+ShadowOptions 7
+
+AmbientColor 255 255 255
+AmbIntensity 0.250000
+
+AddLight
+LightName Nav_Light_Green
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  15.995 3.599998 -3.109998 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 3
+LightColor 0 200 10
+LgtIntensity (envelope)
+  1
+  5
+  -7.63685e-008
+  0 0 0 0 0
+  0
+  15 1 0 0 0
+  0.9
+  16 0 0 0 0
+  0.9
+  17 1 0 0 0
+  0
+  18 0 0 0 0
+EndBehavior 2
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  -7.63685e-008
+  0 0 0 0 0
+  0
+  15 1 0 0 0
+  0.05
+  16 0 0 0 0
+  0.05
+  17 1 0 0 0
+  0
+  18 0 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 41
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 0
+
+AddLight
+LightName Nav_Light_Green
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  16.82501 2.549997 -11.40999 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 3
+LightColor 0 200 10
+LgtIntensity (envelope)
+  1
+  5
+  -7.63685e-008
+  0 0 0 0 0
+  0
+  15 1 0 0 0
+  0.9
+  16 0 0 0 0
+  0.9
+  17 1 0 0 0
+  0
+  18 0 0 0 0
+EndBehavior 2
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  -7.63685e-008
+  0 0 0 0 0
+  0
+  15 1 0 0 0
+  0.05
+  16 0 0 0 0
+  0.05
+  17 1 0 0 0
+  0
+  18 0 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 41
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 0
+
+AddLight
+LightName Nav_Light_Red
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -15.98251 3.599998 -3.109998 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 3
+LightColor 250 0 10
+LgtIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  0
+  7 1 0 0 0
+  0.9
+  8 0 0 0 0
+  0.896
+  9 1 0 0 0
+  0
+  10 0 0 0 0
+  0
+  18 1 0 0 0
+EndBehavior 2
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  0
+  7 1 0 0 0
+  0.05
+  8 0 0 0 0
+  0.05
+  9 1 0 0 0
+  0
+  10 0 0 0 0
+  0
+  18 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 0
+
+AddLight
+LightName Nav_Light_Red
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -16.82747 2.549997 -11.40999 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 3
+LightColor 250 0 10
+LgtIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  0
+  7 1 0 0 0
+  0.9
+  8 0 0 0 0
+  0.896
+  9 1 0 0 0
+  0
+  10 0 0 0 0
+  0
+  18 1 0 0 0
+EndBehavior 2
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  0
+  7 1 0 0 0
+  0.05
+  8 0 0 0 0
+  0.05
+  9 1 0 0 0
+  0
+  10 0 0 0 0
+  0
+  18 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 0
+
+AddLight
+LightName Red_Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -1.319999 7.299998 16.225 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 3
+LightColor 250 10 0
+LgtIntensity 0.500000
+LightType 1
+LensFlare 1
+FlareIntensity 0.090000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 13
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Red_Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 7.299998 16.225 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 7
+ParentObject 3
+LightColor 250 10 0
+LgtIntensity 0.500000
+LightType 1
+LensFlare 1
+FlareIntensity 0.090000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 13
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Red_Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1.325001 7.299998 16.225 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 3
+LightColor 250 10 0
+LgtIntensity 0.500000
+LightType 1
+LensFlare 1
+FlareIntensity 0.090000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 13
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName SpinnyLight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 0 -0.2 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 1
+LightColor 255 240 0
+LgtIntensity 1.000000
+LightType 2
+ConeAngle 30.000000
+EdgeAngle 5.000000
+LensFlare 1
+FlareIntensity 0.160000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 3
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+ShadowType 1
+
+AddLight
+LightName SpinnyLight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 0 0 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 1
+LightColor 255 200 0
+LgtIntensity 1.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.080000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 3
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+ShadowType 1
+
+AddLight
+LightName SpinnyLight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 0 0.2 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 1
+LightColor 255 240 0
+LgtIntensity 1.000000
+LightType 2
+ConeAngle 30.000000
+EdgeAngle 5.000000
+LensFlare 1
+FlareIntensity 0.160000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 3
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+ShadowType 1
+
+AddLight
+LightName SpinnyLight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 0 -0.2 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 2
+LightColor 255 240 0
+LgtIntensity 1.000000
+LightType 2
+ConeAngle 30.000000
+EdgeAngle 5.000000
+LensFlare 1
+FlareIntensity 0.160000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 3
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+ShadowType 1
+
+AddLight
+LightName SpinnyLight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 0 0 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 2
+LightColor 255 200 0
+LgtIntensity 1.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.080000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 3
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+ShadowType 1
+
+AddLight
+LightName SpinnyLight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 0 0.2 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 2
+LightColor 255 240 0
+LgtIntensity 1.000000
+LightType 2
+ConeAngle 30.000000
+EdgeAngle 5.000000
+LensFlare 1
+FlareIntensity 0.160000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 3
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+ShadowType 1
+
+AddLight
+LightName WhiteFlasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 -11.4 6.900001 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ParentObject 3
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.16
+  16 1 0 0 0
+  0.16
+  17 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+ShowCamera 1 7
+CameraMotion (unnamed)
+  9
+  1
+  0 0.25 -247.308 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ZoomFactor 3.200000
+Resolution 1
+PixelAspectRatio 3
+SegmentMemory 1050000
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+FilmSize 2
+FieldRendering 0
+MotionBlur 0
+DepthOfField 0
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 0
+ClipRayColors 0
+DataOverlayLabel  
+FullSceneParamEval 0
+
+ViewMode 1
+ViewAimpoint 0.491201 0.000000 -2.434185
+ViewDirection -2.949609 -0.415388 0.000000
+ViewZoomFactor 8.999997
+GridNumber 40
+GridSize 20.000000
+ShowMotionPath 1
+ShowBGImage 0
+ShowFogRadius 0
+ShowRedraw 0
+ShowSafeAreas 0
+ShowFieldChart 0

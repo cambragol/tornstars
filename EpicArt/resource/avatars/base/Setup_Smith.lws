@@ -1,0 +1,1794 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 0
+PreviewLastFrame 1000
+PreviewFrameStep 1
+FramesPerSecond 25.000000
+
+AddNullObject LightHandle
+ShowObject 5 1
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 1 0 0 0
+EndBehavior 2
+LockedChannels 24
+ParentObject 10
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\Dioramas\Smith\RTO\RTWorkshopInterior_T.lwo
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 10
+ShadowOptions 7
+
+AddNullObject CameraNull
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject CameraHandle
+ShowObject 5 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 10
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\Dioramas\Smith\RTO\RTCarapice_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  48
+  -0.2565 0.532 0.01 0 0 0 1 1 1
+  0 0 0 0 0
+  -0.2565 0.532 0.002499999 0 0 0 1 1 1
+  15 1 0 0 0
+  -0.2565 0.532 -0.0105 0 0 0 1 1 1
+  30 1 0 0 0
+  -0.2565 0.532 -0.0175 0 0 0 1 1 1
+  45 1 0 0 0
+  -0.2565 0.532 -0.016 0 0 0 1 1 1
+  60 1 0 0 0
+  -0.2565 0.532 -0.0135 0 0 0 1 1 1
+  75 1 0 0 0
+  -0.2565 0.532 -0.0145 0 0 0 1 1 1
+  90 1 0 0 0
+  -0.2565 0.532 -0.0175 0 0 0 1 1 1
+  105 0 0 0 0
+  -0.2565 0.532 -0.0165 0 0 0 1 1 1
+  120 0 1 0 0
+  -0.2565 0.532 0.0115 0 0 0 1 1 1
+  135 1 0 0 0
+  -0.2565 0.532 0.0115 0 0 0 1 1 1
+  150 1 0 0 0
+  -0.2565 0.532 0.007999998 0 0 0 1 1 1
+  165 0 0 0 0
+  -0.2565 0.532 0.011 0 0 0 1 1 1
+  180 0 1 0 0
+  -0.2565 0.532 0.009499998 0 0 0 1 1 1
+  195 1 0 0 0
+  -0.2565 0.532 0.0115 0 0 0 1 1 1
+  210 1 0 0 0
+  -0.2565 0.532 0.012593 0 0 0 1 1 1
+  240 1 0 0 0
+  -0.2565 0.532 0.01259259 0 0 0 1 1 1
+  245 1 0 0 0
+  -0.2565 0.532 -0.012 0 0 0 1 1 1
+  255 1 0 1 0
+  -0.2565 0.532 -0.0195 0 0 0 1 1 1
+  270 0 1 0 0
+  -0.2565 0.532 -0.021 0 0 0 1 1 1
+  285 0 0 0 0
+  -0.2565 0.532 -0.0225 0 0 0 1 1 1
+  300 1 0 0 0
+  -0.2565 0.532 -0.02 0 0 0 1 1 1
+  435 1 0 0 0
+  -0.2565 0.532 -0.0175 0 0 0 1 1 1
+  450 1 0 0 0
+  -0.2565 0.532 -0.0195 0 0 0 1 1 1
+  555 1 0 0 0
+  -0.2565 0.532 -0.0225 0 0 0 1 1 1
+  570 1 0 0 0
+  -0.2565 0.532 0.01200001 0 0 0 1 1 1
+  585 0 1 0 0
+  -0.2565 0.532 0.012 0 0 0 1 1 1
+  660 1 0 0 0
+  -0.2565 0.532 -0.02049999 0 0 0 1 1 1
+  675 1 0 0 0
+  -0.2565 0.532 -0.02249999 0 0 0 1 1 1
+  680 0 0 0 0
+  -0.2565 0.532 -0.01979999 0 0 0 1 1 1
+  695 0 0 0 0
+  -0.2565 0.532 -0.01899999 0 0 0 1 1 1
+  705 1 0 0 0
+  -0.2565 0.532 -0.01382469 0 0 0 1 1 1
+  715 0 0 0 0
+  -0.2565 0.532 0.004746167 0 0 0 1 1 1
+  725 0 0 0 0
+  -0.2565 0.532 0.01200001 0 0 0 1 1 1
+  735 0 0 0 0
+  -0.2565 0.532 0.012 0 0 0 1 1 1
+  840 1 0 0 0
+  -0.2565 0.532 0.01458334 0 0 0 1 1 1
+  845 0 0 0 0
+  -0.2565 0.532 0.01196667 0 0 0 1 1 1
+  850 0 0 0 0
+  -0.2565 0.532 -0.01176666 0 0 0 1 1 1
+  860 0 0 0 0
+  -0.2565 0.532 -0.02113333 0 0 0 1 1 1
+  865 0 0 0 0
+  -0.2565 0.532 -0.022 0 0 0 1 1 1
+  870 1 0 0 0
+  -0.2565 0.532 -0.022 0 0 0 1 1 1
+  930 1 0 0 0
+  -0.2565 0.532 -0.0215 0 0 0 1 1 1
+  940 0 0 0 0
+  -0.2565 0.532 -0.017 0 0 0 1 1 1
+  945 1 0 0 0
+  -0.2565 0.532 0.002000002 0 0 0 1 1 1
+  960 1 0 0 0
+  -0.2565 0.532 0.01266667 0 0 0 1 1 1
+  970 0 0 0 0
+  -0.2565 0.532 0.009000002 0 0 0 1 1 1
+  975 1 0 0 0
+  -0.2565 0.532 0.01 0 0 0 1 1 1
+  990 1 0 0 0
+  -0.2565 0.532 0.01 0 0 0 1 1 1
+  1000 1 0 0 0
+EndBehavior 2
+LockedChannels 43
+ParentObject 8
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\Dioramas\Smith\RTO\RTArmUpper_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  18
+  0 0 0 0 15 -3.8 1 1 1
+  0 0 0 0 0
+  0 0 0 0 15 -3.8 1 1 1
+  15 0 0 0 0
+  0 0 0 0 15 -4.347996 1 1 1
+  30 0 0 0 0
+  0 0 0 0 13.76637 -4.259753 1 1 1
+  45 0 0 0 0
+  0 0 0 0 11.15016 -4.242328 1 1 1
+  60 0 0 0 0
+  0 0 0 0 13.4161 -4.174191 1 1 1
+  75 0 0 0 0
+  0 0 0 0 14.89173 -4.100068 1 1 1
+  90 0 0 0 0
+  0 0 0 0 15.56865 -4.025151 1 1 1
+  105 0 0 0 0
+  0 0 0 0 20.24576 -3.950117 1 1 1
+  120 0 0 0 0
+  0 0 0 0 53.72289 -3.875061 1 1 1
+  135 0 0 0 0
+  0 0 0 0 62.40004 -3.8 1 1 1
+  150 0 0 0 0
+  0 0 0 0 62.40004 -3.8 1 1 1
+  245 0 0 0 0
+  0 0 0 0 36.60005 -4.800002 1 1 1
+  260 0 0 0 0
+  0 0 0 0 20.20004 3.799997 1 1 1
+  290 0 0 0 0
+  0 0 0 0 5.20005 -2.600003 1 1 1
+  350 0 0 0 0
+  0 0 0 0 2 -2.6 1 1 1
+  365 0 0 0 0
+  0 0 0 0 2 -6.599998 1 1 1
+  380 0 0 0 0
+  0 0 0 0 15 -3.8 1 1 1
+  1000 0 0 0 0
+EndBehavior 2
+LockedChannels 8
+ParentObject 5
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\Dioramas\Smith\RTO\RTArmLower_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  24
+  -0.055 -0.335 0 90 0 2.200004 1 1 1
+  0 0 0 0 0
+  -0.055 -0.335 0 84.2 0 2.200004 1 1 1
+  15 0 0 0 0
+  -0.055 -0.335 0 84.2 0 2.2 1 1 1
+  30 0 0 0 0
+  -0.055 -0.335 0 76.90086 0 6.250318 1 1 1
+  45 0 0 0 0
+  -0.055 -0.335 0 73.40024 0 8.415757 1 1 1
+  60 0 0 0 0
+  -0.055 -0.335 0 69.93017 0 10.60996 1 1 1
+  75 0 0 0 0
+  -0.055 -0.335 0 66.46371 0 12.80756 1 1 1
+  90 0 0 0 0
+  -0.055 -0.335 0 62.99772 0 15.00562 1 1 1
+  105 0 0 0 0
+  -0.055 -0.335 0 59.5318 0 17.20373 1 1 1
+  120 0 0 0 0
+  -0.055 -0.335 0 56.0659 0 19.40187 1 1 1
+  135 0 0 0 0
+  -0.055 -0.335 0 52.6 0 21.6 1 1 1
+  150 0 0 0 0
+  -0.055 -0.335 0 52.6 0 21.6 1 1 1
+  245 0 0 0 0
+  -0.055 -0.335 0 43.19998 0 11.79999 1 1 1
+  260 0 0 0 0
+  -0.055 -0.335 0 64.19994 0 1.799982 1 1 1
+  290 0 0 0 0
+  -0.055 -0.335 0 64.19987 0 27.79998 1 1 1
+  350 0 0 0 0
+  -0.055 -0.335 0 60.39993 0 38.60001 1 1 1
+  365 1 0 0 0
+  -0.055 -0.335 0 63.79985 0 30.8 1 1 1
+  380 0 0 0 0
+  -0.055 -0.335 0 62.79995 0 27.8 1 1 1
+  480 0 0 0 0
+  -0.055 -0.335 0 66.63858 0 22.25855 1 1 1
+  580 0 0 0 0
+  -0.055 -0.335 0 63.00834 0 17.39724 1 1 1
+  680 0 0 0 0
+  -0.055 -0.335 0 61.48545 0 12.63548 1 1 1
+  780 0 0 0 0
+  -0.055 -0.335 0 58.31657 0 6.941979 1 1 1
+  900 0 0 0 0
+  -0.055 -0.335 0 63.64518 0 10.45958 1 1 1
+  965 0 0 0 0
+  -0.055 -0.335 0 90 0 2.200004 1 1 1
+  1000 0 0 0 0
+EndBehavior 2
+LockedChannels 22
+ParentObject 6
+ShadowOptions 7
+
+AddNullObject SmithHandle
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -0.006532321 -0.3799999 -1.976909 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 502
+ParentObject 10
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\Dioramas\Smith\RTO\Animation\RTSmith_Anchor_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 8
+ShadowOptions 7
+
+AddNullObject <envelope channel=weld>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ObjDissolve (envelope)
+  1
+  147
+  0
+  0 0 0 0 0
+  0
+  200 0 1 0 0
+  0.7500938
+  201 0 0 0 0
+  0
+  205 0 0 0 0
+  1.000125
+  206 0 0 0 0
+  0
+  210 0 1 0 0
+  0.8501064
+  211 0 0 0 0
+  0
+  215 0 0 0 0
+  0.9501188
+  216 0 0 0 0
+  0
+  220 0 1 0 0
+  0.9001125
+  221 0 0 0 0
+  0
+  225 0 1 0 0
+  0
+  285 0 1 0 0
+  0.8501064
+  286 0 0 0 0
+  0.5845175
+  290 0 0 0 0
+  0.6500813
+  291 0 0 0 0
+  0.4422775
+  295 0 1 0 0
+  0.8501064
+  296 0 0 0 0
+  0.4422775
+  300 0 0 0 0
+  1.000125
+  301 0 0 0 0
+  0.6022976
+  305 0 1 0 0
+  0.9001125
+  306 0 0 0 0
+  0.6022975
+  310 0 0 0 0
+  0.9001125
+  311 0 0 0 0
+  0
+  315 0 1 0 0
+  0
+  350 1 0 0 0
+  0.9001125
+  351 0 0 0 0
+  0.3711575
+  355 0 1 0 0
+  0.8501064
+  356 0 0 0 0
+  0.5133975
+  360 0 0 0 0
+  0.7500938
+  361 0 0 0 0
+  0.3889375
+  375 0 1 0 0
+  0.9001125
+  376 0 0 0 0
+  0.4956175
+  385 0 1 0 0
+  0.9501188
+  386 0 0 0 0
+  0
+  390 0 0 0 0
+  0
+  415 1 1 0 0
+  0.7500938
+  416 0 0 0 0
+  0.3533775
+  420 0 0 0 0
+  0.8501064
+  421 0 0 0 0
+  0.5133975
+  425 0 1 0 0
+  0.5489576
+  435 0 1 0 0
+  0.8501064
+  436 0 0 0 0
+  0.4244975
+  440 0 0 0 0
+  1.000125
+  441 0 0 0 0
+  0
+  445 0 0 0 0
+  0
+  500 1 0 0 0
+  0.8501064
+  501 0 0 0 0
+  0.6911975
+  505 0 0 0 0
+  0.9501188
+  506 0 0 0 0
+  0.6200774
+  510 0 1 0 0
+  0.7500938
+  511 0 0 0 0
+  0.9001125
+  521 0 0 0 0
+  0.3711575
+  525 0 0 0 0
+  1.000125
+  526 0 0 0 0
+  0.4600575
+  530 0 1 0 0
+  0.8501064
+  531 0 0 0 0
+  0.6723064
+  544 0 0 0 0
+  0.6267453
+  561 0 0 0 0
+  0.3711575
+  565 0 0 0 0
+  0.7500938
+  566 0 0 0 0
+  0.5133976
+  570 0 1 0 0
+  1.000125
+  571 0 0 0 0
+  0.3889375
+  575 0 0 0 0
+  0.9501188
+  576 0 0 0 0
+  0.5667374
+  580 0 1 0 0
+  1.000125
+  581 0 0 0 0
+  0.4778375
+  585 0 0 0 0
+  0.8501064
+  586 0 0 0 0
+  0
+  590 0 1 0 0
+  0
+  620 0 1 0 0
+  0.8501064
+  621 0 0 0 0
+  0.5667375
+  625 0 0 0 0
+  0.9501188
+  626 0 0 0 0
+  0.4600576
+  630 0 1 0 0
+  0.6500813
+  631 0 0 0 0
+  0.3711575
+  635 0 0 0 0
+  0.8501064
+  636 0 0 0 0
+  0.4067176
+  640 0 1 0 0
+  0.7500938
+  641 0 0 0 0
+  0.5133975
+  645 0 0 0 0
+  0.8501064
+  646 0 0 0 0
+  0.4244975
+  650 0 1 0 0
+  1.000125
+  651 0 0 0 0
+  0.5133976
+  655 0 0 0 0
+  0.6500813
+  656 0 0 0 0
+  0
+  660 0 0 0 0
+  0
+  700 1 0 0 0
+  0.8501064
+  701 0 0 0 0
+  0.5489574
+  705 0 0 0 0
+  0.6500813
+  706 0 0 0 0
+  0.5489575
+  710 0 1 0 0
+  0.733425
+  711 0 0 0 0
+  0.6089651
+  720 0 0 0 0
+  0.5011739
+  736 0 0 0 0
+  0.2822575
+  740 0 1 0 0
+  1.000125
+  741 0 0 0 0
+  0.3711575
+  745 0 0 0 0
+  1.000125
+  746 0 0 0 0
+  0.4422775
+  750 0 1 0 0
+  0.9501188
+  751 0 0 0 0
+  0.3889375
+  755 0 0 0 0
+  0.8501064
+  756 0 0 0 0
+  0
+  760 0 1 0 0
+  0
+  775 1 0 0 0
+  1.000125
+  776 0 0 0 0
+  0.3000375
+  780 0 1 0 0
+  0.8501064
+  781 0 0 0 0
+  0.3000375
+  785 0 0 0 0
+  1.000125
+  786 0 0 0 0
+  0.4778375
+  795 0 0 0 0
+  0.7500938
+  796 0 0 0 0
+  0.4600575
+  800 0 1 0 0
+  0.9501188
+  801 0 0 0 0
+  0.6656387
+  810 0 0 0 0
+  0.4589463
+  826 0 0 0 0
+  0.3533775
+  830 0 1 0 0
+  0.6500813
+  831 0 0 0 0
+  0.4067175
+  835 0 0 0 0
+  1.000125
+  836 0 0 0 0
+  0.5311775
+  840 0 1 0 0
+  0.8501064
+  841 0 0 0 0
+  0.4244975
+  845 0 0 0 0
+  1.000125
+  846 0 0 0 0
+  0.3889375
+  850 0 1 0 0
+  0.7500938
+  851 0 0 0 0
+  0.3000375
+  855 0 0 0 0
+  1.000125
+  856 0 0 0 0
+  0
+  860 0 0 0 0
+  0
+  900 1 1 0 0
+  1.000125
+  901 0 0 0 0
+  0.4778375
+  905 0 0 0 0
+  0.7500938
+  906 0 0 0 0
+  0.3889375
+  910 0 1 0 0
+  1.000125
+  911 0 0 0 0
+  0.4600575
+  915 0 0 0 0
+  0.7434264
+  916 0 0 0 0
+  0.5656264
+  930 0 0 0 0
+  0.4578351
+  945 0 0 0 0
+  0.3711575
+  949 0 0 0 0
+  1.000125
+  950 0 0 0 0
+  0.4067175
+  954 0 1 0 0
+  1.000125
+  955 0 0 0 0
+  0.5667374
+  959 0 0 0 0
+  1.000125
+  960 0 0 0 0
+  0
+  964 0 0 0 0
+  0
+  1000 1 1 0 0
+EndBehavior 2
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\Dioramas\Smith\RTO\RTWeaponLatchDoor_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0.05999999 -0.07999999 -2.69 -27 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 53
+ParentObject 10
+ShadowOptions 7
+
+AmbientColor 255 255 255
+AmbIntensity 0.000000
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2.780427 1.010003 1.915369 -220.6 14 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 1
+LightColor 255 255 255
+LgtIntensity 0.750000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -0.7009072 -0.88 -0.8747377 0 -116 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 1
+LightColor 255 255 255
+LgtIntensity 0.250000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName TorchLight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.5193976 -0.21 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 7
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  147
+  0
+  0 0 0 0 0
+  0
+  200 0 1 0 0
+  0.0084375
+  201 0 0 0 0
+  0
+  205 0 0 0 0
+  0.01125
+  206 0 0 0 0
+  0
+  210 0 1 0 0
+  0.009562502
+  211 0 0 0 0
+  0
+  215 0 0 0 0
+  0.0106875
+  216 0 0 0 0
+  0
+  220 0 1 0 0
+  0.010125
+  221 0 0 0 0
+  0
+  225 0 1 0 0
+  0
+  285 0 1 0 0
+  0.009562502
+  286 0 0 0 0
+  0.006575
+  290 0 0 0 0
+  0.0073125
+  291 0 0 0 0
+  0.004975
+  295 0 1 0 0
+  0.009562502
+  296 0 0 0 0
+  0.004975
+  300 0 0 0 0
+  0.01125
+  301 0 0 0 0
+  0.006775001
+  305 0 1 0 0
+  0.010125
+  306 0 0 0 0
+  0.006775
+  310 0 0 0 0
+  0.010125
+  311 0 0 0 0
+  0
+  315 0 1 0 0
+  0
+  350 1 0 0 0
+  0.010125
+  351 0 0 0 0
+  0.004175
+  355 0 1 0 0
+  0.009562502
+  356 0 0 0 0
+  0.005775
+  360 0 0 0 0
+  0.0084375
+  361 0 0 0 0
+  0.004375
+  375 0 1 0 0
+  0.010125
+  376 0 0 0 0
+  0.005575
+  385 0 1 0 0
+  0.0106875
+  386 0 0 0 0
+  0
+  390 0 0 0 0
+  0
+  415 1 1 0 0
+  0.0084375
+  416 0 0 0 0
+  0.003975
+  420 0 0 0 0
+  0.009562502
+  421 0 0 0 0
+  0.005775
+  425 0 1 0 0
+  0.006175001
+  435 0 1 0 0
+  0.009562502
+  436 0 0 0 0
+  0.004775
+  440 0 0 0 0
+  0.01125
+  441 0 0 0 0
+  0
+  445 0 0 0 0
+  0
+  500 1 0 0 0
+  0.009562502
+  501 0 0 0 0
+  0.007775
+  505 0 0 0 0
+  0.0106875
+  506 0 0 0 0
+  0.006974999
+  510 0 1 0 0
+  0.0084375
+  511 0 0 0 0
+  0.010125
+  521 0 0 0 0
+  0.004175
+  525 0 0 0 0
+  0.01125
+  526 0 0 0 0
+  0.005175
+  530 0 1 0 0
+  0.009562502
+  531 0 0 0 0
+  0.007562501
+  544 0 0 0 0
+  0.007050003
+  561 0 0 0 0
+  0.004175
+  565 0 0 0 0
+  0.0084375
+  566 0 0 0 0
+  0.005775001
+  570 0 1 0 0
+  0.01125
+  571 0 0 0 0
+  0.004375
+  575 0 0 0 0
+  0.0106875
+  576 0 0 0 0
+  0.006374999
+  580 0 1 0 0
+  0.01125
+  581 0 0 0 0
+  0.005375
+  585 0 0 0 0
+  0.009562502
+  586 0 0 0 0
+  0
+  590 0 1 0 0
+  0
+  620 0 1 0 0
+  0.009562502
+  621 0 0 0 0
+  0.006375
+  625 0 0 0 0
+  0.0106875
+  626 0 0 0 0
+  0.005175001
+  630 0 1 0 0
+  0.0073125
+  631 0 0 0 0
+  0.004175
+  635 0 0 0 0
+  0.009562502
+  636 0 0 0 0
+  0.004575001
+  640 0 1 0 0
+  0.0084375
+  641 0 0 0 0
+  0.005775
+  645 0 0 0 0
+  0.009562502
+  646 0 0 0 0
+  0.004775
+  650 0 1 0 0
+  0.01125
+  651 0 0 0 0
+  0.005775001
+  655 0 0 0 0
+  0.0073125
+  656 0 0 0 0
+  0
+  660 0 0 0 0
+  0
+  700 1 0 0 0
+  0.009562502
+  701 0 0 0 0
+  0.006174999
+  705 0 0 0 0
+  0.0073125
+  706 0 0 0 0
+  0.006175
+  710 0 1 0 0
+  0.00825
+  711 0 0 0 0
+  0.006850001
+  720 0 0 0 0
+  0.005637502
+  736 0 0 0 0
+  0.003175
+  740 0 1 0 0
+  0.01125
+  741 0 0 0 0
+  0.004175
+  745 0 0 0 0
+  0.01125
+  746 0 0 0 0
+  0.004975
+  750 0 1 0 0
+  0.0106875
+  751 0 0 0 0
+  0.004375
+  755 0 0 0 0
+  0.009562502
+  756 0 0 0 0
+  0
+  760 0 1 0 0
+  0
+  775 1 0 0 0
+  0.01125
+  776 0 0 0 0
+  0.003375
+  780 0 1 0 0
+  0.009562502
+  781 0 0 0 0
+  0.003375
+  785 0 0 0 0
+  0.01125
+  786 0 0 0 0
+  0.005375
+  795 0 0 0 0
+  0.0084375
+  796 0 0 0 0
+  0.005175
+  800 0 1 0 0
+  0.0106875
+  801 0 0 0 0
+  0.0074875
+  810 0 0 0 0
+  0.005162501
+  826 0 0 0 0
+  0.003975
+  830 0 1 0 0
+  0.0073125
+  831 0 0 0 0
+  0.004575
+  835 0 0 0 0
+  0.01125
+  836 0 0 0 0
+  0.005975
+  840 0 1 0 0
+  0.009562502
+  841 0 0 0 0
+  0.004775
+  845 0 0 0 0
+  0.01125
+  846 0 0 0 0
+  0.004375
+  850 0 1 0 0
+  0.0084375
+  851 0 0 0 0
+  0.003375
+  855 0 0 0 0
+  0.01125
+  856 0 0 0 0
+  0
+  860 0 0 0 0
+  0
+  900 1 1 0 0
+  0.01125
+  901 0 0 0 0
+  0.005375
+  905 0 0 0 0
+  0.0084375
+  906 0 0 0 0
+  0.004375
+  910 0 1 0 0
+  0.01125
+  911 0 0 0 0
+  0.005175
+  915 0 0 0 0
+  0.008362502
+  916 0 0 0 0
+  0.006362502
+  930 0 0 0 0
+  0.005150001
+  945 0 0 0 0
+  0.004175
+  949 0 0 0 0
+  0.01125
+  950 0 0 0 0
+  0.004575
+  954 0 1 0 0
+  0.01125
+  955 0 0 0 0
+  0.006374999
+  959 0 0 0 0
+  0.01125
+  960 0 0 0 0
+  0
+  964 0 0 0 0
+  0
+  1000 1 1 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 8
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -0.7 0.605 -1.77 0 -26.30001 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 41
+LightColor 255 255 255
+LgtIntensity 0.700000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.035000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 11
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -0.7 0.65 -1.6825 0 -26.30001 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 41
+LightColor 255 255 255
+LgtIntensity 0.700000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.035000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 11
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -0.7 0.6925 -1.5975 0 -26.30001 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 41
+LightColor 255 255 255
+LgtIntensity 0.700000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.035000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 11
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -0.7 0.735 -1.5125 0 -26.30001 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 41
+LightColor 255 255 255
+LgtIntensity 0.700000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.035000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 11
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -0.7 0.78 -1.425 0 -26.30001 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 41
+LightColor 255 255 255
+LgtIntensity 0.700000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.035000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 11
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -0.7 0.82 -1.3475 0 -26.30001 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 46
+LightColor 255 255 255
+LgtIntensity 0.700000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.035000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 11
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.1595001 0.6950001 -2.9075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+LightColor 255 255 255
+LgtIntensity 0.500000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.050000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.4469998 0.6950001 -2.9075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+LightColor 255 255 255
+LgtIntensity 0.500000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.050000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.5069999 0.6950001 -2.9075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+LightColor 255 255 255
+LgtIntensity 0.500000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.050000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.567 0.6950001 -2.9075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+LightColor 255 255 255
+LgtIntensity 0.500000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.050000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.6269999 0.6950001 -2.9075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+LightColor 255 255 255
+LgtIntensity 0.500000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.050000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.6819998 0.6950001 -2.9075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+LightColor 255 255 255
+LgtIntensity 0.500000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.050000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.6544998 0.6950001 -2.9075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+LightColor 255 255 255
+LgtIntensity 0.500000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.050000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.5969998 0.6950001 -2.9075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+LightColor 255 255 255
+LgtIntensity 0.500000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.050000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.5369999 0.6950001 -2.9075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+LightColor 255 255 255
+LgtIntensity 0.500000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.050000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.4769999 0.6950001 -2.9075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+LightColor 255 255 255
+LgtIntensity 0.500000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.050000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.4144999 0.6950001 -2.9075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+LightColor 255 255 255
+LgtIntensity 0.500000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.050000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -0.7 0.6260001 -1.727 0 -26.30001 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 41
+LightColor 255 255 255
+LgtIntensity 0.700000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.035000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 11
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -0.7 0.6715003 -1.6405 0 -26.30001 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 41
+LightColor 255 255 255
+LgtIntensity 0.700000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.035000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 11
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -0.7 0.7135003 -1.5565 0 -26.30001 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 41
+LightColor 255 255 255
+LgtIntensity 0.700000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.035000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 11
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -0.7 0.7580004 -1.469501 0 -26.30001 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 41
+LightColor 255 255 255
+LgtIntensity 0.700000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.035000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 11
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -0.7 0.8005005 -1.3865 0 -26.30001 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 41
+LightColor 255 255 255
+LgtIntensity 0.700000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.035000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 11
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.3794999 0.6950001 -2.9075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+LightColor 255 255 255
+LgtIntensity 0.500000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.050000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.3444999 0.6950001 -2.9075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+LightColor 255 255 255
+LgtIntensity 0.500000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.050000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.3144999 0.6950001 -2.9075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+LightColor 255 255 255
+LgtIntensity 0.500000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.050000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.2844999 0.6950001 -2.9075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+LightColor 255 255 255
+LgtIntensity 0.500000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.050000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.252 0.6950001 -2.9075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+LightColor 255 255 255
+LgtIntensity 0.500000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.050000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.222 0.6950001 -2.9075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+LightColor 255 255 255
+LgtIntensity 0.500000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.050000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.1895 0.6950001 -2.9075 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+LightColor 255 255 255
+LgtIntensity 0.500000
+LightType 1
+LightFalloff 1
+LightRange 1.000000
+LensFlare 1
+FlareIntensity 0.050000
+FlareNominalDistance 1.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 9
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+ShowCamera 1 7
+CameraMotion (unnamed)
+  9
+  1
+  -1.324795 0.7321998 0.716074 147.2002 10.4 0.2 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 3
+ZoomFactor 3.000000
+Resolution 1
+PixelAspectRatio 3
+SegmentMemory 10500000
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+FilmSize 2
+FieldRendering 0
+MotionBlur 0
+DepthOfField 0
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 1
+ClipRayColors 0
+RayRecursionLimit 16
+DataOverlayLabel  
+FullSceneParamEval 0
+
+ViewMode 1
+ViewAimpoint 0.390267 -0.518008 -2.885354
+ViewDirection 4.056138 -0.274020 0.000000
+ViewZoomFactor 20.250008
+GridNumber 20
+GridSize 0.500000
+ShowMotionPath 1
+ShowBGImage 0
+ShowFogRadius 0
+ShowRedraw 0
+ShowSafeAreas 0
+ShowFieldChart 0

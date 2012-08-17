@@ -1,0 +1,5573 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 1
+PreviewLastFrame 2000
+PreviewFrameStep 1
+FramesPerSecond 25.000000
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\BayInterior02_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 97
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\LaunchTubes_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\BayInterior01_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\BayInteriorEndWall_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 100
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\BayJibs_RTO_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\Arm\Crane_Gantry_RTO_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 2
+LockedChannels 59
+ParentObject 91
+IKAnchor 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\Arm\Crane_Platform_RTO_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  50 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 2
+LockedChannels 62
+ParentObject 6
+IKAnchor 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\Arm\Crane_Shoulder_RTO_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 90 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 2
+LockedChannels 1591
+ParentObject 7
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\Arm\Crane_UpperArm_RTO_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -15 4.77 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 2
+LockedChannels 3631
+ParentObject 8
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\Arm\Crane_LowerArm_RTO_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -112 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 2
+LockedChannels 2607
+ParentObject 9
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\Arm\Crane_Wrist_RTO_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -12 112 0 34.01111 0 1 1 1
+  0 0 0 0 0
+EndBehavior 2
+LockedChannels 3631
+ParentObject 10
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\Arm\Crane_Hand_RTO_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 34 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 2
+LockedChannels 2611
+ParentObject 11
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\HabSection_RTO_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 17.5 -140 0 38 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\Vent_RTO_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  241.5 146 -148 0 38 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\Vent_RTO_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -241.5 146 -148 0 38 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\HabWall_RTO_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\SnrvPit_End01_T_G.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 100
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\SnrvPit_End02_T_G.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 100
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\SnrvPit_Side_T_G.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 100
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\SnrvPit_Bot_T_G.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 100
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\BayInterior02Roof_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 99
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\BayInterior01Roof_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 101
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\CraneCables_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\InnerDoor_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -172 96 0 0 0 0 1 1 1
+  0 1 0 0 0
+EndBehavior 2
+LockedChannels 24
+ParentObject 25
+ShadowOptions 7
+
+AddNullObject DoorPivot01
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+  0 0 0 0 0 0 1 1 1
+  100 0 0 0 0
+EndBehavior 1
+ParentObject 36
+ShadowOptions 7
+
+AddNullObject DoorPivot02
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 60 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 36
+ShadowOptions 7
+
+AddNullObject DoorPivot03
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 120 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 36
+ShadowOptions 7
+
+AddNullObject DoorPivot04
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 180 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 36
+ShadowOptions 7
+
+AddNullObject DoorPivot05
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 240 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 36
+ShadowOptions 7
+
+AddNullObject DoorPivot06
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 300 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 36
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\InnerDoor_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -172 96 0 0 0 0 1 1 1
+  0 1 0 0 0
+EndBehavior 2
+ParentObject 26
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\InnerDoor_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -172 96 0 0 0 0 1 1 1
+  0 1 0 0 0
+EndBehavior 2
+ParentObject 27
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\InnerDoor_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -172 96 0 0 0 0 1 1 1
+  0 1 0 0 0
+EndBehavior 2
+ParentObject 28
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\InnerDoor_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -172 96 0 0 0 0 1 1 1
+  0 1 0 0 0
+EndBehavior 2
+ParentObject 29
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\InnerDoor_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -172 96 0 0 0 0 1 1 1
+  0 1 0 0 0
+EndBehavior 2
+ParentObject 30
+ShadowOptions 7
+
+AddNullObject DoorNull
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 1512 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 50
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\dockarm_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  274.6504 -94.7985 527.7753 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ShadowOptions 7
+
+AddNullObject DockSliderMaster01
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -79.97545 -50.0235 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 37
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\dockarmslider_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  79.9755 50.0235 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 38
+ShadowOptions 7
+
+AddNullObject tug_dock
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  194.6019 -145.5 527.8001 -90 90 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 151
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\dockarm_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  274.6504 -94.7985 352.8102 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\dockarm_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  274.6504 -94.7985 177.8451 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ShadowOptions 7
+
+AddNullObject DockSliderMaster02
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -79.97545 -50.0235 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 41
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\dockarmslider_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  79.9755 50.0235 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 43
+ShadowOptions 7
+
+AddNullObject fast_attackdock
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  194.7 -146.2 352.8001 -90 90 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 152
+ShadowOptions 7
+
+AddNullObject DockSliderMaster03
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -79.97545 -50.0235 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 42
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\dockarmslider_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  79.9755 50.0235 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 46
+ShadowOptions 7
+
+AddNullObject heavy_corvettedock
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  194.8001 -147.4 177.9 -90 90 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 153
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Tug\RTO\Tug_Hull_RTO_LOD0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 2.008 24.5014 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+PivotPoint 0 -1.5 -54.5
+ParentObject 40
+ShadowOptions 7
+
+AddNullObject <scene name="upper_engine_lod0"
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -6.2 2.4 -41.6 0 0 46 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 49
+ShadowOptions 7
+
+AddNullObject <scene name="upper_engine_lod0"
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  6.2 2.4 -41.6 0 0 -46 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 49
+ShadowOptions 7
+
+AddNullObject <scene name="lower_engine_lod0"
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  10.4615 -5.55 -50.832 0 0 236 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 49
+ShadowOptions 7
+
+AddNullObject <scene name="lower_engine_lod0"
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -10.4615 -5.55 -50.832 0 0 -236 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 49
+ShadowOptions 7
+
+AddNullObject <node template="ini||avatars|tug_hull|channels"
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <anim channel=boom
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 0 0 0 36 0 1 1 1
+  0 0 0 0 0
+  0 0 0 0 22.5 0 1 1 1
+  1 1 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Tug\RTO\Tug_Engine_RTO_LOD0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 1 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 50
+ShadowOptions 7
+
+AddNullObject <anim channel=flap
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 23.8 -38.2 0 25 0 1 1 1
+  0 1 0 0 0
+  0 23.8 -38.2 0 -12 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 56
+ShadowOptions 7
+
+AddNullObject <anim channel=flap
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 11.6 -38.5 0 -13.8 0 1 1 1
+  0 0 0 0 0
+  0 11.6 -38.5 0 12 0 1 1 1
+  1 1 0 0 0
+EndBehavior 1
+ParentObject 56
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Tug\RTO\Tug_TopBottyFlap_RTO_LOD0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -23.8 38.2 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 57
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Tug\RTO\Tug_LowerBottyFlap_RTO_LOD0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -11.6 38.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 58
+ShadowOptions 7
+
+AddNullObject <scene name="engine_flame_lod0"
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 18.4 -48 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 56
+ShadowOptions 7
+
+AddNullObject <anim channel=boom
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 0 0 0 22 0 1 1 1
+  0 0 0 0 0
+  0 0 0 0 12 0 1 1 1
+  1 1 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Tug\RTO\Tug_Engine_RTO_LOD0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 1 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 52
+ShadowOptions 7
+
+AddNullObject <anim channel=flap
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 11.6 -38.5 0 -13.6 0 1 1 1
+  0 1 0 0 0
+  0 11.6 -38.5 0 12 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 63
+ShadowOptions 7
+
+AddNullObject <anim channel=flap
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 23.8 -38.2 0 25 0 1 1 1
+  0 1 0 0 0
+  0 23.8 -38.2 0 -12 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 63
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Tug\RTO\Tug_LowerBottyFlap_RTO_LOD0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -11.6 38.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 64
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Tug\RTO\Tug_TopBottyFlap_RTO_LOD0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -23.8 38.2 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 65
+ShadowOptions 7
+
+AddNullObject <scene name="engine_flame_lod0"
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 18.4 -48 0 0 0 1 1 1
+  0 1 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 56
+ShadowOptions 7
+
+AddNullObject <anim channel=boom
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 0 0 0 22 0 1 1 1
+  0 0 0 0 0
+  0 0 0 0 12 0 1 1 1
+  1 1 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Tug\RTO\Tug_Engine_RTO_LOD0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 1 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 51
+ShadowOptions 7
+
+AddNullObject <anim channel=flap
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 11.6 -38.5 0 -13.6 0 1 1 1
+  0 1 0 0 0
+  0 11.6 -38.5 0 12 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 70
+ShadowOptions 7
+
+AddNullObject anim channel=flap
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 23.8 -38.2 0 25 0 1 1 1
+  0 1 0 0 0
+  0 23.8 -38.2 0 -12 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 70
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Tug\RTO\Tug_LowerBottyFlap_RTO_LOD0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -11.6 38.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 71
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Tug\RTO\Tug_TopBottyFlap_RTO_LOD0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -23.8 38.2 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 72
+ShadowOptions 7
+
+AddNullObject <scene name="engine_flame_lod0"
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 18.4 -48 0 0 0 1 1 1
+  0 1 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 70
+ShadowOptions 7
+
+AddNullObject anim channel=boom
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 0 0 0 36 0 1 1 1
+  0 0 0 0 0
+  0 0 0 0 22.5 0 1 1 1
+  1 1 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Tug\RTO\Tug_Engine_RTO_LOD0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 1 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 53
+ShadowOptions 7
+
+AddNullObject anim channel=flap
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 23.8 -38.2 0 25 0 1 1 1
+  0 1 0 0 0
+  0 23.8 -38.2 0 -12 0 1 1 1
+  1 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 77
+ShadowOptions 7
+
+AddNullObject anim channel=flap
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  2
+  0 11.6 -38.5 0 -13.8 0 1 1 1
+  0 0 0 0 0
+  0 11.6 -38.5 0 12 0 1 1 1
+  1 1 0 0 0
+EndBehavior 1
+ParentObject 77
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Tug\RTO\Tug_TopBottyFlap_RTO_LOD0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -23.8 38.2 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 78
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Tug\RTO\Tug_LowerBottyFlap_RTO_LOD0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -11.6 38.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 79
+ShadowOptions 7
+
+AddNullObject scene name="engine_flame_lod0"
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 18.4 -48 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 77
+ShadowOptions 7
+
+AddNullObject FC_Dock
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 90 180 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 45
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\FastAttackShip2\RTO\FAS_Lod0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -8.425 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 7
+ParentObject 83
+ShadowOptions 7
+
+AddNullObject root
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject HC_DockNull
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 90 180 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 48
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\HeavyCorvette\RTO\HC0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -15.675 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 86
+ShadowOptions 7
+
+AddNullObject root
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <switch channel=baselights_normal>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <switch channel=baselights_emergency>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject crane_handle
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 -50 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ShadowOptions 7
+
+AddNullObject emergency_camera
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  4
+  0 -75 1487.5 180 0 0 1 1 1
+  0 1 1 0 0
+  -127.1575 -75 -69.5 180 0 0 1 1 1
+  1499 0 1 0 0
+  -127.1575 -75 -69.5 180 0 0 1 1 1
+  1500 1 0 0 0
+  -127.1575 -75 -69.5 180 0 0 1 1 1
+  2000 0 0 0 0
+EndBehavior 2
+LockedChannels 6
+ParentObject 93
+ShadowOptions 7
+
+AddNullObject Null
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject channel=floor01
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject channel=floor02
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 94
+ShadowOptions 7
+
+AddNullObject channel=floor03
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 95
+ShadowOptions 7
+
+AddNullObject channel=floor04
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 96
+ShadowOptions 7
+
+AddNullObject channel=roof2mid
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject channel=roof2side
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 98
+ShadowOptions 7
+
+AddNullObject channel=snrvpit
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject channel=roof1
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\cablesupport_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ShadowOptions 7
+
+AddNullObject SearchLightNULL
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  3
+  0 0 0 30.49998 0 0 0.3 0.3 0.3
+  0 0 0 0 0
+  0 0 0 -47.00002 0 0 0.3 0.3 0.3
+  200 0 0 0 0
+  0 0 0 30.49998 0 0 0.3 0.3 0.3
+  400 0 0 0 0
+EndBehavior 2
+LockedChannels 51
+ParentObject 105
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar texture=SearchBeam>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 200 200 1600
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 103
+ShadowOptions 7
+
+AddNullObject SearchLightAnchor
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -291 290 175 90 78.3 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 43
+ParentObject 89
+ShadowOptions 7
+
+AddNullObject SearchLightAnchor
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -209 290 352 90 99.50001 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 38
+ParentObject 89
+ShadowOptions 7
+
+AddNullObject SearchLightNULL
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  3
+  0 0 0 -20.50003 0 0 0.3 0.3 0.3
+  0 0 0 0 0
+  0 0 0 25.7 0 0 0.3 0.3 0.3
+  200 0 0 0 0
+  0 0 0 -20.50003 0 0 0.3 0.3 0.3
+  400 0 0 0 0
+EndBehavior 2
+LockedChannels 51
+ParentObject 106
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar texture=SearchBeam>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 120 120 1200
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 107
+ShadowOptions 7
+
+AddNullObject SearchLightAnchor
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -253.5 290 702 90 99.50001 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 38
+ParentObject 89
+ShadowOptions 7
+
+AddNullObject SearchLightNULL
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  3
+  0 0 0 47.09998 0 0 0.3 0.3 0.3
+  0 0 0 0 0
+  0 0 0 -28.20001 0 0 0.3 0.3 0.3
+  144 0 0 0 0
+  0 0 0 47.09998 0 0 0.3 0.3 0.3
+  288 0 0 0 0
+EndBehavior 2
+LockedChannels 51
+ParentObject 109
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar texture=SearchBeam>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 80 80 1200
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 110
+ShadowOptions 7
+
+AddNullObject SearchLightAnchor
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -290.5 290 682.5 90 73.29998 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 46
+ParentObject 89
+ShadowOptions 7
+
+AddNullObject SearchLightNULL
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  3
+  0 0 0 -10.00003 0 0 0.3 0.3 0.3
+  0 0 0 0 0
+  0 0 0 22.49998 0 0 0.3 0.3 0.3
+  172 0 0 0 0
+  0 0 0 -10.00003 0 0 0.3 0.3 0.3
+  345 0 0 0 0
+EndBehavior 2
+LockedChannels 51
+ParentObject 112
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar texture=SearchBeam>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 100 100 1600
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 113
+ShadowOptions 7
+
+AddNullObject SearchLightAnchor
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  165 287 527.5 90 85.19998 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 46
+ParentObject 89
+ShadowOptions 7
+
+AddNullObject SearchLightNULL
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 0.3 0.3 0.3
+  0 0 0 0 0
+EndBehavior 2
+LockedChannels 51
+ParentObject 115
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar texture=SearchBeam>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 160 160 1600
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 116
+ShadowOptions 7
+
+AddNullObject SearchLightAnchor
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  165 287 352.5 90 85.19998 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 235
+ParentObject 89
+ShadowOptions 7
+
+AddNullObject SearchLightNULL
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 0.3 0.3 0.3
+  0 0 0 0 0
+EndBehavior 2
+LockedChannels 51
+ParentObject 118
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar texture=SearchBeam>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 160 160 1600
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 119
+ShadowOptions 7
+
+AddNullObject SearchLightAnchor
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  165 287 178.5 90 85.20004 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 43
+ParentObject 89
+ShadowOptions 7
+
+AddNullObject SearchLightNULL
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 0.3 0.3 0.3
+  0 0 0 0 0
+EndBehavior 2
+LockedChannels 51
+ParentObject 121
+ShadowOptions 7
+
+AddNullObject <node class=icBeamAvatar texture=SearchBeam>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 160 160 1600
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 122
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\CalsRoom.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 98
+ShadowOptions 7
+
+AddNullObject DroneHandle
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  11
+  171.3499 -163.8 503.7001 0 0 0 1 1 1
+  0 0 0 0 0
+  171.3499 -163.8 503.7001 0 0 0 1 1 1
+  599 0 0 0 0
+  171.3499 -163.8 503.7001 0 0 0 1 1 1
+  600 0 1 0 0
+  161.4237 -163.8 512.1728 0 0 0 1 1 1
+  650 0 0 0 0
+  170.6999 -163.8 527.4001 0 0 0 1 1 1
+  700 0 1 0 0
+  170.6999 -163.8 527.4001 0 0 0 1 1 1
+  701 0 0 0 0
+  170.6999 -163.8 527.4001 0 0 0 1 1 1
+  800 0 0 0 0
+  170.6999 -163.8 527.4001 0 0 0 1 1 1
+  801 0 0 0 0
+  172.5822 -182.9254 527.4001 0 0 0 1 1 1
+  885 0 0 0 0
+  183.9525 -192.7731 527.4001 0 0 0 1 1 1
+  930 0 0 0 0
+  189.8499 -193.4 527.4001 0 0 0 1 1 1
+  950 0 1 0 0
+EndBehavior 1
+ParentObject 151
+ShadowOptions 7
+
+AddNullObject DroneRot
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  8
+  0 0 0 43.89997 0 0 1 1 1
+  0 0 0 0 0
+  0 0 0 43.89997 0 0 1 1 1
+  599 0 0 0 0
+  0 0 0 43.89997 0 0 1 1 1
+  600 0 0 0 0
+  0 0 0 -44.82005 0 0 1 1 1
+  620 0 0 0 0
+  0 0 0 89.89994 0 0 1 1 1
+  700 0 0 0 0
+  0 0 0 89.89994 0 0 1 1 1
+  701 0 0 0 0
+  0 0 0 96.5299 -18.2939 0 1 1 1
+  875 0 0 0 0
+  0 0 0 89.8999 -90 0 1 1 1
+  950 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 125
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Drone\RTO\BaseDrone_LOW.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 126
+ShadowOptions 7
+
+AddNullObject DroneHandle
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  6
+  198 -163.95 227.7 0 0 0 1 1 1
+  0 0 1 0 0
+  198 -163.95 227.7 0 0 0 1 1 1
+  60 0 1 0 0
+  192.2 -163.95 227.7 0 0 0 1 1 1
+  90 0 1 0 0
+  192.2 -163.95 227.7 0 0 0 1 1 1
+  120 0 0 0 0
+  192.2 -163.95 227.7 0 0 0 1 1 1
+  121 0 1 0 0
+  198 -163.95 227.7 0 0 0 1 1 1
+  150 0 1 0 0
+EndBehavior 2
+LockedChannels 6
+ParentObject 153
+ShadowOptions 7
+
+AddNullObject DroneRot
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  14
+  0 0 0 180 0 0 1 1 1
+  0 0 0 0 0
+  0 0 0 176.6 0 0 1 1 1
+  25 0 0 0 0
+  0 0 0 181.4 0 0 1 1 1
+  30 0 0 0 0
+  0 0 0 185.7999 0 0 1 1 1
+  40 0 0 0 0
+  0 0 0 181.3 0 0 1 1 1
+  45 0 0 0 0
+  0 0 0 193.3 0 0 1 1 1
+  55 0 0 0 0
+  0 0 0 180 0 0 1 1 1
+  60 0 1 0 0
+  0 0 0 180 0 0 1 1 1
+  90 0 1 0 0
+  0 0 0 175 0 0 1 1 1
+  95 0 0 0 0
+  0 0 0 180.4 0 0 1 1 1
+  100 0 0 0 0
+  0 0 0 177.1 0 0 1 1 1
+  105 0 0 0 0
+  0 0 0 184.6 0 0 1 1 1
+  115 0 0 0 0
+  0 0 0 184.6 0 0 1 1 1
+  120 0 0 0 0
+  0 0 0 180 0 0 1 1 1
+  150 0 0 0 0
+EndBehavior 2
+LockedChannels 54
+ParentObject 128
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Drone\RTO\BaseDrone_LOW.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 129
+ShadowOptions 7
+
+AddNullObject DroneHandle
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  159.7 -156.2 356.2 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 53
+ParentObject 152
+ShadowOptions 7
+
+AddNullObject DroneRot
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 90 -11 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 131
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Drone\RTO\BaseDrone_LOW.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 132
+ShadowOptions 7
+
+AddNullObject DroneHandle
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  13
+  184.9 -151.8 194.7 0 0 0 1 1 1
+  0 0 1 0 0
+  184.9 -151.8 194.7 0 0 0 1 1 1
+  400 0 1 0 0
+  231.2875 -151.8 187.275 0 0 0 1 1 1
+  600 0 0 0 0
+  231.2875 -151.8 169.675 0 0 0 1 1 1
+  640 0 0 0 0
+  185.1 -151.8 159.9 0 0 0 1 1 1
+  800 0 1 0 0
+  185.1 -151.8 159.9 0 0 0 1 1 1
+  1200 0 0 0 0
+  185.1 -151.8 159.9 0 0 0 1 1 1
+  1201 0 1 0 0
+  168.1001 -164.0001 145 0 0 0 1 1 1
+  1300 0 0 0 0
+  166.9372 -170.7685 157.122 0 0 0 1 1 1
+  1345 0 0 0 0
+  168.1001 -177.0001 177.9 0 0 0 1 1 1
+  1400 0 0 0 0
+  166.9372 -170.7685 198.522 0 0 0 1 1 1
+  1456 0 0 0 0
+  168.1001 -164.0001 210.8 0 0 0 1 1 1
+  1501 0 0 0 0
+  184.9 -151.8 194.7 0 0 0 1 1 1
+  1600 0 1 0 0
+EndBehavior 2
+LockedChannels 5
+ParentObject 153
+ShadowOptions 7
+
+AddNullObject DroneRot
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  15
+  0 0 0 162.2 0 0 1 1 1
+  0 0 0 0 0
+  0 0 0 162.2 0 0 1 1 1
+  385 0 0 0 0
+  0 0 0 92.79997 0 0 1 1 1
+  410 0 0 0 0
+  0 0 0 142.8 0 0 1 1 1
+  583 0 0 0 0
+  0 0 0 204.2999 0 0 1 1 1
+  629 0 0 0 0
+  0 0 0 258.7999 0 0 1 1 1
+  683 0 0 0 0
+  0 0 0 258.7999 0 0 1 1 1
+  798 0 0 0 0
+  0 0 0 258.7999 0 0 1 1 1
+  1182 0 0 0 0
+  0 0 0 227.5999 0 0 1 1 1
+  1228 0 0 0 0
+  0 0 0 227.5999 36.5 0 1 1 1
+  1256 0 0 0 0
+  0 0 0 227.5999 91.09997 0 1 1 1
+  1301 0 0 0 0
+  0 0 0 227.5999 130.4 0 1 1 1
+  1340 0 0 0 0
+  0 0 0 227.5999 180 0 1 1 1
+  1399 0 0 0 0
+  0 0 0 227.5999 270 0 1 1 1
+  1499 0 0 0 0
+  0 0 0 162.2 360 0 1 1 1
+  1600 0 0 0 0
+EndBehavior 2
+LockedChannels 32
+ParentObject 134
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Drone\RTO\BaseDrone_LOW.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 135
+ShadowOptions 7
+
+AddNullObject ObjectHandle
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\pod0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  102 -258.0299 1200 90 0 -90 1 1 1
+  0 0 0 0 0
+EndBehavior 2
+LockedChannels 51
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\pod0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  102 -208.0103 1200 0 0 -90 1 1 1
+  0 0 0 0 0
+EndBehavior 2
+LockedChannels 29
+ParentObject 137
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\pod0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  102 -258.0299 933.0182 90 0 -90 1 1 1
+  0 0 0 0 0
+EndBehavior 2
+LockedChannels 27
+ParentObject 137
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\Freightpod\RTO\pod0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  102 -258.0299 1146 0 0 -90 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 27
+ParentObject 137
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\SNRV2\RTO\SNRV_RTO_LOD0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 -261 1080 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 53
+ParentObject 143
+ShadowOptions 7
+
+AddNullObject snrv_null
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\dockarm_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  274.6504 -94.7985 705 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ShadowOptions 7
+
+AddNullObject <switch channel=command_section>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  2
+  -80 -53.5 177 -90 90 0 1 1 1
+  0 0 0 0 0
+  -80 -53.5 177 -90 90 0 1 1 1
+  1442 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 39
+ShadowOptions 7
+
+AddNullObject <switch channel=storm_petrel>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  194.6019 -145.5 527.8001 90 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\StormPetrel\RTO\StormPetrel_NoCP_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  4.61936e-007 -6.899998 19 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 146
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\StormPetrel\RTO\StormPetrel_Canopy_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 147
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\StormPetrel\RTO\StormPetrel_CP_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 148
+ShadowOptions 7
+
+LoadObject Objects_IW2\Ships\CommandSection\RTO\RT_CommandSection(Centred)_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 12.5 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 145
+ShadowOptions 7
+
+AddNullObject <switch channel=tug>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ShadowOptions 7
+
+AddNullObject <switch channel=fast_attack>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ShadowOptions 7
+
+AddNullObject <switch channel=heavy_corvette>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\cablesupport_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 175 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\cablesupport_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 350 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\cablesupport_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 525 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ShadowOptions 7
+
+LoadObject Objects_IW2\PlayerBaseInterior\RTO\cablesupport_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 700 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ShadowOptions 7
+
+AmbientColor 255 255 255
+AmbIntensity 0.250000
+
+AddLight
+LightName ButtressFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -306 10 615 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName ButtressFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  306 10 615 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName ButtressFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -306 10 440 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName ButtressFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  306 10 440 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName ButtressFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -306 10 265 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName ButtressFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  306 10 265 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName ButtressFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -306 10 90 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName ButtressFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  306 10 90 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName TroughLight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -46 -242 615 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 226 237 207
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName TroughLight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  46 -242 615 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 226 237 207
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName TroughLight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -46 -242 440 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 226 237 207
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName TroughLight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  46 -242 440 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 226 237 207
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName TroughLight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -46 -242 265 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 226 237 207
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName TroughLight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  46 -242 265 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 226 237 207
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName TroughLight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -46 -242 90 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 226 237 207
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName TroughLight
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  46 -242 90 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 226 237 207
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -165.25 32 702.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 254 254 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  165.25 32 702.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 254 254 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -165.25 32 527.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 254 254 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  165.25 32 527.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 254 254 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -165.25 32 352.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 254 254 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  165.25 32 352.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 254 254 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -165.25 32 177.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 254 254 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  165.25 32 177.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 254 254 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -165.25 32 2.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 254 254 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  165.25 32 2.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 254 254 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName DoorFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -40.3 -157.1 1479.1 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.350000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName DoorFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -115 -115.7 1479.1 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.350000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName DoorFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -157 -43.1 1479.1 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.350000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName DoorFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -157 39.9 1479.1 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.350000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName DoorFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -115 116.4 1479.1 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.350000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName DoorFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -40.3 156.5 1479.1 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.350000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName DoorFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  40.3 -157.1 1479.1 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.350000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName DoorFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  115 -115.7 1479.1 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.350000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName DoorFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  157 -43.1 1479.1 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.350000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName DoorFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  157 39.9 1479.1 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.350000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName DoorFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  115 116.4 1479.1 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.350000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName DoorFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  40.3 156.5 1479.1 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.350000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName JibFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  2
+  -234.0999 -86.1 1164.8 0 -145.4 0 1 1 1
+  0 0 0 0 0
+  -234.0999 -86.1 1164.8 0 -145.4 0 1 1 1
+  1500 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 89
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName JibFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -234.0999 -86.1 935.3 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName JibFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  234.0999 -86.1 1164.8 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 89
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName JibFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  234.0999 -86.1 935.3001 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName CentralFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -71.9875 -164.5 895.1 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName CentralFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -71.9875 -164.5 832.1 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName CentralFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  71.9875 -164.5 895.1 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName CentralFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  71.9875 -164.5 832.1 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 89
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Crane_Gantry_Point_0.5
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -116.7348 10.64999 19.67433 -90 91.00004 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 6
+LightColor 250 203 18
+LgtIntensity 0.000000
+LightType 1
+LightFalloff 1
+LightRange 30.000000
+LensFlare 1
+FlareIntensity 0.000000
+FlareNominalDistance 1000.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 47
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 0
+
+AddLight
+LightName Crane_Gantry_Point
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -116.7348 10.64999 -20.27567 -90 91.00004 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 6
+LightColor 250 203 18
+LgtIntensity 0.000000
+LightType 1
+LightFalloff 1
+LightRange 30.000000
+LensFlare 1
+FlareIntensity 0.000000
+FlareNominalDistance 1000.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 47
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 0
+
+AddLight
+LightName Crane_Gantry_Point
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  116.7152 10.64999 19.12433 -90 91.00004 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 6
+LightColor 250 203 18
+LgtIntensity 0.000000
+LightType 1
+LightFalloff 1
+LightRange 30.000000
+LensFlare 1
+FlareIntensity 0.000000
+FlareNominalDistance 1000.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 47
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 0
+
+AddLight
+LightName Crane_Gantry_Point
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  116.7152 10.64999 -20.22567 -90 91.00004 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 6
+LightColor 250 203 18
+LgtIntensity 0.000000
+LightType 1
+LightFalloff 1
+LightRange 30.000000
+LensFlare 1
+FlareIntensity 0.000000
+FlareNominalDistance 1000.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 47
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 0
+
+AddLight
+LightName Crane_Gantry_spot_0.5
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -13.64271 -1.450012 12.7903 53.20002 79.70006 -12.7 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 8
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.000000
+FlareNominalDistance 1000.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 4
+FlareRandStreakInt 0.420000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 10.000000
+ShadowType 0
+
+AddLight
+LightName Crane_Gantry_spot_0.5
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  12.67373 -1.55001 12.27381 -8.199962 51.39999 -12.7 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 6
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.000000
+FlareNominalDistance 1000.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 4
+FlareRandStreakInt 0.420000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 10.000000
+ShadowType 0
+
+AddLight
+LightName Crane_Arm_Point_25
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -11 -12 112 -90 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 10
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 2
+LightFalloff 1
+LightRange 20.000000
+ConeAngle 30.000000
+EdgeAngle 5.000000
+LensFlare 1
+FlareIntensity 0.000000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 47
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 0
+
+AddLight
+LightName Crane_Arm_Point
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  2
+  8 -12 112 -90 180 0 1 1 1
+  0 0 0 0 0
+  11 -12 112 -90 180 0 1 1 1
+  343 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 10
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 2
+LightFalloff 1
+LightRange 20.000000
+ConeAngle 30.000000
+EdgeAngle 5.000000
+LensFlare 1
+FlareIntensity 0.000000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 47
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 0
+
+AddLight
+LightName Crane_Arm_Point
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 10 34 -90 -90 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 11
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 2
+LightFalloff 1
+LightRange 20.000000
+ConeAngle 30.000000
+EdgeAngle 5.000000
+LensFlare 1
+FlareIntensity 0.000000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 47
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 0
+
+AddLight
+LightName Crane_Arm_Point
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 -10 34 -90 91.00004 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 11
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 2
+LightFalloff 1
+LightRange 20.000000
+ConeAngle 30.000000
+EdgeAngle 5.000000
+LensFlare 1
+FlareIntensity 0.000000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 47
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 0
+
+AddLight
+LightName Crane_Arm_Point
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  11 0 0 -90 180 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 10
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 2
+LightFalloff 1
+LightRange 20.000000
+ConeAngle 30.000000
+EdgeAngle 5.000000
+LensFlare 1
+FlareIntensity 0.000000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 47
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 0
+
+AddLight
+LightName Crane_Arm_Point
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  8.5 -40 -11.23 -90 180 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 9
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 2
+LightFalloff 1
+LightRange 20.000000
+ConeAngle 30.000000
+EdgeAngle 5.000000
+LensFlare 1
+FlareIntensity 0.000000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 47
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 0
+
+AddLight
+LightName Crane_Arm_Point
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -11 0 0 -90 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 10
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 2
+LightFalloff 1
+LightRange 20.000000
+ConeAngle 30.000000
+EdgeAngle 5.000000
+LensFlare 1
+FlareIntensity 0.000000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 47
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 0
+
+AddLight
+LightName Crane_Arm_Point
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -8.5 -40 -11.23 -90 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 9
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 2
+LightFalloff 1
+LightRange 20.000000
+ConeAngle 30.000000
+EdgeAngle 5.000000
+LensFlare 1
+FlareIntensity 0.000000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 47
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 0
+
+AddLight
+LightName Crane_Arm_Point
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -16.6287 -15 4.77 -90 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 8
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 2
+LightFalloff 1
+LightRange 20.000000
+ConeAngle 30.000000
+EdgeAngle 5.000000
+LensFlare 1
+FlareIntensity 0.000000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 47
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 0
+
+AddLight
+LightName Crane_Arm_Point
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  16.5213 -15 4.77 -90 180 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 8
+LightColor 255 0 0
+LgtIntensity 0.000000
+LightType 2
+LightFalloff 1
+LightRange 20.000000
+ConeAngle 30.000000
+EdgeAngle 5.000000
+LensFlare 1
+FlareIntensity 0.000000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 47
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 0
+
+AddLight
+LightName <Light_Main_200>
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.112442 136 617.2904 -90 30 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity (envelope)
+  1
+  4
+  2.682209e-007
+  0 0 0 0 0
+  1.2
+  40 0 0 0 0
+  1.94
+  80 0 0 0 0
+  2
+  90 0 0 0 0
+EndBehavior 1
+LightType 0
+ShadowType 1
+
+AddLight
+LightName <Light_Fill_100>
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.112442 136 617.2904 90 30 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 89
+LightColor 94 47 0
+LgtIntensity (envelope)
+  1
+  4
+  1.341105e-007
+  0 0 0 0 0
+  0.6
+  40 0 0 0 0
+  0.97
+  80 0 0 0 0
+  1
+  90 0 0 0 0
+EndBehavior 1
+LightType 0
+ShadowType 1
+
+AddLight
+LightName <EmergencyLight_Main_75>
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.112442 136 617.2904 -90 30 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 40
+ParentObject 90
+LightColor 128 0 0
+LgtIntensity 1.200000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName <EmergencyLight_Fill_75>
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.112442 136 617.2904 90 30 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 48
+ParentObject 90
+LightColor 128 0 0
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName Whiteflasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 -0.9149995 1.02 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 126
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  0
+  18 1 0 0 0
+  0.02
+  19 1 0 0 0
+  0.02
+  20 1 0 0 0
+  0
+  22 0 0 0 0
+  0
+  24 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 50.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 15
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Redflasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.3198245 0.7000003 1.01 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 126
+LightColor 225 25 15
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  0
+  13 1 0 0 0
+  0.01
+  14 1 0 0 0
+  0.01
+  16 1 0 0 0
+  0
+  17 0 0 0 0
+  0
+  30 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 50.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 15
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Redflasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -0.319825 0.7 1.01 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 126
+LightColor 225 25 15
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0.01
+  0 0 0 0 0
+  0.01
+  1 1 0 0 0
+  0
+  2 1 0 0 0
+  0
+  28 1 0 0 0
+  0.01
+  29 1 0 0 0
+  0.01
+  30 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 50.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 15
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName DroneEngine
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 0.7850006 -1.08 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ParentObject 126
+LightColor 1 197 254
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.018000
+FlareNominalDistance 50.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 15
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Whiteflasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 -0.9149995 1.02 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 129
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  0
+  18 1 0 0 0
+  0.02
+  19 1 0 0 0
+  0.02
+  20 1 0 0 0
+  0
+  22 0 0 0 0
+  0
+  24 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 50.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 15
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Redflasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.3198245 0.7000003 1.01 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 129
+LightColor 225 25 15
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  0
+  13 1 0 0 0
+  0.01
+  14 1 0 0 0
+  0.01
+  16 1 0 0 0
+  0
+  17 0 0 0 0
+  0
+  30 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 50.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 15
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Redflasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -0.319825 0.7 1.01 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 129
+LightColor 225 25 15
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0.01
+  0 0 0 0 0
+  0.01
+  1 1 0 0 0
+  0
+  2 1 0 0 0
+  0
+  28 1 0 0 0
+  0.01
+  29 1 0 0 0
+  0.01
+  30 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 50.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 15
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName DroneEngine
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 0.7850006 -1.08 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ParentObject 129
+LightColor 1 197 254
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.018000
+FlareNominalDistance 50.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 15
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Whiteflasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 -0.9149995 1.02 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 132
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  0
+  18 1 0 0 0
+  0.02
+  19 1 0 0 0
+  0.02
+  20 1 0 0 0
+  0
+  22 0 0 0 0
+  0
+  24 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 50.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 15
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Redflasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.3198245 0.7000003 1.01 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 132
+LightColor 225 25 15
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  0
+  13 1 0 0 0
+  0.01
+  14 1 0 0 0
+  0.01
+  16 1 0 0 0
+  0
+  17 0 0 0 0
+  0
+  30 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 50.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 15
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Redflasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -0.319825 0.7 1.01 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 132
+LightColor 225 25 15
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0.01
+  0 0 0 0 0
+  0.01
+  1 1 0 0 0
+  0
+  2 1 0 0 0
+  0
+  28 1 0 0 0
+  0.01
+  29 1 0 0 0
+  0.01
+  30 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 50.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 15
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName DroneEngine
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 0.7850006 -1.08 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ParentObject 132
+LightColor 1 197 254
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.018000
+FlareNominalDistance 50.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 15
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Whiteflasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 -0.9149995 1.02 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 135
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  0
+  18 1 0 0 0
+  0.02
+  19 1 0 0 0
+  0.02
+  20 1 0 0 0
+  0
+  22 0 0 0 0
+  0
+  24 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 50.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 15
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Redflasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0.3198245 0.7000003 1.01 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 135
+LightColor 225 25 15
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  0
+  13 1 0 0 0
+  0.01
+  14 1 0 0 0
+  0.01
+  16 1 0 0 0
+  0
+  17 0 0 0 0
+  0
+  30 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 50.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 15
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName Redflasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -0.319825 0.7 1.01 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ParentObject 135
+LightColor 225 25 15
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0.01
+  0 0 0 0 0
+  0.01
+  1 1 0 0 0
+  0
+  2 1 0 0 0
+  0
+  28 1 0 0 0
+  0.01
+  29 1 0 0 0
+  0.01
+  30 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 50.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 15
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName DroneEngine
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 0.7850006 -1.08 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1
+ParentObject 135
+LightColor 1 197 254
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.018000
+FlareNominalDistance 50.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 15
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName DroneWelder
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -1.5 -1.614999 -1.08 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 134
+LightColor 1 197 254
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  148
+  0
+  0 0 0 0 0
+  0
+  1 0 1 0 0
+  0.02278125
+  2 0 0 0 0
+  0
+  6 0 0 0 0
+  0.030375
+  7 0 0 0 0
+  0
+  11 0 1 0 0
+  0.02581875
+  12 0 0 0 0
+  0
+  16 0 0 0 0
+  0.02885625
+  17 0 0 0 0
+  0
+  21 0 1 0 0
+  0.0273375
+  22 0 0 0 0
+  0
+  26 0 1 0 0
+  0
+  86 0 1 0 0
+  0.02581875
+  87 0 0 0 0
+  0.0177525
+  91 0 0 0 0
+  0.01974375
+  92 0 0 0 0
+  0.0134325
+  96 0 1 0 0
+  0.02581875
+  97 0 0 0 0
+  0.0134325
+  101 0 0 0 0
+  0.030375
+  102 0 0 0 0
+  0.0182925
+  106 0 1 0 0
+  0.0273375
+  107 0 0 0 0
+  0.0182925
+  111 0 0 0 0
+  0.0273375
+  112 0 0 0 0
+  0
+  116 0 1 0 0
+  0
+  151 1 0 0 0
+  0.0273375
+  152 0 0 0 0
+  0.0112725
+  156 0 1 0 0
+  0.02581875
+  157 0 0 0 0
+  0.0155925
+  161 0 0 0 0
+  0.02278125
+  162 0 0 0 0
+  0.0118125
+  176 0 1 0 0
+  0.0273375
+  177 0 0 0 0
+  0.0150525
+  186 0 1 0 0
+  0.02885625
+  187 0 0 0 0
+  0
+  191 0 0 0 0
+  0
+  216 1 1 0 0
+  0.02278125
+  217 0 0 0 0
+  0.0107325
+  221 0 0 0 0
+  0.02581875
+  222 0 0 0 0
+  0.0155925
+  226 0 1 0 0
+  0.0166725
+  236 0 1 0 0
+  0.02581875
+  237 0 0 0 0
+  0.0128925
+  241 0 0 0 0
+  0.030375
+  242 0 0 0 0
+  0
+  246 0 0 0 0
+  0
+  301 1 0 0 0
+  0.02581875
+  302 0 0 0 0
+  0.0209925
+  306 0 0 0 0
+  0.02885625
+  307 0 0 0 0
+  0.0188325
+  311 0 1 0 0
+  0.02278125
+  312 0 0 0 0
+  0.0273375
+  322 0 0 0 0
+  0.0112725
+  326 0 0 0 0
+  0.030375
+  327 0 0 0 0
+  0.0139725
+  331 0 1 0 0
+  0.02581875
+  332 0 0 0 0
+  0.02041875
+  345 0 0 0 0
+  0.01903501
+  362 0 0 0 0
+  0.0112725
+  366 0 0 0 0
+  0.02278125
+  367 0 0 0 0
+  0.0155925
+  371 0 1 0 0
+  0.030375
+  372 0 0 0 0
+  0.0118125
+  376 0 0 0 0
+  0.02885625
+  377 0 0 0 0
+  0.0172125
+  381 0 1 0 0
+  0.030375
+  382 0 0 0 0
+  0.0145125
+  386 0 0 0 0
+  0.02581875
+  387 0 0 0 0
+  0
+  391 0 1 0 0
+  0
+  816 0 1 0 0
+  0.02581875
+  817 0 0 0 0
+  0.0172125
+  821 0 0 0 0
+  0.02885625
+  822 0 0 0 0
+  0.0139725
+  826 0 1 0 0
+  0.01974375
+  827 0 0 0 0
+  0.0112725
+  831 0 0 0 0
+  0.02581875
+  832 0 0 0 0
+  0.0123525
+  836 0 1 0 0
+  0.02278125
+  837 0 0 0 0
+  0.0155925
+  841 0 0 0 0
+  0.02581875
+  842 0 0 0 0
+  0.0128925
+  846 0 1 0 0
+  0.030375
+  847 0 0 0 0
+  0.0155925
+  851 0 0 0 0
+  0.01974375
+  852 0 0 0 0
+  0
+  856 0 0 0 0
+  0
+  896 1 0 0 0
+  0.02581875
+  897 0 0 0 0
+  0.0166725
+  901 0 0 0 0
+  0.01974375
+  902 0 0 0 0
+  0.0166725
+  906 0 1 0 0
+  0.022275
+  907 0 0 0 0
+  0.018495
+  916 0 0 0 0
+  0.01522125
+  932 0 0 0 0
+  0.0085725
+  936 0 1 0 0
+  0.030375
+  937 0 0 0 0
+  0.0112725
+  941 0 0 0 0
+  0.030375
+  942 0 0 0 0
+  0.0134325
+  946 0 1 0 0
+  0.02885625
+  947 0 0 0 0
+  0.0118125
+  951 0 0 0 0
+  0.02581875
+  952 0 0 0 0
+  0
+  956 0 1 0 0
+  0
+  971 1 0 0 0
+  0.030375
+  972 0 0 0 0
+  0.0091125
+  976 0 1 0 0
+  0.02581875
+  977 0 0 0 0
+  0.0091125
+  981 0 0 0 0
+  0.030375
+  982 0 0 0 0
+  0.0145125
+  991 0 0 0 0
+  0.02278125
+  992 0 0 0 0
+  0.0139725
+  996 0 1 0 0
+  0.02885625
+  997 0 0 0 0
+  0.02021625
+  1006 0 0 0 0
+  0.01393875
+  1022 0 0 0 0
+  0.0107325
+  1026 0 1 0 0
+  0.01974375
+  1027 0 0 0 0
+  0.0123525
+  1031 0 0 0 0
+  0.030375
+  1032 0 0 0 0
+  0.0161325
+  1036 0 1 0 0
+  0.02581875
+  1037 0 0 0 0
+  0.0128925
+  1041 0 0 0 0
+  0.030375
+  1042 0 0 0 0
+  0.0118125
+  1046 0 1 0 0
+  0.02278125
+  1047 0 0 0 0
+  0.0091125
+  1051 0 0 0 0
+  0.030375
+  1052 0 0 0 0
+  0
+  1056 0 0 0 0
+  0
+  1096 1 1 0 0
+  0.030375
+  1097 0 0 0 0
+  0.0145125
+  1101 0 0 0 0
+  0.02278125
+  1102 0 0 0 0
+  0.0118125
+  1106 0 1 0 0
+  0.030375
+  1107 0 0 0 0
+  0.0139725
+  1111 0 0 0 0
+  0.02257875
+  1112 0 0 0 0
+  0.01717876
+  1126 0 0 0 0
+  0.013905
+  1141 0 0 0 0
+  0.0112725
+  1145 0 0 0 0
+  0.030375
+  1146 0 0 0 0
+  0.0123525
+  1150 0 1 0 0
+  0.030375
+  1151 0 0 0 0
+  0.0172125
+  1155 0 0 0 0
+  0.030375
+  1156 0 0 0 0
+  0
+  1160 0 0 0 0
+  0
+  1196 1 1 0 0
+  0
+  1600 0 0 0 0
+EndBehavior 2
+FlareNominalDistance 50.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 15
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName DroneWelder
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1.1 -2.114999 -0.78 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 131
+LightColor 1 197 254
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  147
+  0
+  0 0 0 0 0
+  0
+  200 0 1 0 0
+  0.0253125
+  201 0 0 0 0
+  0
+  205 0 0 0 0
+  0.03375
+  206 0 0 0 0
+  0
+  210 0 1 0 0
+  0.02868751
+  211 0 0 0 0
+  0
+  215 0 0 0 0
+  0.0320625
+  216 0 0 0 0
+  0
+  220 0 1 0 0
+  0.030375
+  221 0 0 0 0
+  0
+  225 0 1 0 0
+  0
+  285 0 1 0 0
+  0.02868751
+  286 0 0 0 0
+  0.019725
+  290 0 0 0 0
+  0.0219375
+  291 0 0 0 0
+  0.014925
+  295 0 1 0 0
+  0.02868751
+  296 0 0 0 0
+  0.014925
+  300 0 0 0 0
+  0.03375
+  301 0 0 0 0
+  0.020325
+  305 0 1 0 0
+  0.030375
+  306 0 0 0 0
+  0.020325
+  310 0 0 0 0
+  0.030375
+  311 0 0 0 0
+  0
+  315 0 1 0 0
+  0
+  350 1 0 0 0
+  0.030375
+  351 0 0 0 0
+  0.012525
+  355 0 1 0 0
+  0.02868751
+  356 0 0 0 0
+  0.017325
+  360 0 0 0 0
+  0.0253125
+  361 0 0 0 0
+  0.013125
+  375 0 1 0 0
+  0.030375
+  376 0 0 0 0
+  0.016725
+  385 0 1 0 0
+  0.0320625
+  386 0 0 0 0
+  0
+  390 0 0 0 0
+  0
+  415 1 1 0 0
+  0.0253125
+  416 0 0 0 0
+  0.011925
+  420 0 0 0 0
+  0.02868751
+  421 0 0 0 0
+  0.017325
+  425 0 1 0 0
+  0.018525
+  435 0 1 0 0
+  0.02868751
+  436 0 0 0 0
+  0.014325
+  440 0 0 0 0
+  0.03375
+  441 0 0 0 0
+  0
+  445 0 0 0 0
+  0
+  500 1 0 0 0
+  0.02868751
+  501 0 0 0 0
+  0.023325
+  505 0 0 0 0
+  0.0320625
+  506 0 0 0 0
+  0.020925
+  510 0 1 0 0
+  0.0253125
+  511 0 0 0 0
+  0.030375
+  521 0 0 0 0
+  0.012525
+  525 0 0 0 0
+  0.03375
+  526 0 0 0 0
+  0.015525
+  530 0 1 0 0
+  0.02868751
+  531 0 0 0 0
+  0.0226875
+  544 0 0 0 0
+  0.02115001
+  561 0 0 0 0
+  0.012525
+  565 0 0 0 0
+  0.0253125
+  566 0 0 0 0
+  0.017325
+  570 0 1 0 0
+  0.03375
+  571 0 0 0 0
+  0.013125
+  575 0 0 0 0
+  0.0320625
+  576 0 0 0 0
+  0.019125
+  580 0 1 0 0
+  0.03375
+  581 0 0 0 0
+  0.016125
+  585 0 0 0 0
+  0.02868751
+  586 0 0 0 0
+  0
+  590 0 1 0 0
+  0
+  620 0 1 0 0
+  0.02868751
+  621 0 0 0 0
+  0.019125
+  625 0 0 0 0
+  0.0320625
+  626 0 0 0 0
+  0.015525
+  630 0 1 0 0
+  0.0219375
+  631 0 0 0 0
+  0.012525
+  635 0 0 0 0
+  0.02868751
+  636 0 0 0 0
+  0.013725
+  640 0 1 0 0
+  0.0253125
+  641 0 0 0 0
+  0.017325
+  645 0 0 0 0
+  0.02868751
+  646 0 0 0 0
+  0.014325
+  650 0 1 0 0
+  0.03375
+  651 0 0 0 0
+  0.017325
+  655 0 0 0 0
+  0.0219375
+  656 0 0 0 0
+  0
+  660 0 0 0 0
+  0
+  700 1 0 0 0
+  0.02868751
+  701 0 0 0 0
+  0.018525
+  705 0 0 0 0
+  0.0219375
+  706 0 0 0 0
+  0.018525
+  710 0 1 0 0
+  0.02475
+  711 0 0 0 0
+  0.02055
+  720 0 0 0 0
+  0.01691251
+  736 0 0 0 0
+  0.009525
+  740 0 1 0 0
+  0.03375
+  741 0 0 0 0
+  0.012525
+  745 0 0 0 0
+  0.03375
+  746 0 0 0 0
+  0.014925
+  750 0 1 0 0
+  0.0320625
+  751 0 0 0 0
+  0.013125
+  755 0 0 0 0
+  0.02868751
+  756 0 0 0 0
+  0
+  760 0 1 0 0
+  0
+  775 1 0 0 0
+  0.03375
+  776 0 0 0 0
+  0.010125
+  780 0 1 0 0
+  0.02868751
+  781 0 0 0 0
+  0.010125
+  785 0 0 0 0
+  0.03375
+  786 0 0 0 0
+  0.016125
+  795 0 0 0 0
+  0.0253125
+  796 0 0 0 0
+  0.015525
+  800 0 1 0 0
+  0.0320625
+  801 0 0 0 0
+  0.0224625
+  810 0 0 0 0
+  0.0154875
+  826 0 0 0 0
+  0.011925
+  830 0 1 0 0
+  0.0219375
+  831 0 0 0 0
+  0.013725
+  835 0 0 0 0
+  0.03375
+  836 0 0 0 0
+  0.017925
+  840 0 1 0 0
+  0.02868751
+  841 0 0 0 0
+  0.014325
+  845 0 0 0 0
+  0.03375
+  846 0 0 0 0
+  0.013125
+  850 0 1 0 0
+  0.0253125
+  851 0 0 0 0
+  0.010125
+  855 0 0 0 0
+  0.03375
+  856 0 0 0 0
+  0
+  860 0 0 0 0
+  0
+  900 1 1 0 0
+  0.03375
+  901 0 0 0 0
+  0.016125
+  905 0 0 0 0
+  0.0253125
+  906 0 0 0 0
+  0.013125
+  910 0 1 0 0
+  0.03375
+  911 0 0 0 0
+  0.015525
+  915 0 0 0 0
+  0.02508751
+  916 0 0 0 0
+  0.01908751
+  930 0 0 0 0
+  0.01545
+  945 0 0 0 0
+  0.012525
+  949 0 0 0 0
+  0.03375
+  950 0 0 0 0
+  0.013725
+  954 0 1 0 0
+  0.03375
+  955 0 0 0 0
+  0.019125
+  959 0 0 0 0
+  0.03375
+  960 0 0 0 0
+  0
+  964 0 0 0 0
+  0
+  1000 1 1 0 0
+EndBehavior 2
+FlareNominalDistance 50.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 15
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -165.25 32 702.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 90
+LightColor 192 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  165.25 32 702.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 90
+LightColor 192 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -165.25 32 527.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 90
+LightColor 192 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  165.25 32 527.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 90
+LightColor 192 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -165.25 32 352.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 90
+LightColor 192 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  165.25 32 352.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 90
+LightColor 192 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -165.25 32 177.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 90
+LightColor 192 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  165.25 32 177.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 90
+LightColor 192 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -165.25 32 2.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 90
+LightColor 192 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName GantryPoint
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  165.25 32 2.84 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 90
+LightColor 192 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName ButtressFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -306 10 615 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 90
+LightColor 192 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.250000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName ButtressFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  306 10 615 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 90
+LightColor 192 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.250000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName ButtressFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -306 10 440 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 90
+LightColor 192 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.250000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName ButtressFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  306 10 440 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 90
+LightColor 192 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.250000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName ButtressFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -306 10 265 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 90
+LightColor 192 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.250000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName ButtressFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  306 10 265 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 90
+LightColor 192 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.250000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName ButtressFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -306 10 90 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 90
+LightColor 192 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.250000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName ButtressFlare
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  306 10 90 0 -145.4 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 90
+LightColor 192 0 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.250000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 6
+LensFlareOptions 45
+FlareStarFilter 2
+FlareRandStreakInt 0.030000
+FlareRandStreakDens 50.000000
+FlareRandStreakSharp 6.000000
+ShadowType 1
+
+AddLight
+LightName <snrv_spot>
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  1.699995 -146.8 1034.9 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 0.700000
+LightType 1
+LightFalloff 1
+LightRange 180.000000
+ShadowType 1
+
+AddLight
+LightName <ap_spot>
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  176.6 -92.69999 352.4001 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 1.500000
+LightType 1
+LightFalloff 1
+LightRange 100.000000
+ShadowType 1
+
+AddLight
+LightName <tug_spot>
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  176.6 -90.59998 527.1999 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 1.500000
+LightType 1
+LightFalloff 1
+LightRange 100.000000
+ShadowType 1
+
+AddLight
+LightName <cs_spot>
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  176.6 -90.99996 704.9 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 1.500000
+LightType 1
+LightFalloff 1
+LightRange 100.000000
+ShadowType 1
+
+AddLight
+LightName <hc_spot>
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  176.6 -95.69999 178.4 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 89
+LightColor 255 255 255
+LgtIntensity 1.500000
+LightType 1
+LightFalloff 1
+LightRange 100.000000
+ShadowType 1
+
+ShowCamera 1 7
+CameraMotion (unnamed)
+  9
+  4
+  0 0 0 0 0 0 1 1 1
+  0 1 1 0 0
+  0 0 0 0 2.029717 0 1 1 1
+  500 1 0 0.5 0
+  0 0 0 -141.4 10.4 0 1 1 1
+  1500 0 0.5 0.5 0
+  0 0 0 -141.4 10.4 0 1 1 1
+  2000 1 1 0 0
+EndBehavior 2
+LockedChannels 53
+ParentObject 92
+ZoomFactor 1.800000
+Resolution 0
+PixelAspectRatio 3
+SegmentMemory 10500000
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+FilmSize 2
+FieldRendering 0
+MotionBlur 0
+DepthOfField 0
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 0
+ClipRayColors 0
+DataOverlayLabel  
+FullSceneParamEval 0
+
+ViewMode 2
+ViewAimpoint 10.278082 24.921621 489.300293
+ViewDirection -1.953022 0.041888 0.000000
+ViewZoomFactor 0.270781
+GridNumber 40
+GridSize 20.000000
+ShowMotionPath 1
+ShowBGImage 0
+ShowFogRadius 0
+ShowRedraw 0
+ShowSafeAreas 0
+ShowFieldChart 0

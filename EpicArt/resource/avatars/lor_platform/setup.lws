@@ -1,0 +1,1605 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 1
+PreviewLastFrame 100
+PreviewFrameStep 1
+FramesPerSecond 25.000000
+
+AddNullObject <detail_switch min=0.0 max=0.01>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -1000 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.01 max=0.1>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.1 max=1.0>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  1000 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ShadowOptions 7
+
+AddNullObject LOD0_object_handle
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 3
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\0_lor_cage.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\0_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  228 -192 288 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 5
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\0_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  228 -192 530 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 5
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\0_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  228 -192 772 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 5
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\0_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  228 -192 1014 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 5
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\0_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -228 -192 1014 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 5
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\0_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -228 -192 772 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 5
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\0_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -228 -192 530 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 5
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\0_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -228 -192 288 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 5
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\0_lor_eng_sml.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -120 0 1302 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\0_lor_eng_sml.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  120 0 1302 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\0_lor_cab.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -120 0 1802 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\0_lor_storage_sml.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -120 0 -500 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\0_lor_storage_sml.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  120 0 -500 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\0_lor_engine.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -120 0 -500 0 0 0 7.5 7.5 7.5
+  0 0 0 0 0
+EndBehavior 1
+PivotPoint 0 0 8.183
+ParentObject 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\0_lor_engine.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  120 0 -500 0 0 0 7.5 7.5 7.5
+  0 0 0 0 0
+EndBehavior 1
+PivotPoint 0 0 8.183
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject <scene name=LOD0_eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -177.15 41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject <scene name=LOD0_eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -62.85 41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject <scene name=LOD0_eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -62.85 -41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject <scene name=LOD0_eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -177.15 -41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject <scene name=LOD0_eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  62.85 -41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject <scene name=LOD0_eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  62.85 41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject <scene name=LOD0_eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  177.15 41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject <scene name=LOD0_eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  177.15 -41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject root
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject LOD1_object_handle
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 2
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\Modules\LOR_Platform\RTO\LOD1\1_lor_cage.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 30
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\Modules\LOR_Platform\RTO\LOD1\1_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  228 -192 288 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 31
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD1\1_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  228 -192 530 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 31
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD1\1_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  228 -192 772 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 31
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD1\1_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  228 -192 1014 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 31
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD1\1_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -228 -192 1014 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 31
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD1\1_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -228 -192 772 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 31
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD1\1_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -228 -192 530 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 31
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD1\1_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -228 -192 288 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 31
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD1\1_lor_eng_sml.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -120 0 1302 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 30
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD1\1_lor_eng_sml.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  120 0 1302 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 30
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\Modules\LOR_Platform\RTO\LOD1\1_lor_cab.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -120 0 1802 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 30
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD1\1_lor_storage_sml.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -120 0 -500 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 30
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD1\1_lor_storage_sml.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  120 0 -500 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 30
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD1\1_lor_engine.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -120 0 -500 0 0 0 7.5 7.5 7.5
+  0 0 0 0 0
+EndBehavior 1
+PivotPoint 0 0 8.183
+ParentObject 30
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD1\1_lor_engine.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  120 0 -500 0 0 0 7.5 7.5 7.5
+  0 0 0 0 0
+EndBehavior 1
+PivotPoint 0 0 8.183
+ParentObject 30
+ShadowOptions 7
+
+AddNullObject <scene name=eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -177.15 41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 30
+ShadowOptions 7
+
+AddNullObject <scene name=eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -62.85 41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 30
+ShadowOptions 7
+
+AddNullObject <scene name=eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -62.85 -41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 30
+ShadowOptions 7
+
+AddNullObject <scene name=eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -177.15 -41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 30
+ShadowOptions 7
+
+AddNullObject <scene name=eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  62.85 -41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 30
+ShadowOptions 7
+
+AddNullObject <scene name=eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  62.85 41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 30
+ShadowOptions 7
+
+AddNullObject <scene name=eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  177.15 41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 30
+ShadowOptions 7
+
+AddNullObject <scene name=eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  177.15 -41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 30
+ShadowOptions 7
+
+AddNullObject LOD2_object_handle
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 1
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\Modules\LOR_Platform\RTO\LOD2\2_lor_cage_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 55
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\Modules\LOR_Platform\RTO\LOD2\2_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  228 -192 288 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 56
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD2\2_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  228 -192 530 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 56
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD2\2_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  228 -192 772 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 56
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD2\2_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  228 -192 1014 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 56
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD2\2_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -228 -192 1014 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 56
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD2\2_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -228 -192 772 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 56
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD2\2_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -228 -192 530 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 56
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD2\2_lor_ribJB.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -228 -192 288 180 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 56
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD2\2_lor_eng_sml.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -120 0 1302 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 55
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD2\2_lor_eng_sml.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  120 0 1302 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 55
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\Modules\LOR_Platform\RTO\LOD2\2_lor_cab_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -120 0 1802 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 55
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD2\2_lor_storage_sml.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -120 0 -500 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 55
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD2\2_lor_storage_sml.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  120 0 -500 0 0 0 5 5 5
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 55
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD2\2_lor_engine.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -120 0 -500 0 0 0 7.5 7.5 7.5
+  0 0 0 0 0
+EndBehavior 1
+PivotPoint 0 0 8.183
+ParentObject 55
+ShadowOptions 7
+
+LoadObject Objects_IW2\Stations\ModularStations\modules\LOR_Platform\RTO\LOD2\2_lor_engine.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  120 0 -500 0 0 0 7.5 7.5 7.5
+  0 0 0 0 0
+EndBehavior 1
+PivotPoint 0 0 8.183
+ParentObject 55
+ShadowOptions 7
+
+AddNullObject <scene name=eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -177.15 41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 55
+ShadowOptions 7
+
+AddNullObject <scene name=eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -62.85 41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 55
+ShadowOptions 7
+
+AddNullObject <scene name=eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -62.85 -41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 55
+ShadowOptions 7
+
+AddNullObject <scene name=eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  -177.15 -41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 55
+ShadowOptions 7
+
+AddNullObject <scene name=eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  62.85 -41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 55
+ShadowOptions 7
+
+AddNullObject <scene name=eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  62.85 41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 55
+ShadowOptions 7
+
+AddNullObject <scene name=eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  177.15 41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 55
+ShadowOptions 7
+
+AddNullObject <scene name=eng_flares>
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  177.15 -41.85 -690 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 55
+ShadowOptions 7
+
+AmbientColor 255 255 255
+AmbIntensity 0.250000
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  143.5 -345 772 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  11 1 0 0 0
+  0.225
+  12 1 0 0 0
+  0.225
+  14 1 0 0 0
+  4.656613e-010
+  15 1 0 0 0
+  0
+  30 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  143.5 -345 530 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  11 1 0 0 0
+  0.225
+  12 1 0 0 0
+  0.225
+  14 1 0 0 0
+  4.656613e-010
+  15 1 0 0 0
+  0
+  30 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -143.5 -345 288 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  11 1 0 0 0
+  0.225
+  12 1 0 0 0
+  0.225
+  14 1 0 0 0
+  4.656613e-010
+  15 1 0 0 0
+  0
+  30 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -295.5 -35 772 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 29
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.225
+  16 1 0 0 0
+  0.225
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -143.5 -345 530 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.225
+  16 1 0 0 0
+  0.225
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  143.5 -345 288 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.225
+  16 1 0 0 0
+  0.225
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -295.5 -35 530 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 29
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.225
+  16 1 0 0 0
+  0.225
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -295.5 -35 288 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 29
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.225
+  16 1 0 0 0
+  0.225
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  295.5 -35 288 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 29
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.225
+  16 1 0 0 0
+  0.225
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  295.5 -35 530 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 29
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.225
+  16 1 0 0 0
+  0.225
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  295.5 -35 772 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 29
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.225
+  16 1 0 0 0
+  0.225
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -143.5 -345 1014 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.225
+  16 1 0 0 0
+  0.225
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -295.5 -35 1014 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 29
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.225
+  16 1 0 0 0
+  0.225
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  295.5 -35 1014 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 29
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.225
+  16 1 0 0 0
+  0.225
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  143.5 -345 1014 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  11 1 0 0 0
+  0.225
+  12 1 0 0 0
+  0.225
+  14 1 0 0 0
+  4.656613e-010
+  15 1 0 0 0
+  0
+  30 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -143.5 -345 772 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 29
+LightColor 255 1 1
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  15 1 0 0 0
+  0.225
+  16 1 0 0 0
+  0.225
+  18 1 0 0 0
+  4.656613e-010
+  19 1 0 0 0
+  0
+  34 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName WhiteFlasher
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -120 -50 1942 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 29
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  -7.63685e-008
+  0 0 0 0 0
+  -7.63685e-008
+  7 1 0 0 0
+  0.3
+  8 1 0 0 0
+  0.3
+  11 1 0 0 0
+  4.656613e-010
+  13 1 0 0 0
+  0
+  24 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+ShowCamera 0 7
+CameraMotion (unnamed)
+  9
+  1
+  0 0.25 -247.308 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ZoomFactor 3.200000
+Resolution 1
+PixelAspectRatio 3
+SegmentMemory 1050000
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+FilmSize 2
+FieldRendering 0
+MotionBlur 0
+DepthOfField 0
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 0
+ClipRayColors 0
+DataOverlayLabel  
+FullSceneParamEval 0
+
+ViewMode 2
+ViewAimpoint -120.000000 -60.000000 1897.000000
+ViewDirection -0.670209 -0.439822 0.000000
+ViewZoomFactor 45.562511
+GridNumber 40
+GridSize 500.000000
+ShowMotionPath 1
+ShowBGImage 0
+ShowFogRadius 0
+ShowRedraw 0
+ShowSafeAreas 0
+ShowFieldChart 0

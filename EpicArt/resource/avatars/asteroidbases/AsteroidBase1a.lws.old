@@ -1,0 +1,2254 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 100
+FrameStep 1
+PreviewFirstFrame 1
+PreviewLastFrame 100
+PreviewFrameStep 1
+FramesPerSecond 25.000000
+
+AddNullObject <detail_switch min=0.0 max=0.03>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -3000 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.03 max=0.15>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ShadowOptions 7
+
+AddNullObject <detail_switch min=0.15 max=1.0>
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  3000 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 6
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\Asteroids\RTO\ForSetupsOnly\0_MattsAsteroid01.lwo
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 3
+ShadowOptions 7
+
+AddNullObject Dockport Null_2
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  745.687 0 -208.1089 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 2
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject Dockport Null_3
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  -595.9677 0 -75.60372 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 2
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject Dockport Null_4
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  -41.79365 0 -6.896606 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 2
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject Dockport Null_6
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  133.588 0 -715.1246 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 2
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject Dockport Null_1
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  885 0 -745 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+AddNullObject Dockport Null_5
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  -625 0 -680 -0.1 0.4000001 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 4
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\Tower\RTO\Tower0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 6
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\Tower\RTO\Tower0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 -45 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 10
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\Buildings\RTO\Buildings0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 0.6 0.6 0.6
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 8
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\AirlockDoors\RTO\Airlockdoors0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 30 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 7
+ShadowOptions 7
+
+AddNullObject LightNull
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 14
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\LandingPad\RTO\Pad0_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 9
+ShadowOptions 7
+
+AddNullObject root
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 16
+ShadowOptions 7
+
+AddNullObject ship_dock
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -10 70 0 0 -90 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 46
+ParentObject 16
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\Dome\RTO\Dome0_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 5
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\Asteroids\RTO\LOD1\ForSetupsOnly\1_MattsAsteroid01.lwo
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 2
+ShadowOptions 7
+
+AddNullObject Dockport Null_2
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  745.687 0 -208.1089 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 2
+ParentObject 20
+ShadowOptions 7
+
+AddNullObject Dockport Null_3
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  -595.9677 0 -75.60372 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 2
+ParentObject 20
+ShadowOptions 7
+
+AddNullObject Dockport Null_4
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  -41.79365 0 -6.896606 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 2
+ParentObject 20
+ShadowOptions 7
+
+AddNullObject Dockport Null_6
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  133.588 0 -715.1246 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 2
+ParentObject 20
+ShadowOptions 7
+
+AddNullObject Dockport Null_1
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  885 0 -745 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 20
+ShadowOptions 7
+
+AddNullObject Dockport Null_5
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  -625 0 -680 -0.1 0.4000001 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 20
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\Tower\RTO\LOD1\Tower1_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 22
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\Tower\RTO\LOD1\Tower1_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 -45 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 26
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\Buildings\RTO\LOD1\Buildings1_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 0.6 0.6 0.6
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 24
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\AirlockDoors\RTO\LOD1\Airlockdoors1_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 30 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 23
+ShadowOptions 7
+
+AddNullObject LightNull
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 30
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\LandingPad\RTO\LOD1\Pad1_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 25
+ShadowOptions 7
+
+AddNullObject root
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 32
+ShadowOptions 7
+
+AddNullObject ship_dock
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -10 70 0 0 -90 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 46
+ParentObject 32
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\Dome\RTO\LOD1\Dome1_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 21
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\Asteroids\RTO\LOD2\ForSetupsOnly\2_MattsAsteroid01.lwo
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 1
+ShadowOptions 7
+
+AddNullObject Dockport Null_2
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  745.687 0 -208.1089 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 2
+ParentObject 36
+ShadowOptions 7
+
+AddNullObject Dockport Null_3
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  -595.9677 0 -75.60372 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 2
+ParentObject 36
+ShadowOptions 7
+
+AddNullObject Dockport Null_4
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  -41.79365 0 -6.896606 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 2
+ParentObject 36
+ShadowOptions 7
+
+AddNullObject Dockport Null_6
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  133.588 0 -715.1246 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 2
+ParentObject 36
+ShadowOptions 7
+
+AddNullObject Dockport Null_1
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  885 0 -745 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 36
+ShadowOptions 7
+
+AddNullObject Dockport Null_5
+ShowObject 7 7
+ObjectMotion (unnamed)
+  9
+  1
+  -625 0 -680 -0.1 0.4000001 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 36
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\Tower\RTO\LOD2\Tower2_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 38
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\Tower\RTO\LOD2\Tower2_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 -45 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 42
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\Buildings\RTO\LOD2\Buildings2_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 0.6 0.6 0.6
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 40
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\AirlockDoors\RTO\LOD2\Airlockdoors2_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 30 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 39
+ShadowOptions 7
+
+AddNullObject LightNull
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 46
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\LandingPad\RTO\LOD2\Pad2_T.lwo
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 41
+ShadowOptions 7
+
+AddNullObject root
+ShowObject 4 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 48
+ShadowOptions 7
+
+AddNullObject ship_dock
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  -10 70 0 0 -90 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 46
+ParentObject 48
+ShadowOptions 7
+
+LoadObject Objects_IW2\AsteroidBases\Dome\RTO\LOD2\Dome2_T.lwo
+ShowObject 8 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 37
+ShadowOptions 7
+
+AmbientColor 255 255 255
+AmbIntensity 0.250000
+
+AddLight
+LightName Light
+ShowLight 0 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  250.0288 40 -119.7534 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 15
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  124.4812 40 -246.5199 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 15
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -124.7534 40 -246.5199 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 15
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -250.0288 40 -119.7534 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 15
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -250.0288 40 119.7534 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 15
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -124.4812 40 246.5199 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 15
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  124.4812 40 246.5199 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 15
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  250.0288 40 119.7534 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 15
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -48.7746 146.1614 189.9734 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 17
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -175.3907 146.1614 84.0988 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 17
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -174.6845 146.1614 -86.0606 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 17
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -50.2597 146.1614 -187.7154 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 17
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  105.3181 146.1614 -150.7077 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 17
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  175.4461 146.1614 0.582312 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 17
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  103.2775 146.1614 150.4771 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 17
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  250.0288 40 -119.7534 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 31
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  124.4812 40 -246.5199 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 31
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -124.7534 40 -246.5199 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 31
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -250.0288 40 -119.7534 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 31
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -250.0288 40 119.7534 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 31
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -124.4812 40 246.5199 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 31
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  124.4812 40 246.5199 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 31
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  250.0288 40 119.7534 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 31
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -48.7746 146.1614 189.9734 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 33
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -175.3907 146.1614 84.0988 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 33
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -174.6845 146.1614 -86.0606 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 33
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -50.2597 146.1614 -187.7154 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 33
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  105.3181 146.1614 -150.7077 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 33
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  175.4461 146.1614 0.582312 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 33
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  103.2775 146.1614 150.4771 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 33
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  250.0288 40 -119.7534 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 47
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  124.4812 40 -246.5199 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 47
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -124.7534 40 -246.5199 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 47
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -250.0288 40 -119.7534 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 47
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -250.0288 40 119.7534 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 47
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -124.4812 40 246.5199 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 47
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  124.4812 40 246.5199 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 47
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  250.0288 40 119.7534 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 47
+LightColor 255 1 0
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  24 1 0 0 0
+  0.15
+  25 1 0 0 0
+  0.15
+  50 1 0 0 0
+  0
+  51 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -48.7746 146.1614 189.9734 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 49
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -175.3907 146.1614 84.0988 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 49
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -174.6845 146.1614 -86.0606 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 49
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -50.2597 146.1614 -187.7154 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 49
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  105.3181 146.1614 -150.7077 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 49
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  175.4461 146.1614 0.582312 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 49
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName RedNav
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  103.2775 146.1614 150.4771 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ParentObject 49
+LightColor 255 255 255
+LgtIntensity 0.000000
+LightType 1
+LensFlare 1
+FlareIntensity 0.150000
+FlareNominalDistance 10.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 7
+FlareRingColor 80 20 10
+FlareRingSize 0.220000
+FlareStarFilter 2
+ShadowType 1
+
+AddLight
+LightName Light
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  -2 2 -2 45 35 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LightColor 255 255 255
+LgtIntensity 1.000000
+LightType 0
+ShadowType 1
+
+ShowCamera 0 7
+CameraMotion (unnamed)
+  9
+  1
+  0 0.25 -247.308 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+ZoomFactor 3.200000
+Resolution 1
+PixelAspectRatio 3
+SegmentMemory 1050000
+Antialiasing 0
+AdaptiveSampling 1
+AdaptiveThreshold 16
+FilmSize 2
+FieldRendering 0
+MotionBlur 0
+DepthOfField 0
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+
+RenderMode 2
+RayTraceEffects 0
+ClipRayColors 0
+DataOverlayLabel  
+FullSceneParamEval 0
+
+ViewMode 0
+ViewAimpoint -0.070017 0.000000 0.830498
+ViewDirection -2.949609 -0.415388 0.000000
+ViewZoomFactor 0.069366
+GridNumber 40
+GridSize 20.000000
+ShowMotionPath 1
+ShowBGImage 0
+ShowFogRadius 0
+ShowRedraw 0
+ShowSafeAreas 0
+ShowFieldChart 0

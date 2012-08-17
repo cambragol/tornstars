@@ -1,0 +1,268 @@
+LWSC
+1
+
+FirstFrame 1
+LastFrame 300
+FrameStep 1
+PreviewFirstFrame 1
+PreviewLastFrame 300
+PreviewFrameStep 1
+FramesPerSecond 25.000000
+
+AddNullObject TugNull
+ShowObject 1 7
+ObjectMotion (unnamed)
+  9
+  1
+  0 0 0 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 1579
+PivotPoint 0 0 -45.2
+ShadowOptions 7
+
+AmbientColor 255 255 255
+AmbIntensity 0.000000
+
+AddLight
+LightName Blinker
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 22.5 -55.8657 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 1
+LightColor 10 115 230
+LgtIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  0
+  14 1 0 0 0
+  2
+  16 0 0 0 0
+  2
+  17 0 0 0 0
+  0
+  20 0 0 0 0
+  0
+  40 1 0 0 0
+EndBehavior 2
+LightType 1
+LightFalloff 1
+LightRange 100.000000
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  0
+  14 1 0 0 0
+  1
+  16 0 0 0 0
+  1
+  17 0 0 0 0
+  0
+  20 0 0 0 0
+  0
+  40 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 200.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 33
+ShadowType 1
+
+AddLight
+LightName Blinker
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 -26 -55.8657 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 1
+LightColor 10 115 230
+LgtIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  34 1 0 0 0
+  2
+  36 0 0 0 0
+  2
+  37 0 0 0 0
+  0
+  40 1 0 0 0
+EndBehavior 2
+LightType 1
+LightFalloff 1
+LightRange 100.000000
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  34 1 0 0 0
+  1
+  36 0 0 0 0
+  1
+  37 0 0 0 0
+  0
+  40 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 200.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 33
+ShadowType 1
+
+AddLight
+LightName Blinker
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 22.5 -55.8657 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 3
+ParentObject 1
+LightColor 10 115 230
+LgtIntensity 0.000000
+LightType 1
+LightFalloff 1
+LightRange 50.000000
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  6
+  0
+  0 0 0 0 0
+  0
+  14 1 0 0 0
+  2
+  16 0 0 0 0
+  2
+  17 0 0 0 0
+  0
+  20 0 0 0 0
+  0
+  40 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 200.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 33
+ShadowType 0
+
+AddLight
+LightName Blinker
+ShowLight 1 7
+LightMotion (unnamed)
+  9
+  1
+  0 -26 -55.8657 0 0 0 1 1 1
+  0 0 0 0 0
+EndBehavior 1
+LockedChannels 5
+ParentObject 1
+LightColor 10 115 230
+LgtIntensity 0.000000
+LightType 1
+LightFalloff 1
+LightRange 50.000000
+LensFlare 1
+FlareIntensity (envelope)
+  1
+  5
+  0
+  0 0 0 0 0
+  0
+  34 1 0 0 0
+  2
+  36 0 0 0 0
+  2
+  37 0 0 0 0
+  0
+  40 1 0 0 0
+EndBehavior 2
+FlareNominalDistance 200.000000
+FlareDissolve 0.000000
+LensFlareFade 14
+LensFlareOptions 33
+ShadowType 0
+
+ShowCamera 1 7
+CameraMotion (unnamed)
+  9
+  3
+  0 0 0 26.89996 1.599964 -7.800004 1 1 1
+  0 0 0 0 0
+  0 0 0 28.31329 2.144447 -1.399999 1 1 1
+  170 0 0 0 0
+  0 0 0 28.31329 2.144447 0 1 1 1
+  300 0 0 0 0
+EndBehavior 1
+ZoomFactor 2.800000
+Resolution 2
+CustomSize 760 455
+PixelAspectRatio 4
+SegmentMemory 10500000
+Antialiasing 2
+EnhancedAA 1
+AdaptiveSampling 0
+FilmSize 2
+FieldRendering 0
+MotionBlur 3
+BlurLength 0.500000
+DepthOfField 0
+
+SolidBackdrop 1
+BackdropColor 0 0 0
+ZenithColor 0 40 80
+SkyColor 120 180 240
+GroundColor 50 40 30
+NadirColor 100 80 60
+FogType 0
+DitherIntensity 1
+AnimatedDither 0
+GlowEffect 1
+GlowIntensity 0.500000
+GlowRadius 4.000000
+
+RenderMode 2
+RayTraceEffects 1
+ClipRayColors 0
+RayRecursionLimit 16
+DataOverlayLabel  
+OutputFilenameFormat 1
+SaveRGBImagesPrefix \\Svr_frames\Frames\Movies_IW2\Act_2\PrisonExt\TugHeads4Gap\Tug\A2_Tug_Element
+RGBImageFormat 10
+SaveAlphaImagesPrefix \\Svr_frames\Frames\Movies_IW2\Act_2\PrisonExt\TugHeads4Gap\Tug\Alpha\Alpha
+AlphaImageFormat 9
+FullSceneParamEval 0
+
+ViewMode 0
+ViewAimpoint 123.531982 -575.445679 -1.725128
+ViewDirection -6.558939 8.895939 -1.942552
+ViewZoomFactor 0.000014
+GridNumber 0
+GridSize 0.005000
+ShowMotionPath 1
+ShowBGImage 0
+ShowFogRadius 0
+ShowRedraw 0
+ShowSafeAreas 1
+ShowFieldChart 0
