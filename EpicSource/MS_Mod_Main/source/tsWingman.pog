@@ -782,7 +782,10 @@ task wingman_watch(hship ship)
    int i, total;
    bool toggle;
    hisim previous_target;
-
+	// Added by cambragol to improve feedback for docking wingmen
+	int wait_time;
+	float distance, distance_before, distance_now;
+	//
 
    // Inital checks before we start the watch task.
    if (tsShip.IsCapsuleJumping(ship)) {
@@ -1130,18 +1133,56 @@ task wingman_watch(hship ship)
 
       case eSS_Dock:
          // Wait in this state for an undock order.
+		//distance_now = 0;
+			// This mess decides which dock to enable
+			if (tsShip.IsFreighter(ship)){
+
+				tsStationAi.toggle_unload_dock(toggle, iHabitat.Cast(target));
+
+			} else {
+
+				tsStationAi.toggle_universal_dock(toggle, iHabitat.Cast(target));
+			}
+
+
+
          if (neworder != ePO_None) {
+		wait_time = 0;
             accept_order(ship, debug_on);
             next_state = new_order_state(neworder);
             wingman_state = change_state(ship, wingman_state, next_state, debug_on);
-         }else if (OT_None == iAI.CurrentOrderType(ship)) {
+		}
+	   else if ((distance == 0) && (wait_time == 15)){
+               iConversation.OneLiner(ship, "", "epo_in_docking_queue");
+		}
+	   else if ((distance == 0) && (wait_time == 30)){
+		iConversation.OneLiner(ship, "", "epo_still_waiting_to_dock");
+		}
+	   else if ((distance == 0) && (wait_time == 60)){
+		iConversation.OneLiner(ship, "", "epo_still_still_waiting_to_dock");
+		}
+	   else if ((distance == 0) && (wait_time == 100)){
+		iConversation.OneLiner(ship, "", "epo_still_still_still_waiting_to_dock");
+		}
+	   else if ((distance == 0) && (wait_time == 150)){
+		iConversation.OneLiner(ship, "", "epo_still_still_still_still_waiting_to_dock");
+		}
+
+         else if (OT_None == iAI.CurrentOrderType(ship)) {
             // If the order completes, go to idle.
 
             if (iSim.IsDockedTo(ship, dock_target)) {
                iConversation.OneLiner(ship, "", "epo_docking_complete");
             }
+		wait_time = 0;
             wingman_state = change_state(ship, wingman_state, eSS_Idle, debug_on);
          }
+		//Added to check if the wingman is moving
+		distance_before = distance_now;
+	      distance_now = Sim.DistanceBetween(ship,target);
+		distance = distance_before - distance_now;
+		//
+	   wait_time = ++wait_time;
          break;
 
       case eSS_Undock:

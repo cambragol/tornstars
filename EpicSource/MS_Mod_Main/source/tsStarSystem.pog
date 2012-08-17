@@ -79,7 +79,7 @@ UpdateSystem()
    hhabitat station;
    int i, total;
    string system = iSim.ActiveWorld();
-   hregion region;
+   hregion region, region_outer;
 
 	set lpoints, local_set;
 	hlagrangepoint lpoint, destination;
@@ -132,10 +132,12 @@ UpdateSystem()
 	   // removed the exclusion on Mines, as now they have a station component
          if (ESC_Mine != tsStation.Category(station)) {
 
-            region = iRegion.CreateTrafficControl(station, 15km, 500);
+            region = iRegion.CreateTrafficControl(station, 20km, 400);
+		region_outer = iRegion.CreateLDSI(station, 40km);
 	   // added different LDSIregion for Mines, because of their asteroid fields
          } else {
-            region = iRegion.CreateTrafficControl(station, 20km, 200);
+            region = iRegion.CreateTrafficControl(station, 25km, 200);
+		region_outer = iRegion.CreateLDSI(station, 40km);
 
 	   }
       }

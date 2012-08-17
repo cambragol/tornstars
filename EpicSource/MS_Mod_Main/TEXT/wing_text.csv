@@ -153,6 +153,18 @@ epo_prospector_undocking,"Detaching from survey asteroid"
 
 epo_ship_out_of_system, "That wingmen is not in this system.  We can't reach them"
 
+; Docking feedback
+
+epo_in_docking_queue, "Dock occupied...holding"
+
+epo_still_waiting_to_dock, "Holding for docking"
+
+epo_still_still_waiting_to_dock, "We are still holding in dock approach"
+
+epo_still_still_still_waiting_to_dock, "Dock is not available.  Holding"
+
+epo_still_still_still_still_waiting_to_dock,  "Dock is still not available.  We are continuing to hold"
+
 
 ; StationAi responses
 

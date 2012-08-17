@@ -530,7 +530,7 @@ bool IsTanker(hship ship)
 
 bool IsFreighter(hship ship)
 {
-   return (Object.StringProperty(ship,"gtHiredShipType") == "freighter");
+   return (Object.IntProperty(ship,"freighter") >= 1);
 }
 
 bool IsCapsuleJumping(hship ship)
